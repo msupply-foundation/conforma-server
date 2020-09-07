@@ -175,8 +175,8 @@ CREATE TABLE public.template_element (
 
 CREATE TABLE public.template_question (
     id serial primary key,
-    is_required boolean,
-    is_editable boolean,
+    is_required boolean DEFAULT true,
+    is_editable boolean DEFAULT true,
     parameters jsonb,
     default_value jsonb
 ) inherits (public.template_element);
