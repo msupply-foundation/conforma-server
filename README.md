@@ -1,5 +1,3 @@
-# irims-server-demo
-
 Install dependencies:  
 `yarn install`
 
