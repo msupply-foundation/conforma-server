@@ -1,0 +1,5 @@
+DROP DATABASE IF EXISTS irims;
+
+CREATE DATABASE irims;
+
+\c irims
