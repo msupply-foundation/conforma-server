@@ -114,7 +114,7 @@ CREATE TABLE public.template (
     id serial primary key,
     version_id integer references public.template_version,
     template_name varchar,
-    code varchar,
+    code varchar NOT NULL,
     status public.template_status
 );
 
@@ -167,7 +167,7 @@ CREATE TABLE public.template_element (
     id serial primary key,
     section_id integer references public.template_section(id),
     next_element_id integer references public.template_element(id),
-    code varchar,
+    code varchar NOT NULL,
     title varchar,
     visibility_condition jsonb,
     element_type_plugin_code varchar
