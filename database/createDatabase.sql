@@ -1,5 +1,5 @@
-DROP DATABASE IF EXISTS irims;
+DROP DATABASE IF EXISTS tmf_app_manager;
 
-CREATE DATABASE irims;
+CREATE DATABASE tmf_app_manager;
 
-\c irims
+\c tmf_app_manager

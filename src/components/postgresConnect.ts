@@ -13,7 +13,7 @@ const { Client } = require('pg');
 export const pgClient = new Client({
   user: 'postgres',
   host: 'localhost',
-  database: 'irims',
+  database: 'tmf_app_manager',
   password: '',
   port: 5432,
 });
