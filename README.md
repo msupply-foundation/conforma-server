@@ -58,3 +58,7 @@ Documented in the `Query-Syntax.md` in the documentation folder.
 Code is in the `modules` folder.
 
 To test, run: `yarn test` (uses installed Jest)
+
+## Documentation
+
+Developer documentation available in documentation folder -- intended for publication to this repo's wiki. See the documentation's own README for more information
