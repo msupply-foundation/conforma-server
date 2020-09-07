@@ -5,10 +5,7 @@
   "file": "dummy1",
   "function_name": "dummy1",
   "description": "This does nothing. It's just for testing purposes.",
-  "required_parameters": [
-    "application_id",
-    "status"
-  ],
+  "required_parameters": ["application_id", "status"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

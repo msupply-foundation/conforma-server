@@ -1,16 +1,15 @@
-"use strict";
-module.exports["dummy1"] = function (parameters) {
-    try {
-        console.log("This is a dummy plugin");
-        return {
-            status: "Success",
-            error_log: "",
-        };
-    }
-    catch (error) {
-        return {
-            status: "Fail",
-            error_log: "There was a problem",
-        };
-    }
+'use strict';
+module.exports['dummy1'] = function (parameters) {
+  try {
+    console.log('This is a dummy plugin');
+    return {
+      status: 'Success',
+      error_log: '',
+    };
+  } catch (error) {
+    return {
+      status: 'Fail',
+      error_log: 'There was a problem',
+    };
+  }
 };

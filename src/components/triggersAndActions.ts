@@ -1,7 +1,7 @@
-import path from "path";
-import getAppRootDir from "./getAppRoot";
+import path from 'path';
+import getAppRootDir from './getAppRoot';
 
-const schedule = require("node-schedule");
+const schedule = require('node-schedule');
 
 export interface DatabaseRecord {
   [key: string]: any;
@@ -34,25 +34,27 @@ export interface Action {
   parameter_queries: { [key: string]: any };
 }
 
-const pluginFolder = path.join(getAppRootDir(), "plugins"); //Change this to config file
+const pluginFolder = path.join(getAppRootDir(), 'plugins'); //Change this to config file
 
 // Load actions from Database at server startup
 export const loadActions = async function (
   client: { [key: string]: Function },
   actionLibrary: { [key: string]: Function }
 ) {
-  console.log("Loading Actions from Database...");
+  console.log('Loading Actions from Database...');
 
   // const actionLibrary: { [key: string]: Function } = {};
 
-  client.query("SELECT code, path, function_name FROM action_plugin").then((res: DatabaseResult) => {
-    res.rows.forEach((row) => {
-      const action = require(path.join(pluginFolder, row.path));
-      actionLibrary[row.code] = action[row.function_name];
+  client
+    .query('SELECT code, path, function_name FROM action_plugin')
+    .then((res: DatabaseResult) => {
+      res.rows.forEach((row) => {
+        const action = require(path.join(pluginFolder, row.path));
+        actionLibrary[row.code] = action[row.function_name];
+      });
     });
-  });
 
-  console.log("Actions loaded");
+  console.log('Actions loaded');
 
   // return actionLibrary;
 };
@@ -65,7 +67,7 @@ export const loadScheduledActions = async function (
 ) {
   // const actionSchedule: any[] = [];
 
-  console.log("Loading Scheduled jobs");
+  console.log('Loading Scheduled jobs');
   // Load from Database
   client
     .query(
@@ -90,7 +92,7 @@ export const loadScheduledActions = async function (
           actionSchedule.push(job);
         } else {
           // Overdue jobs to be executed immediately
-          console.log("Executing overdue action:", action.action_code, action.parameters);
+          console.log('Executing overdue action:', action.action_code, action.parameters);
           executeAction(
             client,
             {
@@ -133,11 +135,13 @@ export async function processTrigger(client: { [key: string]: Function }, payloa
     VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)
     `;
     actions.forEach((action: Action) => {
-      client.query(writeQuery, [payload.id, action.code, action.parameter_queries, "Queued"]);
+      client.query(writeQuery, [payload.id, action.code, action.parameter_queries, 'Queued']);
     });
     // Update trigger queue item with success/failure (and log)
     // If SUCCESS -- Not sure best way to test for this:
-    client.query(`UPDATE trigger_queue SET status = 'Action Dispatched' WHERE id = $1`, [payload.id]);
+    client.query(`UPDATE trigger_queue SET status = 'Action Dispatched' WHERE id = $1`, [
+      payload.id,
+    ]);
   } catch (err) {
     console.log(err.stack);
   }
@@ -163,9 +167,9 @@ export async function executeAction(
 function evaluateExpression(query: any) {
   // This would be basically the same as the client-side query/condition evaluator described in QUERY SYNTAX. For now, we'll assume they all match (True), or are all literal values.
   switch (query.type) {
-    case "boolean":
+    case 'boolean':
       return true;
-    case "string":
+    case 'string':
       return query.value;
   }
   return true;

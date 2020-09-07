@@ -6,8 +6,8 @@ export const testData: ITestData = {};
 
 // Basic (single level literals)
 testData.basicStringLiteral = {
-  type: "string",
-  value: "First Name",
+  type: 'string',
+  value: 'First Name',
 };
 
 testData.stringifiedBasicStringLiteral = `{
@@ -16,7 +16,7 @@ testData.stringifiedBasicStringLiteral = `{
 }`;
 
 testData.basicStringLiteralNoType = {
-  value: "First Name",
+  value: 'First Name',
 };
 
 testData.basicBoolean = {
@@ -26,84 +26,84 @@ testData.basicBoolean = {
 testData.stringifiedBasicBoolean = `{"value":true}`;
 
 testData.basicArray = {
-  type: "array",
-  value: ["Pharmaceutical", "Natural Product", "Other"],
+  type: 'array',
+  value: ['Pharmaceutical', 'Natural Product', 'Other'],
 };
 
 testData.stringifiedBasicArray = '{"value":["Pharmaceutical","Natural Product","Other"]}';
 
 // AND
 testData.operatorAND_2values = {
-  type: "boolean",
-  operator: "AND",
+  type: 'boolean',
+  operator: 'AND',
   children: [
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
   ],
 };
 
 testData.operatorAND_2values_false = {
-  type: "boolean",
-  operator: "AND",
+  type: 'boolean',
+  operator: 'AND',
   children: [
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: false,
     },
   ],
 };
 
 testData.operatorAND_4values = {
-  type: "boolean",
-  operator: "AND",
+  type: 'boolean',
+  operator: 'AND',
   children: [
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
   ],
 };
 
 testData.operatorAND_4values_false = {
-  type: "boolean",
-  operator: "AND",
+  type: 'boolean',
+  operator: 'AND',
   children: [
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: false,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
   ],
@@ -112,99 +112,99 @@ testData.operatorAND_4values_false = {
 // OR
 
 testData.operatorOR_2values = {
-  type: "boolean",
-  operator: "OR",
+  type: 'boolean',
+  operator: 'OR',
   children: [
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
   ],
 };
 
 testData.operatorOR_2values_1false = {
-  type: "boolean",
-  operator: "OR",
+  type: 'boolean',
+  operator: 'OR',
   children: [
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: false,
     },
   ],
 };
 
 testData.operatorOR_4values = {
-  type: "boolean",
-  operator: "OR",
+  type: 'boolean',
+  operator: 'OR',
   children: [
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
   ],
 };
 
 testData.operatorOR_4values_1false = {
-  type: "boolean",
-  operator: "OR",
+  type: 'boolean',
+  operator: 'OR',
   children: [
     {
-      type: "boolean",
+      type: 'boolean',
       value: false,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: false,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: true,
     },
   ],
 };
 
 testData.operatorOR_4values_false = {
-  type: "boolean",
-  operator: "OR",
+  type: 'boolean',
+  operator: 'OR',
   children: [
     {
-      type: "boolean",
+      type: 'boolean',
       value: false,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: false,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: false,
     },
     {
-      type: "boolean",
+      type: 'boolean',
       value: false,
     },
   ],
@@ -213,72 +213,72 @@ testData.operatorOR_4values_false = {
 // CONCAT
 
 testData.CONCAT_2_Arrays = {
-  type: "array",
-  operator: "CONCAT",
+  type: 'array',
+  operator: 'CONCAT',
   children: [
     {
-      type: "array",
+      type: 'array',
       value: [1, 2, 3],
     },
     {
-      value: ["Four", "Five", "Six"],
+      value: ['Four', 'Five', 'Six'],
     },
   ],
 };
 
 testData.CONCAT_4_Arrays = {
-  type: "array",
-  operator: "CONCAT",
+  type: 'array',
+  operator: 'CONCAT',
   children: [
     {
-      type: "array",
+      type: 'array',
       value: [1, 2, 3],
     },
     {
-      value: ["Four", "Five", "Six"],
+      value: ['Four', 'Five', 'Six'],
     },
     {
-      value: [7, 8, "Nine"],
+      value: [7, 8, 'Nine'],
     },
     {
-      value: [["Four", "Five", "Six"], "The", "End"],
+      value: [['Four', 'Five', 'Six'], 'The', 'End'],
     },
   ],
 };
 
 testData.CONCAT_3_Strings = {
-  type: "string",
-  operator: "CONCAT",
+  type: 'string',
+  operator: 'CONCAT',
   children: [
     {
-      type: "string",
-      value: "Carl",
+      type: 'string',
+      value: 'Carl',
     },
     {
-      type: "string",
-      value: " ",
+      type: 'string',
+      value: ' ',
     },
     {
-      value: "Smith",
+      value: 'Smith',
     },
   ],
 };
 
 testData.CONCAT_4_Unspecified = {
-  operator: "CONCAT",
+  operator: 'CONCAT',
   children: [
     {
-      value: "Carl",
+      value: 'Carl',
     },
     {
-      type: "string",
-      value: " ",
+      type: 'string',
+      value: ' ',
     },
     {
-      value: "Smith",
+      value: 'Smith',
     },
     {
-      value: "--XXX",
+      value: '--XXX',
     },
   ],
 };
@@ -286,7 +286,7 @@ testData.CONCAT_4_Unspecified = {
 // Equal
 
 testData.EQUAL_Numbers = {
-  operator: "=",
+  operator: '=',
   children: [
     {
       value: 6,
@@ -298,7 +298,7 @@ testData.EQUAL_Numbers = {
 };
 
 testData.EQUAL_Numbers_false = {
-  operator: "=",
+  operator: '=',
   children: [
     {
       value: 6,
@@ -310,31 +310,31 @@ testData.EQUAL_Numbers_false = {
 };
 
 testData.EQUAL_String = {
-  operator: "=",
+  operator: '=',
   children: [
     {
-      value: "Monday 1st January",
+      value: 'Monday 1st January',
     },
     {
-      value: "Monday 1st January",
+      value: 'Monday 1st January',
     },
   ],
 };
 
 testData.EQUAL_String_false = {
-  operator: "=",
+  operator: '=',
   children: [
     {
-      value: "War and Peace",
+      value: 'War and Peace',
     },
     {
-      value: "War and Peas",
+      value: 'War and Peas',
     },
   ],
 };
 
 testData.EQUAL_Numbers_many = {
-  operator: "=",
+  operator: '=',
   children: [
     {
       value: 6,
@@ -352,10 +352,10 @@ testData.EQUAL_Numbers_many = {
 };
 
 testData.EQUAL_String_single = {
-  operator: "=",
+  operator: '=',
   children: [
     {
-      value: "All by myself",
+      value: 'All by myself',
     },
   ],
 };
@@ -363,7 +363,7 @@ testData.EQUAL_String_single = {
 // Inequality
 
 testData.NOT_EQUAL_Numbers = {
-  operator: "!=",
+  operator: '!=',
   children: [
     {
       value: 8.7,
@@ -375,7 +375,7 @@ testData.NOT_EQUAL_Numbers = {
 };
 
 testData.NOT_EQUAL_Numbers_false = {
-  operator: "!=",
+  operator: '!=',
   children: [
     {
       value: 6,
@@ -387,25 +387,25 @@ testData.NOT_EQUAL_Numbers_false = {
 };
 
 testData.NOT_EQUAL_String = {
-  operator: "!=",
+  operator: '!=',
   children: [
     {
-      value: "Monday 1st January",
+      value: 'Monday 1st January',
     },
     {
-      value: "Tuesday 1st January",
+      value: 'Tuesday 1st January',
     },
   ],
 };
 
 testData.NOT_EQUAL_String_false = {
-  operator: "!=",
+  operator: '!=',
   children: [
     {
-      value: "The Brothers Karamazov",
+      value: 'The Brothers Karamazov',
     },
     {
-      value: "The Brothers Karamazov",
+      value: 'The Brothers Karamazov',
     },
   ],
 };
@@ -413,7 +413,7 @@ testData.NOT_EQUAL_String_false = {
 // PLUS
 
 testData.PLUS_2Nums = {
-  operator: "+",
+  operator: '+',
   children: [
     {
       value: 6,
@@ -425,7 +425,7 @@ testData.PLUS_2Nums = {
 };
 
 testData.PLUS_4Nums = {
-  operator: "+",
+  operator: '+',
   children: [
     {
       value: 7.5,
@@ -445,25 +445,25 @@ testData.PLUS_4Nums = {
 // REGEX
 
 testData.REGEX_check_email = {
-  operator: "REGEX",
+  operator: 'REGEX',
   children: [
     {
-      value: "carl@sussol.net",
+      value: 'carl@sussol.net',
     },
     {
-      value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$",
+      value: '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$',
     },
   ],
 };
 
 testData.REGEX_check_email_false = {
-  operator: "REGEX",
+  operator: 'REGEX',
   children: [
     {
-      value: "carl@sussol$net",
+      value: 'carl@sussol$net',
     },
     {
-      value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$",
+      value: '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$',
     },
   ],
 };
@@ -472,36 +472,36 @@ testData.REGEX_check_email_false = {
 
 testData.user = {
   id: 2,
-  firstName: "Carl",
-  lastName: "Smith",
-  title: "Import Manager",
+  firstName: 'Carl',
+  lastName: 'Smith',
+  title: 'Import Manager',
 };
 
 testData.organisation = {
   id: 1,
-  name: "XYZ Pharmaceuticals",
-  category: "Manufacturers",
+  name: 'XYZ Pharmaceuticals',
+  category: 'Manufacturers',
 };
 
 testData.form = {
-  q1: "Drug Registration",
-  q2: "A",
+  q1: 'Drug Registration',
+  q2: 'A',
   q3: undefined,
-  q4: "Panadol",
+  q4: 'Panadol',
 };
 
 testData.application = {
   id: 1,
-  name: "Drug Registration",
-  status: "Draft",
+  name: 'Drug Registration',
+  status: 'Draft',
   stage: 1,
 };
 
 testData.singleUserProperty = {
-  operator: "objectProperties",
+  operator: 'objectProperties',
   children: [
     {
-      value: { object: "user", property: "firstName" },
+      value: { object: 'user', property: 'firstName' },
     },
   ],
 };
@@ -509,11 +509,11 @@ testData.singleUserProperty = {
 // SQL operator
 
 testData.getApplicationName = {
-  type: "string",
-  operator: "pgSQL",
+  type: 'string',
+  operator: 'pgSQL',
   children: [
     {
-      value: "SELECT name FROM application WHERE template_id = $1",
+      value: 'SELECT name FROM application WHERE template_id = $1',
     },
     {
       value: 2,
@@ -522,30 +522,30 @@ testData.getApplicationName = {
 };
 
 testData.getListOfTemplates = {
-  type: "array",
-  operator: "pgSQL",
+  type: 'array',
+  operator: 'pgSQL',
   children: [
     {
-      value: "SELECT template_name FROM template",
+      value: 'SELECT template_name FROM template',
     },
   ],
 };
 
 testData.countTemplates = {
-  type: "number",
-  operator: "pgSQL",
+  type: 'number',
+  operator: 'pgSQL',
   children: [
     {
-      value: "SELECT count(*) FROM template",
+      value: 'SELECT count(*) FROM template',
     },
   ],
 };
 
 testData.getListOfTemplates_noType = {
-  operator: "pgSQL",
+  operator: 'pgSQL',
   children: [
     {
-      value: "SELECT template_name FROM template",
+      value: 'SELECT template_name FROM template',
     },
   ],
 };
@@ -555,62 +555,62 @@ testData.getListOfTemplates_noType = {
 // More complex combinations
 
 testData.concatFirstAndLastNames = {
-  type: "string",
-  operator: "CONCAT",
+  type: 'string',
+  operator: 'CONCAT',
   children: [
     {
-      operator: "objectProperties",
-      children: [{ value: { object: "user", property: "firstName" } }],
+      operator: 'objectProperties',
+      children: [{ value: { object: 'user', property: 'firstName' } }],
     },
     {
-      value: " ",
+      value: ' ',
     },
     {
-      operator: "objectProperties",
-      children: [{ value: { object: "user", property: "lastName" } }],
+      operator: 'objectProperties',
+      children: [{ value: { object: 'user', property: 'lastName' } }],
     },
   ],
 };
 
 testData.complex1 = {
-  operator: "AND",
+  operator: 'AND',
   children: [
     {
-      operator: "=",
+      operator: '=',
       children: [
         {
-          operator: "objectProperties",
+          operator: 'objectProperties',
           children: [
             {
-              value: { object: "form", property: "q1" },
+              value: { object: 'form', property: 'q1' },
             },
           ],
         },
         {
-          value: "Drug Registration",
+          value: 'Drug Registration',
         },
       ],
     },
     {
-      operator: "!=",
+      operator: '!=',
       children: [
         {
-          type: "number",
-          operator: "pgSQL",
+          type: 'number',
+          operator: 'pgSQL',
           children: [
-            { value: "SELECT COUNT(*) FROM user_organisation WHERE user_id = $1" },
+            { value: 'SELECT COUNT(*) FROM user_organisation WHERE user_id = $1' },
             {
-              operator: "objectProperties",
-              children: [{ value: { object: "user", property: "id" } }],
+              operator: 'objectProperties',
+              children: [{ value: { object: 'user', property: 'id' } }],
             },
             {
-              operator: "objectProperties",
-              children: [{ value: { object: "organisation", property: "id" } }],
+              operator: 'objectProperties',
+              children: [{ value: { object: 'organisation', property: 'id' } }],
             },
           ],
         },
         {
-          type: "number",
+          type: 'number',
           value: 0,
         },
       ],
@@ -619,14 +619,14 @@ testData.complex1 = {
 };
 
 testData.complex2 = {
-  operator: "AND",
+  operator: 'AND',
   children: [
     {
-      operator: "=",
+      operator: '=',
       children: [
         {
-          operator: "objectProperties",
-          children: [{ value: { object: "application", property: "stage" } }],
+          operator: 'objectProperties',
+          children: [{ value: { object: 'application', property: 'stage' } }],
         },
         {
           value: 1,
@@ -634,13 +634,16 @@ testData.complex2 = {
       ],
     },
     {
-      operator: "=",
+      operator: '=',
       children: [
         {
-          operator: "graphQL",
+          operator: 'graphQL',
           children: [
-            { value: "Graph QL to return COUNT of questions for current application that are NOT Approved" },
-            { value: { object: "application", property: "id" } },
+            {
+              value:
+                'Graph QL to return COUNT of questions for current application that are NOT Approved',
+            },
+            { value: { object: 'application', property: 'id' } },
           ],
         },
         {

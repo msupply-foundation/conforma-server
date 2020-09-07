@@ -1,19 +1,25 @@
-import { DatabaseRecord, loadActions, loadScheduledActions, processTrigger, executeAction } from "./triggersAndActions";
-import registerPlugins from "./registerPlugins";
+import {
+  DatabaseRecord,
+  loadActions,
+  loadScheduledActions,
+  processTrigger,
+  executeAction,
+} from './triggersAndActions';
+import registerPlugins from './registerPlugins';
 
-const { Client } = require("pg");
+const { Client } = require('pg');
 
 // Postgres Database listeners for Triggers/Actions
 export const pgClient = new Client({
-  user: "postgres",
-  host: "localhost",
-  database: "irims",
-  password: "",
+  user: 'postgres',
+  host: 'localhost',
+  database: 'irims',
+  password: '',
   port: 5432,
 });
 
 pgClient.connect();
-console.log("Connecting to Postgres...");
+console.log('Connecting to Postgres...');
 
 // Load action plugins
 const actionLibrary: { [key: string]: Function } = {};
@@ -28,17 +34,17 @@ export const loadActionPlugins = async () => {
   await loadScheduledActions(pgClient, actionLibrary, actionSchedule);
 };
 
-pgClient.on("notification", (msg: DatabaseRecord) => {
+pgClient.on('notification', (msg: DatabaseRecord) => {
   switch (msg.channel) {
-    case "trigger_notifications":
+    case 'trigger_notifications':
       processTrigger(pgClient, JSON.parse(msg.payload));
       break;
-    case "action_notifications":
+    case 'action_notifications':
       executeAction(pgClient, JSON.parse(msg.payload), actionLibrary);
       break;
   }
   // console.log(msg.payload);
 });
 
-pgClient.query("LISTEN trigger_notifications");
-pgClient.query("LISTEN action_notifications");
+pgClient.query('LISTEN trigger_notifications');
+pgClient.query('LISTEN action_notifications');

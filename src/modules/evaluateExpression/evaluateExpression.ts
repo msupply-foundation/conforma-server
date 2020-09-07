@@ -28,7 +28,7 @@ export default async function evaluateExpression(
   params = defaultParameters
 ): Promise<string | number | boolean | any[]> {
   // If input is JSON string, convert to Object
-  const query = typeof inputQuery === "string" ? JSON.parse(inputQuery) : inputQuery;
+  const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery;
 
   // Base case
   if (!query.children) {
@@ -42,77 +42,77 @@ export default async function evaluateExpression(
     );
 
     switch (query.operator) {
-      case "AND":
+      case 'AND':
         return childrenResolved.reduce((acc: boolean, child: boolean) => {
           return acc && child;
         }, true);
 
-      case "OR":
+      case 'OR':
         return childrenResolved.reduce((acc: boolean, child: boolean) => {
           return acc || child;
         }, false);
 
-      case "CONCAT":
-        if (query.type === "array") {
+      case 'CONCAT':
+        if (query.type === 'array') {
           return childrenResolved.reduce((acc: any, child: any) => {
             return acc.concat(child); // .flat(1) doesn't work for some reason
           });
-        } else if (query.type === "string" || !query.type) {
-          return childrenResolved.join("");
+        } else if (query.type === 'string' || !query.type) {
+          return childrenResolved.join('');
         }
         break;
 
-      case "REGEX":
+      case 'REGEX':
         const str: string = childrenResolved[0];
         const re: RegExp = new RegExp(childrenResolved[1]);
         return re.test(str);
 
-      case "=":
+      case '=':
         return childrenResolved.every((child) => child === childrenResolved[0]);
 
-      case "!=":
+      case '!=':
         return childrenResolved[0] !== childrenResolved[1];
 
-      case "+":
+      case '+':
         return childrenResolved.reduce((acc: number, child: number) => {
           return acc + child;
         }, 0);
 
-      case "objectProperties":
+      case 'objectProperties':
         try {
           return params[childrenResolved[0].object][childrenResolved[0].property];
         } catch {
           return "Can't resolve object";
         }
 
-      case "pgSQL":
-        if (!params.connection) return "No database connection provided";
+      case 'pgSQL':
+        if (!params.connection) return 'No database connection provided';
         return processPgSQL(childrenResolved, query.type, params.connection);
 
-      case "graphQL":
-        if (!params.connection) return "No database connection provided";
+      case 'graphQL':
+        if (!params.connection) return 'No database connection provided';
         return processGraphQL(childrenResolved, params.connection);
 
       // etc. for as many other operators as we want/need.
     }
   }
-  return "No matching operators";
+  return 'No matching operators';
 }
 
 async function processPgSQL(queryArray: any[], queryType: string, connection: IConnection) {
   const query = {
     text: queryArray[0],
     values: queryArray.slice(1),
-    rowMode: queryType ? "array" : "",
+    rowMode: queryType ? 'array' : '',
   };
   try {
     const res = await connection.query(query);
     switch (queryType) {
-      case "array":
+      case 'array':
         return res.rows.flat();
-      case "string":
-        return res.rows.flat().join(" ");
-      case "number":
+      case 'string':
+        return res.rows.flat().join(' ');
+      case 'number':
         return Number(res.rows.flat());
       default:
         return res.rows;

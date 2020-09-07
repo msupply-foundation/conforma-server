@@ -5,18 +5,13 @@
   "file": "consoleLog",
   "function_name": "consoleLog",
   "description": "All it does is print a message to the console. That's it.",
-  "required_parameters": [
-    "message"
-  ],
+  "required_parameters": ["message"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",
       "url": "http://msupply.foundation"
     },
-    "keywords": [
-      "action",
-      "logger"
-    ],
+    "keywords": ["action", "logger"],
     "logos": {
       "small": "",
       "large": ""
