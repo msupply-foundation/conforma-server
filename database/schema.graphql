@@ -887,9 +887,9 @@ type ApplicationResponse implements Node {
   timeCreated: Datetime
 
   """
-  Reads a single `TemplateQuestion` that is related to this `ApplicationResponse`.
+  Reads a single `TemplateElement` that is related to this `ApplicationResponse`.
   """
-  templateQuestionByTemplateQuestionId: TemplateQuestion
+  templateElementByTemplateQuestionId: TemplateElement
 
   """
   Reads a single `Application` that is related to this `ApplicationResponse`.
@@ -982,7 +982,7 @@ input ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput {
   templateQuestionId: Int
   value: JSON
   timeCreated: Datetime
-  templateQuestionToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
+  templateElementToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
   applicationToApplicationId: ApplicationResponseApplicationIdFkeyInput
   reviewResponsesUsingId: ReviewResponseApplicationResponseIdFkeyInverseInput
   filesUsingId: FileApplicationResponseIdFkeyInverseInput
@@ -1111,7 +1111,7 @@ input ApplicationResponseInput {
   applicationId: Int
   value: JSON
   timeCreated: Datetime
-  templateQuestionToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
+  templateElementToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
   applicationToApplicationId: ApplicationResponseApplicationIdFkeyInput
   reviewResponsesUsingId: ReviewResponseApplicationResponseIdFkeyInverseInput
   filesUsingId: FileApplicationResponseIdFkeyInverseInput
@@ -1158,14 +1158,14 @@ input ApplicationResponseOnApplicationResponseForApplicationResponseApplicationI
 """The globally unique `ID` look up for the row to update."""
 input ApplicationResponseOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyNodeIdUpdate {
   """
-  The globally unique `ID` which identifies a single `templateQuestion` to be connected.
+  The globally unique `ID` which identifies a single `templateElement` to be connected.
   """
   nodeId: ID!
 
   """
-  An object where the defined keys will be set on the `templateQuestion` being updated.
+  An object where the defined keys will be set on the `templateElement` being updated.
   """
-  templateQuestionPatch: TemplateQuestionPatch!
+  templateElementPatch: TemplateElementPatch!
 }
 
 """The fields on `applicationResponse` to look up the row to update."""
@@ -1230,7 +1230,7 @@ input ApplicationResponsePatch {
   applicationId: Int
   value: JSON
   timeCreated: Datetime
-  templateQuestionToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
+  templateElementToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
   applicationToApplicationId: ApplicationResponseApplicationIdFkeyInput
   reviewResponsesUsingId: ReviewResponseApplicationResponseIdFkeyInverseInput
   filesUsingId: FileApplicationResponseIdFkeyInverseInput
@@ -1287,54 +1287,54 @@ input ApplicationResponseTemplateQuestionIdFkeyApplicationResponseCreateInput {
   applicationId: Int
   value: JSON
   timeCreated: Datetime
-  templateQuestionToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
+  templateElementToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
   applicationToApplicationId: ApplicationResponseApplicationIdFkeyInput
   reviewResponsesUsingId: ReviewResponseApplicationResponseIdFkeyInverseInput
   filesUsingId: FileApplicationResponseIdFkeyInverseInput
 }
 
 """
-Input for the nested mutation of `templateQuestion` in the `ApplicationResponseInput` mutation.
+Input for the nested mutation of `templateElement` in the `ApplicationResponseInput` mutation.
 """
 input ApplicationResponseTemplateQuestionIdFkeyInput {
   """
-  The primary key(s) for `templateQuestion` for the far side of the relationship.
+  The primary key(s) for `templateElement` for the far side of the relationship.
   """
-  connectById: TemplateQuestionTemplateQuestionPkeyConnect
+  connectById: TemplateElementTemplateElementPkeyConnect
 
   """
-  The primary key(s) for `templateQuestion` for the far side of the relationship.
+  The primary key(s) for `templateElement` for the far side of the relationship.
   """
-  connectByNodeId: TemplateQuestionNodeIdConnect
+  connectByNodeId: TemplateElementNodeIdConnect
 
   """
-  The primary key(s) for `templateQuestion` for the far side of the relationship.
+  The primary key(s) for `templateElement` for the far side of the relationship.
   """
-  deleteById: TemplateQuestionTemplateQuestionPkeyDelete
+  deleteById: TemplateElementTemplateElementPkeyDelete
 
   """
-  The primary key(s) for `templateQuestion` for the far side of the relationship.
+  The primary key(s) for `templateElement` for the far side of the relationship.
   """
-  deleteByNodeId: TemplateQuestionNodeIdDelete
+  deleteByNodeId: TemplateElementNodeIdDelete
 
   """
-  The primary key(s) and patch data for `templateQuestion` for the far side of the relationship.
+  The primary key(s) and patch data for `templateElement` for the far side of the relationship.
   """
-  updateById: TemplateQuestionOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyUsingTemplateQuestionPkeyUpdate
+  updateById: TemplateElementOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyUsingTemplateElementPkeyUpdate
 
   """
-  The primary key(s) and patch data for `templateQuestion` for the far side of the relationship.
+  The primary key(s) and patch data for `templateElement` for the far side of the relationship.
   """
   updateByNodeId: ApplicationResponseOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyNodeIdUpdate
 
   """
-  A `TemplateQuestionInput` object that will be created and connected to this object.
+  A `TemplateElementInput` object that will be created and connected to this object.
   """
-  create: ApplicationResponseTemplateQuestionIdFkeyTemplateQuestionCreateInput
+  create: ApplicationResponseTemplateQuestionIdFkeyTemplateElementCreateInput
 }
 
 """
-Input for the nested mutation of `applicationResponse` in the `TemplateQuestionInput` mutation.
+Input for the nested mutation of `applicationResponse` in the `TemplateElementInput` mutation.
 """
 input ApplicationResponseTemplateQuestionIdFkeyInverseInput {
   """
@@ -1370,7 +1370,7 @@ input ApplicationResponseTemplateQuestionIdFkeyInverseInput {
   """
   The primary key(s) and patch data for `applicationResponse` for the far side of the relationship.
   """
-  updateByNodeId: [TemplateQuestionOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyNodeIdUpdate!]
+  updateByNodeId: [TemplateElementOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyNodeIdUpdate!]
 
   """
   A `ApplicationResponseInput` object that will be created and connected to this object.
@@ -1378,19 +1378,22 @@ input ApplicationResponseTemplateQuestionIdFkeyInverseInput {
   create: [ApplicationResponseTemplateQuestionIdFkeyApplicationResponseCreateInput!]
 }
 
-"""The `templateQuestion` to be created by this mutation."""
-input ApplicationResponseTemplateQuestionIdFkeyTemplateQuestionCreateInput {
+"""The `templateElement` to be created by this mutation."""
+input ApplicationResponseTemplateQuestionIdFkeyTemplateElementCreateInput {
   id: Int
   sectionId: Int
-  nextElementId: Int
   code: String!
+  nextElementCode: String
   title: String
+  category: TemplateElementCategory
   visibilityCondition: JSON
   elementTypePluginCode: String
   isRequired: Boolean
   isEditable: Boolean
   parameters: JSON
   defaultValue: JSON
+  validation: JSON
+  templateSectionToSectionId: TemplateElementSectionIdFkeyInput
   applicationResponsesUsingId: ApplicationResponseTemplateQuestionIdFkeyInverseInput
 }
 
@@ -2921,9 +2924,9 @@ type CreateApplicationResponsePayload {
   query: Query
 
   """
-  Reads a single `TemplateQuestion` that is related to this `ApplicationResponse`.
+  Reads a single `TemplateElement` that is related to this `ApplicationResponse`.
   """
-  templateQuestionByTemplateQuestionId: TemplateQuestion
+  templateElementByTemplateQuestionId: TemplateElement
 
   """
   Reads a single `Application` that is related to this `ApplicationResponse`.
@@ -3678,51 +3681,11 @@ type CreateTemplateElementPayload {
   """
   templateSectionBySectionId: TemplateSection
 
-  """
-  Reads a single `TemplateElement` that is related to this `TemplateElement`.
-  """
-  templateElementByNextElementId: TemplateElement
-
   """An edge for our `TemplateElement`. May be used by Relay 1."""
   templateElementEdge(
     """The method to use when ordering `TemplateElement`."""
     orderBy: [TemplateElementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TemplateElementsEdge
-}
-
-"""All input for the create `TemplateInformation` mutation."""
-input CreateTemplateInformationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `TemplateInformation` to be created by this mutation."""
-  templateInformation: TemplateInformationInput!
-}
-
-"""The output of our create `TemplateInformation` mutation."""
-type CreateTemplateInformationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `TemplateInformation` that was created by this mutation."""
-  templateInformation: TemplateInformation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `TemplateInformation`. May be used by Relay 1."""
-  templateInformationEdge(
-    """The method to use when ordering `TemplateInformation`."""
-    orderBy: [TemplateInformationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TemplateInformationsEdge
 }
 
 """All input for the create `Template` mutation."""
@@ -3816,41 +3779,6 @@ type CreateTemplatePermissionPayload {
     """The method to use when ordering `TemplatePermission`."""
     orderBy: [TemplatePermissionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TemplatePermissionsEdge
-}
-
-"""All input for the create `TemplateQuestion` mutation."""
-input CreateTemplateQuestionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """The `TemplateQuestion` to be created by this mutation."""
-  templateQuestion: TemplateQuestionInput!
-}
-
-"""The output of our create `TemplateQuestion` mutation."""
-type CreateTemplateQuestionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `TemplateQuestion` that was created by this mutation."""
-  templateQuestion: TemplateQuestion
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `TemplateQuestion`. May be used by Relay 1."""
-  templateQuestionEdge(
-    """The method to use when ordering `TemplateQuestion`."""
-    orderBy: [TemplateQuestionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TemplateQuestionsEdge
 }
 
 """All input for the create `TemplateReviewStage` mutation."""
@@ -4331,9 +4259,9 @@ type DeleteApplicationResponsePayload {
   query: Query
 
   """
-  Reads a single `TemplateQuestion` that is related to this `ApplicationResponse`.
+  Reads a single `TemplateElement` that is related to this `ApplicationResponse`.
   """
-  templateQuestionByTemplateQuestionId: TemplateQuestion
+  templateElementByTemplateQuestionId: TemplateElement
 
   """
   Reads a single `Application` that is related to this `ApplicationResponse`.
@@ -5332,64 +5260,11 @@ type DeleteTemplateElementPayload {
   """
   templateSectionBySectionId: TemplateSection
 
-  """
-  Reads a single `TemplateElement` that is related to this `TemplateElement`.
-  """
-  templateElementByNextElementId: TemplateElement
-
   """An edge for our `TemplateElement`. May be used by Relay 1."""
   templateElementEdge(
     """The method to use when ordering `TemplateElement`."""
     orderBy: [TemplateElementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TemplateElementsEdge
-}
-
-"""All input for the `deleteTemplateInformationById` mutation."""
-input DeleteTemplateInformationByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: Int!
-}
-
-"""All input for the `deleteTemplateInformation` mutation."""
-input DeleteTemplateInformationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `TemplateInformation` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""The output of our delete `TemplateInformation` mutation."""
-type DeleteTemplateInformationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `TemplateInformation` that was deleted by this mutation."""
-  templateInformation: TemplateInformation
-  deletedTemplateInformationId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `TemplateInformation`. May be used by Relay 1."""
-  templateInformationEdge(
-    """The method to use when ordering `TemplateInformation`."""
-    orderBy: [TemplateInformationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TemplateInformationsEdge
 }
 
 """All input for the `deleteTemplate` mutation."""
@@ -5499,54 +5374,6 @@ type DeleteTemplatePermissionPayload {
     """The method to use when ordering `TemplatePermission`."""
     orderBy: [TemplatePermissionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TemplatePermissionsEdge
-}
-
-"""All input for the `deleteTemplateQuestionById` mutation."""
-input DeleteTemplateQuestionByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-  id: Int!
-}
-
-"""All input for the `deleteTemplateQuestion` mutation."""
-input DeleteTemplateQuestionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `TemplateQuestion` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""The output of our delete `TemplateQuestion` mutation."""
-type DeleteTemplateQuestionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `TemplateQuestion` that was deleted by this mutation."""
-  templateQuestion: TemplateQuestion
-  deletedTemplateQuestionId: ID
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `TemplateQuestion`. May be used by Relay 1."""
-  templateQuestionEdge(
-    """The method to use when ordering `TemplateQuestion`."""
-    orderBy: [TemplateQuestionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TemplateQuestionsEdge
 }
 
 """All input for the `deleteTemplateReviewStageById` mutation."""
@@ -6207,7 +6034,7 @@ input FileApplicationResponseIdFkeyApplicationResponseCreateInput {
   applicationId: Int
   value: JSON
   timeCreated: Datetime
-  templateQuestionToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
+  templateElementToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
   applicationToApplicationId: ApplicationResponseApplicationIdFkeyInput
   reviewResponsesUsingId: ReviewResponseApplicationResponseIdFkeyInverseInput
   filesUsingId: FileApplicationResponseIdFkeyInverseInput
@@ -6832,14 +6659,6 @@ type Mutation {
     input: CreateTemplateElementInput!
   ): CreateTemplateElementPayload
 
-  """Creates a single `TemplateInformation`."""
-  createTemplateInformation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTemplateInformationInput!
-  ): CreateTemplateInformationPayload
-
   """Creates a single `TemplatePermission`."""
   createTemplatePermission(
     """
@@ -6847,14 +6666,6 @@ type Mutation {
     """
     input: CreateTemplatePermissionInput!
   ): CreateTemplatePermissionPayload
-
-  """Creates a single `TemplateQuestion`."""
-  createTemplateQuestion(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: CreateTemplateQuestionInput!
-  ): CreateTemplateQuestionPayload
 
   """Creates a single `TemplateReviewStage`."""
   createTemplateReviewStage(
@@ -7329,24 +7140,6 @@ type Mutation {
   ): UpdateTemplateElementPayload
 
   """
-  Updates a single `TemplateInformation` using its globally unique id and a patch.
-  """
-  updateTemplateInformation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTemplateInformationInput!
-  ): UpdateTemplateInformationPayload
-
-  """Updates a single `TemplateInformation` using a unique key and a patch."""
-  updateTemplateInformationById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTemplateInformationByIdInput!
-  ): UpdateTemplateInformationPayload
-
-  """
   Updates a single `TemplatePermission` using its globally unique id and a patch.
   """
   updateTemplatePermission(
@@ -7363,24 +7156,6 @@ type Mutation {
     """
     input: UpdateTemplatePermissionByIdInput!
   ): UpdateTemplatePermissionPayload
-
-  """
-  Updates a single `TemplateQuestion` using its globally unique id and a patch.
-  """
-  updateTemplateQuestion(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTemplateQuestionInput!
-  ): UpdateTemplateQuestionPayload
-
-  """Updates a single `TemplateQuestion` using a unique key and a patch."""
-  updateTemplateQuestionById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: UpdateTemplateQuestionByIdInput!
-  ): UpdateTemplateQuestionPayload
 
   """
   Updates a single `TemplateReviewStage` using its globally unique id and a patch.
@@ -7882,22 +7657,6 @@ type Mutation {
     input: DeleteTemplateElementByIdInput!
   ): DeleteTemplateElementPayload
 
-  """Deletes a single `TemplateInformation` using its globally unique id."""
-  deleteTemplateInformation(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTemplateInformationInput!
-  ): DeleteTemplateInformationPayload
-
-  """Deletes a single `TemplateInformation` using a unique key."""
-  deleteTemplateInformationById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTemplateInformationByIdInput!
-  ): DeleteTemplateInformationPayload
-
   """Deletes a single `TemplatePermission` using its globally unique id."""
   deleteTemplatePermission(
     """
@@ -7913,22 +7672,6 @@ type Mutation {
     """
     input: DeleteTemplatePermissionByIdInput!
   ): DeleteTemplatePermissionPayload
-
-  """Deletes a single `TemplateQuestion` using its globally unique id."""
-  deleteTemplateQuestion(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTemplateQuestionInput!
-  ): DeleteTemplateQuestionPayload
-
-  """Deletes a single `TemplateQuestion` using a unique key."""
-  deleteTemplateQuestionById(
-    """
-    The exclusive input argument for this mutation. An object type, make sure to see documentation for this object’s fields.
-    """
-    input: DeleteTemplateQuestionByIdInput!
-  ): DeleteTemplateQuestionPayload
 
   """Deletes a single `TemplateReviewStage` using its globally unique id."""
   deleteTemplateReviewStage(
@@ -10578,35 +10321,6 @@ type Query implements Node {
     condition: TemplateElementCondition
   ): TemplateElementsConnection
 
-  """Reads and enables pagination through a set of `TemplateInformation`."""
-  allTemplateInformations(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `TemplateInformation`."""
-    orderBy: [TemplateInformationsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TemplateInformationCondition
-  ): TemplateInformationsConnection
-
   """Reads and enables pagination through a set of `TemplatePermission`."""
   allTemplatePermissions(
     """Only read the first `n` values of the set."""
@@ -10635,35 +10349,6 @@ type Query implements Node {
     """
     condition: TemplatePermissionCondition
   ): TemplatePermissionsConnection
-
-  """Reads and enables pagination through a set of `TemplateQuestion`."""
-  allTemplateQuestions(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `TemplateQuestion`."""
-    orderBy: [TemplateQuestionsOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: TemplateQuestionCondition
-  ): TemplateQuestionsConnection
 
   """Reads and enables pagination through a set of `TemplateReviewStage`."""
   allTemplateReviewStages(
@@ -10890,9 +10575,7 @@ type Query implements Node {
   templateById(id: Int!): Template
   templateActionById(id: Int!): TemplateAction
   templateElementById(id: Int!): TemplateElement
-  templateInformationById(id: Int!): TemplateInformation
   templatePermissionById(id: Int!): TemplatePermission
-  templateQuestionById(id: Int!): TemplateQuestion
   templateReviewStageById(id: Int!): TemplateReviewStage
   templateSectionById(id: Int!): TemplateSection
   templateStageById(id: Int!): TemplateStage
@@ -11111,14 +10794,6 @@ type Query implements Node {
     nodeId: ID!
   ): TemplateElement
 
-  """Reads a single `TemplateInformation` using its globally unique `ID`."""
-  templateInformation(
-    """
-    The globally unique `ID` to be used in selecting a single `TemplateInformation`.
-    """
-    nodeId: ID!
-  ): TemplateInformation
-
   """Reads a single `TemplatePermission` using its globally unique `ID`."""
   templatePermission(
     """
@@ -11126,14 +10801,6 @@ type Query implements Node {
     """
     nodeId: ID!
   ): TemplatePermission
-
-  """Reads a single `TemplateQuestion` using its globally unique `ID`."""
-  templateQuestion(
-    """
-    The globally unique `ID` to be used in selecting a single `TemplateQuestion`.
-    """
-    nodeId: ID!
-  ): TemplateQuestion
 
   """Reads a single `TemplateReviewStage` using its globally unique `ID`."""
   templateReviewStage(
@@ -11568,7 +11235,7 @@ input ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput {
   applicationId: Int
   value: JSON
   timeCreated: Datetime
-  templateQuestionToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
+  templateElementToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
   applicationToApplicationId: ApplicationResponseApplicationIdFkeyInput
   reviewResponsesUsingId: ReviewResponseApplicationResponseIdFkeyInverseInput
   filesUsingId: FileApplicationResponseIdFkeyInverseInput
@@ -14336,24 +14003,25 @@ type TemplateElement implements Node {
   nodeId: ID!
   id: Int!
   sectionId: Int
-  nextElementId: Int
   code: String!
+  nextElementCode: String
   title: String
+  category: TemplateElementCategory
   visibilityCondition: JSON
   elementTypePluginCode: String
+  isRequired: Boolean
+  isEditable: Boolean
+  parameters: JSON
+  defaultValue: JSON
+  validation: JSON
 
   """
   Reads a single `TemplateSection` that is related to this `TemplateElement`.
   """
   templateSectionBySectionId: TemplateSection
 
-  """
-  Reads a single `TemplateElement` that is related to this `TemplateElement`.
-  """
-  templateElementByNextElementId: TemplateElement
-
-  """Reads and enables pagination through a set of `TemplateElement`."""
-  templateElementsByNextElementId(
+  """Reads and enables pagination through a set of `ApplicationResponse`."""
+  applicationResponsesByTemplateQuestionId(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -14372,14 +14040,14 @@ type TemplateElement implements Node {
     """Read all values in the set after (below) this cursor."""
     after: Cursor
 
-    """The method to use when ordering `TemplateElement`."""
-    orderBy: [TemplateElementsOrderBy!] = [PRIMARY_KEY_ASC]
+    """The method to use when ordering `ApplicationResponse`."""
+    orderBy: [ApplicationResponsesOrderBy!] = [PRIMARY_KEY_ASC]
 
     """
     A condition to be used in determining which values should be returned by the collection.
     """
-    condition: TemplateElementCondition
-  ): TemplateElementsConnection!
+    condition: ApplicationResponseCondition
+  ): ApplicationResponsesConnection!
 }
 
 enum TemplateElementCategory {
@@ -14398,85 +14066,57 @@ input TemplateElementCondition {
   """Checks for equality with the object’s `sectionId` field."""
   sectionId: Int
 
-  """Checks for equality with the object’s `nextElementId` field."""
-  nextElementId: Int
-
   """Checks for equality with the object’s `code` field."""
   code: String
 
+  """Checks for equality with the object’s `nextElementCode` field."""
+  nextElementCode: String
+
   """Checks for equality with the object’s `title` field."""
   title: String
+
+  """Checks for equality with the object’s `category` field."""
+  category: TemplateElementCategory
 
   """Checks for equality with the object’s `visibilityCondition` field."""
   visibilityCondition: JSON
 
   """Checks for equality with the object’s `elementTypePluginCode` field."""
   elementTypePluginCode: String
+
+  """Checks for equality with the object’s `isRequired` field."""
+  isRequired: Boolean
+
+  """Checks for equality with the object’s `isEditable` field."""
+  isEditable: Boolean
+
+  """Checks for equality with the object’s `parameters` field."""
+  parameters: JSON
+
+  """Checks for equality with the object’s `defaultValue` field."""
+  defaultValue: JSON
+
+  """Checks for equality with the object’s `validation` field."""
+  validation: JSON
 }
 
 """An input for mutations affecting `TemplateElement`"""
 input TemplateElementInput {
   id: Int
   sectionId: Int
-  nextElementId: Int
   code: String!
+  nextElementCode: String
   title: String
+  category: TemplateElementCategory
   visibilityCondition: JSON
   elementTypePluginCode: String
+  isRequired: Boolean
+  isEditable: Boolean
+  parameters: JSON
+  defaultValue: JSON
+  validation: JSON
   templateSectionToSectionId: TemplateElementSectionIdFkeyInput
-  templateElementToNextElementId: TemplateElementNextElementIdFkeyInput
-}
-
-"""
-Input for the nested mutation of `templateElement` in the `TemplateElementInput` mutation.
-"""
-input TemplateElementNextElementIdFkeyInput {
-  """
-  The primary key(s) for `templateElement` for the far side of the relationship.
-  """
-  connectById: TemplateElementTemplateElementPkeyConnect
-
-  """
-  The primary key(s) for `templateElement` for the far side of the relationship.
-  """
-  connectByNodeId: TemplateElementNodeIdConnect
-
-  """
-  The primary key(s) for `templateElement` for the far side of the relationship.
-  """
-  deleteById: TemplateElementTemplateElementPkeyDelete
-
-  """
-  The primary key(s) for `templateElement` for the far side of the relationship.
-  """
-  deleteByNodeId: TemplateElementNodeIdDelete
-
-  """
-  The primary key(s) and patch data for `templateElement` for the far side of the relationship.
-  """
-  updateById: TemplateElementOnTemplateElementForTemplateElementNextElementIdFkeyUsingTemplateElementPkeyUpdate
-
-  """
-  The primary key(s) and patch data for `templateElement` for the far side of the relationship.
-  """
-  updateByNodeId: TemplateElementOnTemplateElementForTemplateElementNextElementIdFkeyNodeIdUpdate
-
-  """
-  A `TemplateElementInput` object that will be created and connected to this object.
-  """
-  create: TemplateElementNextElementIdFkeyTemplateElementCreateInput
-}
-
-"""The `templateElement` to be created by this mutation."""
-input TemplateElementNextElementIdFkeyTemplateElementCreateInput {
-  id: Int
-  sectionId: Int
-  code: String!
-  title: String
-  visibilityCondition: JSON
-  elementTypePluginCode: String
-  templateSectionToSectionId: TemplateElementSectionIdFkeyInput
-  templateElementToNextElementId: TemplateElementNextElementIdFkeyInput
+  applicationResponsesUsingId: ApplicationResponseTemplateQuestionIdFkeyInverseInput
 }
 
 """The globally unique `ID` look up for the row to connect."""
@@ -14496,24 +14136,24 @@ input TemplateElementNodeIdDelete {
 }
 
 """The globally unique `ID` look up for the row to update."""
-input TemplateElementOnTemplateElementForTemplateElementNextElementIdFkeyNodeIdUpdate {
+input TemplateElementOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyNodeIdUpdate {
   """
-  The globally unique `ID` which identifies a single `templateElement` to be connected.
+  The globally unique `ID` which identifies a single `applicationResponse` to be connected.
   """
   nodeId: ID!
 
   """
-  An object where the defined keys will be set on the `templateElement` being updated.
+  An object where the defined keys will be set on the `applicationResponse` being updated.
   """
-  templateElementPatch: TemplateElementPatch!
+  applicationResponsePatch: ApplicationResponsePatch!
 }
 
 """The fields on `templateElement` to look up the row to update."""
-input TemplateElementOnTemplateElementForTemplateElementNextElementIdFkeyUsingTemplateElementPkeyUpdate {
+input TemplateElementOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyUsingTemplateElementPkeyUpdate {
   """
   An object where the defined keys will be set on the `templateElement` being updated.
   """
-  templateElementPatch: updateTemplateElementOnTemplateElementForTemplateElementNextElementIdFkeyPatch!
+  templateElementPatch: updateTemplateElementOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyPatch!
   id: Int!
 }
 
@@ -14545,13 +14185,19 @@ Represents an update to a `TemplateElement`. Fields that are set will be updated
 input TemplateElementPatch {
   id: Int
   sectionId: Int
-  nextElementId: Int
   code: String
+  nextElementCode: String
   title: String
+  category: TemplateElementCategory
   visibilityCondition: JSON
   elementTypePluginCode: String
+  isRequired: Boolean
+  isEditable: Boolean
+  parameters: JSON
+  defaultValue: JSON
+  validation: JSON
   templateSectionToSectionId: TemplateElementSectionIdFkeyInput
-  templateElementToNextElementId: TemplateElementNextElementIdFkeyInput
+  applicationResponsesUsingId: ApplicationResponseTemplateQuestionIdFkeyInverseInput
 }
 
 """A connection to a list of `TemplateElement` values."""
@@ -14661,13 +14307,19 @@ input TemplateElementSectionIdFkeyInverseInput {
 """The `templateElement` to be created by this mutation."""
 input TemplateElementSectionIdFkeyTemplateElementCreateInput {
   id: Int
-  nextElementId: Int
   code: String!
+  nextElementCode: String
   title: String
+  category: TemplateElementCategory
   visibilityCondition: JSON
   elementTypePluginCode: String
+  isRequired: Boolean
+  isEditable: Boolean
+  parameters: JSON
+  defaultValue: JSON
+  validation: JSON
   templateSectionToSectionId: TemplateElementSectionIdFkeyInput
-  templateElementToNextElementId: TemplateElementNextElementIdFkeyInput
+  applicationResponsesUsingId: ApplicationResponseTemplateQuestionIdFkeyInverseInput
 }
 
 """The `templateSection` to be created by this mutation."""
@@ -14698,16 +14350,28 @@ enum TemplateElementsOrderBy {
   ID_DESC
   SECTION_ID_ASC
   SECTION_ID_DESC
-  NEXT_ELEMENT_ID_ASC
-  NEXT_ELEMENT_ID_DESC
   CODE_ASC
   CODE_DESC
+  NEXT_ELEMENT_CODE_ASC
+  NEXT_ELEMENT_CODE_DESC
   TITLE_ASC
   TITLE_DESC
+  CATEGORY_ASC
+  CATEGORY_DESC
   VISIBILITY_CONDITION_ASC
   VISIBILITY_CONDITION_DESC
   ELEMENT_TYPE_PLUGIN_CODE_ASC
   ELEMENT_TYPE_PLUGIN_CODE_DESC
+  IS_REQUIRED_ASC
+  IS_REQUIRED_DESC
+  IS_EDITABLE_ASC
+  IS_EDITABLE_DESC
+  PARAMETERS_ASC
+  PARAMETERS_DESC
+  DEFAULT_VALUE_ASC
+  DEFAULT_VALUE_DESC
+  VALIDATION_ASC
+  VALIDATION_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -14720,128 +14384,6 @@ input TemplateElementTemplateElementPkeyConnect {
 """The fields on `templateElement` to look up the row to delete."""
 input TemplateElementTemplateElementPkeyDelete {
   id: Int!
-}
-
-type TemplateInformation implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  id: Int!
-  sectionId: Int
-  nextElementId: Int
-  code: String!
-  title: String
-  visibilityCondition: JSON
-  elementTypePluginCode: String
-  parameters: JSON
-}
-
-"""
-A condition to be used against `TemplateInformation` object types. All fields
-are tested for equality and combined with a logical ‘and.’
-"""
-input TemplateInformationCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `sectionId` field."""
-  sectionId: Int
-
-  """Checks for equality with the object’s `nextElementId` field."""
-  nextElementId: Int
-
-  """Checks for equality with the object’s `code` field."""
-  code: String
-
-  """Checks for equality with the object’s `title` field."""
-  title: String
-
-  """Checks for equality with the object’s `visibilityCondition` field."""
-  visibilityCondition: JSON
-
-  """Checks for equality with the object’s `elementTypePluginCode` field."""
-  elementTypePluginCode: String
-
-  """Checks for equality with the object’s `parameters` field."""
-  parameters: JSON
-}
-
-"""An input for mutations affecting `TemplateInformation`"""
-input TemplateInformationInput {
-  id: Int
-  sectionId: Int
-  nextElementId: Int
-  code: String!
-  title: String
-  visibilityCondition: JSON
-  elementTypePluginCode: String
-  parameters: JSON
-}
-
-"""
-Represents an update to a `TemplateInformation`. Fields that are set will be updated.
-"""
-input TemplateInformationPatch {
-  id: Int
-  sectionId: Int
-  nextElementId: Int
-  code: String
-  title: String
-  visibilityCondition: JSON
-  elementTypePluginCode: String
-  parameters: JSON
-}
-
-"""A connection to a list of `TemplateInformation` values."""
-type TemplateInformationsConnection {
-  """A list of `TemplateInformation` objects."""
-  nodes: [TemplateInformation]!
-
-  """
-  A list of edges which contains the `TemplateInformation` and cursor to aid in pagination.
-  """
-  edges: [TemplateInformationsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `TemplateInformation` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `TemplateInformation` edge in the connection."""
-type TemplateInformationsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `TemplateInformation` at the end of the edge."""
-  node: TemplateInformation
-}
-
-"""Methods to use when ordering `TemplateInformation`."""
-enum TemplateInformationsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  SECTION_ID_ASC
-  SECTION_ID_DESC
-  NEXT_ELEMENT_ID_ASC
-  NEXT_ELEMENT_ID_DESC
-  CODE_ASC
-  CODE_DESC
-  TITLE_ASC
-  TITLE_DESC
-  VISIBILITY_CONDITION_ASC
-  VISIBILITY_CONDITION_DESC
-  ELEMENT_TYPE_PLUGIN_CODE_ASC
-  ELEMENT_TYPE_PLUGIN_CODE_DESC
-  PARAMETERS_ASC
-  PARAMETERS_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
 }
 
 """An input for mutations affecting `Template`"""
@@ -15712,231 +15254,6 @@ input TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput {
   templatePermissionsUsingId: TemplatePermissionTemplateSectionIdFkeyInverseInput
   templateElementsUsingId: TemplateElementSectionIdFkeyInverseInput
   applicationSectionsUsingId: ApplicationSectionTemplateSectionIdFkeyInverseInput
-}
-
-type TemplateQuestion implements Node {
-  """
-  A globally unique identifier. Can be used in various places throughout the system to identify this single value.
-  """
-  nodeId: ID!
-  id: Int!
-  sectionId: Int
-  nextElementId: Int
-  code: String!
-  title: String
-  visibilityCondition: JSON
-  elementTypePluginCode: String
-  isRequired: Boolean
-  isEditable: Boolean
-  parameters: JSON
-  defaultValue: JSON
-
-  """Reads and enables pagination through a set of `ApplicationResponse`."""
-  applicationResponsesByTemplateQuestionId(
-    """Only read the first `n` values of the set."""
-    first: Int
-
-    """Only read the last `n` values of the set."""
-    last: Int
-
-    """
-    Skip the first `n` values from our `after` cursor, an alternative to cursor
-    based pagination. May not be used with `last`.
-    """
-    offset: Int
-
-    """Read all values in the set before (above) this cursor."""
-    before: Cursor
-
-    """Read all values in the set after (below) this cursor."""
-    after: Cursor
-
-    """The method to use when ordering `ApplicationResponse`."""
-    orderBy: [ApplicationResponsesOrderBy!] = [PRIMARY_KEY_ASC]
-
-    """
-    A condition to be used in determining which values should be returned by the collection.
-    """
-    condition: ApplicationResponseCondition
-  ): ApplicationResponsesConnection!
-}
-
-"""
-A condition to be used against `TemplateQuestion` object types. All fields are
-tested for equality and combined with a logical ‘and.’
-"""
-input TemplateQuestionCondition {
-  """Checks for equality with the object’s `id` field."""
-  id: Int
-
-  """Checks for equality with the object’s `sectionId` field."""
-  sectionId: Int
-
-  """Checks for equality with the object’s `nextElementId` field."""
-  nextElementId: Int
-
-  """Checks for equality with the object’s `code` field."""
-  code: String
-
-  """Checks for equality with the object’s `title` field."""
-  title: String
-
-  """Checks for equality with the object’s `visibilityCondition` field."""
-  visibilityCondition: JSON
-
-  """Checks for equality with the object’s `elementTypePluginCode` field."""
-  elementTypePluginCode: String
-
-  """Checks for equality with the object’s `isRequired` field."""
-  isRequired: Boolean
-
-  """Checks for equality with the object’s `isEditable` field."""
-  isEditable: Boolean
-
-  """Checks for equality with the object’s `parameters` field."""
-  parameters: JSON
-
-  """Checks for equality with the object’s `defaultValue` field."""
-  defaultValue: JSON
-}
-
-"""An input for mutations affecting `TemplateQuestion`"""
-input TemplateQuestionInput {
-  id: Int
-  sectionId: Int
-  nextElementId: Int
-  code: String!
-  title: String
-  visibilityCondition: JSON
-  elementTypePluginCode: String
-  isRequired: Boolean
-  isEditable: Boolean
-  parameters: JSON
-  defaultValue: JSON
-  applicationResponsesUsingId: ApplicationResponseTemplateQuestionIdFkeyInverseInput
-}
-
-"""The globally unique `ID` look up for the row to connect."""
-input TemplateQuestionNodeIdConnect {
-  """
-  The globally unique `ID` which identifies a single `templateQuestion` to be connected.
-  """
-  nodeId: ID!
-}
-
-"""The globally unique `ID` look up for the row to delete."""
-input TemplateQuestionNodeIdDelete {
-  """
-  The globally unique `ID` which identifies a single `templateQuestion` to be deleted.
-  """
-  nodeId: ID!
-}
-
-"""The globally unique `ID` look up for the row to update."""
-input TemplateQuestionOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyNodeIdUpdate {
-  """
-  The globally unique `ID` which identifies a single `applicationResponse` to be connected.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `applicationResponse` being updated.
-  """
-  applicationResponsePatch: ApplicationResponsePatch!
-}
-
-"""The fields on `templateQuestion` to look up the row to update."""
-input TemplateQuestionOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyUsingTemplateQuestionPkeyUpdate {
-  """
-  An object where the defined keys will be set on the `templateQuestion` being updated.
-  """
-  templateQuestionPatch: updateTemplateQuestionOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyPatch!
-  id: Int!
-}
-
-"""
-Represents an update to a `TemplateQuestion`. Fields that are set will be updated.
-"""
-input TemplateQuestionPatch {
-  id: Int
-  sectionId: Int
-  nextElementId: Int
-  code: String
-  title: String
-  visibilityCondition: JSON
-  elementTypePluginCode: String
-  isRequired: Boolean
-  isEditable: Boolean
-  parameters: JSON
-  defaultValue: JSON
-  applicationResponsesUsingId: ApplicationResponseTemplateQuestionIdFkeyInverseInput
-}
-
-"""A connection to a list of `TemplateQuestion` values."""
-type TemplateQuestionsConnection {
-  """A list of `TemplateQuestion` objects."""
-  nodes: [TemplateQuestion]!
-
-  """
-  A list of edges which contains the `TemplateQuestion` and cursor to aid in pagination.
-  """
-  edges: [TemplateQuestionsEdge!]!
-
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """
-  The count of *all* `TemplateQuestion` you could get from the connection.
-  """
-  totalCount: Int!
-}
-
-"""A `TemplateQuestion` edge in the connection."""
-type TemplateQuestionsEdge {
-  """A cursor for use in pagination."""
-  cursor: Cursor
-
-  """The `TemplateQuestion` at the end of the edge."""
-  node: TemplateQuestion
-}
-
-"""Methods to use when ordering `TemplateQuestion`."""
-enum TemplateQuestionsOrderBy {
-  NATURAL
-  ID_ASC
-  ID_DESC
-  SECTION_ID_ASC
-  SECTION_ID_DESC
-  NEXT_ELEMENT_ID_ASC
-  NEXT_ELEMENT_ID_DESC
-  CODE_ASC
-  CODE_DESC
-  TITLE_ASC
-  TITLE_DESC
-  VISIBILITY_CONDITION_ASC
-  VISIBILITY_CONDITION_DESC
-  ELEMENT_TYPE_PLUGIN_CODE_ASC
-  ELEMENT_TYPE_PLUGIN_CODE_DESC
-  IS_REQUIRED_ASC
-  IS_REQUIRED_DESC
-  IS_EDITABLE_ASC
-  IS_EDITABLE_DESC
-  PARAMETERS_ASC
-  PARAMETERS_DESC
-  DEFAULT_VALUE_ASC
-  DEFAULT_VALUE_DESC
-  PRIMARY_KEY_ASC
-  PRIMARY_KEY_DESC
-}
-
-"""The fields on `templateQuestion` to look up the row to connect."""
-input TemplateQuestionTemplateQuestionPkeyConnect {
-  id: Int!
-}
-
-"""The fields on `templateQuestion` to look up the row to delete."""
-input TemplateQuestionTemplateQuestionPkeyDelete {
-  id: Int!
 }
 
 type TemplateReviewStage implements Node {
@@ -18113,7 +17430,7 @@ input updateApplicationResponseOnApplicationResponseForApplicationResponseApplic
   templateQuestionId: Int
   value: JSON
   timeCreated: Datetime
-  templateQuestionToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
+  templateElementToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
   applicationToApplicationId: ApplicationResponseApplicationIdFkeyInput
   reviewResponsesUsingId: ReviewResponseApplicationResponseIdFkeyInverseInput
   filesUsingId: FileApplicationResponseIdFkeyInverseInput
@@ -18127,7 +17444,7 @@ input updateApplicationResponseOnApplicationResponseForApplicationResponseTempla
   applicationId: Int
   value: JSON
   timeCreated: Datetime
-  templateQuestionToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
+  templateElementToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
   applicationToApplicationId: ApplicationResponseApplicationIdFkeyInput
   reviewResponsesUsingId: ReviewResponseApplicationResponseIdFkeyInverseInput
   filesUsingId: FileApplicationResponseIdFkeyInverseInput
@@ -18142,7 +17459,7 @@ input updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch {
   applicationId: Int
   value: JSON
   timeCreated: Datetime
-  templateQuestionToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
+  templateElementToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
   applicationToApplicationId: ApplicationResponseApplicationIdFkeyInput
   reviewResponsesUsingId: ReviewResponseApplicationResponseIdFkeyInverseInput
   filesUsingId: FileApplicationResponseIdFkeyInverseInput
@@ -18157,7 +17474,7 @@ input updateApplicationResponseOnReviewResponseForReviewResponseApplicationRespo
   applicationId: Int
   value: JSON
   timeCreated: Datetime
-  templateQuestionToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
+  templateElementToTemplateQuestionId: ApplicationResponseTemplateQuestionIdFkeyInput
   applicationToApplicationId: ApplicationResponseApplicationIdFkeyInput
   reviewResponsesUsingId: ReviewResponseApplicationResponseIdFkeyInverseInput
   filesUsingId: FileApplicationResponseIdFkeyInverseInput
@@ -18180,9 +17497,9 @@ type UpdateApplicationResponsePayload {
   query: Query
 
   """
-  Reads a single `TemplateQuestion` that is related to this `ApplicationResponse`.
+  Reads a single `TemplateElement` that is related to this `ApplicationResponse`.
   """
-  templateQuestionByTemplateQuestionId: TemplateQuestion
+  templateElementByTemplateQuestionId: TemplateElement
 
   """
   Reads a single `Application` that is related to this `ApplicationResponse`.
@@ -19920,15 +19237,22 @@ input UpdateTemplateElementInput {
 """
 An object where the defined keys will be set on the `templateElement` being updated.
 """
-input updateTemplateElementOnTemplateElementForTemplateElementNextElementIdFkeyPatch {
+input updateTemplateElementOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyPatch {
   id: Int
   sectionId: Int
   code: String
+  nextElementCode: String
   title: String
+  category: TemplateElementCategory
   visibilityCondition: JSON
   elementTypePluginCode: String
+  isRequired: Boolean
+  isEditable: Boolean
+  parameters: JSON
+  defaultValue: JSON
+  validation: JSON
   templateSectionToSectionId: TemplateElementSectionIdFkeyInput
-  templateElementToNextElementId: TemplateElementNextElementIdFkeyInput
+  applicationResponsesUsingId: ApplicationResponseTemplateQuestionIdFkeyInverseInput
 }
 
 """
@@ -19936,13 +19260,19 @@ An object where the defined keys will be set on the `templateElement` being upda
 """
 input updateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch {
   id: Int
-  nextElementId: Int
   code: String
+  nextElementCode: String
   title: String
+  category: TemplateElementCategory
   visibilityCondition: JSON
   elementTypePluginCode: String
+  isRequired: Boolean
+  isEditable: Boolean
+  parameters: JSON
+  defaultValue: JSON
+  validation: JSON
   templateSectionToSectionId: TemplateElementSectionIdFkeyInput
-  templateElementToNextElementId: TemplateElementNextElementIdFkeyInput
+  applicationResponsesUsingId: ApplicationResponseTemplateQuestionIdFkeyInverseInput
 }
 
 """The output of our update `TemplateElement` mutation."""
@@ -19966,73 +19296,11 @@ type UpdateTemplateElementPayload {
   """
   templateSectionBySectionId: TemplateSection
 
-  """
-  Reads a single `TemplateElement` that is related to this `TemplateElement`.
-  """
-  templateElementByNextElementId: TemplateElement
-
   """An edge for our `TemplateElement`. May be used by Relay 1."""
   templateElementEdge(
     """The method to use when ordering `TemplateElement`."""
     orderBy: [TemplateElementsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TemplateElementsEdge
-}
-
-"""All input for the `updateTemplateInformationById` mutation."""
-input UpdateTemplateInformationByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `TemplateInformation` being updated.
-  """
-  templateInformationPatch: TemplateInformationPatch!
-  id: Int!
-}
-
-"""All input for the `updateTemplateInformation` mutation."""
-input UpdateTemplateInformationInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `TemplateInformation` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `TemplateInformation` being updated.
-  """
-  templateInformationPatch: TemplateInformationPatch!
-}
-
-"""The output of our update `TemplateInformation` mutation."""
-type UpdateTemplateInformationPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `TemplateInformation` that was updated by this mutation."""
-  templateInformation: TemplateInformation
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `TemplateInformation`. May be used by Relay 1."""
-  templateInformationEdge(
-    """The method to use when ordering `TemplateInformation`."""
-    orderBy: [TemplateInformationsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TemplateInformationsEdge
 }
 
 """All input for the `updateTemplate` mutation."""
@@ -20316,81 +19584,6 @@ type UpdateTemplatePermissionPayload {
     """The method to use when ordering `TemplatePermission`."""
     orderBy: [TemplatePermissionsOrderBy!] = [PRIMARY_KEY_ASC]
   ): TemplatePermissionsEdge
-}
-
-"""All input for the `updateTemplateQuestionById` mutation."""
-input UpdateTemplateQuestionByIdInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  An object where the defined keys will be set on the `TemplateQuestion` being updated.
-  """
-  templateQuestionPatch: TemplateQuestionPatch!
-  id: Int!
-}
-
-"""All input for the `updateTemplateQuestion` mutation."""
-input UpdateTemplateQuestionInput {
-  """
-  An arbitrary string value with no semantic meaning. Will be included in the
-  payload verbatim. May be used to track mutations by the client.
-  """
-  clientMutationId: String
-
-  """
-  The globally unique `ID` which will identify a single `TemplateQuestion` to be updated.
-  """
-  nodeId: ID!
-
-  """
-  An object where the defined keys will be set on the `TemplateQuestion` being updated.
-  """
-  templateQuestionPatch: TemplateQuestionPatch!
-}
-
-"""
-An object where the defined keys will be set on the `templateQuestion` being updated.
-"""
-input updateTemplateQuestionOnApplicationResponseForApplicationResponseTemplateQuestionIdFkeyPatch {
-  id: Int
-  sectionId: Int
-  nextElementId: Int
-  code: String
-  title: String
-  visibilityCondition: JSON
-  elementTypePluginCode: String
-  isRequired: Boolean
-  isEditable: Boolean
-  parameters: JSON
-  defaultValue: JSON
-  applicationResponsesUsingId: ApplicationResponseTemplateQuestionIdFkeyInverseInput
-}
-
-"""The output of our update `TemplateQuestion` mutation."""
-type UpdateTemplateQuestionPayload {
-  """
-  The exact same `clientMutationId` that was provided in the mutation input,
-  unchanged and unused. May be used by a client to track mutations.
-  """
-  clientMutationId: String
-
-  """The `TemplateQuestion` that was updated by this mutation."""
-  templateQuestion: TemplateQuestion
-
-  """
-  Our root query field type. Allows us to run any query from our mutation payload.
-  """
-  query: Query
-
-  """An edge for our `TemplateQuestion`. May be used by Relay 1."""
-  templateQuestionEdge(
-    """The method to use when ordering `TemplateQuestion`."""
-    orderBy: [TemplateQuestionsOrderBy!] = [PRIMARY_KEY_ASC]
-  ): TemplateQuestionsEdge
 }
 
 """All input for the `updateTemplateReviewStageById` mutation."""

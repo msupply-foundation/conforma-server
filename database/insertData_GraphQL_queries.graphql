@@ -1,0 +1,80 @@
+mutation TemplateA_UserReg {
+  __typename
+  createTemplateVersion(
+    input: {
+      templateVersion: {
+        isCurrent: true
+        number: 1
+        timeCreated: "NOW();"
+        templatesUsingId: {
+          create: {
+            templateName: "UserRegistration"
+            code: "UserRego1"
+            templateSectionsUsingId: {
+              create: {
+                code: "S1"
+                title: "Section 1"
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "GS1"
+                      title: "Group 1"
+                      elementTypePluginCode: "group_start"
+                      visibilityCondition: "{\"value\": true}"
+                      category: INFORMATION
+                      parameters: "{}"
+                    }
+                    {
+                      code: "Q1"
+                      title: "Organisation Name"
+                      elementTypePluginCode: "short_text"
+                      visibilityCondition: "{\"value\": true}"
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: true
+                      parameters: "{\"label\":\"Unique name for company\"}"
+                    }
+                    {
+                      code: "Q2"
+                      title: "Organisation Activity"
+                      elementTypePluginCode: "drop_down"
+                      visibilityCondition: "{\"value\": true}"
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: true
+                      parameters: "{\"label\":\"Select the type of activity\",\"options\":[\"Manufacturer\", \"Importer\",\"Producer\"]}"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ) {
+    templateVersion {
+      number
+      templatesByVersionId {
+        nodes {
+          code
+          templateName
+          templateSectionsByTemplateId {
+            nodes {
+              code
+              title
+              templateElementsBySectionId {
+                nodes {
+                  code
+                  parameters
+                  title
+                  category
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

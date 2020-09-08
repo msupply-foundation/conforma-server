@@ -166,26 +166,18 @@ CREATE TABLE public.template_permission (
 CREATE TABLE public.template_element (
     id serial primary key,
     section_id integer references public.template_section(id),
-    next_element_id integer references public.template_element(id),
     code varchar NOT NULL,
+    next_element_code varchar,
     title varchar,
+    category public.template_element_category,
     visibility_condition jsonb,
-    element_type_plugin_code varchar
-);
-
-CREATE TABLE public.template_question (
-    id serial primary key,
-    is_required boolean DEFAULT true,
-    is_editable boolean DEFAULT true,
+    element_type_plugin_code varchar,
+    is_required boolean,
+    is_editable boolean,
     parameters jsonb,
     default_value jsonb,
     validation jsonb
-) inherits (public.template_element);
-
-CREATE TABLE public.template_information (
-    id serial primary key,
-    parameters jsonb
-) inherits (public.template_element);
+);
 
 
 -- Plugins for QuestionType and InfoType elements
@@ -241,7 +233,7 @@ CREATE TABLE public.application_status_history (
 
 CREATE TABLE public.application_response (
     id serial primary key,
-    template_question_id integer references public.template_question(id),
+    template_question_id integer references public.template_element(id),
     application_id integer references public.application(id),
     value jsonb,
     time_created timestamp with time zone
