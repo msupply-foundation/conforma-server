@@ -106,3 +106,4 @@ build
 
 # File storage folder
 /src/files
+database/schema.graphql
