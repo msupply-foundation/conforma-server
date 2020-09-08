@@ -178,7 +178,8 @@ CREATE TABLE public.template_question (
     is_required boolean DEFAULT true,
     is_editable boolean DEFAULT true,
     parameters jsonb,
-    default_value jsonb
+    default_value jsonb,
+    validation jsonb
 ) inherits (public.template_element);
 
 CREATE TABLE public.template_information (
