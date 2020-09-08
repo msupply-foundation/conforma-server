@@ -1,8 +1,15 @@
 {
-  "name": "irims-server-demo",
+  "name": "application-manager-server",
   "version": "1.0.0",
   "main": "server.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openmsupply/application-manager-server"
+  },
+  "engines": {
+    "node": ">=13.8.0"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.10",
     "@types/node": "^14.6.0",
