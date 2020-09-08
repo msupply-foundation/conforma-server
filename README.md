@@ -13,7 +13,7 @@ To launch Postgraphile server (in a new Terminal process):
 `yarn pg`
 
 To launch in dev mode _with_ Postgraphile server:  
-`yarn dev-pg`
+`yarn dev_pg`
 
 To build (compiles all .ts files to .js in `build` folder):  
 `yarn build`
