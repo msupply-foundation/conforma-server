@@ -1,6 +1,6 @@
 ## Home page for the **mSupply Application Manager** back-end repo.
 
-Please see [ReadMe](__README) for information about maintaining this documentation.
+Please see [ReadMe](__README.md) for information about maintaining this documentation.
 
 #### Contents
 
