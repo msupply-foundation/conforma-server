@@ -1,4 +1,4 @@
-## Home page for the **mSupply Application Manager** back-end repo.
+## Home page for **The mSupply Foundation Application Manager** server repo -- Internal Documentation.
 
 Please see [ReadMe](__README.md) for information about maintaining this documentation.
 

@@ -7,8 +7,8 @@ docs_path = "./documentation"
 output_path = "./documentation/_wiki"
 markup_formats = [".md", ".markdown"]
 media_types = [".png", ".jpg", ".gif", ".svg"]
-ignore = ["ignore"]
-ext_ignore = [".DS_Store"]
+ignore = ["ignore"]  # File or folder names to ignore
+ext_ignore = [".DS_Store"]  # File extensions to ignore
 
 
 def in_ignore_list(path, ignore_list):
