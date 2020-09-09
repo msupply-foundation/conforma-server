@@ -1,13 +1,13 @@
-NOTE: Subtree not set up yet, will wait till proper repo is made.
-
 ## Intro
 
 This documentation folder contains a clone of this project's **wiki** repo.
 
 It has been pulled into this main repo using `git subtree`, using the guide shown [here](https://gist.github.com/yukoff/5220f33123de5e7e428db63ef7025e72).
 
-If you are wanting to be able to push/pull back to the wiki repo, please run the following after clonining this project to set the wiki repo as a remote:  
-`git remote add wiki https://github.com/<user>/<repo>.wiki.git`
+More info about subtrees [here](https://www.atlassian.com/git/tutorials/git-subtree).
+
+If you are wanting to be able to push/pull back to the wiki repo, please run the following after cloning this project to set the wiki repo as a remote:  
+`git remote add wiki https://github.com/openmsupply/application-manager-server.wiki.git`
 
 To push (publish) changes from this repo to the wiki:  
 `yarn publish-docs`
