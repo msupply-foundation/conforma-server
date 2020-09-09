@@ -37,7 +37,7 @@ def file_convert_links(file):
 if not os.path.exists(output_path):
     os.makedirs(output_path)
 
-
+print("Exporting docs to wiki repo...")
 for root, dirs, files in os.walk(docs_path):
     if os.path.commonprefix([output_path, root]) == output_path or in_ignore_list(root, ignore):
         continue
