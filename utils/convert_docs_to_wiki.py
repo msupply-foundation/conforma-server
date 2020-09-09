@@ -7,7 +7,7 @@ docs_path = "./documentation"
 output_path = "./documentation/_wiki"
 markup_formats = [".md", ".markdown"]
 media_types = [".png", ".jpg", ".gif", ".svg"]
-ignore = ["ignore", "_wiki"]
+ignore = ["ignore"]
 ext_ignore = [".DS_Store"]
 
 

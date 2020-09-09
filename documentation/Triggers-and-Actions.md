@@ -1,6 +1,6 @@
 # Triggers & Actions
 
-In order to facilitate customisable events in Application Templates, there is a system of **Triggers** associated with various events that, in turn, trigger **Actions** -- "things that happen" in response to a trigger. A template will specify a set of Triggers, the Action(s) that happen in response to that trigger, the conditions (using [dynamic expression syntax](Query-Syntax)) under which the Action will run, and the parameters (again, as expressions) that will be sent to the Action at runtime.
+In order to facilitate customisable events in Application Templates, there is a system of **Triggers** associated with various events that, in turn, trigger **Actions** -- "things that happen" in response to a trigger. A template will specify a set of Triggers, the Action(s) that happen in response to that trigger, the conditions (using [dynamic expression syntax](Query-Syntax.md)) under which the Action will run, and the parameters (again, as expressions) that will be sent to the Action at runtime.
 
 Most triggers are associated with events on the main database tables (Application, Review, etc.). Specifically, there is a field on these tables called `trigger` into which the "event" (e.g. "On Application Submit") is recorded. The database listens to this field, then notifies the server, which launches the appropriate Actions, using parameters from the current conditions.
 
