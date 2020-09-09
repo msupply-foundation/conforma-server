@@ -7,13 +7,15 @@ It has been pulled into this main repo using `git subtree`, using the guide show
 More info about subtrees [here](https://www.atlassian.com/git/tutorials/git-subtree).
 
 If you are wanting to be able to push/pull back to the wiki repo, please run the following after cloning this project to set the wiki repo as a remote:  
-`git remote add wiki https://github.com/openmsupply/application-manager-server.wiki.git`
+`git remote add wiki https://github.com/openmsupply/application-manager-server.wiki.git`  
+(I think each installation needs to do this seperately, maybe someone can test and confirm?)
 
 To push (publish) changes from this repo to the wiki:  
-`yarn publish-docs`
+`yarn push_docs`
 
 To pull (update from wiki) into this repo:  
-`yarn pull-docs`
+`yarn pull_docs`  
+(Try to avoid this -- make most changes locally)
 
 ### File/Folder structure and links
 
