@@ -308,7 +308,7 @@ Tree structure:
 # Additional Comments
 
 - The `evaluateExpression` function can take either a javascript object or a stringified JSON as its argument, just in case the JSON blob is extracted from the database as a string.
-- The objectProperties operator is currently the most uncertain, as it requires local state to be passed to the `evaluateExpression` function in a specific shape. I can’t think of a better way to do this without using `eval` to convert stringified object names to variables. Suggestions welcome.
+- The `objectProperties` operator is currently the most uncertain, as it requires local state to be passed to the `evaluateExpression` function in a specific shape. I can’t think of a better way to do this without using `eval` to convert stringified object names to variables. Suggestions welcome.
 
 # To Do
 
