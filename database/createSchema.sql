@@ -120,7 +120,7 @@ CREATE TABLE public.template (
 
 CREATE TABLE public.template_stage (
     id serial primary key,
-    tamplate_id integer references public.template(id)
+    template_id integer references public.template(id)
 );
 
 CREATE TABLE public.template_section (
