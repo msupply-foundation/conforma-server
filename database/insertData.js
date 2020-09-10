@@ -276,19 +276,121 @@ const queries = [
           }
         }
       }`,
+  //   User registration application 1
+  `mutation {
+    createApplication(
+      input: {
+        application: {
+          name: "User Registration: Nicole Madruga"
+          serial: 100
+          isActive: true
+          outcome: PENDING
+          userToUserId: { connectById: { id: 2 } }
+          applicationSectionsUsingId: {
+            create: [{ templateSectionId: 1 }, { templateSectionId: 2 }]
+          }
+          applicationResponsesUsingId: {
+            create: [
+              {
+                timeCreated: "NOW()"
+                value: "{text: 'Nicole'}"
+                templateElementToTemplateQuestionId: { connectById: { id: 2 } }
+              }
+              {
+                timeCreated: "NOW()"
+                value: "{text: 'Madruga'}"
+                templateElementToTemplateQuestionId: { connectById: { id: 3 } }
+              }
+              {
+                timeCreated: "NOW()"
+                value: "{option: '1'}"
+                templateElementToTemplateQuestionId: { connectById: { id: 6 } }
+              }
+            ]
+          }
+          applicationStageHistoriesUsingId: {
+            create: [
+              {
+                stage: SCREENING
+                timeCreated: "NOW()"
+                isCurrent: false
+                applicationStatusHistoriesUsingId: {
+                  create: {
+                    status: COMPLETED
+                    timeCreated: "NOW()"
+                    isCurrent: false
+                  }
+                }
+              }
+              {
+                stage: ASSESSMENT
+                timeCreated: "NOW()"
+                isCurrent: true
+                applicationStatusHistoriesUsingId: {
+                  create: {
+                    status: SUBMITTED
+                    timeCreated: "NOW()"
+                    isCurrent: true
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      application {
+        name
+        template {
+          templateName
+        }
+        applicationResponses {
+          nodes {
+            value
+            templateQuestion {
+              title
+            }
+          }
+        }
+        applicationSections {
+          nodes {
+            templateSection {
+              title
+            }
+          }
+        }
+        applicationStageHistories {
+          nodes {
+            stage
+            isCurrent
+            applicationStatusHistories {
+              nodes {
+                isCurrent
+                status
+              }
+            }
+          }
+        }
+      }
+    }
+  }`,
 ];
 
-queries.forEach((query) => {
-  fetch(graphQLendpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
-      query: query,
-    }),
-  })
-    .then((res) => res.json())
-    .then((data) => console.log('Added to database:', JSON.stringify(data)));
-});
+const loopQueries = async () => {
+  for (let i = 0; i < queries.length; i++) {
+    const res = await fetch(graphQLendpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        query: queries[i],
+      }),
+    });
+    const data = await res.json();
+    console.log('Added to database:', JSON.stringify(data));
+  }
+};
+
+loopQueries();
