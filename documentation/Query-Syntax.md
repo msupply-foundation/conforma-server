@@ -10,10 +10,12 @@ _Run `yarn test` to see it in action -- the tests are in the `src/modules/evalua
 
 Any value that could possibly be a dynamic query should be stored in this format. This would include:
 
-- Question parameters (Option lists, Labels, Placeholder text, etc.)
-- Visibility conditions
-- Conditions in triggers
-- Validation criteria
+**Question**:
+  - Parameters (Option lists, Labels, Placeholder text, etc.)
+  - Visibility conditions
+  - Validation criteria
+**Trigger**:
+  - Conditions
 
 For more complex lookups, we would hide the complexity from the user in the Template builder, and just present a set of pre-defined “queries” in the UI, which map to a pre-written query with perhaps a selectable parameter or two. (However, we should also provide a JSON editor as an alternative if an advanced user wishes to manually create more complex queries.)
 
