@@ -1,3 +1,7 @@
+-- THIS IS NOW OBSOLETE AND REPLACED BY insertData.js WHICH USES GRAPHQL
+
+
+
 SET search_path = public;
 
 -- (Template) application types
