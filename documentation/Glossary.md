@@ -12,7 +12,7 @@ In Old IRIMS terms: PROCEDURE.
 
 **Section** — A logical sub-section of an application template. This concept is needed as reviewers can be assigned to different sections of an application based on their expertise, etc.
 
-**Page** — A visual grouping of form steps. I.e. things that will be shown together. Distinct from “Section”, as Section refers to a logical subset of the Application (with its own assignments, status, etc.) whereas “Page” is purely a visual thing. You would expect each Section to have several Pages if there are a lot of questions to answer.
+**Page** — A visual grouping of form steps -- i.e. things that will be shown together. Distinct from “Section”, as Section refers to a logical subset of the Application (with its own assignments, status, etc.) whereas “Page” is purely a visual thing. You would expect each Section to have several Pages if there are a lot of questions to answer.
 
 **Group** — Questions can be “grouped” (or can be left ungrouped). Grouped questions share a visual “grouping”, and can be flowed horizontally within the flex box (if space permits), and can also share a common “visibility_condition”.
 
