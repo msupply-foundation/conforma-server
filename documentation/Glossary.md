@@ -22,7 +22,7 @@ In Old IRIMS terms: PROCEDURE.
 
 **Stage** — A defined stage an application (or Section) must go through. Basic Drug registration would have the stages “Screening”, “Assessment” and “Final Approval”, for example.
 
-**Status** — The “state” of an application at any given time, which would affect what can be done with it. E.g. “Submitted” -- would mean it can be assigned, but not edited by the applicant. “Under Review” would mean it can have Step approvals and comments added by a Reviewer. Final Status is “Complete”, which (probably) puts it into a read-only state.
+**Status** — The “state” of an application at any given time, which would affect what can be done with it. E.g. “Submitted” -- would mean it can be assigned to be reviewed, but not edited by the applicant. “Under Review” would mean it can have response approvals and comments added by a Reviewer. Final Status is “Complete”, which (probably) puts it into a read-only state.
 
 **Outcome** — The final result of an application. Will most likely be either “Approved” or “Rejected” once it reaches the “Complete” status, and before that would be “Pending” (or perhaps Null).
 
