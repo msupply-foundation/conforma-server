@@ -28,7 +28,7 @@ In Old IRIMS terms: PROCEDURE.
 
 **Trigger** — A type of Event listener that responds to changes in the database or environment to launch “Actions”. Examples might be “OnSubmit”, “OnReviewSubmit”, “OnApproval”, etc. Can be in response to user-initiated events (like those examples) or time-based, such as schedulers (e.g. if an application must be responded to within a certain time limit, an Action would be Triggered when that time is reached)
 
-**Action** — something that happens in response to a “trigger condition” (e.g. OnSubmit, OnApproval, etc.) Can be simple notifications (“Send email”) or more complex, including triggering other actions, or changing the Stage or Status of an application. Additional actions can be added via plugins. (See [Triggers & Actions](Triggers-and-Actions.md))
+**Action** — something that happens in response to a “trigger condition” (e.g. OnSubmit, OnApproval, etc.) Can be simple notifications (“Send email”) or more complex, including triggering other actions, or changing the Stage or Status of an application. Actions are defined in plugins, so more can be written and added as needed. (See [Triggers & Actions](Triggers-and-Actions.md))
 
 ### Permissions
 
