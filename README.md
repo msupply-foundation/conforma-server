@@ -6,7 +6,7 @@ Install dependencies:
 Initialise database:  
 `yarn database_init`  
 (Needs `psql` command-line tool to be installed, and a super-user named `postgres` -- [here](https://gist.github.com/ibraheem4/ce5ccd3e4d7a65589ce84f2a3b7c23a3) for instructions.  
-Creates a database named `irims` and populates it with minimal data.)
+Creates a database named `tmf_app_manager` and populates it with minimal data.)
 
 To run in dev mode:  
 `yarn dev`
