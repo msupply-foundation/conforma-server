@@ -76,12 +76,12 @@ export const loadScheduledActions = async function (
   // Load from Database
   client
     .query(
-      `SELECT id, action_code, parameters, time_executed FROM action_queue WHERE status = 'Scheduled' ORDER BY time_executed`
+      `SELECT id, action_code, parameters, execution_time FROM action_queue WHERE status = 'Scheduled' ORDER BY execution_time`
     )
     .then((res: DatabaseResult) => {
       res.rows.forEach((action) => {
         // console.log(action);
-        const date = new Date(action.time_executed);
+        const date = new Date(action.execution_time);
         if (date > new Date(Date.now())) {
           const job = schedule.scheduleJob(date, function () {
             executeAction(
@@ -163,7 +163,7 @@ export async function executeAction(
     UPDATE action_queue
     SET status = $1,
     error_log = $2,
-    time_executed = CURRENT_TIMESTAMP
+    execution_time = CURRENT_TIMESTAMP
     WHERE id = $3
   `;
   client.query(updateActionQuery, [actionResult.status, actionResult.error, payload.id]);
