@@ -1,6 +1,8 @@
+import { Client } from 'pg';
+
 interface IParameters {
   [key: string]: any;
-  connection?: IConnection;
+  connection?: Client;
 }
 
 interface IQueryNode {
@@ -10,18 +12,7 @@ interface IQueryNode {
   children?: Array<IQueryNode>;
 }
 
-interface IConnection {
-  user?: string;
-  host?: string;
-  database?: string;
-  password?: string;
-  port?: number;
-  query?: any;
-}
-
-const defaultParameters: IParameters = {
-  connection: {},
-};
+const defaultParameters: IParameters = {};
 
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
@@ -82,6 +73,7 @@ export default async function evaluateExpression(
         try {
           return params[childrenResolved[0].object][childrenResolved[0].property];
         } catch {
+          console.log('Fail');
           return "Can't resolve object";
         }
 
@@ -99,7 +91,7 @@ export default async function evaluateExpression(
   return 'No matching operators';
 }
 
-async function processPgSQL(queryArray: any[], queryType: string, connection: IConnection) {
+async function processPgSQL(queryArray: any[], queryType: string, connection: Client) {
   const query = {
     text: queryArray[0],
     values: queryArray.slice(1),
