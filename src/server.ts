@@ -1,4 +1,6 @@
 import fastify from 'fastify';
+import fastifyStatic from 'fastify-static';
+import fastifyMultipart from 'fastify-multipart';
 import path from 'path';
 import { loadActionPlugins } from './components/postgresConnect';
 import {
@@ -18,11 +20,11 @@ const startServer = async () => {
 
   const server = fastify();
 
-  server.register(require('fastify-static'), {
+  server.register(fastifyStatic, {
     root: path.join(getAppRootDir(), filesFolderName),
   });
 
-  server.register(require('fastify-multipart'));
+  server.register(fastifyMultipart);
 
   // File download endpoint (get by Database ID)
   server.get('/file', async function (request: any, reply: any) {
