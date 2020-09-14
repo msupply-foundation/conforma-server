@@ -12,8 +12,6 @@ const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder);
 export const loadActions = async function (client: Client, actionLibrary: ActionLibrary) {
   console.log('Loading Actions from Database...');
 
-  // const actionLibrary: { [key: string]: Function } = {};
-
   client
     .query('SELECT code, path, function_name FROM action_plugin')
     .then((res: DatabaseResult) => {
@@ -77,7 +75,7 @@ export const loadScheduledActions = async function (
   // return actionSchedule;
 };
 
-export async function processTrigger(client: { [key: string]: Function }, payload: TriggerPayload) {
+export async function processTrigger(client: Client, payload: TriggerPayload) {
   try {
     // Get Actions from matching Template
     const query = `
@@ -117,9 +115,9 @@ export async function processTrigger(client: { [key: string]: Function }, payloa
 }
 
 export async function executeAction(
-  client: { [key: string]: Function },
+  client: Client,
   payload: ActionPayload,
-  actionLibrary: { [key: string]: Function }
+  actionLibrary: ActionLibrary
 ) {
   // TO-DO: If Scheduled, create a Job instead
   const actionResult = actionLibrary[payload.code](payload.parameters);
