@@ -10,10 +10,11 @@ import path from 'path';
 import { DatabaseResult } from '../types';
 import getAppRootDir from './getAppRoot';
 import * as config from '../config.json';
+import { Client } from 'pg';
 
 const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder);
 
-export default async function registerPlugins(client: { [key: string]: Function }) {
+export default async function registerPlugins(client: Client) {
   // Load plugin info from files
   console.log('Scanning plugins folder...');
   const plugins = fs

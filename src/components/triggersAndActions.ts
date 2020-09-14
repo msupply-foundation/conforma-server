@@ -2,16 +2,14 @@ import path from 'path';
 import getAppRootDir from './getAppRoot';
 import * as config from '../config.json';
 import { ActionLibrary, Action, DatabaseResult, TriggerPayload, ActionPayload } from '../types';
+import { Client } from 'pg';
 
 const schedule = require('node-schedule');
 
 const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder);
 
 // Load actions from Database at server startup
-export const loadActions = async function (
-  client: { [key: string]: Function },
-  actionLibrary: ActionLibrary
-) {
+export const loadActions = async function (client: Client, actionLibrary: ActionLibrary) {
   console.log('Loading Actions from Database...');
 
   // const actionLibrary: { [key: string]: Function } = {};
@@ -32,7 +30,7 @@ export const loadActions = async function (
 
 // Load scheduled jobs from Database at server startup
 export const loadScheduledActions = async function (
-  client: { [key: string]: Function },
+  client: Client,
   actionLibrary: ActionLibrary,
   actionSchedule: any[]
 ) {

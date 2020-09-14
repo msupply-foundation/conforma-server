@@ -13,6 +13,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.10",
     "@types/node": "^14.6.0",
+    "@types/pg": "^7.14.4",
     "jest": "^26.4.0",
     "nodemon": "^2.0.4",
     "postgraphile-plugin-nested-mutations": "^1.0.1",
