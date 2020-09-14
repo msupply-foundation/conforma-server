@@ -7,7 +7,7 @@
 
 import * as fs from 'fs';
 import path from 'path';
-import { DatabaseResult } from './triggersAndActions';
+import { DatabaseResult } from '../types';
 import getAppRootDir from './getAppRoot';
 import * as config from '../config.json';
 

@@ -1,10 +1,10 @@
 import {
-  DatabaseRecord,
   loadActions,
   loadScheduledActions,
   processTrigger,
   executeAction,
 } from './triggersAndActions';
+import { ActionLibrary, DatabaseRecord } from '../types';
 import registerPlugins from './registerPlugins';
 import * as config from '../config.json';
 
@@ -17,7 +17,7 @@ pgClient.connect();
 console.log('Connecting to Postgres...');
 
 // Load action plugins
-const actionLibrary: { [key: string]: Function } = {};
+const actionLibrary: ActionLibrary = {};
 const actionSchedule: any[] = [];
 
 export const loadActionPlugins = async () => {

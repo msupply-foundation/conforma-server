@@ -1,43 +1,9 @@
 import path from 'path';
 import getAppRootDir from './getAppRoot';
 import * as config from '../config.json';
+import { ActionLibrary, Action, DatabaseResult, TriggerPayload, ActionPayload } from '../types';
 
 const schedule = require('node-schedule');
-
-export interface DatabaseRecord {
-  [key: string]: any;
-  code: string;
-}
-
-export interface DatabaseResult {
-  rows: DatabaseRecord[];
-}
-
-export interface TriggerPayload {
-  id: number;
-  trigger: string;
-  table: string;
-  record_id: number;
-}
-
-export interface ActionPayload {
-  id: number;
-  code: string;
-  parameters: { [key: string]: any };
-}
-
-export interface Action {
-  code: string;
-  path: string;
-  name: string;
-  trigger: string;
-  condition: { [key: string]: any };
-  parameter_queries: { [key: string]: any };
-}
-
-interface ActionLibrary {
-  [key: string]: Function;
-}
 
 const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder);
 
