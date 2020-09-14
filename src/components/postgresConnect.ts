@@ -6,17 +6,12 @@ import {
   executeAction,
 } from './triggersAndActions';
 import registerPlugins from './registerPlugins';
+import * as config from '../config.json';
 
 const { Client } = require('pg');
 
 // Postgres Database listeners for Triggers/Actions
-export const pgClient = new Client({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'tmf_app_manager',
-  password: '',
-  port: 5432,
-});
+export const pgClient = new Client(config.pg_database_connection);
 
 pgClient.connect();
 console.log('Connecting to Postgres...');

@@ -9,8 +9,9 @@ import * as fs from 'fs';
 import path from 'path';
 import { DatabaseResult } from './triggersAndActions';
 import getAppRootDir from './getAppRoot';
+import * as config from '../config.json';
 
-const pluginFolder = path.join(getAppRootDir(), 'plugins'); //Change this to config file
+const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder);
 
 export default async function registerPlugins(client: { [key: string]: Function }) {
   // Load plugin info from files

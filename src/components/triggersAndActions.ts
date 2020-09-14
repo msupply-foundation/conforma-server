@@ -1,5 +1,6 @@
 import path from 'path';
 import getAppRootDir from './getAppRoot';
+import * as config from '../config.json';
 
 const schedule = require('node-schedule');
 
@@ -34,7 +35,7 @@ export interface Action {
   parameter_queries: { [key: string]: any };
 }
 
-const pluginFolder = path.join(getAppRootDir(), 'plugins'); //Change this to config file
+const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder);
 
 // Load actions from Database at server startup
 export const loadActions = async function (

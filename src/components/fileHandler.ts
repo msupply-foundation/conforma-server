@@ -4,8 +4,9 @@ import util from 'util';
 import { pipeline } from 'stream';
 import getAppRootDir from './getAppRoot';
 import { pgClient } from './postgresConnect';
+import * as config from '../config.json';
 
-export const filesFolderName = 'files'; // Add to config
+export const filesFolderName = config.filesFolderName;
 
 export function createFilesFolder() {
   try {
