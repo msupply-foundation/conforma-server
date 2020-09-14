@@ -20,6 +20,8 @@ In Old IRIMS terms: PROCEDURE.
 
 **Response** — an applicant’s “Answer” to a specific question in a specific application.
 
+**Question Type** — A type of field that can be used in a form. E.g. Text entry, Selector, Multi-select. Defined as “plug-ins”, but we’ll have a default set initially, with new ones created as required. Also know as **Element Type** as it can include proper _questions_ as well as **Information Type** elements, which are form elements that don't require a response (e.g. Infobox, Image, etc.)
+
 **Stage** — A defined stage an application (or Section) must go through. Basic Drug registration would have the stages “Screening”, “Assessment” and “Final Approval”, for example.
 
 **Status** — The “state” of an application at any given time, which would affect what can be done with it. E.g. “Submitted” -- would mean it can be assigned to be reviewed, but not edited by the applicant. “Under Review” would mean it can have response approvals and comments added by a Reviewer. Final Status is “Complete”, which (probably) puts it into a read-only state.
@@ -38,8 +40,6 @@ In Old IRIMS terms: PROCEDURE.
 
 (Could also be thought of as a “criterion” or a “filter” for whether a user is allowed to do a particular Operation on a particular Application Type.)
 
-**Field Type** — A type of field that can be used in a form. E.g. Text entry, Selector, Multi-select. Defined as “plug-ins”, but we’ll have a default set initially, with new ones created as required.
-
 **Permission Field Type** — A field type (above) that is specifically for selecting permissions to be applied for.
 
 **Operation** — a “thing you can do” with an application. E.g. “Apply”, “View”, “Review”, “Consolidate”, “Finalise”. These probably need to be defined quite precisely and probably baked into the system. However, in the Application Template setup, you’ll be able to choose which operations are relevant (e.g. for a User Registration, only “Apply” and “Approve” might be needed).
@@ -50,7 +50,7 @@ In Old IRIMS terms: PROCEDURE.
 
 **User** — any one who has an account on the system. Includes individual applicants, reviewer and admins, etc. Each individual person should have one (and only one) user account. Users will apply for/be given “permissions” to view or do specific “operations” with specific application “types” (templates).
 
-**Organisation** — A company or other organisation that has products to be assessed by reviewers. Organisations will need to be entities in the system, but they are not _users_. Users are assigned to, or associated with, organisations. Each organisation needs at least one “owner” user (by default, the user who applied for the organisation to be created)
+**Organisation** — A company or other organisation that has products to be assessed by reviewers. Organisations will need to be entities in the system, but they are not _users_. Users are assigned to, or associated with, organisations. Each organisation needs at least one “owner” user (by default, the user who applied for the organisation to be created), who can add new users to the organisation and do other management tasks.
 
 ### Reviewing Terminology
 
