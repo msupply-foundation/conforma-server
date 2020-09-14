@@ -58,6 +58,6 @@ In Old IRIMS terms: PROCEDURE.
 
 **Approve** — for each _response_ above. (need a different term for approving whole application or section -- is that “finalise”?)
 
-**Consolidate** — ??
+**Consolidate** — Someone with a higher privileges can do the consolidation of review(s) of each application. Which is selecting the LOQ (List of Questions) to be returned to the Applicant with review comments or the approval to let the application continue to the next stage.
 
 **Finalise** — Final assessment on application (Rejected/Approved). Probably done by Admin (someone with high-level privileges)
