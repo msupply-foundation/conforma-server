@@ -2,17 +2,12 @@
 
 import evaluateExpression from './evaluateExpression';
 import { testData } from './evaluateExpressionTestData';
+import * as config from '../../config.json';
 
 const { Client } = require('pg');
 
 //CONFIG -- DATABASE SETUP:
-const pgConnect = new Client({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'irims_playground',
-  password: '',
-  port: 5432,
-});
+const pgConnect = new Client(config.pg_database_connection);
 
 pgConnect.connect();
 
