@@ -8,6 +8,10 @@ import * as config from '../config.json';
 
 export const filesFolderName = config.filesFolderName;
 
+interface HttpQueryParameters {
+  [key: string]: string;
+}
+
 export function createFilesFolder() {
   try {
     fs.mkdirSync(path.join(getAppRootDir(), filesFolderName));
@@ -28,17 +32,14 @@ export async function getFilename(id: string) {
 }
 
 const pump = util.promisify(pipeline);
-export async function saveFiles(data: any, queryParams: any) {
+export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
   for await (const file of data) {
     await pump(
       file.file,
       fs.createWriteStream(path.join(getAppRootDir(), filesFolderName, file.filename))
     );
-    const parameters: any = {
-      user_id: undefined,
-      application_id: undefined,
-      application_response_id: undefined,
-    };
+
+    const parameters = { ...queryParams };
 
     ['user_id', 'application_id', 'application_response_id'].forEach((field) => {
       const queryFieldValue = queryParams[field];
