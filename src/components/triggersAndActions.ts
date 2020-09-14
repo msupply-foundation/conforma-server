@@ -35,12 +35,16 @@ export interface Action {
   parameter_queries: { [key: string]: any };
 }
 
+interface ActionLibrary {
+  [key: string]: Function;
+}
+
 const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder);
 
 // Load actions from Database at server startup
 export const loadActions = async function (
   client: { [key: string]: Function },
-  actionLibrary: { [key: string]: Function }
+  actionLibrary: ActionLibrary
 ) {
   console.log('Loading Actions from Database...');
 
@@ -63,7 +67,7 @@ export const loadActions = async function (
 // Load scheduled jobs from Database at server startup
 export const loadScheduledActions = async function (
   client: { [key: string]: Function },
-  actionLibrary: { [key: string]: Function },
+  actionLibrary: ActionLibrary,
   actionSchedule: any[]
 ) {
   // const actionSchedule: any[] = [];
