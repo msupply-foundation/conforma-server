@@ -59,7 +59,8 @@ Documented in the `Query-Syntax.md` in the documentation folder.
 
 Code is in the `modules` folder.
 
-To test, run: `yarn test` (uses installed Jest)
+To test (using Jest):
+`yarn test`
 
 ## Documentation
 
