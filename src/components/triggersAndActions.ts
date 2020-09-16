@@ -1,30 +1,30 @@
-import path from 'path';
-import getAppRootDir from './getAppRoot';
-import * as config from '../config.json';
-import { ActionLibrary, Action, DatabaseResult, TriggerPayload, ActionPayload } from '../types';
-import { Client } from 'pg';
+import path from 'path'
+import getAppRootDir from './getAppRoot'
+import * as config from '../config.json'
+import { ActionLibrary, Action, DatabaseResult, TriggerPayload, ActionPayload } from '../types'
+import { Client } from 'pg'
 
-const schedule = require('node-schedule');
+const schedule = require('node-schedule')
 
-const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder);
+const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder)
 
 // Load actions from Database at server startup
 export const loadActions = async function (client: Client, actionLibrary: ActionLibrary) {
-  console.log('Loading Actions from Database...');
+  console.log('Loading Actions from Database...')
 
   client
     .query('SELECT code, path, function_name FROM action_plugin')
     .then((res: DatabaseResult) => {
       res.rows.forEach((row) => {
-        const action = require(path.join(pluginFolder, row.path));
-        actionLibrary[row.code] = action[row.function_name];
-      });
-    });
+        const action = require(path.join(pluginFolder, row.path))
+        actionLibrary[row.code] = action[row.function_name]
+      })
+    })
 
-  console.log('Actions loaded');
+  console.log('Actions loaded')
 
   // return actionLibrary;
-};
+}
 
 // Load scheduled jobs from Database at server startup
 export const loadScheduledActions = async function (
@@ -34,7 +34,7 @@ export const loadScheduledActions = async function (
 ) {
   // const actionSchedule: any[] = [];
 
-  console.log('Loading Scheduled jobs');
+  console.log('Loading Scheduled jobs')
   // Load from Database
   client
     .query(
@@ -43,7 +43,7 @@ export const loadScheduledActions = async function (
     .then((res: DatabaseResult) => {
       res.rows.forEach((action) => {
         // console.log(action);
-        const date = new Date(action.execution_time);
+        const date = new Date(action.execution_time)
         if (date > new Date(Date.now())) {
           const job = schedule.scheduleJob(date, function () {
             executeAction(
@@ -54,12 +54,12 @@ export const loadScheduledActions = async function (
                 parameters: action.parameters,
               },
               actionLibrary
-            );
-          });
-          actionSchedule.push(job);
+            )
+          })
+          actionSchedule.push(job)
         } else {
           // Overdue jobs to be executed immediately
-          console.log('Executing overdue action:', action.action_code, action.parameters);
+          console.log('Executing overdue action:', action.action_code, action.parameters)
           executeAction(
             client,
             {
@@ -68,12 +68,12 @@ export const loadScheduledActions = async function (
               parameters: action.parameters,
             },
             actionLibrary
-          );
+          )
         }
-      });
-    });
+      })
+    })
   // return actionSchedule;
-};
+}
 
 export async function processTrigger(client: Client, payload: TriggerPayload) {
   try {
@@ -84,33 +84,33 @@ export async function processTrigger(client: Client, payload: TriggerPayload) {
     JOIN action_plugin ON template_action.action_code = action_plugin.code
     WHERE template_id = (SELECT template_id from ${payload.table} WHERE id = $1)
     AND trigger = $2;
-    `;
-    const res = await client.query(query, [payload.record_id, payload.trigger]);
+    `
+    const res = await client.query(query, [payload.record_id, payload.trigger])
     // Filter out Actions that don't match the current condition
-    const actions = res.rows.filter((action: Action) => evaluateExpression(action.condition));
+    const actions = res.rows.filter((action: Action) => evaluateExpression(action.condition))
     // Evaluate parameters for each Action
     actions.forEach((action: Action) => {
-      const parameter_queries = action.parameter_queries;
+      const parameter_queries = action.parameter_queries
       Object.keys(parameter_queries).forEach((key) => {
-        parameter_queries[key] = evaluateExpression(parameter_queries[key]);
-      });
+        parameter_queries[key] = evaluateExpression(parameter_queries[key])
+      })
       // console.log(parameter_queries);
-    });
+    })
     // Write each Action with parameters to Action_Queue
     const writeQuery = `
     INSERT into action_queue (trigger_event, action_code, parameters, status, time_queued)
     VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)
-    `;
+    `
     actions.forEach((action: Action) => {
-      client.query(writeQuery, [payload.id, action.code, action.parameter_queries, 'Queued']);
-    });
+      client.query(writeQuery, [payload.id, action.code, action.parameter_queries, 'Queued'])
+    })
     // Update trigger queue item with success/failure (and log)
     // If SUCCESS -- Not sure best way to test for this:
     client.query(`UPDATE trigger_queue SET status = 'Action Dispatched' WHERE id = $1`, [
       payload.id,
-    ]);
+    ])
   } catch (err) {
-    console.log(err.stack);
+    console.log(err.stack)
   }
 }
 
@@ -120,24 +120,24 @@ export async function executeAction(
   actionLibrary: ActionLibrary
 ) {
   // TO-DO: If Scheduled, create a Job instead
-  const actionResult = actionLibrary[payload.code](payload.parameters);
+  const actionResult = actionLibrary[payload.code](payload.parameters)
   const updateActionQuery = `
     UPDATE action_queue
     SET status = $1,
     error_log = $2,
     execution_time = CURRENT_TIMESTAMP
     WHERE id = $3
-  `;
-  client.query(updateActionQuery, [actionResult.status, actionResult.error, payload.id]);
+  `
+  client.query(updateActionQuery, [actionResult.status, actionResult.error, payload.id])
 }
 
 function evaluateExpression(query: any) {
   // This would be basically the same as the client-side query/condition evaluator described in QUERY SYNTAX. For now, we'll assume they all match (True), or are all literal values.
   switch (query.type) {
     case 'boolean':
-      return true;
+      return true
     case 'string':
-      return query.value;
+      return query.value
   }
-  return true;
+  return true
 }
