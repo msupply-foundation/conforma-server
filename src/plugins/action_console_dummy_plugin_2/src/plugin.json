@@ -1,0 +1,19 @@
+{
+  "type": "action_plugin",
+  "code": "dum2",
+  "name": "Dummy plug-in #2",
+  "file": "dummy2",
+  "function_name": "dummy2",
+  "description": "This also does nothing. It's just for testing purposes.",
+  "required_parameters": ["user_id", "application_id"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2020-08-27"
+  }
+}
