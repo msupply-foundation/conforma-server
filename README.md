@@ -1,10 +1,12 @@
+# application-manager-server
+
 Install dependencies:  
 `yarn install`
 
 Initialise database:  
 `yarn database_init`  
 (Needs `psql` command-line tool to be installed, and a super-user named `postgres` -- [here](https://gist.github.com/ibraheem4/ce5ccd3e4d7a65589ce84f2a3b7c23a3) for instructions.  
-Creates a database named `irims` and populates it with minimal data.)
+Creates a database named `tmf_app_manager` and populates it with minimal data.)
 
 To run in dev mode:  
 `yarn dev`
@@ -13,7 +15,7 @@ To launch Postgraphile server (in a new Terminal process):
 `yarn pg`
 
 To launch in dev mode _with_ Postgraphile server:  
-`yarn dev-pg`
+`yarn dev_pg`
 
 To build (compiles all .ts files to .js in `build` folder):  
 `yarn build`
@@ -23,7 +25,9 @@ To build and run compiled files:
 
 In dev mode, uses `nodemon` to monitor changes, and `ts-node` to compile typescript files on the fly.
 
-Note: Plugins (in `src/plugins`) are **standalone packages** and must be compiled individually. However, they should come pre-compiled and are copied to the `build` folder when building the server app. To automatically re-compile all plugins, run `yarn build_plugins`.
+Note: Plugins (in `src/plugins`) are **standalone packages** and must be compiled individually. However, they should come pre-compiled and are copied to the `build` folder when building the server app.  
+To automatically re-compile all plugins:  
+`yarn build_plugins`.
 
 This repo has the following functionality implemented in basic form:
 
@@ -55,7 +59,8 @@ Documented in the `Query-Syntax.md` in the documentation folder.
 
 Code is in the `modules` folder.
 
-To test, run: `yarn test` (uses installed Jest)
+To test (using Jest):  
+`yarn test`
 
 ## Documentation
 

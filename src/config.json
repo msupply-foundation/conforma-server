@@ -1,0 +1,11 @@
+{
+  "pg_database_connection": {
+    "user": "postgres",
+    "host": "localhost",
+    "database": "tmf_app_manager",
+    "password": "",
+    "port": 5432
+  },
+  "filesFolderName": "files",
+  "pluginsFolder": "plugins"
+}
