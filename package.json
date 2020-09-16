@@ -15,6 +15,7 @@
     "@types/node": "^14.6.0",
     "@types/pg": "^7.14.4",
     "jest": "^26.4.0",
+    "node-fetch": "^2.6.1",
     "nodemon": "^2.0.4",
     "postgraphile-plugin-nested-mutations": "^1.0.1",
     "rimraf": "^3.0.2",
@@ -29,8 +30,8 @@
     "test": "jest",
     "pg": "exec ./utils/postgraphile_launch.sh",
     "dev_pg": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg\"",
-    "database_init": "psql -U postgres -f ./database/createDatabase.sql && psql -U postgres -d tmf_app_manager -f ./database/createSchema.sql && psql -U postgres -d tmf_app_manager -f ./database/insertData.sql",
-    "build_plugins": "exec ./utils/build_plugins.sh",
+    "database_init": "psql -U postgres -f ./database/createDatabase.sql && psql -U postgres -d tmf_app_manager -f ./database/createSchema.sql && node ./database/insertData.js",
+    "build_plugins": "exec ./utils/build_plugins.sh"
     "push_docs": "exec ./utils/push_docs_to_wiki.sh"
   },
   "dependencies": {
