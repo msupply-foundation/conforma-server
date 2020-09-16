@@ -1,6 +1,6 @@
 # Database Schema
 
-The database is constructed in [**PostgreSQL v12**](https://www.postgresql.org/) and accessed from the front end using [**GraphQL**](https://graphql.org/learn/), via [**postGraphile** ](https://www.graphile.org/postgraphile/) -- a layer which presents a Postgres database as a GraphQL schema.
+The database is constructed in [**PostgreSQL v12**](https://www.postgresql.org/) and accessed from the front end using [**GraphQL**](https://graphql.org/learn/), via [**PostGraphile** ](https://www.graphile.org/postgraphile/) -- a layer which presents a Postgres database as a GraphQL schema.
 
 Here is the overall schema (work in progress):
 
