@@ -281,7 +281,7 @@ const queries = [
         username
       }
     }
-      }`,
+  }`,
   //   User registration application 1
   `mutation {
     createApplication(
@@ -342,6 +342,7 @@ const queries = [
               }
             ]
           }
+          templateToTemplateId: { connectById: { id: 1 } }
         }
       }
     ) {
@@ -440,6 +441,7 @@ const queries = [
               }
             ]
           }
+          templateToTemplateId: { connectById: { id: 1 } }
         }
       }
     ) {
@@ -526,6 +528,7 @@ const queries = [
               }
             }
           }
+          templateId: 2
         }
       }
     ) {
