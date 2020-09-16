@@ -6,14 +6,16 @@ _Run `yarn test` to see it in action -- the tests are in the `src/modules/evalua
 
 **The problem**: the highly configurable Template system in mSupply Application Manager requires many values to be stored as dynamic queries to either local state or the database, and perform basic operations (logic, concatenation, etc.) on them. We need a way to represent these potentially complex “expressions” in the database so they can be evaluated at runtime (both in the front and back-end), but without resorting to using `eval()` to evaluate javascript code directly.
 
-**The solution**: We store these queries in a JSON **expression tree** which can be easily traversed recursively and evaluated when needed. This way, we can store very simple values (e.g. literal strings) in the same format as complex dynamic queries. The demo function `evaluateExpression()` evaluates these expressions.
+**The solution**: We store these queries in a JSON **expression tree** which can be easily traversed recursively and evaluated when needed. This way, we can store very simple values (e.g. literal strings) in the same format as complex dynamic queries. The function `evaluateExpression()` evaluates these expressions.
 
 Any value that could possibly be a dynamic query should be stored in this format. This would include:
 
-- Question parameters (Option lists, Labels, Placeholder text, etc.)
-- Visibility conditions
-- Conditions in triggers
-- Validation criteria
+**Question**:
+  - Parameters (Option lists, Labels, Placeholder text, etc.)
+  - Visibility conditions
+  - Validation criteria
+**Trigger**:
+  - Conditions
 
 For more complex lookups, we would hide the complexity from the user in the Template builder, and just present a set of pre-defined “queries” in the UI, which map to a pre-written query with perhaps a selectable parameter or two. (However, we should also provide a JSON editor as an alternative if an advanced user wishes to manually create more complex queries.)
 
@@ -308,7 +310,7 @@ Tree structure:
 # Additional Comments
 
 - The `evaluateExpression` function can take either a javascript object or a stringified JSON as its argument, just in case the JSON blob is extracted from the database as a string.
-- The objectProperties operator is currently the most uncertain, as it requires local state to be passed to the `evaluateExpression` function in a specific shape. I can’t think of a better way to do this without using `eval` to convert stringified object names to variables. Suggestions welcome.
+- The `objectProperties` operator is currently the most uncertain, as it requires local state to be passed to the `evaluateExpression` function in a specific shape. I can’t think of a better way to do this without using `eval` to convert stringified object names to variables. Suggestions welcome.
 
 # To Do
 

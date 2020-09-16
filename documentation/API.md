@@ -2,6 +2,11 @@
 
 Up-to-date documentation of all endpoints and back-end services for reference of front-end devs.
 
+The back-end currently has two server instances which are launched to handle incoming requests:
+
+- [**Postgraphile**](https://www.graphile.org/postgraphile/) server -- exposes a **GraphQL** endpoint and uses GraphQL queries to access the **PostGres** database.
+- [**Fastify**](https://www.fastify.io/) server -- additional endpoints for various services. (Will also serve the actual app when deployed, and will probably have PostGraphile added as a plugin later in development)
+
 ---
 
 ### Postgraphile server API:
