@@ -9,5 +9,5 @@ Here is the overall schema (work in progress):
 ## Detailed areas
 
 - [Permissions]
-- [Application Template]
+- [Application Template](Database-Schema-Template.md)
 - [Reviews]
