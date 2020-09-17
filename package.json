@@ -30,7 +30,7 @@
     "test": "jest",
     "pg": "exec ./utils/postgraphile_launch.sh",
     "dev_pg": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg\"",
-    "database_init": "psql -U postgres -f ./database/createDatabase.sql && psql -U postgres -d tmf_app_manager -f ./database/createSchema.sql && node ./database/insertData.js",
+    "database_init": "exec ./database/initialise_database.sh",
     "build_plugins": "exec ./utils/build_plugins.sh",
     "push_docs": "exec ./utils/push_docs_to_wiki.sh"
   },
