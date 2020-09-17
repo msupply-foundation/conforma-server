@@ -1,11 +1,19 @@
 {
-  "name": "irims-server-demo",
+  "name": "application-manager-server",
   "version": "1.0.0",
   "main": "server.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openmsupply/application-manager-server"
+  },
+  "engines": {
+    "node": ">=13.8.0"
+  },
   "devDependencies": {
     "@types/jest": "^26.0.10",
     "@types/node": "^14.6.0",
+    "@types/pg": "^7.14.4",
     "jest": "^26.4.0",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.4",
@@ -23,7 +31,8 @@
     "pg": "exec ./utils/postgraphile_launch.sh",
     "dev_pg": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg\"",
     "database_init": "exec ./database/initialise_database.sh",
-    "build_plugins": "exec ./utils/build_plugins.sh"
+    "build_plugins": "exec ./utils/build_plugins.sh",
+    "push_docs": "exec ./utils/push_docs_to_wiki.sh"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",

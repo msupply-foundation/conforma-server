@@ -1,36 +1,36 @@
 interface ITestData {
-  [key: string]: object | string;
+  [key: string]: object | string
 }
 
-export const testData: ITestData = {};
+export const testData: ITestData = {}
 
 // Basic (single level literals)
 testData.basicStringLiteral = {
   type: 'string',
   value: 'First Name',
-};
+}
 
 testData.stringifiedBasicStringLiteral = `{
     "type": "string",
     "value": "First Name"
-}`;
+}`
 
 testData.basicStringLiteralNoType = {
   value: 'First Name',
-};
+}
 
 testData.basicBoolean = {
   value: true,
-};
+}
 
-testData.stringifiedBasicBoolean = `{"value":true}`;
+testData.stringifiedBasicBoolean = `{"value":true}`
 
 testData.basicArray = {
   type: 'array',
   value: ['Pharmaceutical', 'Natural Product', 'Other'],
-};
+}
 
-testData.stringifiedBasicArray = '{"value":["Pharmaceutical","Natural Product","Other"]}';
+testData.stringifiedBasicArray = '{"value":["Pharmaceutical","Natural Product","Other"]}'
 
 // AND
 testData.operatorAND_2values = {
@@ -46,7 +46,7 @@ testData.operatorAND_2values = {
       value: true,
     },
   ],
-};
+}
 
 testData.operatorAND_2values_false = {
   type: 'boolean',
@@ -61,7 +61,7 @@ testData.operatorAND_2values_false = {
       value: false,
     },
   ],
-};
+}
 
 testData.operatorAND_4values = {
   type: 'boolean',
@@ -84,7 +84,7 @@ testData.operatorAND_4values = {
       value: true,
     },
   ],
-};
+}
 
 testData.operatorAND_4values_false = {
   type: 'boolean',
@@ -107,7 +107,7 @@ testData.operatorAND_4values_false = {
       value: true,
     },
   ],
-};
+}
 
 // OR
 
@@ -124,7 +124,7 @@ testData.operatorOR_2values = {
       value: true,
     },
   ],
-};
+}
 
 testData.operatorOR_2values_1false = {
   type: 'boolean',
@@ -139,7 +139,7 @@ testData.operatorOR_2values_1false = {
       value: false,
     },
   ],
-};
+}
 
 testData.operatorOR_4values = {
   type: 'boolean',
@@ -162,7 +162,7 @@ testData.operatorOR_4values = {
       value: true,
     },
   ],
-};
+}
 
 testData.operatorOR_4values_1false = {
   type: 'boolean',
@@ -185,7 +185,7 @@ testData.operatorOR_4values_1false = {
       value: true,
     },
   ],
-};
+}
 
 testData.operatorOR_4values_false = {
   type: 'boolean',
@@ -208,7 +208,7 @@ testData.operatorOR_4values_false = {
       value: false,
     },
   ],
-};
+}
 
 // CONCAT
 
@@ -224,7 +224,7 @@ testData.CONCAT_2_Arrays = {
       value: ['Four', 'Five', 'Six'],
     },
   ],
-};
+}
 
 testData.CONCAT_4_Arrays = {
   type: 'array',
@@ -244,7 +244,7 @@ testData.CONCAT_4_Arrays = {
       value: [['Four', 'Five', 'Six'], 'The', 'End'],
     },
   ],
-};
+}
 
 testData.CONCAT_3_Strings = {
   type: 'string',
@@ -262,7 +262,7 @@ testData.CONCAT_3_Strings = {
       value: 'Smith',
     },
   ],
-};
+}
 
 testData.CONCAT_4_Unspecified = {
   operator: 'CONCAT',
@@ -281,7 +281,7 @@ testData.CONCAT_4_Unspecified = {
       value: '--XXX',
     },
   ],
-};
+}
 
 // Equal
 
@@ -295,7 +295,7 @@ testData.EQUAL_Numbers = {
       value: 6,
     },
   ],
-};
+}
 
 testData.EQUAL_Numbers_false = {
   operator: '=',
@@ -307,7 +307,7 @@ testData.EQUAL_Numbers_false = {
       value: 0,
     },
   ],
-};
+}
 
 testData.EQUAL_String = {
   operator: '=',
@@ -319,7 +319,7 @@ testData.EQUAL_String = {
       value: 'Monday 1st January',
     },
   ],
-};
+}
 
 testData.EQUAL_String_false = {
   operator: '=',
@@ -331,7 +331,7 @@ testData.EQUAL_String_false = {
       value: 'War and Peas',
     },
   ],
-};
+}
 
 testData.EQUAL_Numbers_many = {
   operator: '=',
@@ -349,7 +349,7 @@ testData.EQUAL_Numbers_many = {
       value: 6,
     },
   ],
-};
+}
 
 testData.EQUAL_String_single = {
   operator: '=',
@@ -358,7 +358,7 @@ testData.EQUAL_String_single = {
       value: 'All by myself',
     },
   ],
-};
+}
 
 // Inequality
 
@@ -372,7 +372,7 @@ testData.NOT_EQUAL_Numbers = {
       value: 6,
     },
   ],
-};
+}
 
 testData.NOT_EQUAL_Numbers_false = {
   operator: '!=',
@@ -384,7 +384,7 @@ testData.NOT_EQUAL_Numbers_false = {
       value: 6,
     },
   ],
-};
+}
 
 testData.NOT_EQUAL_String = {
   operator: '!=',
@@ -396,7 +396,7 @@ testData.NOT_EQUAL_String = {
       value: 'Tuesday 1st January',
     },
   ],
-};
+}
 
 testData.NOT_EQUAL_String_false = {
   operator: '!=',
@@ -408,7 +408,7 @@ testData.NOT_EQUAL_String_false = {
       value: 'The Brothers Karamazov',
     },
   ],
-};
+}
 
 // PLUS
 
@@ -422,7 +422,7 @@ testData.PLUS_2Nums = {
       value: 6,
     },
   ],
-};
+}
 
 testData.PLUS_4Nums = {
   operator: '+',
@@ -440,7 +440,7 @@ testData.PLUS_4Nums = {
       value: 6,
     },
   ],
-};
+}
 
 // REGEX
 
@@ -454,7 +454,7 @@ testData.REGEX_check_email = {
       value: '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$',
     },
   ],
-};
+}
 
 testData.REGEX_check_email_false = {
   operator: 'REGEX',
@@ -466,7 +466,7 @@ testData.REGEX_check_email_false = {
       value: '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$',
     },
   ],
-};
+}
 
 // Return User or Form values
 
@@ -475,27 +475,27 @@ testData.user = {
   firstName: 'Carl',
   lastName: 'Smith',
   title: 'Import Manager',
-};
+}
 
 testData.organisation = {
   id: 1,
   name: 'XYZ Pharmaceuticals',
   category: 'Manufacturers',
-};
+}
 
 testData.form = {
   q1: 'Drug Registration',
   q2: 'A',
   q3: undefined,
   q4: 'Panadol',
-};
+}
 
 testData.application = {
   id: 1,
   name: 'Drug Registration',
   status: 'Draft',
   stage: 1,
-};
+}
 
 testData.singleUserProperty = {
   operator: 'objectProperties',
@@ -504,7 +504,7 @@ testData.singleUserProperty = {
       value: { object: 'user', property: 'firstName' },
     },
   ],
-};
+}
 
 // SQL operator
 
@@ -519,7 +519,7 @@ testData.getApplicationName = {
       value: 2,
     },
   ],
-};
+}
 
 testData.getListOfTemplates = {
   type: 'array',
@@ -529,7 +529,7 @@ testData.getListOfTemplates = {
       value: 'SELECT template_name FROM template',
     },
   ],
-};
+}
 
 testData.countTemplates = {
   type: 'number',
@@ -539,7 +539,7 @@ testData.countTemplates = {
       value: 'SELECT count(*) FROM template',
     },
   ],
-};
+}
 
 testData.getListOfTemplates_noType = {
   operator: 'pgSQL',
@@ -548,7 +548,7 @@ testData.getListOfTemplates_noType = {
       value: 'SELECT template_name FROM template',
     },
   ],
-};
+}
 
 // GraphQL operator -- TO DO
 
@@ -570,7 +570,7 @@ testData.concatFirstAndLastNames = {
       children: [{ value: { object: 'user', property: 'lastName' } }],
     },
   ],
-};
+}
 
 testData.complex1 = {
   operator: 'AND',
@@ -616,7 +616,7 @@ testData.complex1 = {
       ],
     },
   ],
-};
+}
 
 testData.complex2 = {
   operator: 'AND',
@@ -652,7 +652,7 @@ testData.complex2 = {
       ],
     },
   ],
-};
+}
 
 testData.complex2_asString = `{
     "operator": "AND",
@@ -705,4 +705,4 @@ testData.complex2_asString = `{
         ]
       }
     ]
-  }`;
+  }`
