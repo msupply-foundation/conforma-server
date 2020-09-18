@@ -310,7 +310,7 @@ const queries = [
           name: "User Registration: Nicole Madruga"
           serial: 100
           isActive: true
-          outcome: PENDING
+          outcome: APPROVED
           userToUserId: { connectById: { id: 1 } }
           applicationSectionsUsingId: {
             create: [{ templateSectionId: 1 }, { templateSectionId: 2 }]
@@ -336,7 +336,7 @@ const queries = [
           }
           applicationStageHistoriesUsingId: {
             create: {
-              stageId: 1
+              templateStageToStageId: { connectById: { id: 1 } }
               timeCreated: "NOW()"
               isCurrent: true
               applicationStatusHistoriesUsingId: {
@@ -397,7 +397,7 @@ const queries = [
           name: "User Registration: Carl Smith"
           serial: 101
           isActive: true
-          outcome: PENDING
+          outcome: APPROVED
           userToUserId: { connectById: { id: 2 } }
           applicationSectionsUsingId: {
             create: [{ templateSectionId: 1 }, { templateSectionId: 2 }]
@@ -423,7 +423,7 @@ const queries = [
           }
           applicationStageHistoriesUsingId: {
             create: {
-              stageId: 1
+              templateStageToStageId: { connectById: { id: 1 } }
               timeCreated: "NOW()"
               isCurrent: true
               applicationStatusHistoriesUsingId: {
@@ -513,7 +513,7 @@ const queries = [
           applicationStageHistoriesUsingId: {
             create: [
               {
-                stageId: 2
+                templateStageToStageId: { connectById: { id: 2 } }
                 timeCreated: "NOW()"
                 isCurrent: false
                 applicationStatusHistoriesUsingId: {
@@ -525,7 +525,7 @@ const queries = [
                 }
               },
               {
-                stageId: 3
+                templateStageToStageId: { connectById: { id: 3 } }
                 timeCreated: "NOW()"
                 isCurrent: true
                 applicationStatusHistoriesUsingId: {
