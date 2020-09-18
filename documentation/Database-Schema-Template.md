@@ -5,36 +5,39 @@
 ## Tables description: Template
 
 ### Version
-When the Admin user wants to edit an existing <b>application template</b> a new version is created. This new version is linked to a duplication of all records in the <b>application template</b> group. The Admin can continue making changes until publishing the new version.
-With this versioning we keep previous finalised applications linked to a correct version of the template form & rules. 
+When the Admin user wants to edit an existing <b>application template</b> a new version is created. This new version is linked to a duplication of all records of the current <b>application template</b>. The Admin can make changes until publishing this new version.
+With templates versioning we keep previous finalised applications linked to the correct versions of the application templates used. 
 
 * <b>template version</b>
-The `is_current` is set to `'false'` while the version is getting created, being edited or if it's a previous version.  
-The `is_current` is set to `'true'` when the new version of application template is publiched. 
-When a new version is added every new application of this application template will linked and be displayed in the new version.
+The `is_current` is set to `'false'` while the version is being created or edited or for all versions that is not the current.  
+The `is_current` is set to `'true'` when the new version of one application template is published. 
+When a new version is added every new application of this application template will be linked to the new version.
 
 <b>To be considered: Should we check if no applications are associated with an existing template and just add changes to the current version instead?</b>
 
 ### Visualisation
-The visualisation and questions required in each stage of one application is defined in the application template with the following entities. 
+The visualisation and questions required in each stage of an application is defined in the application template with the following entities. 
 * <b>template</b>
-Representation of the application template. All nested elements are accessible via joined tables and can be created or queried in the same call using GraphQL engine. The current status can be `'Draft'`, `'Available'` or `'Disabled'`. The only Available templates are the one with in the version flagged as current. All other application template are Disabled or Draft (if unfinalised).
+Representation of the application template. All nested elements are accessible via joined tables and can be created or queried in the same call using the GraphQL engine.
+The `version_id` is the link with the template version.
+The `template_name` and `code` is to help admin users identifying one template.
+The `current_status` can be `'Draft'`, `'Available'` or `'Disabled'`. The only 'Available' templates are the onesthe in the version flagged as the current one. All other application template are 'Disabled' or 'Draft' (if unfinalised).
 * <b>template stage</b>
 There is one or more stages per application template. Each one is defined as a new record that point to `tenplate_id` with the `number` of this stage (1, 2, 3, ...) and `title` can be anything, the most populars are: `'Screening'`, `'Assessment'`, `'Final Stage'`.
 * <b>template sections</b>
-Sections of the application template that contain elements. Each section can be associated with a <b>template permission</b> if this section requires a certain type of reviewer to check for responses from an Applicant.
+Sections of the application template that contain some elements. Each section can be associated with a <b>template permission</b> if this section requires a certain type of reviewer to check for responses from an Applicant.
 * <b>template elements</b>
-Elements in the application template always are part of a section therefor it stores the `section_id` instead of the `template_id`.
+Elements in the application template always are part of a section, therefor it stores the `section_id` instead of the `template_id`.
 The `code` is associated with the <b>element type plugin</b>, where the definitions of each element will be coming from.
-The order each element is displayed uses the `next_element_code` (combined with `section_id` of the current template version).
+The order each element is displayed is defined by the `next_element_code` (combined with the `section_id` of the current template version).
 The `visibility_condition` checks for any required previous elements to be answered before this element can be displayed. 
 The `category` is either `'Question'` or `'Information'`. 
-Questions will require responses from the Applicant and Information are only structural or visual elements. 
-When the element is a question it also uses `is_required` and `is_editable` to determina its state. 
+'Questions' elements will require responses from the Applicant and 'Information' elements are only structural or for visualisation. 
+When the element category is 'Question' it also uses `is_required` and `is_editable` to determine its state. 
 More detailed description of question elements coming soon: `validation`, `parameters`. 
 * <b>element type plugin</b> 
-Also known as the <b>Question plugin</b>. Describes the plugin funtions and rendering as an Application with `display_component_name` and in the configuration page of the template builder with `config_component_name`. 
-This table store what is dynamically imported to the project App from the plugins folder (src/modules/plugins). The plugin `code` is the primary key. And template elements has the `element_type_plugin_code` connecting the element type. Using the code will make it easier for exporting a template from one system to another.
+Also known as the <b>Question plugin</b>, describes the plugin functions to render as part of an Application with `display_component_name` and as part of the configuration page in the template builder with `config_component_name`. 
+This table store what is dynamically imported to the App from the plugins folder (src/modules/plugins). The plugin `code` is the primary key. And template elements have `element_type_plugin_code` linking to the element type. Using the code will make it easier for exporting and importing a template from one system to another.
 
 ### Permission settings
 Different users needs different permissions for acting on an applicatiion template. For example a user entitled as an <b>Applicant</b> would require to be associated with a template permission be able to Apply to specific application templates. Another example is the user entitled as a <b>Reviewer</b> who would require to be associated with the template review stage to be able to Review application templates on a stage or specific sections of application templates on a stage.
