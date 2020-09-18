@@ -89,6 +89,14 @@ const queries = [
                   }
                   { code: "S2", title: "Section 2" }
                 ]
+              },
+              templateStagesUsingId: {
+                create: [
+                  {
+                    number: 1,
+                    title: "Screening"
+                  }
+                ] 
               }
             }
           }
@@ -188,6 +196,18 @@ const queries = [
                   { code: "S2", title: "Section 2" }
                   { code: "S3", title: "Section 3" }
                 ]
+              },
+              templateStagesUsingId: {
+                create: [
+                  {
+                    number: 1,
+                    title: "Screening"
+                  },
+                  {
+                    number: 2,
+                    title: "Assessment"
+                  }
+                ] 
               }
               templateActionsUsingId: {
                 create: {
@@ -315,32 +335,18 @@ const queries = [
             ]
           }
           applicationStageHistoriesUsingId: {
-            create: [
-              {
-                stage: SCREENING
-                timeCreated: "NOW()"
-                isCurrent: false
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: COMPLETED
-                    timeCreated: "NOW()"
-                    isCurrent: false
-                  }
+            create: {
+              stageId: 1
+              timeCreated: "NOW()"
+              isCurrent: true
+              applicationStatusHistoriesUsingId: {
+                create: {
+                  status: COMPLETED
+                  timeCreated: "NOW()"
+                  isCurrent: true
                 }
               }
-              {
-                stage: ASSESSMENT
-                timeCreated: "NOW()"
-                isCurrent: true
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: SUBMITTED
-                    timeCreated: "NOW()"
-                    isCurrent: true
-                  }
-                }
-              }
-            ]
+            }
           }
           templateToTemplateId: { connectById: { id: 1 } }
         }
@@ -368,7 +374,9 @@ const queries = [
         }
         applicationStageHistories {
           nodes {
-            stage
+            stage {
+              title
+            }
             isCurrent
             applicationStatusHistories {
               nodes {
@@ -414,32 +422,18 @@ const queries = [
             ]
           }
           applicationStageHistoriesUsingId: {
-            create: [
-              {
-                stage: SCREENING
-                timeCreated: "NOW()"
-                isCurrent: false
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: COMPLETED
-                    timeCreated: "NOW()"
-                    isCurrent: false
-                  }
+            create: {
+              stageId: 1
+              timeCreated: "NOW()"
+              isCurrent: true
+              applicationStatusHistoriesUsingId: {
+                create: {
+                  status: COMPLETED
+                  timeCreated: "NOW()"
+                  isCurrent: true
                 }
               }
-              {
-                stage: ASSESSMENT
-                timeCreated: "NOW()"
-                isCurrent: true
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: SUBMITTED
-                    timeCreated: "NOW()"
-                    isCurrent: true
-                  }
-                }
-              }
-            ]
+            }
           }
           templateToTemplateId: { connectById: { id: 1 } }
         }
@@ -467,7 +461,9 @@ const queries = [
         }
         applicationStageHistories {
           nodes {
-            stage
+            stage {
+              title
+            }
             isCurrent
             applicationStatusHistories {
               nodes {
@@ -515,18 +511,32 @@ const queries = [
             ]
           }
           applicationStageHistoriesUsingId: {
-            create: {
-              stage: SCREENING
-              timeCreated: "NOW()"
-              isCurrent: false
-              applicationStatusHistoriesUsingId: {
-                create: {
-                  status: SUBMITTED
-                  timeCreated: "NOW()"
-                  isCurrent: false
+            create: [
+              {
+                stageId: 2
+                timeCreated: "NOW()"
+                isCurrent: false
+                applicationStatusHistoriesUsingId: {
+                  create: {
+                    status: COMPLETED
+                    timeCreated: "NOW()"
+                    isCurrent: false
+                  }
+                }
+              },
+              {
+                stageId: 3
+                timeCreated: "NOW()"
+                isCurrent: true
+                applicationStatusHistoriesUsingId: {
+                  create: {
+                    status: SUBMITTED
+                    timeCreated: "NOW()"
+                    isCurrent: true
+                  }
                 }
               }
-            }
+            ]
           }
           templateId: 2
         }
@@ -554,7 +564,9 @@ const queries = [
         }
         applicationStageHistories {
           nodes {
-            stage
+            stage {
+              title
+            }
             isCurrent
             applicationStatusHistories {
               nodes {
