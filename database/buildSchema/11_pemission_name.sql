@@ -2,5 +2,6 @@
 
 CREATE TABLE public.permission_name (
     id serial primary key,
-    name varchar
+    name varchar,
+    policy_id integer references public.permission_policy(id)
 );
