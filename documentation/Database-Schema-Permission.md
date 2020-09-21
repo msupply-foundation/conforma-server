@@ -5,27 +5,28 @@
 ## Database Area description: Permission
 
 ### Definition
-To define what applications have what actions available for what user. We like to define the permission definition using: Who, how and what.
-Who => Is the `permission_name`, which describes the type of action and user associated.
-How => Is the `permission_policy`. What actions the user with this permission can make.
-What => Is the `template_permission` that connects a permission with a application or section.
+To define permissions with actionables for the user over an application templates.
 
-Before any user are included the permissions can be already created. The permission definition consists in the `permission_policy` and the `permission_name`. Then what will link a permission to a application is the `template_permission`.
-Later on the `permission_join` is used to grant the permission to a user or user in a company.
+We like to define the permissions definition using: Who, how and what.
+Who => Is the `permission_name`, which describes the type of action to be associated with users.
+How => Is the `permission_policy` or how the user that has this permission can interact with an application template (through actions).
+What => Is the `template_permission` that connects some permission with an application template or section of an application template.
 
-After the user grated a permission to do a certain action on applications/sections of the application, these actions will be displayed in the system. There are also SQL policies created to restrict areas of the database that users have access (based on permissions).
+Before any user is included, permissions can be created. The permission definition consists only on the `permission_policy` and the `permission_name`. And then what links this permission with an application template is the `template_permission`, and after the permission is granted to a user (or a user in a company) what links this permission with an user is the `permission_join`.
+
+If the user is grated a permission to do a certain action on an applications/sections of the application, this action will be displayed in the system. There are also SQL policies that get created to restrict areas of the database that users have access to (based on the same permissions).
 
 ## Tables
 * **permission policy**
-The `name` and `description` of the poliicy helps the user identify the policy details.
+The `name` and `description` of the poliicy helps the Admin users identify the policy details.
 The `rules` will define exactly what actions will be allowed on the linked application.
-The `type` is the action type, that would be one of the options: `'Apply'`, `'Review'`, `'Assign'`, ...(few more to be added).
-The `default_restrictions` is similar to `restrictions` from the template permission. Basically from the whole set of possibilities that the `rules` should allow the user to make actions on a application template, the restrictions will limit when these actions can be done.
+The `type` is the action type, that should be one of the options: `'Apply'`, `'Review'`, `'Assign'`, ...(few more to be added).
+The `default_restrictions` is similar to `restrictions` (on the **template permission**). Basically from the whole set of possibilities that the `rules` allow the user to make via actions on an application, the restrictions will limit when these actions can be done.
 More detailed description of template permissions coming soon: `rules`.
 
 * **permission name**
 The `policy_id` links to the permission policy.
-The `name` should be a short very descriptive name of a generic permission (not based on a individual application template).
+The `name` should be a short very descriptive name of a generic permission (not based on an individual application template).
 
 * **permission join**
 The `permission_name` links to the permission name.
