@@ -93,17 +93,18 @@ export async function processTrigger(client: Client, payload: TriggerPayload) {
 
     actions.forEach((action: Action) => {
       const parameter_queries = action.parameter_queries
-      console.log(Object.entries(parameter_queries))
-      ;async () => {
-        for (let i = 0; i < Object.entries(parameter_queries).length; i++) {
-          console.log('Running...')
-          parameter_queries[i] = await evaluateExpression(parameter_queries[i][1])
-        }
-      }
-      // Object.keys(parameter_queries).forEach((key) => {
-      //   parameter_queries[key] = evaluateExpression(parameter_queries[key])
-      //   console.log(key, parameter_queries[key])
-      // })
+      // const parameter_array = Object.entries(parameter_queries)
+      // ;async () => {
+      //   for (let i = 0; i < parameter_array.length; i++) {
+      //     const key = parameter_array[i][0]
+      //     const value = parameter_array[i][1]
+      //     parameter_queries[key] = await evaluateExpression(parameter_queries[value])
+      //   }
+      // }
+      Object.keys(parameter_queries).forEach((key) => {
+        parameter_queries[key] = evaluateExpression(parameter_queries[key])
+        console.log(key, parameter_queries[key])
+      })
     })
     // Write each Action with parameters to Action_Queue
     const writeQuery = `
