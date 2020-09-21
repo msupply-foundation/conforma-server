@@ -4,6 +4,7 @@ import * as config from '../config.json'
 import { ActionLibrary, Action, DatabaseResult, TriggerPayload, ActionPayload } from '../types'
 import evaluateExpression from '../modules/evaluateExpression/evaluateExpression'
 import { Client } from 'pg'
+import { type } from 'os'
 
 const schedule = require('node-schedule')
 
@@ -88,24 +89,20 @@ export async function processTrigger(client: Client, payload: TriggerPayload) {
     `
     const res = await client.query(query, [payload.record_id, payload.trigger])
     // Filter out Actions that don't match the current condition
-    const actions = await res.rows.filter((action: Action) => evaluateExpression(action.condition))
-    // Evaluate parameters for each Action
+    const actions: Action[] = []
+    for (const action of res.rows) {
+      const condition = await evaluateExpression(action.condition)
+      if (condition) actions.push(action)
+    }
 
-    actions.forEach((action: Action) => {
+    // Evaluate parameters for each Action
+    for (const action of actions) {
       const parameter_queries = action.parameter_queries
-      // const parameter_array = Object.entries(parameter_queries)
-      // ;async () => {
-      //   for (let i = 0; i < parameter_array.length; i++) {
-      //     const key = parameter_array[i][0]
-      //     const value = parameter_array[i][1]
-      //     parameter_queries[key] = await evaluateExpression(parameter_queries[value])
-      //   }
-      // }
-      Object.keys(parameter_queries).forEach((key) => {
-        parameter_queries[key] = evaluateExpression(parameter_queries[key])
-        console.log(key, parameter_queries[key])
-      })
-    })
+      for (const key in parameter_queries) {
+        parameter_queries[key] = await evaluateExpression(parameter_queries[key])
+      }
+    }
+
     // Write each Action with parameters to Action_Queue
     const writeQuery = `
     INSERT into action_queue (trigger_event, action_code, parameters, status, time_queued)
@@ -140,14 +137,3 @@ export async function executeAction(
   `
   client.query(updateActionQuery, [actionResult.status, actionResult.error, payload.id])
 }
-
-// function evaluateExpression(query: any) {
-//   // This would be basically the same as the client-side query/condition evaluator described in QUERY SYNTAX. For now, we'll assume they all match (True), or are all literal values.
-//   switch (query.type) {
-//     case 'boolean':
-//       return true
-//     case 'string':
-//       return query.value
-//   }
-//   return true
-// }
