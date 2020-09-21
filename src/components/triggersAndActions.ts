@@ -2,6 +2,7 @@ import path from 'path'
 import getAppRootDir from './getAppRoot'
 import * as config from '../config.json'
 import { ActionLibrary, Action, DatabaseResult, TriggerPayload, ActionPayload } from '../types'
+import evaluateExpression from '../modules/evaluateExpression/evaluateExpression'
 import { Client } from 'pg'
 
 const schedule = require('node-schedule')
@@ -87,14 +88,22 @@ export async function processTrigger(client: Client, payload: TriggerPayload) {
     `
     const res = await client.query(query, [payload.record_id, payload.trigger])
     // Filter out Actions that don't match the current condition
-    const actions = res.rows.filter((action: Action) => evaluateExpression(action.condition))
+    const actions = await res.rows.filter((action: Action) => evaluateExpression(action.condition))
     // Evaluate parameters for each Action
+
     actions.forEach((action: Action) => {
       const parameter_queries = action.parameter_queries
-      Object.keys(parameter_queries).forEach((key) => {
-        parameter_queries[key] = evaluateExpression(parameter_queries[key])
-      })
-      // console.log(parameter_queries);
+      console.log(Object.entries(parameter_queries))
+      ;async () => {
+        for (let i = 0; i < Object.entries(parameter_queries).length; i++) {
+          console.log('Running...')
+          parameter_queries[i] = await evaluateExpression(parameter_queries[i][1])
+        }
+      }
+      // Object.keys(parameter_queries).forEach((key) => {
+      //   parameter_queries[key] = evaluateExpression(parameter_queries[key])
+      //   console.log(key, parameter_queries[key])
+      // })
     })
     // Write each Action with parameters to Action_Queue
     const writeQuery = `
@@ -131,13 +140,13 @@ export async function executeAction(
   client.query(updateActionQuery, [actionResult.status, actionResult.error, payload.id])
 }
 
-function evaluateExpression(query: any) {
-  // This would be basically the same as the client-side query/condition evaluator described in QUERY SYNTAX. For now, we'll assume they all match (True), or are all literal values.
-  switch (query.type) {
-    case 'boolean':
-      return true
-    case 'string':
-      return query.value
-  }
-  return true
-}
+// function evaluateExpression(query: any) {
+//   // This would be basically the same as the client-side query/condition evaluator described in QUERY SYNTAX. For now, we'll assume they all match (True), or are all literal values.
+//   switch (query.type) {
+//     case 'boolean':
+//       return true
+//     case 'string':
+//       return query.value
+//   }
+//   return true
+// }
