@@ -64,22 +64,13 @@ This table store what is dynamically imported to the App from the plugins folder
 Different users needs different permissions for acting on an applicatiion template. For example a user entitled as an **Applicant** would require to be associated with a template permission be able to Apply to specific application templates. Another example is the user entitled as a **Reviewer** who would require to be associated with the template review stage to be able to Review application templates on a stage or specific sections of application templates on a stage.
 
 ### template permission
-The template permission is the link between users and templates. Each one can be for the entiry application template with `template_id` and no `template_section_id` or have it the section defined for more specific permissions related to a section.
+The template permission is the link between users and templates. Each one can be for the entire application template with `template_id` and no `template_section_id` or have it the section defined for more specific permissions related to a section.
 
 The `permission_policy_id` link to the actual permission policy to describe what are the policies associated to this template permission.
 
 The `permission_join_id` links this permission to a user/company and `restrictions` would add more specific rules.
 
 More detailed description of template permissions coming soon: `restrictions`.
-
-### template review stage
-Defines user that can review each stage of one application template.
-
-The `template_stage_id` links to one stage of the application template (e.g. `'Screening'`).
-
-The `permission_join_id` links this permission to a user that will be able to review this application template.
-
-More detailed description coming soon: `name`.
 
 **To be considered:**
 
@@ -88,9 +79,9 @@ More detailed description coming soon: `name`.
 `template_review_stage` more generic removing the `permission_join_id` and adding to `template_permission` another `template_review_stage_id` to connect a permission to a user and the application template stage?
 
 ## Triggered actions
-The workflow of actions that should happen after an expected trigger happens for each stage of one application is defined in the application template by actions. Triggers are every change on the application, flagged by the field `trigger` which has associated actions.
+The workflow of what should happen after an expected trigger in each stage of one application is defined in the application template by actions. Triggers are every change on the application, flagged by the field `trigger` which has associated actions. See more about [triggers](Triggers-and-Actions.md)
 
-The actions logic are defined inside action plugins, which execute a function generate some change in the database.
+The actions logic are defined inside action plugins, which execute a function to generate some change in the database. (Link to Action plugins comming soon)
 
 ### template action
 The `template_id` links the action with the application template. 
