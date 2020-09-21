@@ -83,19 +83,6 @@ The workflow of what should happen after an expected trigger in each stage of on
 
 The actions logic are defined inside action plugins, which execute a function to generate some change in the database. (Link to Action plugins comming soon)
 
-### template action
-The `template_id` links the action with the application template. 
-
-The `trigger` describes what is the trigger associated with this action. The trigger would be one of the options: `'onApplicationCreate'`, `'onApplicationSubmit'`, `'onApplicationSave'`, `'onApplicationWithdrawn'`, `'onReviewStart'`, `'onReviewEditComment'`, `'onReviewSave'`, `'onReviewAssign'`, `'onApprovalSubmit'`, `'onScheduleTime'`.
-
-The `action_code` of the associated **action plugin**, where the definitions for the action are coming from. 
-
-The `condition` defines the environment for this action to happen.
-
-The `parameter_queries` list the required local object or queries to be used by the **Query Syntax** when the action runs.
-
-More detailed description of template actions coming soon: `condition`.
-
 ### action plugin
 The `code` is unique per action plugin.
 
@@ -105,6 +92,15 @@ The `path` is the local path in the server where the imported plugin is stored.
 
 The `function_name` the name of the function to be called when the action runs.
 
-The `requires_parameters` list the required local object or queries to be used by the **Query Syntax** when the action runs.
+The `required_parameters` is the name of the fields required of local object or queries to be used when the action runs.
 
-More detailed description on the different between `action_plugin.requires_parameters` and `action.parameter_queries` coming soon.
+### template action
+The `template_id` links the action with the application template. 
+
+The `trigger` describes what is the trigger associated with this action. The list of possible triggers can be found [here](Triggers-and-Actions.md)
+
+The `action_code` of the associated **action plugin**, where the definitions for the action are coming from. 
+
+The `condition` is a JSON expression that must evaluate to true for the Action to proceed.
+
+The `parameter_queries` is an object mapping each of these fields from `action_plugin.required_parameters` to a JSON expression to provide the value to these fields.
