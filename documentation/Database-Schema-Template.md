@@ -42,7 +42,10 @@ The `code` is associated with the **element type plugin**, where the definitions
 
 The order each element is displayed is defined by the `next_element_code` (combined with the `section_id` of the current template version).
 
-The `visibility_condition` checks for any required previous elements to be answered before this element can be displayed. 
+The `visibility_condition` checks for a condition that will be evaluated and run using the [**Query syntax**](Query-Syntax.md). Examples of visibility conditions:
+  * checkes for any required previous elements to be answered before this element can be displayed
+  * check for current `stage` (e.g. only showing request for payment documentation during `'Assessment'`)
+  * or anything that can be expressed in a JSON query expression.
 
 The `category` is either `'Question'` or `'Information'`. 
 
