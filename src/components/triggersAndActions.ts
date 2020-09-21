@@ -4,7 +4,6 @@ import * as config from '../config.json'
 import { ActionLibrary, Action, DatabaseResult, TriggerPayload, ActionPayload } from '../types'
 import evaluateExpression from '../modules/evaluateExpression/evaluateExpression'
 import { Client } from 'pg'
-import { type } from 'os'
 
 const schedule = require('node-schedule')
 
