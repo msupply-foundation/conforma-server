@@ -38,6 +38,7 @@ pgClient.on('notification', (msg: DatabaseRecord) => {
       executeAction(pgClient, JSON.parse(msg.payload), actionLibrary)
       break
   }
+  // console.log(msg.payload);
 })
 
 pgClient.query('LISTEN trigger_notifications')
