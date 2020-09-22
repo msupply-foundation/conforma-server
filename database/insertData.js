@@ -39,7 +39,7 @@ const queries = [
                               visibilityCondition: { value: true }
                               category: QUESTION
                               isRequired: true
-                              isEditable: true
+                              isEditable: { value: true }
                               parameters: { label: "First Name" }
                             }
                             {
@@ -50,7 +50,7 @@ const queries = [
                               visibilityCondition: { value: true }
                               category: QUESTION
                               isRequired: true
-                              isEditable: true
+                              isEditable: { value: true }
                               parameters: { label: "Last Name" }
                             }
                             {
@@ -78,7 +78,7 @@ const queries = [
                               visibilityCondition: { value: true }
                               category: QUESTION
                               isRequired: true
-                              isEditable: true
+                              isEditable: { value: true }
                               parameters: {
                                 label: "Select your Company"
                                 options: ["Company A", "Company B"]
@@ -157,7 +157,7 @@ const queries = [
                           visibilityCondition: { value: true }
                           category: QUESTION
                           isRequired: true
-                          isEditable: true
+                          isEditable: { value: true }
                           parameters: { label: "Unique Name for Company" }
                         }
                         {
@@ -168,7 +168,7 @@ const queries = [
                           visibilityCondition: { value: true }
                           category: QUESTION
                           isRequired: true
-                          isEditable: true
+                          isEditable: { value: true }
                           parameters: {
                             label: "Select type of activity"
                             options: ["Manufacturer", "Importer", "Producer"]

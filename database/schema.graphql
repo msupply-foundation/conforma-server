@@ -1389,7 +1389,7 @@ input ApplicationResponseTemplateQuestionIdFkeyTemplateElementCreateInput {
   visibilityCondition: JSON
   elementTypePluginCode: String
   isRequired: Boolean
-  isEditable: Boolean
+  isEditable: JSON
   parameters: JSON
   defaultValue: JSON
   validation: JSON
@@ -2661,7 +2661,7 @@ input ApplicationTemplateIdFkeyTemplateCreateInput {
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -3898,7 +3898,7 @@ type CreateTemplateStagePayload {
   query: Query
 
   """Reads a single `Template` that is related to this `TemplateStage`."""
-  tamplate: Template
+  template: Template
 
   """An edge for our `TemplateStage`. May be used by Relay 1."""
   templateStageEdge(
@@ -5532,7 +5532,7 @@ type DeleteTemplateStagePayload {
   query: Query
 
   """Reads a single `Template` that is related to this `TemplateStage`."""
-  tamplate: Template
+  template: Template
 
   """An edge for our `TemplateStage`. May be used by Relay 1."""
   templateStageEdge(
@@ -13443,7 +13443,7 @@ type Template implements Node {
   version: TemplateVersion
 
   """Reads and enables pagination through a set of `TemplateStage`."""
-  templateStagesByTamplateId(
+  templateStages(
     """Only read the first `n` values of the set."""
     first: Int
 
@@ -13968,7 +13968,7 @@ input TemplateActionTemplateIdFkeyTemplateCreateInput {
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -14010,7 +14010,7 @@ type TemplateElement implements Node {
   visibilityCondition: JSON
   elementTypePluginCode: String
   isRequired: Boolean
-  isEditable: Boolean
+  isEditable: JSON
   parameters: JSON
   defaultValue: JSON
   validation: JSON
@@ -14088,7 +14088,7 @@ input TemplateElementCondition {
   isRequired: Boolean
 
   """Checks for equality with the object’s `isEditable` field."""
-  isEditable: Boolean
+  isEditable: JSON
 
   """Checks for equality with the object’s `parameters` field."""
   parameters: JSON
@@ -14111,7 +14111,7 @@ input TemplateElementInput {
   visibilityCondition: JSON
   elementTypePluginCode: String
   isRequired: Boolean
-  isEditable: Boolean
+  isEditable: JSON
   parameters: JSON
   defaultValue: JSON
   validation: JSON
@@ -14192,7 +14192,7 @@ input TemplateElementPatch {
   visibilityCondition: JSON
   elementTypePluginCode: String
   isRequired: Boolean
-  isEditable: Boolean
+  isEditable: JSON
   parameters: JSON
   defaultValue: JSON
   validation: JSON
@@ -14314,7 +14314,7 @@ input TemplateElementSectionIdFkeyTemplateElementCreateInput {
   visibilityCondition: JSON
   elementTypePluginCode: String
   isRequired: Boolean
-  isEditable: Boolean
+  isEditable: JSON
   parameters: JSON
   defaultValue: JSON
   validation: JSON
@@ -14394,7 +14394,7 @@ input TemplateInput {
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -14528,7 +14528,7 @@ input TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplatePkey
 }
 
 """The globally unique `ID` look up for the row to update."""
-input TemplateOnTemplateStageForTemplateStageTamplateIdFkeyNodeIdUpdate {
+input TemplateOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate {
   """
   The globally unique `ID` which identifies a single `templateStage` to be connected.
   """
@@ -14541,11 +14541,11 @@ input TemplateOnTemplateStageForTemplateStageTamplateIdFkeyNodeIdUpdate {
 }
 
 """The fields on `template` to look up the row to update."""
-input TemplateOnTemplateStageForTemplateStageTamplateIdFkeyUsingTemplatePkeyUpdate {
+input TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplatePkeyUpdate {
   """
   An object where the defined keys will be set on the `template` being updated.
   """
-  patch: updateTemplateOnTemplateStageForTemplateStageTamplateIdFkeyPatch!
+  patch: updateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch!
   id: Int!
 }
 
@@ -14559,7 +14559,7 @@ input TemplatePatch {
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -15116,7 +15116,7 @@ input TemplatePermissionTemplateIdFkeyTemplateCreateInput {
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -15755,8 +15755,10 @@ input TemplateReviewStageTemplateStageIdFkeyTemplateReviewStageCreateInput {
 """The `templateStage` to be created by this mutation."""
 input TemplateReviewStageTemplateStageIdFkeyTemplateStageCreateInput {
   id: Int
-  tamplateId: Int
-  templateToTamplateId: TemplateStageTamplateIdFkeyInput
+  number: Int
+  title: String
+  templateId: Int
+  templateToTemplateId: TemplateStageTemplateIdFkeyInput
   templateReviewStagesUsingId: TemplateReviewStageTemplateStageIdFkeyInverseInput
 }
 
@@ -16162,7 +16164,7 @@ input TemplateSectionTemplateIdFkeyTemplateCreateInput {
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -16222,10 +16224,12 @@ type TemplateStage implements Node {
   """
   nodeId: ID!
   id: Int!
-  tamplateId: Int
+  number: Int
+  title: String
+  templateId: Int
 
   """Reads a single `Template` that is related to this `TemplateStage`."""
-  tamplate: Template
+  template: Template
 
   """Reads and enables pagination through a set of `TemplateReviewStage`."""
   templateReviewStages(
@@ -16265,15 +16269,23 @@ input TemplateStageCondition {
   """Checks for equality with the object’s `id` field."""
   id: Int
 
-  """Checks for equality with the object’s `tamplateId` field."""
-  tamplateId: Int
+  """Checks for equality with the object’s `number` field."""
+  number: Int
+
+  """Checks for equality with the object’s `title` field."""
+  title: String
+
+  """Checks for equality with the object’s `templateId` field."""
+  templateId: Int
 }
 
 """An input for mutations affecting `TemplateStage`"""
 input TemplateStageInput {
   id: Int
-  tamplateId: Int
-  templateToTamplateId: TemplateStageTamplateIdFkeyInput
+  number: Int
+  title: String
+  templateId: Int
+  templateToTemplateId: TemplateStageTemplateIdFkeyInput
   templateReviewStagesUsingId: TemplateReviewStageTemplateStageIdFkeyInverseInput
 }
 
@@ -16316,7 +16328,7 @@ input TemplateStageOnTemplateReviewStageForTemplateReviewStageTemplateStageIdFke
 }
 
 """The globally unique `ID` look up for the row to update."""
-input TemplateStageOnTemplateStageForTemplateStageTamplateIdFkeyNodeIdUpdate {
+input TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate {
   """
   The globally unique `ID` which identifies a single `template` to be connected.
   """
@@ -16329,11 +16341,11 @@ input TemplateStageOnTemplateStageForTemplateStageTamplateIdFkeyNodeIdUpdate {
 }
 
 """The fields on `templateStage` to look up the row to update."""
-input TemplateStageOnTemplateStageForTemplateStageTamplateIdFkeyUsingTemplateStagePkeyUpdate {
+input TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplateStagePkeyUpdate {
   """
   An object where the defined keys will be set on the `templateStage` being updated.
   """
-  patch: updateTemplateStageOnTemplateStageForTemplateStageTamplateIdFkeyPatch!
+  patch: updateTemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyPatch!
   id: Int!
 }
 
@@ -16342,8 +16354,10 @@ Represents an update to a `TemplateStage`. Fields that are set will be updated.
 """
 input TemplateStagePatch {
   id: Int
-  tamplateId: Int
-  templateToTamplateId: TemplateStageTamplateIdFkeyInput
+  number: Int
+  title: String
+  templateId: Int
+  templateToTemplateId: TemplateStageTemplateIdFkeyInput
   templateReviewStagesUsingId: TemplateReviewStageTemplateStageIdFkeyInverseInput
 }
 
@@ -16378,8 +16392,12 @@ enum TemplateStagesOrderBy {
   NATURAL
   ID_ASC
   ID_DESC
-  TAMPLATE_ID_ASC
-  TAMPLATE_ID_DESC
+  NUMBER_ASC
+  NUMBER_DESC
+  TITLE_ASC
+  TITLE_DESC
+  TEMPLATE_ID_ASC
+  TEMPLATE_ID_DESC
   PRIMARY_KEY_ASC
   PRIMARY_KEY_DESC
 }
@@ -16387,7 +16405,7 @@ enum TemplateStagesOrderBy {
 """
 Input for the nested mutation of `template` in the `TemplateStageInput` mutation.
 """
-input TemplateStageTamplateIdFkeyInput {
+input TemplateStageTemplateIdFkeyInput {
   """
   The primary key(s) for `template` for the far side of the relationship.
   """
@@ -16411,23 +16429,23 @@ input TemplateStageTamplateIdFkeyInput {
   """
   The primary key(s) and patch data for `template` for the far side of the relationship.
   """
-  updateById: TemplateOnTemplateStageForTemplateStageTamplateIdFkeyUsingTemplatePkeyUpdate
+  updateById: TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplatePkeyUpdate
 
   """
   The primary key(s) and patch data for `template` for the far side of the relationship.
   """
-  updateByNodeId: TemplateStageOnTemplateStageForTemplateStageTamplateIdFkeyNodeIdUpdate
+  updateByNodeId: TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate
 
   """
   A `TemplateInput` object that will be created and connected to this object.
   """
-  create: TemplateStageTamplateIdFkeyTemplateCreateInput
+  create: TemplateStageTemplateIdFkeyTemplateCreateInput
 }
 
 """
 Input for the nested mutation of `templateStage` in the `TemplateInput` mutation.
 """
-input TemplateStageTamplateIdFkeyInverseInput {
+input TemplateStageTemplateIdFkeyInverseInput {
   """
   Flag indicating whether all other `templateStage` records that match this relationship should be removed.
   """
@@ -16456,28 +16474,28 @@ input TemplateStageTamplateIdFkeyInverseInput {
   """
   The primary key(s) and patch data for `templateStage` for the far side of the relationship.
   """
-  updateById: [TemplateStageOnTemplateStageForTemplateStageTamplateIdFkeyUsingTemplateStagePkeyUpdate!]
+  updateById: [TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplateStagePkeyUpdate!]
 
   """
   The primary key(s) and patch data for `templateStage` for the far side of the relationship.
   """
-  updateByNodeId: [TemplateOnTemplateStageForTemplateStageTamplateIdFkeyNodeIdUpdate!]
+  updateByNodeId: [TemplateOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate!]
 
   """
   A `TemplateStageInput` object that will be created and connected to this object.
   """
-  create: [TemplateStageTamplateIdFkeyTemplateStageCreateInput!]
+  create: [TemplateStageTemplateIdFkeyTemplateStageCreateInput!]
 }
 
 """The `template` to be created by this mutation."""
-input TemplateStageTamplateIdFkeyTemplateCreateInput {
+input TemplateStageTemplateIdFkeyTemplateCreateInput {
   id: Int
   versionId: Int
   templateName: String
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -16485,9 +16503,11 @@ input TemplateStageTamplateIdFkeyTemplateCreateInput {
 }
 
 """The `templateStage` to be created by this mutation."""
-input TemplateStageTamplateIdFkeyTemplateStageCreateInput {
+input TemplateStageTemplateIdFkeyTemplateStageCreateInput {
   id: Int
-  templateToTamplateId: TemplateStageTamplateIdFkeyInput
+  number: Int
+  title: String
+  templateToTemplateId: TemplateStageTemplateIdFkeyInput
   templateReviewStagesUsingId: TemplateReviewStageTemplateStageIdFkeyInverseInput
 }
 
@@ -16667,7 +16687,7 @@ input TemplateVersionIdFkeyTemplateCreateInput {
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -19251,7 +19271,7 @@ input updateTemplateElementOnApplicationResponseForApplicationResponseTemplateQu
   visibilityCondition: JSON
   elementTypePluginCode: String
   isRequired: Boolean
-  isEditable: Boolean
+  isEditable: JSON
   parameters: JSON
   defaultValue: JSON
   validation: JSON
@@ -19271,7 +19291,7 @@ input updateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch
   visibilityCondition: JSON
   elementTypePluginCode: String
   isRequired: Boolean
-  isEditable: Boolean
+  isEditable: JSON
   parameters: JSON
   defaultValue: JSON
   validation: JSON
@@ -19332,7 +19352,7 @@ input updateTemplateOnApplicationForApplicationTemplateIdFkeyPatch {
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -19349,7 +19369,7 @@ input updateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch {
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -19365,7 +19385,7 @@ input updateTemplateOnTemplateForTemplateVersionIdFkeyPatch {
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -19382,7 +19402,7 @@ input updateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -19399,7 +19419,7 @@ input updateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch {
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -19409,14 +19429,14 @@ input updateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch {
 """
 An object where the defined keys will be set on the `template` being updated.
 """
-input updateTemplateOnTemplateStageForTemplateStageTamplateIdFkeyPatch {
+input updateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch {
   id: Int
   versionId: Int
   templateName: String
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
-  templateStagesUsingId: TemplateStageTamplateIdFkeyInverseInput
+  templateStagesUsingId: TemplateStageTemplateIdFkeyInverseInput
   templateSectionsUsingId: TemplateSectionTemplateIdFkeyInverseInput
   templatePermissionsUsingId: TemplatePermissionTemplateIdFkeyInverseInput
   applicationsUsingId: ApplicationTemplateIdFkeyInverseInput
@@ -19851,17 +19871,21 @@ An object where the defined keys will be set on the `templateStage` being update
 """
 input updateTemplateStageOnTemplateReviewStageForTemplateReviewStageTemplateStageIdFkeyPatch {
   id: Int
-  tamplateId: Int
-  templateToTamplateId: TemplateStageTamplateIdFkeyInput
+  number: Int
+  title: String
+  templateId: Int
+  templateToTemplateId: TemplateStageTemplateIdFkeyInput
   templateReviewStagesUsingId: TemplateReviewStageTemplateStageIdFkeyInverseInput
 }
 
 """
 An object where the defined keys will be set on the `templateStage` being updated.
 """
-input updateTemplateStageOnTemplateStageForTemplateStageTamplateIdFkeyPatch {
+input updateTemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyPatch {
   id: Int
-  templateToTamplateId: TemplateStageTamplateIdFkeyInput
+  number: Int
+  title: String
+  templateToTemplateId: TemplateStageTemplateIdFkeyInput
   templateReviewStagesUsingId: TemplateReviewStageTemplateStageIdFkeyInverseInput
 }
 
@@ -19882,7 +19906,7 @@ type UpdateTemplateStagePayload {
   query: Query
 
   """Reads a single `Template` that is related to this `TemplateStage`."""
-  tamplate: Template
+  template: Template
 
   """An edge for our `TemplateStage`. May be used by Relay 1."""
   templateStageEdge(
