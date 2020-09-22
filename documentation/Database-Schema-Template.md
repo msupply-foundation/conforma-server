@@ -42,15 +42,19 @@ There is one or more stages per application template. Each one is defined as a n
 
 ### template sections
 
-Sections of the application template that contain some elements. Each section can be associated with a **template permission** if this section requires a certain type of reviewer to check for responses from an Applicant.
+Sections of the application template that contain some [elements/questions](Elements-Questions.md). Each section can be associated with a **template permission** if this section requires a certain type of reviewer to check for responses from an Applicant.
 
 ### template elements
 
 Elements in the application template always are part of a section, therefor it stores the `section_id` instead of the `template_id`.
 
-The `code` is associated with the **element type plugin**, where the definitions of each element will be coming from.
+The `code` is unique for each element in the same **template**. This code will be auto-generated, but we would allow the Admin user to change if needed.
 
-The order each element is displayed is defined by the `next_element_code` (combined with the `section_id` of the current template version).
+The `next_element_code` links to the unique code of the next element to display in the application. So we order elements as a linked list.
+
+The `title` that will be display in this question/information element to the user. Default is `'Undefined'`.
+
+The `category` is either `'Question'` or `'Information'`. The 'Questions' are elements that will require responses from the Applicant and 'Information' elements are only structural or for visualisation.
 
 The `visibility_condition` checks for a condition that will be evaluated and run using the [**Query syntax**](Query-Syntax.md). Examples of visibility conditions:
 
@@ -58,13 +62,13 @@ The `visibility_condition` checks for a condition that will be evaluated and run
 - check for current `stage` (e.g. only showing request for payment documentation during `'Assessment'`)
 - or anything that can be expressed in a JSON query expression.
 
-The `category` is either `'Question'` or `'Information'`.
+The `element_type_plugin_code` is associated with the **element type plugin**, where the definitions of each element will be coming from.
 
-'Questions' elements will require responses from the Applicant and 'Information' elements are only structural or for visualisation.
+The `is_required` determines which 'Question' elements that are compulsory (when visible, defined by the **visibility_condition**).
 
-When the element category is 'Question' it also uses `is_required` and `is_editable` to determine its state.
+The `is_editable` determines which 'Question' elements should be editable in which conditions. e.g. A questions that should be editable depending on the selected option of a previous Question; A question that is only editable when the **application stage** changes.
 
-More detailed description of question elements coming soon: `validation`, `parameters`.
+More detailed description of question elements coming soon: `parameters`, `default_value` and `validation`.
 
 ### element type plugin
 
