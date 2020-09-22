@@ -34,7 +34,7 @@ The `outcome` is either `'Pending'`, `'Approved'`, `'Rejected'`. The application
 
 ### application_section
 
-Sections of the application. It will point to the `template_section` that stores all the elements (questions) to be displayed. We required to have this records to have those associated to reviews.
+Sections of the application. It will point to the `template_section` that stores all the elements (questions) to be displayed. This table is required as it provides a way to associate reviews (which are per-section) to specific application sections.
 
 The `application_id` links to the application.
 
