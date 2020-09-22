@@ -11,7 +11,7 @@ Action plugins reside in `/src/plugins`. Each plugin is contained within its own
 Within a plugin's folder are the following files:
 
 - `jest.config.js` -- Contains automated tests for the plugin that run whenever `test` is run in the project.
-- `package.json` -- A standard `npm` package.json file which treats this plugin's folder as a distinct package. (more details in **Development** section below)
+- `package.json` -- A standard `npm` package.json file which treats this plugin's folder as a distinct package. (more details in **Development** section [below](#development))
 - `tsconfig.json` -- Typescript configuration file. Shouldn't need to be changed.
 - `/src` -- folder containing plugin source code and metadata
 - `/src/plugin.json` -- contains metadata for the plugin. The system reads this file (at startup) to load all the relevant information about the plugin into the database, so make sure it is accurate and up-to-date. Further details below.
@@ -107,6 +107,8 @@ The `action_plugin` table is the primary record of what actions are available to
 - `path` (determined by the folder the plugin was found in, plus the specified filename)
 - `function_name`
 - `required_parameters`
+
+<a name="development"></a>
 
 ## Development and build process
 
