@@ -2,7 +2,7 @@
 
 Please see [Triggers & Actions](./Triggers-and-Actions.md) for an explanation of how the trigger/action system works.
 
-This document gives the specification for the **Action plugins** themselves.
+This document details the specification for the **Action plugins** themselves.
 
 ## Location & Folder contents
 
@@ -85,7 +85,7 @@ Compulsory fields are:
   - The database's register of installed plugins (`action_plugin` table)
   - Actions are stored in an in-memory Action library that maps `code` to the function name.
   - Templates store the actions associated with them by referencing this `code`
-- `name` -- the name displayed in the UI (e.g. Template Builder)
+- `name` -- the name displayed in the UI (mainly Template Builder)
 - `description` -- short explanation of the plugin's functionality. Also displayed in the UI.
 - `file` -- the name of the source code file. Don't include the file extension, as the dynamic import will read from either the `.js` or `.ts` file depending on context (development vs. build).
 - `function_name` -- the name of the function exported in the source code file. If this name is changed in that file, it _must_ be updated here, or else the app won't find the function.
@@ -93,8 +93,37 @@ Compulsory fields are:
 
 ## How plugins are loaded.
 
+At startup, the server app scans the `plugins` folder. In each plugin's subfolder, it looks for the `plugin.json` file, from which it reads the metadata. It compares this information with the list of plugins registered in `action_plugin` and updates the database accordingly:
+
+- Adds a new record for newly-found plugins
+- Updates plugin details that have changed
+- Removes records for missing plugins
+
+The `action_plugin` table is the primary record of what actions are available to the system, with the following fields stored:
+
+- `code`
+- `name`
+- `description`
+- `path` (determined by the folder the plugin was found in, plus the specified filename)
+- `function_name`
+- `required_parameters`
+
 ## Development and build process
+
+Plugins are intended to be stand-alone units, in that a user should be able to simply copy a plugin folder to another system and have it work straight away. (Eventually, we envisage that plugins could be imported directly via the front-end UI.) To that end, each plugin is developed as its own package, with its own `package.json` and `node_modules` folder, as well as Typescript and testing configurations.
+
+When developing a plugin, you can run the main app with `yarn dev` as normal, and changes you make to the plugin `.ts` file will be reflected immediately in the dev environment.
+
+However, when development work is complete, the plugin should be built independently by running `yarn build` in the plugin's root folder, which will compile the typescript code into `.js` file(s). (There is also a shortcut `yarn build_plugins` to build all plugins from the project root.) When the main project is built (`yarn build`), the plugins are not re-compiled, but simply copied directly to the build folder, so its expected they will each have their own compiled `.js` file already in place.
+
+## Needs consideration
+
+- Should the `required_parameters` specify an expected type so that the Template Builder UI knows what kind of options to present?
+
+- Should there be (optional) **default values** for the `required_parameters`? I'm thinking, for things like "Send notification", the user's email address will be required, but it's always going to be the same query (`{operator: "objectProperties", children: [{value: {object: "user", property: "email"}}]}`) so it seems like it should there by default so the Admin doesn't have to specify an obvious value in the Template Builder.
+
+- Currently, parameters are evaluated immeditely before the Action is saved to the `action_queue`. For immediate actions, this is fine, but for Scheduled Actions, can we imagine a use case where it would be better for them to be evaluated at the time they run (which could be much later, even years)?
 
 ## List of Action plugins created to-date:
 
-- Console Log
+- **Console Log**: Just prints a message to the console. For demo purposes only.
