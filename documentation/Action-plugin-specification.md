@@ -48,7 +48,7 @@ In the simple example above, the only parameter expected is `message`, which the
 
 ## `plugin.json` file
 
-The `plugin.json` file contains all the plugins metadata. This includes the essential information that is loaded into the database that affects the functioning of the plugin, plus other information that may become useful in the future (i.e. not implemented yet).
+The `plugin.json` file contains all the plugins metadata. This includes the essential information that is loaded into the database that determines the functioning of the plugin, plus other information that may become useful in the future (i.e. not implemented yet).
 
 Example `plugin.json` (from Console Logger):
 
@@ -83,17 +83,17 @@ Compulsory fields are:
 
 - `code` -- this must be a unique string that identifies the plugin. It shouldn't be changed after release. This is used as an id by:
   - The database's register of installed plugins (`action_plugin` table)
-  - Actions are stored in an in-memory Action library that maps `code` to the function name.
+  - Actions are stored in an in-memory Action library that maps `code` to the `function name`.
   - Templates store the actions associated with them by referencing this `code`
 - `name` -- the name displayed in the UI (mainly Template Builder)
 - `description` -- short explanation of the plugin's functionality. Also displayed in the UI.
-- `file` -- the name of the source code file. Don't include the file extension, as the dynamic import will read from either the `.js` or `.ts` file depending on context (development vs. build).
-- `function_name` -- the name of the function exported in the source code file. If this name is changed in that file, it _must_ be updated here, or else the app won't find the function.
+- `file` -- the name of the source code file. Doesn't include the file extension, as the dynamic import will read from either the `.js` or `.ts` file depending on context (development vs. build).
+- `function_name` -- the name of the function exported in the source code file. If this name is changed in the source file, it _must_ be updated here, or else the app won't find the function.
 - `required_parameters` -- an array of strings that define the names of the fields that must be supplied to the plugin at runtime. Templates store the values (or dynamic expressions) that map to these field names.
 
 ## How plugins are loaded.
 
-At startup, the server app scans the `plugins` folder. In each plugin's subfolder, it looks for the `plugin.json` file, from which it reads the metadata. It compares this information with the list of plugins registered in `action_plugin` and updates the database accordingly:
+At startup, the server app scans the `plugins` folder. In each plugin's subfolder, it looks for a `plugin.json` file, from which it reads the metadata. It compares this information with the list of plugins registered in `action_plugin` and updates the database accordingly:
 
 - Adds a new record for newly-found plugins
 - Updates plugin details that have changed
@@ -114,7 +114,7 @@ Plugins are intended to be stand-alone units, in that a user should be able to s
 
 When developing a plugin, you can run the main app with `yarn dev` as normal, and changes you make to the plugin `.ts` file will be reflected immediately in the dev environment.
 
-However, when development work is complete, the plugin should be built independently by running `yarn build` in the plugin's root folder, which will compile the typescript code into `.js` file(s). (There is also a shortcut `yarn build_plugins` to build all plugins from the project root.) When the main project is built (`yarn build`), the plugins are not re-compiled, but simply copied directly to the build folder, so its expected they will each have their own compiled `.js` file already in place.
+However, when development work is complete, the plugin should be built independently by running `yarn build` _in the plugin's root folder_, which will compile the typescript code into `.js` file(s). (There is also a shortcut `yarn build_plugins` to build all plugins from the project root.) When the main project is built (`yarn build`), the plugins are not re-compiled, but simply copied directly to the build folder, so its expected they will each have their own compiled `.js` file already in place.
 
 ## Needs consideration
 
