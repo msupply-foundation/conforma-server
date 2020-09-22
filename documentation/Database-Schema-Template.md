@@ -33,7 +33,8 @@ The `version_id` is the link with the template version.
 
 The `template_name` and `code` is to help admin users identifying one template.
 
-The `current_status` can be `'Draft'`, `'Available'` or `'Disabled'`. The only 'Available' templates are the onesthe in the version flagged as the current one. All other application template are 'Disabled' or 'Draft' (if unfinalised).
+**To be re-considered after issue #35 is in PR or merged to master:**
+~~The `current_status` can be `'Draft'`, `'Available'` or `'Disabled'`. The only 'Available' templates are the ones in the version flagged as the current one. All other application template are 'Disabled' or 'Draft' (if unfinalised).~~
 
 ### template stage
 
