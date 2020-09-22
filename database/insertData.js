@@ -13,7 +13,7 @@ const queries = [
           timeCreated: "NOW();"
           templatesUsingId: {
             create: {
-              templateName: "User Registration"
+              name: "User Registration"
               code: "UserRego1"
               templateSectionsUsingId: {
                 create: [
@@ -100,7 +100,7 @@ const queries = [
         templatesByVersionId {
           nodes {
             code
-            templateName
+            name
             templateSections {
               nodes {
                 code
@@ -131,7 +131,7 @@ const queries = [
           timeCreated: "NOW();"
           templatesUsingId: {
             create: {
-              templateName: "Company Registration"
+              name: "Company Registration"
               code: "CompRego1"
               templateSectionsUsingId: {
                 create: [
@@ -207,7 +207,7 @@ const queries = [
         templatesByVersionId {
           nodes {
             code
-            templateName
+            name
             templateSections {
               nodes {
                 code
@@ -349,7 +349,7 @@ const queries = [
       application {
         name
         template {
-          templateName
+          name
         }
         applicationResponses {
           nodes {
@@ -448,7 +448,7 @@ const queries = [
       application {
         name
         template {
-          templateName
+          name
         }
         applicationResponses {
           nodes {
@@ -535,7 +535,7 @@ const queries = [
       application {
         name
         template {
-          templateName
+          name
         }
         applicationResponses {
           nodes {

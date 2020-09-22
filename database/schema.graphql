@@ -113,7 +113,7 @@ type ActionQueue implements Node {
   parameters: JSON
   status: ActionQueueStatus
   timeQueued: Datetime
-  timeExecuted: Datetime
+  executionTime: Datetime
   errorLog: String
 
   """Reads a single `TriggerQueue` that is related to this `ActionQueue`."""
@@ -153,8 +153,8 @@ input ActionQueueCondition {
   """Checks for equality with the object’s `timeQueued` field."""
   timeQueued: Datetime
 
-  """Checks for equality with the object’s `timeExecuted` field."""
-  timeExecuted: Datetime
+  """Checks for equality with the object’s `executionTime` field."""
+  executionTime: Datetime
 
   """Checks for equality with the object’s `errorLog` field."""
   errorLog: String
@@ -168,7 +168,7 @@ input ActionQueueInput {
   parameters: JSON
   status: ActionQueueStatus
   timeQueued: Datetime
-  timeExecuted: Datetime
+  executionTime: Datetime
   errorLog: String
   triggerQueueToTriggerEvent: ActionQueueTriggerEventFkeyInput
 }
@@ -221,7 +221,7 @@ input ActionQueuePatch {
   parameters: JSON
   status: ActionQueueStatus
   timeQueued: Datetime
-  timeExecuted: Datetime
+  executionTime: Datetime
   errorLog: String
   triggerQueueToTriggerEvent: ActionQueueTriggerEventFkeyInput
 }
@@ -267,8 +267,8 @@ enum ActionQueuesOrderBy {
   STATUS_DESC
   TIME_QUEUED_ASC
   TIME_QUEUED_DESC
-  TIME_EXECUTED_ASC
-  TIME_EXECUTED_DESC
+  EXECUTION_TIME_ASC
+  EXECUTION_TIME_DESC
   ERROR_LOG_ASC
   ERROR_LOG_DESC
   PRIMARY_KEY_ASC
@@ -289,7 +289,7 @@ input ActionQueueTriggerEventFkeyActionQueueCreateInput {
   parameters: JSON
   status: ActionQueueStatus
   timeQueued: Datetime
-  timeExecuted: Datetime
+  executionTime: Datetime
   errorLog: String
   triggerQueueToTriggerEvent: ActionQueueTriggerEventFkeyInput
 }
@@ -2657,7 +2657,7 @@ input ApplicationTemplateIdFkeyInverseInput {
 input ApplicationTemplateIdFkeyTemplateCreateInput {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -13435,7 +13435,7 @@ type Template implements Node {
   nodeId: ID!
   id: Int!
   versionId: Int
-  templateName: String
+  name: String
   code: String!
   status: TemplateStatus
 
@@ -13964,7 +13964,7 @@ input TemplateActionTemplateIdFkeyTemplateActionCreateInput {
 input TemplateActionTemplateIdFkeyTemplateCreateInput {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -13986,8 +13986,8 @@ input TemplateCondition {
   """Checks for equality with the object’s `versionId` field."""
   versionId: Int
 
-  """Checks for equality with the object’s `templateName` field."""
-  templateName: String
+  """Checks for equality with the object’s `name` field."""
+  name: String
 
   """Checks for equality with the object’s `code` field."""
   code: String
@@ -14390,7 +14390,7 @@ input TemplateElementTemplateElementPkeyDelete {
 input TemplateInput {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -14555,7 +14555,7 @@ Represents an update to a `Template`. Fields that are set will be updated.
 input TemplatePatch {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -15112,7 +15112,7 @@ input TemplatePermissionTemplateIdFkeyInverseInput {
 input TemplatePermissionTemplateIdFkeyTemplateCreateInput {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -16160,7 +16160,7 @@ input TemplateSectionTemplateIdFkeyInverseInput {
 input TemplateSectionTemplateIdFkeyTemplateCreateInput {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -16208,8 +16208,8 @@ enum TemplatesOrderBy {
   ID_DESC
   VERSION_ID_ASC
   VERSION_ID_DESC
-  TEMPLATE_NAME_ASC
-  TEMPLATE_NAME_DESC
+  NAME_ASC
+  NAME_DESC
   CODE_ASC
   CODE_DESC
   STATUS_ASC
@@ -16491,7 +16491,7 @@ input TemplateStageTemplateIdFkeyInverseInput {
 input TemplateStageTemplateIdFkeyTemplateCreateInput {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -16683,7 +16683,7 @@ input TemplateVersionIdFkeyInverseInput {
 """The `template` to be created by this mutation."""
 input TemplateVersionIdFkeyTemplateCreateInput {
   id: Int
-  templateName: String
+  name: String
   code: String!
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -17132,7 +17132,7 @@ input updateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch {
   parameters: JSON
   status: ActionQueueStatus
   timeQueued: Datetime
-  timeExecuted: Datetime
+  executionTime: Datetime
   errorLog: String
   triggerQueueToTriggerEvent: ActionQueueTriggerEventFkeyInput
 }
@@ -19348,7 +19348,7 @@ An object where the defined keys will be set on the `template` being updated.
 input updateTemplateOnApplicationForApplicationTemplateIdFkeyPatch {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -19365,7 +19365,7 @@ An object where the defined keys will be set on the `template` being updated.
 input updateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -19381,7 +19381,7 @@ An object where the defined keys will be set on the `template` being updated.
 """
 input updateTemplateOnTemplateForTemplateVersionIdFkeyPatch {
   id: Int
-  templateName: String
+  name: String
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -19398,7 +19398,7 @@ An object where the defined keys will be set on the `template` being updated.
 input updateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -19415,7 +19415,7 @@ An object where the defined keys will be set on the `template` being updated.
 input updateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
@@ -19432,7 +19432,7 @@ An object where the defined keys will be set on the `template` being updated.
 input updateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch {
   id: Int
   versionId: Int
-  templateName: String
+  name: String
   code: String
   status: TemplateStatus
   templateVersionToVersionId: TemplateVersionIdFkeyInput
