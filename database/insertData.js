@@ -360,7 +360,7 @@ const queries = [
         applicationResponses {
           nodes {
             value
-            templateQuestion {
+            templateElement {
               title
             }
           }
