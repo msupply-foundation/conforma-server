@@ -14,7 +14,7 @@ Within a plugin's folder are the following files:
 - `package.json` -- A standard `npm` package.json file which treats this plugin's folder as a distinct package. (more details in **Development** section [below](#development))
 - `tsconfig.json` -- Typescript configuration file. Shouldn't need to be changed.
 - `/src` -- folder containing plugin source code and metadata
-- `/src/plugin.json` -- contains metadata for the plugin. The system reads this file (at startup) to load all the relevant information about the plugin into the database, so make sure it is accurate and up-to-date. Further details below.
+- `/src/plugin.json` -- contains metadata for the plugin. The system reads this file (at startup) to load all the relevant information about the plugin into the database, so make sure it is accurate and up-to-date. Further details [below](#plugin).
 - `/src/<plugin-name>.ts` -- Typescript source code
 - `/src/<plugin-name>.js` -- Javascript code compiled from Typescript. This is what is actually loaded and run in the built server app.
 
@@ -45,6 +45,8 @@ In this case `consoleLog` is the name of the function called by the Action modul
 All parameters are passed in as keys/values in the `parameters` object. The plugin specifies the names of the parameter fields it is expecting (in `plugin.json`, below), and the template associated with this Action stores [expressions/queries](./Query-Syntax.md) to generate the values. These values are evaluated when the action is triggered and stored in the action_queue. The evaluated parameters are passed to the Action when its function is called.
 
 In the simple example above, the only parameter expected is `message`, which the function prints to the Console.
+
+<a name="plugin"></a>
 
 ## `plugin.json` file
 
