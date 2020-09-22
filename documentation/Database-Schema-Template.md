@@ -23,7 +23,7 @@ With templates versioning we keep previous finalised applications linked to the 
 
 ## Display elements
 
-The visualisation and questions required in each stage of an application is defined in the application template with the following entities.
+The sections and questions required in each stage of an application is defined in the application template with the following entities.
 
 ### template
 
@@ -31,9 +31,12 @@ Representation of the application template. All nested elements are accessible v
 
 The `version_id` is the link with the template version.
 
-The `template_name` and `code` is to help admin users identifying one template.
+The `name` is used to help **Admin users** identifying each template.
+
+The `code` is the identifier of the application template, althoug more than one record may have the same code due to versions.
 
 **To be re-considered after issue #35 is in PR or merged to master:**
+
 ~~The `current_status` can be `'Draft'`, `'Available'` or `'Disabled'`. The only 'Available' templates are the ones in the version flagged as the current one. All other application template are 'Disabled' or 'Draft' (if unfinalised).~~
 
 ### template stage
