@@ -48,7 +48,7 @@ The `application_id` links to the application.
 
 The `stage_id` links to the template stage, which will have the `name` and number of this stage.
 
-The `time_created` defined when this stage was created.
+The `time_created` records when this stage was created.
 
 The `is_current` is set to `'true'` while this is the current stage of this application. Otherwise is set to `'false'`.
 
