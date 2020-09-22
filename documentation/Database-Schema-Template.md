@@ -72,13 +72,17 @@ More detailed description of question elements coming soon: `parameters`, `defau
 
 ### element type plugin
 
-Also known as the **Question plugin**, describes the plugin functions to render as part of an Application with `display_component_name` and as part of the configuration page in the template builder with `config_component_name`.
+Also known as the **Question plugin**, each record in this table refers to an external [Plugin bundle](Question-Plugin-Bundles.md) in the plugins folder (`src/modules/plugins`).
 
-This table store what is dynamically imported to the App from the plugins folder (src/modules/plugins). The plugin `code` is the primary key. And template elements have `element_type_plugin_code` linking to the element type. Using the code will make it easier for exporting and importing a template from one system to another.
+The `display_component_name` references the UI component the applicant sees when filling in the form.
+
+The `config_component_name` refers to the UI component used to create the question/element in the [Template Builder](Template-Builder.md).
 
 ## Permission settings
 
-Different users needs different permissions for acting on an applicatiion template. For example a user entitled as an **Applicant** would require to be associated with a template permission be able to Apply to specific application templates. Another example is the user entitled as a **Reviewer** who would require to be associated with the template review stage to be able to Review application templates on a stage or specific sections of application templates on a stage.
+Different users needs different permissions for acting on an applicatiion template.
+
+For example an **Applicant user** would be required to be associated with a template permission in order to **Apply** to a specific application of a template type. Another example is a **Reviewer user** who would be required to be associated with a template permission in order to **Review** applications of a specific template type (or specific sections of the application of a template type) on a certain stage.
 
 ### template permission
 
