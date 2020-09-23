@@ -10,7 +10,7 @@ To define permissions with actionables for the user over an application template
 
 We like to define the permissions definition using: Who, how and what.
 
-**Who** => Is the `permission_name`, which describes the type of action to be associated with users.
+**Who** => the `permission_name`, which describes the type of action to be associated with users.
 
 **How** => the `permission_policy` or how the user that has this permission can interact with an application template (through actions).
 
