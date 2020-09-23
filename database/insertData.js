@@ -5,115 +5,106 @@ const graphQLendpoint = 'http://localhost:5000/graphql'
 const queries = [
   // Template A -- User Registration
   `mutation {
-    createTemplateVersion(
+    createTemplate(
       input: {
-        templateVersion: {
-          isCurrent: true
-          number: 1
-          timeCreated: "NOW();"
-          templatesUsingId: {
-            create: {
-              name: "User Registration"
-              code: "UserRego1"
-              templateSectionsUsingId: {
-                create: [
-                  {
-                    code: "S1"
-                    title: "Section 1"
-                    templateElementsUsingId: {
-                      create: [
-                        {
-                          code: "GS1"
-                          nextElementCode: "Q1"
-                          title: "Group 1"
-                          elementTypePluginCode: "group_start"
-                          visibilityCondition: { value: true }
-                          category: INFORMATION
-                          parameters: "{}"
-                        }
-                        {
-                          code: "Q1"
-                          nextElementCode: "Q2"
-                          title: "First Name"
-                          elementTypePluginCode: "short_text"
-                          visibilityCondition: { value: true }
-                          category: QUESTION
-                          isRequired: true
-                          isEditable: { value: true }
-                          parameters: { label: "First Name" }
-                        }
-                        {
-                          code: "Q2"
-                          nextElementCode: "GE1"
-                          title: "Surname"
-                          elementTypePluginCode: "drop_down"
-                          visibilityCondition: { value: true }
-                          category: QUESTION
-                          isRequired: true
-                          isEditable: { value: true }
-                          parameters: { label: "Last Name" }
-                        }
-                        {
-                          code: "GE1"
-                          nextElementCode: "BR1"
-                          title: "Group 1"
-                          elementTypePluginCode: "group_end"
-                          visibilityCondition: { value: true }
-                          category: INFORMATION
-                          parameters: {}
-                        }
-                        {
-                          code: "BR1"
-                          nextElementCode: "Q3"
-                          title: "Page 1"
-                          elementTypePluginCode: "page_break"
-                          visibilityCondition: { value: true }
-                          category: INFORMATION
-                          parameters: {}
-                        }
-                        {
-                          code: "Q3"
-                          title: "Company"
-                          elementTypePluginCode: "drop_down"
-                          visibilityCondition: { value: true }
-                          category: QUESTION
-                          isRequired: true
-                          isEditable: { value: true }
-                          parameters: {
-                            label: "Select your Company"
-                            options: ["Company A", "Company B"]
-                          }
-                        }
-                      ]
+        template: {
+          code: "UserRego1"
+          isCurrentVersion: true
+          name: "User Registration"
+          status: AVAILABLE
+          versionTimestamp: "NOW()"
+          templateSectionsUsingId: {
+            create: [
+              {
+                code: "S1"
+                title: "Section 1"
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "GS1"
+                      nextElementCode: "Q1"
+                      title: "Group 1"
+                      elementTypePluginCode: "group_start"
+                      visibilityCondition: { value: true }
+                      category: INFORMATION
+                      parameters: "{}"
                     }
-                  }
-                  { code: "S2", title: "Section 2" }
-                ]
+                    {
+                      code: "Q1"
+                      nextElementCode: "Q2"
+                      title: "First Name"
+                      elementTypePluginCode: "short_text"
+                      visibilityCondition: { value: true }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: { label: "First Name" }
+                    }
+                    {
+                      code: "Q2"
+                      nextElementCode: "GE1"
+                      title: "Surname"
+                      elementTypePluginCode: "drop_down"
+                      visibilityCondition: { value: true }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: { label: "Last Name" }
+                    }
+                    {
+                      code: "GE1"
+                      nextElementCode: "BR1"
+                      title: "Group 1"
+                      elementTypePluginCode: "group_end"
+                      visibilityCondition: { value: true }
+                      category: INFORMATION
+                      parameters: {}
+                    }
+                    {
+                      code: "BR1"
+                      nextElementCode: "Q3"
+                      title: "Page 1"
+                      elementTypePluginCode: "page_break"
+                      visibilityCondition: { value: true }
+                      category: INFORMATION
+                      parameters: {}
+                    }
+                    {
+                      code: "Q3"
+                      title: "Company"
+                      elementTypePluginCode: "drop_down"
+                      visibilityCondition: { value: true }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: {
+                        label: "Select your Company"
+                        options: ["Company A", "Company B"]
+                      }
+                    }
+                  ]
+                }
               }
-            }
+              { code: "S2", title: "Section 2" }
+            ]
           }
         }
       }
     ) {
-      templateVersion {
-        number
-        templatesByVersionId {
+      template {
+        code
+        name
+        templateSections {
           nodes {
             code
-            name
-            templateSections {
+            title
+            templateElementsBySectionId {
               nodes {
                 code
+                visibilityCondition
+                parameters
                 title
-                templateElementsBySectionId {
-                  nodes {
-                    code
-                    visibilityCondition
-                    parameters
-                    title
-                    category
-                  }
-                }
+                category
               }
             }
           }
@@ -123,78 +114,78 @@ const queries = [
   }`,
   // Template B - Company Registration
   `mutation {
-    createTemplateVersion(
+    createTemplate(
       input: {
-        templateVersion: {
-          isCurrent: true
-          number: 1
-          timeCreated: "NOW();"
-          templatesUsingId: {
-            create: {
-              name: "Company Registration"
-              code: "CompRego1"
-              templateSectionsUsingId: {
-                create: [
-                  {
-                    code: "S1"
-                    title: "Section 1"
-                    templateElementsUsingId: {
-                      create: [
-                        {
-                          code: "GS1"
-                          nextElementCode: "Q1"
-                          title: "Group 1"
-                          elementTypePluginCode: "group_start"
-                          visibilityCondition: { value: true }
-                          category: INFORMATION
-                          parameters: "{}"
-                        }
-                        {
-                          code: "Q1"
-                          nextElementCode: "Q2"
-                          title: "Organisation Name"
-                          elementTypePluginCode: "short_text"
-                          visibilityCondition: { value: true }
-                          category: QUESTION
-                          isRequired: true
-                          isEditable: { value: true }
-                          parameters: { label: "Unique Name for Company" }
-                        }
-                        {
-                          code: "Q2"
-                          nextElementCode: "GE1"
-                          title: "Organisation Activity"
-                          elementTypePluginCode: "drop_down"
-                          visibilityCondition: { value: true }
-                          category: QUESTION
-                          isRequired: true
-                          isEditable: { value: true }
-                          parameters: {
-                            label: "Select type of activity"
-                            options: ["Manufacturer", "Importer", "Producer"]
-                          }
-                        }
-                        {
-                          code: "GE1"
-                          title: "Group 1"
-                          elementTypePluginCode: "group_end"
-                          visibilityCondition: { value: true }
-                          category: INFORMATION
-                          parameters: {}
-                        }
-                      ]
+        template: {
+          code: "CompRego1"
+          isCurrentVersion: true
+          name: "Company Registration"
+          status: AVAILABLE
+          versionTimestamp: "NOW()"
+          templateSectionsUsingId: {
+            create: [
+              {
+                code: "S1"
+                title: "Section 1"
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "GS1"
+                      nextElementCode: "Q1"
+                      title: "Group 1"
+                      elementTypePluginCode: "group_start"
+                      visibilityCondition: { value: true }
+                      category: INFORMATION
+                      parameters: "{}"
                     }
-                  }
-                  { code: "S2", title: "Section 2" }
-                  { code: "S3", title: "Section 3" }
-                ]
+                    {
+                      code: "Q1"
+                      nextElementCode: "Q2"
+                      title: "Organisation Name"
+                      elementTypePluginCode: "short_text"
+                      visibilityCondition: { value: true }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: { label: "Unique Name for Company" }
+                    }
+                    {
+                      code: "Q2"
+                      nextElementCode: "GE1"
+                      title: "Organisation Activity"
+                      elementTypePluginCode: "drop_down"
+                      visibilityCondition: { value: true }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: {
+                        label: "Select type of activity"
+                        options: ["Manufacturer", "Importer", "Producer"]
+                      }
+                    }
+                    {
+                      code: "GE1"
+                      title: "Group 1"
+                      elementTypePluginCode: "group_end"
+                      visibilityCondition: { value: true }
+                      category: INFORMATION
+                      parameters: {}
+                    }
+                  ]
+                }
               }
-              templateActionsUsingId: {
-                create: {
-                  actionCode: "cLog"
-                  condition: "{value:true}"
-                  trigger: ON_APPLICATION_SUBMIT
-                  parameterQueries: "{message: {value: 'The Action has been executed. Automated Actions FTW!!!'}}"
+              { code: "S2", title: "Section 2" }
+              { code: "S3", title: "Section 3" }
+            ]
+          }
+          templateActionsUsingId: {
+            create: {
+              actionCode: "cLog"
+              condition: "{value:true}"
+              trigger: ON_APPLICATION_SUBMIT
+              parameterQueries: {
+                message: {
+                  value: "The Action has been executed. Automated Actions FTW!!!"
                 }
               }
             }
@@ -202,25 +193,20 @@ const queries = [
         }
       }
     ) {
-      templateVersion {
-        number
-        templatesByVersionId {
+      template {
+        code
+        name
+        templateSections {
           nodes {
             code
-            name
-            templateSections {
+            title
+            templateElementsBySectionId {
               nodes {
                 code
+                visibilityCondition
+                parameters
                 title
-                templateElementsBySectionId {
-                  nodes {
-                    code
-                    visibilityCondition
-                    parameters
-                    title
-                    category
-                  }
-                }
+                category
               }
             }
           }
