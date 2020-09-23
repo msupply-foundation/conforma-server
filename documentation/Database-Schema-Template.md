@@ -49,7 +49,7 @@ Sections of the application template that contain some [elements/questions](Elem
 
 ### template elements
 
-Elements in the application template always are part of a section, therefor it stores the `section_id` instead of the `template_id`.
+Elements in the application template always are part of a section, therefore it stores the `section_id` instead of the `template_id`.
 
 The `code` is unique for each element in the same **template**. This code will be auto-generated, but we would allow the Admin user to change if needed.
 
@@ -83,7 +83,7 @@ The `config_component_name` refers to the UI component used to create the questi
 
 ## Permission settings
 
-Different users needs different permissions for acting on an applicatiion template.
+Different users needs different permissions for acting on an application template.
 
 For example an **Applicant user** would be required to be associated with a template permission in order to **Apply** to a specific application of a template type. Another example is a **Reviewer user** who would be required to be associated with a template permission in order to **Review** applications of a specific template type (or specific sections of the application of a template type) on a certain stage.
 
