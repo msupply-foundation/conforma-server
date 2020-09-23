@@ -49,7 +49,7 @@ Sections of the application template that contain some [elements/questions](Elem
 
 ### template elements
 
-Elements in the application template always are part of a section, therefor it stores the `section_id` instead of the `template_id`.
+Elements in the application template always are part of a section, therefore it stores the `section_id` instead of the `template_id`.
 
 The `code` is unique for each element in the same **template**. This code will be auto-generated, but we would allow the Admin user to change if needed.
 
