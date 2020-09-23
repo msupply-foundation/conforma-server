@@ -32,7 +32,7 @@ The `rules` will define the list of when the user is allowed to be acting on the
 
 The `default_restrictions` is similar to `restrictions` (on the **template permission**). Basically from the whole set of possibilities that the `rules` allow the user to make via actions on an application, the restrictions will limit when these actions can be done.
 
-![Restrictions diagram](images/database-permission-restrictions.png =100x20)
+![<img src="images/database-permission-restrictions.png" width="50"/>](images/database-permission-restrictions.png)
 
 ### permission name
 
