@@ -105,7 +105,7 @@ export default async function evaluateExpression(
 
       case 'graphQL':
         if (!params.connection) return 'No database connection provided'
-        return processGraphQL(childrenResolved, params.connection)
+        return processGraphQL(childrenResolved, query.type, params.connection)
 
       // etc. for as many other operators as we want/need.
     }
@@ -136,7 +136,7 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
   }
 }
 
-function processGraphQL(queryArray: any[], connection: object) {
+async function processGraphQL(queryArray: any[], queryType: string, connection: object) {
   // TO-DO -- For now just return a value that makes test work
   return 0
 }

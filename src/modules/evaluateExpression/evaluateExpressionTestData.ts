@@ -552,6 +552,19 @@ testData.getListOfTemplates_noType = {
 
 // GraphQL operator -- TO DO
 
+testData.simpleGraphQL = {
+  operator: 'graphQL',
+  children: [
+    {value: `query MyQuery {
+      application(id: 1) {
+        name
+      }
+    }`},
+    {},
+    {["name"]}
+  ]
+}
+
 // More complex combinations
 
 testData.concatFirstAndLastNames = {
