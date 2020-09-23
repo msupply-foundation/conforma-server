@@ -83,7 +83,7 @@ The `config_component_name` refers to the UI component used to create the questi
 
 ## Permission settings
 
-Different users needs different permissions for acting on an applicatiion template.
+Different users needs different permissions for acting on an application template.
 
 For example an **Applicant user** would be required to be associated with a template permission in order to **Apply** to a specific application of a template type. Another example is a **Reviewer user** who would be required to be associated with a template permission in order to **Review** applications of a specific template type (or specific sections of the application of a template type) on a certain stage.
 
