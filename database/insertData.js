@@ -9,7 +9,6 @@ const queries = [
       input: {
         template: {
           code: "UserRego1"
-          isCurrentVersion: true
           name: "User Registration"
           status: AVAILABLE
           versionTimestamp: "NOW()"
@@ -118,7 +117,6 @@ const queries = [
       input: {
         template: {
           code: "CompRego1"
-          isCurrentVersion: true
           name: "Company Registration"
           status: AVAILABLE
           versionTimestamp: "NOW()"

@@ -7,6 +7,5 @@ CREATE TABLE public.template (
     name varchar,
     code varchar,
     status public.template_status,
-    is_current_version bool,
     version_timestamp timestamp   
 );
