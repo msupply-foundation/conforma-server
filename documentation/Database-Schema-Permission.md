@@ -14,7 +14,7 @@ We like to define the permissions definition using: Who, how and what.
 
 **How** => Is the `permission_policy` or how the user that has this permission can interact with an application template (through actions).
 
-**What** => Is the `template_permission` that connects some permission with an application template or section of an application template.
+ **What** => the `template_permission` that connects some permission with an application template or section of an application template.
 
 Before any user is included, permissions can be created. The permission definition consists only of the `permission_policy` and the `permission_name`. And then what links this permission with an application template is the `template_permission`, and after the permission is granted to a user (or a user in a company) what links this permission with an user is the `permission_join`.
 
