@@ -10,4 +10,5 @@ Here is the overall schema (work in progress):
 
 - [Permissions]
 - [Application Template](Database-Schema-Template.md)
+- [Application](Database-Schema-Application.md)
 - [Reviews]

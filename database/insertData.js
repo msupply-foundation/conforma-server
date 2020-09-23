@@ -89,6 +89,14 @@ const queries = [
                   }
                   { code: "S2", title: "Section 2" }
                 ]
+              },
+              templateStagesUsingId: {
+                create: [
+                  {
+                    number: 1,
+                    title: "Screening"
+                  }
+                ] 
               }
             }
           }
@@ -188,6 +196,18 @@ const queries = [
                   { code: "S2", title: "Section 2" }
                   { code: "S3", title: "Section 3" }
                 ]
+              },
+              templateStagesUsingId: {
+                create: [
+                  {
+                    number: 1,
+                    title: "Screening"
+                  },
+                  {
+                    number: 2,
+                    title: "Assessment"
+                  }
+                ] 
               }
               templateActionsUsingId: {
                 create: {
@@ -290,7 +310,7 @@ const queries = [
           name: "User Registration: Nicole Madruga"
           serial: 100
           isActive: true
-          outcome: PENDING
+          outcome: APPROVED
           userToUserId: { connectById: { id: 1 } }
           applicationSectionsUsingId: {
             create: [{ templateSectionId: 1 }, { templateSectionId: 2 }]
@@ -300,47 +320,33 @@ const queries = [
               {
                 timeCreated: "NOW()"
                 value: "{text: 'Nicole'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 2 } }
+                templateElementToTemplateElementId: { connectById: { id: 2 } }
               }
               {
                 timeCreated: "NOW()"
                 value: "{text: 'Madruga'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 3 } }
+                templateElementToTemplateElementId: { connectById: { id: 3 } }
               }
               {
                 timeCreated: "NOW()"
                 value: "{option: '1'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 6 } }
+                templateElementToTemplateElementId: { connectById: { id: 6 } }
               }
             ]
           }
           applicationStageHistoriesUsingId: {
-            create: [
-              {
-                stage: SCREENING
-                timeCreated: "NOW()"
-                isCurrent: false
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: COMPLETED
-                    timeCreated: "NOW()"
-                    isCurrent: false
-                  }
+            create: {
+              templateStageToStageId: { connectById: { id: 1 } }
+              timeCreated: "NOW()"
+              isCurrent: true
+              applicationStatusHistoriesUsingId: {
+                create: {
+                  status: COMPLETED
+                  timeCreated: "NOW()"
+                  isCurrent: true
                 }
               }
-              {
-                stage: ASSESSMENT
-                timeCreated: "NOW()"
-                isCurrent: true
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: SUBMITTED
-                    timeCreated: "NOW()"
-                    isCurrent: true
-                  }
-                }
-              }
-            ]
+            }
           }
           templateToTemplateId: { connectById: { id: 1 } }
         }
@@ -354,7 +360,7 @@ const queries = [
         applicationResponses {
           nodes {
             value
-            templateQuestion {
+            templateElement {
               title
             }
           }
@@ -368,7 +374,9 @@ const queries = [
         }
         applicationStageHistories {
           nodes {
-            stage
+            stage {
+              title
+            }
             isCurrent
             applicationStatusHistories {
               nodes {
@@ -389,7 +397,7 @@ const queries = [
           name: "User Registration: Carl Smith"
           serial: 101
           isActive: true
-          outcome: PENDING
+          outcome: APPROVED
           userToUserId: { connectById: { id: 2 } }
           applicationSectionsUsingId: {
             create: [{ templateSectionId: 1 }, { templateSectionId: 2 }]
@@ -399,47 +407,33 @@ const queries = [
               {
                 timeCreated: "NOW()"
                 value: "{text: 'Carl'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 2 } }
+                templateElementToTemplateElementId: { connectById: { id: 2 } }
               }
               {
                 timeCreated: "NOW()"
                 value: "{text: 'Smith'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 3 } }
+                templateElementToTemplateElementId: { connectById: { id: 3 } }
               }
               {
                 timeCreated: "NOW()"
                 value: "{option: '1'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 6 } }
+                templateElementToTemplateElementId: { connectById: { id: 6 } }
               }
             ]
           }
           applicationStageHistoriesUsingId: {
-            create: [
-              {
-                stage: SCREENING
-                timeCreated: "NOW()"
-                isCurrent: false
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: COMPLETED
-                    timeCreated: "NOW()"
-                    isCurrent: false
-                  }
+            create: {
+              templateStageToStageId: { connectById: { id: 1 } }
+              timeCreated: "NOW()"
+              isCurrent: true
+              applicationStatusHistoriesUsingId: {
+                create: {
+                  status: COMPLETED
+                  timeCreated: "NOW()"
+                  isCurrent: true
                 }
               }
-              {
-                stage: ASSESSMENT
-                timeCreated: "NOW()"
-                isCurrent: true
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: SUBMITTED
-                    timeCreated: "NOW()"
-                    isCurrent: true
-                  }
-                }
-              }
-            ]
+            }
           }
           templateToTemplateId: { connectById: { id: 1 } }
         }
@@ -453,7 +447,7 @@ const queries = [
         applicationResponses {
           nodes {
             value
-            templateQuestion {
+            templateElement {
               title
             }
           }
@@ -467,7 +461,9 @@ const queries = [
         }
         applicationStageHistories {
           nodes {
-            stage
+            stage {
+              title
+            }
             isCurrent
             applicationStatusHistories {
               nodes {
@@ -505,28 +501,42 @@ const queries = [
               {
                 timeCreated: "NOW()"
                 value: "{text: 'Company C'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 8 } }
+                templateElementToTemplateElementId: { connectById: { id: 8 } }
               }
               {
                 timeCreated: "NOW()"
                 value: "{option: '2'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 9 } }
+                templateElementToTemplateElementId: { connectById: { id: 9 } }
               }
             ]
           }
           applicationStageHistoriesUsingId: {
-            create: {
-              stage: SCREENING
-              timeCreated: "NOW()"
-              isCurrent: false
-              applicationStatusHistoriesUsingId: {
-                create: {
-                  status: SUBMITTED
-                  timeCreated: "NOW()"
-                  isCurrent: false
+            create: [
+              {
+                templateStageToStageId: { connectById: { id: 2 } }
+                timeCreated: "NOW()"
+                isCurrent: false
+                applicationStatusHistoriesUsingId: {
+                  create: {
+                    status: COMPLETED
+                    timeCreated: "NOW()"
+                    isCurrent: false
+                  }
+                }
+              },
+              {
+                templateStageToStageId: { connectById: { id: 3 } }
+                timeCreated: "NOW()"
+                isCurrent: true
+                applicationStatusHistoriesUsingId: {
+                  create: {
+                    status: SUBMITTED
+                    timeCreated: "NOW()"
+                    isCurrent: true
+                  }
                 }
               }
-            }
+            ]
           }
           templateId: 2
         }
@@ -540,7 +550,7 @@ const queries = [
         applicationResponses {
           nodes {
             value
-            templateQuestion {
+            templateElement {
               title
             }
           }
@@ -554,7 +564,9 @@ const queries = [
         }
         applicationStageHistories {
           nodes {
-            stage
+            stage {
+              title
+            }
             isCurrent
             applicationStatusHistories {
               nodes {
