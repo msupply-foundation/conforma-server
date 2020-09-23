@@ -6,7 +6,7 @@
 
 ### Definition
 
-To define permissions with actionables for the user over an application templates.
+To define permissions with actionables for the user over application templates.
 
 We like to define the permissions definition using: Who, how and what.
 
