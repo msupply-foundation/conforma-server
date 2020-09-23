@@ -12,7 +12,7 @@ We like to define the permissions definition using: Who, how and what.
 
 **Who** => Is the `permission_name`, which describes the type of action to be associated with users.
 
-**How** => Is the `permission_policy` or how the user that has this permission can interact with an application template (through actions).
+**How** => the `permission_policy` or how the user that has this permission can interact with an application template (through actions).
 
  **What** => the `template_permission` that connects some permission with an application template or section of an application template.
 
