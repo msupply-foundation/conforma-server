@@ -38,11 +38,11 @@ The `default_restrictions` is similar to `restrictions` (on the **template permi
 
 The `policy_id` links to the permission policy.
 
-The `name` should be a short very descriptive name of a generic permission (not based on an individual application template).
+The `name` should be a short very descriptive name of a generic permission (not based on an individual application template). For example the permission for a Reviewer to review basic appliation sections: "Review basic section".
 
 ### permission join
 
-The `permission_name` links to the permission name.
+The `permission_name_id` links to the permission name.
 
 The `user_id` links to a user with this permission granted. (Can be NULL, if is a user_organisation permission).
 
