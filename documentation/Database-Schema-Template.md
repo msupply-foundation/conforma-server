@@ -4,23 +4,6 @@
 
 # Database Area description: Template
 
-## Version
-
-**To be re-implemented in another issue. This documentation should be edited after issue #35 is in a PR or merged to master.**
-
-~~When the Admin user wants to edit an existing **application template** a new version is created. This new version is linked to a duplication of all records of the current **application template**. The Admin can make changes until publishing this new version.
-With templates versioning we keep previous finalised applications linked to the correct versions of the application templates used.~~
-
-~~###template version~~
-
-~~The `is_current` is set to `'false'` while the version is being created or edited or for all versions that is not the current.~~
-
-~~The `is_current` is set to `'true'` when the new version of one application template is published.~~
-
-~~When a new version is added every new application of this application template will be linked to the new version.~~
-
-**To be considered: Should we check if no applications are associated with an existing template and just add changes to the current version instead?**
-
 ## Display elements
 
 The sections and questions required in each stage of an application is defined in the application template with the following entities.
@@ -29,15 +12,13 @@ The sections and questions required in each stage of an application is defined i
 
 Representation of the application template. All nested elements are accessible via joined tables and can be created or queried in the same call using the GraphQL engine.
 
-The `version_id` is the link with the template version.
+Whenever a template is modified, the new version is saved as a new template record with a new `version_timestamp`. Different versions of the same base template are connected with the same `code`. The `status` field is used to indicate which version is the current active one.
 
-The `name` is used to help **Admin users** identifying each template.
+The `name` is what users of the system will see as the "Application Type" -- e.g. "Drug Registration".
 
-The `code` is the identifier of the application template, althoug more than one record may have the same code due to versions.
+The `status` can be `'Draft'`, `'Available'` or `'Disabled'`. The version currently active in the system is the one (and only one) marked `'Available'`.
 
-**To be re-considered after issue #35 is in PR or merged to master:**
-
-~~The `current_status` can be `'Draft'`, `'Available'` or `'Disabled'`. The only 'Available' templates are the ones in the version flagged as the current one. All other application template are 'Disabled' or 'Draft' (if unfinalised).~~
+**To be considered: Should we check if no applications are associated with an existing template and just add changes to the current version instead?**
 
 ### template stage
 
