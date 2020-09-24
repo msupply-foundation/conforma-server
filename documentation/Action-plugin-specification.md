@@ -20,7 +20,9 @@ Within a plugin's folder are the following files:
 
 ## Source code file
 
-The main source code for the plugin is simply an exported function that the server app dynamically loads via `require` at run-time. Plugin code should follow this basic structure:
+The main source code for the plugin is simply an exported function that the server app dynamically loads via `require` at run-time. Calling the function exported by each action plugin, sequentially is the job of the **Action module**. 
+
+Plugin code should follow this basic structure:
 
 ```
 module.exports['consoleLog'] = function (parameters: any) {
