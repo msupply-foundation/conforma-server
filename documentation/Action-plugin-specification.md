@@ -4,6 +4,8 @@ Please see [Triggers & Actions](./Triggers-and-Actions.md) for an explanation of
 
 This document details the specification for the **Action plugins** themselves.
 
+See [here](./List-of-Action-plugins.md) for a list of currently implemented Action plugins.
+
 ## Location & Folder contents
 
 Action plugins reside in `/src/plugins`. Each plugin is contained within its own subfolder. The name of the folder does not matter in terms of behaviour, but should be named something consistent with existing plugins.
@@ -44,7 +46,7 @@ module.exports['consoleLog'] = function (parameters: any) {
 
 In this case `consoleLog` is the name of the function called by the Action module. Relevant code sits within the `try` block. The `catch (error)` block should be left as is (unless you wish to break it down into more specific errors) -- this ensures the `action_queue` table keeps a record of the success or failure of each action.
 
-All parameters are passed in as keys/values in the `parameters` object. The plugin specifies the names of the parameter fields it is expecting (in `plugin.json`, below). The application template that is associated with the  Action plugin should store [expressions/queries](./Query-Syntax.md) to generate the values for the parameter fields. These values are evaluated when the action is triggered and stored in the action_queue. The evaluated parameters are passed to the Action when its function is called.
+All parameters are passed in as keys/values in the `parameters` object. The plugin specifies the names of the parameter fields it is expecting (in `plugin.json`, below). The application template that is associated with the Action plugin should store [expressions/queries](./Query-Syntax.md) to generate the values for the parameter fields. These values are evaluated when the action is triggered and stored in the action_queue. The evaluated parameters are passed to the Action when its function is called.
 
 In the simple example above, the only parameter expected is `message`, which the function prints to the Console.
 
@@ -118,21 +120,18 @@ The `action_plugin` table is the primary record of what actions are available to
 
 Plugins are intended to be stand-alone units, in that a user should be able to simply copy a plugin folder to another system and have it work straight away. (Eventually, we envisage that plugins could be imported directly via the front-end UI.) To that end, each plugin is developed as its own package, with its own `package.json` and `node_modules` folder, as well as Typescript and testing configurations.
 
-While developing a plugin, you can run the main app with:
-
-`yarn dev` 
+While developing a plugin, you can run the main app with:  
+`yarn dev`
 
 Any changes you make to the plugin `.ts` file will be reflected immediately in the dev environment.
 
-After development work is complete, the plugin should be built independently by running _in the plugin's root folder_, which will compile the typescript code into `.js` file(s) with:
+After development work is complete, the plugin should be built independently by running the following command _in the plugin's root folder_, which will compile the typescript code into `.js` file(s):  
+ `yarn build`
 
- `yarn build` 
- 
-Alternatively to build all plugins from the project root folder with:
-
+Alternatively, to build _all_ plugins from the project root folder:  
 `yarn build_plugins`
 
-When the main project is built (`yarn build`), the plugins are not re-compiled, but simply copied directly to the build folder, so its expected they will each have their own compiled `.js` file already in place.
+When the main project is built (`yarn build`), the plugins are not re-compiled, but simply copied directly to the build folder, so it is expected they will each have their own compiled `.js` file already in place.
 
 ## Needs consideration
 
@@ -141,7 +140,3 @@ When the main project is built (`yarn build`), the plugins are not re-compiled, 
 - Should there be (optional) **default values** for the `required_parameters`? I'm thinking, for things like "Send notification", the user's email address will be required, but it's always going to be the same query (`{operator: "objectProperties", children: [{value: {object: "user", property: "email"}}]}`) so it seems like it should there by default so the Admin doesn't have to specify an obvious value in the Template Builder.
 
 - Currently, parameters are evaluated immeditely before the Action is saved to the `action_queue`. For immediate actions, this is fine, but for Scheduled Actions, can we imagine a use case where it would be better for them to be evaluated at the time they run (which could be much later, even years)?
-
-## List of Action plugins created to-date:
-
-- **Console Log**: Just prints a message to the console. For demo purposes only.
