@@ -44,7 +44,7 @@ module.exports['consoleLog'] = function (parameters: any) {
 
 In this case `consoleLog` is the name of the function called by the Action module. Relevant code sits within the `try` block. The `catch (error)` block should be left as is (unless you wish to break it down into more specific errors) -- this ensures the `action_queue` table keeps a record of the success or failure of each action.
 
-All parameters are passed in as keys/values in the `parameters` object. The plugin specifies the names of the parameter fields it is expecting (in `plugin.json`, below), and the template associated with this Action stores [expressions/queries](./Query-Syntax.md) to generate the values. These values are evaluated when the action is triggered and stored in the action_queue. The evaluated parameters are passed to the Action when its function is called.
+All parameters are passed in as keys/values in the `parameters` object. The plugin specifies the names of the parameter fields it is expecting (in `plugin.json`, below). The application template that is associated with the  Action plugin should store [expressions/queries](./Query-Syntax.md) to generate the values for the parameter fields. These values are evaluated when the action is triggered and stored in the action_queue. The evaluated parameters are passed to the Action when its function is called.
 
 In the simple example above, the only parameter expected is `message`, which the function prints to the Console.
 
