@@ -6,10 +6,14 @@ import * as config from '../../config.json'
 
 const { Client } = require('pg')
 
-//CONFIG -- DATABASE SETUP:
+//CONFIG -- Postgres DATABASE SETUP:
 const pgConnect = new Client(config.pg_database_connection)
 
 pgConnect.connect()
+
+//CONFIG -- GraphQL SETUP
+const fetch = require('node-fetch')
+const graphQLendpoint = 'http://localhost:5000/graphql'
 
 // Basic (single level literals)
 
@@ -257,15 +261,15 @@ test('Test returning single user property', () => {
 // SQL operator
 
 test('Test Postgres lookup single string', () => {
-  return evaluateExpression(testData.getApplicationName, { connection: pgConnect }).then(
+  return evaluateExpression(testData.getApplicationName, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toBe('Company registration: Company C')
+      expect(result).toBe('Company Registration: Company C')
     }
   )
 })
 
 test('Test Postgres get array of template names', () => {
-  return evaluateExpression(testData.getListOfTemplates, { connection: pgConnect }).then(
+  return evaluateExpression(testData.getListOfTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
       expect(result).toEqual(['User Registration', 'Company Registration'])
     }
@@ -273,7 +277,7 @@ test('Test Postgres get array of template names', () => {
 })
 
 test('Test Postgres get Count of templates', () => {
-  return evaluateExpression(testData.countTemplates, { connection: pgConnect }).then(
+  return evaluateExpression(testData.countTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
       expect(result).toEqual(2)
     }
@@ -281,14 +285,25 @@ test('Test Postgres get Count of templates', () => {
 })
 
 test('Test Postgres get template names -- no type', () => {
-  return evaluateExpression(testData.getListOfTemplates_noType, { connection: pgConnect }).then(
+  return evaluateExpression(testData.getListOfTemplates_noType, { pgConnection: pgConnect }).then(
     (result: any) => {
       expect(result).toEqual([{ name: 'User Registration' }, { name: 'Company Registration' }])
     }
   )
 })
 
-// // GraphQL operator -- TO DO
+// GraphQL operator
+
+test('Test GraphQL -- get single application name', () => {
+  return evaluateExpression(testData.simpleGraphQL, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual('User Registration: Nicole Madruga')
+  })
+})
 
 // More complex combinations
 

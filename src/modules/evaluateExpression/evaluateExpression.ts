@@ -1,6 +1,9 @@
+import { Client } from 'pg'
+
 interface IParameters {
   [key: string]: any
-  connection?: IConnection
+  pgConnection?: Client
+  graphQLConnection?: IGraphQLConnection
 }
 
 interface IQueryNode {
@@ -10,16 +13,17 @@ interface IQueryNode {
   children?: Array<IQueryNode>
 }
 
-interface IConnection {
-  user?: string
-  host?: string
-  database?: string
-  password?: string
-  port?: number
-  query?: any
+interface IGraphQLConnection {
+  fetch: any
+  endpoint: string
 }
 
-type NodeType = 'string' | 'number' | 'boolean' | 'array'
+interface IGraphQLReturnObject {
+  // [key: string]: string | IGraphQLReturnObject
+  [key: string]: any
+}
+
+type NodeType = 'string' | 'number' | 'boolean' | 'array' | 'object'
 
 type Operator =
   | 'AND'
@@ -34,7 +38,7 @@ type Operator =
   | 'graphQL'
 
 const defaultParameters: IParameters = {
-  connection: {},
+  // connection: {},
 }
 
 export default async function evaluateExpression(
@@ -100,12 +104,12 @@ export default async function evaluateExpression(
         }
 
       case 'pgSQL':
-        if (!params.connection) return 'No database connection provided'
-        return processPgSQL(childrenResolved, query.type, params.connection)
+        if (!params.pgConnection) return 'No database connection provided'
+        return processPgSQL(childrenResolved, query.type, params.pgConnection)
 
       case 'graphQL':
-        if (!params.connection) return 'No database connection provided'
-        return processGraphQL(childrenResolved, query.type, params.connection)
+        if (!params.graphQLConnection) return 'No database connection provided'
+        return processGraphQL(childrenResolved, query.type, params.graphQLConnection)
 
       // etc. for as many other operators as we want/need.
     }
@@ -113,7 +117,7 @@ export default async function evaluateExpression(
   return 'No matching operators'
 }
 
-async function processPgSQL(queryArray: any[], queryType: string, connection: IConnection) {
+async function processPgSQL(queryArray: any[], queryType: string, connection: Client) {
   const query = {
     text: queryArray[0],
     values: queryArray.slice(1),
@@ -136,7 +140,38 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
   }
 }
 
-async function processGraphQL(queryArray: any[], queryType: string, connection: object) {
-  // TO-DO -- For now just return a value that makes test work
+async function processGraphQL(
+  queryArray: any[],
+  queryType: string,
+  connection: IGraphQLConnection
+) {
+  const [query, variables, returnFields] = queryArray
+  const res = await connection.fetch(connection.endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      query: query,
+      variables: variables,
+    }),
+  })
+  const data = await res.json()
+  const resultArray = parseObject(data.data, returnFields)
+  console.log('Result:', data.data)
   return 0
+}
+
+function parseObject(data: IGraphQLReturnObject, fields: string[]) {
+  const captureArray = []
+  Object.keys(data).forEach((key) => {
+    if (key in fields) {
+      if (typeof data[key] !== 'string') {
+        const value = parseObject(data[key], fields)
+      } else {
+        const value = data[key]
+      }
+    }
+  })
 }

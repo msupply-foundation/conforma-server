@@ -555,14 +555,20 @@ testData.getListOfTemplates_noType = {
 testData.simpleGraphQL = {
   operator: 'graphQL',
   children: [
-    {value: `query MyQuery {
-      application(id: 1) {
-        name
-      }
-    }`},
-    {},
-    {["name"]}
-  ]
+    {
+      value: `query MyQuery($appId:Int!) {
+        application(id: $appId) {
+          name
+        }
+      }`,
+    },
+    {
+      value: {
+        appId: 1,
+      },
+    },
+    { value: ['name'] },
+  ],
 }
 
 // More complex combinations
