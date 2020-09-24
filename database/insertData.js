@@ -87,6 +87,7 @@ const queries = [
               { code: "S2", title: "Section 2" }
             ]
           }
+          templateStagesUsingId: { create: [{ number: 1, title: "Screening" }] }
         }
       }
     ) {
@@ -110,7 +111,8 @@ const queries = [
         }
       }
     }
-  }`,
+  }
+  `,
   // Template B - Company Registration
   `mutation {
     createTemplate(
@@ -176,6 +178,12 @@ const queries = [
               { code: "S3", title: "Section 3" }
             ]
           }
+          templateStagesUsingId: {
+            create: [
+              { number: 1, title: "Screening" }
+              { number: 2, title: "Assessment" }
+            ]
+          }
           templateActionsUsingId: {
             create: {
               actionCode: "cLog"
@@ -211,8 +219,7 @@ const queries = [
         }
       }
     }
-  }
-  `,
+  }`,
   //   Add some users
   `mutation {
         createUser(
@@ -268,292 +275,284 @@ const queries = [
   }`,
   //   User registration application 1
   `mutation {
-    createApplication(
-      input: {
-        application: {
-          name: "User Registration: Nicole Madruga"
-          serial: 100
-          isActive: true
-          outcome: PENDING
-          userToUserId: { connectById: { id: 1 } }
-          applicationSectionsUsingId: {
-            create: [{ templateSectionId: 1 }, { templateSectionId: 2 }]
-          }
-          applicationResponsesUsingId: {
-            create: [
-              {
-                timeCreated: "NOW()"
-                value: "{text: 'Nicole'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 2 } }
-              }
-              {
-                timeCreated: "NOW()"
-                value: "{text: 'Madruga'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 3 } }
-              }
-              {
-                timeCreated: "NOW()"
-                value: "{option: '1'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 6 } }
-              }
-            ]
-          }
-          applicationStageHistoriesUsingId: {
-            create: [
-              {
-                stage: SCREENING
-                timeCreated: "NOW()"
-                isCurrent: false
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: COMPLETED
-                    timeCreated: "NOW()"
-                    isCurrent: false
-                  }
+      createApplication(
+        input: {
+          application: {
+            name: "User Registration: Nicole Madruga"
+            serial: 100
+            isActive: true
+            outcome: APPROVED
+            userToUserId: { connectById: { id: 1 } }
+            applicationSectionsUsingId: {
+              create: [{ templateSectionId: 1 }, { templateSectionId: 2 }]
+            }
+            applicationResponsesUsingId: {
+              create: [
+                {
+                  timeCreated: "NOW()"
+                  value: "{text: 'Nicole'}"
+                  templateElementToTemplateElementId: { connectById: { id: 2 } }
                 }
-              }
-              {
-                stage: ASSESSMENT
+                {
+                  timeCreated: "NOW()"
+                  value: "{text: 'Madruga'}"
+                  templateElementToTemplateElementId: { connectById: { id: 3 } }
+                }
+                {
+                  timeCreated: "NOW()"
+                  value: "{option: '1'}"
+                  templateElementToTemplateElementId: { connectById: { id: 6 } }
+                }
+              ]
+            }
+            applicationStageHistoriesUsingId: {
+              create: {
+                templateStageToStageId: { connectById: { id: 1 } }
                 timeCreated: "NOW()"
                 isCurrent: true
                 applicationStatusHistoriesUsingId: {
                   create: {
-                    status: SUBMITTED
+                    status: COMPLETED
                     timeCreated: "NOW()"
                     isCurrent: true
                   }
                 }
               }
-            ]
+            }
+            templateToTemplateId: { connectById: { id: 1 } }
           }
-          templateToTemplateId: { connectById: { id: 1 } }
         }
-      }
-    ) {
-      application {
-        name
-        template {
+      ) {
+        application {
           name
-        }
-        applicationResponses {
-          nodes {
-            value
-            templateQuestion {
-              title
+          template {
+            name
+          }
+          applicationResponses {
+            nodes {
+              value
+              templateElement {
+                title
+              }
             }
           }
-        }
-        applicationSections {
-          nodes {
-            templateSection {
-              title
+          applicationSections {
+            nodes {
+              templateSection {
+                title
+              }
             }
           }
-        }
-        applicationStageHistories {
-          nodes {
-            stage
-            isCurrent
-            applicationStatusHistories {
-              nodes {
-                isCurrent
-                status
+          applicationStageHistories {
+            nodes {
+              stage {
+                title
+              }
+              isCurrent
+              applicationStatusHistories {
+                nodes {
+                  isCurrent
+                  status
+                }
               }
             }
           }
         }
       }
-    }
-  }`,
+    }`,
   // User Registration application 2
   `mutation {
-    createApplication(
-      input: {
-        application: {
-          name: "User Registration: Carl Smith"
-          serial: 101
-          isActive: true
-          outcome: PENDING
-          userToUserId: { connectById: { id: 2 } }
-          applicationSectionsUsingId: {
-            create: [{ templateSectionId: 1 }, { templateSectionId: 2 }]
-          }
-          applicationResponsesUsingId: {
-            create: [
-              {
-                timeCreated: "NOW()"
-                value: "{text: 'Carl'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 2 } }
-              }
-              {
-                timeCreated: "NOW()"
-                value: "{text: 'Smith'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 3 } }
-              }
-              {
-                timeCreated: "NOW()"
-                value: "{option: '1'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 6 } }
-              }
-            ]
-          }
-          applicationStageHistoriesUsingId: {
-            create: [
-              {
-                stage: SCREENING
-                timeCreated: "NOW()"
-                isCurrent: false
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: COMPLETED
-                    timeCreated: "NOW()"
-                    isCurrent: false
-                  }
+      createApplication(
+        input: {
+          application: {
+            name: "User Registration: Carl Smith"
+            serial: 101
+            isActive: true
+            outcome: APPROVED
+            userToUserId: { connectById: { id: 2 } }
+            applicationSectionsUsingId: {
+              create: [{ templateSectionId: 1 }, { templateSectionId: 2 }]
+            }
+            applicationResponsesUsingId: {
+              create: [
+                {
+                  timeCreated: "NOW()"
+                  value: "{text: 'Carl'}"
+                  templateElementToTemplateElementId: { connectById: { id: 2 } }
                 }
-              }
-              {
-                stage: ASSESSMENT
+                {
+                  timeCreated: "NOW()"
+                  value: "{text: 'Smith'}"
+                  templateElementToTemplateElementId: { connectById: { id: 3 } }
+                }
+                {
+                  timeCreated: "NOW()"
+                  value: "{option: '1'}"
+                  templateElementToTemplateElementId: { connectById: { id: 6 } }
+                }
+              ]
+            }
+            applicationStageHistoriesUsingId: {
+              create: {
+                templateStageToStageId: { connectById: { id: 1 } }
                 timeCreated: "NOW()"
                 isCurrent: true
                 applicationStatusHistoriesUsingId: {
                   create: {
-                    status: SUBMITTED
+                    status: COMPLETED
                     timeCreated: "NOW()"
                     isCurrent: true
                   }
                 }
               }
-            ]
+            }
+            templateToTemplateId: { connectById: { id: 1 } }
           }
-          templateToTemplateId: { connectById: { id: 1 } }
         }
-      }
-    ) {
-      application {
-        name
-        template {
+      ) {
+        application {
           name
-        }
-        applicationResponses {
-          nodes {
-            value
-            templateQuestion {
-              title
-            }
+          template {
+            name
           }
-        }
-        applicationSections {
-          nodes {
-            templateSection {
-              title
-            }
-          }
-        }
-        applicationStageHistories {
-          nodes {
-            stage
-            isCurrent
-            applicationStatusHistories {
-              nodes {
-                isCurrent
-                status
+          applicationResponses {
+            nodes {
+              value
+              templateElement {
+                title
               }
             }
           }
-        }
-        user {
-          username
-        }
-      }
-    }
-  }`,
-  // Company registration application
-  `mutation {
-    createApplication(
-      input: {
-        application: {
-          name: "Company Registration: Company C"
-          serial: 102
-          isActive: true
-          outcome: PENDING
-          userToUserId: { connectById: { id: 2 } }
-          applicationSectionsUsingId: {
-            create: [
-              { templateSectionId: 3 }
-              { templateSectionId: 4 }
-              { templateSectionId: 5 }
-            ]
-          }
-          applicationResponsesUsingId: {
-            create: [
-              {
-                timeCreated: "NOW()"
-                value: "{text: 'Company C'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 8 } }
+          applicationSections {
+            nodes {
+              templateSection {
+                title
               }
-              {
-                timeCreated: "NOW()"
-                value: "{option: '2'}"
-                templateElementToTemplateQuestionId: { connectById: { id: 9 } }
-              }
-            ]
+            }
           }
-          applicationStageHistoriesUsingId: {
-            create: {
-              stage: SCREENING
-              timeCreated: "NOW()"
-              isCurrent: false
-              applicationStatusHistoriesUsingId: {
-                create: {
-                  status: SUBMITTED
-                  timeCreated: "NOW()"
-                  isCurrent: false
+          applicationStageHistories {
+            nodes {
+              stage {
+                title
+              }
+              isCurrent
+              applicationStatusHistories {
+                nodes {
+                  isCurrent
+                  status
                 }
               }
             }
           }
-          templateId: 2
+          user {
+            username
+          }
         }
       }
-    ) {
-      application {
-        name
-        template {
+    }`,
+  // Company registration application
+  `mutation {
+      createApplication(
+        input: {
+          application: {
+            name: "Company Registration: Company C"
+            serial: 102
+            isActive: true
+            outcome: PENDING
+            userToUserId: { connectById: { id: 2 } }
+            applicationSectionsUsingId: {
+              create: [
+                { templateSectionId: 3 }
+                { templateSectionId: 4 }
+                { templateSectionId: 5 }
+              ]
+            }
+            applicationResponsesUsingId: {
+              create: [
+                {
+                  timeCreated: "NOW()"
+                  value: "{text: 'Company C'}"
+                  templateElementToTemplateElementId: { connectById: { id: 8 } }
+                }
+                {
+                  timeCreated: "NOW()"
+                  value: "{option: '2'}"
+                  templateElementToTemplateElementId: { connectById: { id: 9 } }
+                }
+              ]
+            }
+            applicationStageHistoriesUsingId: {
+              create: [
+                {
+                  templateStageToStageId: { connectById: { id: 2 } }
+                  timeCreated: "NOW()"
+                  isCurrent: false
+                  applicationStatusHistoriesUsingId: {
+                    create: {
+                      status: COMPLETED
+                      timeCreated: "NOW()"
+                      isCurrent: false
+                    }
+                  }
+                },
+                {
+                  templateStageToStageId: { connectById: { id: 3 } }
+                  timeCreated: "NOW()"
+                  isCurrent: true
+                  applicationStatusHistoriesUsingId: {
+                    create: {
+                      status: SUBMITTED
+                      timeCreated: "NOW()"
+                      isCurrent: true
+                    }
+                  }
+                }
+              ]
+            }
+            templateId: 2
+          }
+        }
+      ) {
+        application {
           name
-        }
-        applicationResponses {
-          nodes {
-            value
-            templateQuestion {
-              title
-            }
+          template {
+            name
           }
-        }
-        applicationSections {
-          nodes {
-            templateSection {
-              title
-            }
-          }
-        }
-        applicationStageHistories {
-          nodes {
-            stage
-            isCurrent
-            applicationStatusHistories {
-              nodes {
-                isCurrent
-                status
+          applicationResponses {
+            nodes {
+              value
+              templateElement {
+                title
               }
             }
           }
-        }
-        user {
-          username
+          applicationSections {
+            nodes {
+              templateSection {
+                title
+              }
+            }
+          }
+          applicationStageHistories {
+            nodes {
+              stage {
+                title
+              }
+              isCurrent
+              applicationStatusHistories {
+                nodes {
+                  isCurrent
+                  status
+                }
+              }
+            }
+          }
+          user {
+            username
+          }
         }
       }
-    }
-  }`,
+    }`,
 ]
 
 const loopQueries = async () => {
