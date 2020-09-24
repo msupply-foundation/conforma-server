@@ -550,13 +550,13 @@ testData.getListOfTemplates_noType = {
   ],
 }
 
-// GraphQL operator -- TO DO
+// GraphQL operator
 
 testData.simpleGraphQL = {
   operator: 'graphQL',
   children: [
     {
-      value: `query MyQuery($appId:Int!) {
+      value: `query App($appId:Int!) {
         application(id: $appId) {
           name
         }
@@ -567,7 +567,42 @@ testData.simpleGraphQL = {
         appId: 1,
       },
     },
-    { value: ['name'] },
+    { value: 'application.name' },
+  ],
+}
+
+testData.GraphQL_listOfApplications = {
+  operator: 'graphQL',
+  children: [
+    {
+      value: `query Apps {
+      applications {
+        nodes {
+          name
+        }
+      }
+    }`,
+    },
+    {},
+    { value: 'applications.nodes' },
+  ],
+}
+
+testData.GraphQL_listOfApplicationsWithId = {
+  operator: 'graphQL',
+  children: [
+    {
+      value: `query Apps {
+        applications {
+          nodes {
+            name
+            id
+          }
+        }
+      }`,
+    },
+    {},
+    { value: 'applications.nodes' },
   ],
 }
 

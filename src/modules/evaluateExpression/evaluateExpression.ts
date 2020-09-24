@@ -44,7 +44,7 @@ const defaultParameters: IParameters = {
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
   params = defaultParameters
-): Promise<string | number | boolean | any[]> {
+): Promise<string | number | boolean | any[] | IGraphQLReturnObject> {
   // If input is JSON string, convert to Object
   const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
 
@@ -145,7 +145,7 @@ async function processGraphQL(
   queryType: string,
   connection: IGraphQLConnection
 ) {
-  const [query, variables, returnFields] = queryArray
+  const [query, variables, returnNode] = queryArray
   const res = await connection.fetch(connection.endpoint, {
     method: 'POST',
     headers: {
@@ -158,20 +158,37 @@ async function processGraphQL(
     }),
   })
   const data = await res.json()
-  const resultArray = parseObject(data.data, returnFields)
-  console.log('Result:', data.data)
-  return 0
+  const selectedNode = extractNode(data.data, returnNode)
+  switch (queryType) {
+    // case 'array':
+    //   return selectedNode.flat()
+    // case 'string':
+    //   return res.rows.flat().join(' ')
+    // case 'number':
+    //   return Number(res.rows.flat())
+    default:
+      if (Array.isArray(selectedNode)) return selectedNode.map((item) => simplifyObject(item))
+      else return simplifyObject(selectedNode)
+  }
 }
 
-function parseObject(data: IGraphQLReturnObject, fields: string[]) {
-  const captureArray = []
-  Object.keys(data).forEach((key) => {
-    if (key in fields) {
-      if (typeof data[key] !== 'string') {
-        const value = parseObject(data[key], fields)
-      } else {
-        const value = data[key]
-      }
-    }
-  })
+function extractNode(
+  data: IGraphQLReturnObject,
+  node: string
+): IGraphQLReturnObject | string | IGraphQLReturnObject[] {
+  const returnNodeArray = node.split('.')
+  return extractNodeWithArray(data, returnNodeArray)
+
+  function extractNodeWithArray(
+    data: IGraphQLReturnObject,
+    nodeArray: string[]
+  ): IGraphQLReturnObject | string {
+    if (nodeArray.length === 1) return data[nodeArray[0]]
+    else return extractNodeWithArray(data[nodeArray[0]], nodeArray.slice(1))
+  }
+}
+
+function simplifyObject(item: number | string | boolean | IGraphQLReturnObject) {
+  if (typeof item === 'object' && Object.keys(item).length === 1) return Object.values(item)[0]
+  else return item
 }

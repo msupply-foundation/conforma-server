@@ -305,6 +305,45 @@ test('Test GraphQL -- get single application name', () => {
   })
 })
 
+test('Test GraphQL -- List of Application Names', () => {
+  return evaluateExpression(testData.GraphQL_listOfApplications, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual([
+      'User Registration: Nicole Madruga',
+      'User Registration: Carl Smith',
+      'Company Registration: Company C',
+    ])
+  })
+})
+
+test('Test GraphQL -- List of Application Names with Ids', () => {
+  return evaluateExpression(testData.GraphQL_listOfApplicationsWithId, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual([
+      {
+        name: 'User Registration: Nicole Madruga',
+        id: 1,
+      },
+      {
+        name: 'User Registration: Carl Smith',
+        id: 2,
+      },
+      {
+        name: 'Company Registration: Company C',
+        id: 3,
+      },
+    ])
+  })
+})
+
 // More complex combinations
 
 test('Test concatenate user First and Last names', () => {
