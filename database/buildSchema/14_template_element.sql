@@ -12,7 +12,7 @@ CREATE TABLE public.template_element (
     visibility_condition jsonb,
     element_type_plugin_code varchar,
     is_required boolean,
-    is_editable boolean,
+    is_editable jsonb,
     parameters jsonb,
     default_value jsonb,
     validation jsonb

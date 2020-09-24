@@ -13,7 +13,7 @@ const queries = [
           timeCreated: "NOW();"
           templatesUsingId: {
             create: {
-              templateName: "User Registration"
+              name: "User Registration"
               code: "UserRego1"
               templateSectionsUsingId: {
                 create: [
@@ -39,7 +39,7 @@ const queries = [
                           visibilityCondition: { value: true }
                           category: QUESTION
                           isRequired: true
-                          isEditable: true
+                          isEditable: { value: true }
                           parameters: { label: "First Name" }
                         }
                         {
@@ -50,7 +50,7 @@ const queries = [
                           visibilityCondition: { value: true }
                           category: QUESTION
                           isRequired: true
-                          isEditable: true
+                          isEditable: { value: true }
                           parameters: { label: "Last Name" }
                         }
                         {
@@ -78,7 +78,7 @@ const queries = [
                           visibilityCondition: { value: true }
                           category: QUESTION
                           isRequired: true
-                          isEditable: true
+                          isEditable: { value: true }
                           parameters: {
                             label: "Select your Company"
                             options: ["Company A", "Company B"]
@@ -108,7 +108,7 @@ const queries = [
         templatesByVersionId {
           nodes {
             code
-            templateName
+            name
             templateSections {
               nodes {
                 code
@@ -139,7 +139,7 @@ const queries = [
           timeCreated: "NOW();"
           templatesUsingId: {
             create: {
-              templateName: "Company Registration"
+              name: "Company Registration"
               code: "CompRego1"
               templateSectionsUsingId: {
                 create: [
@@ -165,7 +165,7 @@ const queries = [
                           visibilityCondition: { value: true }
                           category: QUESTION
                           isRequired: true
-                          isEditable: true
+                          isEditable: { value: true }
                           parameters: { label: "Unique Name for Company" }
                         }
                         {
@@ -176,7 +176,7 @@ const queries = [
                           visibilityCondition: { value: true }
                           category: QUESTION
                           isRequired: true
-                          isEditable: true
+                          isEditable: { value: true }
                           parameters: {
                             label: "Select type of activity"
                             options: ["Manufacturer", "Importer", "Producer"]
@@ -227,7 +227,7 @@ const queries = [
         templatesByVersionId {
           nodes {
             code
-            templateName
+            name
             templateSections {
               nodes {
                 code
@@ -355,7 +355,7 @@ const queries = [
       application {
         name
         template {
-          templateName
+          name
         }
         applicationResponses {
           nodes {
@@ -442,7 +442,7 @@ const queries = [
       application {
         name
         template {
-          templateName
+          name
         }
         applicationResponses {
           nodes {
@@ -545,7 +545,7 @@ const queries = [
       application {
         name
         template {
-          templateName
+          name
         }
         applicationResponses {
           nodes {
