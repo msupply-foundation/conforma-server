@@ -118,7 +118,11 @@ The `action_plugin` table is the primary record of what actions are available to
 
 Plugins are intended to be stand-alone units, in that a user should be able to simply copy a plugin folder to another system and have it work straight away. (Eventually, we envisage that plugins could be imported directly via the front-end UI.) To that end, each plugin is developed as its own package, with its own `package.json` and `node_modules` folder, as well as Typescript and testing configurations.
 
-When developing a plugin, you can run the main app with `yarn dev` as normal, and changes you make to the plugin `.ts` file will be reflected immediately in the dev environment.
+While developing a plugin, you can run the main app with:
+
+`yarn dev` 
+
+Any changes you make to the plugin `.ts` file will be reflected immediately in the dev environment.
 
 However, when development work is complete, the plugin should be built independently by running `yarn build` _in the plugin's root folder_, which will compile the typescript code into `.js` file(s). (There is also a shortcut `yarn build_plugins` to build all plugins from the project root.) When the main project is built (`yarn build`), the plugins are not re-compiled, but simply copied directly to the build folder, so its expected they will each have their own compiled `.js` file already in place.
 
