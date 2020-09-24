@@ -124,7 +124,15 @@ While developing a plugin, you can run the main app with:
 
 Any changes you make to the plugin `.ts` file will be reflected immediately in the dev environment.
 
-However, when development work is complete, the plugin should be built independently by running `yarn build` _in the plugin's root folder_, which will compile the typescript code into `.js` file(s). (There is also a shortcut `yarn build_plugins` to build all plugins from the project root.) When the main project is built (`yarn build`), the plugins are not re-compiled, but simply copied directly to the build folder, so its expected they will each have their own compiled `.js` file already in place.
+After development work is complete, the plugin should be built independently by running _in the plugin's root folder_, which will compile the typescript code into `.js` file(s) with:
+
+ `yarn build` 
+ 
+Alternatively to build all plugins from the project root folder with:
+
+`yarn build_plugins`
+
+When the main project is built (`yarn build`), the plugins are not re-compiled, but simply copied directly to the build folder, so its expected they will each have their own compiled `.js` file already in place.
 
 ## Needs consideration
 
