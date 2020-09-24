@@ -1,5 +1,4 @@
 module.exports = {
-  dynamicJson: true,
   options: {
     appendPlugins: [
       '@graphile-contrib/pg-simplify-inflector',
@@ -9,7 +8,7 @@ module.exports = {
     graphiql: '/graphiql',
     enhanceGraphiql: true,
     cors: true,
-    watch: true,
+    dynamicJson: true,
     graphileBuildOptions: {
       connectionFilterRelations: true,
     },
