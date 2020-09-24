@@ -36,7 +36,7 @@ The `code` is unique for each element in the same **template**. This code will b
 
 The `next_element_code` links to the unique code of the next element to display in the application. So we order elements as a linked list.
 
-The `title` that will be display in this question/information element to the user. Default is `'Undefined'`.
+The `title` is what the Admin user can use for some more detailed definition of this element. Displayed only in the [Template Builder](Template-Builder.md).
 
 The `category` is either `'Question'` or `'Information'`. The 'Questions' are elements that will require responses from the Applicant and 'Information' elements are only structural or for visualisation.
 
@@ -56,7 +56,7 @@ More detailed description of question elements coming soon: `parameters`, `defau
 
 ### element type plugin
 
-Also known as the **Question plugin**, each record in this table refers to an external [Plugin bundle](Question-Plugin-Bundles.md) in the plugins folder (`src/modules/plugins`).
+Also known as the **Question plugin**, each record in this table refers to an external [Plugin bundle](Question-Plugin-Bundles.md) in the plugins folder (`src/plugins`).
 
 The `display_component_name` references the UI component the applicant sees when filling in the form.
 
@@ -64,7 +64,7 @@ The `config_component_name` refers to the UI component used to create the questi
 
 ## Permission settings
 
-Different users needs different permissions for acting on an applicatiion template.
+Different users needs different permissions for acting on an application template.
 
 For example an **Applicant user** would be required to be associated with a template permission in order to **Apply** to a specific application of a template type. Another example is a **Reviewer user** who would be required to be associated with a template permission in order to **Review** applications of a specific template type (or specific sections of the application of a template type) on a certain stage.
 
