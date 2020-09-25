@@ -571,11 +571,8 @@ testData.simpleGraphQL = {
         }
       }`,
     },
-    {
-      value: {
-        appId: 1,
-      },
-    },
+    { value: ['appId'] },
+    { value: 1 },
     { value: 'application.name' },
   ],
 }
@@ -592,11 +589,7 @@ testData.GraphQL_listOfApplications = {
       }
     }`,
     },
-    {
-      value: {
-        appId: 1,
-      },
-    },
+    { value: [] },
     { value: 'applications.nodes' },
   ],
 }
@@ -614,11 +607,7 @@ testData.GraphQL_listOfApplicationsWithId = {
         }
       }`,
     },
-    {
-      value: {
-        appId: 1,
-      },
-    },
+    { value: [] },
     { value: 'applications.nodes' },
   ],
 }
@@ -639,20 +628,10 @@ testData.GraphQL_CountApplicationSections = {
         }
       }`,
     },
+    { value: ['appId'] },
     {
-      operator: 'evalVariables',
-      children: [
-        {
-          appId: {
-            operator: 'objectProperties',
-            children: [
-              {
-                value: { object: 'application', property: 'id' },
-              },
-            ],
-          },
-        },
-      ],
+      operator: 'objectProperties',
+      children: [{ value: { object: 'application', property: 'id' } }],
     },
     { value: 'application.applicationSections.totalCount' },
   ],

@@ -144,12 +144,12 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: Cl
 }
 
 async function processGraphQL(queryArray: any[], connection: IGraphQLConnection) {
-  const [query, variables, returnNode] = queryArray
+  const query = queryArray[0]
+  const variableNames = queryArray[1]
+  const variableNodes = queryArray.slice(2, queryArray.length - 1)
+  const returnNode = queryArray[queryArray.length - 1]
 
-  console.log('Variables:', variables)
-
-  const variablesEvaluated =
-    Object.keys(variables).length === 0 ? variables : await evaluateGraphQLVariables(variables)
+  const variables = zipArraysToObject(variableNames, variableNodes)
 
   const data = await graphQLquery(query, variables, connection)
 
@@ -159,16 +159,13 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
   else return simplifyObject(selectedNode)
 }
 
-// Takes GraphQL variables object and evaluates any fields
-// that may have dynamic expressions rather than literal values.
-async function evaluateGraphQLVariables(variables: any) {
-  console.log('Evaluating', variables)
-  const evaluatedVariables: any = {}
-  for (const key of Object.keys(variables)) {
-    if (typeof variables[key] !== 'object') evaluatedVariables[key] = variables[key]
-    else evaluatedVariables[key] = await evaluateExpression(variables[key])
+// Build an object from an array of field names and an array of values
+function zipArraysToObject(variableNames: string[], variableValues: any[]) {
+  const returnObject: INestedObject = {}
+  for (let i = 0; i < variableNames.length; i++) {
+    returnObject[variableNames[i]] = variableValues[i]
   }
-  return evaluatedVariables
+  return returnObject
 }
 
 // Return a specific node (e.g. application.name) from a nested Object
