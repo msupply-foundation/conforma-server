@@ -356,8 +356,9 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
   })
 })
 
-test('Test GraphQL -- count Sections on specific Application', () => {
+test('Test GraphQL -- count Sections on current Application', () => {
   return evaluateExpression(testData.GraphQL_CountApplicationSections, {
+    application: testData.application,
     graphQLConnection: {
       fetch: fetch,
       endpoint: graphQLendpoint,

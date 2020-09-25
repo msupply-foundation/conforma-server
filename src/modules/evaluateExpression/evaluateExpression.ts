@@ -32,6 +32,7 @@ type Operator =
   | '!= '
   | '+'
   | 'REGEX'
+  | 'evalVariables'
   | 'objectProperties'
   | 'pgSQL'
   | 'graphQL'
@@ -102,6 +103,9 @@ export default async function evaluateExpression(
           return "Can't resolve object"
         }
 
+      case 'objectBuild': {
+      }
+
       case 'pgSQL':
         if (!params.pgConnection) return 'No database connection provided'
         return processPgSQL(childrenResolved, query.type, params.pgConnection)
@@ -142,11 +146,29 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: Cl
 async function processGraphQL(queryArray: any[], connection: IGraphQLConnection) {
   const [query, variables, returnNode] = queryArray
 
+  console.log('Variables:', variables)
+
+  const variablesEvaluated =
+    Object.keys(variables).length === 0 ? variables : await evaluateGraphQLVariables(variables)
+
   const data = await graphQLquery(query, variables, connection)
+
   const selectedNode = extractNode(data, returnNode)
 
   if (Array.isArray(selectedNode)) return selectedNode.map((item) => simplifyObject(item))
   else return simplifyObject(selectedNode)
+}
+
+// Takes GraphQL variables object and evaluates any fields
+// that may have dynamic expressions rather than literal values.
+async function evaluateGraphQLVariables(variables: any) {
+  console.log('Evaluating', variables)
+  const evaluatedVariables: any = {}
+  for (const key of Object.keys(variables)) {
+    if (typeof variables[key] !== 'object') evaluatedVariables[key] = variables[key]
+    else evaluatedVariables[key] = await evaluateExpression(variables[key])
+  }
+  return evaluatedVariables
 }
 
 // Return a specific node (e.g. application.name) from a nested Object

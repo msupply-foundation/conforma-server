@@ -592,7 +592,11 @@ testData.GraphQL_listOfApplications = {
       }
     }`,
     },
-    {},
+    {
+      value: {
+        appId: 1,
+      },
+    },
     { value: 'applications.nodes' },
   ],
 }
@@ -610,7 +614,11 @@ testData.GraphQL_listOfApplicationsWithId = {
         }
       }`,
     },
-    {},
+    {
+      value: {
+        appId: 1,
+      },
+    },
     { value: 'applications.nodes' },
   ],
 }
@@ -631,7 +639,21 @@ testData.GraphQL_CountApplicationSections = {
         }
       }`,
     },
-    { value: { appId: 1 } },
+    {
+      operator: 'evalVariables',
+      children: [
+        {
+          appId: {
+            operator: 'objectProperties',
+            children: [
+              {
+                value: { object: 'application', property: 'id' },
+              },
+            ],
+          },
+        },
+      ],
+    },
     { value: 'application.applicationSections.totalCount' },
   ],
 }
