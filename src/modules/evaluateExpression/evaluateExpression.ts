@@ -18,9 +18,8 @@ interface IGraphQLConnection {
   endpoint: string
 }
 
-interface IGraphQLReturnObject {
-  // [key: string]: string | IGraphQLReturnObject
-  [key: string]: any
+interface INestedObject {
+  [key: string]: any | INestedObject
 }
 
 type NodeType = 'string' | 'number' | 'boolean' | 'array' | 'object'
@@ -44,7 +43,7 @@ const defaultParameters: IParameters = {
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
   params = defaultParameters
-): Promise<string | number | boolean | any[] | IGraphQLReturnObject> {
+): Promise<string | number | boolean | any[] | INestedObject> {
   // If input is JSON string, convert to Object
   const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
 
@@ -109,7 +108,7 @@ export default async function evaluateExpression(
 
       case 'graphQL':
         if (!params.graphQLConnection) return 'No database connection provided'
-        return processGraphQL(childrenResolved, query.type, params.graphQLConnection)
+        return processGraphQL(childrenResolved, params.graphQLConnection)
 
       // etc. for as many other operators as we want/need.
     }
@@ -140,13 +139,42 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: Cl
   }
 }
 
-async function processGraphQL(
-  queryArray: any[],
-  queryType: string,
-  connection: IGraphQLConnection
-) {
+async function processGraphQL(queryArray: any[], connection: IGraphQLConnection) {
   const [query, variables, returnNode] = queryArray
-  const res = await connection.fetch(connection.endpoint, {
+
+  const data = await graphQLquery(query, variables, connection)
+  const selectedNode = extractNode(data, returnNode)
+
+  if (Array.isArray(selectedNode)) return selectedNode.map((item) => simplifyObject(item))
+  else return simplifyObject(selectedNode)
+}
+
+// Return a specific node (e.g. application.name) from a nested Object
+function extractNode(
+  data: INestedObject,
+  node: string
+): INestedObject | string | number | boolean | INestedObject[] {
+  const returnNodeArray = node.split('.')
+  return extractNodeWithArray(data, returnNodeArray)
+
+  function extractNodeWithArray(
+    data: INestedObject,
+    nodeArray: string[]
+  ): INestedObject | string | number | boolean | INestedObject[] {
+    if (nodeArray.length === 1) return data[nodeArray[0]]
+    else return extractNodeWithArray(data[nodeArray[0]], nodeArray.slice(1))
+  }
+}
+
+// If Object has only 1 field, return just the value of that field,
+// else return the whole object.
+function simplifyObject(item: number | string | boolean | INestedObject) {
+  if (typeof item === 'object' && Object.keys(item).length === 1) return Object.values(item)[0]
+  else return item
+}
+
+async function graphQLquery(query: string, variables: object, connection: IGraphQLConnection) {
+  const queryResult = await connection.fetch(connection.endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -157,38 +185,6 @@ async function processGraphQL(
       variables: variables,
     }),
   })
-  const data = await res.json()
-  const selectedNode = extractNode(data.data, returnNode)
-  switch (queryType) {
-    // case 'array':
-    //   return selectedNode.flat()
-    // case 'string':
-    //   return res.rows.flat().join(' ')
-    // case 'number':
-    //   return Number(res.rows.flat())
-    default:
-      if (Array.isArray(selectedNode)) return selectedNode.map((item) => simplifyObject(item))
-      else return simplifyObject(selectedNode)
-  }
-}
-
-function extractNode(
-  data: IGraphQLReturnObject,
-  node: string
-): IGraphQLReturnObject | string | IGraphQLReturnObject[] {
-  const returnNodeArray = node.split('.')
-  return extractNodeWithArray(data, returnNodeArray)
-
-  function extractNodeWithArray(
-    data: IGraphQLReturnObject,
-    nodeArray: string[]
-  ): IGraphQLReturnObject | string {
-    if (nodeArray.length === 1) return data[nodeArray[0]]
-    else return extractNodeWithArray(data[nodeArray[0]], nodeArray.slice(1))
-  }
-}
-
-function simplifyObject(item: number | string | boolean | IGraphQLReturnObject) {
-  if (typeof item === 'object' && Object.keys(item).length === 1) return Object.values(item)[0]
-  else return item
+  const data = await queryResult.json()
+  return data.data
 }

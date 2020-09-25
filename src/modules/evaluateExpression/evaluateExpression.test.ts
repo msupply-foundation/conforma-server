@@ -292,6 +292,18 @@ test('Test Postgres get template names -- no type', () => {
   )
 })
 
+test('Test Postgres get application list with IDs', () => {
+  return evaluateExpression(testData.getListOfApplications_withId, {
+    pgConnection: pgConnect,
+  }).then((result: any) => {
+    expect(result).toEqual([
+      { id: 1, name: 'User Registration: Nicole Madruga' },
+      { id: 2, name: 'User Registration: Carl Smith' },
+      { id: 3, name: 'Company Registration: Company C' },
+    ])
+  })
+})
+
 // GraphQL operator
 
 test('Test GraphQL -- get single application name', () => {
@@ -341,6 +353,17 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
         id: 3,
       },
     ])
+  })
+})
+
+test('Test GraphQL -- count Sections on specific Application', () => {
+  return evaluateExpression(testData.GraphQL_CountApplicationSections, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual(2)
   })
 })
 

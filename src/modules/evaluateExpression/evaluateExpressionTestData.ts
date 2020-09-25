@@ -550,6 +550,15 @@ testData.getListOfTemplates_noType = {
   ],
 }
 
+testData.getListOfApplications_withId = {
+  operator: 'pgSQL',
+  children: [
+    {
+      value: 'SELECT id, name FROM application',
+    },
+  ],
+}
+
 // GraphQL operator
 
 testData.simpleGraphQL = {
@@ -603,6 +612,27 @@ testData.GraphQL_listOfApplicationsWithId = {
     },
     {},
     { value: 'applications.nodes' },
+  ],
+}
+
+testData.GraphQL_CountApplicationSections = {
+  operator: 'graphQL',
+  children: [
+    {
+      value: `query SectionCount($appId:Int!) {
+        application(id: $appId) {
+          id
+          template {
+            name
+          }
+          applicationSections {
+            totalCount
+          }
+        }
+      }`,
+    },
+    { value: { appId: 1 } },
+    { value: 'application.applicationSections.totalCount' },
   ],
 }
 
