@@ -11,11 +11,14 @@ _Run `yarn test` to see it in action -- the tests are in the `src/modules/evalua
 Any value that could possibly be a dynamic query should be stored in this format. This would include:
 
 **Question**:
-  - Parameters (Option lists, Labels, Placeholder text, etc.)
-  - Visibility conditions
-  - Validation criteria
+
+- Parameters (Option lists, Labels, Placeholder text, etc.)
+- Visibility conditions
+- Validation criteria
+
 **Trigger**:
-  - Conditions
+
+- Conditions
 
 For more complex lookups, we would hide the complexity from the user in the Template builder, and just present a set of pre-defined “queries” in the UI, which map to a pre-written query with perhaps a selectable parameter or two. (However, we should also provide a JSON editor as an alternative if an advanced user wishes to manually create more complex queries.)
 
@@ -127,13 +130,22 @@ Used to extract values from current state, for example, from `user`, `organisati
 Performs queries to a connected PostGres database and returns the result in a format specified by `type`.
 
 - Input:
-  - First child node contains a **string** representing the parameterized SQL query (i.e. $1, $2 substitution)
+  - First child node contains a **string** representing the parameterized SQL query (i.e. `$1`, `$2` substitution)
   - Remaining nodes return the values (**strings**, **numbers**, **arrays**) required for the above query substitution.
 - Output: Either **array** (all values flattened into one array), **string** (all results concatenated with spaces), or a single **number**, depending on the type specification. If not specified, it returns the default `node-postgres` format (an array of objects, with fields of each object being the database column names).
 
 ## graphQL
 
-Performs queries on connected GraphQL interface. Not yet implemented.
+Performs queries on connected GraphQL interface.
+
+- Input:
+  - First child node's value is a string representing the GraphQL query
+  - Second child node's value is an array of field names for the query's associated variables object. If no variables are required for the query, pass an empty array.
+  - Next node's values are the values of the fields for the variables object -- one node for each field in the previous node's array.
+  - The last node's value is a string stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below)
+- Output: whatever type is contained in the specified GraphQL node, which can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
+  - If there only one field, only the value of the field will be returned.
+  - If there is more than one field, the whole object will be returned.
 
 # Usage
 
@@ -153,7 +165,12 @@ The query evaluator is implemented in the `evaluateExpression` function:
 }
 ```
 
-- `parameters` can also contain one additional field called `connection`, which is an object representing an active database connection. \
+- `parameters` can also contain one additional field called `connection`, which is an object representing an active database connection.
+- If using one of the database operators (**pgSQL** or **graphQL**), you must also pass a connection object as one of the `parameters`.
+  - For **pgSQL**:  
+    `pgConnection: <node-postgres Client object>`
+  - For **graphQL**:
+    `graphQLConnection: {fetch: <fetch object>, endpoint: <URL of GraphQL enpoint>`}
 
 # Examples
 
