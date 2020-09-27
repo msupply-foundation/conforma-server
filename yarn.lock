@@ -3983,6 +3983,11 @@ postgraphile-core@4.8.0:
     graphile-build-pg "4.8.0"
     tslib "^1.13.0"
 
+postgraphile-plugin-connection-filter@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/postgraphile-plugin-connection-filter/-/postgraphile-plugin-connection-filter-2.0.0.tgz#caec75f8f8913f0a0ef48dcdd393c3e915c5ac3e"
+  integrity sha512-4h1L1c7hyexRVmtWQrHsLvn4Ctm2j4kvn2jY593gfgJMotwEl7/exZ4PDszfgZJW8B4AO4c+HRy3v0TUG3AUpw==
+
 postgraphile-plugin-nested-mutations@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/postgraphile-plugin-nested-mutations/-/postgraphile-plugin-nested-mutations-1.0.1.tgz#f8eb132f3cd69d5bafcaa2de0322daadcf85fd15"
