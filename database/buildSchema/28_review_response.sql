@@ -3,7 +3,7 @@
 CREATE TABLE public.review_response (
 	id serial primary key,
 	application_response_id integer references public.application_response(id),
-	review_decision public.review_decision,
+	decision public.review_decision,
 	comment varchar,
 	trigger public.trigger
 );
