@@ -6,7 +6,7 @@
 
 ## User instance
 
-An user is either the Applicant that wants to apply to a application (Registration) in the system or the other entities (i.e. Reviewer) that will be the evaluator of the workflow of the application. What will define exact the type of user are permissions (permission_join) which is associated with the user and the organisation of the user. So the same user may have different actions available depening on the company selected on the login.
+A user is either the Applicant that wants to apply for an application (Registration) in the system or the other entities (i.e. Reviewer) that will evaluate the application. What will define exact the type of user are permissions (`permission_join`) which is associated with the user and the organisation of the user. So the same user may have different operations available depending on the company they selected on login.
 
 ### user
 
