@@ -14,12 +14,12 @@ interface IQueryNode {
 }
 
 interface IGraphQLConnection {
-  fetch: any
+  fetch: any // Don't know type of fetch object
   endpoint: string
 }
 
-interface INestedObject {
-  [key: string]: any | INestedObject
+interface IBasicObject {
+  [key: string]: any
 }
 
 type NodeType = 'string' | 'number' | 'boolean' | 'array' | 'object'
@@ -44,7 +44,7 @@ const defaultParameters: IParameters = {
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
   params = defaultParameters
-): Promise<string | number | boolean | any[] | INestedObject> {
+): Promise<string | number | boolean | any[] | IBasicObject> {
   // If input is JSON string, convert to Object
   const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
 
@@ -161,7 +161,7 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
 
 // Build an object from an array of field names and an array of values
 function zipArraysToObject(variableNames: string[], variableValues: any[]) {
-  const returnObject: INestedObject = {}
+  const returnObject: IBasicObject = {}
   for (let i = 0; i < variableNames.length; i++) {
     returnObject[variableNames[i]] = variableValues[i]
   }
@@ -170,16 +170,16 @@ function zipArraysToObject(variableNames: string[], variableValues: any[]) {
 
 // Return a specific node (e.g. application.name) from a nested Object
 function extractNode(
-  data: INestedObject,
+  data: IBasicObject,
   node: string
-): INestedObject | string | number | boolean | INestedObject[] {
+): IBasicObject | string | number | boolean | IBasicObject[] {
   const returnNodeArray = node.split('.')
   return extractNodeWithArray(data, returnNodeArray)
 
   function extractNodeWithArray(
-    data: INestedObject,
+    data: IBasicObject,
     nodeArray: string[]
-  ): INestedObject | string | number | boolean | INestedObject[] {
+  ): IBasicObject | string | number | boolean | IBasicObject[] {
     if (nodeArray.length === 1) return data[nodeArray[0]]
     else return extractNodeWithArray(data[nodeArray[0]], nodeArray.slice(1))
   }
@@ -187,7 +187,7 @@ function extractNode(
 
 // If Object has only 1 field, return just the value of that field,
 // else return the whole object.
-function simplifyObject(item: number | string | boolean | INestedObject) {
+function simplifyObject(item: number | string | boolean | IBasicObject) {
   if (typeof item === 'object' && Object.keys(item).length === 1) return Object.values(item)[0]
   else return item
 }

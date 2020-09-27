@@ -146,6 +146,7 @@ Performs queries on connected GraphQL interface.
 - Output: whatever type is contained in the specified GraphQL node, which can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
   - If there only one field, only the value of the field will be returned.
   - If there is more than one field, the whole object will be returned.
+  - Objects contained within arrays are also returned with the above logic.
 
 # Usage
 
@@ -333,6 +334,7 @@ Tree structure:
 
 - ~~Convert to typescript.~~
 - ~~Make function async and all operators return Promises (currently only pgSQL does, which is not very consistent)~~
-- Error handling
+- Better error handling
 - Create mocks (or alt?) for Database queries in jest test suite
 - Figure out how to make into a module that can be easily imported into both front-end and back-end repositories.
+- Pass JWT/auth token to database operators
