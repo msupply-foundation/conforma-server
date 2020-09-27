@@ -8,6 +8,7 @@ Here is the overall schema (work in progress):
 
 ## Detailed areas
 
-- [Permissions]
-- [Application Template]
+- [Permissions](Database-Schema-Permission.md)
+- [Application Template](Database-Schema-Template.md)
+- [Application](Database-Schema-Application.md)
 - [Reviews]
