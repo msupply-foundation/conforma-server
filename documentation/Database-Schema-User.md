@@ -39,4 +39,4 @@ The `user_id` links to the user table.
 
 The `organisation_id` links to the organistion.
 
-The `user_role` is just a literal for now that states what is this user role in the organisation. It is created based on what permissions the user has to act as the organisation. For example a user that creates the company in the system can be the **company owner** and another user that joins the compnay by default can be the **employee**. Other example is the user that is part of FDA and when associated with the main organisation in the system the default job is **revisor**.
+The `user_role` is just a literal for now that states this user's role in the organisation. It is created based on what permissions the user has to act as the organisation. For example a user that creates the company in the system can be the **Company Owner** and another user that joins the company by default can be an **Employee** or **Member**. Another example is the user that is part of FDA and when associated with the main organisation in the system the default job is **Reviewer**.
