@@ -6,7 +6,7 @@
 
 ## User instance
 
-An user is either the Applicant that wants to apply to a application (Registration) in the system or the other entities (i.e. Reviewer) that will be the evaluator of the workflow of the application. What will define exact the type of user are permissions (permission_join) which is associated with the user and the organisation of the user. So the same user may have different actions available depening on the company selected on the login.
+A user is either the Applicant that wants to apply for an application (Registration) in the system or the other entities (i.e. Reviewer) that will evaluate the application. What will define exact the type of user are permissions (`permission_join`) which is associated with the user and the organisation of the user. So the same user may have different operations available depending on the company they selected on login.
 
 ### user
 
@@ -39,4 +39,4 @@ The `user_id` links to the user table.
 
 The `organisation_id` links to the organistion.
 
-The `user_role` is just a literal for now that states what is this user role in the organisation. It is created based on what permissions the user has to act as the organisation. For example a user that creates the company in the system can be the **company owner** and another user that joins the compnay by default can be the **employee**. Other example is the user that is part of FDA and when associated with the main organisation in the system the default job is **revisor**.
+The `user_role` is just a literal for now that states this user's role in the organisation. It is created based on what permissions the user has to act as the organisation. For example a user that creates the company in the system can be the **Company Owner** and another user that joins the company by default can be an **Employee** or **Member**. Another example is the user that is part of FDA and when associated with the main organisation in the system the default job is **Reviewer**.
