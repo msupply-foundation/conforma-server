@@ -368,6 +368,8 @@ test('Test GraphQL -- count Sections on current Application', () => {
   })
 })
 
+// TO-DO: Test with multiple variables and dynamic values
+
 // More complex combinations
 
 test('Test concatenate user First and Last names', () => {

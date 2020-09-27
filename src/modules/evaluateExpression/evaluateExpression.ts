@@ -18,7 +18,7 @@ interface IGraphQLConnection {
   endpoint: string
 }
 
-interface IBasicObject {
+type BasicObject = {
   [key: string]: any
 }
 
@@ -37,14 +37,12 @@ type Operator =
   | 'pgSQL'
   | 'graphQL'
 
-const defaultParameters: IParameters = {
-  // connection: {},
-}
+const defaultParameters: IParameters = {}
 
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
   params = defaultParameters
-): Promise<string | number | boolean | any[] | IBasicObject> {
+): Promise<string | number | boolean | any[] | BasicObject> {
   // If input is JSON string, convert to Object
   const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
 
@@ -161,7 +159,7 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
 
 // Build an object from an array of field names and an array of values
 function zipArraysToObject(variableNames: string[], variableValues: any[]) {
-  const returnObject: IBasicObject = {}
+  const returnObject: BasicObject = {}
   for (let i = 0; i < variableNames.length; i++) {
     returnObject[variableNames[i]] = variableValues[i]
   }
@@ -170,16 +168,16 @@ function zipArraysToObject(variableNames: string[], variableValues: any[]) {
 
 // Return a specific node (e.g. application.name) from a nested Object
 function extractNode(
-  data: IBasicObject,
+  data: BasicObject,
   node: string
-): IBasicObject | string | number | boolean | IBasicObject[] {
+): BasicObject | string | number | boolean | BasicObject[] {
   const returnNodeArray = node.split('.')
   return extractNodeWithArray(data, returnNodeArray)
 
   function extractNodeWithArray(
-    data: IBasicObject,
+    data: BasicObject,
     nodeArray: string[]
-  ): IBasicObject | string | number | boolean | IBasicObject[] {
+  ): BasicObject | string | number | boolean | BasicObject[] {
     if (nodeArray.length === 1) return data[nodeArray[0]]
     else return extractNodeWithArray(data[nodeArray[0]], nodeArray.slice(1))
   }
@@ -187,7 +185,7 @@ function extractNode(
 
 // If Object has only 1 field, return just the value of that field,
 // else return the whole object.
-function simplifyObject(item: number | string | boolean | IBasicObject) {
+function simplifyObject(item: number | string | boolean | BasicObject) {
   if (typeof item === 'object' && Object.keys(item).length === 1) return Object.values(item)[0]
   else return item
 }
