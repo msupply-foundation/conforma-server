@@ -159,11 +159,11 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
 
 // Build an object from an array of field names and an array of values
 function zipArraysToObject(variableNames: string[], variableValues: any[]) {
-  const returnObject: BasicObject = {}
-  for (let i = 0; i < variableNames.length; i++) {
-    returnObject[variableNames[i]] = variableValues[i]
-  }
-  return returnObject
+  const createdObject: BasicObject = {}
+  variableNames.map((name, index) => {
+    createdObject[name] = variableValues[index]
+  })
+  return createdObject
 }
 
 // Return a specific node (e.g. application.name) from a nested Object

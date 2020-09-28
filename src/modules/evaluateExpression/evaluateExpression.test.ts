@@ -388,6 +388,19 @@ test('Test concatenate user First and Last names', () => {
   )
 })
 
+test('Validation: Company name is unique', () => {
+  return evaluateExpression(testData.complexValidation, {
+    form2: testData.form2,
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toBe(true)
+  })
+})
+
+// The following need more data in database and schema refinements before they can be implemented:
 // test("Test visibility condition -- Answer to Q1 is Drug Registration and user belongs to at least one organisation", () => {
 //   expect(evaluateExpression(testData.complex1, { form: testData.form, user: testData.user })).toEqual(true);
 // });

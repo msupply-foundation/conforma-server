@@ -490,6 +490,11 @@ testData.form = {
   q4: 'Panadol',
 }
 
+testData.form2 = {
+  q1: 'Company Registration',
+  q2: 'XYZ Chemicals',
+}
+
 testData.application = {
   id: 1,
   name: 'Drug Registration',
@@ -791,3 +796,39 @@ testData.complex2_asString = `{
       }
     ]
   }`
+
+testData.complexValidation = {
+  operator: '=',
+  children: [
+    {
+      operator: 'graphQL',
+      children: [
+        {
+          value: `query Orgs($orgName: String) {
+            organisations(condition: {name: $orgName}) {
+              totalCount
+              nodes {
+                name
+                id
+              }
+            }
+          }`,
+        },
+        { value: ['orgName'] },
+        {
+          operator: 'objectProperties',
+          children: [
+            {
+              value: {
+                object: 'form2',
+                property: 'q2',
+              },
+            },
+          ],
+        },
+        { value: 'organisations.totalCount' },
+      ],
+    },
+    { value: 0 },
+  ],
+}

@@ -284,6 +284,52 @@ Tree structure:
 }
 ```
 
+**Example 3**: Validation: Company name is unique (i.e. The total count of Organisations with "name" equal to the value of the question response is zero)
+
+Tree structure:
+
+![Example 3 tree diagram](images/query-syntax-example-3b.png)
+
+```
+{
+  operator: '=',
+  children: [
+    {
+      operator: 'graphQL',
+      children: [
+        {
+          value: `query Orgs($orgName: String) {
+            organisations(condition: {name: $orgName}) {
+              totalCount
+              nodes {
+                name
+                id
+              }
+            }
+          }`,
+        },
+        { value: ['orgName'] },
+        {
+          operator: 'objectProperties',
+          children: [
+            {
+              value: {
+                object: 'form2',
+                property: 'q2',
+              },
+            },
+          ],
+        },
+        { value: 'organisations.totalCount' },
+      ],
+    },
+    { value: 0 },
+  ],
+}
+```
+
+<!-->
+
 **Example 3**: Trigger condition: Stage = SCREENING and All questions are Approved
 
 Tree structure:
@@ -324,6 +370,8 @@ Tree structure:
  ],
 };
 ```
+
+<-->
 
 # Additional Comments
 
