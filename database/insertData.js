@@ -224,7 +224,7 @@ const queries = [
   `mutation {
         createUser(
           input: {
-            user: { email: "nicole@sussol.net", password: "1234", username: "nmadruga", role: APPLICANT }
+            user: { email: "nicole@sussol.net", password: "1234", username: "nmadruga" }
           }
         ) {
           user {
@@ -237,7 +237,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "carl@sussol.net", password: "1234", username: "carl", role: APPLICANT }
+        user: { email: "carl@sussol.net", password: "1234", username: "carl" }
       }
     ) {
       user {
@@ -250,7 +250,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "andrei@sussol.net", password: "1234", username: "andrei", role: APPLICANT }
+        user: { email: "andrei@sussol.net", password: "1234", username: "andrei" }
       }
     ) {
       user {
@@ -263,7 +263,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "valerio@nra.org", password: "1234", username: "valerio", role: REVIEWER }
+        user: { email: "valerio@nra.org", password: "1234", username: "valerio" }
       }
     ) {
       user {
