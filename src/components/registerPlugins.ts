@@ -7,14 +7,13 @@
 
 import * as fs from 'fs'
 import path from 'path'
-import { DatabaseResult } from '../types'
 import getAppRootDir from './getAppRoot'
 import * as config from '../config.json'
-import { Client } from 'pg'
+import PostgresDB from './postgresConnect'
 
 const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder)
 
-export default async function registerPlugins(client: Client) {
+export default async function registerPlugins() {
   // Load plugin info from files
   console.log('Scanning plugins folder...')
   const plugins = fs
@@ -34,8 +33,7 @@ export default async function registerPlugins(client: Client) {
     })
 
   // Load plugin info from Database
-  const res: DatabaseResult = await client.query('SELECT * FROM action_plugin')
-  const dbPlugins = res.rows
+  const dbPlugins = await PostgresDB.getActions()
   // Check if any in DB now missing from files -- alert if so.
   const pluginCodes = plugins.map((item) => item.code)
   const missingPlugins = dbPlugins.filter((item) => !pluginCodes.includes(item.code))
@@ -43,7 +41,7 @@ export default async function registerPlugins(client: Client) {
     const missingPlugin = missingPlugins[index]
     console.warn('ALERT: Plug-in file missing:', missingPlugin.name)
     try {
-      await client.query('DELETE FROM action_plugin WHERE code = $1', [missingPlugin.code])
+      await PostgresDB.deleteFromPlugins([missingPlugin.code])
       console.log('Plugin de-registered:', missingPlugin.name)
     } catch (err) {
       console.error("Couldn't remove plug-in:", missingPlugin.name)
@@ -54,21 +52,12 @@ export default async function registerPlugins(client: Client) {
   // Compare each plugin against Database record
   const dbPluginCodes = dbPlugins.map((item) => item.code)
   const unregisteredPlugins = plugins.filter((plugin) => !dbPluginCodes.includes(plugin.code))
-  const dbQuery =
-    'INSERT INTO action_plugin (code, name, description, path, function_name, required_parameters) VALUES ($1, $2, $3, $4, $5, $6);'
 
   // Register new plugins
   for (let index = 0; index < unregisteredPlugins.length; index++) {
     const plugin = unregisteredPlugins[index]
     try {
-      await client.query(dbQuery, [
-        plugin.code,
-        plugin.name,
-        plugin.description,
-        plugin.path,
-        plugin.function_name,
-        plugin.required_parameters,
-      ])
+      await PostgresDB.addPlugin(plugin)
       console.log('Plugin registered:', plugin.name)
     } catch (err) {
       console.error('There was a problem registering', plugin.name)
@@ -86,17 +75,7 @@ export default async function registerPlugins(client: Client) {
       (plugin.name !== dbPlugin.name || plugin.description !== dbPlugin.description)
     ) {
       try {
-        await client.query(
-          'UPDATE action_plugin SET name = $1, description = $2, path = $3, function_name = $4, required_parameters = $5 WHERE code = $6',
-          [
-            plugin.name,
-            plugin.description,
-            plugin.path,
-            plugin.function_name,
-            plugin.required_parameters,
-            plugin.code,
-          ]
-        )
+        await PostgresDB.updatePlugin(plugin)
         console.log('Plugin updated:', plugin.name)
       } catch (err) {
         console.error('There was a problem updating', plugin.name)

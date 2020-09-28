@@ -1,3 +1,12 @@
+type ActionQueueStatus = 'SCHEDULED' | 'QUEUED' | 'SUCCESS' | 'FAIL'
+
+export interface ActionQueuePayload {
+  id: number
+  code: string
+  parameter_queries?: { [key: string]: any }
+  status: ActionQueueStatus
+}
+
 export interface ActionLibrary {
   [key: string]: Function
 }
@@ -9,6 +18,19 @@ export interface DatabaseRecord {
 
 export interface DatabaseResult {
   rows: DatabaseRecord[]
+}
+
+export interface PluginPayload {
+  code: string
+  name: string
+  description: string
+  path: string
+  function_name: string
+  required_parameters: { [key: string]: any }
+}
+
+export interface QueryPayload {
+  [key: string]: any
 }
 
 export interface TriggerPayload {

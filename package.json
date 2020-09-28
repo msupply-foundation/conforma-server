@@ -18,6 +18,7 @@
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.4",
     "postgraphile-plugin-nested-mutations": "^1.0.1",
+    "postgres-pool": "^3.1.4",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.2.0",
     "ts-node": "^8.10.2",
