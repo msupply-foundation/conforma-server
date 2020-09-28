@@ -96,9 +96,8 @@ export async function processTrigger(client: Client, payload: TriggerPayload) {
 
     // Evaluate parameters for each Action
     for (const action of actions) {
-      const parameter_queries = action.parameter_queries
-      for (const key in parameter_queries) {
-        parameter_queries[key] = await evaluateExpression(parameter_queries[key])
+      for (const key in action.parameter_queries) {
+        action.parameter_queries[key] = await evaluateExpression(action.parameter_queries[key])
       }
     }
 
