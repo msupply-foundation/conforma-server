@@ -328,7 +328,7 @@ Tree structure:
 }
 ```
 
-<!-->
+<!--
 
 **Example 3**: Trigger condition: Stage = SCREENING and All questions are Approved
 
@@ -371,7 +371,7 @@ Tree structure:
 };
 ```
 
-<-->
+-->
 
 # Additional Comments
 
