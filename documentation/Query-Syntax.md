@@ -142,7 +142,7 @@ Performs queries on connected GraphQL interface.
   - First child node's value is a string representing the GraphQL query
   - Second child node's value is an array of field names for the query's associated variables object. If no variables are required for the query, pass an empty array.
   - Next node's values are the values of the fields for the variables object -- one node for each field in the previous node's array.
-  - The last node's value is a string stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below)
+  - The last node's value is a string stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`)
 - Output: whatever type is contained in the specified GraphQL node, which can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
   - If there only one field, only the value of the field will be returned.
   - If there is more than one field, the whole object will be returned.
