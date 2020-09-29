@@ -3,7 +3,6 @@ import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
-import PostgresDB from './components/postgresConnect'
 import {
   saveFiles,
   getFilename,
@@ -15,7 +14,7 @@ import getAppRootDir from './components/getAppRoot'
 // Bare-bones Fastify server
 
 const startServer = async () => {
-  await loadActionPlugins(PostgresDB) // Connects to Database and listens for Triggers
+  await loadActionPlugins() // Connects to Database and listens for Triggers
 
   createFilesFolder()
 

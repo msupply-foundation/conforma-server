@@ -11,6 +11,6 @@ export const loadActionPlugins = async () => {
   await registerPlugins()
   // Load Action functions into global scope
   await loadActions(actionLibrary)
-  // Schedule future actions and execute overdue ones
-  await loadScheduledActions(actionLibrary, actionSchedule)
+  // // Schedule future actions and execute overdue ones
+  // await loadScheduledActions(actionLibrary, actionSchedule)
 }

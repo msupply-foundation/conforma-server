@@ -34,6 +34,7 @@ export default async function registerPlugins() {
 
   // Load plugin info from Database
   const dbPlugins = await PostgresDB.getActions()
+
   // Check if any in DB now missing from files -- alert if so.
   const pluginCodes = plugins.map((item) => item.code)
   const missingPlugins = dbPlugins.filter((item) => !pluginCodes.includes(item.code))

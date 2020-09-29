@@ -73,7 +73,7 @@ export async function processTrigger(payload: TriggerPayload) {
     // Filter out Actions that don't match the current condition
     const actions: Action[] = []
 
-    result.forEach((action) => {
+    for (const action of result) {
       const condition = await evaluateExpression(action.condition)
       if (condition) actions.push(action)
     }
@@ -84,8 +84,13 @@ export async function processTrigger(payload: TriggerPayload) {
         action.parameter_queries[key] = await evaluateExpression(action.parameter_queries[key])
       }
       // Write each Action with parameters to Action_Queue
-      await PosgresDB.addActionQueue({id: payload.id, code: action.code, parameter_queries: action.parameter_queries, status: 'QUEUED'})
-    })
+      await PosgresDB.addActionQueue({
+        id: payload.id,
+        code: action.code,
+        parameter_queries: action.parameter_queries,
+        status: 'QUEUED',
+      })
+    }
 
     // Update trigger queue item with success/failure (and log)
     // If SUCCESS -- Not sure best way to test for this:
