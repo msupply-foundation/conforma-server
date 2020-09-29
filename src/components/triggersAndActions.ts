@@ -3,7 +3,6 @@ import getAppRootDir from './getAppRoot'
 import * as config from '../config.json'
 import { ActionLibrary, Action, DatabaseResult, TriggerPayload, ActionPayload } from '../types'
 import evaluateExpression from '../modules/evaluateExpression/evaluateExpression'
-// import { Client } from 'pg'
 import PosgresDB from '../components/postgresConnect'
 
 const schedule = require('node-schedule')
@@ -65,9 +64,8 @@ export const loadScheduledActions = async function (
 export async function processTrigger(payload: TriggerPayload) {
   try {
     // Get Actions from matching Template
-    const result = await PosgresDB.getActionsByTemplate([
-      payload.table,
-      Number(payload.record_id).toString(),
+    const result = await PosgresDB.getActionsByTemplate(payload.table, [
+      payload.record_id,
       payload.trigger,
     ])
     // Filter out Actions that don't match the current condition

@@ -1,10 +1,9 @@
 import { processTrigger, executeAction } from './triggersAndActions'
 import { actionLibrary, actionSchedule } from './pluginsConnect'
 import * as config from '../config.json'
-import { Pool, QueryResult } from 'pg'
+import { Client, Pool, QueryResult } from 'pg'
 import {
   Action,
-  ActionQueue,
   ActionQueuePayload,
   DatabaseResult,
   DatabaseRecord,
@@ -26,20 +25,29 @@ class PostgresDB {
       process.exit(-1)
     })
 
-    // this.pool.on('notification', (msg: DatabaseRecord) => {
-    //   switch (msg.channel) {
-    //     case 'trigger_notifications':
-    //       processTrigger(JSON.parse(msg.payload))
-    //       break
-    //     case 'action_notifications':
-    //       executeAction(JSON.parse(msg.payload), actionLibrary)
-    //       break
-    //   }
-    //   // console.log(msg.payload);
-    // })
+    this.startListener()
+  }
 
-    // this.pool.query('LISTEN trigger_notifications')
-    // this.pool.query('LISTEN action_notifications')
+  private startListener = async () => {
+    const listener = new Client(config.pg_database_connection)
+    listener.connect()
+    listener.query('LISTEN trigger_notifications')
+    listener.query('LISTEN action_notifications')
+    listener.on('notification', ({ channel, payload }) => {
+      if (!payload) {
+        console.log(`Notification ${channel} received with no payload!`)
+        return
+      }
+      switch (channel) {
+        case 'trigger_notifications':
+          processTrigger(JSON.parse(payload))
+          break
+        case 'action_notifications':
+          executeAction(JSON.parse(payload), actionLibrary)
+          break
+      }
+      // console.log(payload)
+    })
   }
 
   public static get Instance() {
@@ -64,7 +72,7 @@ class PostgresDB {
         Object.values(action)
       )
     } catch (err) {
-      console.log(err.stack)
+      console.log('Aqui', err.stack)
     }
   }
 
@@ -89,12 +97,19 @@ class PostgresDB {
     }
   }
 
-  public getActionsByTemplate = async (payload: any): Promise<Action[]> => {
+  public getActionsByTemplate = async (
+    tableName: string,
+    payload: QueryPayload
+  ): Promise<Action[]> => {
     try {
       const result: DatabaseResult = await this.makeQuery(
-        'SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, condition, parameter_queries FROM template JOIN template_action ON template.id = template_action.template_id JOIN action_plugin ON template_action.action_code = action_plugin.code WHERE template_id = (SELECT template_id from $1 WHERE id = $2) AND trigger = $3',
+        `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, condition, parameter_queries FROM template 
+         JOIN template_action ON template.id = template_action.template_id 
+         JOIN action_plugin ON template_action.action_code = action_plugin.code 
+         WHERE template_id = (SELECT template_id FROM ${tableName} WHERE id = $1) AND trigger = $2`,
         payload
       )
+
       return result.rows as Action[]
     } catch (err) {
       return err.stack
