@@ -46,7 +46,6 @@ class PostgresDB {
           executeAction(JSON.parse(payload), actionLibrary)
           break
       }
-      // console.log(payload)
     })
   }
 
@@ -72,7 +71,7 @@ class PostgresDB {
         Object.values(action)
       )
     } catch (err) {
-      console.log('Aqui', err.stack)
+      console.log(err.stack)
     }
   }
 
@@ -116,13 +115,12 @@ class PostgresDB {
     }
   }
 
-  public getActionsScheduled = async (): Promise<DatabaseRecord[]> => {
+  public getActionsScheduled = async (payload: any = ['Scheduled']): Promise<DatabaseRecord[]> => {
     try {
       const result: DatabaseResult = await this.makeQuery(
-        'SELECT id, action_code, parameters, execution_time FROM action_queue WHERE status = "Scheduled" ORDER BY execution_time',
-        []
+        'SELECT id, action_code, parameters, execution_time FROM action_queue WHERE status = $1 ORDER BY execution_time',
+        payload
       )
-      console.log(result.rows)
       return result.rows
     } catch (err) {
       return err.stack

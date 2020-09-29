@@ -13,14 +13,18 @@ const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder)
 export const loadActions = async function (actionLibrary: ActionLibrary) {
   console.log('Loading Actions from Database...')
 
-  const result = await PosgresDB.getActionsByCode()
+  try {
+    const result = await PosgresDB.getActionsByCode()
 
-  result.forEach((row) => {
-    const action = require(path.join(pluginFolder, row.path))
-    actionLibrary[row.code] = action[row.function_name]
-  })
+    result.forEach((row) => {
+      const action = require(path.join(pluginFolder, row.path))
+      actionLibrary[row.code] = action[row.function_name]
+    })
 
-  console.log('Actions loaded')
+    console.log('Actions loaded.')
+  } catch (err) {
+    console.log(err.stack)
+  }
 }
 
 // Load scheduled jobs from Database at server startup
@@ -28,37 +32,51 @@ export const loadScheduledActions = async function (
   actionLibrary: ActionLibrary,
   actionSchedule: any[]
 ) {
-  console.log('Loading Scheduled jobs')
+  console.log('Loading Scheduled jobs...')
+
   // Load from Database
   const result = await PosgresDB.getActionsScheduled()
-  result.forEach((action) => {
-    // console.log(action);
-    const date = new Date(action.execution_time)
-    if (date > new Date(Date.now())) {
-      const job = schedule.scheduleJob(date, function () {
+
+  for await (const scheduledAction of result) {
+    try {
+      const date = new Date(scheduledAction.execution_time)
+      if (date > new Date(Date.now())) {
+        const job = schedule.scheduleJob(date, function () {
+          executeAction(
+            {
+              id: scheduledAction.id,
+              code: scheduledAction.action_code,
+              parameters: scheduledAction.parameters,
+            },
+            actionLibrary
+          )
+        })
+        actionSchedule.push(job)
+      } else {
+        // Overdue jobs to be executed immediately
+        console.log(
+          'Executing overdue action:',
+          scheduledAction.action_code,
+          scheduledAction.parameters
+        )
         executeAction(
           {
-            id: action.id,
-            code: action.action_code,
-            parameters: action.parameters,
+            id: scheduledAction.id,
+            code: scheduledAction.action_code,
+            parameters: scheduledAction.parameters,
           },
           actionLibrary
         )
-      })
-      actionSchedule.push(job)
-    } else {
-      // Overdue jobs to be executed immediately
-      console.log('Executing overdue action:', action.action_code, action.parameters)
-      executeAction(
-        {
-          id: action.id,
-          code: action.action_code,
-          parameters: action.parameters,
-        },
-        actionLibrary
-      )
+      }
+    } catch (err) {
+      console.log(err.stack)
+      return
     }
-  })
+  }
+
+  actionSchedule.length > 0
+    ? console.log(`${actionSchedule.length} scheduled jobs loaded.`)
+    : console.log('There was no jobs to be loaded.')
 }
 
 export async function processTrigger(payload: TriggerPayload) {
@@ -86,7 +104,7 @@ export async function processTrigger(payload: TriggerPayload) {
         id: payload.id,
         code: action.code,
         parameter_queries: action.parameter_queries,
-        status: 'QUEUED',
+        status: 'Queued',
       })
     }
 

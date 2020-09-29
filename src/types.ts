@@ -10,7 +10,8 @@ export interface ActionQueue {
   execution_time: string
 }
 
-type ActionQueueStatus = 'SCHEDULED' | 'QUEUED' | 'SUCCESS' | 'FAIL'
+// TODO: Ideally this would be coming from postgraphile types, to be consistent with the types
+type ActionQueueStatus = 'Scheduled' | 'Queued' | 'Success' | 'Fail'
 
 export interface ActionQueuePayload {
   id: number
