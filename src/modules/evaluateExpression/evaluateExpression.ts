@@ -1,45 +1,9 @@
-interface IParameters {
-  [key: string]: any
-  connection?: IConnection
-}
-
-interface IQueryNode {
-  value?: string | number | boolean | object
-  type?: NodeType
-  operator?: Operator
-  children?: Array<IQueryNode>
-}
-
-interface IConnection {
-  user?: string
-  host?: string
-  database?: string
-  password?: string
-  port?: number
-  query?: any
-}
-
-type NodeType = 'string' | 'number' | 'boolean' | 'array'
-
-type Operator =
-  | 'AND'
-  | 'OR'
-  | 'CONCAT'
-  | '='
-  | '!= '
-  | '+'
-  | 'REGEX'
-  | 'objectProperties'
-  | 'pgSQL'
-  | 'graphQL'
-
-const defaultParameters: IParameters = {
-  connection: {},
-}
+import { IQueryNode, IParameters } from '../../types'
+import PostgresDB from '../../components/postgresConnect'
 
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
-  params = defaultParameters
+  params?: IParameters
 ): Promise<string | number | boolean | any[]> {
   // If input is JSON string, convert to Object
   const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
@@ -93,6 +57,7 @@ export default async function evaluateExpression(
         }, 0)
 
       case 'objectProperties':
+        if (!params) return 'No parameters received for objectProperties node'
         try {
           return params[childrenResolved[0].object][childrenResolved[0].property]
         } catch {
@@ -100,12 +65,11 @@ export default async function evaluateExpression(
         }
 
       case 'pgSQL':
-        if (!params.connection) return 'No database connection provided'
-        return processPgSQL(childrenResolved, query.type, params.connection)
+        return processPgSQL(childrenResolved, query.type)
 
-      case 'graphQL':
-        if (!params.connection) return 'No database connection provided'
-        return processGraphQL(childrenResolved, params.connection)
+      // case 'graphQL':
+      //   if (!params.connection) return 'No database connection provided'
+      //   return processGraphQL(childrenResolved, params.connection)
 
       // etc. for as many other operators as we want/need.
     }
@@ -113,14 +77,14 @@ export default async function evaluateExpression(
   return 'No matching operators'
 }
 
-async function processPgSQL(queryArray: any[], queryType: string, connection: IConnection) {
+async function processPgSQL(queryArray: any[], queryType: string) {
   const query = {
     text: queryArray[0],
     values: queryArray.slice(1),
     rowMode: queryType ? 'array' : '',
   }
   try {
-    const res = await connection.query(query)
+    const res = await PostgresDB.makeQuery(query.text, query.values)
     switch (queryType) {
       case 'array':
         return res.rows.flat()

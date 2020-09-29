@@ -1,3 +1,15 @@
+export interface ActionLibrary {
+  [key: string]: Function
+}
+
+export interface ActionQueue {
+  id: number
+  status?: ActionQueueStatus
+  action_code: string
+  parameters: { [key: string]: any }
+  execution_time: string
+}
+
 type ActionQueueStatus = 'SCHEDULED' | 'QUEUED' | 'SUCCESS' | 'FAIL'
 
 export interface ActionQueuePayload {
@@ -5,10 +17,6 @@ export interface ActionQueuePayload {
   code: string
   parameter_queries?: { [key: string]: any }
   status: ActionQueueStatus
-}
-
-export interface ActionLibrary {
-  [key: string]: Function
 }
 
 export interface DatabaseRecord {
@@ -29,16 +37,14 @@ export interface PluginPayload {
   required_parameters: { [key: string]: any }
 }
 
-export interface QueryPayload {
-  [key: string]: any
-}
-
 export interface TriggerPayload {
   id: number
   trigger: string
   table: string
   record_id: number
 }
+
+export type QueryPayload = any[]
 
 export interface ActionPayload {
   id: number
@@ -54,3 +60,28 @@ export interface Action {
   condition: { [key: string]: any }
   parameter_queries: { [key: string]: any }
 }
+
+export interface IParameters {
+  [key: string]: any
+}
+
+export interface IQueryNode {
+  value?: string | number | boolean | object
+  type?: NodeType
+  operator?: Operator
+  children?: Array<IQueryNode>
+}
+
+type NodeType = 'string' | 'number' | 'boolean' | 'array'
+
+type Operator =
+  | 'AND'
+  | 'OR'
+  | 'CONCAT'
+  | '='
+  | '!= '
+  | '+'
+  | 'REGEX'
+  | 'objectProperties'
+  | 'pgSQL'
+  | 'graphQL'
