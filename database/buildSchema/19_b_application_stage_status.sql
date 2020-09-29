@@ -1,10 +1,10 @@
 -- Create VIEW which collects application, stage and status information together
 CREATE VIEW public.application_stage_status AS
 	(SELECT app.id,
-			name,
-			ts.number AS stage_number,
-			ts.title AS stage,
-			status
+		name,
+		ts.number AS stage_number,
+		ts.title AS stage,
+		status
 	FROM application app
 	JOIN application_stage_history stage ON app.id = stage.application_id
 	JOIN template_stage ts ON stage.stage_id = ts.id
