@@ -61,28 +61,3 @@ export interface Action {
   condition: { [key: string]: any }
   parameter_queries: { [key: string]: any }
 }
-
-export interface IParameters {
-  [key: string]: any
-}
-
-export interface IQueryNode {
-  value?: string | number | boolean | object
-  type?: NodeType
-  operator?: Operator
-  children?: Array<IQueryNode>
-}
-
-type NodeType = 'string' | 'number' | 'boolean' | 'array'
-
-type Operator =
-  | 'AND'
-  | 'OR'
-  | 'CONCAT'
-  | '='
-  | '!= '
-  | '+'
-  | 'REGEX'
-  | 'objectProperties'
-  | 'pgSQL'
-  | 'graphQL'

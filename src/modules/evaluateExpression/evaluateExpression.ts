@@ -1,9 +1,8 @@
-import { IQueryNode, IParameters } from '../../types'
-import PostgresDB from '../../components/postgresConnect'
+import { IConnection, IQueryNode, IParameters } from './types'
 
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
-  params?: IParameters
+  params: IParameters
 ): Promise<string | number | boolean | any[]> {
   // If input is JSON string, convert to Object
   const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
@@ -57,7 +56,8 @@ export default async function evaluateExpression(
         }, 0)
 
       case 'objectProperties':
-        if (!params) return 'No parameters received for objectProperties node'
+        if (Object.entries(params).length === 0)
+          return 'No parameters received for objectProperties node'
         try {
           return params[childrenResolved[0].object][childrenResolved[0].property]
         } catch {
@@ -65,11 +65,14 @@ export default async function evaluateExpression(
         }
 
       case 'pgSQL':
-        return processPgSQL(childrenResolved, query.type)
+        console.log('pgSQL', childrenResolved)
 
-      // case 'graphQL':
-      //   if (!params.connection) return 'No database connection provided'
-      //   return processGraphQL(childrenResolved, params.connection)
+        if (!params.connection) return 'No database connection provided'
+        return processPgSQL(childrenResolved, query.type, params.connection)
+
+      case 'graphQL':
+        if (!params.connection) return 'No database connection provided'
+        return processGraphQL(childrenResolved, params.connection)
 
       // etc. for as many other operators as we want/need.
     }
@@ -77,14 +80,14 @@ export default async function evaluateExpression(
   return 'No matching operators'
 }
 
-async function processPgSQL(queryArray: any[], queryType: string) {
+async function processPgSQL(queryArray: any[], queryType: string, connection: IConnection) {
   const query = {
     text: queryArray[0],
     values: queryArray.slice(1),
     rowMode: queryType ? 'array' : '',
   }
   try {
-    const res = await PostgresDB.makeQuery(query.text, query.values)
+    const res = await connection.query(query.text, query.values)
     switch (queryType) {
       case 'array':
         return res.rows.flat()

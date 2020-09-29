@@ -1,5 +1,5 @@
 import { processTrigger, executeAction } from './triggersAndActions'
-import { actionLibrary, actionSchedule } from './pluginsConnect'
+import { actionLibrary } from './pluginsConnect'
 import * as config from '../config.json'
 import { Client, Pool, QueryResult } from 'pg'
 import {
@@ -53,10 +53,10 @@ class PostgresDB {
     return this._instance || (this._instance = new this())
   }
 
-  public makeQuery = async (query: string, payload: QueryPayload): Promise<QueryResult> => {
+  public query = async (text: string, payload: QueryPayload): Promise<QueryResult> => {
     const client = await this.pool.connect()
     try {
-      return await client.query(query, payload)
+      return await client.query(text, payload)
     } finally {
       // Make sure to release the client before any error handling,
       // just in case the error handling itself throws an error.
@@ -66,7 +66,7 @@ class PostgresDB {
 
   public addActionQueue = async (action: ActionQueuePayload) => {
     try {
-      const result = await this.makeQuery(
+      const result = await this.query(
         'INSERT into action_queue (trigger_event, action_code, parameters, status, time_queued) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)',
         Object.values(action)
       )
@@ -77,7 +77,7 @@ class PostgresDB {
 
   public getActions = async (): Promise<DatabaseRecord[]> => {
     try {
-      const result: DatabaseResult = await this.makeQuery('SELECT * FROM action_plugin', [])
+      const result: DatabaseResult = await this.query('SELECT * FROM action_plugin', [])
       return result.rows
     } catch (err) {
       return err.stack
@@ -86,7 +86,7 @@ class PostgresDB {
 
   public getActionsByCode = async (): Promise<DatabaseRecord[]> => {
     try {
-      const result: DatabaseResult = await this.makeQuery(
+      const result: DatabaseResult = await this.query(
         'SELECT code, path, function_name FROM action_plugin',
         []
       )
@@ -101,7 +101,7 @@ class PostgresDB {
     payload: QueryPayload
   ): Promise<Action[]> => {
     try {
-      const result: DatabaseResult = await this.makeQuery(
+      const result: DatabaseResult = await this.query(
         `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, condition, parameter_queries FROM template 
          JOIN template_action ON template.id = template_action.template_id 
          JOIN action_plugin ON template_action.action_code = action_plugin.code 
@@ -117,7 +117,7 @@ class PostgresDB {
 
   public getActionsScheduled = async (payload: any = ['Scheduled']): Promise<DatabaseRecord[]> => {
     try {
-      const result: DatabaseResult = await this.makeQuery(
+      const result: DatabaseResult = await this.query(
         'SELECT id, action_code, parameters, execution_time FROM action_queue WHERE status = $1 ORDER BY execution_time',
         payload
       )
@@ -129,7 +129,7 @@ class PostgresDB {
 
   public executeAction = async (payload: any) => {
     try {
-      await this.makeQuery(
+      await this.query(
         'UPDATE action_queue SET status = $1, error_log = $2, execution_time = CURRENT_TIMESTAMP WHERE id = $3',
         payload
       )
@@ -140,7 +140,7 @@ class PostgresDB {
 
   public addPlugin = async (plugin: PluginPayload) => {
     try {
-      await this.makeQuery(
+      await this.query(
         'INSERT INTO action_plugin (code, name, description, path, function_name, required_parameters) VALUES ($1, $2, $3, $4, $5, $6);',
         Object.values(plugin)
       )
@@ -151,7 +151,7 @@ class PostgresDB {
 
   public deleteFromPlugins = async (payload: any) => {
     try {
-      await this.makeQuery('DELETE FROM action_plugin WHERE code = $1', payload)
+      await this.query('DELETE FROM action_plugin WHERE code = $1', payload)
     } catch (err) {
       console.log(err.stack)
     }
@@ -159,7 +159,7 @@ class PostgresDB {
 
   public updatePlugin = async (plugin: PluginPayload) => {
     try {
-      await this.makeQuery(
+      await this.query(
         'UPDATE action_plugin SET name = $1, description = $2, path = $3, function_name = $4, required_parameters = $5 WHERE code = $6',
         Object.values(plugin)
       )
@@ -170,7 +170,7 @@ class PostgresDB {
 
   public updateTriggerQueue = async (payload: any) => {
     try {
-      await this.makeQuery('UPDATE trigger_queue SET status = $1 WHERE id = $2', payload)
+      await this.query('UPDATE trigger_queue SET status = $1 WHERE id = $2', payload)
     } catch (err) {
       console.log(err.stack)
     }

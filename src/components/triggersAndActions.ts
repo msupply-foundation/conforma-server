@@ -90,14 +90,17 @@ export async function processTrigger(payload: TriggerPayload) {
     const actions: Action[] = []
 
     for (const action of result) {
-      const condition = await evaluateExpression(action.condition)
+      const condition = await evaluateExpression(action.condition, PosgresDB)
       if (condition) actions.push(action)
     }
 
     // Evaluate parameters for each Action
     for (const action of actions) {
       for (const key in action.parameter_queries) {
-        action.parameter_queries[key] = await evaluateExpression(action.parameter_queries[key])
+        action.parameter_queries[key] = await evaluateExpression(
+          action.parameter_queries[key],
+          PosgresDB
+        )
       }
       // Write each Action with parameters to Action_Queue
       await PosgresDB.addActionQueue({
