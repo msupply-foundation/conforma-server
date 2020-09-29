@@ -187,7 +187,7 @@ const queries = [
           templateActionsUsingId: {
             create: {
               actionCode: "cLog"
-              condition: "{value:true}"
+              condition: { value: true }
               trigger: ON_APPLICATION_SUBMIT
               parameterQueries: {
                 message: {

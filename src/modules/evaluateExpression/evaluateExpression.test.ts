@@ -259,7 +259,7 @@ test('Test returning single user property', () => {
 test('Test Postgres lookup single string', () => {
   return evaluateExpression(testData.getApplicationName, { connection: pgConnect }).then(
     (result: any) => {
-      expect(result).toBe('Company registration: Company C')
+      expect(result).toBe('Company Registration: Company C')
     }
   )
 })

@@ -2,6 +2,7 @@ import path from 'path'
 import getAppRootDir from './getAppRoot'
 import * as config from '../config.json'
 import { ActionLibrary, Action, DatabaseResult, TriggerPayload, ActionPayload } from '../types'
+import evaluateExpression from '../modules/evaluateExpression/evaluateExpression'
 import { Client } from 'pg'
 
 const schedule = require('node-schedule')
@@ -87,15 +88,19 @@ export async function processTrigger(client: Client, payload: TriggerPayload) {
     `
     const res = await client.query(query, [payload.record_id, payload.trigger])
     // Filter out Actions that don't match the current condition
-    const actions = res.rows.filter((action: Action) => evaluateExpression(action.condition))
+    const actions: Action[] = []
+    for (const action of res.rows) {
+      const condition = await evaluateExpression(action.condition)
+      if (condition) actions.push(action)
+    }
+
     // Evaluate parameters for each Action
-    actions.forEach((action: Action) => {
-      const parameter_queries = action.parameter_queries
-      Object.keys(parameter_queries).forEach((key) => {
-        parameter_queries[key] = evaluateExpression(parameter_queries[key])
-      })
-      // console.log(parameter_queries);
-    })
+    for (const action of actions) {
+      for (const key in action.parameter_queries) {
+        action.parameter_queries[key] = await evaluateExpression(action.parameter_queries[key])
+      }
+    }
+
     // Write each Action with parameters to Action_Queue
     const writeQuery = `
     INSERT into action_queue (trigger_event, action_code, parameters, status, time_queued)
@@ -129,15 +134,4 @@ export async function executeAction(
     WHERE id = $3
   `
   client.query(updateActionQuery, [actionResult.status, actionResult.error, payload.id])
-}
-
-function evaluateExpression(query: any) {
-  // This would be basically the same as the client-side query/condition evaluator described in QUERY SYNTAX. For now, we'll assume they all match (True), or are all literal values.
-  switch (query.type) {
-    case 'boolean':
-      return true
-    case 'string':
-      return query.value
-  }
-  return true
 }
