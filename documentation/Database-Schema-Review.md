@@ -39,30 +39,9 @@ The `trigger` is updated everytime the review has changes done by users. See mor
 - The `review` is per pair of **application-stage** or one per each time it goes back to the Applicant? I think it would be always one per each pair, although the field `review.comment` implies one overall comment which should be sent to the Applicant - per review. In the case if the review is re-submitted and another review will be started (on the same stage), how we would we keep this comment? Or do we remove it or do we create another `review`?
 - The `status` of `'Ready'` - which is when a lower level reviewer has finished the review and the consolidation can happen - is defined in the Schema latest documentation of Drive as `'Reviewed'`. Is it what we have agreed on? I can update it, just want to check that first.
 
-### review section join
-
-The `review_id` links to the main review record of the **application stage**.
-
-The `review_section_assignment_id` links to the reviewer of the section.
-
-The `review_section_id` links to the section being reviewed.
-
-The `send_to_applicant` is a flag for adding this section (and `review_section.comment`) to be sent back to the Applicant.
-
-**To be considered:**
-
-- Can we change `review_section_assignment` to `review_assignment`. Just to keep it short. We know that there will be 1 section per 1 review assignment, the table don't need to have such a long name. And when refereced in `review_section_join`
-  the `section` is duplicated in `review_section_join.review_section_assignment_id`.
-
-- The field `section` linking to the `Application_section` in both `review_section_assignment` and `review_sectiob_join`. One has to go.
-
-### review section
-
-The `decision` is either: `'Approved'`, `'Rejected'`, `'Observations'` and what is the overall decision per section. It is automatically defined by the combinatiion of `review_response.decision`. See [SQL functions](Functions.md) for more details.
-
-The `comment` is also an overall comment of the whole section being reviewed. It can be sent to the Applicant with the review.
-
 ### review section assignment
+
+Represents the assignment of one application's section, on one stage, to a Reviewer. A single recors to store the assignement and idependent of the **review_section** (which stores as many reviews are done by the same reviewer in the same section of the same stage).
 
 The `reviewer_id` links to the user assigned to review a section of the application.
 
@@ -80,7 +59,45 @@ The `level` is defined by the permission of the reviewer associated with this re
 
 - The `stage_id` should be replaced to be in the `review` table instead? When a new stage start it seems that a new review will start and then all its `review_section_assignement` will be in that same **stage**.
 
+### review section join
+
+This join table connects the **review**, the **review_section_assigment** and 1-N **review_section**. This is used for either a simple review or a consolidation, which should be marked with the `send_to_application` flag to define the LOQ.
+
+The `review_id` links to the main review record of the **application stage**.
+
+The `review_section_assignment_id` links to the reviewer of the section.
+
+The `review_section_id` links to the section being reviewed.
+
+The `send_to_applicant` is a flag for adding this section (and `review_section.comment`) to be sent back to the Applicant.
+
+**To be considered:**
+
+- The field `section` linking to the `Application_section` in both `review_section_assignment` and `review_section_join`. One has to go.
+
+### review section
+
+Represents each review done in a cycle - more than one review may be needed considering the review done after a Re-submittion. In the case this is created for a consolidation it will start as a copy of the existing review that can be edited by the user before submiting the review.
+
+The `decision` is either: `'Approved'`, `'Rejected'`, `'Observations'` and what is the overall decision per section. It is automatically defined by the combinatiion of `review_response.decision`. See [SQL functions](Functions.md) for more details.
+
+The `comment` is also an overall comment of the whole section being reviewed. It can be sent to the Applicant with the review.
+
+### review response
+
+Represent the review of a single response. In the case this is created for a consolidation it will start as a copy of the existing review that can be edited by the user before submiting the review.
+
+The `application_response_id` links to the answer given by the Applicant.
+
+The `decision` is either: `'Approved'`, `'Rejected'`, `'Observations'`. The decisions is given by the Reviewer for this particular response of the Applicant.
+
+The `comment` is used when the decision is set as `'Obervations'`. A free text field where the Reviewer explains the problem found. If this review response is added to the LOQ, this comment is sent to the Applicant with the review.
+
+The `trigger` is updated everytime the review response has changes done by users. See more about [triggers](Triggers-and-Actions.md).
+
 ### review section response join
+
+This join table connects the **review_response** and the joint of the **review_section** (that has other important connections). It represents the group of reviewed questions done by a reviewer on a section. This is used for either a simple review or a consolidation, which should be marked with the `send_to_application` flag to define the LOQ.
 
 The `review_section_join_id` links to the review's section and Reviewer.
 
@@ -92,12 +109,4 @@ The `send_to_applicant` is a flag to add the associated `review_response` in the
 
 - The name `review_section_response_join` is quite long and doesn't add much. Since the entity `review_section_join` already stores the `section_id` should we just rename it to `review_response_join`?
 
-### review response
-
-The `application_response_id` links to the answer given by the Applicant.
-
-The `decision` is either: `'Approved'`, `'Rejected'`, `'Observations'`. The decisions is given by the Reviewer for this particular response of the Applicant.
-
-The `comment` is used when the decision is set as `'Obervations'`. A free text field where the Reviewer explains the problem found. If this review response is added to the LOQ, this comment is sent to the Applicant with the review.
-
-The `trigger` is updated everytime the review response has changes done by users. See more about [triggers](Triggers-and-Actions.md).
+![Review diagram](images/database-review-representation.png)
