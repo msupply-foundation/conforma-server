@@ -12,7 +12,7 @@ The **review** is part of the application process where an application is approv
 
 Actions will define which permission is required to submit the reviewed application. Which means that for some applications on a stage it can be required **more than one** review to done for the same section.
 
-First done by Reviewers with lowel `review level` permission, to add comments and decisions. This reviews will sit there until another review, called **consolidation**, is done (on top of the first ones). And the it will be submitted back to the Applicant. In some cases even one more review can be done on top of the second one - more details about that coming soon.
+The first review is done by Reviewers with lower `review level` permission, where they can add comments and decisions to individual responses. This review will sit there until another review, called **consolidation**, is done (on top of the previous ones), which will be sent back to the Applicant as a List of Questions (LOQ). In some cases even one more review can be done on top of the second one - more details about that coming soon.
 
 ## Tables
 
