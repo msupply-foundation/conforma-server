@@ -6,7 +6,7 @@
 
 ### Definition
 
-The review is part of the process of the application in the workflow to be approved or rejected in the system. For example a Drug Registration application, after being submited, goes through stages. In each one of these stages at least one review is required. To have an application reviewed, the system counts with special users called Reviewers (or evaluators).
+The **review** is part of the application process where an application is approved or rejected in the system. For example, a Drug Registration application, after being submitted, goes through stages. In each one of these stages at least one review is required. Users with special permissions to make reviews on applications are called **Reviewers** (or evaluators).
 
 The Reviewer may or may not have permission to submit the LOQ (List of Questions) back to the Applicant that will be allowed to edit this selected LOQ.
 
