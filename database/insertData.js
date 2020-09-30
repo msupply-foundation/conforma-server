@@ -68,7 +68,7 @@ const queries = [
                       isEditable: { value: true }
                       parameters: {
                         label: "Select your Company"
-                        options: ["Company A", "Company B"]
+                        options: { value: ["Company A", "Company B"] }
                       }
                     }
                     {
@@ -148,7 +148,7 @@ const queries = [
                       isEditable: { value: true }
                       parameters: {
                         label: "Select type of activity"
-                        options: ["Manufacturer", "Importer", "Producer"]
+                        options: { value: ["Manufacturer", "Importer", "Producer"] }
                       }
                     }
                     {
