@@ -138,6 +138,30 @@ class PostgresDB {
     }
   }
 
+  public addFile = async (payload: any): Promise<DatabaseRecord> => {
+    try {
+      const result = await this.query(
+        'INSERT INTO file (user_id, original_filename, path, mimetype, application_id, application_response_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+        payload
+      )
+      return result.rows[0]
+    } catch (err) {
+      return err.stack
+    }
+  }
+
+  public getFile = async (payload: any): Promise<DatabaseRecord> => {
+    try {
+      const result = await this.query(
+        'SELECT path, original_filename FROM file WHERE id = $1',
+        payload
+      )
+      return result.rows[0]
+    } catch (err) {
+      return err.stack
+    }
+  }
+
   public addPlugin = async (plugin: PluginPayload) => {
     try {
       await this.query(
