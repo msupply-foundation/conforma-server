@@ -33,7 +33,7 @@ export default async function registerPlugins() {
     })
 
   // Load plugin info from Database
-  const dbPlugins = await PostgresDB.getActions()
+  const dbPlugins = await PostgresDB.getActionPlugins()
 
   // Check if any in DB now missing from files -- alert if so.
   const pluginCodes = plugins.map((item) => item.code)
@@ -42,7 +42,7 @@ export default async function registerPlugins() {
     const missingPlugin = missingPlugins[index]
     console.warn('ALERT: Plug-in file missing:', missingPlugin.name)
     try {
-      await PostgresDB.deleteFromPlugins([missingPlugin.code])
+      await PostgresDB.deleteActionPlugin({ code: missingPlugin.code })
       console.log('Plugin de-registered:', missingPlugin.name)
     } catch (err) {
       console.error("Couldn't remove plug-in:", missingPlugin.name)
@@ -58,7 +58,7 @@ export default async function registerPlugins() {
   for (let index = 0; index < unregisteredPlugins.length; index++) {
     const plugin = unregisteredPlugins[index]
     try {
-      await PostgresDB.addPlugin(plugin)
+      await PostgresDB.addActionPlugin(plugin)
       console.log('Plugin registered:', plugin.name)
     } catch (err) {
       console.error('There was a problem registering', plugin.name)
@@ -76,7 +76,7 @@ export default async function registerPlugins() {
       (plugin.name !== dbPlugin.name || plugin.description !== dbPlugin.description)
     ) {
       try {
-        await PostgresDB.updatePlugin(plugin)
+        await PostgresDB.updateActionPlugin(plugin)
         console.log('Plugin updated:', plugin.name)
       } catch (err) {
         console.error('There was a problem updating', plugin.name)

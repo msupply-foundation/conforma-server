@@ -1,3 +1,12 @@
+export interface ActionInTemplate {
+  code: string
+  path: string
+  name: string
+  trigger: string
+  condition: { [key: string]: any }
+  parameter_queries: { [key: string]: any }
+}
+
 export interface ActionLibrary {
   [key: string]: Function
 }
@@ -14,22 +23,42 @@ export interface ActionQueue {
 type ActionQueueStatus = 'Scheduled' | 'Queued' | 'Success' | 'Fail'
 
 export interface ActionQueuePayload {
-  id: number
-  code: string
-  parameter_queries?: { [key: string]: any }
+  trigger_event: number
+  action_code: string
+  parameters: { [key: string]: any }
   status: ActionQueueStatus
 }
 
-export interface DatabaseRecord {
-  [key: string]: any
+export interface ActionQueueGetPayload {
+  status: ActionQueueStatus
+}
+
+export interface ActionQueueExecutePayload {
+  id: number
+  error_log: string
+  status: ActionQueueStatus
+}
+
+export interface ActionPayload {
+  id: number
+  code: string
+  parameters: { [key: string]: any }
+}
+
+export interface ActionPlugin {
+  code: string
+  name: string
+  description: string
+  path: string
+  function_name: string
+  required_parameters: any[]
+}
+
+export interface ActionPluginDeletePayload {
   code: string
 }
 
-export interface DatabaseResult {
-  rows: DatabaseRecord[]
-}
-
-export interface PluginPayload {
+export interface ActionPluginPayload {
   code: string
   name: string
   description: string
@@ -38,26 +67,41 @@ export interface PluginPayload {
   required_parameters: { [key: string]: any }
 }
 
+export interface File {
+  id: number
+  path: string
+  original_filename: string
+}
+
+export interface FilePayload {
+  user_id: number
+  original_filename: string
+  path: string
+  mimetype: string
+  application_id: number
+  application_response_id: number
+}
+
+export interface FileGetPayload {
+  id: number
+}
+
+// TODO: Ideally this would be coming from postgraphile types, to be consistent with the types
+type TriggerStatus = 'Triggered' | 'Action Dispatched' | 'Error'
+
+export interface ActionInTemplateGetPayload {
+  template_id: number
+  trigger: TriggerStatus
+}
+
 export interface TriggerPayload {
   id: number
-  trigger: string
+  trigger: TriggerStatus
   table: string
   record_id: number
 }
 
-export type QueryPayload = any[]
-
-export interface ActionPayload {
+export interface TriggerQueueUpdatePayload {
   id: number
-  code: string
-  parameters: { [key: string]: any }
-}
-
-export interface Action {
-  code: string
-  path: string
-  name: string
-  trigger: string
-  condition: { [key: string]: any }
-  parameter_queries: { [key: string]: any }
+  status: TriggerStatus
 }

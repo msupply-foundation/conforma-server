@@ -20,9 +20,9 @@ export function createFilesFolder() {
   }
 }
 
-export async function getFilename(id: string) {
+export async function getFilename(id: number) {
   try {
-    const result = await PosgresDB.getFile([id])
+    const result = await PosgresDB.getFile({ id: id })
     const folder = result.path // Not currently used
     const filenameOrig = result.original_filename
     const ext = path.extname(String(filenameOrig))
@@ -55,14 +55,14 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
 async function registerFileInDB(file: any, parameters: any) {
   try {
     // Insert record into Db and get back ID
-    const result = await PosgresDB.addFile([
-      parameters.user_id,
-      file.filename,
-      filesFolderName,
-      file.mimetype,
-      parameters.application_id,
-      parameters.application_response_id,
-    ])
+    const result = await PosgresDB.addFile({
+      user_id: parameters.user_id,
+      original_filename: file.filename,
+      path: filesFolderName,
+      mimetype: file.mimetype,
+      application_id: parameters.application_id,
+      application_response_id: parameters.application_response_id,
+    })
     const fileID = result.id
     // Rename file with ID
     const ext = path.extname(file.filename)

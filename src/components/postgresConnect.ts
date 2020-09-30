@@ -3,12 +3,19 @@ import { actionLibrary } from './pluginsConnect'
 import * as config from '../config.json'
 import { Client, Pool, QueryResult } from 'pg'
 import {
-  Action,
+  ActionInTemplate,
+  ActionQueue,
+  ActionQueueExecutePayload,
+  ActionQueueGetPayload,
   ActionQueuePayload,
-  DatabaseResult,
-  DatabaseRecord,
-  PluginPayload,
-  QueryPayload,
+  ActionPlugin,
+  ActionPluginDeletePayload,
+  ActionPluginPayload,
+  File,
+  FilePayload,
+  FileGetPayload,
+  ActionInTemplateGetPayload,
+  TriggerQueueUpdatePayload,
 } from '../types'
 
 class PostgresDB {
@@ -53,7 +60,7 @@ class PostgresDB {
     return this._instance || (this._instance = new this())
   }
 
-  public query = async (text: string, payload: QueryPayload): Promise<QueryResult> => {
+  public query = async (text: string, payload: any): Promise<QueryResult> => {
     const client = await this.pool.connect()
     try {
       return await client.query(text, payload)
@@ -75,94 +82,56 @@ class PostgresDB {
     }
   }
 
-  public getActions = async (): Promise<DatabaseRecord[]> => {
-    try {
-      const result: DatabaseResult = await this.query('SELECT * FROM action_plugin', [])
-      return result.rows
-    } catch (err) {
-      return err.stack
-    }
-  }
-
-  public getActionsByCode = async (): Promise<DatabaseRecord[]> => {
-    try {
-      const result: DatabaseResult = await this.query(
-        'SELECT code, path, function_name FROM action_plugin',
-        []
-      )
-      return result.rows
-    } catch (err) {
-      return err.stack
-    }
-  }
-
-  public getActionsByTemplate = async (
-    tableName: string,
-    payload: QueryPayload
-  ): Promise<Action[]> => {
-    try {
-      const result: DatabaseResult = await this.query(
-        `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, condition, parameter_queries FROM template 
-         JOIN template_action ON template.id = template_action.template_id 
-         JOIN action_plugin ON template_action.action_code = action_plugin.code 
-         WHERE template_id = (SELECT template_id FROM ${tableName} WHERE id = $1) AND trigger = $2`,
-        payload
-      )
-
-      return result.rows as Action[]
-    } catch (err) {
-      return err.stack
-    }
-  }
-
-  public getActionsScheduled = async (payload: any = ['Scheduled']): Promise<DatabaseRecord[]> => {
-    try {
-      const result: DatabaseResult = await this.query(
-        'SELECT id, action_code, parameters, execution_time FROM action_queue WHERE status = $1 ORDER BY execution_time',
-        payload
-      )
-      return result.rows
-    } catch (err) {
-      return err.stack
-    }
-  }
-
-  public executeAction = async (payload: any) => {
+  public executeActionQueued = async (payload: ActionQueueExecutePayload) => {
     try {
       await this.query(
         'UPDATE action_queue SET status = $1, error_log = $2, execution_time = CURRENT_TIMESTAMP WHERE id = $3',
-        payload
+        Object.values(payload)
       )
     } catch (err) {
       return err.stack
     }
   }
 
-  public addFile = async (payload: any): Promise<DatabaseRecord> => {
+  public getActionsQueued = async (
+    payload: ActionQueueGetPayload = { status: 'Scheduled' }
+  ): Promise<ActionQueue[]> => {
+    try {
+      const result = await this.query(
+        'SELECT id, action_code, parameters, execution_time FROM action_queue WHERE status = $1 ORDER BY execution_time',
+        Object.values(payload)
+      )
+      return result.rows as ActionQueue[]
+    } catch (err) {
+      return err.stack
+    }
+  }
+
+  public addFile = async (payload: FilePayload): Promise<Pick<File, 'id'>> => {
     try {
       const result = await this.query(
         'INSERT INTO file (user_id, original_filename, path, mimetype, application_id, application_response_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
-        payload
+        Object.values(payload)
       )
-      return result.rows[0]
+      return result.rows[0] as Pick<File, 'id'>
     } catch (err) {
       return err.stack
     }
   }
 
-  public getFile = async (payload: any): Promise<DatabaseRecord> => {
+  public getFile = async (payload: FileGetPayload): Promise<File> => {
     try {
       const result = await this.query(
         'SELECT path, original_filename FROM file WHERE id = $1',
         payload
       )
-      return result.rows[0]
+      return result.rows[0] as File
     } catch (err) {
       return err.stack
     }
   }
 
-  public addPlugin = async (plugin: PluginPayload) => {
+  public addActionPlugin = async (plugin: ActionPluginPayload) => {
     try {
       await this.query(
         'INSERT INTO action_plugin (code, name, description, path, function_name, required_parameters) VALUES ($1, $2, $3, $4, $5, $6);',
@@ -173,15 +142,44 @@ class PostgresDB {
     }
   }
 
-  public deleteFromPlugins = async (payload: any) => {
+  public deleteActionPlugin = async (payload: ActionPluginDeletePayload) => {
     try {
-      await this.query('DELETE FROM action_plugin WHERE code = $1', payload)
+      await this.query('DELETE FROM action_plugin WHERE code = $1', Object.values(payload))
     } catch (err) {
       console.log(err.stack)
     }
   }
 
-  public updatePlugin = async (plugin: PluginPayload) => {
+  public getActionPlugins = async (): Promise<ActionPlugin[]> => {
+    try {
+      const result = await this.query('SELECT * FROM action_plugin', [])
+      return result.rows as ActionPlugin[]
+    } catch (err) {
+      return err.stack
+    }
+  }
+
+  public getActionPluginsByTemplate = async (
+    tableName: string,
+    payload: ActionInTemplateGetPayload
+  ): Promise<ActionInTemplate[]> => {
+    try {
+      const result = await this.query(
+        `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, condition, parameter_queries 
+          FROM template 
+         JOIN template_action ON template.id = template_action.template_id 
+         JOIN action_plugin ON template_action.action_code = action_plugin.code 
+         WHERE template_id = (SELECT template_id FROM ${tableName} WHERE id = $1) AND trigger = $2`,
+        Object.values(payload)
+      )
+
+      return result.rows as ActionInTemplate[]
+    } catch (err) {
+      return err.stack
+    }
+  }
+
+  public updateActionPlugin = async (plugin: ActionPluginPayload) => {
     try {
       await this.query(
         'UPDATE action_plugin SET name = $1, description = $2, path = $3, function_name = $4, required_parameters = $5 WHERE code = $6',
@@ -192,7 +190,7 @@ class PostgresDB {
     }
   }
 
-  public updateTriggerQueue = async (payload: any) => {
+  public updateTriggerQueue = async (payload: TriggerQueueUpdatePayload) => {
     try {
       await this.query('UPDATE trigger_queue SET status = $1 WHERE id = $2', payload)
     } catch (err) {

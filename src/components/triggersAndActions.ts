@@ -1,7 +1,7 @@
 import path from 'path'
 import getAppRootDir from './getAppRoot'
 import * as config from '../config.json'
-import { ActionLibrary, Action, DatabaseResult, TriggerPayload, ActionPayload } from '../types'
+import { ActionLibrary, ActionInTemplate, TriggerPayload, ActionPayload } from '../types'
 import evaluateExpression from '../modules/evaluateExpression/evaluateExpression'
 import PosgresDB from '../components/postgresConnect'
 
@@ -14,7 +14,7 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
   console.log('Loading Actions from Database...')
 
   try {
-    const result = await PosgresDB.getActionsByCode()
+    const result = await PosgresDB.getActionPlugins()
 
     result.forEach((row) => {
       const action = require(path.join(pluginFolder, row.path))
@@ -35,7 +35,7 @@ export const loadScheduledActions = async function (
   console.log('Loading Scheduled jobs...')
 
   // Load from Database
-  const result = await PosgresDB.getActionsScheduled()
+  const result = await PosgresDB.getActionsQueued()
 
   for await (const scheduledAction of result) {
     try {
@@ -82,12 +82,12 @@ export const loadScheduledActions = async function (
 export async function processTrigger(payload: TriggerPayload) {
   try {
     // Get Actions from matching Template
-    const result = await PosgresDB.getActionsByTemplate(payload.table, [
-      payload.record_id,
-      payload.trigger,
-    ])
+    const result = await PosgresDB.getActionPluginsByTemplate(payload.table, {
+      template_id: payload.record_id,
+      trigger: payload.trigger,
+    })
     // Filter out Actions that don't match the current condition
-    const actions: Action[] = []
+    const actions: ActionInTemplate[] = []
 
     for (const action of result) {
       const condition = await evaluateExpression(action.condition, PosgresDB)
@@ -104,16 +104,16 @@ export async function processTrigger(payload: TriggerPayload) {
       }
       // Write each Action with parameters to Action_Queue
       await PosgresDB.addActionQueue({
-        id: payload.id,
-        code: action.code,
-        parameter_queries: action.parameter_queries,
+        trigger_event: payload.id,
+        action_code: action.code,
+        parameters: action.parameter_queries,
         status: 'Queued',
       })
     }
 
     // Update trigger queue item with success/failure (and log)
     // If SUCCESS -- Not sure best way to test for this:
-    await PosgresDB.updateTriggerQueue(['Action Dispatched', payload.id])
+    await PosgresDB.updateTriggerQueue({ status: 'Action Dispatched', id: payload.id })
   } catch (err) {
     console.log(err.stack)
   }
@@ -122,5 +122,9 @@ export async function processTrigger(payload: TriggerPayload) {
 export async function executeAction(payload: ActionPayload, actionLibrary: ActionLibrary) {
   // TO-DO: If Scheduled, create a Job instead
   const actionResult = actionLibrary[payload.code](payload.parameters)
-  await PosgresDB.executeAction([actionResult.status, actionResult.error, payload.id])
+  await PosgresDB.executeActionQueued({
+    status: actionResult.status,
+    error_log: actionResult.error,
+    id: payload.id,
+  })
 }
