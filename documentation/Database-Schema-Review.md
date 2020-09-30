@@ -8,7 +8,7 @@
 
 The **review** is part of the application process where an application is approved or rejected in the system. For example, a Drug Registration application, after being submitted, goes through stages. In each one of these stages at least one review is required. Users with special permissions to make reviews on applications are called **Reviewers** (or evaluators).
 
-The Reviewer may or may not have permission to submit the LOQ (List of Questions) back to the Applicant that will be allowed to edit this selected LOQ.
+ The Reviewer may or may not have permission to submit the **LOQ** (List of Questions) back to the Applicant, who will then be able to edit their responses for these questions for re-submission.
 
 Actions will define which permission is required to submit the reviewed application. Which means that for some applications on a stage it can be required **more than one** review to done for the same section.
 
