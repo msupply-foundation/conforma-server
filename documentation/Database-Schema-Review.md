@@ -18,7 +18,7 @@ The first review is done by Reviewers with lower `review level` permission, wher
 
 ### review
 
-A single review is created per pair of **application-stage**. Although some applications may not required any review (which will be defined by the actions for the particular template and stage on the trigger `onApplicationSubmitted`).
+A single review is created per **application stage**. However, some applications may not require any review (which will be defined by the actions for the particular template and stage on the trigger `onApplicationSubmitted`).
 
 The `application_id` links to the application being reviewed.
 
