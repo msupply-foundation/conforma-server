@@ -4,13 +4,17 @@
 
 ## Database Area description: Review
 
-### Definition
+### Review
 
 The **review** is part of the application process where an application is approved or rejected in the system. For example, a Drug Registration application, after being submitted, goes through stages. In each one of these stages at least one review is required. Users with special permissions to make reviews on applications are called **Reviewers** (or evaluators).
 
- The Reviewer may or may not have permission to submit the **LOQ** (List of Questions) back to the Applicant, who will then be able to edit their responses for these questions for re-submission.
+The Reviewer may or may not have permission to submit the **LOQ** (List of Questions) back to the Applicant, who will then be able to edit their responses for these questions for re-submission.
 
-Actions will define which permission is required to submit the reviewed application. Which means that for some applications on a stage it can be required **more than one** review to done for the same section.
+### Consolidation
+
+In the (**application template**) a set of (**template permission**) define how many reviews are required per **stage**. Reviewer users that have the correct `review level` will be able to submit the LOQ and comments back to the applicant.
+
+A **consolidation** (which is stored the same way as a review) is when a second review is required for a **stage** in the **appliation template**.
 
 The first review is done by Reviewers with lower `review level` permission, where they can add comments and decisions to individual responses. This review will sit there until another review, called **consolidation**, is done (on top of the previous ones), which will be sent back to the Applicant as a List of Questions (LOQ). In some cases even one more review can be done on top of the second one - more details about that coming soon.
 
@@ -26,9 +30,9 @@ The `status` of the review is either: `'Awaiting review'`, `'In Progress'`, `'Re
 
 The `comment` is some overall comment for the application - added by the Reviewer making the consolidation. It will be sent to the Applicant with the review.
 
-The `time_created` is the time when the review has started. The created is when the first section is assigned to a reviewer.
+The `time_created` is the time when the review has started which is when the first section is assigned to a reviewer.
 
-The `trigger` is updated everytime the review has changes done by users or a scheduler. See more about [triggers](Triggers-and-Actions.md).
+The `trigger` is updated everytime the review has changes done by users. See more about [triggers](Triggers-and-Actions.md).
 
 **To be considered:**
 
@@ -37,7 +41,7 @@ The `trigger` is updated everytime the review has changes done by users or a sch
 
 ### review section join
 
-The `review_id` links to the main review record of the **application-stage** pair.
+The `review_id` links to the main review record of the **application stage**.
 
 The `review_section_assignment_id` links to the reviewer of the section.
 
@@ -96,4 +100,4 @@ The `decision` is either: `'Approved'`, `'Rejected'`, `'Observations'`. The deci
 
 The `comment` is used when the decision is set as `'Obervations'`. A free text field where the Reviewer explains the problem found. If this review response is added to the LOQ, this comment is sent to the Applicant with the review.
 
-The `trigger` is updated everytime the review response has changes done by users or a scheduler. See more about [triggers](Triggers-and-Actions.md).
+The `trigger` is updated everytime the review response has changes done by users. See more about [triggers](Triggers-and-Actions.md).
