@@ -32,7 +32,6 @@ type Operator =
   | '!= '
   | '+'
   | 'REGEX'
-  | 'evalVariables'
   | 'objectProperties'
   | 'pgSQL'
   | 'graphQL'
@@ -101,9 +100,6 @@ export default async function evaluateExpression(
           return "Can't resolve object"
         }
 
-      case 'objectBuild': {
-      }
-
       case 'pgSQL':
         if (!params.pgConnection) return 'No database connection provided'
         return processPgSQL(childrenResolved, query.type, params.pgConnection)
@@ -158,7 +154,7 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
 }
 
 // Build an object from an array of field names and an array of values
-function zipArraysToObject(variableNames: string[], variableValues: any[]) {
+const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
   const createdObject: BasicObject = {}
   variableNames.map((name, index) => {
     createdObject[name] = variableValues[index]
