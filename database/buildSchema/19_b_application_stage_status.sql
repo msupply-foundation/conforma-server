@@ -2,12 +2,12 @@
 CREATE VIEW public.application_stage_status AS
 	(SELECT app.id,
 		name,
-		ts.number AS stage_number,
-		ts.title AS stage,
+		template_stage.number AS stage_number,
+		template_stage.title AS stage,
 		status
 	FROM application app
 	JOIN application_stage_history stage ON app.id = stage.application_id
-	JOIN template_stage ts ON stage.stage_id = ts.id
+	JOIN template_stage ON stage.stage_id = template_stage.id
 	JOIN application_status_history status ON stage.id = status.application_stage_history_id
 	WHERE stage.is_current = TRUE
 	AND status.is_current = TRUE );
