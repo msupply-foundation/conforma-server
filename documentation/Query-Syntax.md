@@ -190,10 +190,15 @@ Performs queries on connected GraphQL interface.
 
 The query evaluator is implemented in the `evaluateExpression` function:
 
-`evaluateExpression(query: Object, parameters: Object)`
+`evaluateExpression(expression: Object, parameters: Object)`
 
-- `query` must contain at least one node with a `value` property, otherwise the function returns `undefined`.
-- `parameters` is an object containing a reference to each local data object that is needed for the query, e.g. `user`, `organisation` or `form`. The name of the field must be the object name, i.e.
+### `expression`
+
+`expression` must contain at least one node with a `value` property, or an operator with associated child nodes, otherwise the function returns `undefined`.
+
+### `parameters`
+
+`parameters` is an object containing a reference to each local data object that is needed for the query, e.g. `user`, `organisation` or `form`. The name of the field must be the object name, i.e.
 
 ```
 {
@@ -204,12 +209,12 @@ The query evaluator is implemented in the `evaluateExpression` function:
 }
 ```
 
-- `parameters` can also contain one additional field called `connection`, which is an object representing an active database connection.
-- If using one of the database operators (**pgSQL** or **graphQL**), you must also pass a connection object as one of the `parameters`.
-  - For **pgSQL**:  
-    `pgConnection: <node-postgres Client object>`
-  - For **graphQL**:
-    `graphQLConnection: {fetch: <fetch object>, endpoint: <URL of GraphQL enpoint>`}
+`parameters` can also fields containing active database connection(s), which are required if using one of the database operators (**pgSQL** or **graphQL**).
+
+- For **pgSQL**:  
+  `pgConnection: <node-postgres Client object>`
+- For **graphQL**:  
+  `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>`}
 
 # Examples
 
