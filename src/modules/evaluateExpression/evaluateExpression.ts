@@ -149,8 +149,9 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
 
   const selectedNode = extractNode(data, returnNode)
 
-  if (Array.isArray(selectedNode)) return selectedNode.map((item) => simplifyObject(item))
-  else return simplifyObject(selectedNode)
+  return Array.isArray(selectedNode)
+    ? selectedNode.map((item) => simplifyObject(item))
+    : simplifyObject(selectedNode)
 }
 
 // Build an object from an array of field names and an array of values
@@ -163,10 +164,10 @@ const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
 }
 
 // Return a specific node (e.g. application.name) from a nested Object
-function extractNode(
+const extractNode = (
   data: BasicObject,
   node: string
-): BasicObject | string | number | boolean | BasicObject[] {
+): BasicObject | string | number | boolean | BasicObject[] => {
   const returnNodeArray = node.split('.')
   return extractNodeWithArray(data, returnNodeArray)
 
@@ -181,11 +182,12 @@ function extractNode(
 
 // If Object has only 1 field, return just the value of that field,
 // else return the whole object.
-function simplifyObject(item: number | string | boolean | BasicObject) {
- return (typeof item === 'object' && Object.keys(item).length === 1) ? Object.values(item)[0] : item
+const simplifyObject = (item: number | string | boolean | BasicObject) => {
+  return typeof item === 'object' && Object.keys(item).length === 1 ? Object.values(item)[0] : item
 }
 
-async function graphQLquery(query: string, variables: object, connection: IGraphQLConnection) {
+// Abstraction for GraphQL database query using Fetch
+const graphQLquery = async (query: string, variables: object, connection: IGraphQLConnection) => {
   const queryResult = await connection.fetch(connection.endpoint, {
     method: 'POST',
     headers: {
