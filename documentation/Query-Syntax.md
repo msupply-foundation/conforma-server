@@ -130,23 +130,61 @@ Used to extract values from current state, for example, from `user`, `organisati
 Performs queries to a connected PostGres database and returns the result in a format specified by `type`.
 
 - Input:
-  - First child node contains a **string** representing the parameterized SQL query (i.e. `$1`, `$2` substitution)
-  - Remaining nodes return the values (**strings**, **numbers**, **arrays**) required for the above query substitution.
-- Output: Either **array** (all values flattened into one array), **string** (all results concatenated with spaces), or a single **number**, depending on the type specification. If not specified, it returns the default `node-postgres` format (an array of objects, with fields of each object being the database column names).
+  - 1st child node returns a **string** containing the parameterized SQL query (i.e. `$1`, `$2` substitution)
+  - 2nd...N nodes return the values (**strings**, **numbers**, **arrays**) required for the above query substitution.
+- Output: Depending on the `type` field:
+  - `type: 'array'`: returns all values flattened into one array
+  - `type: 'string'`: returns all results concatenated with spaces
+  - `type: 'number'`: returns a single number
+  - no `type` specified: returns the default `node-postgres` format (an array of objects, with fields of each object being the database column names)
+
+**Example**:
+
+```
+{ type: 'string',
+  operator: 'pgSQL',
+  children: [
+    {
+      value: 'SELECT name FROM application WHERE template_id = $1',
+    },
+    {
+      value: 2,
+    },
+  ] }
+```
 
 ## graphQL
 
 Performs queries on connected GraphQL interface.
 
 - Input:
-  - First child node's value is a string representing the GraphQL query
-  - Second child node's value is an array of field names for the query's associated variables object. If no variables are required for the query, pass an empty array.
-  - Next node's values are the values of the fields for the variables object -- one node for each field in the previous node's array.
-  - The last node's value is a string stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`)
-- Output: whatever type is contained in the specified GraphQL node, which can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
+  - 1st child node's returns a **string** representing the GraphQL query
+  - 2nd child node returns an **array** of field names for the query's associated variables object. If no variables are required for the query, pass an empty array (i.e. `{ value: [] }`).
+  - 3rd...N-1 child nodes return the values of the fields for the variables object -- one node for each field in the previous node's array.
+  - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`)
+- Output: the returned GraphQL node can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
+
   - If there only one field, only the value of the field will be returned.
   - If there is more than one field, the whole object will be returned.
   - Objects contained within arrays are also returned with the above logic.
+
+**Example**:
+
+```
+{ operator: 'graphQL',
+  children: [
+    {
+      value: `query App($appId:Int!) {
+        application(id: $appId) {
+          name
+        }
+      }`,
+    },
+    { value: ['appId'] },
+    { value: 1 },
+    { value: 'application.name' },
+  ] }
+```
 
 # Usage
 
