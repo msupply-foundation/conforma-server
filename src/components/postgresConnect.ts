@@ -132,9 +132,16 @@ class PostgresDB {
   }
 
   public addActionPlugin = async (plugin: ActionPluginPayload) => {
+    const getValuesPlaceholders = (plugin: ActionPluginPayload) =>
+      Object.keys(plugin).map((key, index) => `$${index + 1}`)
+
+    console.log('addAction:', `(${Object.keys(plugin)})`, `(${getValuesPlaceholders(plugin)})`)
+
     try {
       await this.query(
-        'INSERT INTO action_plugin (code, name, description, path, function_name, required_parameters) VALUES ($1, $2, $3, $4, $5, $6);',
+        `INSERT INTO action_plugin (${Object.keys(plugin)}) VALUES (${getValuesPlaceholders(
+          plugin
+        )})`,
         Object.values(plugin)
       )
     } catch (err) {
