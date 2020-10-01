@@ -170,14 +170,13 @@ const extractNode = (
 ): BasicObject | string | number | boolean | BasicObject[] => {
   const returnNodeArray = node.split('.')
   return extractNodeWithArray(data, returnNodeArray)
-
-  function extractNodeWithArray(
-    data: BasicObject,
-    nodeArray: string[]
-  ): BasicObject | string | number | boolean | BasicObject[] {
-    if (nodeArray.length === 1) return data[nodeArray[0]]
-    else return extractNodeWithArray(data[nodeArray[0]], nodeArray.slice(1))
-  }
+}
+const extractNodeWithArray = (
+  data: BasicObject,
+  nodeArray: string[]
+): BasicObject | string | number | boolean | BasicObject[] => {
+  if (nodeArray.length === 1) return data[nodeArray[0]]
+  else return extractNodeWithArray(data[nodeArray[0]], nodeArray.slice(1))
 }
 
 // If Object has only 1 field, return just the value of that field,
