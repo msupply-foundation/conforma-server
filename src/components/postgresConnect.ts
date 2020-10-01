@@ -135,8 +135,6 @@ class PostgresDB {
     const getValuesPlaceholders = (plugin: ActionPluginPayload) =>
       Object.keys(plugin).map((key, index) => `$${index + 1}`)
 
-    console.log('addAction:', `(${Object.keys(plugin)})`, `(${getValuesPlaceholders(plugin)})`)
-
     try {
       await this.query(
         `INSERT INTO action_plugin (${Object.keys(plugin)}) VALUES (${getValuesPlaceholders(

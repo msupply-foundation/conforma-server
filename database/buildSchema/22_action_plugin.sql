@@ -8,7 +8,7 @@ CREATE TABLE public.action_plugin (
     path varchar,
     file varchar,
     function_name varchar,
-    required_parameters varchar[]
+    required_parameters varchar[],
     info jsonb
 );
 
