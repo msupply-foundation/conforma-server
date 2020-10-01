@@ -182,8 +182,7 @@ function extractNode(
 // If Object has only 1 field, return just the value of that field,
 // else return the whole object.
 function simplifyObject(item: number | string | boolean | BasicObject) {
-  if (typeof item === 'object' && Object.keys(item).length === 1) return Object.values(item)[0]
-  else return item
+ return (typeof item === 'object' && Object.keys(item).length === 1) ? Object.values(item)[0] : item
 }
 
 async function graphQLquery(query: string, variables: object, connection: IGraphQLConnection) {
