@@ -74,7 +74,7 @@ export const loadScheduledActions = async function (
 
   actionSchedule.length > 0
     ? console.log(`${actionSchedule.length} scheduled jobs loaded.`)
-    : console.log('There was no jobs to be loaded.')
+: console.log('There were no jobs to be loaded.')
 }
 
 export async function processTrigger(payload: TriggerPayload) {
