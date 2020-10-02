@@ -42,8 +42,12 @@ export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
   params = defaultParameters
 ): Promise<string | number | boolean | any[] | BasicObject> {
-  // If input is JSON string, convert to Object
-  const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
+  // If input is not object, try and parse it as a JSON string. If that fails, return the input without any processing.
+  try {
+    var query = inputQuery instanceof Object ? inputQuery : JSON.parse(inputQuery)
+  } catch {
+    return inputQuery
+  }
 
   // Base case
   if (!query.children) {
