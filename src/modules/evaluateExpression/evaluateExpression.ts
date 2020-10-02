@@ -67,8 +67,6 @@ export default async function evaluateExpression(
         }
 
       case 'pgSQL':
-        console.log('pgSQL', childrenResolved)
-
         if (!params.connection) return 'No database connection provided'
         return processPgSQL(childrenResolved, query.type, params.connection)
 
