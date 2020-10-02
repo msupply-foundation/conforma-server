@@ -423,6 +423,28 @@ test('Validation: Company name is unique', () => {
 //   });
 // });
 
+// Invalid input expressions
+
+test('Input is a number', () => {
+  return evaluateExpression(10).then((result: any) => {
+    expect(result).toEqual(10)
+  })
+})
+
+test('Input is an array', () => {
+  return evaluateExpression(['Company A', 'Company B', 'XYZ Pharma']).then((result: any) => {
+    expect(result).toEqual(['Company A', 'Company B', 'XYZ Pharma'])
+  })
+})
+
+test('Input is malformed JSON string', () => {
+  return evaluateExpression(
+    '{"operator":"=", "children":[{"value":6},{"operator":"+", "children":[{"value":6},{"value":6}]}]}}'
+  ).then((result: any) => {
+    expect(result).toEqual('Invalid JSON String')
+  })
+})
+
 afterAll(() => {
   pgConnect.end()
 })

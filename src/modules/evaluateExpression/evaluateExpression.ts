@@ -39,15 +39,20 @@ type Operator =
 const defaultParameters: IParameters = {}
 
 export default async function evaluateExpression(
-  inputQuery: IQueryNode | string,
+  inputQuery: IQueryNode | string | number | boolean | any[],
   params = defaultParameters
-): Promise<string | number | boolean | any[] | BasicObject> {
+): Promise<any> {
   // If input is not object, try and parse it as a JSON string. If that fails, return the input without any processing.
-  try {
-    var query = inputQuery instanceof Object ? inputQuery : JSON.parse(inputQuery)
-  } catch {
-    return inputQuery
-  }
+  let query
+  if (!(inputQuery instanceof Object) || Array.isArray(inputQuery) || inputQuery === null) {
+    if (typeof inputQuery === 'string') {
+      try {
+        query = JSON.parse(inputQuery)
+      } catch {
+        return 'Invalid JSON String'
+      }
+    } else return inputQuery
+  } else query = inputQuery
 
   // Base case
   if (!query.children) {
