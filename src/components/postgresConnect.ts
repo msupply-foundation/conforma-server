@@ -62,7 +62,7 @@ class PostgresDB {
     return this._instance || (this._instance = new this())
   }
 
-  public query = async (text: string, payload: any[]): Promise<QueryResult> => {
+  public query = async (text: string, payload: any[] = []): Promise<QueryResult> => {
     const client = await this.pool.connect()
     try {
       return await client.query(text, payload)
@@ -172,7 +172,7 @@ class PostgresDB {
 
   public getActionPlugins = async (): Promise<ActionPlugin[]> => {
     try {
-      const result = await this.query('SELECT * FROM action_plugin', [])
+      const result = await this.query('SELECT * FROM action_plugin')
       return result.rows as ActionPlugin[]
     } catch (err) {
       console.log(err.stack)

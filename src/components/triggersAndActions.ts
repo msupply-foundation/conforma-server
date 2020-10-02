@@ -1,13 +1,7 @@
 import path from 'path'
 import getAppRootDir from './getAppRoot'
 import * as config from '../config.json'
-import {
-  ActionLibrary,
-  ActionInTemplate,
-  ActionQueue,
-  TriggerPayload,
-  ActionPayload,
-} from '../types'
+import { ActionLibrary, ActionInTemplate, TriggerPayload, ActionPayload } from '../types'
 import evaluateExpression from '../modules/evaluateExpression/evaluateExpression'
 import PosgresDB from '../components/postgresConnect'
 

@@ -4,7 +4,7 @@ import util from 'util'
 import { pipeline } from 'stream'
 import getAppRootDir from './getAppRoot'
 import * as config from '../config.json'
-import PosgresDB from '../components/postgresConnect'
+import PostgresDB from '../components/postgresConnect'
 
 export const filesFolderName = config.filesFolderName
 
@@ -21,7 +21,7 @@ export function createFilesFolder() {
 }
 
 export async function getFilename(id: number) {
-  const result = await PosgresDB.getFile({ id: id })
+  const result = await PostgresDB.getFile({ id: id })
   if (!result) return ''
   const folder = result.path // Not currently used
   const filenameOrig = result.original_filename
@@ -51,7 +51,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
 
 async function registerFileInDB(file: any, parameters: any) {
   // Insert record into Db and get back ID
-  const fileID = await PosgresDB.addFile({
+  const fileID = await PostgresDB.addFile({
     user_id: parameters.user_id,
     original_filename: file.filename,
     path: filesFolderName,
