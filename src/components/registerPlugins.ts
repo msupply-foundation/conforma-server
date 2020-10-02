@@ -42,7 +42,7 @@ export default async function registerPlugins() {
     const missingPlugin = missingPlugins[index]
     console.warn('ALERT: Plug-in file missing:', missingPlugin.name)
     try {
-      await PostgresDB.deleteActionPlugin({ code: missingPlugin.code })
+      await PostgresDB.deleteActionPlugin(missingPlugin)
       console.log('Plugin de-registered:', missingPlugin.name)
     } catch (err) {
       console.error("Couldn't remove plug-in:", missingPlugin.name)

@@ -59,10 +59,6 @@ export interface ActionPlugin {
   required_parameters: any[]
 }
 
-export interface ActionPluginDeletePayload {
-  code: string
-}
-
 export interface ActionPluginInfo {
   author?: {
     name: string
