@@ -124,7 +124,7 @@ class PostgresDB {
         )}) RETURNING id`,
         Object.values(payload)
       )
-      return result.rows[0]
+      return result.rows[0].id
     } catch (err) {
       console.log(err.stack)
       return 0
