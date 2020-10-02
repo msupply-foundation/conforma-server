@@ -1,7 +1,7 @@
 import { Client } from 'pg'
 
 interface IParameters {
-  [key: string]: any
+  objects?: BasicObject[]
   pgConnection?: Client
   graphQLConnection?: IGraphQLConnection
 }
@@ -36,11 +36,9 @@ type Operator =
   | 'pgSQL'
   | 'graphQL'
 
-const defaultParameters: IParameters = {}
-
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string | number | boolean | any[],
-  params = defaultParameters
+  params?: IParameters
 ): Promise<any> {
   // If input is not object, try and parse it as a JSON string. If that fails, return the input without any processing.
   let query
@@ -104,17 +102,20 @@ export default async function evaluateExpression(
 
       case 'objectProperties':
         try {
-          return params[childrenResolved[0].object][childrenResolved[0].property]
+          const objectIndex = childrenResolved[0].objectIndex ? childrenResolved[0].objectIndex : 0
+          const inputObject = params && params.objects ? params.objects[objectIndex] : {}
+          const property = childrenResolved[0].property
+          return extractNode(inputObject, property)
         } catch {
           return "Can't resolve object"
         }
 
       case 'pgSQL':
-        if (!params.pgConnection) return 'No database connection provided'
+        if (!params || !params.pgConnection) return 'No database connection provided'
         return processPgSQL(childrenResolved, query.type, params.pgConnection)
 
       case 'graphQL':
-        if (!params.graphQLConnection) return 'No database connection provided'
+        if (!params || !params.graphQLConnection) return 'No database connection provided'
         return processGraphQL(childrenResolved, params.graphQLConnection)
 
       // etc. for as many other operators as we want/need.

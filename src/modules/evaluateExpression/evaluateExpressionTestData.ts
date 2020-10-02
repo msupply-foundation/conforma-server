@@ -1,5 +1,5 @@
 interface ITestData {
-  [key: string]: object | string
+  [key: string]: any
 }
 
 export const testData: ITestData = {}
@@ -500,13 +500,25 @@ testData.application = {
   name: 'Drug Registration',
   status: 'Draft',
   stage: 1,
+  questions: { q1: 'What is the answer?', q2: 'Enter your name' },
 }
+
+// Object Properties (simple)
 
 testData.singleUserProperty = {
   operator: 'objectProperties',
   children: [
     {
-      value: { object: 'user', property: 'firstName' },
+      value: { objectIndex: 0, property: 'firstName' },
+    },
+  ],
+}
+
+testData.singleApplicationProperty_noIndex_depth2 = {
+  operator: 'objectProperties',
+  children: [
+    {
+      value: { property: 'questions.q2' },
     },
   ],
 }
@@ -636,7 +648,7 @@ testData.GraphQL_CountApplicationSections = {
     { value: ['appId'] },
     {
       operator: 'objectProperties',
-      children: [{ value: { object: 'application', property: 'id' } }],
+      children: [{ value: { property: 'id' } }],
     },
     { value: 'application.applicationSections.totalCount' },
   ],
@@ -650,14 +662,14 @@ testData.concatFirstAndLastNames = {
   children: [
     {
       operator: 'objectProperties',
-      children: [{ value: { object: 'user', property: 'firstName' } }],
+      children: [{ value: { property: 'firstName' } }],
     },
     {
       value: ' ',
     },
     {
       operator: 'objectProperties',
-      children: [{ value: { object: 'user', property: 'lastName' } }],
+      children: [{ value: { property: 'lastName' } }],
     },
   ],
 }
@@ -672,7 +684,7 @@ testData.complex1 = {
           operator: 'objectProperties',
           children: [
             {
-              value: { object: 'form', property: 'q1' },
+              value: { property: 'q1' },
             },
           ],
         },
@@ -691,11 +703,11 @@ testData.complex1 = {
             { value: 'SELECT COUNT(*) FROM user_organisation WHERE user_id = $1' },
             {
               operator: 'objectProperties',
-              children: [{ value: { object: 'user', property: 'id' } }],
+              children: [{ value: { objectIndex: 0, property: 'id' } }],
             },
             {
               operator: 'objectProperties',
-              children: [{ value: { object: 'organisation', property: 'id' } }],
+              children: [{ value: { objectIndex: 1, property: 'id' } }],
             },
           ],
         },
@@ -817,14 +829,7 @@ testData.complexValidation = {
         { value: ['orgName'] },
         {
           operator: 'objectProperties',
-          children: [
-            {
-              value: {
-                object: 'form2',
-                property: 'q2',
-              },
-            },
-          ],
+          children: [{ value: { property: 'q2' } }],
         },
         { value: 'organisations.totalCount' },
       ],
