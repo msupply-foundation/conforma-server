@@ -7,6 +7,11 @@ export interface ActionInTemplate {
   parameter_queries: { [key: string]: any }
 }
 
+export interface ActionInTemplateGetPayload {
+  template_id: number
+  trigger: TriggerStatus
+}
+
 export interface ActionLibrary {
   [key: string]: Function
 }
@@ -106,13 +111,10 @@ export interface FileGetPayload {
   id: number
 }
 
+export type QueryParams = string[] | { [key: string]: any }
+
 // TODO: Ideally this would be coming from postgraphile types, to be consistent with the types
 type TriggerStatus = 'Triggered' | 'Action Dispatched' | 'Error'
-
-export interface ActionInTemplateGetPayload {
-  template_id: number
-  trigger: TriggerStatus
-}
 
 export interface TriggerPayload {
   id: number

@@ -5,16 +5,16 @@ import { Client, Pool, QueryResult } from 'pg'
 import {
   ActionInTemplate,
   ActionQueue,
+  ActionPlugin,
+  File,
+  ActionInTemplateGetPayload,
   ActionQueueExecutePayload,
   ActionQueueGetPayload,
   ActionQueuePayload,
-  ActionPlugin,
   ActionPluginDeletePayload,
   ActionPluginPayload,
-  File,
   FilePayload,
   FileGetPayload,
-  ActionInTemplateGetPayload,
   TriggerQueueUpdatePayload,
 } from '../types'
 
@@ -56,11 +56,14 @@ class PostgresDB {
     })
   }
 
+  private getValuesPlaceholders = (object: { [key: string]: any }) =>
+    Object.keys(object).map((key, index) => `$${index + 1}`)
+
   public static get Instance() {
     return this._instance || (this._instance = new this())
   }
 
-  public query = async (text: string, payload: any): Promise<QueryResult> => {
+  public query = async (text: string, payload: any[]): Promise<QueryResult> => {
     const client = await this.pool.connect()
     try {
       return await client.query(text, payload)
@@ -74,7 +77,9 @@ class PostgresDB {
   public addActionQueue = async (action: ActionQueuePayload) => {
     try {
       const result = await this.query(
-        'INSERT into action_queue (trigger_event, action_code, parameters, status, time_queued) VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)',
+        `INSERT into action_queue (${Object.keys(
+          action
+        )}, time_queued) VALUES (${this.getValuesPlaceholders(action)}, CURRENT_TIMESTAMP)`,
         Object.values(action)
       )
     } catch (err) {
@@ -110,7 +115,7 @@ class PostgresDB {
   public addFile = async (payload: FilePayload): Promise<Pick<File, 'id'>> => {
     try {
       const result = await this.query(
-        'INSERT INTO file (user_id, original_filename, path, mimetype, application_id, application_response_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id',
+        `INSERT INTO file (${Object.keys(payload)}) VALUES () RETURNING id`,
         Object.values(payload)
       )
       return result.rows[0] as Pick<File, 'id'>
@@ -123,7 +128,7 @@ class PostgresDB {
     try {
       const result = await this.query(
         'SELECT path, original_filename FROM file WHERE id = $1',
-        payload
+        Object.values(payload)
       )
       return result.rows[0] as File
     } catch (err) {
@@ -132,12 +137,9 @@ class PostgresDB {
   }
 
   public addActionPlugin = async (plugin: ActionPluginPayload) => {
-    const getValuesPlaceholders = (plugin: ActionPluginPayload) =>
-      Object.keys(plugin).map((key, index) => `$${index + 1}`)
-
     try {
       await this.query(
-        `INSERT INTO action_plugin (${Object.keys(plugin)}) VALUES (${getValuesPlaceholders(
+        `INSERT INTO action_plugin (${Object.keys(plugin)}) VALUES (${this.getValuesPlaceholders(
           plugin
         )})`,
         Object.values(plugin)
@@ -197,7 +199,7 @@ class PostgresDB {
 
   public updateTriggerQueue = async (payload: TriggerQueueUpdatePayload) => {
     try {
-      await this.query('UPDATE trigger_queue SET status = $1 WHERE id = $2', payload)
+      await this.query('UPDATE trigger_queue SET status = $1 WHERE id = $2', Object.values(payload))
     } catch (err) {
       console.log(err.stack)
     }
