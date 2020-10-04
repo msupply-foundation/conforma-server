@@ -74,7 +74,7 @@ export const loadScheduledActions = async function (
 
   actionSchedule.length > 0
     ? console.log(`${actionSchedule.length} scheduled jobs loaded.`)
-: console.log('There were no jobs to be loaded.')
+    : console.log('There were no jobs to be loaded.')
 }
 
 export async function processTrigger(payload: TriggerPayload) {
@@ -91,24 +91,23 @@ export async function processTrigger(payload: TriggerPayload) {
     if (condition) actions.push(action)
   }
 
-  let isAddedAction = true
   // Evaluate parameters for each Action
-  for (const action of actions)
-    while (isAddedAction) {
-      for (const key in action.parameter_queries) {
-        action.parameter_queries[key] = await evaluateExpression(
-          action.parameter_queries[key],
-          PosgresDB
-        )
-      }
-      // Write each Action with parameters to Action_Queue
-      isAddedAction = await PosgresDB.addActionQueue({
-        trigger_event: payload.id,
-        action_code: action.code,
-        parameters: action.parameter_queries,
-        status: 'Queued',
-      })
+  for (const action of actions) {
+    for (const key in action.parameter_queries) {
+      action.parameter_queries[key] = await evaluateExpression(
+        action.parameter_queries[key],
+        PosgresDB
+      )
     }
+    // TODO - Error handling
+    // Write each Action with parameters to Action_Queue
+    await PosgresDB.addActionQueue({
+      trigger_event: payload.id,
+      action_code: action.code,
+      parameters: action.parameter_queries,
+      status: 'Queued',
+    })
+  }
 
   // Update trigger queue item with success/failure (and log)
   // If SUCCESS -- Not sure best way to test for this:
@@ -121,6 +120,7 @@ export async function executeAction(
 ): Promise<boolean> {
   // TO-DO: If Scheduled, create a Job instead
   const actionResult = actionLibrary[payload.code](payload.parameters)
+
   return await PosgresDB.executeActionQueued({
     status: actionResult.status,
     error_log: actionResult.error,

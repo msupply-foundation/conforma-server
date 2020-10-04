@@ -4,8 +4,6 @@ export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
   params: IParameters
 ): Promise<string | number | boolean | any[]> {
-  console.log('inputQuery', inputQuery)
-
   // If input is JSON string, convert to Object
   const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
 
