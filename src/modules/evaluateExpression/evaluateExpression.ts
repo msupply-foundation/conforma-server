@@ -116,6 +116,7 @@ export default async function evaluateExpression(
 
       case 'graphQL':
         if (!params || !params.graphQLConnection) return 'No database connection provided'
+        // TO-DO: Add checks to ensure parameter nodes are consistent with the array of field names node.
         return processGraphQL(childrenResolved, params.graphQLConnection)
 
       // etc. for as many other operators as we want/need.
