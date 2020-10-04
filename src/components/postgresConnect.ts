@@ -74,13 +74,11 @@ class PostgresDB {
   }
 
   public addActionQueue = async (action: ActionQueuePayload): Promise<boolean> => {
+    const text = `INSERT into action_queue (${Object.keys(action)}, time_queued) 
+      VALUES (${this.getValuesPlaceholders(action)}, CURRENT_TIMESTAMP)`
+
     try {
-      const result = await this.query(
-        `INSERT into action_queue (${Object.keys(
-          action
-        )}, time_queued) VALUES (${this.getValuesPlaceholders(action)}, CURRENT_TIMESTAMP)`,
-        Object.values(action)
-      )
+      await this.query(text, Object.values(action))
       return true
     } catch (err) {
       console.log(err.stack)
@@ -117,13 +115,11 @@ class PostgresDB {
   }
 
   public addFile = async (payload: FilePayload): Promise<number> => {
+    const text = `INSERT INTO file (${Object.keys(payload)}) 
+      VALUES (${this.getValuesPlaceholders(payload)}) RETURNING id`
+
     try {
-      const result = await this.query(
-        `INSERT INTO file (${Object.keys(payload)}) VALUES (${this.getValuesPlaceholders(
-          payload
-        )}) RETURNING id`,
-        Object.values(payload)
-      )
+      const result = await this.query(text, Object.values(payload))
       return result.rows[0].id
     } catch (err) {
       console.log(err.stack)
@@ -144,13 +140,10 @@ class PostgresDB {
   }
 
   public addActionPlugin = async (plugin: ActionPluginPayload): Promise<boolean> => {
+    const text = `INSERT INTO action_plugin (${Object.keys(plugin)}) 
+      VALUES (${this.getValuesPlaceholders(plugin)})`
     try {
-      await this.query(
-        `INSERT INTO action_plugin (${Object.keys(plugin)}) VALUES (${this.getValuesPlaceholders(
-          plugin
-        )})`,
-        Object.values(plugin)
-      )
+      await this.query(text, Object.values(plugin))
       return true
     } catch (err) {
       console.log(err.stack)
