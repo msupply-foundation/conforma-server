@@ -86,7 +86,9 @@ class PostgresDB {
     }
   }
 
-  public executeActionQueued = async (payload: ActionQueueExecutePayload): Promise<boolean> => {
+  public executedActionStatusUpdate = async (
+    payload: ActionQueueExecutePayload
+  ): Promise<boolean> => {
     try {
       await this.query(
         'UPDATE action_queue SET status = $1, error_log = $2, execution_time = CURRENT_TIMESTAMP WHERE id = $3',

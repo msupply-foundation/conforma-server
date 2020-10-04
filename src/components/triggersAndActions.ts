@@ -121,7 +121,7 @@ export async function executeAction(
   // TO-DO: If Scheduled, create a Job instead
   const actionResult = actionLibrary[payload.code](payload.parameters)
 
-  return await PosgresDB.executeActionQueued({
+  return await PosgresDB.executedActionStatusUpdate({
     status: actionResult.status,
     error_log: actionResult.error,
     id: payload.id,
