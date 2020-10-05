@@ -164,7 +164,7 @@ Performs queries on connected GraphQL interface.
   - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`)
 - Output: the returned GraphQL node can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
 
-  - If there only one field, only the value of the field will be returned.
+  - If there is only one field, only the value of the field will be returned.
   - If there is more than one field, the whole object will be returned.
   - Objects contained within arrays are also returned with the above logic.
 
