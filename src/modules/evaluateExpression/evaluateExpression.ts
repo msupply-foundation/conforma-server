@@ -1,45 +1,19 @@
-interface IParameters {
-  [key: string]: any
-  connection?: IConnection
-}
-
-interface IQueryNode {
-  value?: string | number | boolean | object
-  type?: NodeType
-  operator?: Operator
-  children?: Array<IQueryNode>
-}
-
-interface IConnection {
-  user?: string
-  host?: string
-  database?: string
-  password?: string
-  port?: number
-  query?: any
-}
-
-type NodeType = 'string' | 'number' | 'boolean' | 'array'
-
-type Operator =
-  | 'AND'
-  | 'OR'
-  | 'CONCAT'
-  | '='
-  | '!= '
-  | '+'
-  | 'REGEX'
-  | 'objectProperties'
-  | 'pgSQL'
-  | 'graphQL'
+import { IConnection, IQueryNode, IParameters } from './types'
 
 const defaultParameters: IParameters = {
-  connection: {},
+  connection: {
+    query: (expression: { text: string }) => {
+      console.log('No connection was passed!')
+      return new Promise(() => {
+        rows: []
+      })
+    },
+  },
 }
 
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
-  params = defaultParameters
+  params: IParameters = defaultParameters
 ): Promise<string | number | boolean | any[]> {
   // If input is JSON string, convert to Object
   const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
@@ -93,6 +67,8 @@ export default async function evaluateExpression(
         }, 0)
 
       case 'objectProperties':
+        if (Object.entries(params).length === 0)
+          return 'No parameters received for objectProperties node'
         try {
           return params[childrenResolved[0].object][childrenResolved[0].property]
         } catch {
@@ -114,13 +90,13 @@ export default async function evaluateExpression(
 }
 
 async function processPgSQL(queryArray: any[], queryType: string, connection: IConnection) {
-  const query = {
+  const expression = {
     text: queryArray[0],
     values: queryArray.slice(1),
     rowMode: queryType ? 'array' : '',
   }
   try {
-    const res = await connection.query(query)
+    const res = await connection.query(expression)
     switch (queryType) {
       case 'array':
         return res.rows.flat()

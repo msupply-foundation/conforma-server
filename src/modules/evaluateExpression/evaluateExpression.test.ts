@@ -247,11 +247,12 @@ test('Testing Regex - Email validation', () => {
 // Return User or Form values
 
 test('Test returning single user property', () => {
-  return evaluateExpression(testData.singleUserProperty, { user: testData.user }).then(
-    (result: any) => {
-      expect(result).toBe('Carl')
-    }
-  )
+  return evaluateExpression(testData.singleUserProperty, {
+    user: testData.user,
+    connection: pgConnect,
+  }).then((result: any) => {
+    expect(result).toBe('Carl')
+  })
 })
 
 // SQL operator
@@ -283,10 +284,7 @@ test('Test Postgres get Count of templates', () => {
 test('Test Postgres get template names -- no type', () => {
   return evaluateExpression(testData.getListOfTemplates_noType, { connection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual([
-        { template_name: 'User Registration' },
-        { template_name: 'Company Registration' },
-      ])
+      expect(result).toEqual([{ name: 'User Registration' }, { name: 'Company Registration' }])
     }
   )
 })
