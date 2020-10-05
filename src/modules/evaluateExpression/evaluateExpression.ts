@@ -1,20 +1,11 @@
 import { IConnection, IQueryNode, IParameters, IGraphQLConnection, BasicObject } from './types'
 
-const defaultParameters: IParameters = {
-  connection: {
-    query: (expression: { text: string }) => {
-      console.log('No connection was passed!')
-      return new Promise(() => {
-        rows: []
-      })
-    },
-  },
-}
+const defaultParameters: IParameters = {}
 
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string | number | boolean | any[],
   params: IParameters = defaultParameters
-): Promise<string | number | boolean | any[]> {
+): Promise<string | number | boolean | BasicObject | any[]> {
   // If input is not object, try and parse it as a JSON string. If that fails, return the input without any processing.
   let query
   if (!(inputQuery instanceof Object) || Array.isArray(inputQuery) || inputQuery === null) {

@@ -20,7 +20,8 @@ export interface IGraphQLConnection {
 
 export interface IParameters {
   [key: string]: any
-  connection?: IConnection
+  pgConnection?: IConnection
+  graphQLConnection?: IGraphQLConnection
 }
 
 export interface IQueryNode {
