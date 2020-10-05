@@ -251,11 +251,12 @@ test('Testing Regex - Email validation', () => {
 // Return User or Form values
 
 test('Test returning single user property', () => {
-  return evaluateExpression(testData.singleUserProperty, { user: testData.user }).then(
-    (result: any) => {
-      expect(result).toBe('Carl')
-    }
-  )
+  return evaluateExpression(testData.singleUserProperty, {
+    user: testData.user,
+    connection: pgConnect,
+  }).then((result: any) => {
+    expect(result).toBe('Carl')
+  })
 })
 
 // SQL operator
