@@ -1,4 +1,4 @@
-import { IConnection, IQueryNode, IParameters } from './types'
+import { IConnection, IQueryNode, IParameters, IGraphQLConnection, BasicObject } from './types'
 
 const defaultParameters: IParameters = {
   connection: {
@@ -12,11 +12,20 @@ const defaultParameters: IParameters = {
 }
 
 export default async function evaluateExpression(
-  inputQuery: IQueryNode | string,
+  inputQuery: IQueryNode | string | number | boolean | any[],
   params: IParameters = defaultParameters
 ): Promise<string | number | boolean | any[]> {
-  // If input is JSON string, convert to Object
-  const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
+  // If input is not object, try and parse it as a JSON string. If that fails, return the input without any processing.
+  let query
+  if (!(inputQuery instanceof Object) || Array.isArray(inputQuery) || inputQuery === null) {
+    if (typeof inputQuery === 'string') {
+      try {
+        query = JSON.parse(inputQuery)
+      } catch {
+        return 'Invalid JSON String'
+      }
+    } else return inputQuery
+  } else query = inputQuery
 
   // Base case
   if (!query.children) {
@@ -76,12 +85,12 @@ export default async function evaluateExpression(
         }
 
       case 'pgSQL':
-        if (!params.connection) return 'No database connection provided'
-        return processPgSQL(childrenResolved, query.type, params.connection)
+        if (!params.pgConnection) return 'No database connection provided'
+        return processPgSQL(childrenResolved, query.type, params.pgConnection)
 
       case 'graphQL':
-        if (!params.connection) return 'No database connection provided'
-        return processGraphQL(childrenResolved, params.connection)
+        if (!params.graphQLConnection) return 'No database connection provided'
+        return processGraphQL(childrenResolved, params.graphQLConnection)
 
       // etc. for as many other operators as we want/need.
     }
@@ -112,7 +121,67 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
   }
 }
 
-function processGraphQL(queryArray: any[], connection: object) {
-  // TO-DO -- For now just return a value that makes test work
-  return 0
+async function processGraphQL(queryArray: any[], connection: IGraphQLConnection) {
+  const query = queryArray[0]
+  const variableNames = queryArray[1]
+  const variableNodes = queryArray.slice(2, queryArray.length - 1)
+  const returnNode = queryArray[queryArray.length - 1]
+
+  const variables = zipArraysToObject(variableNames, variableNodes)
+
+  const data = await graphQLquery(query, variables, connection)
+
+  const selectedNode = extractNode(data, returnNode)
+
+  return Array.isArray(selectedNode)
+    ? selectedNode.map((item) => simplifyObject(item))
+    : simplifyObject(selectedNode)
+}
+
+// Build an object from an array of field names and an array of values
+const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
+  const createdObject: BasicObject = {}
+  variableNames.map((name, index) => {
+    createdObject[name] = variableValues[index]
+  })
+  return createdObject
+}
+
+// Return a specific node (e.g. application.name) from a nested Object
+const extractNode = (
+  data: BasicObject,
+  node: string
+): BasicObject | string | number | boolean | BasicObject[] => {
+  const returnNodeArray = node.split('.')
+  return extractNodeWithArray(data, returnNodeArray)
+}
+const extractNodeWithArray = (
+  data: BasicObject,
+  nodeArray: string[]
+): BasicObject | string | number | boolean | BasicObject[] => {
+  if (nodeArray.length === 1) return data[nodeArray[0]]
+  else return extractNodeWithArray(data[nodeArray[0]], nodeArray.slice(1))
+}
+
+// If Object has only 1 field, return just the value of that field,
+// else return the whole object.
+const simplifyObject = (item: number | string | boolean | BasicObject) => {
+  return typeof item === 'object' && Object.keys(item).length === 1 ? Object.values(item)[0] : item
+}
+
+// Abstraction for GraphQL database query using Fetch
+const graphQLquery = async (query: string, variables: object, connection: IGraphQLConnection) => {
+  const queryResult = await connection.fetch(connection.endpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      query: query,
+      variables: variables,
+    }),
+  })
+  const data = await queryResult.json()
+  return data.data
 }

@@ -490,6 +490,11 @@ testData.form = {
   q4: 'Panadol',
 }
 
+testData.form2 = {
+  q1: 'Company Registration',
+  q2: 'XYZ Chemicals',
+}
+
 testData.application = {
   id: 1,
   name: 'Drug Registration',
@@ -550,7 +555,92 @@ testData.getListOfTemplates_noType = {
   ],
 }
 
-// GraphQL operator -- TO DO
+testData.getListOfApplications_withId = {
+  operator: 'pgSQL',
+  children: [
+    {
+      value: 'SELECT id, name FROM application',
+    },
+  ],
+}
+
+// GraphQL operator
+
+testData.simpleGraphQL = {
+  operator: 'graphQL',
+  children: [
+    {
+      value: `query App($appId:Int!) {
+        application(id: $appId) {
+          name
+        }
+      }`,
+    },
+    { value: ['appId'] },
+    { value: 1 },
+    { value: 'application.name' },
+  ],
+}
+
+testData.GraphQL_listOfApplications = {
+  operator: 'graphQL',
+  children: [
+    {
+      value: `query Apps {
+      applications {
+        nodes {
+          name
+        }
+      }
+    }`,
+    },
+    { value: [] },
+    { value: 'applications.nodes' },
+  ],
+}
+
+testData.GraphQL_listOfApplicationsWithId = {
+  operator: 'graphQL',
+  children: [
+    {
+      value: `query Apps {
+        applications {
+          nodes {
+            name
+            id
+          }
+        }
+      }`,
+    },
+    { value: [] },
+    { value: 'applications.nodes' },
+  ],
+}
+
+testData.GraphQL_CountApplicationSections = {
+  operator: 'graphQL',
+  children: [
+    {
+      value: `query SectionCount($appId:Int!) {
+        application(id: $appId) {
+          id
+          template {
+            name
+          }
+          applicationSections {
+            totalCount
+          }
+        }
+      }`,
+    },
+    { value: ['appId'] },
+    {
+      operator: 'objectProperties',
+      children: [{ value: { object: 'application', property: 'id' } }],
+    },
+    { value: 'application.applicationSections.totalCount' },
+  ],
+}
 
 // More complex combinations
 
@@ -706,3 +796,39 @@ testData.complex2_asString = `{
       }
     ]
   }`
+
+testData.complexValidation = {
+  operator: '=',
+  children: [
+    {
+      operator: 'graphQL',
+      children: [
+        {
+          value: `query Orgs($orgName: String) {
+            organisations(condition: {name: $orgName}) {
+              totalCount
+              nodes {
+                name
+                id
+              }
+            }
+          }`,
+        },
+        { value: ['orgName'] },
+        {
+          operator: 'objectProperties',
+          children: [
+            {
+              value: {
+                object: 'form2',
+                property: 'q2',
+              },
+            },
+          ],
+        },
+        { value: 'organisations.totalCount' },
+      ],
+    },
+    { value: 0 },
+  ],
+}
