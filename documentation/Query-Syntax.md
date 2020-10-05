@@ -187,13 +187,13 @@ Performs queries to a connected PostGres database and returns the result in a fo
 Performs queries on connected GraphQL interface.
 
 - Input:
-  - 1st child node's returns a **string** representing the GraphQL query
+  - 1st child node returns a **string** representing the GraphQL query
   - 2nd child node returns an **array** of field names for the query's associated variables object. If no variables are required for the query, pass an empty array (i.e. `{ value: [] }`).
   - 3rd...N-1 child nodes return the values of the fields for the variables object -- one node for each field in the previous node's array.
   - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`)
 - Output: the returned GraphQL node can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
 
-  - If there only one field, only the value of the field will be returned.
+  - If there is only one field, only the value of the field will be returned.
   - If there is more than one field, the whole object will be returned.
   - Objects contained within arrays are also returned with the above logic.
 
@@ -230,7 +230,7 @@ The query evaluator is implemented in the `evaluateExpression` function:
 `parameters` is an (optional) object with the following (optional) properties available:
 
 - `objects : [local objects]` -- **array** of local state objects required for the query (see **objectProperties** above)
-- `pgConnection: <node-postgres Client object>` -- the Client object containing connection data for a local Postgres database. Only required if expression contains **pgSQL** operator.
+- `pgConnection: <postGresConnect object>` (or any valid PostGres connection object, e.g. `Client` from `node-postgres`)
 - `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>}` -- connection information for a local GraphQL endpoint. Only required if expression contains **graphQL** operator.
 
 # Examples

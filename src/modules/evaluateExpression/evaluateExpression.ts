@@ -1,45 +1,20 @@
-import { Client } from 'pg'
+import { IConnection, IQueryNode, IParameters, IGraphQLConnection, BasicObject } from './types'
 
-interface IParameters {
-  objects?: BasicObject[]
-  pgConnection?: Client
-  graphQLConnection?: IGraphQLConnection
+const defaultParameters: IParameters = {
+  connection: {
+    query: (expression: { text: string }) => {
+      console.log('No connection was passed!')
+      return new Promise(() => {
+        rows: []
+      })
+    },
+  },
 }
-
-interface IQueryNode {
-  value?: string | number | boolean | object
-  type?: NodeType
-  operator?: Operator
-  children?: Array<IQueryNode>
-}
-
-interface IGraphQLConnection {
-  fetch: any // Don't know type of fetch object
-  endpoint: string
-}
-
-type BasicObject = {
-  [key: string]: any
-}
-
-type NodeType = 'string' | 'number' | 'boolean' | 'array' | 'object'
-
-type Operator =
-  | 'AND'
-  | 'OR'
-  | 'CONCAT'
-  | '='
-  | '!= '
-  | '+'
-  | 'REGEX'
-  | 'objectProperties'
-  | 'pgSQL'
-  | 'graphQL'
 
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string | number | boolean | any[],
-  params?: IParameters
-): Promise<any> {
+  params: IParameters = defaultParameters
+): Promise<string | number | boolean | any[]> {
   // If input is not object, try and parse it as a JSON string. If that fails, return the input without any processing.
   let query
   if (!(inputQuery instanceof Object) || Array.isArray(inputQuery) || inputQuery === null) {
@@ -101,6 +76,8 @@ export default async function evaluateExpression(
         }, 0)
 
       case 'objectProperties':
+        if (Object.entries(params).length === 0)
+          return 'No parameters received for objectProperties node'
         try {
           const objectIndex = childrenResolved[0].objectIndex ? childrenResolved[0].objectIndex : 0
           const inputObject = params && params.objects ? params.objects[objectIndex] : {}
@@ -125,14 +102,14 @@ export default async function evaluateExpression(
   return 'No matching operators'
 }
 
-async function processPgSQL(queryArray: any[], queryType: string, connection: Client) {
-  const query = {
+async function processPgSQL(queryArray: any[], queryType: string, connection: IConnection) {
+  const expression = {
     text: queryArray[0],
     values: queryArray.slice(1),
     rowMode: queryType ? 'array' : '',
   }
   try {
-    const res = await connection.query(query)
+    const res = await connection.query(expression)
     switch (queryType) {
       case 'array':
         return res.rows.flat()

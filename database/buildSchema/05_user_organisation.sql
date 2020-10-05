@@ -4,5 +4,5 @@ CREATE TABLE public.user_organisation (
     id serial primary key,
     user_id integer references public.user(id),
     organistion_id integer references public.organisation(id),
-    job varchar
+    user_role varchar
 );

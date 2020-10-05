@@ -2,7 +2,7 @@ import fastify from 'fastify'
 import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
 import path from 'path'
-import { loadActionPlugins } from './components/postgresConnect'
+import { loadActionPlugins } from './components/pluginsConnect'
 import {
   saveFiles,
   getFilename,

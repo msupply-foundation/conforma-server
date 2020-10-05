@@ -3,8 +3,8 @@ import fs from 'fs'
 import util from 'util'
 import { pipeline } from 'stream'
 import getAppRootDir from './getAppRoot'
-import { pgClient } from './postgresConnect'
 import * as config from '../config.json'
+import PostgresDB from '../components/postgresConnect'
 
 export const filesFolderName = config.filesFolderName
 
@@ -20,12 +20,11 @@ export function createFilesFolder() {
   }
 }
 
-export async function getFilename(id: string) {
-  const result = await pgClient.query('SELECT path, original_filename FROM file WHERE id = $1', [
-    id,
-  ])
-  const folder = result.rows[0].path // Not currently used
-  const filenameOrig = result.rows[0].original_filename
+export async function getFilename(id: number) {
+  const result = await PostgresDB.getFile({ id: id })
+  if (!result) return ''
+  const folder = result.path // Not currently used
+  const filenameOrig = result.original_filename
   const ext = path.extname(String(filenameOrig))
   const basename = path.basename(filenameOrig, ext)
   return `${basename}_${id}${ext}`
@@ -52,20 +51,15 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
 
 async function registerFileInDB(file: any, parameters: any) {
   // Insert record into Db and get back ID
-  const query = {
-    text:
-      'INSERT INTO file (user_id, original_filename, path, mimetype, application_id, application_response_id) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;',
-    values: [
-      parameters.user_id,
-      file.filename,
-      filesFolderName,
-      file.mimetype,
-      parameters.application_id,
-      parameters.application_response_id,
-    ],
-  }
-  const result = await pgClient.query(query)
-  const fileID = result.rows[0].id
+  const fileID = await PostgresDB.addFile({
+    user_id: parameters.user_id,
+    original_filename: file.filename,
+    path: filesFolderName,
+    mimetype: file.mimetype,
+    application_id: parameters.application_id,
+    application_response_id: parameters.application_response_id,
+  })
+  if (fileID === 0) return false
   // Rename file with ID
   const ext = path.extname(file.filename)
   const basename = path.basename(file.filename, ext)
@@ -74,4 +68,5 @@ async function registerFileInDB(file: any, parameters: any) {
     path.join(getAppRootDir(), filesFolderName, `${basename}_${fileID}${ext}`),
     () => {}
   )
+  return true
 }
