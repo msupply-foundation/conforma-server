@@ -1,4 +1,4 @@
-import { IConnection, IQueryNode, IParameters, QueryResult } from './types'
+import { IConnection, IQueryNode, IParameters } from './types'
 
 const defaultParameters: IParameters = {
   connection: {
