@@ -1,4 +1,4 @@
-import { IConnection, IQueryNode, IParameters } from './types'
+import { IConnection, IQueryNode, IParameters, IGraphQLConnection, BasicObject } from './types'
 
 const defaultParameters: IParameters = {
   connection: {
@@ -12,7 +12,7 @@ const defaultParameters: IParameters = {
 }
 
 export default async function evaluateExpression(
-  inputQuery: IQueryNode | string,
+  inputQuery: IQueryNode | string | number | boolean | any[],
   params: IParameters = defaultParameters
 ): Promise<string | number | boolean | any[]> {
   // If input is not object, try and parse it as a JSON string. If that fails, return the input without any processing.

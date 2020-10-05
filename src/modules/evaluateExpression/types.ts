@@ -1,3 +1,7 @@
+export type BasicObject = {
+  [key: string]: any
+}
+
 interface QueryRowResult {
   [columns: string]: any
 }
@@ -34,3 +38,8 @@ type Operator =
   | 'objectProperties'
   | 'pgSQL'
   | 'graphQL'
+
+export interface IGraphQLConnection {
+  fetch: any // Don't know type of fetch object
+  endpoint: string
+}
