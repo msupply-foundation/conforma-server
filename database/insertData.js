@@ -224,12 +224,12 @@ const queries = [
   `mutation {
         createUser(
           input: {
-            user: { email: "nicole@sussol.net", password: "1234", username: "nmadruga" }
+            user: { email: "nicole@sussol.net", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "nmadruga" }
           }
         ) {
           user {
             email
-            password
+            passwordHash
             username
           }
         }
@@ -237,12 +237,14 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "carl@sussol.net", password: "1234", username: "carl" }
+        user: { email: "carl@sussol.net", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "carl",
+        firstName: "Carl", lastName: "Smith"
+        dateOfBirth: "1976-12-23" }
       }
     ) {
       user {
         email
-        password
+        passwordHash
         username
       }
     }
@@ -250,12 +252,12 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "andrei@sussol.net", password: "1234", username: "andrei" }
+        user: { email: "andrei@sussol.net", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "andrei" }
       }
     ) {
       user {
         email
-        password
+        passwordHash
         username
       }
     }
@@ -263,12 +265,12 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "valerio@nra.org", password: "1234", username: "valerio" }
+        user: { email: "valerio@nra.org", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "valerio" }
       }
     ) {
       user {
         email
-        password
+        passwordHash
         username
       }
     }

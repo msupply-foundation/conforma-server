@@ -220,6 +220,18 @@ class PostgresDB {
       return false
     }
   }
+
+  public createUser = async (plugin: ActionPluginPayload): Promise<boolean> => {
+    const text = `INSERT INTO user (${Object.keys(plugin)}) 
+      VALUES (${this.getValuesPlaceholders(plugin)})`
+    try {
+      await this.query(text, Object.values(plugin))
+      return true
+    } catch (err) {
+      console.log(err.stack)
+      return false
+    }
+  }
 }
 
 const postgressDBInstance = PostgresDB.Instance
