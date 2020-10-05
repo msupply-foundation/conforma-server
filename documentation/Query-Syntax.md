@@ -158,7 +158,7 @@ Performs queries to a connected PostGres database and returns the result in a fo
 Performs queries on connected GraphQL interface.
 
 - Input:
-  - 1st child node's returns a **string** representing the GraphQL query
+  - 1st child node returns a **string** representing the GraphQL query
   - 2nd child node returns an **array** of field names for the query's associated variables object. If no variables are required for the query, pass an empty array (i.e. `{ value: [] }`).
   - 3rd...N-1 child nodes return the values of the fields for the variables object -- one node for each field in the previous node's array.
   - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`)
