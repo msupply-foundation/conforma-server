@@ -1,5 +1,10 @@
-import { QueryResult } from 'pg'
+interface QueryRowResult {
+  [columns: string]: any
+}
 
+export interface QueryResult {
+  rows: QueryRowResult[]
+}
 export interface IConnection {
   query: (text: string, params: any[]) => Promise<QueryResult>
 }

@@ -1,8 +1,19 @@
-import { IConnection, IQueryNode, IParameters } from './types'
+import { IConnection, IQueryNode, IParameters, QueryResult } from './types'
+
+const defaultParameters: IParameters = {
+  connection: {
+    query: (text: string, params: any[]) => {
+      console.log('No connection was passed!')
+      return new Promise(() => {
+        rows: []
+      })
+    },
+  },
+}
 
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string,
-  params: IParameters
+  params: IParameters = defaultParameters
 ): Promise<string | number | boolean | any[]> {
   // If input is JSON string, convert to Object
   const query = typeof inputQuery === 'string' ? JSON.parse(inputQuery) : inputQuery
