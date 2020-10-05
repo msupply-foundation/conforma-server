@@ -6,7 +6,7 @@ export interface QueryResult {
   rows: QueryRowResult[]
 }
 export interface IConnection {
-  query: (text: string, params: any[]) => Promise<QueryResult>
+  query: (expression: { text: string; values?: any[]; rowMode?: string }) => Promise<QueryResult>
 }
 
 export interface IParameters {

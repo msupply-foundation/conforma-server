@@ -2,7 +2,7 @@ import { IConnection, IQueryNode, IParameters } from './types'
 
 const defaultParameters: IParameters = {
   connection: {
-    query: (text: string, params: any[]) => {
+    query: (expression: { text: string }) => {
       console.log('No connection was passed!')
       return new Promise(() => {
         rows: []
@@ -90,13 +90,13 @@ export default async function evaluateExpression(
 }
 
 async function processPgSQL(queryArray: any[], queryType: string, connection: IConnection) {
-  const query = {
+  const expression = {
     text: queryArray[0],
     values: queryArray.slice(1),
     rowMode: queryType ? 'array' : '',
   }
   try {
-    const res = await connection.query(query.text, query.values)
+    const res = await connection.query(expression)
     switch (queryType) {
       case 'array':
         return res.rows.flat()

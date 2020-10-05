@@ -526,7 +526,7 @@ testData.getListOfTemplates = {
   operator: 'pgSQL',
   children: [
     {
-      value: 'SELECT template_name FROM template',
+      value: 'SELECT name FROM template',
     },
   ],
 }
@@ -545,7 +545,7 @@ testData.getListOfTemplates_noType = {
   operator: 'pgSQL',
   children: [
     {
-      value: 'SELECT template_name FROM template',
+      value: 'SELECT name FROM template',
     },
   ],
 }
