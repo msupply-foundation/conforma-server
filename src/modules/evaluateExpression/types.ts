@@ -1,3 +1,7 @@
+export type BasicObject = {
+  [key: string]: any
+}
+
 interface QueryRowResult {
   [columns: string]: any
 }
@@ -6,7 +10,12 @@ export interface QueryResult {
   rows: QueryRowResult[]
 }
 export interface IConnection {
-  query: (text: string, params: any[]) => Promise<QueryResult>
+  query: (expression: { text: string; values?: any[]; rowMode?: string }) => Promise<QueryResult>
+}
+
+export interface IGraphQLConnection {
+  fetch: any // Don't know type of fetch object
+  endpoint: string
 }
 
 export interface IParameters {

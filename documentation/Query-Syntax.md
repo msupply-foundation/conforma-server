@@ -11,11 +11,14 @@ _Run `yarn test` to see it in action -- the tests are in the `src/modules/evalua
 Any value that could possibly be a dynamic query should be stored in this format. This would include:
 
 **Question**:
-  - Parameters (Option lists, Labels, Placeholder text, etc.)
-  - Visibility conditions
-  - Validation criteria
+
+- Parameters (Option lists, Labels, Placeholder text, etc.)
+- Visibility conditions
+- Validation criteria
+
 **Trigger**:
-  - Conditions
+
+- Conditions
 
 For more complex lookups, we would hide the complexity from the user in the Template builder, and just present a set of pre-defined “queries” in the UI, which map to a pre-written query with perhaps a selectable parameter or two. (However, we should also provide a JSON editor as an alternative if an advanced user wishes to manually create more complex queries.)
 
@@ -127,22 +130,75 @@ Used to extract values from current state, for example, from `user`, `organisati
 Performs queries to a connected PostGres database and returns the result in a format specified by `type`.
 
 - Input:
-  - First child node contains a **string** representing the parameterized SQL query (i.e. $1, $2 substitution)
-  - Remaining nodes return the values (**strings**, **numbers**, **arrays**) required for the above query substitution.
-- Output: Either **array** (all values flattened into one array), **string** (all results concatenated with spaces), or a single **number**, depending on the type specification. If not specified, it returns the default `node-postgres` format (an array of objects, with fields of each object being the database column names).
+  - 1st child node returns a **string** containing the parameterized SQL query (i.e. `$1`, `$2` substitution)
+  - 2nd...N nodes return the values (**strings**, **numbers**, **arrays**) required for the above query substitution.
+- Output: Depending on the `type` field:
+  - `type: 'array'`: returns all values flattened into one array
+  - `type: 'string'`: returns all results concatenated with spaces
+  - `type: 'number'`: returns a single number
+  - no `type` specified: returns the default `node-postgres` format (an array of objects, with fields of each object being the database column names)
+
+**Example**:
+
+```
+{ type: 'string',
+  operator: 'pgSQL',
+  children: [
+    {
+      value: 'SELECT name FROM application WHERE template_id = $1',
+    },
+    {
+      value: 2,
+    },
+  ] }
+```
 
 ## graphQL
 
-Performs queries on connected GraphQL interface. Not yet implemented.
+Performs queries on connected GraphQL interface.
+
+- Input:
+  - 1st child node returns a **string** representing the GraphQL query
+  - 2nd child node returns an **array** of field names for the query's associated variables object. If no variables are required for the query, pass an empty array (i.e. `{ value: [] }`).
+  - 3rd...N-1 child nodes return the values of the fields for the variables object -- one node for each field in the previous node's array.
+  - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`)
+- Output: the returned GraphQL node can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
+
+  - If there is only one field, only the value of the field will be returned.
+  - If there is more than one field, the whole object will be returned.
+  - Objects contained within arrays are also returned with the above logic.
+
+**Example**:
+
+```
+{ operator: 'graphQL',
+  children: [
+    {
+      value: `query App($appId:Int!) {
+        application(id: $appId) {
+          name
+        }
+      }`,
+    },
+    { value: ['appId'] },
+    { value: 1 },
+    { value: 'application.name' },
+  ] }
+```
 
 # Usage
 
 The query evaluator is implemented in the `evaluateExpression` function:
 
-`evaluateExpression(query: Object, parameters: Object)`
+`evaluateExpression(expression: Object, parameters: Object)`
 
-- `query` must contain at least one node with a `value` property, otherwise the function returns `undefined`.
-- `parameters` is an object containing a reference to each local data object that is needed for the query, e.g. `user`, `organisation` or `form`. The name of the field must be the object name, i.e.
+### `expression`
+
+`expression` must contain at least one node with a `value` property, or an operator with associated child nodes, otherwise the function returns `undefined`.
+
+### `parameters`
+
+`parameters` is an object containing a reference to each local data object that is needed for the query, e.g. `user`, `organisation` or `form`. The name of the field must be the object name, i.e.
 
 ```
 {
@@ -153,7 +209,12 @@ The query evaluator is implemented in the `evaluateExpression` function:
 }
 ```
 
-- `parameters` can also contain one additional field called `connection`, which is an object representing an active database connection. \
+`parameters` can also have fields containing active database connection(s), which are required if using one of the database operators (**pgSQL** or **graphQL**).
+
+- For **pgSQL**:  
+  `pgConnection: <postGresConnect object>` (or any valid PostGres connection object, e.g. `Client` from `node-postgres`)
+- For **graphQL**:  
+  `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>`}
 
 # Examples
 
@@ -266,6 +327,52 @@ Tree structure:
 }
 ```
 
+**Example 3**: Validation: Company name is unique (i.e. The total count of Organisations with "name" equal to the value of the question response is zero)
+
+Tree structure:
+
+![Example 3 tree diagram](images/query-syntax-example-3b.png)
+
+```
+{
+  operator: '=',
+  children: [
+    {
+      operator: 'graphQL',
+      children: [
+        {
+          value: `query Orgs($orgName: String) {
+            organisations(condition: {name: $orgName}) {
+              totalCount
+              nodes {
+                name
+                id
+              }
+            }
+          }`,
+        },
+        { value: ['orgName'] },
+        {
+          operator: 'objectProperties',
+          children: [
+            {
+              value: {
+                object: 'form2',
+                property: 'q2',
+              },
+            },
+          ],
+        },
+        { value: 'organisations.totalCount' },
+      ],
+    },
+    { value: 0 },
+  ],
+}
+```
+
+<!--
+
 **Example 3**: Trigger condition: Stage = SCREENING and All questions are Approved
 
 Tree structure:
@@ -307,6 +414,8 @@ Tree structure:
 };
 ```
 
+-->
+
 # Additional Comments
 
 - The `evaluateExpression` function can take either a javascript object or a stringified JSON as its argument, just in case the JSON blob is extracted from the database as a string.
@@ -316,6 +425,7 @@ Tree structure:
 
 - ~~Convert to typescript.~~
 - ~~Make function async and all operators return Promises (currently only pgSQL does, which is not very consistent)~~
-- Error handling
+- Better error handling
 - Create mocks (or alt?) for Database queries in jest test suite
 - Figure out how to make into a module that can be easily imported into both front-end and back-end repositories.
+- Pass JWT/auth token to database operators

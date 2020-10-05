@@ -6,10 +6,14 @@ import * as config from '../../config.json'
 
 const { Client } = require('pg')
 
-//CONFIG -- DATABASE SETUP:
+//CONFIG -- Postgres DATABASE SETUP:
 const pgConnect = new Client(config.pg_database_connection)
 
 pgConnect.connect()
+
+//CONFIG -- GraphQL SETUP
+const fetch = require('node-fetch')
+const graphQLendpoint = 'http://localhost:5000/graphql'
 
 // Basic (single level literals)
 
@@ -258,17 +262,15 @@ test('Test returning single user property', () => {
 // SQL operator
 
 test('Test Postgres lookup single string', () => {
-  return evaluateExpression(testData.getApplicationName, { connection: pgConnect }).then(
+  return evaluateExpression(testData.getApplicationName, { pgConnection: pgConnect }).then(
     (result: any) => {
-      console.log('result', result)
-
       expect(result).toBe('Company Registration: Company C')
     }
   )
 })
 
 test('Test Postgres get array of template names', () => {
-  return evaluateExpression(testData.getListOfTemplates, { connection: pgConnect }).then(
+  return evaluateExpression(testData.getListOfTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
       expect(result).toEqual(['User Registration', 'Company Registration'])
     }
@@ -276,7 +278,7 @@ test('Test Postgres get array of template names', () => {
 })
 
 test('Test Postgres get Count of templates', () => {
-  return evaluateExpression(testData.countTemplates, { connection: pgConnect }).then(
+  return evaluateExpression(testData.countTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
       expect(result).toEqual(2)
     }
@@ -284,17 +286,90 @@ test('Test Postgres get Count of templates', () => {
 })
 
 test('Test Postgres get template names -- no type', () => {
-  return evaluateExpression(testData.getListOfTemplates_noType, { connection: pgConnect }).then(
+  return evaluateExpression(testData.getListOfTemplates_noType, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual([
-        { template_name: 'User Registration' },
-        { template_name: 'Company Registration' },
-      ])
+      expect(result).toEqual([{ name: 'User Registration' }, { name: 'Company Registration' }])
     }
   )
 })
 
-// // GraphQL operator -- TO DO
+test('Test Postgres get application list with IDs', () => {
+  return evaluateExpression(testData.getListOfApplications_withId, {
+    pgConnection: pgConnect,
+  }).then((result: any) => {
+    expect(result).toEqual([
+      { id: 1, name: 'User Registration: Nicole Madruga' },
+      { id: 2, name: 'User Registration: Carl Smith' },
+      { id: 3, name: 'Company Registration: Company C' },
+    ])
+  })
+})
+
+// GraphQL operator
+
+test('Test GraphQL -- get single application name', () => {
+  return evaluateExpression(testData.simpleGraphQL, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual('User Registration: Nicole Madruga')
+  })
+})
+
+test('Test GraphQL -- List of Application Names', () => {
+  return evaluateExpression(testData.GraphQL_listOfApplications, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual([
+      'User Registration: Nicole Madruga',
+      'User Registration: Carl Smith',
+      'Company Registration: Company C',
+    ])
+  })
+})
+
+test('Test GraphQL -- List of Application Names with Ids', () => {
+  return evaluateExpression(testData.GraphQL_listOfApplicationsWithId, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual([
+      {
+        name: 'User Registration: Nicole Madruga',
+        id: 1,
+      },
+      {
+        name: 'User Registration: Carl Smith',
+        id: 2,
+      },
+      {
+        name: 'Company Registration: Company C',
+        id: 3,
+      },
+    ])
+  })
+})
+
+test('Test GraphQL -- count Sections on current Application', () => {
+  return evaluateExpression(testData.GraphQL_CountApplicationSections, {
+    application: testData.application,
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual(2)
+  })
+})
+
+// TO-DO: Test with multiple variables and dynamic values
 
 // More complex combinations
 
@@ -314,6 +389,19 @@ test('Test concatenate user First and Last names', () => {
   )
 })
 
+test('Validation: Company name is unique', () => {
+  return evaluateExpression(testData.complexValidation, {
+    form2: testData.form2,
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toBe(true)
+  })
+})
+
+// The following need more data in database and schema refinements before they can be implemented:
 // test("Test visibility condition -- Answer to Q1 is Drug Registration and user belongs to at least one organisation", () => {
 //   expect(evaluateExpression(testData.complex1, { form: testData.form, user: testData.user })).toEqual(true);
 // });
@@ -335,6 +423,28 @@ test('Test concatenate user First and Last names', () => {
 //     expect(result).toBe(true);
 //   });
 // });
+
+// Invalid input expressions
+
+test('Input is a number', () => {
+  return evaluateExpression(10).then((result: any) => {
+    expect(result).toEqual(10)
+  })
+})
+
+test('Input is an array', () => {
+  return evaluateExpression(['Company A', 'Company B', 'XYZ Pharma']).then((result: any) => {
+    expect(result).toEqual(['Company A', 'Company B', 'XYZ Pharma'])
+  })
+})
+
+test('Input is malformed JSON string', () => {
+  return evaluateExpression(
+    '{"operator":"=", "children":[{"value":6},{"operator":"+", "children":[{"value":6},{"value":6}]}]}}'
+  ).then((result: any) => {
+    expect(result).toEqual('Invalid JSON String')
+  })
+})
 
 afterAll(() => {
   pgConnect.end()

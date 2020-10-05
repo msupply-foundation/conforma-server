@@ -58,7 +58,15 @@ export default async function registerPlugins() {
   for (let index = 0; index < unregisteredPlugins.length; index++) {
     const plugin = unregisteredPlugins[index]
     try {
-      await PostgresDB.addActionPlugin(plugin)
+      // TODO: Replace this with some other way to use only keys from ActionPlugin!s
+      await PostgresDB.addActionPlugin({
+        code: plugin.code,
+        name: plugin.name,
+        description: plugin.description,
+        path: plugin.path,
+        function_name: plugin.function_name,
+        required_parameters: plugin.required_parameters,
+      })
       console.log('Plugin registered:', plugin.name)
     } catch (err) {
       console.error('There was a problem registering', plugin.name)
@@ -76,7 +84,15 @@ export default async function registerPlugins() {
       (plugin.name !== dbPlugin.name || plugin.description !== dbPlugin.description)
     ) {
       try {
-        await PostgresDB.updateActionPlugin(plugin)
+        // TODO: Replace this with some other way to use only keys from ActionPlugin!
+        await PostgresDB.updateActionPlugin({
+          code: plugin.code,
+          name: plugin.name,
+          description: plugin.description,
+          path: plugin.path,
+          function_name: plugin.function_name,
+          required_parameters: plugin.required_parameters,
+        })
         console.log('Plugin updated:', plugin.name)
       } catch (err) {
         console.error('There was a problem updating', plugin.name)
