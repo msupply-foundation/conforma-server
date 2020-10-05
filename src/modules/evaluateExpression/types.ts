@@ -13,6 +13,11 @@ export interface IConnection {
   query: (expression: { text: string; values?: any[]; rowMode?: string }) => Promise<QueryResult>
 }
 
+export interface IGraphQLConnection {
+  fetch: any // Don't know type of fetch object
+  endpoint: string
+}
+
 export interface IParameters {
   [key: string]: any
   connection?: IConnection
@@ -38,8 +43,3 @@ type Operator =
   | 'objectProperties'
   | 'pgSQL'
   | 'graphQL'
-
-export interface IGraphQLConnection {
-  fetch: any // Don't know type of fetch object
-  endpoint: string
-}
