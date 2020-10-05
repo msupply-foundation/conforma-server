@@ -11,7 +11,6 @@ import {
   ActionQueueExecutePayload,
   ActionQueueGetPayload,
   ActionQueuePayload,
-  ActionPluginPayload,
   FilePayload,
   FileGetPayload,
   TriggerQueueUpdatePayload,
@@ -141,7 +140,7 @@ class PostgresDB {
     }
   }
 
-  public addActionPlugin = async (plugin: ActionPluginPayload): Promise<boolean> => {
+  public addActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const text = `INSERT INTO action_plugin (${Object.keys(plugin)}) 
       VALUES (${this.getValuesPlaceholders(plugin)})`
     try {
@@ -153,9 +152,7 @@ class PostgresDB {
     }
   }
 
-  public deleteActionPlugin = async (
-    payload: Pick<ActionPluginPayload, 'code'>
-  ): Promise<boolean> => {
+  public deleteActionPlugin = async (payload: Pick<ActionPlugin, 'code'>): Promise<boolean> => {
     try {
       await this.query('DELETE FROM action_plugin WHERE code = $1', [payload.code])
       return true
@@ -196,7 +193,7 @@ class PostgresDB {
     }
   }
 
-  public updateActionPlugin = async (plugin: ActionPluginPayload): Promise<boolean> => {
+  public updateActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     // TODO: Dynamically select what is being updated
     try {
       await this.query(

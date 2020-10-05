@@ -59,33 +59,13 @@ export interface ActionPlugin {
   required_parameters: any[]
 }
 
-export interface ActionPluginInfo {
-  author?: {
-    name: string
-    url: string
-  }
-  keyords?: string[]
-  logos?: {
-    small?: string
-    medium?: string
-    large?: string
-  }
-  links?: string[]
-  screenshots?: string[]
-  version: string
-  updated: string
-}
-
 export interface ActionPluginPayload {
   code: string
   name: string
-  type: string
   description: string
   path: string
-  file: string
   function_name: string
   required_parameters: { [key: string]: any }
-  info?: ActionPluginInfo
 }
 
 export interface File {

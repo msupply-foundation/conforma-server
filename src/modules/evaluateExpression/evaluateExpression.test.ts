@@ -260,8 +260,6 @@ test('Test returning single user property', () => {
 test('Test Postgres lookup single string', () => {
   return evaluateExpression(testData.getApplicationName, { connection: pgConnect }).then(
     (result: any) => {
-      console.log('result', result)
-
       expect(result).toBe('Company Registration: Company C')
     }
   )
