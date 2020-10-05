@@ -212,7 +212,7 @@ The query evaluator is implemented in the `evaluateExpression` function:
 `parameters` can also have fields containing active database connection(s), which are required if using one of the database operators (**pgSQL** or **graphQL**).
 
 - For **pgSQL**:  
-  `pgConnection: <node-postgres Client object>`
+  `pgConnection: <postGresConnect object>` (or any valid PostGres connection object, e.g. `Client` from `node-postgres`)
 - For **graphQL**:  
   `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>`}
 
