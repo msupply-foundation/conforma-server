@@ -15,6 +15,7 @@ import {
   FilePayload,
   FileGetPayload,
   TriggerQueueUpdatePayload,
+  User,
 } from '../types'
 
 class PostgresDB {
@@ -221,11 +222,11 @@ class PostgresDB {
     }
   }
 
-  public createUser = async (plugin: ActionPluginPayload): Promise<boolean> => {
-    const text = `INSERT INTO user (${Object.keys(plugin)}) 
-      VALUES (${this.getValuesPlaceholders(plugin)})`
+  public createUser = async (user: User): Promise<boolean> => {
+    const text = `INSERT INTO user (${Object.keys(user)}) 
+      VALUES (${this.getValuesPlaceholders(user)})`
     try {
-      await this.query(text, Object.values(plugin))
+      await this.query(text, Object.values(user))
       return true
     } catch (err) {
       console.log(err.stack)
