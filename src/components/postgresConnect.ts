@@ -226,7 +226,6 @@ class PostgresDB {
   public createUser = async (user: User): Promise<boolean> => {
     const text = `INSERT INTO "user" (${Object.keys(user)}) 
       VALUES (${this.getValuesPlaceholders(user)})`
-    console.log('Query text:', text, Object.values(user))
     try {
       await this.query({ text, values: Object.values(user) })
       return true

@@ -14,14 +14,9 @@ export const deepEquality = (obj1: any, obj2: any): boolean => {
       return true
     case false:
       if (!(obj1 instanceof Object && obj2 instanceof Object)) return false
-      if (obj1 === obj2) return true // null check
       if (isArray1 || isArray2) return false // one array slipped through
       // Both objects
-      const keys1 = Object.keys(obj1)
-      const keys2 = Object.keys(obj2)
-      if (!deepEquality(keys1, keys2)) return false
-      const values1 = Object.values(obj1)
-      const values2 = Object.values(obj2)
-      return deepEquality(values1, values2)
+      if (!deepEquality(Object.keys(obj1), Object.keys(obj2))) return false
+      return deepEquality(Object.values(obj1), Object.values(obj2))
   }
 }
