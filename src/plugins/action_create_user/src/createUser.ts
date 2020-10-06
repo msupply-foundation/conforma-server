@@ -4,7 +4,6 @@ module.exports['createUser'] = async function (parameters: any) {
   try {
     console.log('\nAdding new user...')
     const success = await PostgresDB.createUser(parameters)
-    console.log('SUCCESS')
     if (success)
       return {
         status: 'Success',
