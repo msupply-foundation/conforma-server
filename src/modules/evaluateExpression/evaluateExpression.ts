@@ -59,6 +59,7 @@ export default async function evaluateExpression(
         return childrenResolved.every((child) => child === childrenResolved[0])
 
       case '!=':
+        // TO-DO: This operator can cause problems if there is an error message from a lower node. It'll just return `true` as the error doesn't equal the other node. We should find some way to pass any error messages back up. Maybe put all errors in an object with an `error` property and return that if it's present?
         return childrenResolved[0] !== childrenResolved[1]
 
       case '+':
@@ -79,11 +80,11 @@ export default async function evaluateExpression(
         }
 
       case 'pgSQL':
-        if (!params || !params.pgConnection) return 'No database connection provided'
+        if (!params.pgConnection) return 'No database connection provided'
         return processPgSQL(childrenResolved, query.type, params.pgConnection)
 
       case 'graphQL':
-        if (!params || !params.graphQLConnection) return 'No database connection provided'
+        if (!params.graphQLConnection) return 'No database connection provided'
         // TO-DO: Add checks to ensure parameter nodes are consistent with the array of field names node.
         return processGraphQL(childrenResolved, params.graphQLConnection)
 
