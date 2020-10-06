@@ -119,7 +119,9 @@ Compares an input string with a regular expression string and returns whether it
 
 ## objectProperties
 
-For extracting values from local state objects (e.g. `user`, `organisation` or `form`) as part of queries. This might be needed if a question's visibility condition relies on the answer to a previous question, for example. All objects to be queried are to be passed in in an array in the field `objects`. See **Usage** below for detailed overview of arguments.
+For extracting values from local state objects (e.g. `user`, `organisation` or `form`) as part of queries. E.g to determine a question's visibility condition based on an answer to a previous question. 
+
+The evaluateExpression expects each instance of the `objectProperties` to be passed along with all objects that are required in the array field `objects`. See **Usage** below for detailed overview of arguments.
 
 - Input: A single child node whose `value` is an object with the following properties:
   - `objectIndex` (optional) -- the index of the `objects` array that contains the object this node is interested in. If this property is not defined, it defaults to `0`, so you'd usually only include it if you were supplying more than one object to the whole expression.
