@@ -400,12 +400,16 @@ test('Validation: Company name is unique', () => {
   })
 })
 
-// The following need more data in database and schema refinements before they can be implemented:
-// test("Test visibility condition -- Answer to Q1 is Drug Registration and user belongs to at least one organisation", () => {
-//   expect(evaluateExpression(testData.complex1, { form: testData.form, user: testData.user })).toEqual(true);
-// });
+test('Test visibility condition -- Answer to Q1 is Drug Registration and user belongs to at least one organisation', () => {
+  return evaluateExpression(testData.complex1, {
+    objects: [testData.form, testData.user],
+    pgConnection: pgConnect,
+  }).then((result: any) => {
+    expect(result).toBe(false)
+  })
+})
 
-// These don't work yet -- need GraphQL operator to be implemented
+// The following need more data in database and schema refinements before they can be implemented:
 
 // test('Test Trigger condition -- Stage = 1 (Screening) and All Questions are approved', () => {
 //   return evaluateExpression(testData.complex2, {

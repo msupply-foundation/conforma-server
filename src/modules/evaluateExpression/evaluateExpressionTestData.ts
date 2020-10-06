@@ -684,7 +684,7 @@ testData.complex1 = {
           operator: 'objectProperties',
           children: [
             {
-              value: { property: 'q1' },
+              value: { objectIndex: 0, property: 'q1' },
             },
           ],
         },
@@ -701,10 +701,6 @@ testData.complex1 = {
           operator: 'pgSQL',
           children: [
             { value: 'SELECT COUNT(*) FROM user_organisation WHERE user_id = $1' },
-            {
-              operator: 'objectProperties',
-              children: [{ value: { objectIndex: 0, property: 'id' } }],
-            },
             {
               operator: 'objectProperties',
               children: [{ value: { objectIndex: 1, property: 'id' } }],
