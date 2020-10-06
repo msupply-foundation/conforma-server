@@ -20,21 +20,33 @@ const queries = [
                 templateElementsUsingId: {
                   create: [
                     {
+                      code: "Text1"
+                      nextElementCode: "Q1"
+                      title: "Intro"
+                      elementTypePluginCode: "TextInfo"
+                      visibilityCondition: { value: true }
+                      category: INFORMATION
+                      parameters: {
+                        text: "Please fill in your details to **register** for a user account."
+                      }
+                    }
+                    {
                       code: "Q1"
                       nextElementCode: "Q2"
                       title: "First Name"
-                      elementTypePluginCode: "short_text"
+                      elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
                       category: QUESTION
+                      # Should really change isRequired field to a dynamic JSON type
                       isRequired: true
                       isEditable: { value: true }
                       parameters: { label: "First Name" }
                     }
                     {
                       code: "Q2"
-                      nextElementCode: "GE1"
-                      title: "Surname"
-                      elementTypePluginCode: "drop_down"
+                      nextElementCode: "Q3"
+                      title: "Last Name"
+                      elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
                       category: QUESTION
                       isRequired: true
@@ -42,43 +54,173 @@ const queries = [
                       parameters: { label: "Last Name" }
                     }
                     {
-                      code: "GE1"
-                      nextElementCode: "BR1"
-                      title: "Group 1"
-                      elementTypePluginCode: "group_end"
-                      visibilityCondition: { value: true }
-                      category: INFORMATION
-                      parameters: {}
-                    }
-                    {
-                      code: "BR1"
-                      nextElementCode: "Q3"
-                      title: "Page 1"
-                      elementTypePluginCode: "page_break"
-                      visibilityCondition: { value: true }
-                      category: INFORMATION
-                      parameters: {}
-                    }
-                    {
                       code: "Q3"
-                      title: "Company"
-                      elementTypePluginCode: "drop_down"
+                      nextElementCode: "Q4"
+                      title: "Username"
+                      elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
                       category: QUESTION
                       isRequired: true
                       isEditable: { value: true }
+                      parameters: { label: "Select a username" }
+                      validation: { value: true } #Need to write this query
+                      # Validation: Must be unique, Alphanumeric chars only, no spaces
+                    }
+                    {
+                      code: "Q4"
+                      nextElementCode: "Q5"
+                      title: "Email"
+                      elementTypePluginCode: "shortText"
+                      visibilityCondition: { value: true }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: { label: "Email" }
+                      validation: { value: true } #Need to write this query
+                      # Validation: Email REGEX check, must be unique in system
+                    }
+                    {
+                      code: "Q5"
+                      nextElementCode: "Q6"
+                      title: "Password"
+                      elementTypePluginCode: "shortText"
+                      visibilityCondition: { value: true }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: { label: "Email", type: "masked" }
+                      validation: { value: true } #Need to write this query
+                      # Validation: At least 8 chars, must contain at least one letter and one number (REGEX)
+                    }
+                    {
+                      code: "Q6"
+                      nextElementCode: "PB1"
+                      title: "Date Of Birth"
+                      elementTypePluginCode: "datePicker"
+                      visibilityCondition: { value: true }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: { label: "Date of birth" }
+                      validation: { value: true } #Need to write this query
+                      # Validation: Date is more than (18?) years in the past
+                      # evaluateExpression won't be able to do this yet
+                    }
+                    {
+                      code: "PB1"
+                      nextElementCode: "Q7"
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                      parameters: { previousValidityCheck: true }
+                    }
+                    {
+                      code: "Q7"
+                      nextElementCode: "Q8"
+                      title: "Organisation Category"
+                      elementTypePluginCode: "checkboxChoice"
+                      visibilityCondition: { value: true }
+                      category: QUESTION
+                      isRequired: false
+                      isEditable: { value: true }
                       parameters: {
-                        label: "Select your Company"
-                        options: ["Company A", "Company B"]
+                        label: "What category of organisation do you wish to join"
+                        options: ["Manufacturer", "Distributor", "Importer"]
                       }
+                      validation: { value: true } #Need to write this query
+                      # Validation: At least 8 chars, must contain at least one letter and one number (REGEX)
+                    }
+                    {
+                      code: "Q8"
+                      nextElementCode: "Q9"
+                      title: "Select Manufacturer"
+                      elementTypePluginCode: "dropDown"
+                      # Remember to pass Responses object into visibilityCondition
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "Q7" } }]
+                          }
+                          { value: "Manufacturer" }
+                        ]
+                      }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: {
+                        label: "Select Manufacturer"
+                        # This will be a dynamic database lookup once category is added as a field to organisation
+                        options: [
+                          "Manufacturer A"
+                          "Manufacturer B"
+                          "Manufacturer C"
+                        ]
+                      }
+                      validation: { value: true }
+                    }
+                    {
+                      code: "Q9"
+                      nextElementCode: "Q10 "
+                      title: "Select Distributor"
+                      elementTypePluginCode: "dropDown"
+                      # Remember to pass Responses object into visibilityCondition
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "Q7" } }]
+                          }
+                          { value: "Distributor" }
+                        ]
+                      }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: {
+                        label: "Select Distributor"
+                        # This will be a dynamic database lookup once category is added as a field to organisation
+                        options: [
+                          "Distributor A"
+                          "Distributor B"
+                          "Distributor C"
+                        ]
+                      }
+                      validation: { value: true }
+                    }
+                    {
+                      code: "Q10"
+                      title: "Select Importer"
+                      elementTypePluginCode: "dropDown"
+                      # Remember to pass Responses object into visibilityCondition
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "Q7" } }]
+                          }
+                          { value: "Importer" }
+                        ]
+                      }
+                      category: QUESTION
+                      isRequired: true
+                      isEditable: { value: true }
+                      parameters: {
+                        label: "Select Importer"
+                        # This will be a dynamic database lookup once category is added as a field to organisation
+                        options: ["Importer A", "Importer B", "Importer C"]
+                      }
+                      validation: { value: true }
                     }
                   ]
                 }
               }
-              { code: "S2", title: "Section 2" }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Screening" }] }
+          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
         }
       }
     ) {
