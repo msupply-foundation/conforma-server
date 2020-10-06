@@ -200,7 +200,7 @@ class PostgresDB {
 
   public updateActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const text =
-      'UPDATE action_plugin SET name = $1, description = $2, path = $3, function_name = $4, required_parameters = $5 WHERE code = $6'
+      'UPDATE action_plugin SET name = $2, description = $3, path = $4, function_name = $5, required_parameters = $6 WHERE code = $1'
     // TODO: Dynamically select what is being updated
     try {
       await this.query({ text, values: Object.values(plugin) })

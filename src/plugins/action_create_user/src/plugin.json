@@ -5,7 +5,14 @@
   "file": "createUser",
   "function_name": "createUser",
   "description": "Inserts a new user in the database",
-  "required_parameters": ["first_name, last_name, username, date_of_birth, password_hash, email"],
+  "required_parameters": [
+    "first_name",
+    "last_name",
+    "username",
+    "date_of_birth",
+    "password_hash",
+    "email"
+  ],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

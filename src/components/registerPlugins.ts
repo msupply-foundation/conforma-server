@@ -10,6 +10,7 @@ import path from 'path'
 import getAppRootDir from './getAppRoot'
 import * as config from '../config.json'
 import PostgresDB from './postgresConnect'
+import { deepEquality } from './utilityFunctions'
 
 const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder)
 
@@ -81,7 +82,11 @@ export default async function registerPlugins() {
 
     if (
       dbPlugin &&
-      (plugin.name !== dbPlugin.name || plugin.description !== dbPlugin.description)
+      (plugin.name !== dbPlugin.name ||
+        plugin.description !== dbPlugin.description ||
+        plugin.path !== dbPlugin.path ||
+        plugin.function_name !== dbPlugin.function_name ||
+        !deepEquality(plugin.required_parameters, dbPlugin.required_parameters))
     ) {
       try {
         // TODO: Replace this with some other way to use only keys from ActionPlugin!
