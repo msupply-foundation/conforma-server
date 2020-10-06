@@ -1,9 +1,9 @@
 import PostgresDB from '../../../components/postgresConnect'
 
-module.exports['createUser'] = async function (parameters: any) {
+module.exports['createUser'] = async function (user: any) {
   try {
     console.log('\nAdding new user...')
-    const success = await PostgresDB.createUser(parameters)
+    const success = await PostgresDB.createUser(user)
     if (success)
       return {
         status: 'Success',

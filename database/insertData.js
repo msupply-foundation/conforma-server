@@ -20,15 +20,6 @@ const queries = [
                 templateElementsUsingId: {
                   create: [
                     {
-                      code: "GS1"
-                      nextElementCode: "Q1"
-                      title: "Group 1"
-                      elementTypePluginCode: "group_start"
-                      visibilityCondition: { value: true }
-                      category: INFORMATION
-                      parameters: "{}"
-                    }
-                    {
                       code: "Q1"
                       nextElementCode: "Q2"
                       title: "First Name"
