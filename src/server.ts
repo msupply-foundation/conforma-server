@@ -10,6 +10,7 @@ import {
   filesFolderName,
 } from './components/fileHandler'
 import { getAppRootDir } from './components/utilityFunctions'
+import PostgresDB from './components/postgresConnect'
 
 // Bare-bones Fastify server
 
@@ -44,6 +45,31 @@ const startServer = async () => {
   server.get('/', async (request, reply) => {
     console.log('Request made')
     return 'This is the response\n'
+  })
+
+  // Unique name/email/company check
+  server.get('/check-unique', async (request: any, reply) => {
+    const type = request.query.type
+    const value = request.query.value
+    let table, field
+    switch (type) {
+      case 'username':
+        table = 'user'
+        field = 'username'
+        break
+      case 'email':
+        table = 'user'
+        field = 'email'
+        break
+      case 'organisation':
+        table = 'organisation'
+        field = 'name'
+        break
+      default:
+        return null
+    }
+    const isUnique = await PostgresDB.isUnique(table, field, value)
+    return isUnique
   })
 
   server.listen(8080, (err, address) => {

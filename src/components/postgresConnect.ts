@@ -234,6 +234,17 @@ class PostgresDB {
       return false
     }
   }
+
+  public isUnique = async (table: string, field: string, value: string): Promise<boolean> => {
+    const text = `SELECT COUNT(*) FROM "${table}" WHERE ${field} = $1`
+    try {
+      const result = await this.query({ text, values: [value] })
+      return !Boolean(Number(result.rows[0].count))
+    } catch (err) {
+      console.log(err.stack)
+      return false
+    }
+  }
 }
 
 const postgressDBInstance = PostgresDB.Instance
