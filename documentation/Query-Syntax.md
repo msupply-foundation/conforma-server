@@ -119,7 +119,39 @@ Compares an input string with a regular expression string and returns whether it
 
 ## objectProperties
 
-Used to extract values from current state, for example, from `user`, `organisation` or `form` (i.e. previously entered responses) data. Any object to be evaluated must be passed in to the `evaluateExpression` function in its parameters object, with the field name identical to the object name (see below).
+For extracting values from local state objects (e.g. `user`, `organisation` or `form`) as part of dynamic queries, e.g to determine a question's visibility condition based on an answer to a previous question.
+
+The `evaluateExpression` function expects each expression to be passed along with _all_ objects that are required for evaluation in any descendant nodes. See **Usage** below for detailed overview of arguments.
+
+- Input: A single child node whose `value` is an object with the following properties:
+  - `objectIndex` (optional) -- the index of the `objects` array that contains the object this node is interested in. If this property is not defined, it defaults to `0`, so you'd usually only include it if you were supplying more than one object to the whole expression.  
+    _Note: Each node can only return **one** object property_
+  - `property` -- the name of the field whose value is to be extracted. Can be a nested property, written in dot notation (e.g. `questions.q2`) (but cannot yet traverse into arrays.)
+- Output: the value specified in `property` of any type.
+
+**Example**:
+
+```
+evaluateExpression(
+    { operator: 'objectProperties',
+      children: [
+         { value: { property: 'questions.q1' } }
+              ]
+     },
+     { objects: [application] } )
+```
+
+where `application` is the local state object:
+
+```
+application = {
+  id: 1,
+  name: 'Drug Registration',
+  status: 'Draft',
+  stage: 1,
+  questions: { q1: 'What is the answer?', q2: 'Enter your name' },
+}
+```
 
 - Input: Exactly 1 node whose value contains an object with the following:  
   `value: {object: <name of object>, property: <object property>}`
@@ -198,23 +230,11 @@ The query evaluator is implemented in the `evaluateExpression` function:
 
 ### `parameters`
 
-`parameters` is an object containing a reference to each local data object that is needed for the query, e.g. `user`, `organisation` or `form`. The name of the field must be the object name, i.e.
+`parameters` is an (optional) object with the following (optional) properties available:
 
-```
-{
-  user: "user",
-  organisation: "organisation",
-  form: "form",
-  application: "application"
-}
-```
-
-`parameters` can also have fields containing active database connection(s), which are required if using one of the database operators (**pgSQL** or **graphQL**).
-
-- For **pgSQL**:  
-  `pgConnection: <postGresConnect object>` (or any valid PostGres connection object, e.g. `Client` from `node-postgres`)
-- For **graphQL**:  
-  `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>`}
+- `objects : [local objects]` -- **array** of local state objects required for the query (see **objectProperties** above)
+- `pgConnection: <postGresConnect object>` (or any valid PostGres connection object, e.g. `Client` from `node-postgres`)
+- `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>}` -- connection information for a local GraphQL endpoint. Only required if expression contains **graphQL** operator.
 
 # Examples
 
