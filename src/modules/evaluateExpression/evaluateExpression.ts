@@ -1,20 +1,11 @@
 import { IConnection, IQueryNode, IParameters, IGraphQLConnection, BasicObject } from './types'
 
-const defaultParameters: IParameters = {
-  connection: {
-    query: (expression: { text: string }) => {
-      console.log('No connection was passed!')
-      return new Promise(() => {
-        rows: []
-      })
-    },
-  },
-}
+const defaultParameters: IParameters = {}
 
 export default async function evaluateExpression(
   inputQuery: IQueryNode | string | number | boolean | any[],
   params: IParameters = defaultParameters
-): Promise<string | number | boolean | any[]> {
+): Promise<string | number | boolean | BasicObject | any[]> {
   // If input is not object, try and parse it as a JSON string. If that fails, return the input without any processing.
   let query
   if (!(inputQuery instanceof Object) || Array.isArray(inputQuery) || inputQuery === null) {
@@ -68,6 +59,7 @@ export default async function evaluateExpression(
         return childrenResolved.every((child) => child === childrenResolved[0])
 
       case '!=':
+        // TO-DO: This operator can cause problems if there is an error message from a lower node. It'll just return `true` as the error doesn't equal the other node. We should find some way to pass any error messages back up. Maybe put all errors in an object with an `error` property and return that if it's present?
         return childrenResolved[0] !== childrenResolved[1]
 
       case '+':
@@ -79,7 +71,10 @@ export default async function evaluateExpression(
         if (Object.entries(params).length === 0)
           return 'No parameters received for objectProperties node'
         try {
-          return params[childrenResolved[0].object][childrenResolved[0].property]
+          const objectIndex = childrenResolved[0].objectIndex ? childrenResolved[0].objectIndex : 0
+          const inputObject = params && params.objects ? params.objects[objectIndex] : {}
+          const property = childrenResolved[0].property
+          return extractNode(inputObject, property)
         } catch {
           return "Can't resolve object"
         }
@@ -90,6 +85,7 @@ export default async function evaluateExpression(
 
       case 'graphQL':
         if (!params.graphQLConnection) return 'No database connection provided'
+        // TO-DO: Add checks to ensure parameter nodes are consistent with the array of field names node.
         return processGraphQL(childrenResolved, params.graphQLConnection)
 
       // etc. for as many other operators as we want/need.
