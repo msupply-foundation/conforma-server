@@ -51,6 +51,7 @@ const startServer = async () => {
   server.get('/check-unique', async (request: any, reply) => {
     const type = request.query.type
     const value = request.query.value
+    if (value === '' || value === undefined) return false
     let table, field
     switch (type) {
       case 'username':
@@ -66,7 +67,7 @@ const startServer = async () => {
         field = 'name'
         break
       default:
-        return null
+        return false
     }
     const isUnique = await PostgresDB.isUnique(table, field, value)
     return isUnique
