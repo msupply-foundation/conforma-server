@@ -47,7 +47,7 @@ const startServer = async () => {
     return 'This is the response\n'
   })
 
-  // Unique name/email/company check
+  // Unique name/email/organisation check
   server.get('/check-unique', async (request: any, reply) => {
     const type = request.query.type
     const value = request.query.value
