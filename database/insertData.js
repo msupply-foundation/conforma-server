@@ -23,10 +23,11 @@ const queries = [
                       code: "Text1"
                       nextElementCode: "Q1"
                       title: "Intro"
-                      elementTypePluginCode: "TextInfo"
+                      elementTypePluginCode: "textInfo"
                       visibilityCondition: { value: true }
                       category: INFORMATION
                       parameters: {
+                        title: "Create a user account"
                         text: "Please fill in your details to **register** for a user account."
                       }
                     }
@@ -37,7 +38,6 @@ const queries = [
                       elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
                       category: QUESTION
-                      # Should really change isRequired field to a dynamic JSON type
                       isRequired: true
                       isEditable: { value: true }
                       parameters: { label: "First Name" }
@@ -63,8 +63,7 @@ const queries = [
                       isRequired: true
                       isEditable: { value: true }
                       parameters: { label: "Select a username" }
-                      validation: { value: true } #Need to write this query
-                      # Validation: Must be unique, Alphanumeric chars only, no spaces
+                      validation: { value: true }
                     }
                     {
                       code: "Q4"
@@ -76,47 +75,31 @@ const queries = [
                       isRequired: true
                       isEditable: { value: true }
                       parameters: { label: "Email" }
-                      validation: { value: true } #Need to write this query
-                      # Validation: Email REGEX check, must be unique in system
+                      validation: { value: true }
                     }
                     {
                       code: "Q5"
-                      nextElementCode: "Q6"
+                      nextElementCode: "PB1"
                       title: "Password"
                       elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
                       category: QUESTION
                       isRequired: true
                       isEditable: { value: true }
-                      parameters: { label: "Email", type: "masked" }
-                      validation: { value: true } #Need to write this query
-                      # Validation: At least 8 chars, must contain at least one letter and one number (REGEX)
-                    }
-                    {
-                      code: "Q6"
-                      nextElementCode: "PB1"
-                      title: "Date Of Birth"
-                      elementTypePluginCode: "datePicker"
-                      visibilityCondition: { value: true }
-                      category: QUESTION
-                      isRequired: true
-                      isEditable: { value: true }
-                      parameters: { label: "Date of birth" }
-                      validation: { value: true } #Need to write this query
-                      # Validation: Date is more than (18?) years in the past
-                      # evaluateExpression won't be able to do this yet
+                      parameters: { label: "Email", maskedInput: true }
+                      validation: { value: true }
                     }
                     {
                       code: "PB1"
-                      nextElementCode: "Q7"
+                      nextElementCode: "Q6"
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                       parameters: { previousValidityCheck: true }
                     }
                     {
-                      code: "Q7"
-                      nextElementCode: "Q8"
+                      code: "Q6"
+                      nextElementCode: "Q7"
                       title: "Organisation Category"
                       elementTypePluginCode: "checkboxChoice"
                       visibilityCondition: { value: true }
@@ -127,21 +110,19 @@ const queries = [
                         label: "What category of organisation do you wish to join"
                         options: ["Manufacturer", "Distributor", "Importer"]
                       }
-                      validation: { value: true } #Need to write this query
-                      # Validation: At least 8 chars, must contain at least one letter and one number (REGEX)
+                      validation: { value: true }
                     }
                     {
-                      code: "Q8"
-                      nextElementCode: "Q9"
+                      code: "Q7"
+                      nextElementCode: "Q8"
                       title: "Select Manufacturer"
                       elementTypePluginCode: "dropDown"
-                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q7" } }]
+                            children: [{ value: { property: "Q6" } }]
                           }
                           { value: "Manufacturer" }
                         ]
@@ -151,7 +132,6 @@ const queries = [
                       isEditable: { value: true }
                       parameters: {
                         label: "Select Manufacturer"
-                        # This will be a dynamic database lookup once category is added as a field to organisation
                         options: [
                           "Manufacturer A"
                           "Manufacturer B"
@@ -161,17 +141,16 @@ const queries = [
                       validation: { value: true }
                     }
                     {
-                      code: "Q9"
-                      nextElementCode: "Q10 "
+                      code: "Q8"
+                      nextElementCode: "Q9"
                       title: "Select Distributor"
                       elementTypePluginCode: "dropDown"
-                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q7" } }]
+                            children: [{ value: { property: "Q6" } }]
                           }
                           { value: "Distributor" }
                         ]
@@ -181,7 +160,6 @@ const queries = [
                       isEditable: { value: true }
                       parameters: {
                         label: "Select Distributor"
-                        # This will be a dynamic database lookup once category is added as a field to organisation
                         options: [
                           "Distributor A"
                           "Distributor B"
@@ -191,16 +169,15 @@ const queries = [
                       validation: { value: true }
                     }
                     {
-                      code: "Q10"
+                      code: "Q9"
                       title: "Select Importer"
                       elementTypePluginCode: "dropDown"
-                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q7" } }]
+                            children: [{ value: { property: "Q6" } }]
                           }
                           { value: "Importer" }
                         ]
@@ -210,7 +187,6 @@ const queries = [
                       isEditable: { value: true }
                       parameters: {
                         label: "Select Importer"
-                        # This will be a dynamic database lookup once category is added as a field to organisation
                         options: ["Importer A", "Importer B", "Importer C"]
                       }
                       validation: { value: true }
@@ -221,6 +197,30 @@ const queries = [
             ]
           }
           templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateActionsUsingId: {
+            create: [
+              {
+                actionCode: "cLog"
+                condition: { value: true }
+                parameterQueries: {
+                  message: {
+                    value: "Action has been executed on User Registration template"
+                  }
+                }
+              }
+              {
+                actionCode: "createUser"
+                condition: { value: true }
+                parameterQueries: {
+                  first_name: { value: "Test" }
+                  last_name: { value: "Test" }
+                  username: { value: "Test" }
+                  password_hash: { value: "Test" }
+                  email: { value: "Test" }
+                }
+              }
+            ]
+          }
         }
       }
     ) {
@@ -244,7 +244,7 @@ const queries = [
         }
       }
     }
-  }
+  }  
   `,
   // Template B - Company Registration
   `mutation {
@@ -410,91 +410,116 @@ const queries = [
   }`,
   //   User registration application 1
   `mutation {
-      createApplication(
-        input: {
-          application: {
-            name: "User Registration: Nicole Madruga"
-            serial: 100
-            isActive: true
-            outcome: APPROVED
-            userToUserId: { connectById: { id: 1 } }
-            applicationSectionsUsingId: {
-              create: [{ templateSectionId: 1 }, { templateSectionId: 2 }]
-            }
-            applicationResponsesUsingId: {
-              create: [
-                {
-                  timeCreated: "NOW()"
-                  value: "{text: 'Nicole'}"
-                  templateElementToTemplateElementId: { connectById: { id: 2 } }
-                }
-                {
-                  timeCreated: "NOW()"
-                  value: "{text: 'Madruga'}"
-                  templateElementToTemplateElementId: { connectById: { id: 3 } }
-                }
-                {
-                  timeCreated: "NOW()"
-                  value: "{option: '1'}"
-                  templateElementToTemplateElementId: { connectById: { id: 6 } }
-                }
-              ]
-            }
-            applicationStageHistoriesUsingId: {
-              create: {
-                templateStageToStageId: { connectById: { id: 1 } }
+    createApplication(
+      input: {
+        application: {
+          name: "User Registration: Nicole Madruga"
+          serial: 100
+          isActive: true
+          outcome: PENDING
+          userToUserId: { connectById: { id: 1 } }
+          applicationSectionsUsingId: {
+            create: { templateSectionId: 1 }
+          }
+          applicationResponsesUsingId: {
+            create: [
+              {
                 timeCreated: "NOW()"
-                isCurrent: true
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: COMPLETED
-                    timeCreated: "NOW()"
-                    isCurrent: true
-                  }
+                value: {text: "Nicole"}
+                templateElementToTemplateElementId: { connectById: { id: 2 } }
+              }
+              {
+                timeCreated: "NOW()"
+                value: {text: "Madruga"}
+                templateElementToTemplateElementId: { connectById: { id: 3 } }
+              }
+              {
+                timeCreated: "NOW()"
+                value: {text: "nmadruga"}
+                templateElementToTemplateElementId: { connectById: { id: 4 } }
+              }
+              {
+                timeCreated: "NOW()"
+                value: {text: "nicole@sussol.net"}
+                templateElementToTemplateElementId: { connectById: { id: 5 } }
+              }
+              {
+                timeCreated: "NOW()"
+                value: {text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220"}
+                templateElementToTemplateElementId: { connectById: { id: 6 } }
+              }
+              {
+                timeCreated: "NOW()"
+                value: {date: "2010-12-31"}
+                templateElementToTemplateElementId: { connectById: { id: 7 } }
+              }
+              {
+                timeCreated: "NOW()"
+                value: {optionIndex:0, text:"Manufacturer" }
+                templateElementToTemplateElementId: { connectById: { id: 9 } }
+              }
+              {
+                timeCreated: "NOW()"
+                value: {optionIndex:1, text:"Manufacturer B" }
+                templateElementToTemplateElementId: { connectById: { id: 10 } }
+              }
+            ]
+          }
+          applicationStageHistoriesUsingId: {
+            create: {
+              templateStageToStageId: { connectById: { id: 1 } }
+              timeCreated: "NOW()"
+              isCurrent: true
+              applicationStatusHistoriesUsingId: {
+                create: {
+                  status: COMPLETED
+                  timeCreated: "NOW()"
+                  isCurrent: true
                 }
               }
             }
-            templateToTemplateId: { connectById: { id: 1 } }
+          }
+          templateToTemplateId: { connectById: { id: 1 } }
+        }
+      }
+    ) {
+      application {
+        name
+        template {
+          name
+        }
+        applicationResponses {
+          nodes {
+            value
+            templateElement {
+              title
+            }
           }
         }
-      ) {
-        application {
-          name
-          template {
-            name
-          }
-          applicationResponses {
-            nodes {
-              value
-              templateElement {
-                title
-              }
+        applicationSections {
+          nodes {
+            templateSection {
+              title
             }
           }
-          applicationSections {
-            nodes {
-              templateSection {
-                title
-              }
+        }
+        applicationStageHistories {
+          nodes {
+            stage {
+              title
             }
-          }
-          applicationStageHistories {
-            nodes {
-              stage {
-                title
-              }
-              isCurrent
-              applicationStatusHistories {
-                nodes {
-                  isCurrent
-                  status
-                }
+            isCurrent
+            applicationStatusHistories {
+              nodes {
+                isCurrent
+                status
               }
             }
           }
         }
       }
-    }`,
+    }
+  }`,
   // User Registration application 2
   `mutation {
       createApplication(
