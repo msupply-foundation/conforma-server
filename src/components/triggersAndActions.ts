@@ -1,5 +1,5 @@
 import path from 'path'
-import getAppRootDir from './getAppRoot'
+import { getAppRootDir } from './utilityFunctions'
 import * as config from '../config.json'
 import { ActionLibrary, ActionInTemplate, TriggerPayload, ActionPayload } from '../types'
 import evaluateExpression from '../modules/evaluateExpression/evaluateExpression'

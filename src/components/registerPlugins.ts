@@ -7,7 +7,7 @@
 
 import * as fs from 'fs'
 import path from 'path'
-import getAppRootDir from './getAppRoot'
+import { getAppRootDir } from './utilityFunctions'
 import * as config from '../config.json'
 import PostgresDB from './postgresConnect'
 import { deepEquality } from './utilityFunctions'

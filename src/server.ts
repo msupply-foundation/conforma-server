@@ -9,7 +9,7 @@ import {
   createFilesFolder,
   filesFolderName,
 } from './components/fileHandler'
-import getAppRootDir from './components/getAppRoot'
+import { getAppRootDir } from './components/utilityFunctions'
 
 // Bare-bones Fastify server
 

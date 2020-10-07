@@ -2,7 +2,7 @@ import path from 'path'
 import fs from 'fs'
 import util from 'util'
 import { pipeline } from 'stream'
-import getAppRootDir from './getAppRoot'
+import { getAppRootDir } from './utilityFunctions'
 import * as config from '../config.json'
 import PostgresDB from '../components/postgresConnect'
 
