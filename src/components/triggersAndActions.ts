@@ -87,17 +87,20 @@ export async function processTrigger(payload: TriggerPayload) {
   const actions: ActionInTemplate[] = []
 
   for (const action of result) {
-    const condition = await evaluateExpression(action.condition, PostgresDB)
+    const condition = await evaluateExpression(action.condition, {
+      objects: [payload],
+      pgConnection: PostgresDB,
+    })
     if (condition) actions.push(action)
   }
 
   // Evaluate parameters for each Action
   for (const action of actions) {
     for (const key in action.parameter_queries) {
-      action.parameter_queries[key] = await evaluateExpression(
-        action.parameter_queries[key],
-        PostgresDB
-      )
+      action.parameter_queries[key] = await evaluateExpression(action.parameter_queries[key], {
+        objects: [payload],
+        pgConnection: PostgresDB,
+      })
     }
     // TODO - Error handling
     // Write each Action with parameters to Action_Queue
