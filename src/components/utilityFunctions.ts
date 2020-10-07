@@ -10,7 +10,7 @@ export function getAppRootDir() {
 }
 
 // Value equality comparison for arrays and objects, which can
-// be arbitrarily deep
+// be arbitrarily deep. Will also work with primitives.
 export const deepEquality = (obj1: any, obj2: any): boolean => {
   if (obj1 === obj2) return true // primitive value check
   const isArray1 = Array.isArray(obj1)
