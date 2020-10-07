@@ -47,6 +47,7 @@ class PostgresDB {
       switch (channel) {
         case 'trigger_notifications':
           processTrigger(JSON.parse(payload))
+          console.log('Trigger payload', payload)
           break
         case 'action_notifications':
           executeAction(JSON.parse(payload), actionLibrary)

@@ -39,6 +39,7 @@ const queries = [
                       visibilityCondition: { value: true }
                       category: QUESTION
                       isRequired: true
+                      # Should really change isRequired field to a dynamic JSON type
                       isEditable: { value: true }
                       parameters: { label: "First Name" }
                     }
@@ -63,7 +64,8 @@ const queries = [
                       isRequired: true
                       isEditable: { value: true }
                       parameters: { label: "Select a username" }
-                      validation: { value: true }
+                      validation: { value: true } #Need to write this query
+                      # Validation: Must be unique, Alphanumeric chars only, no spaces
                     }
                     {
                       code: "Q4"
@@ -75,7 +77,8 @@ const queries = [
                       isRequired: true
                       isEditable: { value: true }
                       parameters: { label: "Email" }
-                      validation: { value: true }
+                      validation: { value: true } #Need to write this query
+                      # Validation: Email REGEX check, must be unique in system
                     }
                     {
                       code: "Q5"
@@ -87,7 +90,8 @@ const queries = [
                       isRequired: true
                       isEditable: { value: true }
                       parameters: { label: "Email", maskedInput: true }
-                      validation: { value: true }
+                      validation: { value: true } #Need to write this query
+                      # Validation: At least 8 chars, must contain at least one letter and one number (REGEX)
                     }
                     {
                       code: "PB1"
@@ -117,6 +121,7 @@ const queries = [
                       nextElementCode: "Q8"
                       title: "Select Manufacturer"
                       elementTypePluginCode: "dropDown"
+                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -145,6 +150,7 @@ const queries = [
                       nextElementCode: "Q9"
                       title: "Select Distributor"
                       elementTypePluginCode: "dropDown"
+                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -172,6 +178,7 @@ const queries = [
                       code: "Q9"
                       title: "Select Importer"
                       elementTypePluginCode: "dropDown"
+                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -202,6 +209,7 @@ const queries = [
               {
                 actionCode: "cLog"
                 condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
                   message: {
                     value: "Action has been executed on User Registration template"
@@ -211,6 +219,7 @@ const queries = [
               {
                 actionCode: "createUser"
                 condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
                   first_name: { value: "Test" }
                   last_name: { value: "Test" }
@@ -244,8 +253,7 @@ const queries = [
         }
       }
     }
-  }  
-  `,
+  }`,
   // Template B - Company Registration
   `mutation {
     createTemplate(
