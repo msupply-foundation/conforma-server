@@ -305,7 +305,7 @@ test('Test Postgres get application list with IDs', () => {
     pgConnection: pgConnect,
   }).then((result: any) => {
     expect(result).toEqual([
-      { id: 1, name: 'User Registration: Nicole Madruga' },
+      { id: 1, name: 'User Registration: Craig Drown' },
       { id: 2, name: 'User Registration: Carl Smith' },
       { id: 3, name: 'Company Registration: Company C' },
     ])
@@ -321,7 +321,7 @@ test('Test GraphQL -- get single application name', () => {
       endpoint: graphQLendpoint,
     },
   }).then((result: any) => {
-    expect(result).toEqual('User Registration: Nicole Madruga')
+    expect(result).toEqual('User Registration: Craig Drown')
   })
 })
 
@@ -333,7 +333,7 @@ test('Test GraphQL -- List of Application Names', () => {
     },
   }).then((result: any) => {
     expect(result).toEqual([
-      'User Registration: Nicole Madruga',
+      'User Registration: Craig Drown',
       'User Registration: Carl Smith',
       'Company Registration: Company C',
     ])
@@ -349,7 +349,7 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
   }).then((result: any) => {
     expect(result).toEqual([
       {
-        name: 'User Registration: Nicole Madruga',
+        name: 'User Registration: Craig Drown',
         id: 1,
       },
       {
@@ -372,7 +372,7 @@ test('Test GraphQL -- count Sections on current Application', () => {
       endpoint: graphQLendpoint,
     },
   }).then((result: any) => {
-    expect(result).toEqual(2)
+    expect(result).toEqual(3)
   })
 })
 

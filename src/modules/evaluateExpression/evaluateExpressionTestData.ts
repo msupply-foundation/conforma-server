@@ -496,9 +496,9 @@ testData.form2 = {
 }
 
 testData.application = {
-  id: 1,
-  name: 'Drug Registration',
-  status: 'Draft',
+  id: 3,
+  name: 'Company Registration',
+  status: 'Submitted',
   stage: 1,
   questions: { q1: 'What is the answer?', q2: 'Enter your name' },
 }
