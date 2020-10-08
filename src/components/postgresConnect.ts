@@ -77,6 +77,10 @@ class PostgresDB {
     }
   }
 
+  public end = () => {
+    this.pool.end()
+  }
+
   public addActionQueue = async (action: ActionQueuePayload): Promise<boolean> => {
     const text = `INSERT into action_queue (${Object.keys(action)}, time_queued) 
       VALUES (${this.getValuesPlaceholders(action)}, CURRENT_TIMESTAMP)`
