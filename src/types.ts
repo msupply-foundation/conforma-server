@@ -112,3 +112,5 @@ export interface TriggerQueueUpdatePayload {
   id: number
   status: TriggerStatus
 }
+
+export type ApplicationOutcome = 'Pending' | 'Approved' | 'Rejected'

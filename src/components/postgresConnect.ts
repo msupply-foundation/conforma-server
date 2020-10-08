@@ -14,6 +14,7 @@ import {
   FilePayload,
   FileGetPayload,
   TriggerQueueUpdatePayload,
+  ApplicationOutcome,
   User,
 } from '../types'
 
@@ -232,6 +233,24 @@ class PostgresDB {
       VALUES (${this.getValuesPlaceholders(user)})`
     try {
       await this.query({ text, values: Object.values(user) })
+      return true
+    } catch (err) {
+      console.log(err.stack)
+      return false
+    }
+  }
+
+  public setApplicationOutcome = async (
+    appId: number,
+    outcome: ApplicationOutcome
+  ): Promise<boolean> => {
+    // Assumes that `is_active` should become False when outcome is set to "Approved" or "Rejected"
+    const text =
+      outcome === 'Approved' || outcome === 'Rejected'
+        ? 'UPDATE application SET outcome = $1, is_active = false  WHERE id = $2'
+        : 'UPDATE application SET outcome = $1 WHERE id = $2'
+    try {
+      await this.query({ text, values: [outcome, appId] })
       return true
     } catch (err) {
       console.log(err.stack)

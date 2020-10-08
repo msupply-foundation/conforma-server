@@ -288,6 +288,18 @@ const queries = [
                   }
                 }
               }
+              {
+                actionCode: "changeOutcome"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                parameterQueries: {
+                  application_id: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
+                  }
+                  newOutcome: { value: "Approved" }
+                }
+              }
             ]
           }
         }
@@ -313,7 +325,7 @@ const queries = [
         }
       }
     }
-  }  
+  } 
   `,
   // Template B - Company Registration
   `mutation {
