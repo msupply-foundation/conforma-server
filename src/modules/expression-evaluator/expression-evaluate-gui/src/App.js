@@ -61,10 +61,13 @@ function App() {
       objects: objectArray,
       pgConnection: pgInterface,
       graphQLConnection: { fetch: fetchNative, endpoint: graphQLendpoint },
-    }).then((result) => {
-      const output = typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result)
-      setResult(output)
+      APIfetch: fetchNative,
     })
+      .then((result) => {
+        const output = typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result)
+        setResult(output)
+      })
+      .catch((error) => setResult(error.message))
     localStorage.setItem('inputText', input)
   }, [input, objectsInput])
 

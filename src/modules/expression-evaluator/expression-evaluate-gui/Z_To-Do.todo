@@ -1,6 +1,8 @@
 Important:
     - Handle backticks in input box (for GraphQL) (pull out back-ticked bit first, then replace after) @done
     - Local storage save @done
+    - Error handling
+    - API lookups (need to pass fetch?)
 
 General:
     - Better response with bad input query
