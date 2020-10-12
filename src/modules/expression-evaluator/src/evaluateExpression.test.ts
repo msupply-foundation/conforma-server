@@ -397,6 +397,24 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
   })
 })
 
+test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
+  return evaluateExpression(testData.GraphQL_listOfTemplates_noReturnSpecified, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual({
+      templates: {
+        edges: [
+          { node: { name: 'User Registration' } },
+          { node: { name: 'Company Registration' } },
+        ],
+      },
+    })
+  })
+})
+
 test('Test GraphQL -- count Sections on current Application', () => {
   return evaluateExpression(testData.GraphQL_CountApplicationSections, {
     objects: [testData.application],
@@ -421,7 +439,7 @@ test('Test concatenate user First and Last names', () => {
   )
 })
 
-test('Validation: Company name is unique', () => {
+test('Test Validation: Company name is unique', () => {
   return evaluateExpression(testData.complexValidation, {
     objects: [testData.form2],
     graphQLConnection: {
@@ -435,7 +453,7 @@ test('Validation: Company name is unique', () => {
 
 test('Test email validation -- email is unique and is valid email', () => {
   return evaluateExpression(testData.emailValidation, {
-    objects: [testData.user],
+    objects: [testData.form],
     APIfetch: fetch,
   }).then((result: any) => {
     expect(result).toBe(true)
@@ -484,11 +502,12 @@ test('Input is an array', () => {
 })
 
 test('Input is malformed JSON string', () => {
-  return evaluateExpression(
-    '{"operator":"=", "children":[{"value":6},{"operator":"+", "children":[{"value":6},{"value":6}]}]}}'
-  ).then((result: any) => {
-    expect(result).toEqual('Invalid JSON String')
-  })
+  expect(
+    async () =>
+      await evaluateExpression(
+        '{"operator":"=", "children":[{"value":6},{"operator":"+", "children":[{"value":6},{"value":6}]}]}}'
+      )
+  ).rejects.toThrow('Invalid JSON String')
 })
 
 afterAll(() => {

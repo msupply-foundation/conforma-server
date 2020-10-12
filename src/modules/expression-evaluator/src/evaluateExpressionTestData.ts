@@ -486,7 +486,7 @@ testData.organisation = {
 testData.form = {
   q1: 'Drug Registration',
   q2: 'A',
-  q3: undefined,
+  q3: 'nobodylikeme@sussol.net',
   q4: 'Panadol',
 }
 
@@ -681,6 +681,24 @@ testData.GraphQL_listOfApplicationsWithId = {
   ],
 }
 
+testData.GraphQL_listOfTemplates_noReturnSpecified = {
+  operator: 'graphQL',
+  children: [
+    {
+      value: `query Templates {
+        templates {
+          edges {
+            node {
+              name
+            }
+          }
+        }
+      }`,
+    },
+    { value: [] },
+  ],
+}
+
 testData.GraphQL_CountApplicationSections = {
   operator: 'graphQL',
   children: [
@@ -733,7 +751,8 @@ testData.emailValidation = {
       operator: 'REGEX',
       children: [
         {
-          value: 'nobodylikeme@sussol.net',
+          operator: 'objectProperties',
+          children: [{ value: { property: 'q3' } }],
         },
         {
           value: '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$',
@@ -750,7 +769,10 @@ testData.emailValidation = {
           value: ['type', 'value'],
         },
         { value: 'email' },
-        { value: 'nobodylikeme@sussol.net' },
+        {
+          operator: 'objectProperties',
+          children: [{ value: { property: 'q3' } }],
+        },
       ],
     },
   ],

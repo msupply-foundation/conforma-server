@@ -13,7 +13,7 @@ export default async function evaluateExpression(
       try {
         query = JSON.parse(inputQuery)
       } catch {
-        return 'Invalid JSON String'
+        throw new Error('Invalid JSON String')
       }
     } else return inputQuery
   } else query = inputQuery
@@ -51,15 +51,18 @@ export default async function evaluateExpression(
         break
 
       case 'REGEX':
-        const str: string = childrenResolved[0]
-        const re: RegExp = new RegExp(childrenResolved[1])
-        return re.test(str)
+        try {
+          const str: string = childrenResolved[0]
+          const re: RegExp = new RegExp(childrenResolved[1])
+          return re.test(str)
+        } catch {
+          throw new Error('Problem with REGEX')
+        }
 
       case '=':
         return childrenResolved.every((child) => child === childrenResolved[0])
 
       case '!=':
-        // TO-DO: This operator can cause problems if there is an error message from a lower node. It'll just return `true` as the error doesn't equal the other node. We should find some way to pass any error messages back up. Maybe put all errors in an object with an `error` property and return that if it's present?
         return childrenResolved[0] !== childrenResolved[1]
 
       case '+':
@@ -76,7 +79,7 @@ export default async function evaluateExpression(
           const property = childrenResolved[0].property
           return extractNode(inputObject, property)
         } catch {
-          return "Can't resolve object"
+          throw new Error("Can't resolve object")
         }
 
       case 'API':
@@ -94,27 +97,27 @@ export default async function evaluateExpression(
                   .join('&')}`
               : url
         } catch {
-          return 'Invalid API query'
+          throw new Error('Invalid API query')
         }
         let data
         try {
           data = await fetchAPIdata(urlWithQuery, params.APIfetch)
         } catch {
-          return 'Problem with API call'
+          throw new Error('Problem with API call')
         }
         try {
           const returnValue = returnNode ? extractNode(data, returnNode) : data
           return simplifyObject(returnValue)
         } catch {
-          return 'Problem parsing requested node from result'
+          throw new Error('Problem parsing requested node from API result')
         }
 
       case 'pgSQL':
-        if (!params.pgConnection) return 'No database connection provided'
+        if (!params.pgConnection) throw new Error('No Postgres database connection provided')
         return processPgSQL(childrenResolved, query.type, params.pgConnection)
 
       case 'graphQL':
-        if (!params.graphQLConnection) return 'No database connection provided'
+        if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
         // TO-DO: Add checks to ensure parameter nodes are consistent with the array of field names node.
         return processGraphQL(childrenResolved, params.graphQLConnection)
 
@@ -143,25 +146,31 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
         return res.rows
     }
   } catch (err) {
-    return err.stack
+    return err.name + err.message
   }
 }
 
 async function processGraphQL(queryArray: any[], connection: IGraphQLConnection) {
-  const query = queryArray[0]
-  const variableNames = queryArray[1]
-  const variableNodes = queryArray.slice(2, queryArray.length - 1)
-  const returnNode = queryArray[queryArray.length - 1]
+  try {
+    const query = queryArray[0]
+    const variableNames = queryArray[1]
+    const variableNodes = queryArray.slice(2, variableNames.length + 2)
+    const returnNode = queryArray[variableNames.length + 2] && queryArray[variableNames.length + 2]
 
-  const variables = zipArraysToObject(variableNames, variableNodes)
+    const variables = zipArraysToObject(variableNames, variableNodes)
 
-  const data = await graphQLquery(query, variables, connection)
+    const data = await graphQLquery(query, variables, connection)
 
-  const selectedNode = extractNode(data, returnNode)
+    const selectedNode = returnNode ? extractNode(data, returnNode) : data
 
-  return Array.isArray(selectedNode)
-    ? selectedNode.map((item) => simplifyObject(item))
-    : simplifyObject(selectedNode)
+    return Array.isArray(selectedNode)
+      ? selectedNode.map((item) => simplifyObject(item))
+      : returnNode
+      ? simplifyObject(selectedNode)
+      : selectedNode
+  } catch {
+    throw new Error('GraphQL error')
+  }
 }
 
 // Build an object from an array of field names and an array of values
