@@ -283,6 +283,22 @@ test('API: Lookup ToDo in online testing API', () => {
   })
 })
 
+test('API: Return an array from online API', () => {
+  return evaluateExpression(testData.onlineArrayReturn, {
+    APIfetch: fetch,
+  }).then((result: any) => {
+    expect(result).toEqual(testData.onlineArrayReturnResult)
+  })
+})
+
+test('API: Return an array of titles plucked from inside array of objects', () => {
+  return evaluateExpression(testData.onlineArrayNodes, {
+    APIfetch: fetch,
+  }).then((result: any) => {
+    expect(result).toEqual(testData.onlineArrayNodesResult)
+  })
+})
+
 // SQL operator
 
 test('Test Postgres lookup single string', () => {
@@ -412,6 +428,15 @@ test('Validation: Company name is unique', () => {
       fetch: fetch,
       endpoint: graphQLendpoint,
     },
+  }).then((result: any) => {
+    expect(result).toBe(true)
+  })
+})
+
+test('Test email validation -- email is unique and is valid email', () => {
+  return evaluateExpression(testData.emailValidation, {
+    objects: [testData.user],
+    APIfetch: fetch,
   }).then((result: any) => {
     expect(result).toBe(true)
   })

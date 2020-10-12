@@ -175,11 +175,13 @@ const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
 
 // Return a specific node (e.g. application.name) from a nested Object
 const extractNode = (
-  data: BasicObject,
+  data: BasicObject | BasicObject[],
   node: string
 ): BasicObject | string | number | boolean | BasicObject[] => {
   const returnNodeArray = node.split('.')
-  return extractNodeWithArray(data, returnNodeArray)
+  if (Array.isArray(data)) {
+    return data.map((item) => extractNodeWithArray(item, returnNodeArray))
+  } else return extractNodeWithArray(data, returnNodeArray)
 }
 const extractNodeWithArray = (
   data: BasicObject,
