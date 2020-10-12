@@ -523,6 +523,31 @@ testData.singleApplicationProperty_noIndex_depth2 = {
   ],
 }
 
+// API operator
+
+testData.APIisUnique = {
+  operator: 'API',
+  children: [
+    {
+      value: 'http://localhost:/check-unique',
+    },
+    {
+      value: ['type', 'value'],
+    },
+    { value: 'username' },
+    { value: 'magicmike' },
+  ],
+}
+testData.onlineTestAPI = {
+  operator: 'API',
+  children: [
+    {
+      value: 'https://jsonplaceholder.typicode.com/todos/1',
+    },
+    { value: 'title' },
+  ],
+}
+
 // SQL operator
 
 testData.getApplicationName = {

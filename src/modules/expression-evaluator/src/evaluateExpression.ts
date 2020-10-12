@@ -79,6 +79,9 @@ export default async function evaluateExpression(
           return "Can't resolve object"
         }
 
+      case 'API':
+        return 'Does nothing yet'
+
       case 'pgSQL':
         if (!params.pgConnection) return 'No database connection provided'
         return processPgSQL(childrenResolved, query.type, params.pgConnection)

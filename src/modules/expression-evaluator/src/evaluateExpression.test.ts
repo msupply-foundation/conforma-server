@@ -266,6 +266,23 @@ test('Test returning single application property, depth 2, no object index', () 
   })
 })
 
+// API operator
+test('API: Check username is unique', () => {
+  return evaluateExpression(testData.APIisUnique, {
+    APIfetch: fetch,
+  }).then((result: any) => {
+    expect(result).toBe(true)
+  })
+})
+
+test('API: Lookup ToDo in online testing API', () => {
+  return evaluateExpression(testData.onlineTestAPI, {
+    APIfetch: fetch,
+  }).then((result: any) => {
+    expect(result).toBe('delectus aut autem')
+  })
+})
+
 // SQL operator
 
 test('Test Postgres lookup single string', () => {
