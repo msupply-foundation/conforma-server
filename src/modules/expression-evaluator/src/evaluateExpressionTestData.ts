@@ -529,7 +529,7 @@ testData.APIisUnique = {
   operator: 'API',
   children: [
     {
-      value: 'http://localhost:/check-unique',
+      value: 'http://localhost:8080/check-unique',
     },
     {
       value: ['type', 'value'],
@@ -544,6 +544,7 @@ testData.onlineTestAPI = {
     {
       value: 'https://jsonplaceholder.typicode.com/todos/1',
     },
+    { value: [] },
     { value: 'title' },
   ],
 }

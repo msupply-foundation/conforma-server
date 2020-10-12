@@ -80,7 +80,18 @@ export default async function evaluateExpression(
         }
 
       case 'API':
-        return 'Does nothing yet'
+        const url = childrenResolved[0]
+        const queryFields = childrenResolved[1]
+        const queryValues = childrenResolved.slice(2, queryFields.length + 2)
+        const returnNode =
+          childrenResolved[queryFields.length + 2] && childrenResolved[queryFields.length + 2]
+        const urlWithQuery =
+          queryFields.length > 0
+            ? `${url}?${queryFields
+                .map((field: string, index: number) => field + '=' + queryValues[index])
+                .join('&')}`
+            : url
+        const data = await fetchData(urlWithQuery, params.APIfetch)
 
       case 'pgSQL':
         if (!params.pgConnection) return 'No database connection provided'
@@ -183,4 +194,11 @@ const graphQLquery = async (query: string, variables: object, connection: IGraph
   })
   const data = await queryResult.json()
   return data.data
+}
+
+// GET request using fetch (node or browser variety)
+const fetchData = async (url: string, APIfetch: any) => {
+  const result = await APIfetch(url)
+  const data = await result.json()
+  console.log(url, data)
 }
