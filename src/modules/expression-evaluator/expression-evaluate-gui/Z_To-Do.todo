@@ -1,11 +1,11 @@
 Important:
     - Handle backticks in input box (for GraphQL) (pull out back-ticked bit first, then replace after) @done
     - Local storage save @done
-    - Error handling
-    - API lookups (need to pass fetch?)
+    - Error handling @done
+    - API lookups (need to pass fetch?) @done
 
 General:
-    - Better response with bad input query
+    - Better response with bad input query @done
     - Better display for nested objects in output (Stringify it) @done
     - Concurrently -- launch server and React app together @done
  
