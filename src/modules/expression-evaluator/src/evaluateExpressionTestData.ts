@@ -535,7 +535,7 @@ testData.APIisUnique = {
       value: ['type', 'value'],
     },
     { value: 'username' },
-    { value: 'magicmike' },
+    { value: 'druglord' },
   ],
 }
 testData.onlineTestAPI = {

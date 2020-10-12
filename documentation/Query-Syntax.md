@@ -126,7 +126,7 @@ The `evaluateExpression` function expects each expression to be passed along wit
 - Input: A single child node whose `value` is an object with the following properties:
   - `objectIndex` (optional) -- the index of the `objects` array that contains the object this node is interested in. If this property is not defined, it defaults to `0`, so you'd usually only include it if you were supplying more than one object to the whole expression.  
     _Note: Each node can only return **one** object property_
-  - `property` -- the name of the field whose value is to be extracted. Can be a nested property, written in dot notation (e.g. `questions.q2`) (but cannot yet traverse into arrays.)
+  - `property` -- the name of the field whose value is to be extracted. Can be a nested property, written in dot notation (e.g. `questions.q2`) (but cannot yet get specific elements from arrays.)
 - Output: the value specified in `property` of any type.
 
 **Example**:
@@ -193,7 +193,7 @@ Performs queries on connected GraphQL interface.
   - 1st child node returns a **string** representing the GraphQL query
   - 2nd child node returns an **array** of field names for the query's associated variables object. If no variables are required for the query, pass an empty array (i.e. `{ value: [] }`).
   - 3rd...N-1 child nodes return the values of the fields for the variables object -- one node for each field in the previous node's array.
-  - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`)
+  - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`). This last node is optional -- if not provided, the whole result object will be returned unmodified.
 - Output: the returned GraphQL node can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
 
   - If there is only one field, only the value of the field will be returned.
@@ -218,6 +218,38 @@ Performs queries on connected GraphQL interface.
   ] }
 ```
 
+## API
+
+Performs GET requests to public API endpoints.
+
+- Input: _(note: basically the same as GraphQL)_
+  - 1st child node returns a **string** containing the url of the API endpoint
+  - 2nd child note returns an **array** of field names for the url query parameters. If no query parameters are required, pass an empty array (i.e. `{ value: [] }`).
+  - 3rd...N-1 child notes return the values for the query parameters in the 2nd node -- one node for each field name
+  - Nth (last) child node returns a **string** stating the field in the return JSON object that is required. This is optional -- if not supplied the complete response data is returned (which is what you'd want if expecting something other than JSON object). Note: an array is returned, the array _elements_ will be reduced to just this field (assuming they are objects)
+- Output: returned value can be any type. If is is an object, will be simplified according to the same rules as the **GraphQL** operator (above)
+
+**Example**:
+
+This expression queries our `check-unique` to test if the username "druglord" is availabe. The full url would be:  
+`http://localhost:8080/check-unique?type=username&value=druglord`
+
+```
+{
+  operator: 'API',
+  children: [
+    {
+      value: 'http://localhost:8080/check-unique',
+    },
+    {
+      value: ['type', 'value'],
+    },
+    { value: 'username' },
+    { value: 'druglord' },
+  ],
+}
+```
+
 # Usage
 
 The query evaluator is implemented in the `evaluateExpression` function:
@@ -235,6 +267,7 @@ The query evaluator is implemented in the `evaluateExpression` function:
 - `objects : [local objects]` -- **array** of local state objects required for the query (see **objectProperties** above)
 - `pgConnection: <postGresConnect object>` (or any valid PostGres connection object, e.g. `Client` from `node-postgres`)
 - `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>}` -- connection information for a local GraphQL endpoint. Only required if expression contains **graphQL** operator.
+- `APIfetch: <fetch object>` -- required if the API operator is being used. (Note: the reason this must be passed in rather than having the module use `fetch` directly is so it can work in both front- and back-end. The browser provides a native `fetch` method, but this isn't available in Node, which requires the `node-fetch` package. So in order to work in both, the module expects the appropriate variant of the fetch object to be passed in.)
 
 # Examples
 
