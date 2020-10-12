@@ -1,0 +1,92 @@
+// Test suite for Fastify server endpoints
+const fetch = require('node-fetch')
+
+// Config
+const baseURL = 'http://localhost:8080/'
+
+const getRequest = async (url: string) => {
+  const response = await fetch(url)
+  const data = response.json()
+  return data
+}
+
+// check-unique endpoint
+test('Check unique: username is not unique', () => {
+  return getRequest(`${baseURL}check-unique?&type=username&value=nmadruga`).then((result: any) => {
+    expect(result).toBe(false)
+  })
+})
+
+test('Check unique: username is unique', () => {
+  return getRequest(`${baseURL}check-unique?&type=username&value=nicole_m`).then((result: any) => {
+    expect(result).toBe(true)
+  })
+})
+
+test('Check unique: email is not unique', () => {
+  return getRequest(`${baseURL}check-unique?&type=email&value=andrei@sussol.net`).then(
+    (result: any) => {
+      expect(result).toBe(false)
+    }
+  )
+})
+
+test('Check unique: email is unique', () => {
+  return getRequest(`${baseURL}check-unique?&type=email&value=tony@sussol.net`).then(
+    (result: any) => {
+      expect(result).toBe(true)
+    }
+  )
+})
+
+test('Check unique: organisation is not unique', () => {
+  return getRequest(`${baseURL}check-unique?&type=organisation&value=Drugs-R-Us`).then(
+    (result: any) => {
+      expect(result).toBe(false)
+    }
+  )
+})
+
+test('Check unique: organisation is unique', () => {
+  return getRequest(`${baseURL}check-unique?&type=organisation&value=A New Drug Company`).then(
+    (result: any) => {
+      expect(result).toBe(true)
+    }
+  )
+})
+
+test('Check unique: Case-insensitivity - not unique, even though case differs from DB', () => {
+  return getRequest(`${baseURL}check-unique?&type=email&value=Nicole@SuSSol.net`).then(
+    (result: any) => {
+      expect(result).toBe(false)
+    }
+  )
+})
+
+test('Check unique: Returns false when query is invalid (misnamed type field)', () => {
+  return getRequest(`${baseURL}check-unique?&typO=email&value=carl@sussol.net`).then(
+    (result: any) => {
+      expect(result).toBe(false)
+    }
+  )
+})
+
+test('Check unique: Returns false when query is invalid (type is invalid)', () => {
+  return getRequest(`${baseURL}check-unique?&type=firstName&value=carl@sussol.net`).then(
+    (result: any) => {
+      expect(result).toBe(false)
+    }
+  )
+})
+
+test('Check unique: Returns false when value is blank', () => {
+  return getRequest(`${baseURL}check-unique?&type=username&value=`).then((result: any) => {
+    expect(result).toBe(false)
+  })
+})
+
+test('Check unique: Returns false when value field not provided', () => {
+  return getRequest(`${baseURL}check-unique?&type=username`).then((result: any) => {
+    expect(result).toBe(false)
+  })
+})
