@@ -62,8 +62,7 @@ function App() {
       pgConnection: pgInterface,
       graphQLConnection: { fetch: fetchNative, endpoint: graphQLendpoint },
     }).then((result) => {
-      const output = typeof result === 'object' ? JSON.stringify(result, null, 2) : result
-      console.log('Output', output)
+      const output = typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result)
       setResult(output)
     })
     localStorage.setItem('inputText', input)
