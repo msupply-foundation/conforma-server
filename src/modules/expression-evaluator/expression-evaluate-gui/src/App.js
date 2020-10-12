@@ -11,7 +11,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import evaluateExpression from './expression-evaluator/evaluateExpression'
 import * as config from './config.json'
 import { PostgresInterface } from './postgresInterface'
 
