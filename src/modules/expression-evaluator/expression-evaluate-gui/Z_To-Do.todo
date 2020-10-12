@@ -1,0 +1,15 @@
+Important:
+    - Handle backticks in input box (for GraphQL) (pull out back-ticked bit first, then replace after) @done
+    - Local storage save @done
+
+General:
+    - Better response with bad input query
+    - Better display for nested objects in output (Stringify it) @done
+    - Concurrently -- launch server and React app together @done
+ 
+Styling:
+    - Monospace font for input boxes @done
+    - Margins of all elements @done
+    - Headings @done
+    - Favicon
+    - Output text formatting @done
