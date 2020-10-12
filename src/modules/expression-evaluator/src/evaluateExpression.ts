@@ -80,18 +80,34 @@ export default async function evaluateExpression(
         }
 
       case 'API':
-        const url = childrenResolved[0]
-        const queryFields = childrenResolved[1]
-        const queryValues = childrenResolved.slice(2, queryFields.length + 2)
-        const returnNode =
-          childrenResolved[queryFields.length + 2] && childrenResolved[queryFields.length + 2]
-        const urlWithQuery =
-          queryFields.length > 0
-            ? `${url}?${queryFields
-                .map((field: string, index: number) => field + '=' + queryValues[index])
-                .join('&')}`
-            : url
-        const data = await fetchData(urlWithQuery, params.APIfetch)
+        let urlWithQuery, returnNode
+        try {
+          const url = childrenResolved[0]
+          const queryFields = childrenResolved[1]
+          const queryValues = childrenResolved.slice(2, queryFields.length + 2)
+          returnNode =
+            childrenResolved[queryFields.length + 2] && childrenResolved[queryFields.length + 2]
+          urlWithQuery =
+            queryFields.length > 0
+              ? `${url}?${queryFields
+                  .map((field: string, index: number) => field + '=' + queryValues[index])
+                  .join('&')}`
+              : url
+        } catch {
+          return 'Invalid API query'
+        }
+        let data
+        try {
+          data = await fetchAPIdata(urlWithQuery, params.APIfetch)
+        } catch {
+          return 'Problem with API call'
+        }
+        try {
+          const returnValue = returnNode ? extractNode(data, returnNode) : data
+          return simplifyObject(returnValue)
+        } catch {
+          return 'Problem parsing requested node from result'
+        }
 
       case 'pgSQL':
         if (!params.pgConnection) return 'No database connection provided'
@@ -197,8 +213,8 @@ const graphQLquery = async (query: string, variables: object, connection: IGraph
 }
 
 // GET request using fetch (node or browser variety)
-const fetchData = async (url: string, APIfetch: any) => {
+const fetchAPIdata = async (url: string, APIfetch: any) => {
   const result = await APIfetch(url)
   const data = await result.json()
-  console.log(url, data)
+  return data
 }
