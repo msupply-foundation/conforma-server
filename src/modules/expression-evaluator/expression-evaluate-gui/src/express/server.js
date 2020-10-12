@@ -12,12 +12,8 @@ client.connect()
 
 app.use(cors())
 
-app.get('/test', (req, res) => {
-  res.send({ body: 'This is a test' })
-})
-
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`Postgres node middleware running at http://localhost:${port}`)
 })
 
 app.get('/pg-query', (req, res) => {
