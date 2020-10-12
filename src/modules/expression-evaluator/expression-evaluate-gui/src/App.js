@@ -51,6 +51,10 @@ function App() {
 
   // Evaluate output whenever input or input objects change
   useEffect(() => {
+    if (input === '') {
+      setResult('No input')
+      return
+    }
     let cleanInput
     try {
       cleanInput = looseJSON(input)
@@ -102,7 +106,6 @@ function App() {
     try {
       const backtickRe = /`[\s\S]*?`/g
       const backtickSubstitutions = input.match(backtickRe)
-      console.log('Backtick sub', backtickSubstitutions)
       const backtickReplacement = !compact ? input.replaceAll(backtickRe, `"@1234@"`) : input
       const inputObject = looseJSON(backtickReplacement)
       const stringified = strict

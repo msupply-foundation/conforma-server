@@ -14,4 +14,5 @@ Styling:
     - Margins of all elements @done
     - Headings @done
     - Favicon
+    - Color RED for error outputs
     - Output text formatting @done
