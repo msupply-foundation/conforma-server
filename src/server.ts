@@ -49,8 +49,7 @@ const startServer = async () => {
 
   // Unique name/email/organisation check
   server.get('/check-unique', async (request: any, reply) => {
-    const type = request.query.type
-    const value = request.query.value
+    const { type, value } = request.query
     if (value === '' || value === undefined) return false
     let table, field
     switch (type) {
