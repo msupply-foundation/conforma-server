@@ -773,6 +773,7 @@ testData.emailValidation = {
           operator: 'objectProperties',
           children: [{ value: { property: 'q3' } }],
         },
+        { value: 'unique' },
       ],
     },
   ],
