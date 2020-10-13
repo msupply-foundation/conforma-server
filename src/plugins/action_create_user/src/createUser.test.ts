@@ -1,7 +1,5 @@
 // Test suite for the createUser Action -- just confirms that users are written to database.
 
-import PostgresDB from '../../../components/postgresConnect'
-
 const Action = require('./createUser')
 
 const testUser = {
@@ -23,7 +21,7 @@ const invalidUser = {
 }
 
 test('Test: add User to database', () => {
-  return Action.createUser(testUser, PostgresDB).then((result: any) => {
+  return Action.createUser(testUser).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
@@ -32,7 +30,7 @@ test('Test: add User to database', () => {
 })
 
 test('Test: Invalid user -- should fail', () => {
-  return Action.createUser(invalidUser, PostgresDB).then((result: any) => {
+  return Action.createUser(invalidUser).then((result: any) => {
     expect(result).toEqual({
       status: 'Fail',
       error_log: 'There was a problem creating new user.',
