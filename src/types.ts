@@ -68,6 +68,15 @@ export interface ActionPluginPayload {
   required_parameters: { [key: string]: any }
 }
 
+export interface User {
+  first_name?: string
+  last_name?: string
+  username: string
+  date_of_birth?: Date
+  password_hash: string
+  email: string
+}
+
 export interface File {
   id: number
   path: string

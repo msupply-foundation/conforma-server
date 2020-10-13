@@ -37,7 +37,9 @@ typings/
 .env
 .env.test
 
-
 # File storage folder
 /src/files
 database/schema.graphql
+
+# Build folder
+build

@@ -14,6 +14,7 @@ import {
   FilePayload,
   FileGetPayload,
   TriggerQueueUpdatePayload,
+  User,
 } from '../types'
 
 class PostgresDB {
@@ -27,6 +28,7 @@ class PostgresDB {
     // it contains if a backend error or network partition happens
     this.pool.on('error', (err) => {
       console.error('Unexpected error on idle pool', err)
+      throw err
       process.exit(-1)
     })
 
@@ -76,6 +78,10 @@ class PostgresDB {
     }
   }
 
+  public end = () => {
+    this.pool.end()
+  }
+
   public addActionQueue = async (action: ActionQueuePayload): Promise<boolean> => {
     const text = `INSERT into action_queue (${Object.keys(action)}, time_queued) 
       VALUES (${this.getValuesPlaceholders(action)}, CURRENT_TIMESTAMP)`
@@ -84,8 +90,7 @@ class PostgresDB {
       await this.query({ text, values: Object.values(action) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -98,8 +103,7 @@ class PostgresDB {
       await this.query({ text, values: Object.values(payload) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -115,8 +119,7 @@ class PostgresDB {
       })
       return result.rows as ActionQueue[]
     } catch (err) {
-      console.log(err.stack)
-      return []
+      throw err
     }
   }
 
@@ -128,8 +131,7 @@ class PostgresDB {
       const result = await this.query({ text, values: Object.values(payload) })
       return result.rows[0].id
     } catch (err) {
-      console.log(err.stack)
-      return 0
+      throw err
     }
   }
 
@@ -139,8 +141,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [payload.id] })
       return result.rows[0] as File
     } catch (err) {
-      console.log(err.stack)
-      return undefined
+      throw err
     }
   }
 
@@ -151,8 +152,7 @@ class PostgresDB {
       await this.query({ text, values: Object.values(plugin) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -162,8 +162,7 @@ class PostgresDB {
       await this.query({ text, values: [payload.code] })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -173,8 +172,7 @@ class PostgresDB {
       const result = await this.query({ text })
       return result.rows as ActionPlugin[]
     } catch (err) {
-      console.log(err.stack)
-      return []
+      throw err
     }
   }
 
@@ -192,21 +190,19 @@ class PostgresDB {
       const result = await this.query({ text, values: [payload.template_id, payload.trigger] })
       return result.rows as ActionInTemplate[]
     } catch (err) {
-      console.log(err.stack)
-      return []
+      throw err
     }
   }
 
   public updateActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const text =
-      'UPDATE action_plugin SET name = $1, description = $2, path = $3, function_name = $4, required_parameters = $5 WHERE code = $6'
+      'UPDATE action_plugin SET name = $2, description = $3, path = $4, function_name = $5, required_parameters = $6 WHERE code = $1'
     // TODO: Dynamically select what is being updated
     try {
       await this.query({ text, values: Object.values(plugin) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -217,8 +213,18 @@ class PostgresDB {
       await this.query({ text, values: Object.values(payload) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
+    }
+  }
+
+  public createUser = async (user: User): Promise<boolean> => {
+    const text = `INSERT INTO "user" (${Object.keys(user)}) 
+      VALUES (${this.getValuesPlaceholders(user)})`
+    try {
+      await this.query({ text, values: Object.values(user) })
+      return true
+    } catch (err) {
+      throw err
     }
   }
 }

@@ -14,6 +14,5 @@ CREATE TABLE public.template_element (
     is_required boolean,
     is_editable jsonb,
     parameters jsonb,
-    default_value jsonb,
     validation jsonb
 );
