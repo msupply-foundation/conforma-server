@@ -44,3 +44,6 @@ database/schema.graphql
 # Build folders
 build
 lib
+
+# Temp for expression-evaluator gui
+src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluator/
