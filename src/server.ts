@@ -50,7 +50,13 @@ const startServer = async () => {
   // Unique name/email/organisation check
   server.get('/check-unique', async (request: any, reply) => {
     const { type, value } = request.query
-    if (value === '' || value === undefined) return false
+    if (value === '' || value === undefined) {
+      reply.send({
+        unique: false,
+        message: 'Value not provided',
+      })
+      return
+    }
     let table, field
     switch (type) {
       case 'username':
@@ -66,10 +72,21 @@ const startServer = async () => {
         field = 'name'
         break
       default:
-        return false
+        reply.send({
+          unique: false,
+          message: 'Type missing or invalid',
+        })
+        return
     }
-    const isUnique = await PostgresDB.isUnique(table, field, value)
-    return isUnique
+    try {
+      const isUnique = await PostgresDB.isUnique(table, field, value)
+      reply.send({
+        unique: isUnique,
+        message: '',
+      })
+    } catch (err) {
+      reply.send({ unique: false, message: err.message })
+    }
   })
 
   server.listen(8080, (err, address) => {
