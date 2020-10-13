@@ -43,3 +43,4 @@ database/schema.graphql
 
 # Build folder
 build
+lib
