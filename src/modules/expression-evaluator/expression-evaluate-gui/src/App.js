@@ -37,10 +37,12 @@ const useStyles = makeStyles((theme) => ({
 function App() {
   const classes = useStyles()
 
+  const [result, setResult] = useState()
+  const [resultType, setResultType] = useState('string')
+
   const [input, setInput] = useState(
     localStorage.getItem('inputText') || '{ value: "Enter expression here"}'
   )
-  const [result, setResult] = useState()
   const [objectsInput, setObjectsInput] = useState(
     localStorage.getItem('objectText') || `{firstName: "Carl", lastName: "Smith"}`
   )
@@ -67,11 +69,15 @@ function App() {
       graphQLConnection: { fetch: fetchNative, endpoint: graphQLendpoint },
       APIfetch: fetchNative,
     })
-      .then((result) => {
-        const output = typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result)
+      .then((res) => {
+        const output = typeof res === 'object' ? JSON.stringify(res, null, 2) : String(res)
         setResult(output)
+        setResultType(typeof res === 'object' ? 'object' : 'other')
       })
-      .catch((error) => setResult(error.message))
+      .catch((error) => {
+        setResult(error.message)
+        setResultType('error')
+      })
     localStorage.setItem('inputText', input)
   }, [input, objectsInput])
 
@@ -272,7 +278,9 @@ function App() {
         <Card className={classes.root} style={{ marginTop: 76 }} variant="outlined">
           <CardContent>
             <Typography variant="body1" component="p">
-              <pre>{result}</pre>
+              {resultType === 'object' && <pre>{result}</pre>}
+              {resultType === 'other' && <span className="result-text">{result}</span>}
+              {resultType === 'error' && <span className="error-text">{result}</span>}
             </Typography>
           </CardContent>
         </Card>
