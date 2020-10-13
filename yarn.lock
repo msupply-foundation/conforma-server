@@ -481,9 +481,9 @@
     chalk "^4.0.0"
 
 "@openmsupply/expression-evaluator@^1.0.0":
-  version "1.0.0"
-  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.0.0/0b2374f34fd5a0f4c9fb8d0d5e0c279d706e1717a8fc7595b601738f4440e379#cad520468762177311643d3ade4d59c20a46c603"
-  integrity sha512-Og0Eqrr+UowuvD6UtdmiuBi7U8GFtZrndJ85Fy/YSyUlUSNjESWj16AKqc7RzFs1/Ff+dvnmUVI7jB54fNCL/w==
+  version "1.1.1"
+  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.1.1/106eb86673f3e3bb638dbc1df0691de026d577c25574935cb530ba721e6761fa#2420db0a3b5a4dfdb40ec75f8b66a17f481034e6"
+  integrity sha512-d5o4XRm2kRs378hVAeM6Iy9nO3khsvLO5tisyK/lslaZd4X45NRvztpYyBMwOegQe9jauW60+qRN21gb8C+BQg==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
