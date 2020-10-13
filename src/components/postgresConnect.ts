@@ -245,7 +245,8 @@ class PostgresDB {
       const result = await this.query({ text, values: [value] })
       return !Boolean(Number(result.rows[0].count))
     } catch (err) {
-      throw err
+      console.log(err.stack)
+      return false
     }
   }
 }
