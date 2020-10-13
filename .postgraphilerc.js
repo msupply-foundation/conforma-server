@@ -9,6 +9,8 @@ module.exports = {
     enhanceGraphiql: true,
     cors: true,
     dynamicJson: true,
+    exportSchemaGraphql: './database/schema.graphql',
+    exportSchemaJson: './database/schema.json',
     graphileBuildOptions: {
       connectionFilterRelations: true,
     },
