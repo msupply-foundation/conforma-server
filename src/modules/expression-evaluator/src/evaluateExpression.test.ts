@@ -2,7 +2,7 @@
 
 import evaluateExpression from './evaluateExpression'
 import { testData } from './evaluateExpressionTestData'
-import * as config from '../../config.json'
+import * as config from './config.json'
 
 const { Client } = require('pg')
 

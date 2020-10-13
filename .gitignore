@@ -41,5 +41,6 @@ typings/
 /src/files
 database/schema.graphql
 
-# Build folder
+# Build folders
 build
+lib

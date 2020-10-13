@@ -2,7 +2,7 @@ import path from 'path'
 import { getAppRootDir } from './utilityFunctions'
 import * as config from '../config.json'
 import { ActionLibrary, ActionInTemplate, TriggerPayload, ActionPayload } from '../types'
-import evaluateExpression from '../modules/evaluateExpression/evaluateExpression'
+import evaluateExpression from '@openmsupply/expression-evaluator'
 import PostgresDB from '../components/postgresConnect'
 
 const schedule = require('node-schedule')
