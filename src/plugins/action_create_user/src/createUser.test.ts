@@ -29,7 +29,7 @@ test('Test: add User to database', () => {
   })
 })
 
-test('Test: Invalid user -- should fail', () => {
+test('Test: Invalid user (date_of_birth field mis-named) -- should fail', () => {
   return Action.createUser(invalidUser).then((result: any) => {
     expect(result).toEqual({
       status: 'Fail',
