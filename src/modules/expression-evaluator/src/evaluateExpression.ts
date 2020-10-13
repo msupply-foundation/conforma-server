@@ -145,7 +145,7 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
         return res.rows
     }
   } catch (err) {
-    return err.name + err.message
+    return err
   }
 }
 
