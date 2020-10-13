@@ -145,7 +145,8 @@ function App() {
   }
 
   const prettifyObjects = () => {
-    const pretty = JSONstringify(objectsInput, false, strictJSONObjInput)
+    let objectsInputArrayStr = encloseStringInBrackets(objectsInput)
+    const pretty = JSONstringify(objectsInputArrayStr, false, strictJSONObjInput)
     if (pretty) setObjectsInput(pretty)
     else alert('Invalid input')
   }
@@ -154,6 +155,13 @@ function App() {
     const compact = JSONstringify(objectsInput, true, strictJSONObjInput)
     if (compact) setObjectsInput(compact)
     else alert('Invalid input')
+  }
+
+  const encloseStringInBrackets = (string) => {
+    let outputString = string[0] !== '[' ? '[' + string : string
+    outputString =
+      outputString.substring(outputString.length - 1) !== ']' ? outputString + ']' : outputString
+    return outputString
   }
 
   return (
@@ -263,7 +271,7 @@ function App() {
         <h1>Output</h1>
         <Card className={classes.root} style={{ marginTop: 76 }} variant="outlined">
           <CardContent>
-            <Typography variant="body2" component="p">
+            <Typography variant="body1" component="p">
               <pre>{result}</pre>
             </Typography>
           </CardContent>
