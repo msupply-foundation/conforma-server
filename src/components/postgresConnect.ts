@@ -14,9 +14,8 @@ import {
   FilePayload,
   FileGetPayload,
   TriggerQueueUpdatePayload,
-  ApplicationOutcome,
-  User,
 } from '../types'
+import { ApplicationOutcome, User } from '../generated/graphql'
 
 class PostgresDB {
   private static _instance: PostgresDB
