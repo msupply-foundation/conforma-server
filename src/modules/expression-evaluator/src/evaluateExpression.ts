@@ -13,7 +13,8 @@ export default async function evaluateExpression(
       try {
         query = JSON.parse(inputQuery)
       } catch {
-        throw new Error('Invalid JSON String')
+        return inputQuery
+        // throw new Error('Invalid JSON String')
       }
     } else return inputQuery
   } else query = inputQuery
