@@ -1,8 +1,8 @@
 const express = require('express')
 const app = express()
-const port = 3001
 const cors = require('cors')
 const config = require('../config.json')
+const port = config.postgresInterfacePort
 
 const { Client } = require('pg')
 const { text } = require('express')
