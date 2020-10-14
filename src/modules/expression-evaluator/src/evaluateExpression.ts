@@ -14,7 +14,6 @@ export default async function evaluateExpression(
         query = JSON.parse(inputQuery)
       } catch {
         return inputQuery
-        // throw new Error('Invalid JSON String')
       }
     } else return inputQuery
   } else query = inputQuery
