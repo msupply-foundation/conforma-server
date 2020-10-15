@@ -10,7 +10,8 @@ CREATE TABLE public.action_queue (
     status public.action_queue_status,
     time_queued timestamp,
     execution_time timestamp,
-    error_log varchar
+    error_log varchar,
+    trigger public.trigger
 );
 
 -- Function to Notify Action service of ActionQueue insert
@@ -37,6 +38,13 @@ EXECUTE FUNCTION public.notify_action_queue();
 -- TRIGGER (Listener) on application table
 -- Note: couldn't put this in application file as it requires the trigger_queue table and function to be defined first
 CREATE TRIGGER application_trigger AFTER INSERT OR UPDATE OF trigger ON public.application
+FOR EACH ROW
+WHEN (NEW.trigger IS NOT NULL)
+EXECUTE FUNCTION public.add_event_to_trigger_queue();
+
+-- TRIGGER (Listener) on for action_queue table
+-- Used to trigger subsequent actions when actions are run sequentially
+CREATE TRIGGER action_queue_trigger AFTER INSERT OR UPDATE OF trigger ON public.action_queue
 FOR EACH ROW
 WHEN (NEW.trigger IS NOT NULL)
 EXECUTE FUNCTION public.add_event_to_trigger_queue();

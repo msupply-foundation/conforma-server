@@ -83,6 +83,9 @@ export async function processTrigger(payload: TriggerPayload) {
     template_id: payload.record_id,
     trigger: payload.trigger,
   })
+
+  console.log(payload)
+
   // Filter out Actions that don't match the current condition
   const actions: ActionInTemplate[] = []
 
