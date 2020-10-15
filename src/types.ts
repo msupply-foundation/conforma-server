@@ -8,7 +8,7 @@ export interface ActionInTemplate {
 }
 
 export interface ActionInTemplateGetPayload {
-  template_id: number
+  record_id: number
   trigger: TriggerStatus
 }
 

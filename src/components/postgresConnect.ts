@@ -187,7 +187,7 @@ class PostgresDB {
     WHERE template_id = (SELECT template_id FROM ${tableName} WHERE id = $1) AND trigger = $2`
 
     try {
-      const result = await this.query({ text, values: [payload.template_id, payload.trigger] })
+      const result = await this.query({ text, values: [payload.record_id, payload.trigger] })
       return result.rows as ActionInTemplate[]
     } catch (err) {
       throw err
