@@ -227,6 +227,16 @@ class PostgresDB {
       throw err
     }
   }
+
+  public isUnique = async (table: string, field: string, value: string): Promise<boolean> => {
+    const text = `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
+    try {
+      const result = await this.query({ text, values: [value] })
+      return !Boolean(Number(result.rows[0].count))
+    } catch (err) {
+      throw err
+    }
+  }
 }
 
 const postgressDBInstance = PostgresDB.Instance
