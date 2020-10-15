@@ -122,7 +122,7 @@ export async function executeAction(
   actionLibrary: ActionLibrary
 ): Promise<boolean> {
   // TO-DO: If Scheduled, create a Job instead
-  const actionResult = actionLibrary[payload.code](payload.parameters)
+  const actionResult = await actionLibrary[payload.code](payload.parameters)
 
   return await PostgresDB.executedActionStatusUpdate({
     status: actionResult.status,
