@@ -228,9 +228,9 @@ Performs GET requests to public API endpoints.
 
 - Input: _(note: basically the same as GraphQL)_
   - 1st child node returns a **string** containing the url of the API endpoint
-  - 2nd child note returns an **array** of field names for the url query parameters. If no query parameters are required, pass an empty array (i.e. `{ value: [] }`).
+  - 2nd child node returns an **array** of field names for the url query parameters. If no query parameters are required, pass an empty array (i.e. `{ value: [] }`).
   - 3rd...N-1 child notes return the values for the query parameters in the 2nd node -- one node for each field name
-  - Nth (last) child node returns a **string** stating the field in the return JSON object that is required. This is optional -- if not supplied the complete response data is returned (which is what you'd want if expecting something other than JSON object).
+  - Nth (last) child node returns a **string** stating the field/property of the return JSON object that is required. This is optional -- if not supplied the complete response data is returned (which is what you'd want if expecting something other than JSON object).
 - Output: returned value can be any type. If is is an object, will be simplified according to the same rules as the **GraphQL** operator (above)  
   Note: if an array of objects is returned, the selected field (specified in the last input node) will apply to each object in the array.
 
