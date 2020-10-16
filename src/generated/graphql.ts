@@ -145,6 +145,7 @@ export type ActionQueue = Node & {
   timeQueued?: Maybe<Scalars['Datetime']>;
   executionTime?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
+  trigger?: Maybe<Trigger>;
   /** Reads a single `TriggerQueue` that is related to this `ActionQueue`. */
   triggerQueueByTriggerEvent?: Maybe<TriggerQueue>;
 };
@@ -180,6 +181,8 @@ export type ActionQueueCondition = {
   executionTime?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `errorLog` field. */
   errorLog?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
 };
 
 /** A filter to be used against `ActionQueue` object types. All fields are combined with a logical ‘and.’ */
@@ -200,6 +203,8 @@ export type ActionQueueFilter = {
   executionTime?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `errorLog` field. */
   errorLog?: Maybe<StringFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `triggerQueueByTriggerEvent` relation. */
   triggerQueueByTriggerEvent?: Maybe<TriggerQueueFilter>;
   /** A related `triggerQueueByTriggerEvent` exists. */
@@ -222,6 +227,7 @@ export type ActionQueueInput = {
   timeQueued?: Maybe<Scalars['Datetime']>;
   executionTime?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
+  trigger?: Maybe<Trigger>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
 };
 
@@ -262,6 +268,7 @@ export type ActionQueuePatch = {
   timeQueued?: Maybe<Scalars['Datetime']>;
   executionTime?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
+  trigger?: Maybe<Trigger>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
 };
 
@@ -306,6 +313,8 @@ export enum ActionQueuesOrderBy {
   ExecutionTimeDesc = 'EXECUTION_TIME_DESC',
   ErrorLogAsc = 'ERROR_LOG_ASC',
   ErrorLogDesc = 'ERROR_LOG_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -352,6 +361,7 @@ export type ActionQueueTriggerEventFkeyActionQueueCreateInput = {
   timeQueued?: Maybe<Scalars['Datetime']>;
   executionTime?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
+  trigger?: Maybe<Trigger>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
 };
 
@@ -13561,7 +13571,8 @@ export enum Trigger {
   OnReviewSave = 'ON_REVIEW_SAVE',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
-  OnScheduleTime = 'ON_SCHEDULE_TIME'
+  OnScheduleTime = 'ON_SCHEDULE_TIME',
+  OnActionComplete = 'ON_ACTION_COMPLETE'
 }
 
 /** A filter to be used against Trigger fields. All fields are combined with a logical ‘and.’ */
@@ -13902,6 +13913,7 @@ export type UpdateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch = 
   timeQueued?: Maybe<Scalars['Datetime']>;
   executionTime?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
+  trigger?: Maybe<Trigger>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
 };
 
@@ -17259,14 +17271,14 @@ export type ResolversTypes = {
   JSON: ResolverTypeWrapper<Scalars['JSON']>;
   ActionQueueStatus: ActionQueueStatus;
   Datetime: ResolverTypeWrapper<Scalars['Datetime']>;
+  Trigger: Trigger;
   ActionQueueFilter: ActionQueueFilter;
   IntFilter: IntFilter;
   JSONFilter: JsonFilter;
   ActionQueueStatusFilter: ActionQueueStatusFilter;
   DatetimeFilter: DatetimeFilter;
-  TriggerQueueFilter: TriggerQueueFilter;
   TriggerFilter: TriggerFilter;
-  Trigger: Trigger;
+  TriggerQueueFilter: TriggerQueueFilter;
   TriggerQueueStatusFilter: TriggerQueueStatusFilter;
   TriggerQueueStatus: TriggerQueueStatus;
   TriggerQueueToManyActionQueueFilter: TriggerQueueToManyActionQueueFilter;
@@ -18340,8 +18352,8 @@ export type ResolversParentTypes = {
   JSONFilter: JsonFilter;
   ActionQueueStatusFilter: ActionQueueStatusFilter;
   DatetimeFilter: DatetimeFilter;
-  TriggerQueueFilter: TriggerQueueFilter;
   TriggerFilter: TriggerFilter;
+  TriggerQueueFilter: TriggerQueueFilter;
   TriggerQueueStatusFilter: TriggerQueueStatusFilter;
   TriggerQueueToManyActionQueueFilter: TriggerQueueToManyActionQueueFilter;
   ActionQueuesConnection: ActionQueuesConnection;
@@ -19389,6 +19401,7 @@ export type ActionQueueResolvers<ContextType = any, ParentType extends Resolvers
   timeQueued?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   executionTime?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   errorLog?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   triggerQueueByTriggerEvent?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

@@ -78,6 +78,24 @@ export const loadScheduledActions = async function (
 }
 
 export async function processTrigger(payload: TriggerPayload) {
+  // Deduce template ID -- different for each triggered table
+  let templateID
+
+  switch (payload.table) {
+    case 'application':
+      break
+    case 'review':
+      break
+    case 'review_response':
+      break
+    case 'review_section':
+      break
+    case 'review_section_assign':
+      break
+    default:
+      throw new Error('Table name not valid')
+  }
+
   // Get Actions from matching Template
   const result = await PostgresDB.getActionPluginsByTemplate(payload.table, {
     record_id: payload.record_id,
@@ -85,6 +103,7 @@ export async function processTrigger(payload: TriggerPayload) {
   })
 
   console.log(payload)
+  console.log(result)
 
   // Filter out Actions that don't match the current condition
   const actions: ActionInTemplate[] = []

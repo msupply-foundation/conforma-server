@@ -22,13 +22,14 @@ Most triggers are associated with events on the main database tables (Applicatio
 | `onApplicationCreate`    | Postgres trigger on `Application` table                          |
 | `onApplicationSubmit`    | Postgres trigger on `Application` table                          |
 | `onApplicationSave`      | Postgres trigger on `Application` table                          |
-| `onApplicationWithdrawn` | Postgres trigger on `Review` table                               |
+| `onApplicationWithdrawn` | Postgres trigger on `Application` table                          |
 | `onReviewStart`          | Postgres trigger on `Review` table                               |
 | `onReviewSubmit`         | Postgres trigger on `Review` table                               |
 | `onEditComment`          | Postgres trigger on `Review_response` table                      |
 | `onReviewSave`           | Postgres trigger on `Review` table                               |
 | `onApplicationAssign`    | Postgres trigger on `Review_section_assign` table                |
 | `onApprovalSubmit`       | Postgres trigger on `Review_section` table                       |
+| `onActionComplete`       | Postgres trigger on `Action_queue` table                         |
 | `onScheduledTime`        | Server scheduled service (see [here](link to Scheduled actions)) |
 
 ### Actions

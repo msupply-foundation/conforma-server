@@ -207,16 +207,6 @@ const queries = [
           templateActionsUsingId: {
             create: [
               {
-                actionCode: "cLog"
-                condition: { value: true }
-                trigger: ON_APPLICATION_SUBMIT
-                parameterQueries: {
-                  message: {
-                    value: "Action has been executed on User Registration template"
-                  }
-                }
-              }
-              {
                 actionCode: "createUser"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
@@ -300,6 +290,16 @@ const queries = [
                   newOutcome: { value: "Approved" }
                 }
               }
+              {
+                actionCode: "cLog"
+                condition: { value: true }
+                trigger: ON_ACTION_COMPLETE
+                parameterQueries: {
+                  message: {
+                    value: "Testing sequential actions"
+                  }
+                }
+              }
             ]
           }
         }
@@ -325,7 +325,7 @@ const queries = [
         }
       }
     }
-  } 
+  }  
   `,
   // Template B - Company Registration
   `mutation {

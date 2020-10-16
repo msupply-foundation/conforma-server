@@ -7,3 +7,5 @@ CREATE TABLE public.review_section (
 	review_decision public.review_decision,
 	comment varchar
 );
+
+-- Probably need to add trigger here
