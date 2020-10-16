@@ -83,12 +83,9 @@ export default async function evaluateExpression(
         }
 
       case 'API':
-        let urlWithQuery, returnNode
+        let url, urlWithQuery, queryFields, queryValues: string[], returnNode
         try {
-          const url = childrenResolved[0]
-          const queryFields = childrenResolved[1]
-          const queryValues = childrenResolved.slice(2, queryFields.length + 2)
-          returnNode = childrenResolved[queryFields.length + 2]
+          ;[url, queryFields, queryValues, returnNode] = assignChildNodesToQuery(childrenResolved)
           urlWithQuery =
             queryFields.length > 0
               ? `${url}?${queryFields
@@ -150,10 +147,7 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
 
 async function processGraphQL(queryArray: any[], connection: IGraphQLConnection) {
   try {
-    const query = queryArray[0]
-    const variableNames = queryArray[1]
-    const variableNodes = queryArray.slice(2, variableNames.length + 2)
-    const returnNode = queryArray[variableNames.length + 2]
+    const [query, variableNames, variableNodes, returnNode] = assignChildNodesToQuery(queryArray)
 
     const variables = zipArraysToObject(variableNames, variableNodes)
 
@@ -169,6 +163,14 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
   } catch {
     throw new Error('GraphQL error')
   }
+}
+
+const assignChildNodesToQuery = (childNodes: any[]) => {
+  const query = childNodes[0]
+  const fieldNames = childNodes[1]
+  const values = childNodes.slice(2, fieldNames.length + 2)
+  const returnNode = childNodes[fieldNames.length + 2]
+  return [query, fieldNames, values, returnNode]
 }
 
 // Build an object from an array of field names and an array of values
