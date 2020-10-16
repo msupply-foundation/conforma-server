@@ -44,5 +44,6 @@ typings/
 database/schema.graphql
 database/schema.json
 
-# Build folder
+# Build folders
 build
+lib

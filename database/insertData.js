@@ -474,6 +474,22 @@ const queries = [
       }
     }
   }`,
+  //   Add one organisation
+  `mutation {
+    createOrganisation(
+      input: {
+        organisation: {
+          address: "123 Nowhere St\\nAuckland"
+          licenceNumber: "XYZ1234"
+          name: "Drugs-R-Us"
+        }
+      }
+    ) {
+      organisation {
+        name
+      }
+    }
+  }`,
   //   User registration application 1
   `mutation {
     createApplication(
