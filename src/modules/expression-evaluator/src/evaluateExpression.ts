@@ -88,8 +88,7 @@ export default async function evaluateExpression(
           const url = childrenResolved[0]
           const queryFields = childrenResolved[1]
           const queryValues = childrenResolved.slice(2, queryFields.length + 2)
-          returnNode =
-            childrenResolved[queryFields.length + 2] && childrenResolved[queryFields.length + 2]
+          returnNode = childrenResolved[queryFields.length + 2]
           urlWithQuery =
             queryFields.length > 0
               ? `${url}?${queryFields
