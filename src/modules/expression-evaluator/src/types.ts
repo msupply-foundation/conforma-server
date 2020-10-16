@@ -14,7 +14,7 @@ export interface IConnection {
 }
 
 export interface IGraphQLConnection {
-  fetch: any // Don't know type of fetch object
+  fetch: Function
   endpoint: string
 }
 
@@ -22,7 +22,7 @@ export interface IParameters {
   objects?: object[]
   pgConnection?: IConnection
   graphQLConnection?: IGraphQLConnection
-  APIfetch?: any // Don't know type of fetch object
+  APIfetch?: Function
 }
 
 export interface IQueryNode {
