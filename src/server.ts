@@ -10,7 +10,8 @@ import {
   filesFolderName,
 } from './components/fileHandler'
 import { getAppRootDir } from './components/utilityFunctions'
-import PostgresDB from './components/postgresConnect'
+import DBConnect from './components/databaseConnect'
+// import PostgresDB from './components/postgresConnect'
 
 // Bare-bones Fastify server
 
@@ -79,7 +80,7 @@ const startServer = async () => {
         return
     }
     try {
-      const isUnique = await PostgresDB.isUnique(table, field, value)
+      const isUnique = await DBConnect.isUnique(table, field, value)
       reply.send({
         unique: isUnique,
         message: '',

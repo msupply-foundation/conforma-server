@@ -176,6 +176,35 @@ class PostgresDB {
     }
   }
 
+  public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
+    let text: string
+    switch (tableName) {
+      case 'application':
+        text = 'SELECT template_id FROM application WHERE id = $1'
+      case 'review':
+        // NB: Check the rest of these queries properly once we have data in the tables
+        text =
+          'SELECT template_id FROM application WHERE id = (SELECT application_id FROM review WHERE id = $1)'
+        break
+      case 'review_response':
+        text = 'TO-DO'
+        break
+      case 'review_section':
+        text = 'TO-DO'
+        break
+      case 'review_section_assign':
+        text = 'TO-DO'
+        break
+      case 'action_queue':
+        text = 'TO-DO'
+        break
+      default:
+        throw new Error('Table name not valid')
+    }
+    const result: number = await this.query({ text, values: [record_id] })
+    return result
+  }
+
   public getActionPluginsByTemplate = async (
     tableName: string,
     payload: ActionInTemplateGetPayload

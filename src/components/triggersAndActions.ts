@@ -3,7 +3,8 @@ import { getAppRootDir } from './utilityFunctions'
 import * as config from '../config.json'
 import { ActionLibrary, ActionInTemplate, TriggerPayload, ActionPayload } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import PostgresDB from '../components/postgresConnect'
+// import PostgresDB from '../components/postgresConnect'
+import DBConnect from './databaseConnect'
 
 const schedule = require('node-schedule')
 
@@ -14,7 +15,7 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
   console.log('Loading Actions from Database...')
 
   try {
-    const result = await PostgresDB.getActionPlugins()
+    const result = await DBConnect.getActionPlugins()
 
     result.forEach((row) => {
       const action = require(path.join(pluginFolder, row.path))
@@ -35,7 +36,7 @@ export const loadScheduledActions = async function (
   console.log('Loading Scheduled jobs...')
 
   // Load from Database
-  const actions = await PostgresDB.getActionsQueued()
+  const actions = await DBConnect.getActionsQueued()
 
   let isExecutedAction = true
   for await (const scheduledAction of actions)
@@ -79,25 +80,10 @@ export const loadScheduledActions = async function (
 
 export async function processTrigger(payload: TriggerPayload) {
   // Deduce template ID -- different for each triggered table
-  let templateID
-
-  switch (payload.table) {
-    case 'application':
-      break
-    case 'review':
-      break
-    case 'review_response':
-      break
-    case 'review_section':
-      break
-    case 'review_section_assign':
-      break
-    default:
-      throw new Error('Table name not valid')
-  }
+  const templateID = DBConnect.getTemplateId(payload.table, payload.record_id)
 
   // Get Actions from matching Template
-  const result = await PostgresDB.getActionPluginsByTemplate(payload.table, {
+  const result = await DBConnect.getActionPluginsByTemplate(payload.table, {
     record_id: payload.record_id,
     trigger: payload.trigger,
   })
@@ -111,7 +97,7 @@ export async function processTrigger(payload: TriggerPayload) {
   for (const action of result) {
     const condition = await evaluateExpression(action.condition, {
       objects: [payload],
-      pgConnection: PostgresDB,
+      pgConnection: DBConnect,
     })
     if (condition) actions.push(action)
   }
@@ -121,12 +107,12 @@ export async function processTrigger(payload: TriggerPayload) {
     for (const key in action.parameter_queries) {
       action.parameter_queries[key] = await evaluateExpression(action.parameter_queries[key], {
         objects: [payload],
-        pgConnection: PostgresDB,
+        pgConnection: DBConnect,
       })
     }
     // TODO - Error handling
     // Write each Action with parameters to Action_Queue
-    await PostgresDB.addActionQueue({
+    await DBConnect.addActionQueue({
       trigger_event: payload.id,
       action_code: action.code,
       parameters: action.parameter_queries,
@@ -136,7 +122,7 @@ export async function processTrigger(payload: TriggerPayload) {
 
   // Update trigger queue item with success/failure (and log)
   // If SUCCESS -- Not sure best way to test for this:
-  await PostgresDB.updateTriggerQueue({ status: 'Action Dispatched', id: payload.id })
+  await DBConnect.updateTriggerQueue({ status: 'Action Dispatched', id: payload.id })
 }
 
 export async function executeAction(
@@ -146,7 +132,7 @@ export async function executeAction(
   // TO-DO: If Scheduled, create a Job instead
   const actionResult = await actionLibrary[payload.code](payload.parameters)
 
-  return await PostgresDB.executedActionStatusUpdate({
+  return await DBConnect.executedActionStatusUpdate({
     status: actionResult.status,
     error_log: actionResult.error,
     id: payload.id,
