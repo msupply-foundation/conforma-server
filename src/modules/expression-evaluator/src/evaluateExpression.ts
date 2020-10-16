@@ -153,7 +153,7 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
     const query = queryArray[0]
     const variableNames = queryArray[1]
     const variableNodes = queryArray.slice(2, variableNames.length + 2)
-    const returnNode = queryArray[variableNames.length + 2] && queryArray[variableNames.length + 2]
+    const returnNode = queryArray[variableNames.length + 2]
 
     const variables = zipArraysToObject(variableNames, variableNodes)
 
