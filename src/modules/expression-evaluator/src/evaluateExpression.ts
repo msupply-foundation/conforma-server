@@ -77,15 +77,17 @@ export default async function evaluateExpression(
           const objectIndex = childrenResolved[0].objectIndex ? childrenResolved[0].objectIndex : 0
           const inputObject = params && params.objects ? params.objects[objectIndex] : {}
           const property = childrenResolved[0].property
-          return extractNode(inputObject, property)
+          return extractProperty(inputObject, property)
         } catch {
           throw new Error("Can't resolve object")
         }
 
       case 'API':
-        let url, urlWithQuery, queryFields, queryValues: string[], returnNode
+        let url, urlWithQuery, queryFields, queryValues: string[], returnProperty
         try {
-          ;[url, queryFields, queryValues, returnNode] = assignChildNodesToQuery(childrenResolved)
+          ;[url, queryFields, queryValues, returnProperty] = assignChildNodesToQuery(
+            childrenResolved
+          )
           urlWithQuery =
             queryFields.length > 0
               ? `${url}?${queryFields
@@ -102,8 +104,7 @@ export default async function evaluateExpression(
           throw new Error('Problem with API call')
         }
         try {
-          const returnValue = returnNode ? extractNode(data, returnNode) : data
-          return simplifyObject(returnValue)
+          return extractAndSimplify(data, returnProperty)
         } catch {
           throw new Error('Problem parsing requested node from API result')
         }
@@ -147,30 +148,38 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
 
 async function processGraphQL(queryArray: any[], connection: IGraphQLConnection) {
   try {
-    const [query, variableNames, variableNodes, returnNode] = assignChildNodesToQuery(queryArray)
+    const [query, variableNames, variableValues, returnProperty] = assignChildNodesToQuery(
+      queryArray
+    )
 
-    const variables = zipArraysToObject(variableNames, variableNodes)
+    const variables = zipArraysToObject(variableNames, variableValues)
 
     const data = await graphQLquery(query, variables, connection)
 
-    const selectedNode = returnNode ? extractNode(data, returnNode) : data
-
-    return Array.isArray(selectedNode)
-      ? selectedNode.map((item) => simplifyObject(item))
-      : returnNode
-      ? simplifyObject(selectedNode)
-      : selectedNode
+    return extractAndSimplify(data, returnProperty)
   } catch {
     throw new Error('GraphQL error')
   }
+}
+
+const extractAndSimplify = (
+  data: BasicObject | BasicObject[],
+  returnProperty: string | undefined
+) => {
+  const selectedProperty = returnProperty ? extractProperty(data, returnProperty) : data
+  return Array.isArray(selectedProperty)
+    ? selectedProperty.map((item) => simplifyObject(item))
+    : returnProperty
+    ? simplifyObject(selectedProperty)
+    : selectedProperty
 }
 
 const assignChildNodesToQuery = (childNodes: any[]) => {
   const query = childNodes[0]
   const fieldNames = childNodes[1]
   const values = childNodes.slice(2, fieldNames.length + 2)
-  const returnNode = childNodes[fieldNames.length + 2]
-  return [query, fieldNames, values, returnNode]
+  const returnProperty = childNodes[fieldNames.length + 2]
+  return [query, fieldNames, values, returnProperty]
 }
 
 // Build an object from an array of field names and an array of values
@@ -182,25 +191,31 @@ const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
   return createdObject
 }
 
-// Return a specific node (e.g. application.name) from a nested Object
-const extractNode = (
+// Returns a specific property (e.g. application.name) from a nested Object
+// It splits the returnProperty descriptor into an array
+// (e.g. ["application", "name"]) before recursively drilling
+// down into the object by each property level (from array) in turn
+const extractProperty = (
   data: BasicObject | BasicObject[],
   node: string
 ): BasicObject | string | number | boolean | BasicObject[] => {
-  const returnNodeArray = node.split('.')
+  const propertyPathArray = node.split('.')
+  // ie. "application.template.name" => ["applcation", "template", "name"]
   if (Array.isArray(data)) {
-    return data.map((item) => extractNodeWithArray(item, returnNodeArray))
-  } else return extractNodeWithArray(data, returnNodeArray)
+    // If an array, extract the property from *each item*
+    return data.map((item) => extractPropertyUsingPathArray(item, propertyPathArray))
+  } else return extractPropertyUsingPathArray(data, propertyPathArray)
 }
-const extractNodeWithArray = (
+const extractPropertyUsingPathArray = (
   data: BasicObject,
-  nodeArray: string[]
+  propertyPathArray: string[]
 ): BasicObject | string | number | boolean | BasicObject[] => {
-  if (nodeArray.length === 1) return data[nodeArray[0]]
-  else return extractNodeWithArray(data[nodeArray[0]], nodeArray.slice(1))
+  const currentProperty = propertyPathArray[0]
+  if (propertyPathArray.length === 1) return data[currentProperty]
+  else return extractPropertyUsingPathArray(data[currentProperty], propertyPathArray.slice(1))
 }
 
-// If Object has only 1 field, return just the value of that field,
+// If Object has only 1 property, return just the value of that property,
 // else return the whole object.
 const simplifyObject = (item: number | string | boolean | BasicObject) => {
   return typeof item === 'object' && Object.keys(item).length === 1 ? Object.values(item)[0] : item
