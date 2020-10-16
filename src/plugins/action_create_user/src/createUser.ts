@@ -15,6 +15,7 @@ module.exports['createUser'] = async function (user: any) {
         error_log: 'There was a problem creating new user.',
       }
   } catch (error) {
+    console.log(error.message)
     return {
       status: 'Fail',
       error_log: 'There was a problem creating new user.',
