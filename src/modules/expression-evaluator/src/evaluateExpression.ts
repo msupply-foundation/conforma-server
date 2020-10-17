@@ -192,9 +192,6 @@ const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
 }
 
 // Returns a specific property (e.g. application.name) from a nested Object
-// It splits the returnProperty descriptor into an array
-// (e.g. ["application", "name"]) before recursively drilling
-// down into the object by each property level (from array) in turn
 const extractProperty = (
   data: BasicObject | BasicObject[],
   node: string | string[]
@@ -204,11 +201,10 @@ const extractProperty = (
   if (Array.isArray(data)) {
     // If an array, extract the property from *each item*
     return data.map((item) => extractProperty(item, propertyPathArray))
-  } else {
-    const currentProperty = propertyPathArray[0]
-    if (propertyPathArray.length === 1) return data[currentProperty]
-    else return extractProperty(data[currentProperty], propertyPathArray.slice(1))
   }
+  const currentProperty = propertyPathArray[0]
+  if (propertyPathArray.length === 1) return data[currentProperty]
+  else return extractProperty(data[currentProperty], propertyPathArray.slice(1))
 }
 
 // If Object has only 1 property, return just the value of that property,
