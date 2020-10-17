@@ -197,22 +197,18 @@ const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
 // down into the object by each property level (from array) in turn
 const extractProperty = (
   data: BasicObject | BasicObject[],
-  node: string
+  node: string | string[]
 ): BasicObject | string | number | boolean | BasicObject[] => {
-  const propertyPathArray = node.split('.')
+  const propertyPathArray = Array.isArray(node) ? node : node.split('.')
   // ie. "application.template.name" => ["applcation", "template", "name"]
   if (Array.isArray(data)) {
     // If an array, extract the property from *each item*
-    return data.map((item) => extractPropertyUsingPathArray(item, propertyPathArray))
-  } else return extractPropertyUsingPathArray(data, propertyPathArray)
-}
-const extractPropertyUsingPathArray = (
-  data: BasicObject,
-  propertyPathArray: string[]
-): BasicObject | string | number | boolean | BasicObject[] => {
-  const currentProperty = propertyPathArray[0]
-  if (propertyPathArray.length === 1) return data[currentProperty]
-  else return extractPropertyUsingPathArray(data[currentProperty], propertyPathArray.slice(1))
+    return data.map((item) => extractProperty(item, propertyPathArray))
+  } else {
+    const currentProperty = propertyPathArray[0]
+    if (propertyPathArray.length === 1) return data[currentProperty]
+    else return extractProperty(data[currentProperty], propertyPathArray.slice(1))
+  }
 }
 
 // If Object has only 1 property, return just the value of that property,
