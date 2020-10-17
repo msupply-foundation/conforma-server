@@ -1,8 +1,12 @@
 # (Dynamic) Query/Expression Syntax
 
-_Note: The module is currently in the `src/modules` folder, but will be extracted to an npm package soon, to make it available to the front end as well._
+This module is in `src/modules/expression-evaluator`, structured as its own package for standalone development.
 
-_Run `yarn test` to see it in action -- the tests are in the `src/modules/evaluateExpression` folder._
+The current build of the module is published to Github packages so it can be easily imported into both front- and back-end projects. See **Installation** at the end of this page for instructions on how to make it work in your environment.
+
+Run `yarn test` to see it in action.
+
+---
 
 **The problem**: the highly configurable Template system in mSupply Application Manager requires many values to be stored as dynamic queries to either local state or the database, and perform basic operations (logic, concatenation, etc.) on them. We need a way to represent these potentially complex “expressions” in the database so they can be evaluated at runtime (both in the front and back-end), but without resorting to using `eval()` to evaluate javascript code directly.
 
@@ -224,10 +228,11 @@ Performs GET requests to public API endpoints.
 
 - Input: _(note: basically the same as GraphQL)_
   - 1st child node returns a **string** containing the url of the API endpoint
-  - 2nd child note returns an **array** of field names for the url query parameters. If no query parameters are required, pass an empty array (i.e. `{ value: [] }`).
+  - 2nd child node returns an **array** of field names for the url query parameters. If no query parameters are required, pass an empty array (i.e. `{ value: [] }`).
   - 3rd...N-1 child notes return the values for the query parameters in the 2nd node -- one node for each field name
-  - Nth (last) child node returns a **string** stating the field in the return JSON object that is required. This is optional -- if not supplied the complete response data is returned (which is what you'd want if expecting something other than JSON object). Note: an array is returned, the array _elements_ will be reduced to just this field (assuming they are objects)
-- Output: returned value can be any type. If is is an object, will be simplified according to the same rules as the **GraphQL** operator (above)
+  - Nth (last) child node returns a **string** stating the field/property of the return JSON object that is required. This is optional -- if not supplied the complete response data is returned (which is what you'd want if expecting something other than JSON object).
+- Output: returned value can be any type. If is is an object, will be simplified according to the same rules as the **GraphQL** operator (above)  
+  Note: if an array of objects is returned, the selected field (specified in the last input node) will apply to each object in the array.
 
 **Example**:
 
@@ -472,13 +477,40 @@ Tree structure:
 # Additional Comments
 
 - The `evaluateExpression` function can take either a javascript object or a stringified JSON as its argument, just in case the JSON blob is extracted from the database as a string.
-- The `objectProperties` operator is currently the most uncertain, as it requires local state to be passed to the `evaluateExpression` function in a specific shape. I can’t think of a better way to do this without using `eval` to convert stringified object names to variables. Suggestions welcome.
 
 # To Do
 
 - ~~Convert to typescript.~~
 - ~~Make function async and all operators return Promises (currently only pgSQL does, which is not very consistent)~~
-- Better error handling
+- ~~Better error handling~~
 - Create mocks (or alt?) for Database queries in jest test suite
-- Figure out how to make into a module that can be easily imported into both front-end and back-end repositories.
+- ~~Figure out how to make into a module that can be easily imported into both front-end and back-end repositories.~~
 - Pass JWT/auth token to database operators
+
+# Installation
+
+The module is published as a Github package [here](https://github.com/openmsupply/application-manager-server/packages/433685).
+
+In order to import packages from Github (rather than the default npm), the Github registry info needs to be added to an `.npmrc` config file in the project root, like so:
+
+```
+registry=https://registry.npmjs.org
+@openmsupply:registry=https://npm.pkg.github.com
+```
+
+This is telling npm/yarn to use the normal npm registry, except for packages scoped with `@openmsupply` which should use Github. This file is probably already present in the project.
+
+You'll also need to authenticate once with Github npm registry in order to download the package.
+
+- First of all, create a **personal access token** on Github using [these instructions](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token). When selecting scopes or permissions, make sure at least `read:packages` is selected
+- Run `npm login --registry=https://npm.pkg.github.com` in the project root, and you'll be asked to supply your (Github) USERNAME, (personal access) TOKEN, and (public) EMAIL.
+
+Then you can add the package to your project, if it's not already specified in `package.json`:
+
+`yarn add @openmsupply/expression-evaluator`
+
+It'll work exactly like a regular npm package after that.
+
+To update to the latest release of the package, run:
+
+`yarn upgrade @openmsupply/expression-evaluator`

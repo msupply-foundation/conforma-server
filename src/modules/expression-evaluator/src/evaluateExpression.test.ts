@@ -271,7 +271,7 @@ test('API: Check username is unique', () => {
   return evaluateExpression(testData.APIisUnique, {
     APIfetch: fetch,
   }).then((result: any) => {
-    expect(result).toBe(true)
+    expect(result).toEqual({ unique: true, message: '' })
   })
 })
 

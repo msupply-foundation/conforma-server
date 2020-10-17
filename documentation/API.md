@@ -24,7 +24,7 @@ Web-based GUI available at:
 
 #### File upload endpoint:
 
-`http://localhost:8080/upload`
+`/upload`
 
 Usage: `POST` request with file(s) in the request `body` form-data:  
 `key: "file" value: <File(s)>`
@@ -36,14 +36,41 @@ Additional (optional) fields:
 - `application_response_id`
 
 Note: optional fields can be supplied _either_ as additional `key/value `pairs in the request `body` _or_ as `query parameters`  
-e.g. `http://localhost:8080/upload?user=2&application_id=3`
+e.g. `/upload?user=2&application_id=3`
 
 Files are uploaded to `src/files` with their database table id appended to the filename (to ensure uniqueness).
 
 #### File download endpoint:
 
-`http://localhost:8080/file?id=XX`
+`/file?id=XX`
 
 Usage: `GET` request with file database id as a URL query parameter.
 
 **To-do**: authentication/permission checks for file access.
+
+#### Check unique endpoint
+
+`/check-unique`
+
+Endpoint to check if a username/email/org name is unique in the system. Needed because the front-end user won't have permission to query the full list of records, only ones they have permission for.
+
+Query parameters:
+
+- `type`: available options: `username`, `email`, `organisation`
+- `value`: the value being checked for uniqueness
+
+Example request URL: `/check-unique/type=email&value=carl@sussol.net`
+
+Check is case-insensitive, so `user99` will return **Not Unique** if `User99` is in the database.
+
+Request will return an object, structured like so:
+
+```
+{
+  unique: true/false
+  message: "Type missing or invalid"/"Value not provided", or <empty string> if all okay
+}
+```
+
+There are basic unit tests for this endpoint. Run:  
+`yarn test src/server.test.ts`
