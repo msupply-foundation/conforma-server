@@ -80,7 +80,7 @@ export const loadScheduledActions = async function (
 export async function processTrigger(payload: TriggerPayload) {
   // Get Actions from matching Template
   const result = await PostgresDB.getActionPluginsByTemplate(payload.table, {
-    template_id: payload.record_id,
+    record_id: payload.record_id,
     trigger: payload.trigger,
   })
   // Filter out Actions that don't match the current condition
