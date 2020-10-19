@@ -484,7 +484,7 @@ const queries = [
       input: {
         application: {
           name: "User Registration: Craig Drown"
-          serial: 100
+          serial: "100"
           isActive: true
           outcome: PENDING
           applicationSectionsUsingId: { create: { templateSectionId: 1 } }
@@ -588,7 +588,7 @@ const queries = [
       input: {
         application: {
           name: "User Registration: Carl Smith"
-          serial: 101
+          serial: "101"
           isActive: true
           outcome: APPROVED
           userToUserId: { connectById: { id: 2 } }
@@ -698,7 +698,7 @@ const queries = [
       input: {
         application: {
           name: "Company Registration: Company C"
-          serial: 102
+          serial: "102"
           isActive: true
           outcome: PENDING
           userToUserId: { connectById: { id: 2 } }

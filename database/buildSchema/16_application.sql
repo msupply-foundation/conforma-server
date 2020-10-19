@@ -9,7 +9,7 @@ CREATE TABLE public.application (
     unique_identifier varchar,
     template_id integer references public.template(id),
     user_id integer references public.user(id),
-    serial integer,
+    serial varchar,
     name varchar,
     outcome public.application_outcome,
     is_active bool,
