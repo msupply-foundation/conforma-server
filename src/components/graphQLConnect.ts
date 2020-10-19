@@ -28,14 +28,11 @@ class GraphQLdb {
     return data.data
   }
 
-public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
-  try {
-    
+  public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
+    // Not implemented yet -- needs more data in DB
+    throw new Error('Method not yet implemented for this table')
   }
 }
 
-
-}
-
 const graphqlDBInstance = GraphQLdb.Instance
-export default postgressDBInstance
+export default graphqlDBInstance

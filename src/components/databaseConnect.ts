@@ -50,12 +50,11 @@ class DBConnect {
         break
       // NB: Check the rest of these queries properly once we have data in the tables
       case 'review_response' || 'review_section' || 'review_section_assign' || 'action_queue':
-        throw new Error('Not yet implemented')
+        templateId = await GraphQLdb.getTemplateId(tableName, record_id)
 
       default:
         throw new Error('Table name not valid')
     }
-
     return templateId
   }
 }
