@@ -3,20 +3,39 @@ import * as config from '../config.json'
 
 const endpoint = config.graphQLendpoint
 
-const graphQLquery = async (query: string, variables: object) => {
-  const queryResult = await fetch(endpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
-      query: query,
-      variables: variables,
-    }),
-  })
-  const data = await queryResult.json()
-  return data.data
+class GraphQLdb {
+  private static _instance: GraphQLdb
+
+  // constructor() {}
+
+  public static get Instance() {
+    return this._instance || (this._instance = new this())
+  }
+
+  public gqlQuery = async (query: string, variables: object) => {
+    const queryResult = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        query: query,
+        variables: variables,
+      }),
+    })
+    const data = await queryResult.json()
+    return data.data
+  }
+
+public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
+  try {
+    
+  }
 }
 
-export default graphQLquery
+
+}
+
+const graphqlDBInstance = GraphQLdb.Instance
+export default postgressDBInstance

@@ -186,18 +186,6 @@ class PostgresDB {
         text =
           'SELECT template_id FROM application WHERE id = (SELECT application_id FROM review WHERE id = $1)'
         break
-      case 'review_response':
-        text = 'TO-DO'
-        break
-      case 'review_section':
-        text = 'TO-DO'
-        break
-      case 'review_section_assign':
-        text = 'TO-DO'
-        break
-      case 'action_queue':
-        text = 'TO-DO'
-        break
       default:
         throw new Error('Table name not valid')
     }
