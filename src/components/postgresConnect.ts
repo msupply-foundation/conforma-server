@@ -201,8 +201,8 @@ class PostgresDB {
       default:
         throw new Error('Table name not valid')
     }
-    const result: number = await this.query({ text, values: [record_id] })
-    return result
+    const result = await this.query({ text, values: [record_id] })
+    return result.rows[0]
   }
 
   public getActionPluginsByTemplate = async (

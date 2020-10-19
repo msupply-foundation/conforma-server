@@ -80,7 +80,7 @@ export const loadScheduledActions = async function (
 
 export async function processTrigger(payload: TriggerPayload) {
   // Deduce template ID -- different for each triggered table
-  const templateID = DBConnect.getTemplateId(payload.table, payload.record_id)
+  const templateID = await DBConnect.getTemplateId(payload.table, payload.record_id)
 
   // Get Actions from matching Template
   const result = await DBConnect.getActionPluginsByTemplate(payload.table, {

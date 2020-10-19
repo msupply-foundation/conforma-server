@@ -1,4 +1,5 @@
 import PostgresDB from './postgresConnect'
+import GraphQLdb from './graphQLConnect'
 
 class DBConnect {
   private static _instance: DBConnect
@@ -40,6 +41,23 @@ class DBConnect {
   public isUnique = PostgresDB.isUnique
 
   public setApplicationOutcome = PostgresDB.setApplicationOutcome
+
+  public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
+    let templateId: number
+    switch (tableName) {
+      case 'application' || 'review':
+        templateId = await PostgresDB.getTemplateId(tableName, record_id)
+        break
+      // NB: Check the rest of these queries properly once we have data in the tables
+      case 'review_response' || 'review_section' || 'review_section_assign' || 'action_queue':
+        throw new Error('Not yet implemented')
+
+      default:
+        throw new Error('Table name not valid')
+    }
+
+    return templateId
+  }
 }
 
 const dbConnectInstance = DBConnect.Instance
