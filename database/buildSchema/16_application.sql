@@ -6,10 +6,9 @@ CREATE TYPE public.trigger as ENUM ('onApplicationCreate', 'onApplicationSubmit'
 
 CREATE TABLE public.application (
     id serial primary key,
-    unique_identifier varchar,
     template_id integer references public.template(id),
     user_id integer references public.user(id),
-    serial integer,
+serial varchar UNIQUE,
     name varchar,
     outcome public.application_outcome,
     is_active bool,
