@@ -11,6 +11,10 @@
     "node": ">=10.16.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "1.17.10",
+    "@graphql-codegen/typescript": "1.17.10",
+    "@graphql-codegen/typescript-operations": "^1.17.8",
+    "@graphql-codegen/typescript-resolvers": "^1.17.10",
     "@types/jest": "^26.0.10",
     "@types/node": "^14.6.0",
     "@types/node-fetch": "^2.5.7",
@@ -33,7 +37,8 @@
     "dev_pg": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg\"",
     "database_init": "exec ./database/initialise_database.sh",
     "build_plugins": "exec ./utils/build_plugins.sh",
-    "push_docs": "exec ./utils/push_docs_to_wiki.sh"
+    "push_docs": "exec ./utils/push_docs_to_wiki.sh",
+    "generate": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
