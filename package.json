@@ -8,7 +8,7 @@
     "url": "https://github.com/openmsupply/application-manager-server"
   },
   "engines": {
-    "node": ">=13.8.0"
+    "node": ">=10.16.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.10",
