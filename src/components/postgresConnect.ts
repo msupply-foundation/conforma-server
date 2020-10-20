@@ -14,8 +14,8 @@ import {
   FilePayload,
   FileGetPayload,
   TriggerQueueUpdatePayload,
-  User,
 } from '../types'
+import { ApplicationOutcome, User } from '../generated/graphql'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -187,7 +187,7 @@ class PostgresDB {
     WHERE template_id = (SELECT template_id FROM ${tableName} WHERE id = $1) AND trigger = $2`
 
     try {
-      const result = await this.query({ text, values: [payload.template_id, payload.trigger] })
+      const result = await this.query({ text, values: [payload.record_id, payload.trigger] })
       return result.rows as ActionInTemplate[]
     } catch (err) {
       throw err
@@ -235,6 +235,21 @@ class PostgresDB {
       return !Boolean(Number(result.rows[0].count))
     } catch (err) {
       throw err
+    }
+  }
+
+  public setApplicationOutcome = async (
+    appId: number,
+    outcome: ApplicationOutcome
+  ): Promise<boolean> => {
+    // Note: There is a trigger in Postgres DB that automatically updates the `is_active` field to False when outcome is set to "Approved" or "Rejected"
+    const text = 'UPDATE application SET outcome = $1  WHERE id = $2'
+    try {
+      await this.query({ text, values: [outcome, appId] })
+      return true
+    } catch (err) {
+      console.log(err.stack)
+      return false
     }
   }
 }

@@ -9,6 +9,14 @@ for file in ./database/buildSchema/*; do
     psql -U postgres -d tmf_app_manager -f $file
 done
 
+sleep 1
+
 echo "Inserting data..."
 
-exec node ./database/insertData.js
+exec node ./database/insertData.js &
+
+PID=$!
+wait $PID
+
+echo "Generating types file..."
+yarn generate
