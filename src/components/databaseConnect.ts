@@ -42,14 +42,20 @@ class DBConnect {
 
   public setApplicationOutcome = PostgresDB.setApplicationOutcome
 
+  public getOriginalRecordFromActionQueue = GraphQLdb.getOriginalRecordFromActionQueue
+
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
     let templateId: number
     switch (tableName) {
-      case 'application' || 'review':
+      case 'application':
+      case 'review':
         templateId = await PostgresDB.getTemplateId(tableName, record_id)
         break
       // NB: Check the rest of these queries properly once we have data in the tables
-      case 'review_response' || 'review_section' || 'review_section_assign' || 'action_queue':
+      case 'review_response':
+      case 'review_section':
+      case 'review_section_assign':
+      case 'action_queue':
         templateId = await GraphQLdb.getTemplateId(tableName, record_id)
         break
       default:

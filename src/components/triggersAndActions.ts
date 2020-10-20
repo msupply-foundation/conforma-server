@@ -5,6 +5,7 @@ import { ActionLibrary, ActionInTemplate, TriggerPayload, ActionPayload } from '
 import evaluateExpression from '@openmsupply/expression-evaluator'
 // import PostgresDB from '../components/postgresConnect'
 import DBConnect from './databaseConnect'
+import { table } from 'console'
 
 const schedule = require('node-schedule')
 
@@ -80,9 +81,19 @@ export const loadScheduledActions = async function (
 
 export async function processTrigger(payload: TriggerPayload) {
   // Deduce template ID -- different for each triggered table
-  const templateID = await DBConnect.getTemplateId(payload.table, payload.record_id)
 
-  console.log('TemplateID:', templateID)
+  let table, recordId
+  if (payload.table === 'action_queue') {
+    ;({ table, recordId } = await DBConnect.getOriginalRecordFromActionQueue(
+      payload.table,
+      payload.record_id
+    ))
+  } else {
+    table = payload.table
+    recordId = payload.record_id
+  }
+
+  const templateID = await DBConnect.getTemplateId(table, recordId)
 
   // Get Actions from matching Template
   const result = await DBConnect.getActionPluginsByTemplate(payload.table, {
