@@ -82,14 +82,13 @@ export async function processTrigger(payload: TriggerPayload) {
   // Deduce template ID -- different for each triggered table
   const templateID = await DBConnect.getTemplateId(payload.table, payload.record_id)
 
+  console.log('TemplateID:', templateID)
+
   // Get Actions from matching Template
   const result = await DBConnect.getActionPluginsByTemplate(payload.table, {
     record_id: payload.record_id,
     trigger: payload.trigger,
   })
-
-  console.log(payload)
-  console.log(result)
 
   // Filter out Actions that don't match the current condition
   const actions: ActionInTemplate[] = []

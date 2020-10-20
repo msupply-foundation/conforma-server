@@ -29,8 +29,13 @@ class GraphQLdb {
   }
 
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
+    switch (tableName) {
+      case 'action_queue':
+        break
+      default:
+        throw new Error('Method not yet implemented for this table')
+    }
     // Not implemented yet -- needs more data in DB
-    throw new Error('Method not yet implemented for this table')
   }
 }
 

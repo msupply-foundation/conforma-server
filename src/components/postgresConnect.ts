@@ -181,6 +181,7 @@ class PostgresDB {
     switch (tableName) {
       case 'application':
         text = 'SELECT template_id FROM application WHERE id = $1'
+        break
       case 'review':
         // NB: Check the rest of these queries properly once we have data in the tables
         text =
@@ -189,8 +190,10 @@ class PostgresDB {
       default:
         throw new Error('Table name not valid')
     }
+    console.log(text, record_id)
     const result = await this.query({ text, values: [record_id] })
-    return result.rows[0]
+    // console.log(result)
+    return result.rows[0].template_id
   }
 
   public getActionPluginsByTemplate = async (
