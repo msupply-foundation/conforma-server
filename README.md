@@ -3,7 +3,7 @@
 Install dependencies:  
 `yarn install`
 
-Note: In order to install the [expression-evaluator](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax#installation) package, you'll need to authenticate with the Github package registry. See instructions for this [here](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax#installation)
+Note: In order to install the [expression-evaluator](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax) package, you'll need to authenticate with the Github package registry. See instructions for this [here](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax#installation)
 
 Initialise database:  
 `yarn database_init`  
