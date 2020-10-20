@@ -8,7 +8,7 @@ export interface ActionInTemplate {
 }
 
 export interface ActionInTemplateGetPayload {
-  template_id: number
+  record_id: number
   trigger: TriggerStatus
 }
 
@@ -68,15 +68,6 @@ export interface ActionPluginPayload {
   required_parameters: { [key: string]: any }
 }
 
-export interface User {
-  first_name?: string
-  last_name?: string
-  username: string
-  date_of_birth?: Date
-  password_hash: string
-  email: string
-}
-
 export interface File {
   id: number
   path: string
@@ -113,4 +104,4 @@ export interface TriggerQueueUpdatePayload {
   status: TriggerStatus
 }
 
-export type ApplicationOutcome = 'Pending' | 'Approved' | 'Rejected'
+// export type ApplicationOutcome = 'Pending' | 'Approved' | 'Rejected'

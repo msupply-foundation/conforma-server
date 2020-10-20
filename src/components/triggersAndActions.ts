@@ -2,7 +2,7 @@ import path from 'path'
 import { getAppRootDir } from './utilityFunctions'
 import * as config from '../config.json'
 import { ActionLibrary, ActionInTemplate, TriggerPayload, ActionPayload } from '../types'
-import evaluateExpression from '../modules/evaluateExpression/evaluateExpression'
+import evaluateExpression from '@openmsupply/expression-evaluator'
 import PostgresDB from '../components/postgresConnect'
 
 const schedule = require('node-schedule')
@@ -80,7 +80,7 @@ export const loadScheduledActions = async function (
 export async function processTrigger(payload: TriggerPayload) {
   // Get Actions from matching Template
   const result = await PostgresDB.getActionPluginsByTemplate(payload.table, {
-    template_id: payload.record_id,
+    record_id: payload.record_id,
     trigger: payload.trigger,
   })
   // Filter out Actions that don't match the current condition

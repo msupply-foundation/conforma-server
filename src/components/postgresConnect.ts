@@ -14,9 +14,8 @@ import {
   FilePayload,
   FileGetPayload,
   TriggerQueueUpdatePayload,
-  ApplicationOutcome,
-  User,
 } from '../types'
+import { ApplicationOutcome, User } from '../generated/graphql'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -29,6 +28,7 @@ class PostgresDB {
     // it contains if a backend error or network partition happens
     this.pool.on('error', (err) => {
       console.error('Unexpected error on idle pool', err)
+      throw err
       process.exit(-1)
     })
 
@@ -90,8 +90,7 @@ class PostgresDB {
       await this.query({ text, values: Object.values(action) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -104,8 +103,7 @@ class PostgresDB {
       await this.query({ text, values: Object.values(payload) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -121,8 +119,7 @@ class PostgresDB {
       })
       return result.rows as ActionQueue[]
     } catch (err) {
-      console.log(err.stack)
-      return []
+      throw err
     }
   }
 
@@ -134,8 +131,7 @@ class PostgresDB {
       const result = await this.query({ text, values: Object.values(payload) })
       return result.rows[0].id
     } catch (err) {
-      console.log(err.stack)
-      return 0
+      throw err
     }
   }
 
@@ -145,8 +141,7 @@ class PostgresDB {
       const result = await this.query({ text, values: [payload.id] })
       return result.rows[0] as File
     } catch (err) {
-      console.log(err.stack)
-      return undefined
+      throw err
     }
   }
 
@@ -157,8 +152,7 @@ class PostgresDB {
       await this.query({ text, values: Object.values(plugin) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -168,8 +162,7 @@ class PostgresDB {
       await this.query({ text, values: [payload.code] })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -179,8 +172,7 @@ class PostgresDB {
       const result = await this.query({ text })
       return result.rows as ActionPlugin[]
     } catch (err) {
-      console.log(err.stack)
-      return []
+      throw err
     }
   }
 
@@ -195,11 +187,10 @@ class PostgresDB {
     WHERE template_id = (SELECT template_id FROM ${tableName} WHERE id = $1) AND trigger = $2`
 
     try {
-      const result = await this.query({ text, values: [payload.template_id, payload.trigger] })
+      const result = await this.query({ text, values: [payload.record_id, payload.trigger] })
       return result.rows as ActionInTemplate[]
     } catch (err) {
-      console.log(err.stack)
-      return []
+      throw err
     }
   }
 
@@ -211,8 +202,7 @@ class PostgresDB {
       await this.query({ text, values: Object.values(plugin) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -223,8 +213,7 @@ class PostgresDB {
       await this.query({ text, values: Object.values(payload) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
     }
   }
 
@@ -235,8 +224,17 @@ class PostgresDB {
       await this.query({ text, values: Object.values(user) })
       return true
     } catch (err) {
-      console.log(err.stack)
-      return false
+      throw err
+    }
+  }
+
+  public isUnique = async (table: string, field: string, value: string): Promise<boolean> => {
+    const text = `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
+    try {
+      const result = await this.query({ text, values: [value] })
+      return !Boolean(Number(result.rows[0].count))
+    } catch (err) {
+      throw err
     }
   }
 

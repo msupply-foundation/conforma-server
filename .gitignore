@@ -39,8 +39,11 @@ typings/
 
 # File storage folder
 /src/files
-database/schema.graphql
 
-# Build folder
+#GraphQL schema auto-generated
+database/schema.graphql
+database/schema.json
+
+# Build folders
 build
 lib

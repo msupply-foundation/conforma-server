@@ -11,4 +11,10 @@ done
 
 echo "Inserting data..."
 
-exec node ./database/insertData.js
+exec node ./database/insertData.js &
+
+PID=$!
+wait $PID
+
+echo "Generating types file..."
+yarn generate
