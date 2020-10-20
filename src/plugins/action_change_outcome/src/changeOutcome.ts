@@ -1,6 +1,4 @@
-import PostgresDB from '../../../components/postgresConnect'
-
-module.exports['changeOutcome'] = async function (parameters: any) {
+module.exports['changeOutcome'] = async function (parameters: any, PostgresDB: any) {
   const { application_id, newOutcome } = parameters
   try {
     console.log(`\nUpdating application: ${newOutcome}`)
