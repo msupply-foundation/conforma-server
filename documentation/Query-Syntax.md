@@ -453,6 +453,8 @@ Tree structure:
 - ~~Figure out how to make into a module that can be easily imported into both front-end and back-end repositories.~~
 - Pass JWT/auth token to database operators
 
+<a name="installation"></a>
+
 # Installation
 
 The module is published as a Github package [here](https://github.com/openmsupply/application-manager-server/packages/433685).
