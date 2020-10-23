@@ -15,7 +15,7 @@ import {
   FileGetPayload,
   TriggerQueueUpdatePayload,
 } from '../types'
-import { ApplicationOutcome, User } from '../generated/graphql'
+import { ApplicationOutcome, Trigger, User } from '../generated/graphql'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -190,24 +190,22 @@ class PostgresDB {
       default:
         throw new Error('Table name not valid')
     }
-    console.log(text, record_id)
     const result = await this.query({ text, values: [record_id] })
-    // console.log(result)
     return result.rows[0].template_id
   }
 
-  public getActionPluginsByTemplate = async (
-    tableName: string,
-    payload: ActionInTemplateGetPayload
+  public getActionPluginsByTemplateId = async (
+    templateId: number,
+    trigger: Trigger
   ): Promise<ActionInTemplate[]> => {
     const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, condition, parameter_queries 
     FROM template 
     JOIN template_action ON template.id = template_action.template_id 
     JOIN action_plugin ON template_action.action_code = action_plugin.code 
-    WHERE template_id = (SELECT template_id FROM ${tableName} WHERE id = $1) AND trigger = $2`
+    WHERE template_id = $1 AND trigger = $2`
 
     try {
-      const result = await this.query({ text, values: [payload.record_id, payload.trigger] })
+      const result = await this.query({ text, values: [templateId, trigger] })
       return result.rows as ActionInTemplate[]
     } catch (err) {
       throw err

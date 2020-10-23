@@ -1,3 +1,5 @@
+import { Trigger } from './generated/graphql'
+
 export interface ActionInTemplate {
   code: string
   path: string
@@ -103,7 +105,7 @@ type TriggerStatus = 'Triggered' | 'Action Dispatched' | 'Error'
 
 export interface TriggerPayload {
   id: number
-  trigger: TriggerStatus
+  trigger: Trigger
   table: string
   record_id: number
 }

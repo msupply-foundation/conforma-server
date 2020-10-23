@@ -30,7 +30,7 @@ class DBConnect {
 
   public getActionPlugins = PostgresDB.getActionPlugins
 
-  public getActionPluginsByTemplate = PostgresDB.getActionPluginsByTemplate
+  public getActionPluginsByTemplateId = PostgresDB.getActionPluginsByTemplateId
 
   public updateActionPlugin = PostgresDB.updateActionPlugin
 
