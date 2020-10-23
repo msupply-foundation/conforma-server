@@ -5,6 +5,7 @@ CREATE TYPE public.action_queue_status as ENUM ('Scheduled', 'Queued', 'Success'
 CREATE TABLE public.action_queue (
     id serial primary key,
     trigger_event integer references public.trigger_queue(id),
+    template_id integer references public.template(id),
     action_code varchar,
     parameters jsonb,
     status public.action_queue_status,

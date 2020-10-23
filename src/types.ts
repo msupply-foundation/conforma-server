@@ -31,6 +31,7 @@ type ActionQueueStatus = 'Scheduled' | 'Queued' | 'Success' | 'Fail'
 
 export interface ActionQueuePayload {
   trigger_event: number
+  template_id: number
   action_code: string
   parameters: { [key: string]: any }
   status: ActionQueueStatus

@@ -121,6 +121,7 @@ export async function processTrigger(payload: TriggerPayload) {
     // Write each Action with parameters to Action_Queue
     await DBConnect.addActionQueue({
       trigger_event: payload.id,
+      template_id: templateID,
       action_code: action.code,
       parameters: action.parameter_queries,
       status: 'Queued',
