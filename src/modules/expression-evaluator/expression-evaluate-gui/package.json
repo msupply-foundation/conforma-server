@@ -20,7 +20,6 @@
     "start": "rimraf ./src/expression-evaluator && mkdir ./src/expression-evaluator && cp ../src/evaluateExpression.ts ../src/types.ts ./src/expression-evaluator && concurrently --kill-others-on-fail \"yarn serve\" \"PORT=3005 react-scripts start\"",
     "build": "react-scripts build",
     "serve": "node ./src/express/server",
-    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
