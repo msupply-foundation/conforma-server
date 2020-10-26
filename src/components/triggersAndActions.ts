@@ -82,6 +82,8 @@ export const loadScheduledActions = async function (
 export async function processTrigger(payload: TriggerPayload) {
   // Deduce template ID -- different for each triggered table
 
+  console.log('Payload', payload)
+
   let table, recordId
   if (payload.table === 'action_queue') {
     ;({ table, recordId } = await DBConnect.getOriginalRecordFromActionQueue(

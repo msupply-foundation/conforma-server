@@ -3415,8 +3415,6 @@ export type CreateTemplateActionPayload = {
   query?: Maybe<Query>;
   /** Reads a single `Template` that is related to this `TemplateAction`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateAction` that is related to this `TemplateAction`. */
-  previousAction?: Maybe<TemplateAction>;
   /** An edge for our `TemplateAction`. May be used by Relay 1. */
   templateActionEdge?: Maybe<TemplateActionsEdge>;
 };
@@ -4744,8 +4742,6 @@ export type DeleteTemplateActionPayload = {
   query?: Maybe<Query>;
   /** Reads a single `Template` that is related to this `TemplateAction`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateAction` that is related to this `TemplateAction`. */
-  previousAction?: Maybe<TemplateAction>;
   /** An edge for our `TemplateAction`. May be used by Relay 1. */
   templateActionEdge?: Maybe<TemplateActionsEdge>;
 };
@@ -11752,28 +11748,12 @@ export type TemplateAction = Node & {
   id: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  previousActionId?: Maybe<Scalars['Int']>;
+  previousActionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   /** Reads a single `Template` that is related to this `TemplateAction`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateAction` that is related to this `TemplateAction`. */
-  previousAction?: Maybe<TemplateAction>;
-  /** Reads and enables pagination through a set of `TemplateAction`. */
-  templateActionsByPreviousActionId: TemplateActionsConnection;
-};
-
-
-export type TemplateActionTemplateActionsByPreviousActionIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<TemplateActionsOrderBy>>;
-  condition?: Maybe<TemplateActionCondition>;
-  filter?: Maybe<TemplateActionFilter>;
 };
 
 /**
@@ -11787,8 +11767,8 @@ export type TemplateActionCondition = {
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `previousActionId` field. */
-  previousActionId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `previousActionCode` field. */
+  previousActionCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `condition` field. */
@@ -11805,26 +11785,18 @@ export type TemplateActionFilter = {
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `previousActionId` field. */
-  previousActionId?: Maybe<IntFilter>;
+  /** Filter by the object’s `previousActionCode` field. */
+  previousActionCode?: Maybe<StringFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `condition` field. */
   condition?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameterQueries` field. */
   parameterQueries?: Maybe<JsonFilter>;
-  /** Filter by the object’s `templateActionsByPreviousActionId` relation. */
-  templateActionsByPreviousActionId?: Maybe<TemplateActionToManyTemplateActionFilter>;
-  /** Some related `templateActionsByPreviousActionId` exist. */
-  templateActionsByPreviousActionIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** A related `template` exists. */
   templateExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `previousAction` relation. */
-  previousAction?: Maybe<TemplateActionFilter>;
-  /** A related `previousAction` exists. */
-  previousActionExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateActionFilter>>;
   /** Checks for any expressions in this list. */
@@ -11838,12 +11810,11 @@ export type TemplateActionInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  previousActionId?: Maybe<Scalars['Int']>;
+  previousActionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
-  templateActionToPreviousActionId?: Maybe<TemplateActionPreviousActionIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -11856,21 +11827,6 @@ export type TemplateActionNodeIdConnect = {
 export type TemplateActionNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `templateAction` to be deleted. */
   nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `templateAction` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `templateAction` being updated. */
-  patch: TemplateActionPatch;
-};
-
-/** The fields on `templateAction` to look up the row to update. */
-export type TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyUsingTemplateActionPkeyUpdate = {
-  /** An object where the defined keys will be set on the `templateAction` being updated. */
-  patch: UpdateTemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyPatch;
-  id: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -11893,42 +11849,11 @@ export type TemplateActionPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  previousActionId?: Maybe<Scalars['Int']>;
+  previousActionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
-  templateActionToPreviousActionId?: Maybe<TemplateActionPreviousActionIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `templateAction` in the `TemplateActionInput` mutation. */
-export type TemplateActionPreviousActionIdFkeyInput = {
-  /** The primary key(s) for `templateAction` for the far side of the relationship. */
-  connectById?: Maybe<TemplateActionTemplateActionPkeyConnect>;
-  /** The primary key(s) for `templateAction` for the far side of the relationship. */
-  connectByNodeId?: Maybe<TemplateActionNodeIdConnect>;
-  /** The primary key(s) for `templateAction` for the far side of the relationship. */
-  deleteById?: Maybe<TemplateActionTemplateActionPkeyDelete>;
-  /** The primary key(s) for `templateAction` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<TemplateActionNodeIdDelete>;
-  /** The primary key(s) and patch data for `templateAction` for the far side of the relationship. */
-  updateById?: Maybe<TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyUsingTemplateActionPkeyUpdate>;
-  /** The primary key(s) and patch data for `templateAction` for the far side of the relationship. */
-  updateByNodeId?: Maybe<TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyNodeIdUpdate>;
-  /** A `TemplateActionInput` object that will be created and connected to this object. */
-  create?: Maybe<TemplateActionPreviousActionIdFkeyTemplateActionCreateInput>;
-};
-
-/** The `templateAction` to be created by this mutation. */
-export type TemplateActionPreviousActionIdFkeyTemplateActionCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  actionCode?: Maybe<Scalars['String']>;
-  trigger?: Maybe<Trigger>;
-  condition?: Maybe<Scalars['JSON']>;
-  parameterQueries?: Maybe<Scalars['JSON']>;
-  templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
-  templateActionToPreviousActionId?: Maybe<TemplateActionPreviousActionIdFkeyInput>;
 };
 
 /** A connection to a list of `TemplateAction` values. */
@@ -11962,8 +11887,8 @@ export enum TemplateActionsOrderBy {
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   ActionCodeAsc = 'ACTION_CODE_ASC',
   ActionCodeDesc = 'ACTION_CODE_DESC',
-  PreviousActionIdAsc = 'PREVIOUS_ACTION_ID_ASC',
-  PreviousActionIdDesc = 'PREVIOUS_ACTION_ID_DESC',
+  PreviousActionCodeAsc = 'PREVIOUS_ACTION_CODE_ASC',
+  PreviousActionCodeDesc = 'PREVIOUS_ACTION_CODE_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   ConditionAsc = 'CONDITION_ASC',
@@ -12026,12 +11951,11 @@ export type TemplateActionTemplateIdFkeyInverseInput = {
 export type TemplateActionTemplateIdFkeyTemplateActionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  previousActionId?: Maybe<Scalars['Int']>;
+  previousActionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
-  templateActionToPreviousActionId?: Maybe<TemplateActionPreviousActionIdFkeyInput>;
 };
 
 /** The `template` to be created by this mutation. */
@@ -12047,16 +11971,6 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-};
-
-/** A filter to be used against many `TemplateAction` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateActionToManyTemplateActionFilter = {
-  /** Every related `TemplateAction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<TemplateActionFilter>;
-  /** Some related `TemplateAction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<TemplateActionFilter>;
-  /** No related `TemplateAction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<TemplateActionFilter>;
 };
 
 /**
@@ -15753,27 +15667,14 @@ export type UpdateTemplateActionInput = {
 };
 
 /** An object where the defined keys will be set on the `templateAction` being updated. */
-export type UpdateTemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  actionCode?: Maybe<Scalars['String']>;
-  trigger?: Maybe<Trigger>;
-  condition?: Maybe<Scalars['JSON']>;
-  parameterQueries?: Maybe<Scalars['JSON']>;
-  templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
-  templateActionToPreviousActionId?: Maybe<TemplateActionPreviousActionIdFkeyInput>;
-};
-
-/** An object where the defined keys will be set on the `templateAction` being updated. */
 export type UpdateTemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  previousActionId?: Maybe<Scalars['Int']>;
+  previousActionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
-  templateActionToPreviousActionId?: Maybe<TemplateActionPreviousActionIdFkeyInput>;
 };
 
 /** The output of our update `TemplateAction` mutation. */
@@ -15790,8 +15691,6 @@ export type UpdateTemplateActionPayload = {
   query?: Maybe<Query>;
   /** Reads a single `Template` that is related to this `TemplateAction`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateAction` that is related to this `TemplateAction`. */
-  previousAction?: Maybe<TemplateAction>;
   /** An edge for our `TemplateAction`. May be used by Relay 1. */
   templateActionEdge?: Maybe<TemplateActionsEdge>;
 };
@@ -17559,7 +17458,6 @@ export type ResolversTypes = {
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateActionFilter: TemplateActionFilter;
-  TemplateActionToManyTemplateActionFilter: TemplateActionToManyTemplateActionFilter;
   ActionQueuesConnection: ResolverTypeWrapper<ActionQueuesConnection>;
   ActionQueue: ResolverTypeWrapper<ActionQueue>;
   TriggerQueue: ResolverTypeWrapper<TriggerQueue>;
@@ -17859,13 +17757,8 @@ export type ResolversTypes = {
   TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
   TemplatePatch: TemplatePatch;
   TemplateActionTemplateIdFkeyTemplateCreateInput: TemplateActionTemplateIdFkeyTemplateCreateInput;
-  TemplateActionPreviousActionIdFkeyInput: TemplateActionPreviousActionIdFkeyInput;
-  TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyUsingTemplateActionPkeyUpdate: TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyUsingTemplateActionPkeyUpdate;
-  updateTemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyPatch: UpdateTemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyPatch;
-  TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyNodeIdUpdate: TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyNodeIdUpdate;
-  TemplateActionPatch: TemplateActionPatch;
-  TemplateActionPreviousActionIdFkeyTemplateActionCreateInput: TemplateActionPreviousActionIdFkeyTemplateActionCreateInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
+  TemplateActionPatch: TemplateActionPatch;
   TemplateActionTemplateIdFkeyTemplateActionCreateInput: TemplateActionTemplateIdFkeyTemplateActionCreateInput;
   ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate;
   ApplicationTemplateIdFkeyTemplateCreateInput: ApplicationTemplateIdFkeyTemplateCreateInput;
@@ -18637,7 +18530,6 @@ export type ResolversParentTypes = {
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateActionFilter: TemplateActionFilter;
-  TemplateActionToManyTemplateActionFilter: TemplateActionToManyTemplateActionFilter;
   ActionQueuesConnection: ActionQueuesConnection;
   ActionQueue: ActionQueue;
   TriggerQueue: TriggerQueue;
@@ -18909,13 +18801,8 @@ export type ResolversParentTypes = {
   TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
   TemplatePatch: TemplatePatch;
   TemplateActionTemplateIdFkeyTemplateCreateInput: TemplateActionTemplateIdFkeyTemplateCreateInput;
-  TemplateActionPreviousActionIdFkeyInput: TemplateActionPreviousActionIdFkeyInput;
-  TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyUsingTemplateActionPkeyUpdate: TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyUsingTemplateActionPkeyUpdate;
-  updateTemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyPatch: UpdateTemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyPatch;
-  TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyNodeIdUpdate: TemplateActionOnTemplateActionForTemplateActionPreviousActionIdFkeyNodeIdUpdate;
-  TemplateActionPatch: TemplateActionPatch;
-  TemplateActionPreviousActionIdFkeyTemplateActionCreateInput: TemplateActionPreviousActionIdFkeyTemplateActionCreateInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
+  TemplateActionPatch: TemplateActionPatch;
   TemplateActionTemplateIdFkeyTemplateActionCreateInput: TemplateActionTemplateIdFkeyTemplateActionCreateInput;
   ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate;
   ApplicationTemplateIdFkeyTemplateCreateInput: ApplicationTemplateIdFkeyTemplateCreateInput;
@@ -20005,7 +19892,6 @@ export type CreateTemplateActionPayloadResolvers<ContextType = any, ParentType e
   templateAction?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  previousAction?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType>;
   templateActionEdge?: Resolver<Maybe<ResolversTypes['TemplateActionsEdge']>, ParentType, ContextType, RequireFields<CreateTemplateActionPayloadTemplateActionEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -20313,7 +20199,6 @@ export type DeleteTemplateActionPayloadResolvers<ContextType = any, ParentType e
   deletedTemplateActionNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  previousAction?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType>;
   templateActionEdge?: Resolver<Maybe<ResolversTypes['TemplateActionsEdge']>, ParentType, ContextType, RequireFields<DeleteTemplateActionPayloadTemplateActionEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -21044,13 +20929,11 @@ export type TemplateActionResolvers<ContextType = any, ParentType extends Resolv
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   actionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  previousActionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  previousActionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   condition?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   parameterQueries?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  previousAction?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType>;
-  templateActionsByPreviousActionId?: Resolver<ResolversTypes['TemplateActionsConnection'], ParentType, ContextType, RequireFields<TemplateActionTemplateActionsByPreviousActionIdArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -21420,7 +21303,6 @@ export type UpdateTemplateActionPayloadResolvers<ContextType = any, ParentType e
   templateAction?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  previousAction?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType>;
   templateActionEdge?: Resolver<Maybe<ResolversTypes['TemplateActionsEdge']>, ParentType, ContextType, RequireFields<UpdateTemplateActionPayloadTemplateActionEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
