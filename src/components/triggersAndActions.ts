@@ -42,7 +42,7 @@ export const loadScheduledActions = async function (
   let isExecutedAction = true
   for await (const scheduledAction of actions)
     while (isExecutedAction) {
-      const date = new Date(scheduledAction.execution_time)
+      const date = new Date(scheduledAction.time_completed)
       if (date > new Date(Date.now())) {
         const job = schedule.scheduleJob(date, function () {
           // TODO: Check if was exectued otherwise don't continue

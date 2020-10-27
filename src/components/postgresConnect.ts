@@ -49,9 +49,9 @@ class PostgresDB {
         case 'trigger_notifications':
           processTrigger(JSON.parse(payload))
           break
-        case 'action_notifications':
-          executeAction(JSON.parse(payload), actionLibrary)
-          break
+        // case 'action_notifications':
+        //   executeAction(JSON.parse(payload), actionLibrary)
+        //   break
       }
     })
   }
@@ -98,7 +98,7 @@ class PostgresDB {
     payload: ActionQueueExecutePayload
   ): Promise<boolean> => {
     const text =
-      'UPDATE action_queue SET status = $1, error_log = $2, execution_time = CURRENT_TIMESTAMP WHERE id = $3'
+      'UPDATE action_queue SET status = $1, error_log = $2, time_completed = CURRENT_TIMESTAMP WHERE id = $3'
     try {
       await this.query({ text, values: Object.values(payload) })
       return true
@@ -111,7 +111,7 @@ class PostgresDB {
     payload: ActionQueueGetPayload = { status: 'Scheduled' }
   ): Promise<ActionQueue[]> => {
     const text =
-      'SELECT id, action_code, parameters, execution_time FROM action_queue WHERE status = $1 ORDER BY execution_time'
+      'SELECT id, action_code, parameters, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
     try {
       const result = await this.query({
         text,

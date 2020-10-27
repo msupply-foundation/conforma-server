@@ -10,9 +10,8 @@ CREATE TABLE public.action_queue (
     parameters jsonb,
     status public.action_queue_status,
     time_queued timestamp,
-    execution_time timestamp,
-    error_log varchar,
-    trigger public.trigger
+    time_completed timestamp,
+    error_log varchar
 );
 
 -- Function to Notify Action service of ActionQueue insert

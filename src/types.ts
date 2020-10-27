@@ -23,7 +23,7 @@ export interface ActionQueue {
   status?: ActionQueueStatus
   action_code: string
   parameters: { [key: string]: any }
-  execution_time: string
+  time_completed: string
 }
 
 // TODO: Ideally this would be coming from postgraphile types, to be consistent with the types
