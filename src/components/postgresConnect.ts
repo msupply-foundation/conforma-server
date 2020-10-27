@@ -96,10 +96,6 @@ class PostgresDB {
     }
   }
 
-  public addActionQueueBatch = async (actions: ActionSequential[]): Promise<boolean> => {
-    return true
-  }
-
   public executedActionStatusUpdate = async (
     payload: ActionQueueExecutePayload
   ): Promise<boolean> => {
@@ -113,7 +109,7 @@ class PostgresDB {
     }
   }
 
-  public getActionsQueued = async (
+  public getActionsScheduled = async (
     payload: ActionQueueGetPayload = { status: 'Scheduled' }
   ): Promise<ActionQueue[]> => {
     const text =
@@ -124,6 +120,33 @@ class PostgresDB {
         values: Object.values(payload),
       })
       return result.rows as ActionQueue[]
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
+    const text =
+      "SELECT id, action_code, parameters, time_queued FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY time_queued"
+    try {
+      const result = await this.query({
+        text,
+        values: [templateId],
+      })
+      return result.rows as ActionQueue[]
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public resetTrigger = async (table: string, record_id: number): Promise<boolean> => {
+    const text = `UPDATE ${table} SET trigger = NULL WHERE id = $1`
+    try {
+      const result = await this.query({
+        text,
+        values: [record_id],
+      })
+      return true
     } catch (err) {
       throw err
     }
@@ -200,7 +223,7 @@ class PostgresDB {
     return result.rows[0].template_id
   }
 
-  public getActionPluginsByTemplateId = async (
+  public getActionsByTemplateId = async (
     templateId: number,
     trigger: Trigger
   ): Promise<ActionInTemplate[]> => {

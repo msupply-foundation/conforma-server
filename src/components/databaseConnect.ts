@@ -16,11 +16,13 @@ class DBConnect {
 
   public addActionQueue = PostgresDB.addActionQueue
 
-  public addActionQueueBatch = PostgresDB.addActionQueueBatch
-
   public executedActionStatusUpdate = PostgresDB.executedActionStatusUpdate
 
-  public getActionsQueued = PostgresDB.getActionsQueued
+  public getActionsScheduled = PostgresDB.getActionsScheduled
+
+  public getActionsProcessing = PostgresDB.getActionsProcessing
+
+  public resetTrigger = PostgresDB.resetTrigger
 
   public addFile = PostgresDB.addFile
 
@@ -32,7 +34,7 @@ class DBConnect {
 
   public getActionPlugins = PostgresDB.getActionPlugins
 
-  public getActionPluginsByTemplateId = PostgresDB.getActionPluginsByTemplateId
+  public getActionsByTemplateId = PostgresDB.getActionsByTemplateId
 
   public updateActionPlugin = PostgresDB.updateActionPlugin
 

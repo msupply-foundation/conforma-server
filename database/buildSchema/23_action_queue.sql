@@ -18,12 +18,14 @@ CREATE TABLE public.action_queue (
 CREATE OR REPLACE FUNCTION public.notify_action_queue()
 RETURNS trigger as $action_event$
 BEGIN
+IF NEW.status = 'Queued' THEN
 PERFORM pg_notify('action_notifications', json_build_object(
 	'id', NEW.id,
 	'code', NEW.action_code,
 	'parameters', NEW.parameters
 	)::text
-);	
+);
+END IF;
 RETURN NULL;
 END;
 $action_event$ LANGUAGE plpgsql;
