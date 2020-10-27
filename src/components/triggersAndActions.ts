@@ -132,7 +132,7 @@ export async function processTrigger(payload: TriggerPayload) {
       // TODO - better error handling
       // Write each Action with parameters to Action_Queue
       await DBConnect.addActionQueue({
-        trigger_event: payload.id,
+        trigger_event: trigger_id,
         template_id: templateID,
         action_code: action.code,
         parameter_queries: action.parameter_queries,
