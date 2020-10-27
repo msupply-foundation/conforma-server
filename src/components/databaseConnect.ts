@@ -55,13 +55,11 @@ class DBConnect {
       case 'review':
         templateId = await PostgresDB.getTemplateId(tableName, record_id)
         break
-      // NB: Check the rest of these queries properly once we have data in the tables
+      // TO-DO: Implement these queries once we have more data in database
+      // -- will probably be easier using GraphQL
       case 'review_response':
       case 'review_section':
       case 'review_section_assign':
-      case 'action_queue':
-        templateId = await GraphQLdb.getTemplateId(tableName, record_id)
-        break
       default:
         throw new Error('Table name not valid')
     }
