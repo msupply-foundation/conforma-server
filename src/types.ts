@@ -8,6 +8,7 @@ export interface ActionInTemplate {
   sequence: number | null
   condition: { [key: string]: any }
   parameter_queries: { [key: string]: any }
+  parameters_evaluated: { [key: string]: any }
 }
 
 export interface ActionSequential extends ActionInTemplate {
@@ -27,7 +28,8 @@ export interface ActionQueue {
   id: number
   status?: ActionQueueStatus
   action_code: string
-  parameters: { [key: string]: any }
+  parameter_queries: { [key: string]: any }
+  parameters_evaluated: { [key: string]: any }
   time_completed: string
 }
 
@@ -38,7 +40,8 @@ export interface ActionQueuePayload {
   trigger_event: number
   template_id: number
   action_code: string
-  parameters: { [key: string]: any }
+  parameter_queries: { [key: string]: any }
+  parameters_evaluated: { [key: string]: any }
   status: ActionQueueStatus
 }
 

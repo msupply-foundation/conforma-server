@@ -113,7 +113,7 @@ class PostgresDB {
     payload: ActionQueueGetPayload = { status: 'Scheduled' }
   ): Promise<ActionQueue[]> => {
     const text =
-      'SELECT id, action_code, parameters, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
+      'SELECT id, action_code, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
     try {
       const result = await this.query({
         text,
@@ -127,13 +127,26 @@ class PostgresDB {
 
   public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
     const text =
-      "SELECT id, action_code, parameters, time_queued FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY time_queued"
+      "SELECT id, action_code, parameter_queries, time_queued FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY time_queued"
     try {
       const result = await this.query({
         text,
         values: [templateId],
       })
       return result.rows as ActionQueue[]
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public updateActionParametersEvaluated = async (action_id: number, parameters: any) => {
+    const text = 'UPDATE action_queue SET parameters_evaluated = $1 WHERE id = $2'
+    try {
+      const result = await this.query({
+        text,
+        values: [parameters, action_id],
+      })
+      return true
     } catch (err) {
       throw err
     }

@@ -22,6 +22,8 @@ class DBConnect {
 
   public getActionsProcessing = PostgresDB.getActionsProcessing
 
+  public updateActionParametersEvaluated = PostgresDB.updateActionParametersEvaluated
+
   public resetTrigger = PostgresDB.resetTrigger
 
   public addFile = PostgresDB.addFile
