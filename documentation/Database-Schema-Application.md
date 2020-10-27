@@ -16,7 +16,7 @@ The `template_id` links to the template used to display all sections and element
 
 The `user_id` links to the Applicant user that created this application.
 
-The `serial` is a number used to display the application number to users.
+The `serial` is a string used to display the application number to users - future plan is to allow custom serial numbers.
 
 The `name` will be deduced by the template name + user + company names.
 
@@ -27,10 +27,6 @@ The `is_active` is set to `'false'` for applications that have finished the revi
 The `trigger` is updated everytime the application has changes done by users or a scheduler. See more about [triggers](Triggers-and-Actions.md)
 
 The `outcome` is either `'Pending'`, `'Approved'`, `'Rejected'`. The application is 'Pending' during the review process, each stage will store also the outcome, so it will only be updated to here once the review process is finished resulting in either 'Approved' or 'Rejected'.
-
-**To be considered:**
-
-- The `unique_identifier` is a new field. What is it used for? Should is replace the `serial`?
 
 ### application_section
 

@@ -1,6 +1,4 @@
-import DBConnect from '../../../components/databaseConnect'
-
-module.exports['createUser'] = async function (user: any) {
+module.exports['createUser'] = async function (user: any, DBConnect: any) {
   try {
     console.log(`\nAdding new user: ${user.username}`)
     const success = await DBConnect.createUser(user)

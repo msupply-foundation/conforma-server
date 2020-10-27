@@ -13,7 +13,7 @@ export default async function evaluateExpression(
       try {
         query = JSON.parse(inputQuery)
       } catch {
-        return 'Invalid JSON String'
+        throw new Error('Invalid JSON String')
       }
     } else return inputQuery
   } else query = inputQuery
@@ -51,15 +51,18 @@ export default async function evaluateExpression(
         break
 
       case 'REGEX':
-        const str: string = childrenResolved[0]
-        const re: RegExp = new RegExp(childrenResolved[1])
-        return re.test(str)
+        try {
+          const str: string = childrenResolved[0]
+          const re: RegExp = new RegExp(childrenResolved[1])
+          return re.test(str)
+        } catch {
+          throw new Error('Problem with REGEX')
+        }
 
       case '=':
         return childrenResolved.every((child) => child === childrenResolved[0])
 
       case '!=':
-        // TO-DO: This operator can cause problems if there is an error message from a lower node. It'll just return `true` as the error doesn't equal the other node. We should find some way to pass any error messages back up. Maybe put all errors in an object with an `error` property and return that if it's present?
         return childrenResolved[0] !== childrenResolved[1]
 
       case '+':
@@ -74,18 +77,44 @@ export default async function evaluateExpression(
           const objectIndex = childrenResolved[0].objectIndex ? childrenResolved[0].objectIndex : 0
           const inputObject = params && params.objects ? params.objects[objectIndex] : {}
           const property = childrenResolved[0].property
-          return extractNode(inputObject, property)
+          return extractProperty(inputObject, property)
         } catch {
-          return "Can't resolve object"
+          throw new Error("Can't resolve object")
+        }
+
+      case 'API':
+        let url, urlWithQuery, queryFields, queryValues: string[], returnProperty
+        try {
+          ;[url, queryFields, queryValues, returnProperty] = assignChildNodesToQuery(
+            childrenResolved
+          )
+          urlWithQuery =
+            queryFields.length > 0
+              ? `${url}?${queryFields
+                  .map((field: string, index: number) => field + '=' + queryValues[index])
+                  .join('&')}`
+              : url
+        } catch {
+          throw new Error('Invalid API query')
+        }
+        let data
+        try {
+          data = await fetchAPIdata(urlWithQuery, params.APIfetch)
+        } catch {
+          throw new Error('Problem with API call')
+        }
+        try {
+          return extractAndSimplify(data, returnProperty)
+        } catch {
+          throw new Error('Problem parsing requested node from API result')
         }
 
       case 'pgSQL':
-        if (!params.pgConnection) return 'No database connection provided'
+        if (!params.pgConnection) throw new Error('No Postgres database connection provided')
         return processPgSQL(childrenResolved, query.type, params.pgConnection)
 
       case 'graphQL':
-        if (!params.graphQLConnection) return 'No database connection provided'
-        // TO-DO: Add checks to ensure parameter nodes are consistent with the array of field names node.
+        if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
         return processGraphQL(childrenResolved, params.graphQLConnection)
 
       // etc. for as many other operators as we want/need.
@@ -113,25 +142,44 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
         return res.rows
     }
   } catch (err) {
-    return err.stack
+    return err
   }
 }
 
 async function processGraphQL(queryArray: any[], connection: IGraphQLConnection) {
-  const query = queryArray[0]
-  const variableNames = queryArray[1]
-  const variableNodes = queryArray.slice(2, queryArray.length - 1)
-  const returnNode = queryArray[queryArray.length - 1]
+  try {
+    const [query, variableNames, variableValues, returnProperty] = assignChildNodesToQuery(
+      queryArray
+    )
 
-  const variables = zipArraysToObject(variableNames, variableNodes)
+    const variables = zipArraysToObject(variableNames, variableValues)
 
-  const data = await graphQLquery(query, variables, connection)
+    const data = await graphQLquery(query, variables, connection)
 
-  const selectedNode = extractNode(data, returnNode)
+    return extractAndSimplify(data, returnProperty)
+  } catch {
+    throw new Error('GraphQL error')
+  }
+}
 
-  return Array.isArray(selectedNode)
-    ? selectedNode.map((item) => simplifyObject(item))
-    : simplifyObject(selectedNode)
+const extractAndSimplify = (
+  data: BasicObject | BasicObject[],
+  returnProperty: string | undefined
+) => {
+  const selectedProperty = returnProperty ? extractProperty(data, returnProperty) : data
+  return Array.isArray(selectedProperty)
+    ? selectedProperty.map((item) => simplifyObject(item))
+    : returnProperty
+    ? simplifyObject(selectedProperty)
+    : selectedProperty
+}
+
+const assignChildNodesToQuery = (childNodes: any[]) => {
+  const query = childNodes[0]
+  const fieldNames = childNodes[1]
+  const values = childNodes.slice(2, fieldNames.length + 2)
+  const returnProperty = childNodes[fieldNames.length + 2]
+  return [query, fieldNames, values, returnProperty]
 }
 
 // Build an object from an array of field names and an array of values
@@ -143,23 +191,23 @@ const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
   return createdObject
 }
 
-// Return a specific node (e.g. application.name) from a nested Object
-const extractNode = (
-  data: BasicObject,
-  node: string
+// Returns a specific property (e.g. application.name) from a nested Object
+const extractProperty = (
+  data: BasicObject | BasicObject[],
+  node: string | string[]
 ): BasicObject | string | number | boolean | BasicObject[] => {
-  const returnNodeArray = node.split('.')
-  return extractNodeWithArray(data, returnNodeArray)
-}
-const extractNodeWithArray = (
-  data: BasicObject,
-  nodeArray: string[]
-): BasicObject | string | number | boolean | BasicObject[] => {
-  if (nodeArray.length === 1) return data[nodeArray[0]]
-  else return extractNodeWithArray(data[nodeArray[0]], nodeArray.slice(1))
+  const propertyPathArray = Array.isArray(node) ? node : node.split('.')
+  // ie. "application.template.name" => ["applcation", "template", "name"]
+  if (Array.isArray(data)) {
+    // If an array, extract the property from *each item*
+    return data.map((item) => extractProperty(item, propertyPathArray))
+  }
+  const currentProperty = propertyPathArray[0]
+  if (propertyPathArray.length === 1) return data[currentProperty]
+  else return extractProperty(data[currentProperty], propertyPathArray.slice(1))
 }
 
-// If Object has only 1 field, return just the value of that field,
+// If Object has only 1 property, return just the value of that property,
 // else return the whole object.
 const simplifyObject = (item: number | string | boolean | BasicObject) => {
   return typeof item === 'object' && Object.keys(item).length === 1 ? Object.values(item)[0] : item
@@ -180,4 +228,11 @@ const graphQLquery = async (query: string, variables: object, connection: IGraph
   })
   const data = await queryResult.json()
   return data.data
+}
+
+// GET request using fetch (node or browser variety)
+const fetchAPIdata = async (url: string, APIfetch: any) => {
+  const result = await APIfetch(url)
+  const data = await result.json()
+  return data
 }
