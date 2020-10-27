@@ -166,7 +166,7 @@ export async function executeAction(
   actionLibrary: ActionLibrary
 ): Promise<boolean> {
   // TO-DO: If Scheduled, create a Job instead
-  const actionResult = await actionLibrary[payload.code](payload.parameters, PostgresDB)
+  const actionResult = await actionLibrary[payload.code](payload.parameters, DBConnect)
 
   return await DBConnect.executedActionStatusUpdate({
     status: actionResult.status,
