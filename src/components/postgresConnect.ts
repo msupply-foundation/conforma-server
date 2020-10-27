@@ -14,6 +14,7 @@ import {
   FilePayload,
   FileGetPayload,
   TriggerQueueUpdatePayload,
+  ActionSequential,
 } from '../types'
 import { ApplicationOutcome, Trigger, User } from '../generated/graphql'
 
@@ -49,9 +50,10 @@ class PostgresDB {
         case 'trigger_notifications':
           processTrigger(JSON.parse(payload))
           break
-        // case 'action_notifications':
-        //   executeAction(JSON.parse(payload), actionLibrary)
-        //   break
+        case 'action_notifications':
+          // For Async Actions only
+          executeAction(JSON.parse(payload), actionLibrary)
+          break
       }
     })
   }
@@ -92,6 +94,10 @@ class PostgresDB {
     } catch (err) {
       throw err
     }
+  }
+
+  public addActionQueueBatch = async (actions: ActionSequential[]): Promise<boolean> => {
+    return true
   }
 
   public executedActionStatusUpdate = async (
@@ -198,7 +204,7 @@ class PostgresDB {
     templateId: number,
     trigger: Trigger
   ): Promise<ActionInTemplate[]> => {
-    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, condition, parameter_queries 
+    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, sequence, condition, parameter_queries 
     FROM template 
     JOIN template_action ON template.id = template_action.template_id 
     JOIN action_plugin ON template_action.action_code = action_plugin.code 

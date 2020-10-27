@@ -345,6 +345,7 @@ export enum ActionQueuesOrderBy {
 export enum ActionQueueStatus {
   Scheduled = 'SCHEDULED',
   Queued = 'QUEUED',
+  Processing = 'PROCESSING',
   Success = 'SUCCESS',
   Fail = 'FAIL'
 }
@@ -11737,8 +11738,8 @@ export type TemplateAction = Node & {
   id: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  previousActionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
+  sequence?: Maybe<Scalars['Int']>;
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   /** Reads a single `Template` that is related to this `TemplateAction`. */
@@ -11756,10 +11757,10 @@ export type TemplateActionCondition = {
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `previousActionCode` field. */
-  previousActionCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `sequence` field. */
+  sequence?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `condition` field. */
   condition?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameterQueries` field. */
@@ -11774,10 +11775,10 @@ export type TemplateActionFilter = {
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `previousActionCode` field. */
-  previousActionCode?: Maybe<StringFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `sequence` field. */
+  sequence?: Maybe<IntFilter>;
   /** Filter by the object’s `condition` field. */
   condition?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameterQueries` field. */
@@ -11799,8 +11800,8 @@ export type TemplateActionInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  previousActionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
+  sequence?: Maybe<Scalars['Int']>;
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
@@ -11838,8 +11839,8 @@ export type TemplateActionPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  previousActionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
+  sequence?: Maybe<Scalars['Int']>;
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
@@ -11876,10 +11877,10 @@ export enum TemplateActionsOrderBy {
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   ActionCodeAsc = 'ACTION_CODE_ASC',
   ActionCodeDesc = 'ACTION_CODE_DESC',
-  PreviousActionCodeAsc = 'PREVIOUS_ACTION_CODE_ASC',
-  PreviousActionCodeDesc = 'PREVIOUS_ACTION_CODE_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
+  SequenceAsc = 'SEQUENCE_ASC',
+  SequenceDesc = 'SEQUENCE_DESC',
   ConditionAsc = 'CONDITION_ASC',
   ConditionDesc = 'CONDITION_DESC',
   ParameterQueriesAsc = 'PARAMETER_QUERIES_ASC',
@@ -11940,8 +11941,8 @@ export type TemplateActionTemplateIdFkeyInverseInput = {
 export type TemplateActionTemplateIdFkeyTemplateActionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  previousActionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
+  sequence?: Maybe<Scalars['Int']>;
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
@@ -13631,7 +13632,7 @@ export enum Trigger {
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
-  OnActionComplete = 'ON_ACTION_COMPLETE'
+  Processing = 'PROCESSING'
 }
 
 /** A filter to be used against Trigger fields. All fields are combined with a logical ‘and.’ */
@@ -13841,7 +13842,7 @@ export enum TriggerQueuesOrderBy {
 
 export enum TriggerQueueStatus {
   Triggered = 'TRIGGERED',
-  ActionDispatched = 'ACTION_DISPATCHED',
+  ActionsDispatched = 'ACTIONS_DISPATCHED',
   Error = 'ERROR'
 }
 
@@ -15657,8 +15658,8 @@ export type UpdateTemplateActionInput = {
 export type UpdateTemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  previousActionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
+  sequence?: Maybe<Scalars['Int']>;
   condition?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   templateToTemplateId?: Maybe<TemplateActionTemplateIdFkeyInput>;
@@ -20915,8 +20916,8 @@ export type TemplateActionResolvers<ContextType = any, ParentType extends Resolv
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   actionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  previousActionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  sequence?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   condition?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   parameterQueries?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;

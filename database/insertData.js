@@ -210,6 +210,7 @@ const queries = [
                 actionCode: "createUser"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
+                sequence: 1
                 parameterQueries: {
                   first_name: {
                     type: "string"
@@ -282,6 +283,7 @@ const queries = [
                 actionCode: "changeOutcome"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
+                sequence: 2
                 parameterQueries: {
                   application_id: {
                     operator: "objectProperties"
@@ -293,11 +295,9 @@ const queries = [
               {
                 actionCode: "cLog"
                 condition: { value: true }
-                trigger: ON_ACTION_COMPLETE
+                trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
-                  message: {
-                    value: "Testing sequential actions"
-                  }
+                  message: { value: "Testing parallel actions" }
                 }
               }
             ]
@@ -325,7 +325,7 @@ const queries = [
         }
       }
     }
-  }  
+  }   
   `,
   // Template B - Company Registration
   `mutation {

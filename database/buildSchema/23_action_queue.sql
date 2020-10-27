@@ -1,6 +1,6 @@
 -- action queue
 
-CREATE TYPE public.action_queue_status as ENUM ('Scheduled', 'Queued', 'Success', 'Fail');
+CREATE TYPE public.action_queue_status as ENUM ('Scheduled', 'Queued', 'Processing', 'Success', 'Fail');
 
 CREATE TABLE public.action_queue (
     id serial primary key,
@@ -39,12 +39,5 @@ EXECUTE FUNCTION public.notify_action_queue();
 -- Note: couldn't put this in application file as it requires the trigger_queue table and function to be defined first
 CREATE TRIGGER application_trigger AFTER INSERT OR UPDATE OF trigger ON public.application
 FOR EACH ROW
-WHEN (NEW.trigger IS NOT NULL)
-EXECUTE FUNCTION public.add_event_to_trigger_queue();
-
--- TRIGGER (Listener) on for action_queue table
--- Used to trigger subsequent actions when actions are run sequentially
-CREATE TRIGGER action_queue_trigger AFTER INSERT OR UPDATE OF trigger ON public.action_queue
-FOR EACH ROW
-WHEN (NEW.trigger IS NOT NULL)
+WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'Processing')
 EXECUTE FUNCTION public.add_event_to_trigger_queue();

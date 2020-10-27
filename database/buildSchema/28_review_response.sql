@@ -11,5 +11,5 @@ CREATE TABLE public.review_response (
 -- TRIGGER (Listener) on Review_response table
 CREATE TRIGGER review_response_trigger AFTER INSERT OR UPDATE OF trigger ON public.review_response
 FOR EACH ROW
-WHEN (NEW.trigger IS NOT NULL)
+WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'Processing')
 EXECUTE FUNCTION public.add_event_to_trigger_queue();

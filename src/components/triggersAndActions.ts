@@ -1,11 +1,18 @@
 import path from 'path'
 import { getAppRootDir } from './utilityFunctions'
 import * as config from '../config.json'
-import { ActionLibrary, ActionInTemplate, TriggerPayload, ActionPayload } from '../types'
+import {
+  ActionLibrary,
+  ActionInTemplate,
+  TriggerPayload,
+  ActionPayload,
+  ActionSequential,
+} from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 // import PostgresDB from '../components/postgresConnect'
 import DBConnect from './databaseConnect'
 import { table } from 'console'
+import { TemplateAction } from '../generated/graphql'
 
 const schedule = require('node-schedule')
 
@@ -79,39 +86,11 @@ export const loadScheduledActions = async function (
     : console.log('There were no jobs to be loaded.')
 }
 
-export async function processTrigger(payload: TriggerPayload) {
-  // Deduce template ID -- different for each triggered table
-
-  console.log('Payload', payload)
-
-  let table, recordId
-  if (payload.table === 'action_queue') {
-    ;({ table, recordId } = await DBConnect.getOriginalRecordFromActionQueue(
-      payload.table,
-      payload.record_id
-    ))
-  } else {
-    table = payload.table
-    recordId = payload.record_id
-  }
-
-  const templateID = await DBConnect.getTemplateId(table, recordId)
-
-  // Get Actions from matching Template
-  const result = await DBConnect.getActionPluginsByTemplateId(templateID, payload.trigger)
-
-  // Filter out Actions that don't match the current condition
-  const actions: ActionInTemplate[] = []
-
-  for (const action of result) {
-    const condition = await evaluateExpression(action.condition, {
-      objects: [payload],
-      pgConnection: DBConnect,
-    })
-    if (condition) actions.push(action)
-  }
-
-  // Evaluate parameters for each Action
+const evaluateTriggerAndUpdateActionQueue = async (
+  actions: ActionInTemplate[],
+  payload: TriggerPayload,
+  templateID: number
+) => {
   for (const action of actions) {
     for (const key in action.parameter_queries) {
       action.parameter_queries[key] = await evaluateExpression(action.parameter_queries[key], {
@@ -119,20 +98,96 @@ export async function processTrigger(payload: TriggerPayload) {
         pgConnection: DBConnect,
       })
     }
-    // TODO - Error handling
-    // Write each Action with parameters to Action_Queue
+
+    //   // Write each Action with parameters to Action_Queue
     await DBConnect.addActionQueue({
       trigger_event: payload.id,
       template_id: templateID,
       action_code: action.code,
       parameters: action.parameter_queries,
-      status: 'Queued',
+      status: action.sequence ? 'Processing' : 'Queued',
     })
   }
+}
 
-  // Update trigger queue item with success/failure (and log)
-  // If SUCCESS -- Not sure best way to test for this:
-  await DBConnect.updateTriggerQueue({ status: 'Action Dispatched', id: payload.id })
+export async function processTrigger(payload: TriggerPayload) {
+  // Deduce template ID -- different for each triggered table
+
+  const templateID = await DBConnect.getTemplateId(payload.table, payload.record_id)
+
+  // Get Actions from matching Template
+  const result = await DBConnect.getActionPluginsByTemplateId(templateID, payload.trigger)
+
+  // Filter out Actions that don't match the current condition
+  // and separate into Sequential and Async actions
+  const actionsSequential: ActionSequential[] = []
+  const actionsAsync: ActionInTemplate[] = []
+
+  for (const action of result) {
+    const condition = await evaluateExpression(action.condition, {
+      objects: [payload],
+      pgConnection: DBConnect,
+    })
+    if (condition) {
+      if (action.sequence) actionsSequential.push(action as ActionSequential)
+      else actionsAsync.push(action)
+    }
+  }
+
+  // Sort sequential Actions into the correct order
+  actionsSequential.sort((action1: ActionSequential, action2: ActionSequential) => {
+    return action1.sequence - action2.sequence
+  })
+
+  // Evaluate Parameters for each Action
+
+  // Async actions first so they can execute without waiting for sequential Actions
+
+  // Now Sequential:
+  // To-do: remove repetition
+  for (const action of actionsSequential) {
+    for (const key in action.parameter_queries) {
+      action.parameter_queries[key] = await evaluateExpression(action.parameter_queries[key], {
+        objects: [payload],
+        pgConnection: DBConnect,
+      })
+    }
+    // To-do: How to check for individual errors?
+    await DBConnect.addActionQueueBatch(actionsSequential)
+  }
+
+  // Iterate over Sequential Actions and build Database params
+
+  // Actions to Action queue (status "Processing")
+
+  // Read Actions from from Database (match templateID and "Processing")
+
+  // Execute actions one by one, updating status after completion
+
+  // After all done, set Trigger on table back to NULL
+
+  // Evaluate parameters for each Action
+  // for (const action of actions) {
+  //   for (const key in action.parameter_queries) {
+  //     action.parameter_queries[key] = await evaluateExpression(action.parameter_queries[key], {
+  //       objects: [payload],
+  //       pgConnection: DBConnect,
+  //     })
+  //   }
+  //   // TODO - Error handling
+  //   // Write each Action with parameters to Action_Queue
+  //   await DBConnect.addActionQueue({
+  //     trigger_event: payload.id,
+  //     template_id: templateID,
+  //     action_code: action.code,
+  //     parameters: action.parameter_queries,
+  //     status: 'Queued',
+  //   })
+  // }
+
+  // // Update trigger queue item with success/failure (and log)
+  // // If SUCCESS -- Not sure best way to test for this:
+  // await DBConnect.updateTriggerQueue({ status: 'Actions Dispatched', id: payload.id })
 }
 
 export async function executeAction(

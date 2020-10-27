@@ -16,6 +16,8 @@ class DBConnect {
 
   public addActionQueue = PostgresDB.addActionQueue
 
+  public addActionQueueBatch = PostgresDB.addActionQueueBatch
+
   public executedActionStatusUpdate = PostgresDB.executedActionStatusUpdate
 
   public getActionsQueued = PostgresDB.getActionsQueued
