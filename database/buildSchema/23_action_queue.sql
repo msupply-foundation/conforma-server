@@ -22,7 +22,7 @@ CREATE TABLE public.action_queue (
 CREATE OR REPLACE FUNCTION public.notify_action_queue()
 RETURNS trigger as $action_event$
 BEGIN
-IF NEW.status = 'Queued' THEN
+-- IF NEW.status = 'Queued' THEN
 PERFORM pg_notify('action_notifications', json_build_object(
 	'id', NEW.id,
 	'code', NEW.action_code,
@@ -30,7 +30,7 @@ PERFORM pg_notify('action_notifications', json_build_object(
 	'parameter_queries', NEW.parameter_queries
 	)::text
 );
-END IF;
+-- END IF;
 RETURN NULL;
 END;
 $action_event$ LANGUAGE plpgsql;
@@ -39,6 +39,7 @@ $action_event$ LANGUAGE plpgsql;
 -- TRIGGERS for action_queue 
 CREATE TRIGGER action_queue AFTER INSERT ON public.action_queue
 FOR EACH ROW
+WHEN (NEW.status <> 'Processing')
 EXECUTE FUNCTION public.notify_action_queue();
 
 

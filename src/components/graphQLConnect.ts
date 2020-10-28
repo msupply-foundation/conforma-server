@@ -42,8 +42,8 @@ class GraphQLdb {
     const variables = { record_id }
     const result = await this.gqlQuery(query, variables)
     const table = result.actionQueue.triggerQueueByTriggerEvent.table
-    const origRecord_id = result.actionQueue.triggerQueueByTriggerEvent.record_id
-    return { table, recordId: origRecord_id }
+    const origRecordId = result.actionQueue.triggerQueueByTriggerEvent.record_id
+    return { table, recordId: origRecordId }
   }
 
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {

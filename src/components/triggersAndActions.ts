@@ -114,22 +114,19 @@ export async function processTrigger(payload: TriggerPayload) {
     }
   }
 
-  for (const actionList of [actionsAsync, actionsSequential]) {
-    const status = Object.is(actionList, actionsAsync) ? 'Queued' : 'Processing'
+  for (const action of [...actionsAsync, ...actionsSequential]) {
     // Add all actions to Action Queue
-    for (const action of actionList) {
-      // TODO - better error handling
-      await DBConnect.addActionQueue({
-        trigger_event: trigger_id,
-        template_id: templateId,
-        sequence: action.sequence,
-        action_code: action.code,
-        trigger_payload: payload,
-        parameter_queries: action.parameter_queries,
-        parameters_evaluated: {},
-        status,
-      })
-    }
+    // TODO - better error handling
+    await DBConnect.addActionQueue({
+      trigger_event: trigger_id,
+      template_id: templateId,
+      sequence: action.sequence,
+      action_code: action.code,
+      trigger_payload: payload,
+      parameter_queries: action.parameter_queries,
+      parameters_evaluated: {},
+      status: action.sequence ? 'Processing' : 'Queued',
+    })
   }
   await DBConnect.updateTriggerQueueStatus({ status: 'Actions Dispatched', id: trigger_id })
 
