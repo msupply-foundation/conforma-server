@@ -308,7 +308,7 @@ const queries = [
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
-                  message: { value: "Testing parallel actions -- This message is Asynchronous" }
+                  message: { value: "Testing parallel actions -- This message is Asynchronous. \\nEven though it is last in the Actions list, it'll probably appear first." }
                 }
               }
             ]
