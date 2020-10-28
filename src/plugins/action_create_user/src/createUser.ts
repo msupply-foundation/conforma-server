@@ -1,9 +1,6 @@
 module.exports['createUser'] = async function (user: any, DBConnect: any) {
   try {
     console.log(`\nAdding new user: ${user.username}`)
-    const output = {
-      user.
-    }
     const result = await DBConnect.createUser(user)
     if (result.success)
       return {
@@ -14,8 +11,8 @@ module.exports['createUser'] = async function (user: any, DBConnect: any) {
           username: user.username,
           firstName: user?.first_name,
           lastName: user?.last_name,
-          email: user.email
-        }
+          email: user.email,
+        },
       }
     else
       return {

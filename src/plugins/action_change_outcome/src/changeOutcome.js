@@ -35,7 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-module.exports['changeOutcome'] = function (parameters, PostgresDB) {
+module.exports['changeOutcome'] = function (parameters, DBConnect) {
     return __awaiter(this, void 0, void 0, function () {
         var application_id, newOutcome, success, error_1;
         return __generator(this, function (_a) {
@@ -46,13 +46,17 @@ module.exports['changeOutcome'] = function (parameters, PostgresDB) {
                 case 1:
                     _a.trys.push([1, 3, , 4]);
                     console.log("\nUpdating application: " + newOutcome);
-                    return [4 /*yield*/, PostgresDB.setApplicationOutcome(application_id, newOutcome)];
+                    return [4 /*yield*/, DBConnect.setApplicationOutcome(application_id, newOutcome)];
                 case 2:
                     success = _a.sent();
                     if (success)
                         return [2 /*return*/, {
                                 status: 'Success',
                                 error_log: '',
+                                output: {
+                                    applicationId: application_id,
+                                    newOutcome: newOutcome,
+                                },
                             }];
                     else
                         return [2 /*return*/, {

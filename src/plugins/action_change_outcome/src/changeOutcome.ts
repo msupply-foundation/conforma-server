@@ -7,6 +7,10 @@ module.exports['changeOutcome'] = async function (parameters: any, DBConnect: an
       return {
         status: 'Success',
         error_log: '',
+        output: {
+          applicationId: application_id,
+          newOutcome,
+        },
       }
     else
       return {
