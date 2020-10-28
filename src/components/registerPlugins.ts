@@ -68,6 +68,7 @@ export default async function registerPlugins() {
         path: plugin.path,
         function_name: plugin.function_name,
         required_parameters: plugin.required_parameters,
+        output_fields: plugin.output_fields,
       })
       console.log('Plugin registered:', plugin.name)
     } catch (err) {
@@ -87,7 +88,8 @@ export default async function registerPlugins() {
         plugin.description !== dbPlugin.description ||
         plugin.path !== dbPlugin.path ||
         plugin.function_name !== dbPlugin.function_name ||
-        !deepEquality(plugin.required_parameters, dbPlugin.required_parameters))
+        !deepEquality(plugin.required_parameters, dbPlugin.required_parameters) ||
+        !deepEquality(plugin.output_fields, dbPlugin.output_fields, true))
     ) {
       try {
         // TODO: Replace this with some other way to use only keys from ActionPlugin!
@@ -98,6 +100,7 @@ export default async function registerPlugins() {
           path: plugin.path,
           function_name: plugin.function_name,
           required_parameters: plugin.required_parameters,
+          output_fields: plugin.output_fields,
         })
         console.log('Plugin updated:', plugin.name)
       } catch (err) {

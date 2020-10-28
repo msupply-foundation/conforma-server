@@ -12,6 +12,7 @@ CREATE TABLE public.action_queue (
     parameter_queries jsonb,
     parameters_evaluated jsonb,
     status public.action_queue_status,
+    output jsonb,
     time_queued timestamp,
     time_completed timestamp,
     error_log varchar
