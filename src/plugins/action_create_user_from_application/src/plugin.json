@@ -4,7 +4,7 @@
   "name": "Create User From Application",
   "file": "createUserFromApplication",
   "function_name": "createUserFromApplication",
-  "description": "Inserts a new user in the database based on a user registration application",
+  "description": "Inserts a new user in the database based on a user registration application. Note: this plugin is specific to the User Registration template, so if the question structure of that template changes, this plugin will need to be updated accordingly.",
   "required_parameters": ["applicationId"],
   "output_properties": ["userId", "username", "firstName", "lastName", "email"],
   "info": {

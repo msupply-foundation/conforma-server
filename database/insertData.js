@@ -218,75 +218,14 @@ const queries = [
                 }
               }
               {
-                actionCode: "createUser"
+                actionCode: "createUserFromApplication"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: {
-                  first_name: {
-                    type: "string"
-                    operator: "pgSQL"
-                    children: [
-                      {
-                        value: "SELECT value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE code = 'Q1' and application_id = $1;"
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
-                  }
-                  last_name: {
-                    type: "string"
-                    operator: "pgSQL"
-                    children: [
-                      {
-                        value: "SELECT value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE code = 'Q2' and application_id = $1;"
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
-                  }
-                  username: {
-                    type: "string"
-                    operator: "pgSQL"
-                    children: [
-                      {
-                        value: "SELECT value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE code = 'Q3' and application_id = $1;"
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
-                  }
-                  password_hash: {
-                    type: "string"
-                    operator: "pgSQL"
-                    children: [
-                      {
-                        value: "SELECT value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE code = 'Q5' and application_id = $1;"
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
-                  }
-                  email: {
-                    type: "string"
-                    operator: "pgSQL"
-                    children: [
-                      {
-                        value: "SELECT value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE code = 'Q4' and application_id = $1;"
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
                   }
                 }
               }
