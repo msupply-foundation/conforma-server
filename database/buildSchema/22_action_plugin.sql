@@ -7,6 +7,6 @@ CREATE TABLE public.action_plugin (
     path varchar,
     function_name varchar,
     required_parameters varchar[],
-    output_fields varchar[]
+    output_properties varchar[]
 );
 

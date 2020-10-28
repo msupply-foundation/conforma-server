@@ -73,7 +73,7 @@ export interface ActionPlugin {
   path: string
   function_name: string
   required_parameters: string[]
-  output_fields?: string[]
+  output_properties?: string[]
 }
 
 export interface ActionPluginPayload {

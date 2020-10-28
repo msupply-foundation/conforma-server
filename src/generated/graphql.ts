@@ -29,7 +29,7 @@ export type ActionPlugin = Node & {
   path?: Maybe<Scalars['String']>;
   functionName?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
-  outputFields?: Maybe<Array<Maybe<Scalars['String']>>>;
+  outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /**
@@ -49,8 +49,8 @@ export type ActionPluginCondition = {
   functionName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `requiredParameters` field. */
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `outputFields` field. */
-  outputFields?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `outputProperties` field. */
+  outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A filter to be used against `ActionPlugin` object types. All fields are combined with a logical ‘and.’ */
@@ -67,8 +67,8 @@ export type ActionPluginFilter = {
   functionName?: Maybe<StringFilter>;
   /** Filter by the object’s `requiredParameters` field. */
   requiredParameters?: Maybe<StringListFilter>;
-  /** Filter by the object’s `outputFields` field. */
-  outputFields?: Maybe<StringListFilter>;
+  /** Filter by the object’s `outputProperties` field. */
+  outputProperties?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ActionPluginFilter>>;
   /** Checks for any expressions in this list. */
@@ -85,7 +85,7 @@ export type ActionPluginInput = {
   path?: Maybe<Scalars['String']>;
   functionName?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
-  outputFields?: Maybe<Array<Maybe<Scalars['String']>>>;
+  outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** Represents an update to a `ActionPlugin`. Fields that are set will be updated. */
@@ -96,7 +96,7 @@ export type ActionPluginPatch = {
   path?: Maybe<Scalars['String']>;
   functionName?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
-  outputFields?: Maybe<Array<Maybe<Scalars['String']>>>;
+  outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A connection to a list of `ActionPlugin` values. */
@@ -136,8 +136,8 @@ export enum ActionPluginsOrderBy {
   FunctionNameDesc = 'FUNCTION_NAME_DESC',
   RequiredParametersAsc = 'REQUIRED_PARAMETERS_ASC',
   RequiredParametersDesc = 'REQUIRED_PARAMETERS_DESC',
-  OutputFieldsAsc = 'OUTPUT_FIELDS_ASC',
-  OutputFieldsDesc = 'OUTPUT_FIELDS_DESC',
+  OutputPropertiesAsc = 'OUTPUT_PROPERTIES_ASC',
+  OutputPropertiesDesc = 'OUTPUT_PROPERTIES_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -19702,7 +19702,7 @@ export type ActionPluginResolvers<ContextType = any, ParentType extends Resolver
   path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   functionName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   requiredParameters?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  outputFields?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  outputProperties?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

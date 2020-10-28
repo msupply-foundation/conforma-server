@@ -13,7 +13,7 @@
     "password_hash",
     "email"
   ],
-  "output_fields": ["userId", "username", "firstName", "lastName", "email"],
+  "output_properties": ["userId", "username", "firstName", "lastName", "email"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",
