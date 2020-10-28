@@ -11,6 +11,7 @@ import {
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import DBConnect from './databaseConnect'
 import { actionLibrary } from './pluginsConnect'
+import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
 
 const schedule = require('node-schedule')
 
@@ -51,12 +52,12 @@ export const loadScheduledActions = async function (
       if (date > new Date(Date.now())) {
         const job = schedule.scheduleJob(date, function () {
           // TODO: Check if was executed otherwise don't continue
-          // TODO: Evaluate parameters at runtime
           executeAction(
             {
               id: scheduledAction.id,
               code: scheduledAction.action_code,
-              parameters: scheduledAction.parameters_evaluated,
+              trigger_payload: scheduledAction.trigger_payload,
+              parameter_queries: scheduledAction.parameter_queries,
             },
             actionLibrary
           )
@@ -74,7 +75,8 @@ export const loadScheduledActions = async function (
           {
             id: scheduledAction.id,
             code: scheduledAction.action_code,
-            parameters: scheduledAction.parameters_evaluated,
+            trigger_payload: scheduledAction.trigger_payload,
+            parameter_queries: scheduledAction.parameter_queries,
           },
           actionLibrary
         )
@@ -89,17 +91,11 @@ export const loadScheduledActions = async function (
 export async function processTrigger(payload: TriggerPayload) {
   const { id: trigger_id, trigger, table, record_id } = payload
 
-  // Parameters for expression evaluator
-  const evaluatorParams = {
-    objects: [payload],
-    pgConnection: DBConnect,
-  }
-
   // Deduce template ID -- different for each triggered table
-  const templateID = await DBConnect.getTemplateId(table, record_id)
+  const templateId = await DBConnect.getTemplateId(table, record_id)
 
   // Get Actions from matching Template
-  const result = await DBConnect.getActionsByTemplateId(templateID, trigger)
+  const result = await DBConnect.getActionsByTemplateId(templateId, trigger)
 
   // Filter out Actions that don't match the current condition
   // and separate into Sequential and Async actions
@@ -107,7 +103,10 @@ export async function processTrigger(payload: TriggerPayload) {
   const actionsAsync: ActionInTemplate[] = []
 
   for (const action of result) {
-    const condition = await evaluateExpression(action.condition, evaluatorParams)
+    const condition = await evaluateExpression(action.condition, {
+      objects: [payload],
+      pgConnection: DBConnect,
+    })
     if (condition) {
       if (action.sequence) actionsSequential.push(action as ActionSequential)
       else actionsAsync.push(action)
@@ -121,41 +120,33 @@ export async function processTrigger(payload: TriggerPayload) {
 
   for (const actionList of [actionsAsync, actionsSequential]) {
     const status = Object.is(actionList, actionsAsync) ? 'Queued' : 'Processing'
-    // Evaluate Parameters for each Async Action
+    // Add all actions to Action Queue
     for (const action of actionList) {
-      if (status === 'Queued') {
-        action.parameters_evaluated = await evaluateParameters(
-          action.parameter_queries,
-          evaluatorParams
-        )
-      }
       // TODO - better error handling
-      // Write each Action with parameters to Action_Queue
       await DBConnect.addActionQueue({
         trigger_event: trigger_id,
-        template_id: templateID,
+        template_id: templateId,
+        sequence: action.sequence,
         action_code: action.code,
+        trigger_payload: payload,
         parameter_queries: action.parameter_queries,
-        parameters_evaluated: action.parameters_evaluated,
+        parameters_evaluated: {},
         status,
       })
     }
   }
+  await DBConnect.updateTriggerQueueStatus({ status: 'Actions Dispatched', id: trigger_id })
 
   // Get sequential Actions from database
-  const actionsToExecute = await DBConnect.getActionsProcessing(templateID)
+  const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
-  // Evaluate parameters and execute Actions one by one, updating database status after completion
+  // Execute Actions one by one
   for (const action of actionsToExecute) {
-    action.parameters_evaluated = await evaluateParameters(
-      action.parameter_queries,
-      evaluatorParams
-    )
-    DBConnect.updateActionParametersEvaluated(action.id, action.parameters_evaluated)
     const actionPayload = {
       id: action.id,
       code: action.action_code,
-      parameters: action.parameters_evaluated,
+      trigger_payload: action.trigger_payload,
+      parameter_queries: action.parameter_queries,
     }
     await executeAction(actionPayload, actionLibrary)
   }
@@ -164,12 +155,15 @@ export async function processTrigger(payload: TriggerPayload) {
   DBConnect.resetTrigger(table, record_id)
 }
 
-async function evaluateParameters(parametersExpression: any, evaluatorParameters: any) {
-  const parametersEvaluated: any = {}
+async function evaluateParameters(
+  parameterQueries: BasicObject,
+  evaluatorParameters: IParameters = {}
+) {
+  const parametersEvaluated: BasicObject = {}
   try {
-    for (const key in parametersExpression) {
+    for (const key in parameterQueries) {
       parametersEvaluated[key] = await evaluateExpression(
-        parametersExpression[key],
+        parameterQueries[key],
         evaluatorParameters
       )
     }
@@ -183,12 +177,20 @@ export async function executeAction(
   payload: ActionPayload,
   actionLibrary: ActionLibrary
 ): Promise<boolean> {
+  const evaluatorParams = {
+    objects: [payload.trigger_payload],
+    pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
+  }
+  // Evaluate parameters
+  const parametersEvaluated = await evaluateParameters(payload.parameter_queries, evaluatorParams)
+
   // TO-DO: If Scheduled, create a Job instead
-  const actionResult = await actionLibrary[payload.code](payload.parameters, DBConnect)
+  const actionResult = await actionLibrary[payload.code](parametersEvaluated, DBConnect)
 
   return await DBConnect.executedActionStatusUpdate({
     status: actionResult.status,
     error_log: actionResult.error,
+    parameters_evaluated: parametersEvaluated,
     id: payload.id,
   })
 }

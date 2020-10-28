@@ -40,7 +40,7 @@ class DBConnect {
 
   public updateActionPlugin = PostgresDB.updateActionPlugin
 
-  public updateTriggerQueue = PostgresDB.updateTriggerQueue
+  public updateTriggerQueueStatus = PostgresDB.updateTriggerQueueStatus
 
   public createUser = PostgresDB.createUser
 

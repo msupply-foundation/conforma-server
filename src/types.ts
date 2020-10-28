@@ -28,6 +28,7 @@ export interface ActionQueue {
   id: number
   status?: ActionQueueStatus
   action_code: string
+  trigger_payload: TriggerPayload
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
   time_completed: string
@@ -40,6 +41,8 @@ export interface ActionQueuePayload {
   trigger_event: number
   template_id: number
   action_code: string
+  trigger_payload: TriggerPayload
+  sequence: number | null
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
   status: ActionQueueStatus
@@ -52,13 +55,15 @@ export interface ActionQueueGetPayload {
 export interface ActionQueueExecutePayload {
   id: number
   error_log: string
+  parameters_evaluated: { [key: string]: any }
   status: ActionQueueStatus
 }
 
 export interface ActionPayload {
   id: number
   code: string
-  parameters: { [key: string]: any }
+  trigger_payload: TriggerPayload
+  parameter_queries: { [key: string]: any }
 }
 
 export interface ActionPlugin {
@@ -114,5 +119,3 @@ export interface TriggerQueueUpdatePayload {
   id: number
   status: TriggerStatus
 }
-
-// export type ApplicationOutcome = 'Pending' | 'Approved' | 'Rejected'

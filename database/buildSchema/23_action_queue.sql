@@ -6,7 +6,9 @@ CREATE TABLE public.action_queue (
     id serial primary key,
     trigger_event integer references public.trigger_queue(id),
     template_id integer references public.template(id),
+    sequence integer,
     action_code varchar,
+    trigger_payload jsonb,
     parameter_queries jsonb,
     parameters_evaluated jsonb,
     status public.action_queue_status,
@@ -23,7 +25,8 @@ IF NEW.status = 'Queued' THEN
 PERFORM pg_notify('action_notifications', json_build_object(
 	'id', NEW.id,
 	'code', NEW.action_code,
-	'parameters', NEW.parameters_evaluated
+	'trigger_payload', NEW.trigger_payload,
+	'parameter_queries', NEW.parameter_queries
 	)::text
 );
 END IF;

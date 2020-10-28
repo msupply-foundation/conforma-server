@@ -100,7 +100,7 @@ class PostgresDB {
     payload: ActionQueueExecutePayload
   ): Promise<boolean> => {
     const text =
-      'UPDATE action_queue SET status = $1, error_log = $2, time_completed = CURRENT_TIMESTAMP WHERE id = $3'
+      'UPDATE action_queue SET status = $1, error_log = $2, parameters_evaluated = $3, time_completed = CURRENT_TIMESTAMP WHERE id = $4'
     try {
       await this.query({ text, values: Object.values(payload) })
       return true
@@ -113,7 +113,7 @@ class PostgresDB {
     payload: ActionQueueGetPayload = { status: 'Scheduled' }
   ): Promise<ActionQueue[]> => {
     const text =
-      'SELECT id, action_code, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
+      'SELECT id, action_code, trigger_payload, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
     try {
       const result = await this.query({
         text,
@@ -127,7 +127,7 @@ class PostgresDB {
 
   public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
     const text =
-      "SELECT id, action_code, parameter_queries, time_queued FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY time_queued"
+      "SELECT id, action_code, trigger_payload, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
     try {
       const result = await this.query({
         text,
@@ -266,7 +266,9 @@ class PostgresDB {
     }
   }
 
-  public updateTriggerQueue = async (payload: TriggerQueueUpdatePayload): Promise<boolean> => {
+  public updateTriggerQueueStatus = async (
+    payload: TriggerQueueUpdatePayload
+  ): Promise<boolean> => {
     const text = 'UPDATE trigger_queue SET status = $1 WHERE id = $2'
     // TODO: Dynamically select what is being updated
     try {
