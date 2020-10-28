@@ -1252,7 +1252,7 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   id?: Maybe<Scalars['Int']>;
   sectionId?: Maybe<Scalars['Int']>;
   code: Scalars['String'];
-  nextElementCode?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
@@ -1614,6 +1614,7 @@ export type ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput = 
   templateId?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
@@ -12081,7 +12082,7 @@ export type TemplateElement = Node & {
   id: Scalars['Int'];
   sectionId?: Maybe<Scalars['Int']>;
   code: Scalars['String'];
-  nextElementCode?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
@@ -12150,8 +12151,8 @@ export type TemplateElementCondition = {
   sectionId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `nextElementCode` field. */
-  nextElementCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `index` field. */
+  index?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `title` field. */
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `category` field. */
@@ -12178,8 +12179,8 @@ export type TemplateElementFilter = {
   sectionId?: Maybe<IntFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
-  /** Filter by the object’s `nextElementCode` field. */
-  nextElementCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `index` field. */
+  index?: Maybe<IntFilter>;
   /** Filter by the object’s `title` field. */
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `category` field. */
@@ -12217,7 +12218,7 @@ export type TemplateElementInput = {
   id?: Maybe<Scalars['Int']>;
   sectionId?: Maybe<Scalars['Int']>;
   code: Scalars['String'];
-  nextElementCode?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
@@ -12277,7 +12278,7 @@ export type TemplateElementPatch = {
   id?: Maybe<Scalars['Int']>;
   sectionId?: Maybe<Scalars['Int']>;
   code?: Maybe<Scalars['String']>;
-  nextElementCode?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
@@ -12345,7 +12346,7 @@ export type TemplateElementSectionIdFkeyInverseInput = {
 export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   id?: Maybe<Scalars['Int']>;
   code: Scalars['String'];
-  nextElementCode?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
@@ -12364,6 +12365,7 @@ export type TemplateElementSectionIdFkeyTemplateSectionCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
@@ -12388,8 +12390,8 @@ export enum TemplateElementsOrderBy {
   SectionIdDesc = 'SECTION_ID_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
-  NextElementCodeAsc = 'NEXT_ELEMENT_CODE_ASC',
-  NextElementCodeDesc = 'NEXT_ELEMENT_CODE_DESC',
+  IndexAsc = 'INDEX_ASC',
+  IndexDesc = 'INDEX_DESC',
   TitleAsc = 'TITLE_ASC',
   TitleDesc = 'TITLE_DESC',
   CategoryAsc = 'CATEGORY_ASC',
@@ -12958,6 +12960,7 @@ export type TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput = 
   templateId?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
@@ -12985,6 +12988,7 @@ export type TemplateSection = Node & {
   templateId?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   /** Reads a single `Template` that is related to this `TemplateSection`. */
   template?: Maybe<Template>;
   /** Reads and enables pagination through a set of `TemplatePermission`. */
@@ -13044,6 +13048,8 @@ export type TemplateSectionCondition = {
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `index` field. */
+  index?: Maybe<Scalars['Int']>;
 };
 
 /** A filter to be used against `TemplateSection` object types. All fields are combined with a logical ‘and.’ */
@@ -13056,6 +13062,8 @@ export type TemplateSectionFilter = {
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
+  /** Filter by the object’s `index` field. */
+  index?: Maybe<IntFilter>;
   /** Filter by the object’s `templatePermissions` relation. */
   templatePermissions?: Maybe<TemplateSectionToManyTemplatePermissionFilter>;
   /** Some related `templatePermissions` exist. */
@@ -13086,6 +13094,7 @@ export type TemplateSectionInput = {
   templateId?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
@@ -13170,6 +13179,7 @@ export type TemplateSectionPatch = {
   templateId?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
@@ -13209,6 +13219,8 @@ export enum TemplateSectionsOrderBy {
   TitleDesc = 'TITLE_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
+  IndexAsc = 'INDEX_ASC',
+  IndexDesc = 'INDEX_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -13270,6 +13282,7 @@ export type TemplateSectionTemplateIdFkeyTemplateSectionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
@@ -15792,7 +15805,7 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   id?: Maybe<Scalars['Int']>;
   sectionId?: Maybe<Scalars['Int']>;
   code?: Maybe<Scalars['String']>;
-  nextElementCode?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
@@ -15809,7 +15822,7 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
 export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   code?: Maybe<Scalars['String']>;
-  nextElementCode?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
@@ -16067,6 +16080,7 @@ export type UpdateTemplateSectionOnApplicationSectionForApplicationSectionTempla
   templateId?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
@@ -16079,6 +16093,7 @@ export type UpdateTemplateSectionOnTemplateElementForTemplateElementSectionIdFke
   templateId?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
@@ -16091,6 +16106,7 @@ export type UpdateTemplateSectionOnTemplatePermissionForTemplatePermissionTempla
   templateId?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
@@ -16102,6 +16118,7 @@ export type UpdateTemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFk
   id?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
@@ -20998,7 +21015,7 @@ export type TemplateElementResolvers<ContextType = any, ParentType extends Resol
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   sectionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  nextElementCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  index?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   category?: Resolver<Maybe<ResolversTypes['TemplateElementCategory']>, ParentType, ContextType>;
   visibilityCondition?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -21067,6 +21084,7 @@ export type TemplateSectionResolvers<ContextType = any, ParentType extends Resol
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  index?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   templatePermissions?: Resolver<ResolversTypes['TemplatePermissionsConnection'], ParentType, ContextType, RequireFields<TemplateSectionTemplatePermissionsArgs, 'orderBy'>>;
   templateElementsBySectionId?: Resolver<ResolversTypes['TemplateElementsConnection'], ParentType, ContextType, RequireFields<TemplateSectionTemplateElementsBySectionIdArgs, 'orderBy'>>;

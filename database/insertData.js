@@ -17,11 +17,12 @@ const queries = [
               {
                 code: "S1"
                 title: "Section 1"
+                index: 0
                 templateElementsUsingId: {
                   create: [
                     {
                       code: "Text1"
-                      nextElementCode: "Q1"
+                      index: 0
                       title: "Intro"
                       elementTypePluginCode: "textInfo"
                       visibilityCondition: { value: true }
@@ -33,7 +34,7 @@ const queries = [
                     }
                     {
                       code: "Q1"
-                      nextElementCode: "Q2"
+                      index: 1
                       title: "First Name"
                       elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
@@ -45,7 +46,7 @@ const queries = [
                     }
                     {
                       code: "Q2"
-                      nextElementCode: "Q3"
+                      index: 2
                       title: "Last Name"
                       elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
@@ -56,7 +57,7 @@ const queries = [
                     }
                     {
                       code: "Q3"
-                      nextElementCode: "Q4"
+                      index: 3
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
@@ -69,7 +70,7 @@ const queries = [
                     }
                     {
                       code: "Q4"
-                      nextElementCode: "Q5"
+                      index: 4
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
@@ -82,7 +83,7 @@ const queries = [
                     }
                     {
                       code: "Q5"
-                      nextElementCode: "PB1"
+                      index: 5
                       title: "Password"
                       elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
@@ -95,7 +96,7 @@ const queries = [
                     }
                     {
                       code: "PB1"
-                      nextElementCode: "Q6"
+                      index: 6
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
@@ -103,7 +104,7 @@ const queries = [
                     }
                     {
                       code: "Q6"
-                      nextElementCode: "Q7"
+                      index: 7
                       title: "Organisation Category"
                       elementTypePluginCode: "radioChoice"
                       visibilityCondition: { value: true }
@@ -118,7 +119,7 @@ const queries = [
                     }
                     {
                       code: "Q7"
-                      nextElementCode: "Q8"
+                      index: 8
                       title: "Select Manufacturer"
                       elementTypePluginCode: "dropdownChoice"
                       # Remember to pass Responses object into visibilityCondition
@@ -147,7 +148,7 @@ const queries = [
                     }
                     {
                       code: "Q8"
-                      nextElementCode: "Q9"
+                      index: 9
                       title: "Select Distributor"
                       elementTypePluginCode: "dropDown"
                       # Remember to pass Responses object into visibilityCondition
@@ -176,6 +177,7 @@ const queries = [
                     }
                     {
                       code: "Q9"
+                      index: 10
                       title: "Select Importer"
                       elementTypePluginCode: "dropDown"
                       # Remember to pass Responses object into visibilityCondition
@@ -325,8 +327,7 @@ const queries = [
         }
       }
     }
-  } 
-  `,
+  }  `,
   // Template B - Company Registration
   `mutation {
     createTemplate(
@@ -341,11 +342,12 @@ const queries = [
               {
                 code: "S1"
                 title: "Section 1"
+                index: 0
                 templateElementsUsingId: {
                   create: [
                     {
                       code: "Q1"
-                      nextElementCode: "Q2"
+                      index: 0
                       title: "Organisation Name"
                       elementTypePluginCode: "shortText"
                       visibilityCondition: { value: true }
@@ -353,11 +355,12 @@ const queries = [
                       isRequired: true
                       isEditable: { value: true }
                       parameters: { label: "Unique Name for Company" }
-                      validation: {value:true}
+                      validation: { value: true }
                       # Validation TO-DO: must be unique in system
                     }
                     {
                       code: "Q2"
+                      index: 1
                       title: "Organisation Activity"
                       elementTypePluginCode: "dropdownChoice"
                       visibilityCondition: { value: true }
@@ -372,8 +375,8 @@ const queries = [
                   ]
                 }
               }
-              { code: "S2", title: "Section 2" }
-              { code: "S3", title: "Section 3" }
+              { code: "S2", title: "Section 2", index: 1 }
+              { code: "S3", title: "Section 3", index: 2 }
             ]
           }
           templateStagesUsingId: {
