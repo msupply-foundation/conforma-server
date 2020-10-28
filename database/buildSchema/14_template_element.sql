@@ -6,7 +6,7 @@ CREATE TABLE public.template_element (
     id serial primary key,
     section_id integer references public.template_section(id),
     code varchar NOT NULL,
-    next_element_code varchar,
+    index integer,
     title varchar,
     category public.template_element_category,
     visibility_condition jsonb,
