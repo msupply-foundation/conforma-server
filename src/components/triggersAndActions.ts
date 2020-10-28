@@ -136,7 +136,7 @@ export async function processTrigger(payload: TriggerPayload) {
   // Get sequential Actions from database
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
-  let outputCumulative = {}
+  let outputCumulative = {} // Collect output properties of actions in sequence
   // Execute Actions one by one
   for (const action of actionsToExecute) {
     const actionPayload = {
@@ -145,7 +145,7 @@ export async function processTrigger(payload: TriggerPayload) {
       trigger_payload: action.trigger_payload,
       parameter_queries: action.parameter_queries,
     }
-    const result = await executeAction(actionPayload, actionLibrary)
+    const result = await executeAction(actionPayload, actionLibrary, [outputCumulative])
     outputCumulative = { ...outputCumulative, ...result.output }
   }
 
@@ -173,10 +173,11 @@ async function evaluateParameters(
 
 export async function executeAction(
   payload: ActionPayload,
-  actionLibrary: ActionLibrary
+  actionLibrary: ActionLibrary,
+  additionalObjects: BasicObject[] = []
 ): Promise<ActionQueueExecutePayload> {
   const evaluatorParams = {
-    objects: [payload.trigger_payload],
+    objects: [payload.trigger_payload, ...additionalObjects],
     pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
   }
   // Evaluate parameters
