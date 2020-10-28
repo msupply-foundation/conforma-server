@@ -218,7 +218,7 @@ const queries = [
                 }
               }
               {
-                actionCode: "createUserFromApplication"
+                actionCode: "createUserFromApp"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
