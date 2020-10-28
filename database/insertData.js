@@ -209,10 +209,19 @@ const queries = [
           templateActionsUsingId: {
             create: [
               {
-                actionCode: "createUser"
+                actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
+                parameterQueries: {
+                  message: { value: "Sequential logger -- this message should appear before new user and application approval messages." }
+                }
+              }
+              {
+                actionCode: "createUser"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 2
                 parameterQueries: {
                   first_name: {
                     type: "string"
@@ -285,7 +294,7 @@ const queries = [
                 actionCode: "changeOutcome"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 2
+                sequence: 3
                 parameterQueries: {
                   application_id: {
                     operator: "objectProperties"
@@ -299,7 +308,7 @@ const queries = [
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
-                  message: { value: "Testing parallel actions" }
+                  message: { value: "Testing parallel actions -- This message is Asynchronous" }
                 }
               }
             ]
@@ -327,7 +336,7 @@ const queries = [
         }
       }
     }
-  }  `,
+  }`,
   // Template B - Company Registration
   `mutation {
     createTemplate(
