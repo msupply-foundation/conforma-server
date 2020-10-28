@@ -114,7 +114,6 @@ export async function processTrigger(payload: TriggerPayload) {
   }
 
   for (const action of [...actionsAsync, ...actionsSequential]) {
-    const status = action.sequence ? 'Processing' : 'Queued'
     // Add all actions to Action Queue
     // TODO - better error handling
     await DBConnect.addActionQueue({
@@ -125,7 +124,7 @@ export async function processTrigger(payload: TriggerPayload) {
       trigger_payload: payload,
       parameter_queries: action.parameter_queries,
       parameters_evaluated: {},
-      status,
+      status: action.sequence ? 'Processing' : 'Queued',
     })
   }
   await DBConnect.updateTriggerQueueStatus({ status: 'Actions Dispatched', id: trigger_id })
