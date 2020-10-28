@@ -148,7 +148,6 @@ export async function processTrigger(payload: TriggerPayload) {
     const result = await executeAction(actionPayload, actionLibrary, [outputCumulative])
     outputCumulative = { ...outputCumulative, ...result.output }
   }
-
   // After all done, set Trigger on table back to NULL
   DBConnect.resetTrigger(table, record_id)
 }

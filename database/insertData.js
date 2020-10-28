@@ -214,7 +214,9 @@ const queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
                 parameterQueries: {
-                  message: { value: "Sequential logger -- this message should appear before new user and application approval messages." }
+                  message: {
+                    value: "Sequential logger -- this message should appear before new user and application approval messages."
+                  }
                 }
               }
               {
@@ -246,8 +248,37 @@ const queries = [
                 actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
+                sequence: 4
                 parameterQueries: {
-                  message: { value: "Testing parallel actions -- This message is Asynchronous. \\nEven though it is last in the Actions list, it'll probably appear first." }
+                  message: {
+                    operator: "CONCAT"
+                    children: [
+                      { value: "Output concatenation: The user " }
+                      {
+                        operator: "objectProperties"
+                        children: [
+                          { value: { objectIndex: 1, property: "username" } }
+                        ]
+                      }
+                      { value: "'s registration has been " }
+                      {
+                        operator: "objectProperties"
+                        children: [
+                          { value: { objectIndex: 1, property: "newOutcome" } }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+              {
+                actionCode: "cLog"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                parameterQueries: {
+                  message: {
+                    value: "Testing parallel actions -- This message is Asynchronous. \\nEven though it is last in the Actions list, it'll probably appear first."
+                  }
                 }
               }
             ]
