@@ -113,11 +113,6 @@ export async function processTrigger(payload: TriggerPayload) {
     }
   }
 
-  // Sort sequential Actions into the correct order
-  actionsSequential.sort((action1: ActionSequential, action2: ActionSequential) => {
-    return action1.sequence - action2.sequence
-  })
-
   for (const actionList of [actionsAsync, actionsSequential]) {
     const status = Object.is(actionList, actionsAsync) ? 'Queued' : 'Processing'
     // Add all actions to Action Queue

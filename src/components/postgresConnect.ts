@@ -244,7 +244,8 @@ class PostgresDB {
     FROM template 
     JOIN template_action ON template.id = template_action.template_id 
     JOIN action_plugin ON template_action.action_code = action_plugin.code 
-    WHERE template_id = $1 AND trigger = $2`
+    WHERE template_id = $1 AND trigger = $2
+    ORDER BY sequence NULLS FIRST`
 
     try {
       const result = await this.query({ text, values: [templateId, trigger] })
