@@ -487,7 +487,7 @@ test('Test visibility condition -- Answer to Q1 is Drug Registration and user be
 //   });
 // });
 
-// Invalid input expressions
+// Non-standard input expressions
 
 test('Input is a number', () => {
   return evaluateExpression(10).then((result: any) => {
@@ -501,13 +501,10 @@ test('Input is an array', () => {
   })
 })
 
-test('Input is malformed JSON string', () => {
-  expect(
-    async () =>
-      await evaluateExpression(
-        '{"operator":"=", "children":[{"value":6},{"operator":"+", "children":[{"value":6},{"value":6}]}]}}'
-      )
-  ).rejects.toThrow('Invalid JSON String')
+test('Input is an string', () => {
+  return evaluateExpression('Friday drinks?').then((result: any) => {
+    expect(result).toEqual('Friday drinks?')
+  })
 })
 
 afterAll(() => {
