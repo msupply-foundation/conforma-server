@@ -13,6 +13,15 @@ Most triggers are associated with events on the main database tables (Applicatio
 
 Actions can be defined as **Sequential** or **Async** (parallel). Async Actions are executed as soon as the server is notified that they are in the Action queue, whereas Sequential Actions have an additional `sequence` property, and are processed in the prescribed sequence once they've all been inserted into the Action queue.
 
+Actions also return an **output** object (e.g. `createUser` Action returns user details). For sequential Actions, the output properties are collected into a `cumulativeOutput` object which is passed to the parameter evaluator (along with the **trigger payload\***), so subsequent Actions can access any of the output properties of any previous Action in the sequence.
+
+\* The trigger `payload` field in the **trigger_queue** contains basic information about the triggering event, namely:
+
+- **id** : id of this record in trigger_queue
+- **trigger** : trigger type (e.g. `onApplicationSubmit`)
+- **table** : database table that was triggered (e.g. `application`, `review`)
+- **record_id** : id of the record that was triggered in table
+
 ### Overview of Trigger and Action system
 
 ![](images/triggers-and-actions-diagram.png)
