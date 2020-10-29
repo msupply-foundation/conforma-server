@@ -2,7 +2,7 @@ type IParameters = {
   applicationId: number
 }
 
-type Stages = {
+type Stage = {
   id: number
   number: number
   title: string
@@ -14,15 +14,16 @@ module.exports['incrementStage'] = async function (parameters: IParameters, DBCo
   try {
     const templateId: number = await DBConnect.getTemplateId('application', applicationId)
 
-    const allStages: Stages[] = await DBConnect.getTemplateStages(templateId)
+    const allStages: Stage[] = await DBConnect.getTemplateStages(templateId)
 
     const maxStageNum = Math.max(...allStages.map((stage) => stage.number))
 
-    const currentStageId = await DBConnect.getCurrentStageId(3)
+    const currentStageId = await DBConnect.getCurrentStageId(applicationId)
 
     const currentStageNum = allStages.find((stage) => stage.id === currentStageId)?.number
 
-    console.log('Current Stage', currentStageNum)
+    if (currentStageNum === maxStageNum)
+      console.log('WARNING: Application is already at final stage. No changes made.')
 
     const newStageNum = currentStageNum
       ? currentStageNum + 1 <= maxStageNum
@@ -30,7 +31,21 @@ module.exports['incrementStage'] = async function (parameters: IParameters, DBCo
         : currentStageNum
       : 1
 
-    console.log('New NUmver', newStageNum)
+    const newStageId = allStages.find((stage) => stage.number === newStageNum)?.id
+
+    const newStageHistoryId = await DBConnect.addNewStageHistory(applicationId, newStageId)
+
+    // Update Status_history -- either create new Draft, or relink existing
+    const currentStatus = await DBConnect.getCurrentStatusFromStageHistoryId(currentStageId)
+
+    if (currentStatus) {
+      // relink existing status
+      const success = await DBConnect.relinkStatusHistory(newStageHistoryId)
+    } else {
+      console.log('No status found')
+      // create new Draft status
+      const result = await DBConnect.addNewStatusHistory(newStageHistoryId)
+    }
 
     return {
       status: 'Success',

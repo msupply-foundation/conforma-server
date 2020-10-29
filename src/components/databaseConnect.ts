@@ -71,6 +71,14 @@ class DBConnect {
   public getTemplateStages = PostgresDB.getTemplateStages
 
   public getCurrentStageId = PostgresDB.getCurrentStageId
+
+  public addNewStageHistory = PostgresDB.addNewStageHistory
+
+  public getCurrentStatusFromStageHistoryId = PostgresDB.getCurrentStatusFromStageHistoryId
+
+  public relinkStatusHistory = PostgresDB.relinkStatusHistory
+
+  public addNewStatusHistory = PostgresDB.addNewStatusHistory
 }
 
 const dbConnectInstance = DBConnect.Instance

@@ -5,5 +5,5 @@ CREATE TABLE public.application_stage_history (
     application_id integer references public.application(id),
     stage_id integer references public.template_stage(id),
     time_created timestamp,
-    is_current bool
+    is_current bool DEFAULT true
 );

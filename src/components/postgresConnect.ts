@@ -339,6 +339,55 @@ class PostgresDB {
       throw err
     }
   }
+
+  public addNewStageHistory = async (applicationId: number, stageId: number) => {
+    // Note: switching is_current of previous stage_histories to False is done automatically by a Postgres trigger function
+    const text =
+      'INSERT into application_stage_history (application_id, stage_id, time_created) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id'
+    try {
+      const result = await this.query({ text, values: [applicationId, stageId] })
+      return result.rows[0].id
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getCurrentStatusFromStageHistoryId = async (stageHistoryId: number) => {
+    const text =
+      'SELECT id, status FROM application_status_history WHERE application_stage_history_id = $1 AND is_current = true'
+    try {
+      const result = await this.query({ text, values: [stageHistoryId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public relinkStatusHistory = async (stageHistoryId: number) => {
+    const text = 'UPDATE application_status_history SET application_stage_history_id = $1'
+    try {
+      await this.query({ text, values: [stageHistoryId] })
+      return true
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public addNewStatusHistory = async (stageHistoryId: number, status = 'Draft') => {
+    // Note: switching is_current of previous status_histories to False is done automatically by a Postgres trigger function
+    const text =
+      'INSERT into application_status_history (application_stage_history_id, status, time_created) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id, status'
+    try {
+      const result = await this.query({ text, values: [stageHistoryId, status] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
 }
 
 const postgressDBInstance = PostgresDB.Instance

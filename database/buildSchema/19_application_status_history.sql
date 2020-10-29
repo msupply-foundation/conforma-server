@@ -7,5 +7,5 @@ CREATE TABLE public.application_status_history (
     application_stage_history_id integer references public.application_stage_history(id),
     status public.application_status,
     time_created timestamp with time zone,
-    is_current bool
+    is_current bool DEFAULT true
 );
