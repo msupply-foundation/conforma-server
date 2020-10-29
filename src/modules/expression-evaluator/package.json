@@ -30,7 +30,8 @@
   },
   "scripts": {
     "build": "rimraf ./lib && tsc",
-    "test": "jest"
+    "test": "jest",
+    "gui": "cd expression-evaluate-gui && yarn start"
   },
   "dependencies": {},
   "files": [
