@@ -316,6 +316,29 @@ class PostgresDB {
       return false
     }
   }
+
+  public getTemplateStages = async (templateId: number) => {
+    const text = 'SELECT id, number, title FROM template_stage WHERE template_id = $1'
+    try {
+      const result = await this.query({ text, values: [templateId] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getCurrentStageId = async (applicationId: number) => {
+    const text =
+      'SELECT stage_id FROM application_stage_history WHERE application_id = $1 and is_current = true'
+    try {
+      const result = await this.query({ text, values: [applicationId] })
+      return result.rows[0]?.stage_id
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
 }
 
 const postgressDBInstance = PostgresDB.Instance

@@ -67,6 +67,10 @@ class DBConnect {
     }
     return templateId
   }
+
+  public getTemplateStages = PostgresDB.getTemplateStages
+
+  public getCurrentStageId = PostgresDB.getCurrentStageId
 }
 
 const dbConnectInstance = DBConnect.Instance

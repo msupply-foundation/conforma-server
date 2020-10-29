@@ -365,17 +365,28 @@ const queries = [
             ]
           }
           templateActionsUsingId: {
-            create: {
-              actionCode: "cLog"
-              condition: { value: true }
-              trigger: ON_APPLICATION_SUBMIT
-              parameterQueries: {
-                message: {
-                  value: "The Action has been executed. Automated Actions FTW!!!"
+            create: [
+              {
+                actionCode: "cLog"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                parameterQueries: {
+                  message: { value: "Company Registration submission" }
                 }
               }
-            }
-            # TO-DO: Create actions to add Org, etc.
+              {
+                actionCode: "incrementStage"
+                condition: { value: true }
+                trigger: ON_APPLICATION_CREATE
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
+                  }
+                }
+              }
+              # TO-DO: Create actions to add Org, etc.
+            ]
           }
         }
       }
