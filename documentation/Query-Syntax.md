@@ -2,7 +2,7 @@
 
 This module is in `src/modules/expression-evaluator`, structured as its own package for standalone development.
 
-The current build of the module is published to Github packages so it can be easily imported into both front- and back-end projects. See **Installation** at the end of this page for instructions on how to make it work in your environment.
+The current build of the module is published to Github packages so it can be easily imported into both front- and back-end projects. See [Installation](#installation) at the end of this page for instructions on how to make it work in your environment, or [Development](#development) for information on further development of the module, including a browser-based GUI expression builder.
 
 Run `yarn test` to see it in action.
 
@@ -516,3 +516,51 @@ It'll work exactly like a regular npm package after that.
 To update to the latest release of the package, run:
 
 `yarn upgrade @openmsupply/expression-evaluator`
+
+<a name="development"></a>
+
+# Development
+
+The source code is located in `src/modules/expression-evaluator` for ongoing development. It's part of this main back-end repo, but has it's own `package.json` and `node_modules` so it can be developed and published independently. This means that in order to work on it you'll need to run `yarn install` from within this folder.
+
+### Publishing a new version of the package
+
+From within the expression-evaluator module's folder:
+
+- Ensure that the module passes all tests:  
+  `yarn test`
+- Build the package:  
+  `yarn build` (outputs to `/lib` folder)
+- Bump the version:  
+  `yarn version patch | minor | major` (updates `package.json` following [semantic versioning](https://www.geeksforgeeks.org/introduction-semantic-versioning/))
+- Publish to Github packages:  
+  `yarn publish`
+
+Then you can bump the minimum version of the package in the dependent projects (front- and back-end in this case, or upgrade as above.)
+
+### GUI expression builder
+
+This is a browser-based dev tool within the expression-evaluator folder (`/expression-evaluate-gui`) to make building complex queries for templates easy to test and debug.
+
+![GUI screenshot](images/query-syntax-gui_screenshot.png)
+
+As it's a stand-alone project, before using it you'll need to run `yarn install` from within
+the **expression-evaluate-gui** folder
+
+You'll also need to add a .env file to the expression-evaluate-gui folder with the following content:
+
+> SKIP_PREFLIGHT_CHECK=true
+
+This prevents errors being thrown due to different projects having different versions of various dependencies.
+
+Settings for database configurations, endpoints and ports are editable in `/src/config.json`
+
+The app can be launched from either this app's folder or the root back-end folder:  
+`yarn gui`
+
+Additional notes:
+
+- It imports the `evaluateExpression` package from the dev folder (not the published package) as this will enable live testing when actually making new changes to the evaluator.
+- `create-react-app` won't allow importing local modules outside the `src` folder. The workaround is to just re-copy the relevant files into this app's src folder on launch. This means that any changes made to the original `evaluateExpression.ts` won't show up with a hot reload -- you'll have to stop and start the app.
+- the `node-postgres` package won't run directly from the browser, so there's a little Express server that also runs with this app that simply relays postgres queries from this app to postgres
+- API calls to local server (e.g. `http://localhost:8080/check-unique)` don't work. I don't fully understand why, but I got round it by specifying a proxy to `http://localhost:8080` in `package.json` -- you just have to put relative links as the URL. i.e. `/check-unique`
