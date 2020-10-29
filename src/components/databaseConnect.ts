@@ -48,8 +48,6 @@ class DBConnect {
 
   public setApplicationOutcome = PostgresDB.setApplicationOutcome
 
-  public getOriginalRecordFromActionQueue = GraphQLdb.getOriginalRecordFromActionQueue
-
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
     let templateId: number
     switch (tableName) {
