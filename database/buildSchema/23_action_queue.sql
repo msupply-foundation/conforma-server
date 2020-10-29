@@ -14,6 +14,7 @@ CREATE TABLE public.action_queue (
     status public.action_queue_status,
     time_queued timestamp,
     time_completed timestamp,
+    time_scheduled timestamp,
     error_log varchar
 );
 
