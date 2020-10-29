@@ -1,3 +1,4 @@
+import { ActionPluginOutput } from '../../types'
 type IParameters = {
   applicationId: number
 }
@@ -8,9 +9,12 @@ type Stage = {
   title: string
 }
 
-module.exports['incrementStage'] = async function (parameters: IParameters, DBConnect: any) {
+module.exports['incrementStage'] = async function (
+  parameters: IParameters,
+  DBConnect: any
+): Promise<ActionPluginOutput> {
   const { applicationId } = parameters
-  // Get templateID
+  const returnObject: ActionPluginOutput = { status: null, error_log: '' }
   try {
     const templateId: number = await DBConnect.getTemplateId('application', applicationId)
 
@@ -40,25 +44,41 @@ module.exports['incrementStage'] = async function (parameters: IParameters, DBCo
 
     if (currentStatus) {
       // relink existing status
-      const success = await DBConnect.relinkStatusHistory(newStageHistoryId)
+      const result = await DBConnect.relinkStatusHistory(newStageHistoryId)
+      if (result) {
+        returnObject.output = { currentStatus: currentStatus.status }
+      } else {
+        returnObject.status = 'Fail'
+        returnObject.error_log = "Couldn't relink existing status"
+      }
     } else {
-      console.log('No status found')
       // create new Draft status
-      const result = await DBConnect.addNewStatusHistory(newStageHistoryId)
+      console.log('No status found')
+      const newStatus = await DBConnect.addNewStatusHistory(newStageHistoryId)
+      if (newStatus) {
+        returnObject.output = { currentStatus: newStatus }
+      } else {
+        returnObject.status = 'Fail'
+        returnObject.error_log = "Couldn't create new status"
+      }
     }
 
-    return {
-      status: 'Success',
-      error_log: '',
+    if (returnObject.status !== 'Fail') {
+      returnObject.status = 'Success'
+      returnObject.output = {
+        ...returnObject.output,
+        applicationId,
+        stageNumber: newStageNum,
+        stageName: allStages.find((stage) => stage.number === newStageNum)?.title,
+      }
     }
+    return returnObject
   } catch (err) {
-    console.log('Unable to load template Stage info')
+    console.log('Unable to increment Stage')
     console.log(err.message)
-    return {
-      status: 'Fail',
-      error_log: 'Unable to load template Stage info',
-    }
-    return
+    returnObject.status = 'Fail'
+    returnObject.error_log = 'Unable to increment Stage'
+    return returnObject
   }
   // Get list of Stages id, num, name for Template
   // Get Current Stage of Application
