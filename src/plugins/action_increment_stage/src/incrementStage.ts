@@ -42,8 +42,9 @@ module.exports['incrementStage'] = async function (
 
     const newStageId = allStages.find((stage) => stage.number === newStageNum)?.id
 
-    const newStageHistoryId = stageIsMax ? currentStageHistoryId : currentStageHistoryId
-    // await DBConnect.addNewStageHistory(applicationId, newStageId)
+    const newStageHistoryId = stageIsMax
+      ? currentStageHistoryId
+      : await DBConnect.addNewStageHistory(applicationId, newStageId)
 
     // Update Status_history -- either create new Draft, or relink existing
     const currentStatus = await DBConnect.getCurrentStatusFromStageHistoryId(currentStageHistoryId)
@@ -59,7 +60,7 @@ module.exports['incrementStage'] = async function (
       }
     } else {
       // create new Draft status
-      console.log('No status found')
+      console.log('No existing status')
       const newStatus = await DBConnect.addNewStatusHistory(newStageHistoryId)
       if (newStatus) {
         returnObject.output = { currentStatus: newStatus.status, statusId: newStatus.id }
@@ -70,12 +71,14 @@ module.exports['incrementStage'] = async function (
     }
 
     if (returnObject.status !== 'Fail') {
+      const stageName = allStages.find((stage) => stage.number === newStageNum)?.title
+      console.log(`Application Stage: ${stageName}, Status: ${returnObject?.output?.currentStatus}`)
       returnObject.status = 'Success'
       returnObject.output = {
         ...returnObject.output,
         applicationId,
         stageNumber: newStageNum,
-        stageName: allStages.find((stage) => stage.number === newStageNum)?.title,
+        stageName,
         stageHistoryId: newStageHistoryId,
       }
     }
