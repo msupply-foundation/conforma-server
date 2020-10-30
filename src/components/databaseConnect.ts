@@ -74,7 +74,7 @@ class DBConnect {
 
   public addNewStageHistory = PostgresDB.addNewStageHistory
 
-  public getCurrentStatus = PostgresDB.getCurrentStatus
+  public getCurrentStatusHistory = PostgresDB.getCurrentStatusHistory
 
   public getCurrentStatusFromStageHistoryId = PostgresDB.getCurrentStatusFromStageHistoryId
 

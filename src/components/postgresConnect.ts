@@ -353,8 +353,8 @@ class PostgresDB {
     }
   }
 
-  public getCurrentStatus = async (applicationId: number) => {
-    const text = `SELECT application_status_history.id
+  public getCurrentStatusHistory = async (applicationId: number) => {
+    const text = `SELECT application_status_history.id,
       application_stage_history_id, status FROM
       application_status_history JOIN application_stage_history ON
       application_stage_history_id = application_stage_history.id WHERE

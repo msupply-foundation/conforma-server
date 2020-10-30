@@ -21,9 +21,8 @@ module.exports['changeStatus'] = async function (
   const returnObject: ActionPluginOutput = { status: null, error_log: '' }
   console.log(`Changing the Status of Application ${applicationId}...`)
 
-  console.log('Application ID', applicationId)
   try {
-    const currentStatus = await DBConnect.getCurrentStatus(applicationId)
+    const currentStatus = await DBConnect.getCurrentStatusHistory(applicationId)
 
     switch (currentStatus?.status) {
       case undefined:
@@ -36,13 +35,11 @@ module.exports['changeStatus'] = async function (
           returnObject.status = 'Fail'
           returnObject.error_log = 'Missing stage_history for Application'
         } else {
-          const result = await DBConnect.addStatusHistory(
-            currentStatus.application_stage_history_id,
-            newStatus
-          )
+          const result = await DBConnect.addNewStatusHistory(currentStageHistoryId.id, newStatus)
           if (result.id) {
             returnObject.status = 'Success'
             returnObject.output = { status: newStatus, statusId: result.id }
+            console.log(`New status_history created: ${newStatus}`)
           } else {
             returnObject.status = 'Fail'
             returnObject.error_log = "Couldn't create new application_status_history"
@@ -60,16 +57,18 @@ module.exports['changeStatus'] = async function (
         break
       default:
         // Create a new application_status_history record
-        const result = await DBConnect.addStatusHistory(
+        const result = await DBConnect.addNewStatusHistory(
           currentStatus.application_stage_history_id,
           newStatus
         )
         if (result.id) {
           returnObject.status = 'Success'
           returnObject.output = { status: newStatus, statusId: result.id }
+          console.log(`Application status changed to: ${newStatus}`)
         } else {
           returnObject.status = 'Fail'
           returnObject.error_log = "Couldn't create new application_status_history"
+          console.log("Couldn't create new application_status_history")
         }
     }
 
