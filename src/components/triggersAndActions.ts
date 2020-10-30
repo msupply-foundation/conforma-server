@@ -1,9 +1,17 @@
 import path from 'path'
 import { getAppRootDir } from './utilityFunctions'
 import * as config from '../config.json'
-import { ActionLibrary, ActionInTemplate, TriggerPayload, ActionPayload } from '../types'
+import {
+  ActionLibrary,
+  ActionInTemplate,
+  TriggerPayload,
+  ActionPayload,
+  ActionSequential,
+} from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import PostgresDB from '../components/postgresConnect'
+import DBConnect from './databaseConnect'
+import { actionLibrary } from './pluginsConnect'
+import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
 
 const schedule = require('node-schedule')
 
@@ -14,7 +22,7 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
   console.log('Loading Actions from Database...')
 
   try {
-    const result = await PostgresDB.getActionPlugins()
+    const result = await DBConnect.getActionPlugins()
 
     result.forEach((row) => {
       const action = require(path.join(pluginFolder, row.path))
@@ -35,20 +43,21 @@ export const loadScheduledActions = async function (
   console.log('Loading Scheduled jobs...')
 
   // Load from Database
-  const actions = await PostgresDB.getActionsQueued()
+  const actions = await DBConnect.getActionsScheduled()
 
   let isExecutedAction = true
   for await (const scheduledAction of actions)
     while (isExecutedAction) {
-      const date = new Date(scheduledAction.execution_time)
+      const date = new Date(scheduledAction.time_completed)
       if (date > new Date(Date.now())) {
         const job = schedule.scheduleJob(date, function () {
-          // TODO: Check if was exectued otherwise don't continue
+          // TODO: Check if was executed otherwise don't continue
           executeAction(
             {
               id: scheduledAction.id,
               code: scheduledAction.action_code,
-              parameters: scheduledAction.parameters,
+              trigger_payload: scheduledAction.trigger_payload,
+              parameter_queries: scheduledAction.parameter_queries,
             },
             actionLibrary
           )
@@ -59,13 +68,15 @@ export const loadScheduledActions = async function (
         console.log(
           'Executing overdue action:',
           scheduledAction.action_code,
-          scheduledAction.parameters
+          scheduledAction.parameters_evaluated
         )
+        // TODO: Evaluate parameters at runtime
         executeAction(
           {
             id: scheduledAction.id,
             code: scheduledAction.action_code,
-            parameters: scheduledAction.parameters,
+            trigger_payload: scheduledAction.trigger_payload,
+            parameter_queries: scheduledAction.parameter_queries,
           },
           actionLibrary
         )
@@ -78,55 +89,100 @@ export const loadScheduledActions = async function (
 }
 
 export async function processTrigger(payload: TriggerPayload) {
+  const { id: trigger_id, trigger, table, record_id } = payload
+
+  // Deduce template ID -- different for each triggered table
+  const templateId = await DBConnect.getTemplateId(table, record_id)
+
   // Get Actions from matching Template
-  const result = await PostgresDB.getActionPluginsByTemplate(payload.table, {
-    record_id: payload.record_id,
-    trigger: payload.trigger,
-  })
+  const result = await DBConnect.getActionsByTemplateId(templateId, trigger)
+
   // Filter out Actions that don't match the current condition
-  const actions: ActionInTemplate[] = []
+  // and separate into Sequential and Async actions
+  const actionsSequential: ActionSequential[] = []
+  const actionsAsync: ActionInTemplate[] = []
 
   for (const action of result) {
     const condition = await evaluateExpression(action.condition, {
       objects: [payload],
-      pgConnection: PostgresDB,
+      pgConnection: DBConnect,
     })
-    if (condition) actions.push(action)
-  }
-
-  // Evaluate parameters for each Action
-  for (const action of actions) {
-    for (const key in action.parameter_queries) {
-      action.parameter_queries[key] = await evaluateExpression(action.parameter_queries[key], {
-        objects: [payload],
-        pgConnection: PostgresDB,
-      })
+    if (condition) {
+      if (action.sequence) actionsSequential.push(action as ActionSequential)
+      else actionsAsync.push(action)
     }
-    // TODO - Error handling
-    // Write each Action with parameters to Action_Queue
-    await PostgresDB.addActionQueue({
-      trigger_event: payload.id,
-      action_code: action.code,
-      parameters: action.parameter_queries,
-      status: 'Queued',
-    })
   }
 
-  // Update trigger queue item with success/failure (and log)
-  // If SUCCESS -- Not sure best way to test for this:
-  await PostgresDB.updateTriggerQueue({ status: 'Action Dispatched', id: payload.id })
+  for (const action of [...actionsAsync, ...actionsSequential]) {
+    // Add all actions to Action Queue
+    // TODO - better error handling
+    await DBConnect.addActionQueue({
+      trigger_event: trigger_id,
+      template_id: templateId,
+      sequence: action.sequence,
+      action_code: action.code,
+      trigger_payload: payload,
+      parameter_queries: action.parameter_queries,
+      parameters_evaluated: {},
+      status: typeof action.sequence === 'number' ? 'Processing' : 'Queued',
+    })
+  }
+  await DBConnect.updateTriggerQueueStatus({ status: 'Actions Dispatched', id: trigger_id })
+
+  // Get sequential Actions from database
+  const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
+
+  // Execute Actions one by one
+  for (const action of actionsToExecute) {
+    const actionPayload = {
+      id: action.id,
+      code: action.action_code,
+      trigger_payload: action.trigger_payload,
+      parameter_queries: action.parameter_queries,
+    }
+    await executeAction(actionPayload, actionLibrary)
+  }
+
+  // After all done, set Trigger on table back to NULL
+  DBConnect.resetTrigger(table, record_id)
+}
+
+async function evaluateParameters(
+  parameterQueries: BasicObject,
+  evaluatorParameters: IParameters = {}
+) {
+  const parametersEvaluated: BasicObject = {}
+  try {
+    for (const key in parameterQueries) {
+      parametersEvaluated[key] = await evaluateExpression(
+        parameterQueries[key],
+        evaluatorParameters
+      )
+    }
+    return parametersEvaluated
+  } catch (err) {
+    throw err
+  }
 }
 
 export async function executeAction(
   payload: ActionPayload,
   actionLibrary: ActionLibrary
 ): Promise<boolean> {
-  // TO-DO: If Scheduled, create a Job instead
-  const actionResult = await actionLibrary[payload.code](payload.parameters, PostgresDB)
+  const evaluatorParams = {
+    objects: [payload.trigger_payload],
+    pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
+  }
+  // Evaluate parameters
+  const parametersEvaluated = await evaluateParameters(payload.parameter_queries, evaluatorParams)
 
-  return await PostgresDB.executedActionStatusUpdate({
+  // TO-DO: If Scheduled, create a Job instead
+  const actionResult = await actionLibrary[payload.code](parametersEvaluated, DBConnect)
+
+  return await DBConnect.executedActionStatusUpdate({
     status: actionResult.status,
     error_log: actionResult.error,
+    parameters_evaluated: parametersEvaluated,
     id: payload.id,
   })
 }

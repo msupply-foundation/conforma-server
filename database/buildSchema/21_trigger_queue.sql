@@ -1,6 +1,6 @@
 -- trigger queue
 
-CREATE TYPE public.trigger_queue_status as ENUM ('Triggered', 'Action Dispatched', 'Error');
+CREATE TYPE public.trigger_queue_status as ENUM ('Triggered', 'Actions Dispatched', 'Error');
 
 CREATE TABLE public.trigger_queue (
     id serial primary key,
@@ -19,7 +19,7 @@ RETURNS trigger as $trigger_queue$
 BEGIN
 	INSERT INTO trigger_queue (trigger_type, "table", record_id, timestamp, status)
 		VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, current_timestamp, 'Triggered');
-	EXECUTE format('UPDATE %s SET trigger = NULL WHERE id = %s', TG_TABLE_NAME, NEW.id);	
+	EXECUTE format('UPDATE %s SET trigger = ''Processing'' WHERE id = %s', TG_TABLE_NAME, NEW.id);	
 RETURN NULL;
 END;
 $trigger_queue$ LANGUAGE plpgsql;

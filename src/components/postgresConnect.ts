@@ -14,8 +14,9 @@ import {
   FilePayload,
   FileGetPayload,
   TriggerQueueUpdatePayload,
+  ActionSequential,
 } from '../types'
-import { ApplicationOutcome, User } from '../generated/graphql'
+import { ApplicationOutcome, Trigger, User } from '../generated/graphql'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -50,6 +51,7 @@ class PostgresDB {
           processTrigger(JSON.parse(payload))
           break
         case 'action_notifications':
+          // For Async Actions only
           executeAction(JSON.parse(payload), actionLibrary)
           break
       }
@@ -98,7 +100,7 @@ class PostgresDB {
     payload: ActionQueueExecutePayload
   ): Promise<boolean> => {
     const text =
-      'UPDATE action_queue SET status = $1, error_log = $2, execution_time = CURRENT_TIMESTAMP WHERE id = $3'
+      'UPDATE action_queue SET status = $1, error_log = $2, parameters_evaluated = $3, time_completed = CURRENT_TIMESTAMP WHERE id = $4'
     try {
       await this.query({ text, values: Object.values(payload) })
       return true
@@ -107,17 +109,57 @@ class PostgresDB {
     }
   }
 
-  public getActionsQueued = async (
+  public getActionsScheduled = async (
     payload: ActionQueueGetPayload = { status: 'Scheduled' }
   ): Promise<ActionQueue[]> => {
     const text =
-      'SELECT id, action_code, parameters, execution_time FROM action_queue WHERE status = $1 ORDER BY execution_time'
+      'SELECT id, action_code, trigger_payload, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
     try {
       const result = await this.query({
         text,
         values: Object.values(payload),
       })
       return result.rows as ActionQueue[]
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
+    const text =
+      "SELECT id, action_code, trigger_payload, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
+    try {
+      const result = await this.query({
+        text,
+        values: [templateId],
+      })
+      return result.rows as ActionQueue[]
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public updateActionParametersEvaluated = async (action_id: number, parameters: any) => {
+    const text = 'UPDATE action_queue SET parameters_evaluated = $1 WHERE id = $2'
+    try {
+      const result = await this.query({
+        text,
+        values: [parameters, action_id],
+      })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public resetTrigger = async (table: string, record_id: number): Promise<boolean> => {
+    const text = `UPDATE ${table} SET trigger = NULL WHERE id = $1`
+    try {
+      const result = await this.query({
+        text,
+        values: [record_id],
+      })
+      return true
     } catch (err) {
       throw err
     }
@@ -176,18 +218,37 @@ class PostgresDB {
     }
   }
 
-  public getActionPluginsByTemplate = async (
-    tableName: string,
-    payload: ActionInTemplateGetPayload
+  public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
+    let text: string
+    switch (tableName) {
+      case 'application':
+        text = 'SELECT template_id FROM application WHERE id = $1'
+        break
+      case 'review':
+        // NB: Check the rest of these queries properly once we have data in the tables
+        text =
+          'SELECT template_id FROM application WHERE id = (SELECT application_id FROM review WHERE id = $1)'
+        break
+      default:
+        throw new Error('Table name not valid')
+    }
+    const result = await this.query({ text, values: [record_id] })
+    return result.rows[0].template_id
+  }
+
+  public getActionsByTemplateId = async (
+    templateId: number,
+    trigger: Trigger
   ): Promise<ActionInTemplate[]> => {
-    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, condition, parameter_queries 
+    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, sequence, condition, parameter_queries 
     FROM template 
     JOIN template_action ON template.id = template_action.template_id 
     JOIN action_plugin ON template_action.action_code = action_plugin.code 
-    WHERE template_id = (SELECT template_id FROM ${tableName} WHERE id = $1) AND trigger = $2`
+    WHERE template_id = $1 AND trigger = $2
+    ORDER BY sequence NULLS FIRST`
 
     try {
-      const result = await this.query({ text, values: [payload.record_id, payload.trigger] })
+      const result = await this.query({ text, values: [templateId, trigger] })
       return result.rows as ActionInTemplate[]
     } catch (err) {
       throw err
@@ -206,7 +267,9 @@ class PostgresDB {
     }
   }
 
-  public updateTriggerQueue = async (payload: TriggerQueueUpdatePayload): Promise<boolean> => {
+  public updateTriggerQueueStatus = async (
+    payload: TriggerQueueUpdatePayload
+  ): Promise<boolean> => {
     const text = 'UPDATE trigger_queue SET status = $1 WHERE id = $2'
     // TODO: Dynamically select what is being updated
     try {

@@ -212,16 +212,16 @@ const queries = [
                 actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
+                sequence: 1
                 parameterQueries: {
-                  message: {
-                    value: "Action has been executed on User Registration template"
-                  }
+                  message: { value: "Sequential logger -- this message should appear before new user and application approval messages." }
                 }
               }
               {
                 actionCode: "createUser"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
+                sequence: 2
                 parameterQueries: {
                   first_name: {
                     type: "string"
@@ -294,12 +294,21 @@ const queries = [
                 actionCode: "changeOutcome"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
+                sequence: 3
                 parameterQueries: {
                   application_id: {
                     operator: "objectProperties"
                     children: [{ value: { property: "record_id" } }]
                   }
                   newOutcome: { value: "Approved" }
+                }
+              }
+              {
+                actionCode: "cLog"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                parameterQueries: {
+                  message: { value: "Testing parallel actions -- This message is Asynchronous. \\nEven though it is last in the Actions list, it'll probably appear first." }
                 }
               }
             ]
@@ -327,7 +336,7 @@ const queries = [
         }
       }
     }
-  }  `,
+  }`,
   // Template B - Company Registration
   `mutation {
     createTemplate(

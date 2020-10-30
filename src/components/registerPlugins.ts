@@ -9,7 +9,8 @@ import * as fs from 'fs'
 import path from 'path'
 import { getAppRootDir } from './utilityFunctions'
 import * as config from '../config.json'
-import PostgresDB from './postgresConnect'
+// import PostgresDB from './postgresConnect'
+import DBConnect from './databaseConnect'
 import { deepEquality } from './utilityFunctions'
 
 const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder)
@@ -34,7 +35,7 @@ export default async function registerPlugins() {
     })
 
   // Load plugin info from Database
-  const dbPlugins = await PostgresDB.getActionPlugins()
+  const dbPlugins = await DBConnect.getActionPlugins()
 
   // Check if any in DB now missing from files -- alert if so.
   const pluginCodes = plugins.map((item) => item.code)
@@ -43,7 +44,7 @@ export default async function registerPlugins() {
     const missingPlugin = missingPlugins[index]
     console.warn('ALERT: Plug-in file missing:', missingPlugin.name)
     try {
-      await PostgresDB.deleteActionPlugin(missingPlugin)
+      await DBConnect.deleteActionPlugin(missingPlugin)
       console.log('Plugin de-registered:', missingPlugin.name)
     } catch (err) {
       console.error("Couldn't remove plug-in:", missingPlugin.name)
@@ -60,7 +61,7 @@ export default async function registerPlugins() {
     const plugin = unregisteredPlugins[index]
     try {
       // TODO: Replace this with some other way to use only keys from ActionPlugin!s
-      await PostgresDB.addActionPlugin({
+      await DBConnect.addActionPlugin({
         code: plugin.code,
         name: plugin.name,
         description: plugin.description,
@@ -90,7 +91,7 @@ export default async function registerPlugins() {
     ) {
       try {
         // TODO: Replace this with some other way to use only keys from ActionPlugin!
-        await PostgresDB.updateActionPlugin({
+        await DBConnect.updateActionPlugin({
           code: plugin.code,
           name: plugin.name,
           description: plugin.description,

@@ -1,10 +1,18 @@
+import { Trigger } from './generated/graphql'
+
 export interface ActionInTemplate {
   code: string
   path: string
   name: string
   trigger: string
+  sequence: number | null
   condition: { [key: string]: any }
   parameter_queries: { [key: string]: any }
+  parameters_evaluated: { [key: string]: any }
+}
+
+export interface ActionSequential extends ActionInTemplate {
+  sequence: number
 }
 
 export interface ActionInTemplateGetPayload {
@@ -20,17 +28,23 @@ export interface ActionQueue {
   id: number
   status?: ActionQueueStatus
   action_code: string
-  parameters: { [key: string]: any }
-  execution_time: string
+  trigger_payload: TriggerPayload
+  parameter_queries: { [key: string]: any }
+  parameters_evaluated: { [key: string]: any }
+  time_completed: string
 }
 
 // TODO: Ideally this would be coming from postgraphile types, to be consistent with the types
-type ActionQueueStatus = 'Scheduled' | 'Queued' | 'Success' | 'Fail'
+type ActionQueueStatus = 'Scheduled' | 'Processing' | 'Queued' | 'Success' | 'Fail'
 
 export interface ActionQueuePayload {
   trigger_event: number
+  template_id: number
   action_code: string
-  parameters: { [key: string]: any }
+  trigger_payload: TriggerPayload
+  sequence: number | null
+  parameter_queries: { [key: string]: any }
+  parameters_evaluated: { [key: string]: any }
   status: ActionQueueStatus
 }
 
@@ -41,13 +55,15 @@ export interface ActionQueueGetPayload {
 export interface ActionQueueExecutePayload {
   id: number
   error_log: string
+  parameters_evaluated: { [key: string]: any }
   status: ActionQueueStatus
 }
 
 export interface ActionPayload {
   id: number
   code: string
-  parameters: { [key: string]: any }
+  trigger_payload: TriggerPayload
+  parameter_queries: { [key: string]: any }
 }
 
 export interface ActionPlugin {
@@ -90,11 +106,11 @@ export interface FileGetPayload {
 export type QueryParams = string[] | { [key: string]: any }
 
 // TODO: Ideally this would be coming from postgraphile types, to be consistent with the types
-type TriggerStatus = 'Triggered' | 'Action Dispatched' | 'Error'
+type TriggerStatus = 'Triggered' | 'Actions Dispatched' | 'Error'
 
 export interface TriggerPayload {
   id: number
-  trigger: TriggerStatus
+  trigger: Trigger
   table: string
   record_id: number
 }
@@ -103,5 +119,3 @@ export interface TriggerQueueUpdatePayload {
   id: number
   status: TriggerStatus
 }
-
-// export type ApplicationOutcome = 'Pending' | 'Approved' | 'Rejected'

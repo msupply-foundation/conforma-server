@@ -11,6 +11,8 @@ An Application Template will specify:
 
 Most triggers are associated with events on the main database tables (Application, Review, etc.). Specifically, there is a field on these tables called `trigger` into which the "event" (e.g. "On Application Submit") is recorded. The database listens to this field, then notifies the server, which launches the appropriate Actions, using parameters from the current conditions.
 
+Actions can be defined as **Sequential** or **Async** (parallel). Async Actions are executed as soon as the server is notified that they are in the Action queue, whereas Sequential Actions have an additional `sequence` property, and are processed in the prescribed sequence once they've all been inserted into the Action queue.
+
 ### Overview of Trigger and Action system
 
 ![](images/triggers-and-actions-diagram.png)
@@ -22,13 +24,14 @@ Most triggers are associated with events on the main database tables (Applicatio
 | `onApplicationCreate`    | Postgres trigger on `Application` table                          |
 | `onApplicationSubmit`    | Postgres trigger on `Application` table                          |
 | `onApplicationSave`      | Postgres trigger on `Application` table                          |
-| `onApplicationWithdrawn` | Postgres trigger on `Review` table                               |
+| `onApplicationWithdrawn` | Postgres trigger on `Application` table                          |
 | `onReviewStart`          | Postgres trigger on `Review` table                               |
 | `onReviewSubmit`         | Postgres trigger on `Review` table                               |
 | `onEditComment`          | Postgres trigger on `Review_response` table                      |
 | `onReviewSave`           | Postgres trigger on `Review` table                               |
 | `onApplicationAssign`    | Postgres trigger on `Review_section_assign` table                |
 | `onApprovalSubmit`       | Postgres trigger on `Review_section` table                       |
+| `onActionComplete`       | Postgres trigger on `Action_queue` table                         |
 | `onScheduledTime`        | Server scheduled service (see [here](link to Scheduled actions)) |
 
 ### Actions

@@ -1,7 +1,7 @@
-module.exports['createUser'] = async function (user: any, PostgresDB: any) {
+module.exports['createUser'] = async function (user: any, DBConnect: any) {
   try {
     console.log(`\nAdding new user: ${user.username}`)
-    const success = await PostgresDB.createUser(user)
+    const success = await DBConnect.createUser(user)
     if (success)
       return {
         status: 'Success',

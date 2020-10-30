@@ -10,3 +10,5 @@ CREATE TABLE public.review_section_assignment (
 );
 
 -- NOTE: We haven't fully sorted how the review levels are going to work.
+
+-- Also -- needs TRIGGER here probable
