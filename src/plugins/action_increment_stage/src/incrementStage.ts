@@ -16,6 +16,8 @@ module.exports['incrementStage'] = async function (
 ): Promise<ActionPluginOutput> {
   const { applicationId } = parameters
   const returnObject: ActionPluginOutput = { status: null, error_log: '' }
+  console.log(`Incrementing the Stage for Application ${applicationId}...`)
+
   try {
     const templateId: number = await DBConnect.getTemplateId('application', applicationId)
 
@@ -40,12 +42,11 @@ module.exports['incrementStage'] = async function (
 
     const newStageId = allStages.find((stage) => stage.number === newStageNum)?.id
 
-    const newStageHistoryId = stageIsMax
-      ? currentStageHistoryId
-      : await DBConnect.addNewStageHistory(applicationId, newStageId)
+    const newStageHistoryId = stageIsMax ? currentStageHistoryId : currentStageHistoryId
+    // await DBConnect.addNewStageHistory(applicationId, newStageId)
 
     // Update Status_history -- either create new Draft, or relink existing
-    const currentStatus = await DBConnect.getCurrentStatusFromStageHistoryId(currentStageId)
+    const currentStatus = await DBConnect.getCurrentStatusFromStageHistoryId(currentStageHistoryId)
 
     if (currentStatus) {
       // relink existing status
