@@ -34,11 +34,7 @@ module.exports['incrementStage'] = async function (
     const stageIsMax = currentStageNum === maxStageNumber
     if (stageIsMax) console.log('WARNING: Application is already at final stage. No changes made.')
 
-    const newStageNum = currentStageNum
-      ? currentStageNum + 1 <= maxStageNumber
-        ? currentStageNum + 1
-        : currentStageNum
-      : 1
+    const newStageNum = currentStageNum ? (!stageIsMax ? currentStageNum + 1 : currentStageNum) : 1
 
     const newStageId = allStages.find((stage) => stage.number === newStageNum)?.id
 
@@ -50,7 +46,7 @@ module.exports['incrementStage'] = async function (
     const currentStatus = await DBConnect.getCurrentStatusFromStageHistoryId(currentStageHistoryId)
 
     if (currentStatus) {
-      // relink existing status
+      // Relink existing status
       const result = await DBConnect.relinkStatusHistory(currentStatus.id, newStageHistoryId)
       if (result) {
         returnObject.output = { currentStatus: currentStatus.status, statusId: currentStatus.id }
@@ -59,7 +55,7 @@ module.exports['incrementStage'] = async function (
         returnObject.error_log = "Couldn't relink existing status"
       }
     } else {
-      // create new Draft status
+      // Create new Draft status
       console.log('No existing status')
       const newStatus = await DBConnect.addNewStatusHistory(newStageHistoryId)
       if (newStatus) {

@@ -353,6 +353,21 @@ class PostgresDB {
     }
   }
 
+  public getCurrentStatus = async (applicationId: number) => {
+    const text = `SELECT application_status_history.id
+      application_stage_history_id, status FROM
+      application_status_history JOIN application_stage_history ON
+      application_stage_history_id = application_stage_history.id WHERE
+      application_id = $1 AND application_status_history.is_current = true;`
+    try {
+      const result = await this.query({ text, values: [applicationId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getCurrentStatusFromStageHistoryId = async (stageHistoryId: number) => {
     const text =
       'SELECT id, status FROM application_status_history WHERE application_stage_history_id = $1 AND is_current = true'

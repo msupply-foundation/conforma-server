@@ -209,6 +209,17 @@ const queries = [
           templateActionsUsingId: {
             create: [
               {
+                actionCode: "incrementStage"
+                condition: { value: true }
+                trigger: ON_APPLICATION_CREATE
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
+                  }
+                }
+              }
+              {
                 actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
@@ -232,10 +243,23 @@ const queries = [
                 }
               }
               {
-                actionCode: "changeOutcome"
+                actionCode: "changeStatus"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
+                  }
+                  newStatus: { value: "Completed" }
+                }
+              }
+              {
+                actionCode: "changeOutcome"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 4
                 parameterQueries: {
                   application_id: {
                     operator: "objectProperties"
@@ -248,7 +272,7 @@ const queries = [
                 actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 4
+                sequence: 5
                 parameterQueries: {
                   message: {
                     operator: "CONCAT"
@@ -539,7 +563,7 @@ const queries = [
               isCurrent: true
               applicationStatusHistoriesUsingId: {
                 create: {
-                  status: COMPLETED
+                  status: DRAFT
                   timeCreated: "NOW()"
                   isCurrent: true
                 }
