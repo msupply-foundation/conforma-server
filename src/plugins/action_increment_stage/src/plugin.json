@@ -6,7 +6,7 @@
   "function_name": "incrementStage",
   "description": "Increments (or creates) the application Stage, if possible.",
   "required_parameters": ["application_id"],
-  "output_properties": ["applicationId", "stageNumber, stageName, currentStatus"],
+  "output_properties": ["applicationId", "stageNumber, stageName, stageId, status, statusId"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

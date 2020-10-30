@@ -328,12 +328,12 @@ class PostgresDB {
     }
   }
 
-  public getCurrentStageId = async (applicationId: number) => {
+  public getCurrentStageHistory = async (applicationId: number) => {
     const text =
-      'SELECT stage_id FROM application_stage_history WHERE application_id = $1 and is_current = true'
+      'SELECT id, stage_id FROM application_stage_history WHERE application_id = $1 and is_current = true'
     try {
       const result = await this.query({ text, values: [applicationId] })
-      return result.rows[0]?.stage_id
+      return result.rows[0]
     } catch (err) {
       console.log(err.message)
       throw err

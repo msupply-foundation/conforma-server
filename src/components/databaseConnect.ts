@@ -70,7 +70,7 @@ class DBConnect {
 
   public getTemplateStages = PostgresDB.getTemplateStages
 
-  public getCurrentStageId = PostgresDB.getCurrentStageId
+  public getCurrentStageHistory = PostgresDB.getCurrentStageHistory
 
   public addNewStageHistory = PostgresDB.addNewStageHistory
 
