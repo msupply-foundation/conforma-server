@@ -1,6 +1,8 @@
 const fetch = require('node-fetch')
 
-const graphQLendpoint = 'http://localhost:5000/graphql'
+import config from '../src/config.json'
+
+const graphQLendpoint = config.graphQLendpoint
 
 const queries = [
   // Template A -- User Registration
@@ -261,7 +263,7 @@ const queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 4
                 parameterQueries: {
-                  application_id: {
+                  applicationId: {
                     operator: "objectProperties"
                     children: [{ value: { property: "record_id" } }]
                   }

@@ -8,4 +8,8 @@
 
 - **Change Outcome**: Set the Outcome of an application to the input parameter ("Pending", "Approved", "Rejected")
 
-- **Increment Stage**:
+- **Increment Stage**: Changes the application Stage to the next in the sequence
+  - Should be a default Action for all templates `onApplicationCreate`
+  - If a new application, will create a corresponding Status set to "Draft"
+  - If application is already on final stage, will leave unchanged
+- **Change Status**: Changes the application Status to the specifed input parameter

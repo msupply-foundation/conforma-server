@@ -30,7 +30,7 @@ module.exports['changeStatus'] = async function (
         const currentStageHistoryId = await DBConnect.getCurrentStageHistory(applicationId)
         if (!currentStageHistoryId) {
           console.log(
-            "No stage configured for this Application. Can't create a status_history record."
+            "No stage defined for this Application. Can't create a status_history record."
           )
           returnObject.status = 'Fail'
           returnObject.error_log = 'Missing stage_history for Application'

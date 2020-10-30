@@ -5,7 +5,7 @@
   "file": "changeOutcome",
   "function_name": "changeOutcome",
   "description": "Changes the outcome field of an application.",
-  "required_parameters": ["application_id", "newOutcome"],
+  "required_parameters": ["applicationId", "newOutcome"],
   "output_properties": ["applicationId", "newOutcome"],
   "info": {
     "author": {

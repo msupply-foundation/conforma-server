@@ -5,7 +5,7 @@
   "file": "changeStatus",
   "function_name": "changeStatus",
   "description": "Changes the Status of an application",
-  "required_parameters": ["application_id", "newStatus"],
+  "required_parameters": ["applicationId", "newStatus"],
   "output_properties": ["applicationId", "status", "statusId"],
   "info": {
     "author": {

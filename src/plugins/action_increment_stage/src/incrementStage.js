@@ -76,11 +76,7 @@ module.exports['incrementStage'] = function (parameters, DBConnect) {
                     stageIsMax = currentStageNum === maxStageNumber;
                     if (stageIsMax)
                         console.log('WARNING: Application is already at final stage. No changes made.');
-                    newStageNum_1 = currentStageNum
-                        ? currentStageNum + 1 <= maxStageNumber
-                            ? currentStageNum + 1
-                            : currentStageNum
-                        : 1;
+                    newStageNum_1 = currentStageNum ? (!stageIsMax ? currentStageNum + 1 : currentStageNum) : 1;
                     newStageId = (_b = allStages.find(function (stage) { return stage.number === newStageNum_1; })) === null || _b === void 0 ? void 0 : _b.id;
                     if (!stageIsMax) return [3 /*break*/, 5];
                     _e = currentStageHistoryId;
@@ -109,7 +105,7 @@ module.exports['incrementStage'] = function (parameters, DBConnect) {
                     }
                     return [3 /*break*/, 12];
                 case 10:
-                    // create new Draft status
+                    // Create new Draft status
                     console.log('No existing status');
                     return [4 /*yield*/, DBConnect.addNewStatusHistory(newStageHistoryId)];
                 case 11:
