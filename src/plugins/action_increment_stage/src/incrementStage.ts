@@ -51,7 +51,7 @@ module.exports['incrementStage'] = async function (
 
     if (currentStatus) {
       // relink existing status
-      const result = await DBConnect.relinkStatusHistory(newStageHistoryId)
+      const result = await DBConnect.relinkStatusHistory(currentStatus.id, newStageHistoryId)
       if (result) {
         returnObject.output = { currentStatus: currentStatus.status, statusId: currentStatus.id }
       } else {

@@ -365,10 +365,11 @@ class PostgresDB {
     }
   }
 
-  public relinkStatusHistory = async (stageHistoryId: number) => {
-    const text = 'UPDATE application_status_history SET application_stage_history_id = $1'
+  public relinkStatusHistory = async (statusHistoryId: number, stageHistoryId: number) => {
+    const text =
+      'UPDATE application_status_history SET application_stage_history_id = $1 WHERE id = $2'
     try {
-      await this.query({ text, values: [stageHistoryId] })
+      await this.query({ text, values: [stageHistoryId, statusHistoryId] })
       return true
     } catch (err) {
       console.log(err.message)
