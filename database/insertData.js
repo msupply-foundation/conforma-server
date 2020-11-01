@@ -1,6 +1,6 @@
 const fetch = require('node-fetch')
 
-import config from '../src/config.json'
+const config = require('../src/config.json')
 
 const graphQLendpoint = config.graphQLendpoint
 
