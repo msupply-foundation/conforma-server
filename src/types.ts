@@ -1,3 +1,4 @@
+import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import { Trigger } from './generated/graphql'
 
 export interface ActionInTemplate {
@@ -57,6 +58,7 @@ export interface ActionQueueExecutePayload {
   error_log: string
   parameters_evaluated: { [key: string]: any }
   status: ActionQueueStatus
+  output: BasicObject
 }
 
 export interface ActionPayload {
@@ -72,7 +74,8 @@ export interface ActionPlugin {
   description: string
   path: string
   function_name: string
-  required_parameters: any[]
+  required_parameters: string[]
+  output_properties?: string[]
 }
 
 export interface ActionPluginPayload {

@@ -6,6 +6,7 @@
   "function_name": "changeOutcome",
   "description": "Changes the outcome field of an application.",
   "required_parameters": ["application_id", "newOutcome"],
+  "output_properties": ["applicationId", "newOutcome"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

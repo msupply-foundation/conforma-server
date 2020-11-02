@@ -12,6 +12,7 @@ import * as config from '../config.json'
 // import PostgresDB from './postgresConnect'
 import DBConnect from './databaseConnect'
 import { deepEquality } from './utilityFunctions'
+import { ActionPlugin } from '../types'
 
 const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder)
 
@@ -68,6 +69,7 @@ export default async function registerPlugins() {
         path: plugin.path,
         function_name: plugin.function_name,
         required_parameters: plugin.required_parameters,
+        output_properties: plugin.output_properties,
       })
       console.log('Plugin registered:', plugin.name)
     } catch (err) {
@@ -81,14 +83,7 @@ export default async function registerPlugins() {
     const plugin = plugins[index]
     const dbPlugin = dbPlugins.find((item) => item.code === plugin.code)
 
-    if (
-      dbPlugin &&
-      (plugin.name !== dbPlugin.name ||
-        plugin.description !== dbPlugin.description ||
-        plugin.path !== dbPlugin.path ||
-        plugin.function_name !== dbPlugin.function_name ||
-        !deepEquality(plugin.required_parameters, dbPlugin.required_parameters))
-    ) {
+    if (dbPlugin && isPluginUpdated(dbPlugin, plugin)) {
       try {
         // TODO: Replace this with some other way to use only keys from ActionPlugin!
         await DBConnect.updateActionPlugin({
@@ -98,6 +93,7 @@ export default async function registerPlugins() {
           path: plugin.path,
           function_name: plugin.function_name,
           required_parameters: plugin.required_parameters,
+          output_properties: plugin.output_properties,
         })
         console.log('Plugin updated:', plugin.name)
       } catch (err) {
@@ -106,4 +102,15 @@ export default async function registerPlugins() {
       }
     }
   }
+}
+
+const isPluginUpdated = (dbPlugin: ActionPlugin, scannedPlugin: ActionPlugin) => {
+  return (
+    scannedPlugin.name !== dbPlugin.name ||
+    scannedPlugin.description !== dbPlugin.description ||
+    scannedPlugin.path !== dbPlugin.path ||
+    scannedPlugin.function_name !== dbPlugin.function_name ||
+    !deepEquality(scannedPlugin.required_parameters, dbPlugin.required_parameters) ||
+    !deepEquality(scannedPlugin.output_properties, dbPlugin.output_properties, true)
+  )
 }

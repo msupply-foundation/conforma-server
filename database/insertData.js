@@ -214,79 +214,20 @@ const queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
                 parameterQueries: {
-                  message: { value: "Sequential logger -- this message should appear before new user and application approval messages." }
+                  message: {
+                    value: "Sequential logger -- this message should appear before new user and application approval messages."
+                  }
                 }
               }
               {
-                actionCode: "createUser"
+                actionCode: "createUserFromApp"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: {
-                  first_name: {
-                    type: "string"
-                    operator: "pgSQL"
-                    children: [
-                      {
-                        value: "SELECT value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE code = 'Q1' and application_id = $1;"
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
-                  }
-                  last_name: {
-                    type: "string"
-                    operator: "pgSQL"
-                    children: [
-                      {
-                        value: "SELECT value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE code = 'Q2' and application_id = $1;"
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
-                  }
-                  username: {
-                    type: "string"
-                    operator: "pgSQL"
-                    children: [
-                      {
-                        value: "SELECT value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE code = 'Q3' and application_id = $1;"
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
-                  }
-                  password_hash: {
-                    type: "string"
-                    operator: "pgSQL"
-                    children: [
-                      {
-                        value: "SELECT value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE code = 'Q5' and application_id = $1;"
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
-                  }
-                  email: {
-                    type: "string"
-                    operator: "pgSQL"
-                    children: [
-                      {
-                        value: "SELECT value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE code = 'Q4' and application_id = $1;"
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
                   }
                 }
               }
@@ -307,8 +248,37 @@ const queries = [
                 actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
+                sequence: 4
                 parameterQueries: {
-                  message: { value: "Testing parallel actions -- This message is Asynchronous. \\nEven though it is last in the Actions list, it'll probably appear first." }
+                  message: {
+                    operator: "CONCAT"
+                    children: [
+                      { value: "Output concatenation: The user " }
+                      {
+                        operator: "objectProperties"
+                        children: [
+                          { value: { objectIndex: 1, property: "username" } }
+                        ]
+                      }
+                      { value: "'s registration has been " }
+                      {
+                        operator: "objectProperties"
+                        children: [
+                          { value: { objectIndex: 1, property: "newOutcome" } }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+              {
+                actionCode: "cLog"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                parameterQueries: {
+                  message: {
+                    value: "Testing parallel actions -- This message is Asynchronous. \\nEven though it is last in the Actions list, it'll probably appear first."
+                  }
                 }
               }
             ]

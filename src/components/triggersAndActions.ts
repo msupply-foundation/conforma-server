@@ -7,6 +7,7 @@ import {
   TriggerPayload,
   ActionPayload,
   ActionSequential,
+  ActionQueueExecutePayload,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import DBConnect from './databaseConnect'
@@ -132,6 +133,7 @@ export async function processTrigger(payload: TriggerPayload) {
   // Get sequential Actions from database
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
+  let outputCumulative = {} // Collect output properties of actions in sequence
   // Execute Actions one by one
   for (const action of actionsToExecute) {
     const actionPayload = {
@@ -140,9 +142,9 @@ export async function processTrigger(payload: TriggerPayload) {
       trigger_payload: action.trigger_payload,
       parameter_queries: action.parameter_queries,
     }
-    await executeAction(actionPayload, actionLibrary)
+    const result = await executeAction(actionPayload, actionLibrary, [outputCumulative])
+    outputCumulative = { ...outputCumulative, ...result.output }
   }
-
   // After all done, set Trigger on table back to NULL
   DBConnect.resetTrigger(table, record_id)
 }
@@ -167,10 +169,11 @@ async function evaluateParameters(
 
 export async function executeAction(
   payload: ActionPayload,
-  actionLibrary: ActionLibrary
-): Promise<boolean> {
+  actionLibrary: ActionLibrary,
+  additionalObjects: BasicObject[] = []
+): Promise<ActionQueueExecutePayload> {
   const evaluatorParams = {
-    objects: [payload.trigger_payload],
+    objects: [payload.trigger_payload, ...additionalObjects],
     pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
   }
   // Evaluate parameters
@@ -183,6 +186,7 @@ export async function executeAction(
     status: actionResult.status,
     error_log: actionResult.error,
     parameters_evaluated: parametersEvaluated,
+    output: actionResult.output,
     id: payload.id,
   })
 }

@@ -1,7 +1,8 @@
 {
-  "name": "dummy1",
+  "name": "create_user_from_application_action",
   "version": "0.1",
-  "description": "This does nothing. It's just for testing purposes.",
+  "description": "Inserts a new user in the database based on a user registration application",
+  "main": "createUserFromApplication.ts",
   "author": "The mSupplyFoundation",
   "license": "MIT",
   "scripts": {

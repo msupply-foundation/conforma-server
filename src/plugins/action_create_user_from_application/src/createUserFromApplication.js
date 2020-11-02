@@ -35,16 +35,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-module.exports['createUser'] = function (user, DBConnect) {
+Object.defineProperty(exports, "__esModule", { value: true });
+var responseMap = {
+    // Change these when question codes change
+    username: 'Q3',
+    first_name: 'Q1',
+    last_name: 'Q2',
+    email: 'Q4',
+    password_hash: 'Q5',
+};
+module.exports['createUserFromApplication'] = function (parameters, DBConnect) {
     return __awaiter(this, void 0, void 0, function () {
-        var result, error_1;
+        var applicationId, user, sqlQuery, result, applicationResponses_1, error_1, result, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 2, , 3]);
+                    applicationId = parameters.applicationId;
+                    user = {};
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    console.log('Attempting to fetch user details...');
+                    sqlQuery = "SELECT code, value -> 'text' as value FROM application_response JOIN template_element ON template_element.id = application_response.template_element_id WHERE application_id = $1;";
+                    return [4 /*yield*/, DBConnect.query({ text: sqlQuery, values: [applicationId] })];
+                case 2:
+                    result = _a.sent();
+                    applicationResponses_1 = {};
+                    result.rows.map(function (row) {
+                        applicationResponses_1[row.code] = row.value;
+                    });
+                    user.username = applicationResponses_1[responseMap.username];
+                    user.first_name = applicationResponses_1[responseMap.first_name];
+                    user.last_name = applicationResponses_1[responseMap.last_name];
+                    user.email = applicationResponses_1[responseMap.email];
+                    user.password_hash = applicationResponses_1[responseMap.password_hash];
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _a.sent();
+                    console.log(error_1.message);
+                    return [2 /*return*/, {
+                            status: 'Fail',
+                            error_log: 'Unable to fetch user details from application',
+                        }];
+                case 4:
+                    _a.trys.push([4, 6, , 7]);
                     console.log("\nAdding new user: " + user.username);
                     return [4 /*yield*/, DBConnect.createUser(user)];
-                case 1:
+                case 5:
                     result = _a.sent();
                     if (result.success)
                         return [2 /*return*/, {
@@ -63,15 +100,15 @@ module.exports['createUser'] = function (user, DBConnect) {
                                 status: 'Fail',
                                 error_log: 'There was a problem creating new user.',
                             }];
-                    return [3 /*break*/, 3];
-                case 2:
-                    error_1 = _a.sent();
-                    console.log(error_1.message);
+                    return [3 /*break*/, 7];
+                case 6:
+                    error_2 = _a.sent();
+                    console.log(error_2.message);
                     return [2 /*return*/, {
                             status: 'Fail',
                             error_log: 'There was a problem creating new user.',
                         }];
-                case 3: return [2 /*return*/];
+                case 7: return [2 /*return*/];
             }
         });
     });

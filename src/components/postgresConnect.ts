@@ -98,12 +98,12 @@ class PostgresDB {
 
   public executedActionStatusUpdate = async (
     payload: ActionQueueExecutePayload
-  ): Promise<boolean> => {
+  ): Promise<ActionQueueExecutePayload> => {
     const text =
-      'UPDATE action_queue SET status = $1, error_log = $2, parameters_evaluated = $3, time_completed = CURRENT_TIMESTAMP WHERE id = $4'
+      'UPDATE action_queue SET status = $1, error_log = $2, parameters_evaluated = $3, output = $4, time_completed = CURRENT_TIMESTAMP WHERE id = $5'
     try {
       await this.query({ text, values: Object.values(payload) })
-      return true
+      return { ...payload }
     } catch (err) {
       throw err
     }
@@ -257,7 +257,7 @@ class PostgresDB {
 
   public updateActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
     const text =
-      'UPDATE action_plugin SET name = $2, description = $3, path = $4, function_name = $5, required_parameters = $6 WHERE code = $1'
+      'UPDATE action_plugin SET name = $2, description = $3, path = $4, function_name = $5, required_parameters = $6, output_properties = $7 WHERE code = $1'
     // TODO: Dynamically select what is being updated
     try {
       await this.query({ text, values: Object.values(plugin) })
@@ -280,12 +280,13 @@ class PostgresDB {
     }
   }
 
-  public createUser = async (user: User): Promise<boolean> => {
+  public createUser = async (user: User): Promise<object> => {
     const text = `INSERT INTO "user" (${Object.keys(user)}) 
-      VALUES (${this.getValuesPlaceholders(user)})`
+      VALUES (${this.getValuesPlaceholders(user)})
+      RETURNING id`
     try {
-      await this.query({ text, values: Object.values(user) })
-      return true
+      const result = await this.query({ text, values: Object.values(user) })
+      return { userId: result.rows[0].id, success: true }
     } catch (err) {
       throw err
     }
