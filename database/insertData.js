@@ -27,7 +27,6 @@ const queries = [
                       index: 0
                       title: "Intro"
                       elementTypePluginCode: "textInfo"
-                      visibilityCondition: { value: true }
                       category: INFORMATION
                       parameters: {
                         title: "Create a user account"
@@ -39,11 +38,7 @@ const queries = [
                       index: 1
                       title: "First Name"
                       elementTypePluginCode: "shortText"
-                      visibilityCondition: { value: true }
                       category: QUESTION
-                      isRequired: true
-                      # Should really change isRequired field to a dynamic JSON type
-                      isEditable: { value: true }
                       parameters: { label: "First Name" }
                     }
                     {
@@ -51,10 +46,7 @@ const queries = [
                       index: 2
                       title: "Last Name"
                       elementTypePluginCode: "shortText"
-                      visibilityCondition: { value: true }
                       category: QUESTION
-                      isRequired: true
-                      isEditable: { value: true }
                       parameters: { label: "Last Name" }
                     }
                     {
@@ -62,10 +54,7 @@ const queries = [
                       index: 3
                       title: "Username"
                       elementTypePluginCode: "shortText"
-                      visibilityCondition: { value: true }
                       category: QUESTION
-                      isRequired: true
-                      isEditable: { value: true }
                       parameters: { label: "Select a username" }
                       validation: { value: true } #Need to write this query
                       # Validation: Must be unique, Alphanumeric chars only, no spaces
@@ -75,10 +64,7 @@ const queries = [
                       index: 4
                       title: "Email"
                       elementTypePluginCode: "shortText"
-                      visibilityCondition: { value: true }
                       category: QUESTION
-                      isRequired: true
-                      isEditable: { value: true }
                       parameters: { label: "Email" }
                       validation: { value: true } #Need to write this query
                       # Validation: Email REGEX check, must be unique in system
@@ -88,10 +74,7 @@ const queries = [
                       index: 5
                       title: "Password"
                       elementTypePluginCode: "shortText"
-                      visibilityCondition: { value: true }
                       category: QUESTION
-                      isRequired: true
-                      isEditable: { value: true }
                       parameters: { label: "Email", maskedInput: true }
                       validation: { value: true } #Need to write this query
                       # Validation: At least 8 chars, must contain at least one letter and one number (REGEX)
@@ -109,15 +92,11 @@ const queries = [
                       index: 7
                       title: "Organisation Category"
                       elementTypePluginCode: "radioChoice"
-                      visibilityCondition: { value: true }
                       category: QUESTION
-                      isRequired: false
-                      isEditable: { value: true }
                       parameters: {
                         label: "What category of organisation do you wish to join"
                         options: ["Manufacturer", "Distributor", "Importer"]
                       }
-                      validation: { value: true }
                     }
                     {
                       code: "Q7"
@@ -136,8 +115,6 @@ const queries = [
                         ]
                       }
                       category: QUESTION
-                      isRequired: true
-                      isEditable: { value: true }
                       parameters: {
                         label: "Select Manufacturer"
                         options: [
@@ -146,7 +123,6 @@ const queries = [
                           "Manufacturer C"
                         ]
                       }
-                      validation: { value: true }
                     }
                     {
                       code: "Q8"
@@ -165,8 +141,6 @@ const queries = [
                         ]
                       }
                       category: QUESTION
-                      isRequired: true
-                      isEditable: { value: true }
                       parameters: {
                         label: "Select Distributor"
                         options: [
@@ -175,7 +149,6 @@ const queries = [
                           "Distributor C"
                         ]
                       }
-                      validation: { value: true }
                     }
                     {
                       code: "Q9"
@@ -194,13 +167,10 @@ const queries = [
                         ]
                       }
                       category: QUESTION
-                      isRequired: true
-                      isEditable: { value: true }
                       parameters: {
                         label: "Select Importer"
                         options: ["Importer A", "Importer B", "Importer C"]
                       }
-                      validation: { value: true }
                     }
                   ]
                 }
@@ -355,10 +325,7 @@ const queries = [
                       index: 0
                       title: "Organisation Name"
                       elementTypePluginCode: "shortText"
-                      visibilityCondition: { value: true }
                       category: QUESTION
-                      isRequired: true
-                      isEditable: { value: true }
                       parameters: { label: "Unique Name for Company" }
                       validation: { value: true }
                       # Validation TO-DO: must be unique in system
@@ -368,10 +335,7 @@ const queries = [
                       index: 1
                       title: "Organisation Activity"
                       elementTypePluginCode: "dropdownChoice"
-                      visibilityCondition: { value: true }
                       category: QUESTION
-                      isRequired: true
-                      isEditable: { value: true }
                       parameters: {
                         label: "Select type of activity"
                         options: ["Manufacturer", "Importer", "Producer"]
