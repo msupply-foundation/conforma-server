@@ -30,33 +30,11 @@ Sections of the application template that contain some [elements/questions](Elem
 
 ### template elements
 
-Elements in the application template always are part of a section, therefore it stores the `section_id` instead of the `template_id`.
-
-The `code` is unique for each element in the same **template**. This code will be auto-generated, but we would allow the Admin user to change if needed.
-
-The `next_element_code` links to the unique code of the next element to display in the application. So we order elements as a linked list.
-
-The `title` is what the Admin user can use for some more detailed definition of this element. Displayed only in the [Template Builder](Template-Builder.md).
-
-The `category` is either `'Question'` or `'Information'`. The 'Questions' are elements that will require responses from the Applicant and 'Information' elements are only structural or for visualisation.
-
-The `visibility_condition` checks for a condition that will be evaluated and run using the [**Query syntax**](Query-Syntax.md). Examples of visibility conditions:
-
-- checkes for any required previous elements to be answered before this element can be displayed
-- check for current `stage` (e.g. only showing request for payment documentation during `'Assessment'`)
-- or anything that can be expressed in a JSON query expression.
-
-The `element_type_plugin_code` is associated with the **element type plugin**, where the definitions of each element will be coming from.
-
-The `is_required` determines which 'Question' elements that are compulsory (when visible, defined by the **visibility_condition**).
-
-The `is_editable` determines which 'Question' elements should be editable in which conditions. e.g. A questions that should be editable depending on the selected option of a previous Question; A question that is only editable when the **application stage** changes.
-
-More detailed description of question elements coming soon: `parameters`, `default_value` and `validation`.
+See [front-end docs](https://github.com/openmsupply/application-manager-web-app/wiki/Element-Type-Specs) for this spec.
 
 ### element type plugin
 
-Also known as the **Question plugin**, each record in this table refers to an external [Plugin bundle](Question-Plugin-Bundles.md) in the plugins folder (`src/plugins`).
+See [front-end docs](https://github.com/openmsupply/application-manager-web-app/wiki/Element-Type-Specs) for this spec.
 
 The `display_component_name` references the UI component the applicant sees when filling in the form.
 
