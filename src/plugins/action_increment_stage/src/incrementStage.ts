@@ -42,12 +42,12 @@ module.exports['incrementStage'] = async function (
       ? currentStageHistoryId
       : await DBConnect.addNewStageHistory(applicationId, newStageId)
 
-    // Update Status_history -- either create new Draft, or relink existing
+    // Update Status_history -- creates a new record
     const currentStatus = await DBConnect.getCurrentStatusFromStageHistoryId(currentStageHistoryId)
 
-    // Create new COMPLETE status
+    // Create new COMPLETED status
     if (currentStatus) {
-      const newStatus = await DBConnect.addNewStatusHistory(currentStageHistoryId, 'Complete')
+      const newStatus = await DBConnect.addNewStatusHistory(currentStageHistoryId, 'Completed')
       if (newStatus) {
         returnObject.output = { currentStatus: newStatus.status, statusId: newStatus.id }
       } else {

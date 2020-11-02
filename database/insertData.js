@@ -411,6 +411,36 @@ const queries = [
                   }
                 }
               }
+              {
+                actionCode: "changeStatus"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
+                  }
+                  newStatus: { value: "Submitted" }
+                }
+              }
+              {
+                actionCode: "incrementStage"
+                condition: { value: true }
+                trigger: ON_REVIEW_SAVE
+                parameterQueries: {
+                  applicationId: {
+                    type: "number"
+                    operator: "pgSQL"
+                    children: [
+                      { value: "SELECT application_id FROM review WHERE id = $1" }
+                      {
+                        operator: "objectProperties"
+                        children: [{ value: { property: "record_id" } }]
+                      }
+                    ]
+                  }
+                }
+              }
               # TO-DO: Create actions to add Org, etc.
             ]
           }
@@ -754,34 +784,6 @@ const queries = [
               }
             ]
           }
-          applicationStageHistoriesUsingId: {
-            create: [
-              {
-                templateStageToStageId: { connectById: { id: 2 } }
-                timeCreated: "NOW()"
-                isCurrent: false
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: COMPLETED
-                    timeCreated: "NOW()"
-                    isCurrent: false
-                  }
-                }
-              }
-              {
-                templateStageToStageId: { connectById: { id: 3 } }
-                timeCreated: "NOW()"
-                isCurrent: true
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: SUBMITTED
-                    timeCreated: "NOW()"
-                    isCurrent: true
-                  }
-                }
-              }
-            ]
-          }
           templateId: 2
         }
       }
@@ -803,20 +805,6 @@ const queries = [
           nodes {
             templateSection {
               title
-            }
-          }
-        }
-        applicationStageHistories {
-          nodes {
-            stage {
-              title
-            }
-            isCurrent
-            applicationStatusHistories {
-              nodes {
-                isCurrent
-                status
-              }
             }
           }
         }
