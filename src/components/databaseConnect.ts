@@ -81,6 +81,10 @@ class DBConnect {
   public relinkStatusHistory = PostgresDB.relinkStatusHistory
 
   public addNewStatusHistory = PostgresDB.addNewStatusHistory
+
+  // GraphQL
+
+  public gqlQuery = GraphQLdb.gqlQuery
 }
 
 const dbConnectInstance = DBConnect.Instance
