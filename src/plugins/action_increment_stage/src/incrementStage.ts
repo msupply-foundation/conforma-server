@@ -47,12 +47,14 @@ module.exports['incrementStage'] = async function (
 
     // Create new COMPLETED status
     if (currentStatus) {
-      const newStatus = await DBConnect.addNewStatusHistory(currentStageHistoryId, 'Completed')
-      if (newStatus) {
-        returnObject.output = { currentStatus: newStatus.status, statusId: newStatus.id }
-      } else {
-        returnObject.status = 'Fail'
-        returnObject.error_log = "Couldn't create new status"
+      if (!stageIsMax) {
+        const newStatus = await DBConnect.addNewStatusHistory(currentStageHistoryId, 'Completed')
+        if (newStatus) {
+          returnObject.output = { currentStatus: newStatus.status, statusId: newStatus.id }
+        } else {
+          returnObject.status = 'Fail'
+          returnObject.error_log = "Couldn't create new status"
+        }
       }
     } else console.log('No existing status, setting status to Draft')
 
