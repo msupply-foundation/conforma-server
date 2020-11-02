@@ -78,8 +78,6 @@ class DBConnect {
 
   public getCurrentStatusFromStageHistoryId = PostgresDB.getCurrentStatusFromStageHistoryId
 
-  public relinkStatusHistory = PostgresDB.relinkStatusHistory
-
   public addNewStatusHistory = PostgresDB.addNewStatusHistory
 
   // GraphQL

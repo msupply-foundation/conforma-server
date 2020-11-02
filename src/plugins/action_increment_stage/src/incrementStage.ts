@@ -45,25 +45,27 @@ module.exports['incrementStage'] = async function (
     // Update Status_history -- either create new Draft, or relink existing
     const currentStatus = await DBConnect.getCurrentStatusFromStageHistoryId(currentStageHistoryId)
 
+    // Create new COMPLETE status
     if (currentStatus) {
-      // Relink existing status
-      const result = await DBConnect.relinkStatusHistory(currentStatus.id, newStageHistoryId)
-      if (result) {
-        returnObject.output = { currentStatus: currentStatus.status, statusId: currentStatus.id }
-      } else {
-        returnObject.status = 'Fail'
-        returnObject.error_log = "Couldn't relink existing status"
-      }
-    } else {
-      // Create new Draft status
-      console.log('No existing status')
-      const newStatus = await DBConnect.addNewStatusHistory(newStageHistoryId)
+      const newStatus = await DBConnect.addNewStatusHistory(currentStageHistoryId, 'Complete')
       if (newStatus) {
         returnObject.output = { currentStatus: newStatus.status, statusId: newStatus.id }
       } else {
         returnObject.status = 'Fail'
         returnObject.error_log = "Couldn't create new status"
       }
+    } else console.log('No existing status, setting status to Draft')
+
+    // Create new StatusHistory linked to new StageHistory
+    const newStatus = await DBConnect.addNewStatusHistory(
+      newStageHistoryId,
+      currentStatus ? currentStatus.status : 'Draft'
+    )
+    if (newStatus) {
+      returnObject.output = { currentStatus: newStatus.status, statusId: newStatus.id }
+    } else {
+      returnObject.status = 'Fail'
+      returnObject.error_log = "Couldn't create new status"
     }
 
     if (returnObject.status !== 'Fail') {
