@@ -21,9 +21,9 @@ module.exports['incrementStage'] = async function (
   try {
     const templateId: number = await DBConnect.getTemplateId('application', applicationId)
 
-    const allStages: Stage[] = await DBConnect.getTemplateStages(templateId)
+    // const allStages: Stage[] = await DBConnect.getTemplateStages(templateId)
 
-    const maxStageNumber = Math.max(...allStages.map((stage) => stage.number))
+    // const maxStageNumber = Math.max(...allStages.map((stage) => stage.number))
 
     const currentStageHistory = await DBConnect.getCurrentStageHistory(applicationId)
 

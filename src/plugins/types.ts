@@ -13,3 +13,4 @@ export type Status =
   | 'Changes Required'
   | 'Re-submitted'
   | 'Completed'
+  | 'Expired'

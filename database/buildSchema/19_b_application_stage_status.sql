@@ -1,17 +1,3 @@
--- Create VIEW which collects application, CURRENT stage and CURRENT status information together
-CREATE VIEW public.application_stage_status AS
-	(SELECT app.id as application_id,
-		name,
-		template_stage.number AS stage_number,
-		template_stage.title AS stage,
-		status
-	FROM application app
-	JOIN application_stage_history stage ON app.id = stage.application_id
-	JOIN template_stage ON stage.stage_id = template_stage.id
-	JOIN application_status_history status ON stage.id = status.application_stage_history_id
-	WHERE stage.is_current = TRUE
-	AND status.is_current = TRUE );
-
 -- Create VIEW which collects ALL application, stage, stage_history, and status_history together
 CREATE OR REPLACE VIEW public.application_stage_status_all AS
  SELECT stage.application_id, 
@@ -28,7 +14,7 @@ CREATE OR REPLACE VIEW public.application_stage_status_all AS
 	status.is_current as status_is_current
 FROM application_stage_history stage
 FULL OUTER JOIN application_status_history status
-on stage.id = status.application_stage_history_id
+ON stage.id = status.application_stage_history_id
 FULL OUTER JOIN template_stage ts
 ON stage.stage_id = ts.id;
 

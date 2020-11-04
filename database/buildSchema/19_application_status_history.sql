@@ -1,6 +1,6 @@
 -- application status history
 
-CREATE TYPE public.application_status AS ENUM ('Draft', 'Withdrawn', 'Submitted', 'Changes Required', 'Re-submitted', 'Completed');
+CREATE TYPE public.application_status AS ENUM ('Draft', 'Withdrawn', 'Submitted', 'Changes Required', 'Re-submitted', 'Completed', 'Expired');
 
 CREATE TABLE public.application_status_history (
     id serial primary key,

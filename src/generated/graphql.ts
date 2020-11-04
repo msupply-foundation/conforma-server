@@ -589,9 +589,6 @@ export type Application = Node & {
   files: FilesConnection;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
-  stage?: Maybe<Scalars['String']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  status?: Maybe<ApplicationStatus>;
 };
 
 
@@ -727,12 +724,6 @@ export type ApplicationFilter = {
   isActive?: Maybe<BooleanFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `stage` field. */
-  stage?: Maybe<StringFilter>;
-  /** Filter by the object’s `stageNumber` field. */
-  stageNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ApplicationStatusFilter>;
   /** Filter by the object’s `applicationSections` relation. */
   applicationSections?: Maybe<ApplicationToManyApplicationSectionFilter>;
   /** Some related `applicationSections` exist. */
@@ -2217,15 +2208,6 @@ export type ApplicationStageHistoryToManyReviewSectionAssignmentFilter = {
   none?: Maybe<ReviewSectionAssignmentFilter>;
 };
 
-export type ApplicationStageStatus = {
-  __typename?: 'ApplicationStageStatus';
-  applicationId?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  stage?: Maybe<Scalars['String']>;
-  status?: Maybe<ApplicationStatus>;
-};
-
 export type ApplicationStageStatusAll = {
   __typename?: 'ApplicationStageStatusAll';
   applicationId?: Maybe<Scalars['Int']>;
@@ -2357,80 +2339,6 @@ export enum ApplicationStageStatusAllsOrderBy {
   StatusIsCurrentAsc = 'STATUS_IS_CURRENT_ASC',
   StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC'
 }
-
-/**
- * A condition to be used against `ApplicationStageStatus` object types. All fields
- * are tested for equality and combined with a logical ‘and.’
- */
-export type ApplicationStageStatusCondition = {
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `stageNumber` field. */
-  stageNumber?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `stage` field. */
-  stage?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `status` field. */
-  status?: Maybe<ApplicationStatus>;
-};
-
-/** A connection to a list of `ApplicationStageStatus` values. */
-export type ApplicationStageStatusesConnection = {
-  __typename?: 'ApplicationStageStatusesConnection';
-  /** A list of `ApplicationStageStatus` objects. */
-  nodes: Array<Maybe<ApplicationStageStatus>>;
-  /** A list of edges which contains the `ApplicationStageStatus` and cursor to aid in pagination. */
-  edges: Array<ApplicationStageStatusesEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ApplicationStageStatus` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `ApplicationStageStatus` edge in the connection. */
-export type ApplicationStageStatusesEdge = {
-  __typename?: 'ApplicationStageStatusesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ApplicationStageStatus` at the end of the edge. */
-  node?: Maybe<ApplicationStageStatus>;
-};
-
-/** Methods to use when ordering `ApplicationStageStatus`. */
-export enum ApplicationStageStatusesOrderBy {
-  Natural = 'NATURAL',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  StageNumberAsc = 'STAGE_NUMBER_ASC',
-  StageNumberDesc = 'STAGE_NUMBER_DESC',
-  StageAsc = 'STAGE_ASC',
-  StageDesc = 'STAGE_DESC',
-  StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC'
-}
-
-/** A filter to be used against `ApplicationStageStatus` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationStageStatusFilter = {
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
-  /** Filter by the object’s `stageNumber` field. */
-  stageNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `stage` field. */
-  stage?: Maybe<StringFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ApplicationStatusFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationStageStatusFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationStageStatusFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ApplicationStageStatusFilter>;
-};
 
 export enum ApplicationStatus {
   Draft = 'DRAFT',
@@ -8862,8 +8770,6 @@ export type Query = Node & {
   applicationSections?: Maybe<ApplicationSectionsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStageHistory`. */
   applicationStageHistories?: Maybe<ApplicationStageHistoriesConnection>;
-  /** Reads and enables pagination through a set of `ApplicationStageStatus`. */
-  applicationStageStatuses?: Maybe<ApplicationStageStatusesConnection>;
   /** Reads and enables pagination through a set of `ApplicationStageStatusAll`. */
   applicationStageStatusAlls?: Maybe<ApplicationStageStatusAllsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStatusHistory`. */
@@ -9089,19 +8995,6 @@ export type QueryApplicationStageHistoriesArgs = {
   orderBy?: Maybe<Array<ApplicationStageHistoriesOrderBy>>;
   condition?: Maybe<ApplicationStageHistoryCondition>;
   filter?: Maybe<ApplicationStageHistoryFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryApplicationStageStatusesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ApplicationStageStatusesOrderBy>>;
-  condition?: Maybe<ApplicationStageStatusCondition>;
-  filter?: Maybe<ApplicationStageStatusFilter>;
 };
 
 
@@ -17932,12 +17825,6 @@ export type ResolversTypes = {
   TemplateAction: ResolverTypeWrapper<TemplateAction>;
   TemplateActionsEdge: ResolverTypeWrapper<TemplateActionsEdge>;
   ActionQueuesEdge: ResolverTypeWrapper<ActionQueuesEdge>;
-  ApplicationStageStatusesOrderBy: ApplicationStageStatusesOrderBy;
-  ApplicationStageStatusCondition: ApplicationStageStatusCondition;
-  ApplicationStageStatusFilter: ApplicationStageStatusFilter;
-  ApplicationStageStatusesConnection: ResolverTypeWrapper<ApplicationStageStatusesConnection>;
-  ApplicationStageStatus: ResolverTypeWrapper<ApplicationStageStatus>;
-  ApplicationStageStatusesEdge: ResolverTypeWrapper<ApplicationStageStatusesEdge>;
   ApplicationStageStatusAllsOrderBy: ApplicationStageStatusAllsOrderBy;
   ApplicationStageStatusAllCondition: ApplicationStageStatusAllCondition;
   ApplicationStageStatusAllFilter: ApplicationStageStatusAllFilter;
@@ -19002,11 +18889,6 @@ export type ResolversParentTypes = {
   TemplateAction: TemplateAction;
   TemplateActionsEdge: TemplateActionsEdge;
   ActionQueuesEdge: ActionQueuesEdge;
-  ApplicationStageStatusCondition: ApplicationStageStatusCondition;
-  ApplicationStageStatusFilter: ApplicationStageStatusFilter;
-  ApplicationStageStatusesConnection: ApplicationStageStatusesConnection;
-  ApplicationStageStatus: ApplicationStageStatus;
-  ApplicationStageStatusesEdge: ApplicationStageStatusesEdge;
   ApplicationStageStatusAllCondition: ApplicationStageStatusAllCondition;
   ApplicationStageStatusAllFilter: ApplicationStageStatusAllFilter;
   ApplicationStageStatusAllsConnection: ApplicationStageStatusAllsConnection;
@@ -19948,9 +19830,6 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewsArgs, 'orderBy'>>;
   files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationFilesArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ApplicationNotificationsArgs, 'orderBy'>>;
-  stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -20049,15 +19928,6 @@ export type ApplicationStageHistoryResolvers<ContextType = any, ParentType exten
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ApplicationStageStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatus'] = ResolversParentTypes['ApplicationStageStatus']> = {
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type ApplicationStageStatusAllResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatusAll'] = ResolversParentTypes['ApplicationStageStatusAll']> = {
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -20085,20 +19955,6 @@ export type ApplicationStageStatusAllsConnectionResolvers<ContextType = any, Par
 export type ApplicationStageStatusAllsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatusAllsEdge'] = ResolversParentTypes['ApplicationStageStatusAllsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusAll']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ApplicationStageStatusesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatusesConnection'] = ResolversParentTypes['ApplicationStageStatusesConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['ApplicationStageStatus']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['ApplicationStageStatusesEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ApplicationStageStatusesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatusesEdge'] = ResolversParentTypes['ApplicationStageStatusesEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ApplicationStageStatus']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -21096,7 +20952,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationResponses?: Resolver<Maybe<ResolversTypes['ApplicationResponsesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationResponsesArgs, 'orderBy'>>;
   applicationSections?: Resolver<Maybe<ResolversTypes['ApplicationSectionsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationSectionsArgs, 'orderBy'>>;
   applicationStageHistories?: Resolver<Maybe<ResolversTypes['ApplicationStageHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageHistoriesArgs, 'orderBy'>>;
-  applicationStageStatuses?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageStatusesArgs, 'orderBy'>>;
   applicationStageStatusAlls?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusAllsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageStatusAllsArgs, 'orderBy'>>;
   applicationStatusHistories?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoriesArgs, 'orderBy'>>;
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
@@ -21897,12 +21752,9 @@ export type Resolvers<ContextType = any> = {
   ApplicationStageHistoriesConnection?: ApplicationStageHistoriesConnectionResolvers<ContextType>;
   ApplicationStageHistoriesEdge?: ApplicationStageHistoriesEdgeResolvers<ContextType>;
   ApplicationStageHistory?: ApplicationStageHistoryResolvers<ContextType>;
-  ApplicationStageStatus?: ApplicationStageStatusResolvers<ContextType>;
   ApplicationStageStatusAll?: ApplicationStageStatusAllResolvers<ContextType>;
   ApplicationStageStatusAllsConnection?: ApplicationStageStatusAllsConnectionResolvers<ContextType>;
   ApplicationStageStatusAllsEdge?: ApplicationStageStatusAllsEdgeResolvers<ContextType>;
-  ApplicationStageStatusesConnection?: ApplicationStageStatusesConnectionResolvers<ContextType>;
-  ApplicationStageStatusesEdge?: ApplicationStageStatusesEdgeResolvers<ContextType>;
   ApplicationStatusHistoriesConnection?: ApplicationStatusHistoriesConnectionResolvers<ContextType>;
   ApplicationStatusHistoriesEdge?: ApplicationStatusHistoriesEdgeResolvers<ContextType>;
   ApplicationStatusHistory?: ApplicationStatusHistoryResolvers<ContextType>;
