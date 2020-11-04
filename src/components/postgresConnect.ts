@@ -331,9 +331,24 @@ class PostgresDB {
   public getCurrentStageHistory = async (applicationId: number) => {
     const text =
       'SELECT stage_id, stage_number, stage, stage_history_id, status_history_id, status FROM application_stage_status_all WHERE application_id = $1 AND stage_is_current = true'
-    // 'SELECT id, stage_id FROM application_stage_history WHERE application_id = $1 and is_current = true'
     try {
       const result = await this.query({ text, values: [applicationId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getNextStage = async (templateId: number, currentStageNumber = 0) => {
+    const text = `SELECT id as stage_id, number as stage_number, title from template_stage
+    WHERE template_id = $1
+    AND number = (
+      SELECT min(number) from template_stage
+      WHERE number > $2
+    )`
+    try {
+      const result = await this.query({ text, values: [templateId, currentStageNumber] })
       return result.rows[0]
     } catch (err) {
       console.log(err.message)
@@ -360,18 +375,6 @@ class PostgresDB {
       application_id = $1 and status_is_current = true;`
     try {
       const result = await this.query({ text, values: [applicationId] })
-      return result.rows[0]
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  public getCurrentStatusFromStageHistoryId = async (stageHistoryId: number) => {
-    const text =
-      'SELECT id, status FROM application_status_history WHERE application_stage_history_id = $1 AND is_current = true'
-    try {
-      const result = await this.query({ text, values: [stageHistoryId] })
       return result.rows[0]
     } catch (err) {
       console.log(err.message)

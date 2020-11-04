@@ -19,69 +19,64 @@ module.exports['incrementStage'] = async function (
   console.log(`Incrementing the Stage for Application ${applicationId}...`)
 
   try {
-    const templateId: number = await DBConnect.getTemplateId('application', applicationId)
-
-    // const allStages: Stage[] = await DBConnect.getTemplateStages(templateId)
-
-    // const maxStageNumber = Math.max(...allStages.map((stage) => stage.number))
-
     const currentStageHistory = await DBConnect.getCurrentStageHistory(applicationId)
 
-    const currentStageHistoryId = currentStageHistory?.id
-    const currentStageId = currentStageHistory?.stage_id
-    const currentStageNum = allStages.find((stage) => stage.id === currentStageId)?.number
+    const {
+      template_id: templateId,
+      stage_history_id: currentStageHistoryId,
+      stage_id: currentStageId,
+      stage_number: currentStageNum,
+      status_history_id: currentStatusId,
+      status: currentStatus,
+    } = currentStageHistory
 
-    const stageIsMax = currentStageNum === maxStageNumber
-    if (stageIsMax) console.log('WARNING: Application is already at final stage. No changes made.')
+    const nextStage = DBConnect.getNextStage(templateId, currentStageNum)
 
-    const newStageNum = currentStageNum ? (!stageIsMax ? currentStageNum + 1 : currentStageNum) : 1
-
-    const newStageId = allStages.find((stage) => stage.number === newStageNum)?.id
-
-    const newStageHistoryId = stageIsMax
-      ? currentStageHistoryId
-      : await DBConnect.addNewStageHistory(applicationId, newStageId)
-
-    // Update Status_history -- creates a new record
-    const currentStatus = await DBConnect.getCurrentStatusFromStageHistoryId(currentStageHistoryId)
-
-    // Create new COMPLETED status
-    if (currentStatus) {
-      if (!stageIsMax) {
-        const newStatus = await DBConnect.addNewStatusHistory(currentStageHistoryId, 'Completed')
-        if (newStatus) {
-          returnObject.output = { currentStatus: newStatus.status, statusId: newStatus.id }
-        } else {
-          returnObject.status = 'Fail'
-          returnObject.error_log = "Couldn't create new status"
-        }
-      }
-    } else console.log('No existing status, setting status to Draft')
-
-    // Create new StatusHistory linked to new StageHistory
-    const newStatus = await DBConnect.addNewStatusHistory(
-      newStageHistoryId,
-      currentStatus ? currentStatus.status : 'Draft'
-    )
-    if (newStatus) {
-      returnObject.output = { currentStatus: newStatus.status, statusId: newStatus.id }
-    } else {
-      returnObject.status = 'Fail'
-      returnObject.error_log = "Couldn't create new status"
-    }
-
-    if (returnObject.status !== 'Fail') {
-      const stageName = allStages.find((stage) => stage.number === newStageNum)?.title
-      console.log(`Application Stage: ${stageName}, Status: ${returnObject?.output?.currentStatus}`)
+    if (!nextStage) {
+      console.log('WARNING: Application is already at final stage. No changes made.')
       returnObject.status = 'Success'
-      returnObject.output = {
-        ...returnObject.output,
-        applicationId,
-        stageNumber: newStageNum,
-        stageName,
-        stageHistoryId: newStageHistoryId,
+      returnObject.error_log = 'Warning: No changes made'
+      return returnObject
+    }
+
+    if (currentStageHistoryId) {
+      // Make a "Completed" status_history for existing stage_history
+      const result = await DBConnect.addNewStatusHistory(currentStageHistoryId, 'Completed')
+      if (!result) {
+        returnObject.status = 'Fail'
+        returnObject.error_log = "Couldn't create new status"
+        return returnObject
       }
     }
+
+    // Create new stage_history
+    const { id: newStageHistoryId } = await DBConnect.addNewStageHistory(
+      applicationId,
+      nextStage.stage_id
+    )
+
+    // Create new status_history
+    const newStatusHistory = await DBConnect.addNewStatusHistory(
+      newStageHistoryId,
+      currentStatus ? currentStatus : 'Draft'
+    )
+
+    if (!newStageHistoryId || !newStatusHistory) {
+      returnObject.status = 'Fail'
+      returnObject.error_log = 'Problem creating new stage_history or status_history'
+      return returnObject
+    }
+
+    returnObject.status = 'Success'
+    returnObject.output = {
+      applicationId,
+      stageNumber: nextStage.stage_number,
+      stageName: nextStage.title,
+      stageHistoryId: newStageHistoryId,
+      statusId: newStatusHistory.id,
+      status: newStatusHistory.status,
+    }
+
     return returnObject
   } catch (err) {
     console.log('Unable to increment Stage')
