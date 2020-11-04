@@ -393,14 +393,6 @@ const queries = [
           templateActionsUsingId: {
             create: [
               {
-                actionCode: "cLog"
-                condition: { value: true }
-                trigger: ON_APPLICATION_SUBMIT
-                parameterQueries: {
-                  message: { value: "Company Registration submission" }
-                }
-              }
-              {
                 actionCode: "incrementStage"
                 condition: { value: true }
                 trigger: ON_APPLICATION_CREATE
@@ -409,6 +401,14 @@ const queries = [
                     operator: "objectProperties"
                     children: [{ value: { property: "record_id" } }]
                   }
+                }
+              }
+              {
+                actionCode: "cLog"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                parameterQueries: {
+                  message: { value: "Company Registration submission" }
                 }
               }
               {
