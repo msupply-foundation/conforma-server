@@ -10,13 +10,23 @@ CREATE TABLE public.application_status_history (
     is_current bool DEFAULT true
 );
 
+-- FUNCTION to auto-add application_id to application_status_history table
+CREATE or replace FUNCTION public.application_status_history_application_id(application_stage_history_id int)
+RETURNS INT AS $$
+select application_id from application_stage_history where id = $1 ;
+$$ LANGUAGE SQL IMMUTABLE;
 
+ALTER TABLE application_status_history
+  ADD application_id INT
+    GENERATED ALWAYS AS ( application_status_history_application_id(application_stage_history_id)) STORED;
+    
+    
 -- FUNCTION to set `is_current` to false on all other status_histories of current application
 CREATE OR REPLACE FUNCTION public.status_is_current_update()
 RETURNS trigger as $application_status_history_event$
 BEGIN
 	UPDATE public.application_status_history SET is_current = false
-	WHERE application_stage_history_id = NEW.application_stage_history_id AND id<>NEW.id;
+	WHERE application_id = NEW.application_id AND id<>NEW.id;
 RETURN NULL;
 END;
 $application_status_history_event$

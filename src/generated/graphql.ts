@@ -2502,6 +2502,8 @@ export enum ApplicationStatusHistoriesOrderBy {
   TimeCreatedDesc = 'TIME_CREATED_DESC',
   IsCurrentAsc = 'IS_CURRENT_ASC',
   IsCurrentDesc = 'IS_CURRENT_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -2515,6 +2517,7 @@ export type ApplicationStatusHistory = Node & {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   /** Reads a single `ApplicationStageHistory` that is related to this `ApplicationStatusHistory`. */
   applicationStageHistory?: Maybe<ApplicationStageHistory>;
 };
@@ -2538,6 +2541,7 @@ export type ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStat
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -2604,6 +2608,8 @@ export type ApplicationStatusHistoryCondition = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isCurrent` field. */
   isCurrent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
 };
 
 /** A filter to be used against `ApplicationStatusHistory` object types. All fields are combined with a logical ‘and.’ */
@@ -2618,6 +2624,8 @@ export type ApplicationStatusHistoryFilter = {
   timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isCurrent` field. */
   isCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationStageHistory` relation. */
   applicationStageHistory?: Maybe<ApplicationStageHistoryFilter>;
   /** A related `applicationStageHistory` exists. */
@@ -2637,6 +2645,7 @@ export type ApplicationStatusHistoryInput = {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -2674,6 +2683,7 @@ export type ApplicationStatusHistoryPatch = {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -8932,6 +8942,7 @@ export type Query = Node & {
   triggerQueue?: Maybe<TriggerQueue>;
   user?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
+  applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   jwtCheckPolicy?: Maybe<Scalars['Boolean']>;
   jwtGetKey?: Maybe<Scalars['String']>;
   jwtGetPolicyLinksAsSetofText?: Maybe<JwtGetPolicyLinksAsSetofTextConnection>;
@@ -9583,6 +9594,12 @@ export type QueryUserArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUserOrganisationArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationStatusHistoryApplicationIdArgs = {
+  applicationStageHistoryId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -14901,6 +14918,7 @@ export type UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicati
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -20105,6 +20123,7 @@ export type ApplicationStatusHistoryResolvers<ContextType = any, ParentType exte
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   isCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   applicationStageHistory?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -21132,6 +21151,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   triggerQueue?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType, RequireFields<QueryTriggerQueueArgs, 'id'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationArgs, 'id'>>;
+  applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
   jwtCheckPolicy?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryJwtCheckPolicyArgs, never>>;
   jwtGetKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetKeyArgs, never>>;
   jwtGetPolicyLinksAsSetofText?: Resolver<Maybe<ResolversTypes['JwtGetPolicyLinksAsSetofTextConnection']>, ParentType, ContextType, RequireFields<QueryJwtGetPolicyLinksAsSetofTextArgs, never>>;

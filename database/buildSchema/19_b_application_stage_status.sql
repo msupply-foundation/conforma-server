@@ -14,7 +14,7 @@ CREATE VIEW public.application_stage_status AS
 
 -- Create VIEW which collects ALL application, stage, stage_history, and status_history together
 CREATE OR REPLACE VIEW public.application_stage_status_all AS
- SELECT application_id, 
+ SELECT stage.application_id, 
 	template_id,
 	stage_id,
 	number as stage_number,
