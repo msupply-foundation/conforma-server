@@ -1,4 +1,4 @@
--- Create VIEW which collects application, stage and status information together
+-- Create VIEW which collects application, CURRENT stage and CURRENT status information together
 CREATE VIEW public.application_stage_status AS
 	(SELECT app.id,
 		name,
@@ -11,6 +11,26 @@ CREATE VIEW public.application_stage_status AS
 	JOIN application_status_history status ON stage.id = status.application_stage_history_id
 	WHERE stage.is_current = TRUE
 	AND status.is_current = TRUE );
+
+-- Create VIEW which collects ALL application, stage, stage_history, and status_history together
+CREATE OR REPLACE VIEW public.application_stage_status_all AS
+ SELECT application_id, 
+	template_id,
+	stage_id,
+	number as stage_number,
+	title as stage,
+	stage.id as stage_history_id,
+	stage.time_created as stage_history_time_created,
+	stage.is_current as stage_is_current,
+	status.id as status_history_id,
+	status.status,
+	status.time_created as status_history_time_created,
+	status.is_current as status_is_current
+FROM application_stage_history stage
+JOIN application_status_history status
+on stage.id = status.application_stage_history_id
+JOIN template_stage ts
+ON stage.stage_id = ts.id;
 
 
 -- Function to expose stage_number field on application table in GraphQL
