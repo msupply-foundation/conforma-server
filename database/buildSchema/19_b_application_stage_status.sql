@@ -1,6 +1,6 @@
 -- Create VIEW which collects application, CURRENT stage and CURRENT status information together
 CREATE VIEW public.application_stage_status AS
-	(SELECT app.id,
+	(SELECT app.id as application_id,
 		name,
 		template_stage.number AS stage_number,
 		template_stage.title AS stage,
@@ -27,9 +27,9 @@ CREATE OR REPLACE VIEW public.application_stage_status_all AS
 	status.time_created as status_history_time_created,
 	status.is_current as status_is_current
 FROM application_stage_history stage
-JOIN application_status_history status
+FULL OUTER JOIN application_status_history status
 on stage.id = status.application_stage_history_id
-JOIN template_stage ts
+FULL OUTER JOIN template_stage ts
 ON stage.stage_id = ts.id;
 
 
@@ -37,9 +37,9 @@ ON stage.stage_id = ts.id;
 CREATE FUNCTION public.application_stage_number(app public.application)
 RETURNS INT AS $$
 	SELECT stage_number FROM
-		( SELECT id, stage_number FROM
+		( SELECT application_id, stage_number FROM
 			public.application_stage_status ) AS app_stage_num
-	WHERE app_stage_num.id = app.id
+	WHERE app_stage_num.application_id = app.id
 $$ LANGUAGE sql STABLE;
 
 
@@ -47,9 +47,9 @@ $$ LANGUAGE sql STABLE;
 CREATE FUNCTION public.application_stage(app public.application)
 RETURNS VARCHAR AS $$
 	SELECT stage FROM
-		( SELECT id, stage FROM
+		( SELECT application_id, stage FROM
 			public.application_stage_status	) AS app_stage
-	WHERE app_stage.id = app.id
+	WHERE app_stage.application_id = app.id
 $$ LANGUAGE sql STABLE;
 
 
@@ -57,7 +57,7 @@ $$ LANGUAGE sql STABLE;
 CREATE FUNCTION public.application_status(a public.application)
 RETURNS application_status AS $$
 	SELECT status FROM
-		( SELECT id, status FROM
+		( SELECT application_id, status FROM
 			public.application_stage_status ) AS app_status
-	WHERE app_status.id = a.id
+	WHERE app_status.application_id = a.id
 $$ LANGUAGE sql STABLE;

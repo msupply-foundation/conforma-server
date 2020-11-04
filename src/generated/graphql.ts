@@ -2219,7 +2219,7 @@ export type ApplicationStageHistoryToManyReviewSectionAssignmentFilter = {
 
 export type ApplicationStageStatus = {
   __typename?: 'ApplicationStageStatus';
-  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
@@ -2363,8 +2363,8 @@ export enum ApplicationStageStatusAllsOrderBy {
  * are tested for equality and combined with a logical ‘and.’
  */
 export type ApplicationStageStatusCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `stageNumber` field. */
@@ -2400,8 +2400,8 @@ export type ApplicationStageStatusesEdge = {
 /** Methods to use when ordering `ApplicationStageStatus`. */
 export enum ApplicationStageStatusesOrderBy {
   Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
@@ -2414,8 +2414,8 @@ export enum ApplicationStageStatusesOrderBy {
 
 /** A filter to be used against `ApplicationStageStatus` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationStageStatusFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `name` field. */
   name?: Maybe<StringFilter>;
   /** Filter by the object’s `stageNumber` field. */
@@ -20050,7 +20050,7 @@ export type ApplicationStageHistoryResolvers<ContextType = any, ParentType exten
 };
 
 export type ApplicationStageStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatus'] = ResolversParentTypes['ApplicationStageStatus']> = {
-  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

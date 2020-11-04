@@ -1,12 +1,4 @@
-import { ActionPluginOutput } from '../../types'
-
-type Status =
-  | 'Draft'
-  | 'Withdrawn'
-  | 'Submitted'
-  | 'Changes Required'
-  | 'Re-submitted'
-  | 'Completed'
+import { ActionPluginOutput, Status } from '../../types'
 
 type IParameters = {
   applicationId: number
