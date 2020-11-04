@@ -12,4 +12,5 @@
   - Should be a default Action for all templates `onApplicationCreate`
   - If a new application, will create a corresponding Status set to "Draft"
   - If application is already on final stage, will leave unchanged
+
 - **Change Status**: Changes the application Status to the specifed input parameter
