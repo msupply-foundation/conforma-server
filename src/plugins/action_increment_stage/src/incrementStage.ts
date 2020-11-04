@@ -76,10 +76,8 @@ module.exports['incrementStage'] = async function (
       statusId: newStatusHistory.id,
       status: newStatusHistory.status,
     }
-
     return returnObject
   } catch (err) {
-    console.log('Unable to increment Stage')
     console.log(err.message)
     returnObject.status = 'Fail'
     returnObject.error_log = 'Unable to increment Stage'

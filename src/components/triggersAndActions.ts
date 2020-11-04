@@ -185,7 +185,7 @@ export async function executeAction(
 
   return await DBConnect.executedActionStatusUpdate({
     status: actionResult.status,
-    error_log: actionResult.error,
+    error_log: actionResult.error_log,
     parameters_evaluated: parametersEvaluated,
     output: actionResult.output,
     id: payload.id,

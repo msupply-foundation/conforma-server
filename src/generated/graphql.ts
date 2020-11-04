@@ -2346,7 +2346,8 @@ export enum ApplicationStatus {
   Submitted = 'SUBMITTED',
   ChangesRequired = 'CHANGES_REQUIRED',
   ReSubmitted = 'RE_SUBMITTED',
-  Completed = 'COMPLETED'
+  Completed = 'COMPLETED',
+  Expired = 'EXPIRED'
 }
 
 /** A filter to be used against ApplicationStatus fields. All fields are combined with a logical ‘and.’ */
