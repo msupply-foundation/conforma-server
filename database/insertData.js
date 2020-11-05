@@ -450,7 +450,7 @@ const queries = [
                   applicationId: {
                     operator: "objectProperties"
                     children: [
-                      { value: { objectIndex: 1, property: "applicationId" } }
+                      { value: { property: "applicationId" } }
                     ]
                   }
                   newStatus: { value: "Submitted" }

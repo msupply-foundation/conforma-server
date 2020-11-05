@@ -555,7 +555,6 @@ export type ActionQueueTriggerEventFkeyTriggerQueueCreateInput = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -13933,7 +13932,6 @@ export type TriggerQueue = Node & {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   /** Reads and enables pagination through a set of `ActionQueue`. */
@@ -13967,8 +13965,6 @@ export type TriggerQueueCondition = {
   recordId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `payload` field. */
-  payload?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<TriggerQueueStatus>;
   /** Checks for equality with the object’s `log` field. */
@@ -13987,8 +13983,6 @@ export type TriggerQueueFilter = {
   recordId?: Maybe<IntFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `payload` field. */
-  payload?: Maybe<JsonFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<TriggerQueueStatusFilter>;
   /** Filter by the object’s `log` field. */
@@ -14012,7 +14006,6 @@ export type TriggerQueueInput = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -14052,7 +14045,6 @@ export type TriggerQueuePatch = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -14093,8 +14085,6 @@ export enum TriggerQueuesOrderBy {
   RecordIdDesc = 'RECORD_ID_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
-  PayloadAsc = 'PAYLOAD_ASC',
-  PayloadDesc = 'PAYLOAD_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   LogAsc = 'LOG_ASC',
@@ -16472,7 +16462,6 @@ export type UpdateTriggerQueueOnActionQueueForActionQueueTriggerEventFkeyPatch =
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   timestamp?: Maybe<Scalars['Datetime']>;
-  payload?: Maybe<Scalars['JSON']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
@@ -21392,7 +21381,6 @@ export type TriggerQueueResolvers<ContextType = any, ParentType extends Resolver
   table?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   recordId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
-  payload?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['TriggerQueueStatus']>, ParentType, ContextType>;
   log?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   actionQueuesByTriggerEvent?: Resolver<ResolversTypes['ActionQueuesConnection'], ParentType, ContextType, RequireFields<TriggerQueueActionQueuesByTriggerEventArgs, 'orderBy'>>;

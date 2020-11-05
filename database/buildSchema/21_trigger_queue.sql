@@ -8,7 +8,6 @@ CREATE TABLE public.trigger_queue (
     "table" varchar,
     record_id int,
     timestamp timestamp,
-    payload jsonb,
     status public.trigger_queue_status,
     log jsonb
 );

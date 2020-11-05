@@ -13,14 +13,9 @@ Most triggers are associated with events on the main database tables (Applicatio
 
 Actions can be defined as **Sequential** or **Async** (parallel). Async Actions are executed as soon as the server is notified that they are in the Action queue, whereas Sequential Actions have an additional `sequence` property, and are processed in the prescribed sequence once they've all been inserted into the Action queue.
 
-Actions also return an **output** object (e.g. `createUser` Action returns user details). For sequential Actions, the output properties are collected into a `cumulativeOutput` object which is passed to the parameter evaluator (along with the **trigger payload\***), so subsequent Actions can access any of the output properties of any previous Action in the sequence.
+Actions also return an **output** object (e.g. `createUser` Action returns user details). For sequential Actions, the output properties are collected into a `cumulativeOutput` object which is passed to the parameter evaluator (along with the **application_data\*** field), so subsequent Actions can access any of the output properties of any previous Action in the sequence.
 
-\* The trigger `payload` field in the **trigger_queue** contains basic information about the triggering event, namely:
-
-- **id** : id of this record in trigger_queue
-- **trigger** : trigger type (e.g. `onApplicationSubmit`)
-- **table** : database table that was triggered (e.g. `application`, `review`)
-- **record_id** : id of the record that was triggered in table
+\* The `application_data` field in the **application_queue** contains basic information about the triggering event and the application associated with it (more below).
 
 ### Overview of Trigger and Action system
 
@@ -61,3 +56,39 @@ Here is a list of Actions which are anticipated to be part of the core system: (
 | `createScheduledTrigger` | <ul> <li>Timestamp (time of execution)</li> <li>Action(s) (to execute) (array of Action objects)</li> </ul>                                                                                                                                                                              |
 | ~~`checkCondition`~~     | ~~<ul> <li>Condition (expression)</li> <li>Action results (object mapping results of Condition<br/> to actions (with parameters)) E.g.</li> </ul> <pre><code class="code-highlighted code-sql">{ True: SetPermission(parameters),<br/> False: SetPermission(parameters) }</code></pre>~~ |
 | `multipleAction`         | <ul> <li>Array of action objects (to execute in sequence)</li> </ul>                                                                                                                                                                                                                     |
+
+## Action parameters
+
+Actions associated with templates (in **action_template** table) have two fields that can store [dynamic expressions](Query-Syntax.md) which are evaluated at runtime. These are:
+
+- **condition**: an expression which must evaluate to a boolean. If `true` at runtime, the Action will run. An example usage could be to check the current status of the application and only run if it matches a certain value.
+- **parameter_queries**: Every Action plugin has prescribed required parameters (see [Action plugin specification](Action-plugin-specification.md)). In the parameter_queries field, every required parameter has an expression associated which is used to generate the parameter value at runtime. See the [list of Action plugins](List-of-Action-plugins.md) for each plugin's required parameters
+
+## Passing information to Actions
+
+The expressions which are defined in the above fields will often need access to information about the current application state or current user details (for example). While this information can always be extracted from the database (using the `pgSQL` or `graphQL` operators), it will normally be faster and simpler to pass this information in directly.
+
+There are two local state objects passed into the expression evaluator (which can be accessed using the `objectProperties` operator) when processing Triggers/Actions:
+
+- **applicationData**: A collection of useful application state information that is fetched during trigger processing. The (current) fields provided are:
+
+  - `trigger_id`: ID of the trigger record in the `trigger_queue` table
+  - `trigger`: name of the trigger e.g. `onApplicationSubmit`
+  - `table`: the table that was triggered e.g. `application`, `review`
+  - `record_id`: the id of the record on the above table that was triggered
+  - `applicationId`
+  - `templateId`
+  - `stageId` (from `template_stage`)
+  - `stageNumber`
+  - `stage` (name of current stage)
+  - `stageHistoryId`
+  - `stageHistoryTimeCreated`
+  - `statusHistoryId`
+  - `status`: (name of current status)
+  - `statusHistoryTimeCreated`  
+    _Note: more info, such as user/org data and review state will probably be added to this object._  
+    Because this data is only generated once per trigger, it will not be updated between sequential Actions. i.e if the application status is "Draft", then that value will be still be exposed to subsequent Actions in a sequence even if the first one changes the status to "Submitted" (In which case the `cumulativeOutput` object would be useful).
+
+- **cumulativeOutput**: When sequential Actions run, the output from each one is collected into this combined object and passed to subsequent Actions in the sequence. So the final Action in a sequence will have access to the output properties from _all_ previous Actions. Note, however, this object is **not** available to the **condition** evaluator, since all Action conditions are evaluated before the Action sequence is run.
+
+These two objects are passed to the evalutor in this order, so when using the `objectProperties` operator to access them, `applicationData` will have index `0`, and `cumulativeOutput` will have index `1`.
