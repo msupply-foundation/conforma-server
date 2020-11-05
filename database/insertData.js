@@ -423,8 +423,8 @@ const queries = [
               }
               {
                 actionCode: "incrementStage"
-                condition: { value: true }
                 trigger: ON_REVIEW_SAVE
+                sequence: 1
                 parameterQueries: {
                   applicationId: {
                     type: "number"
@@ -437,6 +437,21 @@ const queries = [
                       }
                     ]
                   }
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_SAVE
+                condition: true
+                sequence: 2
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [
+                      { value: { objectIndex: 1, property: "applicationId" } }
+                    ]
+                  }
+                  newStatus: { value: "Submitted" }
                 }
               }
               # TO-DO: Create actions to add Org, etc.
