@@ -8,6 +8,7 @@ import {
   ActionPayload,
   ActionSequential,
   ActionQueueExecutePayload,
+  ActionApplicationData,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import DBConnect from './databaseConnect'
@@ -57,7 +58,7 @@ export const loadScheduledActions = async function (
             {
               id: scheduledAction.id,
               code: scheduledAction.action_code,
-              trigger_payload: scheduledAction.trigger_payload,
+              application_data: scheduledAction.application_data,
               parameter_queries: scheduledAction.parameter_queries,
             },
             actionLibrary
@@ -76,7 +77,7 @@ export const loadScheduledActions = async function (
           {
             id: scheduledAction.id,
             code: scheduledAction.action_code,
-            trigger_payload: scheduledAction.trigger_payload,
+            application_data: scheduledAction.application_data,
             parameter_queries: scheduledAction.parameter_queries,
           },
           actionLibrary
@@ -92,12 +93,13 @@ export const loadScheduledActions = async function (
 export async function processTrigger(payload: TriggerPayload) {
   const { trigger_id, trigger, table, record_id } = payload
 
-  const applicationData = await DBConnect.getTriggerPayloadData(payload)
-  console.log('Application Data', applicationData)
+  const applicationData: ActionApplicationData = await DBConnect.getTriggerPayloadData(payload)
 
-  const templateId = applicationData.template_id
-    ? applicationData.template_id
-    : await DBConnect.getTemplateId(table, record_id)
+  if (!applicationData?.templateId)
+    applicationData.templateId = await DBConnect.getTemplateId(table, record_id)
+
+  console.log('Application Data', applicationData)
+  const templateId = applicationData.templateId
 
   // Get Actions from matching Template
   const result = await DBConnect.getActionsByTemplateId(templateId, trigger)
@@ -126,7 +128,7 @@ export async function processTrigger(payload: TriggerPayload) {
       template_id: templateId,
       sequence: action.sequence,
       action_code: action.code,
-      trigger_payload: payload,
+      application_data: applicationData,
       parameter_queries: action.parameter_queries,
       parameters_evaluated: {},
       status: action.sequence ? 'Processing' : 'Queued',
@@ -143,7 +145,7 @@ export async function processTrigger(payload: TriggerPayload) {
     const actionPayload = {
       id: action.id,
       code: action.action_code,
-      trigger_payload: action.trigger_payload,
+      application_data: applicationData,
       parameter_queries: action.parameter_queries,
     }
     const result = await executeAction(actionPayload, actionLibrary, [outputCumulative])
@@ -178,9 +180,10 @@ export async function executeAction(
   additionalObjects: BasicObject[] = []
 ): Promise<ActionQueueExecutePayload> {
   const evaluatorParams = {
-    objects: [payload.trigger_payload, ...additionalObjects],
+    objects: [payload.application_data, ...additionalObjects],
     pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
   }
+
   // Evaluate parameters
   const parametersEvaluated = await evaluateParameters(payload.parameter_queries, evaluatorParams)
 

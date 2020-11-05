@@ -114,7 +114,7 @@ class PostgresDB {
     payload: ActionQueueGetPayload = { status: 'Scheduled' }
   ): Promise<ActionQueue[]> => {
     const text =
-      'SELECT id, action_code, trigger_payload, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
+      'SELECT id, action_code, application_data, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
     try {
       const result = await this.query({
         text,
@@ -128,7 +128,7 @@ class PostgresDB {
 
   public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
     const text =
-      "SELECT id, action_code, trigger_payload, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
+      "SELECT id, action_code, application_data, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
     try {
       const result = await this.query({
         text,
@@ -221,11 +221,8 @@ class PostgresDB {
 
   public getTriggerPayloadData = async (payload: TriggerPayload) => {
     const applicationId = await this.getApplicationId(payload.table, payload.record_id)
-
-    console.log('Application ID', applicationId)
-
     const text = `
-      SELECT application_id, template_id,
+      SELECT template_id,
       stage_id, stage_number, stage,
       stage_history_id, stage_history_time_created,
       status_history_id, status, status_history_time_created
@@ -236,7 +233,20 @@ class PostgresDB {
     `
     const result = await this.query({ text, values: [applicationId] })
     if (result.rows.length > 1) throw new Error('Database inconsistency')
-    return { ...payload, ...result.rows[0] }
+    const dbOutput = result.rows[0]
+    const applicationData = {
+      applicationId,
+      templateId: dbOutput?.template_id,
+      stageId: dbOutput?.stage_id,
+      stageNumber: dbOutput?.stage_number,
+      stage: dbOutput?.stage,
+      stageHistoryId: dbOutput?.stage_history_id,
+      stageHistoryTimeCreated: dbOutput?.stage_history_time_created,
+      statusHistoryId: dbOutput?.status_history_id,
+      status: dbOutput?.status,
+      statusHistoryTimeCreated: dbOutput?.status_history_time_created,
+    }
+    return { ...payload, ...applicationData }
   }
 
   public getApplicationId = async (tableName: string, recordId: number) => {

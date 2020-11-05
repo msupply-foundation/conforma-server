@@ -427,22 +427,24 @@ const queries = [
                 sequence: 1
                 parameterQueries: {
                   applicationId: {
-                    type: "number"
-                    operator: "pgSQL"
-                    children: [
-                      { value: "SELECT application_id FROM review WHERE id = $1" }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
+                    operator: "objectProperties"
+                    children: [{ value: { property: "applicationId" } }]
                   }
                 }
               }
               {
                 actionCode: "changeStatus"
                 trigger: ON_REVIEW_SAVE
-                condition: true
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: [{ value: { property: "status" } }]
+                    }
+                    { value: "Re-submitted" }
+                  ]
+                }
                 sequence: 2
                 parameterQueries: {
                   applicationId: {

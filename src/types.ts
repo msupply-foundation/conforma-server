@@ -1,5 +1,5 @@
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
-import { Trigger } from './generated/graphql'
+import { ApplicationStatus, Trigger } from './generated/graphql'
 
 export interface ActionInTemplate {
   code: string
@@ -29,7 +29,7 @@ export interface ActionQueue {
   id: number
   status?: ActionQueueStatus
   action_code: string
-  trigger_payload: TriggerPayload
+  application_data: ActionApplicationData
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
   time_completed: string
@@ -42,7 +42,7 @@ export interface ActionQueuePayload {
   trigger_event: number
   template_id: number
   action_code: string
-  trigger_payload: TriggerPayload
+  application_data: TriggerPayload
   sequence: number | null
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
@@ -61,10 +61,27 @@ export interface ActionQueueExecutePayload {
   output: BasicObject
 }
 
+export interface ActionApplicationData {
+  trigger_id: number
+  trigger: Trigger
+  table: string
+  record_id: number
+  applicationId: number
+  templateId: number
+  stageId: number
+  stageNumber: number
+  stage: string
+  stageHistoryId: number
+  stageHistoryTimeCreated: Date
+  statusHistoryId: number
+  status: ApplicationStatus
+  statusHistoryTimeCreated: Date
+}
+
 export interface ActionPayload {
   id: number
   code: string
-  trigger_payload: TriggerPayload
+  application_data: ActionApplicationData
   parameter_queries: { [key: string]: any }
 }
 

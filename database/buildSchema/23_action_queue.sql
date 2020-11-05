@@ -8,7 +8,7 @@ CREATE TABLE public.action_queue (
     template_id integer references public.template(id),
     sequence integer,
     action_code varchar,
-    trigger_payload jsonb,
+    application_data jsonb,
     parameter_queries jsonb,
     parameters_evaluated jsonb,
     status public.action_queue_status,
@@ -26,7 +26,7 @@ BEGIN
 PERFORM pg_notify('action_notifications', json_build_object(
 	'id', NEW.id,
 	'code', NEW.action_code,
-	'trigger_payload', NEW.trigger_payload,
+	'application_data', NEW.application_data,
 	'parameter_queries', NEW.parameter_queries
 	)::text
 );
