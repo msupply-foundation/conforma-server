@@ -19,18 +19,17 @@ module.exports['incrementStage'] = async function (
   console.log(`Incrementing the Stage for Application ${applicationId}...`)
 
   try {
+    const templateId: number = await DBConnect.getTemplateId('application', applicationId)
+
     const currentStageHistory = await DBConnect.getCurrentStageHistory(applicationId)
 
-    const {
-      template_id: templateId,
-      stage_history_id: currentStageHistoryId,
-      stage_id: currentStageId,
-      stage_number: currentStageNum,
-      status_history_id: currentStatusId,
-      status: currentStatus,
-    } = currentStageHistory
+    const currentStageHistoryId = currentStageHistory?.stage_history_id
+    const currentStageId = currentStageHistory?.stage_id
+    const currentStageNum = currentStageHistory?.stage_number
+    const currentStatusId = currentStageHistory?.status_history_id
+    const currentStatus = currentStageHistory?.status
 
-    const nextStage = DBConnect.getNextStage(templateId, currentStageNum)
+    const nextStage = await DBConnect.getNextStage(templateId, currentStageHistoryId)
 
     if (!nextStage) {
       console.log('WARNING: Application is already at final stage. No changes made.')
@@ -39,7 +38,7 @@ module.exports['incrementStage'] = async function (
       return returnObject
     }
 
-    if (currentStageHistoryId) {
+    if (currentStageHistory) {
       // Make a "Completed" status_history for existing stage_history
       const result = await DBConnect.addNewStatusHistory(currentStageHistoryId, 'Completed')
       if (!result) {
@@ -50,10 +49,7 @@ module.exports['incrementStage'] = async function (
     }
 
     // Create new stage_history
-    const { id: newStageHistoryId } = await DBConnect.addNewStageHistory(
-      applicationId,
-      nextStage.stage_id
-    )
+    const newStageHistoryId = await DBConnect.addNewStageHistory(applicationId, nextStage.stage_id)
 
     // Create new status_history
     const newStatusHistory = await DBConnect.addNewStatusHistory(

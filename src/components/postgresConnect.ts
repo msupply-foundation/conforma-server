@@ -372,7 +372,7 @@ class PostgresDB {
   public getCurrentStatusHistory = async (applicationId: number) => {
     const text = `SELECT id, status, application_stage_history_id FROM
       application_status_history WHERE
-      application_id = $1 and status_is_current = true;`
+      application_id = $1 and is_current = true;`
     try {
       const result = await this.query({ text, values: [applicationId] })
       return result.rows[0]

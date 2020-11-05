@@ -15,7 +15,7 @@ CREATE OR REPLACE VIEW public.application_stage_status_all AS
 FROM application_stage_history stage
 FULL OUTER JOIN application_status_history status
 ON stage.id = status.application_stage_history_id
-FULL OUTER JOIN template_stage ts
+JOIN template_stage ts
 ON stage.stage_id = ts.id;
 
 
