@@ -394,7 +394,6 @@ const queries = [
             create: [
               {
                 actionCode: "incrementStage"
-                condition: { value: true }
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
                   applicationId: {
@@ -413,7 +412,6 @@ const queries = [
               }
               {
                 actionCode: "changeStatus"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
                   applicationId: {
