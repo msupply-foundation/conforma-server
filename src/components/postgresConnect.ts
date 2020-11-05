@@ -15,6 +15,7 @@ import {
   FileGetPayload,
   TriggerQueueUpdatePayload,
   ActionSequential,
+  TriggerPayload,
 } from '../types'
 import { ApplicationOutcome, Trigger, User } from '../generated/graphql'
 
@@ -218,7 +219,44 @@ class PostgresDB {
     }
   }
 
-  public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
+  public getTriggerPayloadData = async (payload: TriggerPayload) => {
+    const applicationId = await this.getApplicationId(payload.table, payload.record_id)
+
+    console.log('Application ID', applicationId)
+
+    const text = `
+      SELECT application_id, template_id,
+      stage_id, stage_number, stage,
+      stage_history_id, stage_history_time_created,
+      status_history_id, status, status_history_time_created
+      FROM application_stage_status_all
+      WHERE application_id = $1
+      AND stage_is_current = true
+      AND status_is_current = true
+    `
+    const result = await this.query({ text, values: [applicationId] })
+    if (result.rows.length > 1) throw new Error('Database inconsistency')
+    return { ...payload, ...result.rows[0] }
+  }
+
+  public getApplicationId = async (tableName: string, recordId: number) => {
+    let text: string
+    switch (tableName) {
+      case 'application':
+        return recordId
+      case 'review':
+        // NB: Check the rest of these queries properly once we have data in the tables
+        text = 'SELECT application_id FROM review WHERE id = $1'
+        break
+      // To-Do: queries for other trigger tables
+      default:
+        throw new Error('Table name not valid')
+    }
+    const result = await this.query({ text, values: [recordId] })
+    return result.rows[0].application_id
+  }
+
+  public getTemplateId = async (tableName: string, recordId: number): Promise<number> => {
     let text: string
     switch (tableName) {
       case 'application':
@@ -232,7 +270,7 @@ class PostgresDB {
       default:
         throw new Error('Table name not valid')
     }
-    const result = await this.query({ text, values: [record_id] })
+    const result = await this.query({ text, values: [recordId] })
     return result.rows[0].template_id
   }
 

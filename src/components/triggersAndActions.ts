@@ -90,10 +90,14 @@ export const loadScheduledActions = async function (
 }
 
 export async function processTrigger(payload: TriggerPayload) {
-  const { id: trigger_id, trigger, table, record_id } = payload
+  const { trigger_id, trigger, table, record_id } = payload
 
-  // Deduce template ID -- different for each triggered table
-  const templateId = await DBConnect.getTemplateId(table, record_id)
+  const applicationData = await DBConnect.getTriggerPayloadData(payload)
+  console.log('Application Data', applicationData)
+
+  const templateId = applicationData.template_id
+    ? applicationData.template_id
+    : await DBConnect.getTemplateId(table, record_id)
 
   // Get Actions from matching Template
   const result = await DBConnect.getActionsByTemplateId(templateId, trigger)
@@ -105,7 +109,7 @@ export async function processTrigger(payload: TriggerPayload) {
 
   for (const action of result) {
     const condition = await evaluateExpression(action.condition, {
-      objects: [payload],
+      objects: [applicationData],
       pgConnection: DBConnect,
     })
     if (condition) {

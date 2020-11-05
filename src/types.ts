@@ -112,7 +112,7 @@ export type QueryParams = string[] | { [key: string]: any }
 type TriggerStatus = 'Triggered' | 'Actions Dispatched' | 'Error'
 
 export interface TriggerPayload {
-  id: number
+  trigger_id: number
   trigger: Trigger
   table: string
   record_id: number
