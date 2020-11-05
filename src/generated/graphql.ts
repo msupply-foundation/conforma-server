@@ -589,6 +589,9 @@ export type Application = Node & {
   files: FilesConnection;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
+  stage?: Maybe<Scalars['String']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  status?: Maybe<ApplicationStatus>;
 };
 
 
@@ -724,6 +727,12 @@ export type ApplicationFilter = {
   isActive?: Maybe<BooleanFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `stage` field. */
+  stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ApplicationStatusFilter>;
   /** Filter by the object’s `applicationSections` relation. */
   applicationSections?: Maybe<ApplicationToManyApplicationSectionFilter>;
   /** Some related `applicationSections` exist. */
@@ -19831,6 +19840,9 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewsArgs, 'orderBy'>>;
   files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationFilesArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ApplicationNotificationsArgs, 'orderBy'>>;
+  stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

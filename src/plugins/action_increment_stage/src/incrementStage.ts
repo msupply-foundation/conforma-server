@@ -24,9 +24,6 @@ module.exports['incrementStage'] = async function (
     const currentStageHistory = await DBConnect.getCurrentStageHistory(applicationId)
 
     const currentStageHistoryId = currentStageHistory?.stage_history_id
-    const currentStageId = currentStageHistory?.stage_id
-    const currentStageNum = currentStageHistory?.stage_number
-    const currentStatusId = currentStageHistory?.status_history_id
     const currentStatus = currentStageHistory?.status
 
     const nextStage = await DBConnect.getNextStage(templateId, currentStageHistoryId)
