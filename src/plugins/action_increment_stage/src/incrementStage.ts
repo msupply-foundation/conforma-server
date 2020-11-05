@@ -24,9 +24,10 @@ module.exports['incrementStage'] = async function (
     const currentStageHistory = await DBConnect.getCurrentStageHistory(applicationId)
 
     const currentStageHistoryId = currentStageHistory?.stage_history_id
+    const currentStageNum = currentStageHistory?.stage_number
     const currentStatus = currentStageHistory?.status
 
-    const nextStage = await DBConnect.getNextStage(templateId, currentStageHistoryId)
+    const nextStage = await DBConnect.getNextStage(templateId, currentStageNum)
 
     if (!nextStage) {
       console.log('WARNING: Application is already at final stage. No changes made.')
@@ -69,6 +70,9 @@ module.exports['incrementStage'] = async function (
       statusId: newStatusHistory.id,
       status: newStatusHistory.status,
     }
+    console.log(
+      `Application ${applicationId} Stage incremented to ${returnObject.output.stageName}. Status: ${returnObject.output.status}`
+    )
     return returnObject
   } catch (err) {
     console.log(err.message)
