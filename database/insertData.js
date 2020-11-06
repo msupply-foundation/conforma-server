@@ -217,7 +217,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: [{ value: { property: "applicationId" } }]
                   }
                 }
               }
@@ -240,7 +240,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: [{ value: { property: "applicationId" } }]
                   }
                 }
               }
@@ -252,7 +252,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: [{ value: { property: "applicationId" } }]
                   }
                   newStatus: { value: "Completed" }
                 }
@@ -265,7 +265,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: [{ value: { property: "applicationId" } }]
                   }
                   newOutcome: { value: "Approved" }
                 }
