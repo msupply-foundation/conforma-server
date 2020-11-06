@@ -1,5 +1,17 @@
 # Triggers & Actions
 
+<!-- toc -->
+
+## Article Contents
+
+- [Overview of Trigger and Action system](#overview-of-trigger-and-action-system)
+- [List of available Triggers and the "listener" associated with it.](#list-of-available-triggers-and-the-listener-associated-with-it)
+- [Actions](#actions)
+- [Action parameters](#action-parameters)
+- [Passing information to Actions](#passing-information-to-actions)
+
+<!-- tocstop -->
+
 In order to facilitate customisable events in Application Templates, there is a system of **Triggers** associated with various events that, in turn, trigger **Actions** -- "things that happen" in response to a trigger.
 
 An Application Template will specify:
@@ -17,11 +29,11 @@ Actions also return an **output** object (e.g. `createUser` Action returns user 
 
 \* The `application_data` field in the **application_queue** contains basic information about the triggering event and the application associated with it (more below).
 
-### Overview of Trigger and Action system
+## Overview of Trigger and Action system
 
 ![](images/triggers-and-actions-diagram.png)
 
-### List of available Triggers and the "listener" associated with it.
+## List of available Triggers and the "listener" associated with it.
 
 | Trigger Name             | Listener                                                         |
 | ------------------------ | ---------------------------------------------------------------- |
@@ -38,7 +50,7 @@ Actions also return an **output** object (e.g. `createUser` Action returns user 
 | `onActionComplete`       | Postgres trigger on `Action_queue` table                         |
 | `onScheduledTime`        | Server scheduled service (see [here](link to Scheduled actions)) |
 
-### Actions
+## Actions
 
 Actions are implemented as **plug-ins** -- standalone packages that can be created and customised outisde the main application. As far as the Server is concerned, an Action plug-in is basically an imported **function**, with a defined set of expected parameters.
 
