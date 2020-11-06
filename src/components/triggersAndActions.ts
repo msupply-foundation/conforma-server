@@ -98,7 +98,6 @@ export async function processTrigger(payload: TriggerPayload) {
   if (!applicationData?.templateId)
     applicationData.templateId = await DBConnect.getTemplateId(table, record_id)
 
-  console.log('Application Data', applicationData)
   const templateId = applicationData.templateId
 
   // Get Actions from matching Template
