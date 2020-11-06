@@ -212,7 +212,6 @@ const queries = [
             create: [
               {
                 actionCode: "incrementStage"
-                condition: { value: true }
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
                   applicationId: {
@@ -223,7 +222,6 @@ const queries = [
               }
               {
                 actionCode: "cLog"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
                 parameterQueries: {
@@ -234,7 +232,6 @@ const queries = [
               }
               {
                 actionCode: "createUserFromApp"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: {
@@ -246,7 +243,6 @@ const queries = [
               }
               {
                 actionCode: "changeStatus"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
                 parameterQueries: {
@@ -259,7 +255,6 @@ const queries = [
               }
               {
                 actionCode: "changeOutcome"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 4
                 parameterQueries: {
@@ -272,7 +267,6 @@ const queries = [
               }
               {
                 actionCode: "cLog"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 5
                 parameterQueries: {
@@ -404,7 +398,6 @@ const queries = [
               }
               {
                 actionCode: "cLog"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
                   message: { value: "Company Registration submission" }
