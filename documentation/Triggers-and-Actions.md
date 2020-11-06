@@ -92,3 +92,55 @@ There are two local state objects passed into the expression evaluator (which ca
 - **cumulativeOutput**: When sequential Actions run, the output from each one is collected into this combined object and passed to subsequent Actions in the sequence. So the final Action in a sequence will have access to the output properties from _all_ previous Actions. Note, however, this object is **not** available to the **condition** evaluator, since all Action conditions are evaluated before the Action sequence is run.
 
 These two objects are passed to the evalutor in this order, so when using the `objectProperties` operator to access them, `applicationData` will have index `0`, and `cumulativeOutput` will have index `1`.
+
+**Examples:**
+
+1. If you want a certain Action to only run when the current application status is "Draft", the `condition` expression would be:
+
+```
+{
+  operator: "=",
+  children: [
+    {
+      operator: "objectProperties",
+      children: [{ value: { property: "status"}}]
+    },
+    { value: "Draft" }
+  ]
+}
+```
+
+_Note that the `objectIndex: 0` parameter is not required for `objectProperties` as `0` is the default._
+
+2. For the "Change Status" plugin, the required parameters are `applicationId` and `newStatus`. To change the triggered application to status "Submitted", the `parameter_queries` expression would be:
+
+```
+{
+  applicationId: {
+    operator: "objectProperties",
+    children: [{ value: { property: "applicationId" }}] },
+  newStatus: { value: "Submitted" }
+}
+```
+
+3. A sequential "Console Logger" Action, which follows after "Create User" and "Change Outcome", needs to print a message about newly-created User to the console. It's `parameter_queries` expression could be:
+
+```
+{
+    message: {
+      operator: "CONCAT"
+      children: [
+        { value: "Output concatenation: The user " },
+        {
+          operator: "objectProperties",
+          children: [ { value: { objectIndex: 1, property: "username" } } ]
+        },
+        { value: "'s registration has been " },
+        {
+          operator: "objectProperties",
+          children: [ { value: { objectIndex: 1, property: "newOutcome" } } ]
+        }
+      ]
+    }
+}
+```
