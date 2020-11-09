@@ -9,10 +9,11 @@ CREATE TABLE public.template_element (
     index integer,
     title varchar,
     category public.template_element_category,
-    visibility_condition jsonb,
+    visibility_condition jsonb DEFAULT '{"value":true}'::jsonb,
     element_type_plugin_code varchar,
-    is_required boolean,
-    is_editable jsonb,
+    is_required jsonb DEFAULT '{"value":true}'::jsonb,
+    is_editable jsonb DEFAULT '{"value":true}'::jsonb,
     parameters jsonb,
-    validation jsonb
+    validation jsonb DEFAULT '{"value":true}'::jsonb,
+    validation_message varchar
 );
