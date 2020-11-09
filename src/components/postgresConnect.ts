@@ -316,6 +316,84 @@ class PostgresDB {
       return false
     }
   }
+
+  public getTemplateStages = async (templateId: number) => {
+    const text = 'SELECT id, number, title FROM template_stage WHERE template_id = $1'
+    try {
+      const result = await this.query({ text, values: [templateId] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getCurrentStageHistory = async (applicationId: number) => {
+    const text =
+      'SELECT stage_id, stage_number, stage, stage_history_id, status_history_id, status FROM application_stage_status_all WHERE application_id = $1 AND stage_is_current = true'
+    try {
+      const result = await this.query({ text, values: [applicationId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getNextStage = async (templateId: number, currentStageNumber = 0) => {
+    const text = `SELECT id as stage_id, number as stage_number, title from template_stage
+    WHERE template_id = $1
+    AND number = (
+      SELECT min(number) from template_stage
+      WHERE number > $2
+    )`
+    try {
+      const result = await this.query({ text, values: [templateId, currentStageNumber] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public addNewStageHistory = async (applicationId: number, stageId: number) => {
+    // Note: switching is_current of previous stage_histories to False is done automatically by a Postgres trigger function
+    const text =
+      'INSERT into application_stage_history (application_id, stage_id, time_created) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id'
+    try {
+      const result = await this.query({ text, values: [applicationId, stageId] })
+      return result.rows[0].id
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getCurrentStatusHistory = async (applicationId: number) => {
+    const text = `SELECT id, status, application_stage_history_id FROM
+      application_status_history WHERE
+      application_id = $1 and is_current = true;`
+    try {
+      const result = await this.query({ text, values: [applicationId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public addNewStatusHistory = async (stageHistoryId: number, status = 'Draft') => {
+    // Note: switching is_current of previous status_histories to False is done automatically by a Postgres trigger function
+    const text =
+      'INSERT into application_status_history (application_stage_history_id, status, time_created) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id, status'
+    try {
+      const result = await this.query({ text, values: [stageHistoryId, status] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
 }
 
 const postgressDBInstance = PostgresDB.Instance

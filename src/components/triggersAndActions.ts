@@ -144,6 +144,7 @@ export async function processTrigger(payload: TriggerPayload) {
     }
     const result = await executeAction(actionPayload, actionLibrary, [outputCumulative])
     outputCumulative = { ...outputCumulative, ...result.output }
+    if (result.status === 'Fail') console.log(result.error_log)
   }
   // After all done, set Trigger on table back to NULL
   DBConnect.resetTrigger(table, record_id)
@@ -184,7 +185,7 @@ export async function executeAction(
 
   return await DBConnect.executedActionStatusUpdate({
     status: actionResult.status,
-    error_log: actionResult.error,
+    error_log: actionResult.error_log,
     parameters_evaluated: parametersEvaluated,
     output: actionResult.output,
     id: payload.id,

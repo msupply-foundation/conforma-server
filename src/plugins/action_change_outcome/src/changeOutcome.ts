@@ -1,14 +1,14 @@
 module.exports['changeOutcome'] = async function (parameters: any, DBConnect: any) {
-  const { application_id, newOutcome } = parameters
+  const { applicationId, newOutcome } = parameters
   try {
     console.log(`\nUpdating application: ${newOutcome}`)
-    const success = await DBConnect.setApplicationOutcome(application_id, newOutcome)
+    const success = await DBConnect.setApplicationOutcome(applicationId, newOutcome)
     if (success)
       return {
         status: 'Success',
         error_log: '',
         output: {
-          applicationId: application_id,
+          applicationId,
           newOutcome,
         },
       }

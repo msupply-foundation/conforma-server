@@ -1,0 +1,32 @@
+{
+  "type": "action_plugin",
+  "code": "incrementStage",
+  "name": "Increment Stage",
+  "file": "incrementStage",
+  "function_name": "incrementStage",
+  "description": "Increments (or creates) the application Stage, if possible.",
+  "required_parameters": ["application_id"],
+  "output_properties": [
+    "applicationId",
+    "stageNumber",
+    "stageName",
+    "stageId",
+    "status",
+    "statusId"
+  ],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "update"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2020-10-29"
+  }
+}

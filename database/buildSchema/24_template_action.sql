@@ -6,6 +6,6 @@ CREATE TABLE public.template_action (
     action_code varchar,
     trigger public.trigger,
     sequence integer,
-    condition jsonb,
+    condition jsonb DEFAULT 'true'::jsonb,
     parameter_queries jsonb
 );

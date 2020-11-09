@@ -37,16 +37,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 module.exports['changeOutcome'] = function (parameters, DBConnect) {
     return __awaiter(this, void 0, void 0, function () {
-        var application_id, newOutcome, success, error_1;
+        var applicationId, newOutcome, success, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    application_id = parameters.application_id, newOutcome = parameters.newOutcome;
+                    applicationId = parameters.applicationId, newOutcome = parameters.newOutcome;
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 3, , 4]);
                     console.log("\nUpdating application: " + newOutcome);
-                    return [4 /*yield*/, DBConnect.setApplicationOutcome(application_id, newOutcome)];
+                    return [4 /*yield*/, DBConnect.setApplicationOutcome(applicationId, newOutcome)];
                 case 2:
                     success = _a.sent();
                     if (success)
@@ -54,7 +54,7 @@ module.exports['changeOutcome'] = function (parameters, DBConnect) {
                                 status: 'Success',
                                 error_log: '',
                                 output: {
-                                    applicationId: application_id,
+                                    applicationId: applicationId,
                                     newOutcome: newOutcome,
                                 },
                             }];

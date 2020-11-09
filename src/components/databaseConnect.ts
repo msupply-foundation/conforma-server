@@ -65,6 +65,22 @@ class DBConnect {
     }
     return templateId
   }
+
+  public getTemplateStages = PostgresDB.getTemplateStages
+
+  public getCurrentStageHistory = PostgresDB.getCurrentStageHistory
+
+  public getNextStage = PostgresDB.getNextStage
+
+  public addNewStageHistory = PostgresDB.addNewStageHistory
+
+  public getCurrentStatusHistory = PostgresDB.getCurrentStatusHistory
+
+  public addNewStatusHistory = PostgresDB.addNewStatusHistory
+
+  // GraphQL
+
+  public gqlQuery = GraphQLdb.gqlQuery
 }
 
 const dbConnectInstance = DBConnect.Instance

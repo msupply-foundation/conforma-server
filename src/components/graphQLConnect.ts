@@ -12,7 +12,7 @@ class GraphQLdb {
     return this._instance || (this._instance = new this())
   }
 
-  public gqlQuery = async (query: string, variables: object) => {
+  public gqlQuery = async (query: string, variables = {}) => {
     const queryResult = await fetch(endpoint, {
       method: 'POST',
       headers: {

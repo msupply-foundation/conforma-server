@@ -1,6 +1,8 @@
 const fetch = require('node-fetch')
 
-const graphQLendpoint = 'http://localhost:5000/graphql'
+const config = require('../src/config.json')
+
+const graphQLendpoint = config.graphQLendpoint
 
 const queries = [
   // Template A -- User Registration
@@ -209,6 +211,17 @@ const queries = [
           templateActionsUsingId: {
             create: [
               {
+                actionCode: "incrementStage"
+                condition: { value: true }
+                trigger: ON_APPLICATION_CREATE
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
+                  }
+                }
+              }
+              {
                 actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
@@ -232,12 +245,25 @@ const queries = [
                 }
               }
               {
-                actionCode: "changeOutcome"
+                actionCode: "changeStatus"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
                 parameterQueries: {
-                  application_id: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
+                  }
+                  newStatus: { value: "Completed" }
+                }
+              }
+              {
+                actionCode: "changeOutcome"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 4
+                parameterQueries: {
+                  applicationId: {
                     operator: "objectProperties"
                     children: [{ value: { property: "record_id" } }]
                   }
@@ -248,7 +274,7 @@ const queries = [
                 actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 4
+                sequence: 5
                 parameterQueries: {
                   message: {
                     operator: "CONCAT"
@@ -365,17 +391,71 @@ const queries = [
             ]
           }
           templateActionsUsingId: {
-            create: {
-              actionCode: "cLog"
-              condition: { value: true }
-              trigger: ON_APPLICATION_SUBMIT
-              parameterQueries: {
-                message: {
-                  value: "The Action has been executed. Automated Actions FTW!!!"
+            create: [
+              {
+                actionCode: "incrementStage"
+                trigger: ON_APPLICATION_CREATE
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
+                  }
                 }
               }
-            }
-            # TO-DO: Create actions to add Org, etc.
+              {
+                actionCode: "cLog"
+                condition: { value: true }
+                trigger: ON_APPLICATION_SUBMIT
+                parameterQueries: {
+                  message: { value: "Company Registration submission" }
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_APPLICATION_SUBMIT
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
+                  }
+                  newStatus: { value: "Submitted" }
+                }
+              }
+              {
+                actionCode: "incrementStage"
+                trigger: ON_REVIEW_SAVE
+                sequence: 1
+                parameterQueries: {
+                  applicationId: {
+                    type: "number"
+                    operator: "pgSQL"
+                    children: [
+                      { value: "SELECT application_id FROM review WHERE id = $1" }
+                      {
+                        operator: "objectProperties"
+                        children: [{ value: { property: "record_id" } }]
+                      }
+                    ]
+                  }
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_SAVE
+                condition: true
+                sequence: 2
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [
+                      { value: { objectIndex: 1, property: "applicationId" } }
+                    ]
+                  }
+                  newStatus: { value: "Submitted" }
+                }
+              }
+              # TO-DO: Create actions to add Org, etc.
+            ]
           }
         }
       }
@@ -528,7 +608,7 @@ const queries = [
               isCurrent: true
               applicationStatusHistoriesUsingId: {
                 create: {
-                  status: COMPLETED
+                  status: DRAFT
                   timeCreated: "NOW()"
                   isCurrent: true
                 }
@@ -717,34 +797,6 @@ const queries = [
               }
             ]
           }
-          applicationStageHistoriesUsingId: {
-            create: [
-              {
-                templateStageToStageId: { connectById: { id: 2 } }
-                timeCreated: "NOW()"
-                isCurrent: false
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: COMPLETED
-                    timeCreated: "NOW()"
-                    isCurrent: false
-                  }
-                }
-              }
-              {
-                templateStageToStageId: { connectById: { id: 3 } }
-                timeCreated: "NOW()"
-                isCurrent: true
-                applicationStatusHistoriesUsingId: {
-                  create: {
-                    status: SUBMITTED
-                    timeCreated: "NOW()"
-                    isCurrent: true
-                  }
-                }
-              }
-            ]
-          }
           templateId: 2
         }
       }
@@ -766,20 +818,6 @@ const queries = [
           nodes {
             templateSection {
               title
-            }
-          }
-        }
-        applicationStageHistories {
-          nodes {
-            stage {
-              title
-            }
-            isCurrent
-            applicationStatusHistories {
-              nodes {
-                isCurrent
-                status
-              }
             }
           }
         }

@@ -2228,88 +2228,137 @@ export type ApplicationStageHistoryToManyReviewSectionAssignmentFilter = {
   none?: Maybe<ReviewSectionAssignmentFilter>;
 };
 
-export type ApplicationStageStatus = {
-  __typename?: 'ApplicationStageStatus';
-  id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
+export type ApplicationStageStatusAll = {
+  __typename?: 'ApplicationStageStatusAll';
+  applicationId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
+  stageHistoryId?: Maybe<Scalars['Int']>;
+  stageHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  stageIsCurrent?: Maybe<Scalars['Boolean']>;
+  statusHistoryId?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationStatus>;
+  statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  statusIsCurrent?: Maybe<Scalars['Boolean']>;
 };
 
 /**
- * A condition to be used against `ApplicationStageStatus` object types. All fields
- * are tested for equality and combined with a logical ‘and.’
+ * A condition to be used against `ApplicationStageStatusAll` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
  */
-export type ApplicationStageStatusCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `name` field. */
-  name?: Maybe<Scalars['String']>;
+export type ApplicationStageStatusAllCondition = {
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageId` field. */
+  stageId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stage` field. */
   stage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageHistoryId` field. */
+  stageHistoryId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageHistoryTimeCreated` field. */
+  stageHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `stageIsCurrent` field. */
+  stageIsCurrent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `statusHistoryId` field. */
+  statusHistoryId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<ApplicationStatus>;
+  /** Checks for equality with the object’s `statusHistoryTimeCreated` field. */
+  statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `statusIsCurrent` field. */
+  statusIsCurrent?: Maybe<Scalars['Boolean']>;
 };
 
-/** A connection to a list of `ApplicationStageStatus` values. */
-export type ApplicationStageStatusesConnection = {
-  __typename?: 'ApplicationStageStatusesConnection';
-  /** A list of `ApplicationStageStatus` objects. */
-  nodes: Array<Maybe<ApplicationStageStatus>>;
-  /** A list of edges which contains the `ApplicationStageStatus` and cursor to aid in pagination. */
-  edges: Array<ApplicationStageStatusesEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ApplicationStageStatus` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `ApplicationStageStatus` edge in the connection. */
-export type ApplicationStageStatusesEdge = {
-  __typename?: 'ApplicationStageStatusesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ApplicationStageStatus` at the end of the edge. */
-  node?: Maybe<ApplicationStageStatus>;
-};
-
-/** Methods to use when ordering `ApplicationStageStatus`. */
-export enum ApplicationStageStatusesOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  NameAsc = 'NAME_ASC',
-  NameDesc = 'NAME_DESC',
-  StageNumberAsc = 'STAGE_NUMBER_ASC',
-  StageNumberDesc = 'STAGE_NUMBER_DESC',
-  StageAsc = 'STAGE_ASC',
-  StageDesc = 'STAGE_DESC',
-  StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC'
-}
-
-/** A filter to be used against `ApplicationStageStatus` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationStageStatusFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `name` field. */
-  name?: Maybe<StringFilter>;
+/** A filter to be used against `ApplicationStageStatusAll` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationStageStatusAllFilter = {
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageId` field. */
+  stageId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `stage` field. */
   stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageHistoryId` field. */
+  stageHistoryId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageHistoryTimeCreated` field. */
+  stageHistoryTimeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `stageIsCurrent` field. */
+  stageIsCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `statusHistoryId` field. */
+  statusHistoryId?: Maybe<IntFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ApplicationStatusFilter>;
+  /** Filter by the object’s `statusHistoryTimeCreated` field. */
+  statusHistoryTimeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `statusIsCurrent` field. */
+  statusIsCurrent?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationStageStatusFilter>>;
+  and?: Maybe<Array<ApplicationStageStatusAllFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationStageStatusFilter>>;
+  or?: Maybe<Array<ApplicationStageStatusAllFilter>>;
   /** Negates the expression. */
-  not?: Maybe<ApplicationStageStatusFilter>;
+  not?: Maybe<ApplicationStageStatusAllFilter>;
 };
+
+/** A connection to a list of `ApplicationStageStatusAll` values. */
+export type ApplicationStageStatusAllsConnection = {
+  __typename?: 'ApplicationStageStatusAllsConnection';
+  /** A list of `ApplicationStageStatusAll` objects. */
+  nodes: Array<Maybe<ApplicationStageStatusAll>>;
+  /** A list of edges which contains the `ApplicationStageStatusAll` and cursor to aid in pagination. */
+  edges: Array<ApplicationStageStatusAllsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ApplicationStageStatusAll` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ApplicationStageStatusAll` edge in the connection. */
+export type ApplicationStageStatusAllsEdge = {
+  __typename?: 'ApplicationStageStatusAllsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ApplicationStageStatusAll` at the end of the edge. */
+  node?: Maybe<ApplicationStageStatusAll>;
+};
+
+/** Methods to use when ordering `ApplicationStageStatusAll`. */
+export enum ApplicationStageStatusAllsOrderBy {
+  Natural = 'NATURAL',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  StageIdAsc = 'STAGE_ID_ASC',
+  StageIdDesc = 'STAGE_ID_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
+  StageAsc = 'STAGE_ASC',
+  StageDesc = 'STAGE_DESC',
+  StageHistoryIdAsc = 'STAGE_HISTORY_ID_ASC',
+  StageHistoryIdDesc = 'STAGE_HISTORY_ID_DESC',
+  StageHistoryTimeCreatedAsc = 'STAGE_HISTORY_TIME_CREATED_ASC',
+  StageHistoryTimeCreatedDesc = 'STAGE_HISTORY_TIME_CREATED_DESC',
+  StageIsCurrentAsc = 'STAGE_IS_CURRENT_ASC',
+  StageIsCurrentDesc = 'STAGE_IS_CURRENT_DESC',
+  StatusHistoryIdAsc = 'STATUS_HISTORY_ID_ASC',
+  StatusHistoryIdDesc = 'STATUS_HISTORY_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  StatusHistoryTimeCreatedAsc = 'STATUS_HISTORY_TIME_CREATED_ASC',
+  StatusHistoryTimeCreatedDesc = 'STATUS_HISTORY_TIME_CREATED_DESC',
+  StatusIsCurrentAsc = 'STATUS_IS_CURRENT_ASC',
+  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC'
+}
 
 export enum ApplicationStatus {
   Draft = 'DRAFT',
@@ -2317,7 +2366,8 @@ export enum ApplicationStatus {
   Submitted = 'SUBMITTED',
   ChangesRequired = 'CHANGES_REQUIRED',
   ReSubmitted = 'RE_SUBMITTED',
-  Completed = 'COMPLETED'
+  Completed = 'COMPLETED',
+  Expired = 'EXPIRED'
 }
 
 /** A filter to be used against ApplicationStatus fields. All fields are combined with a logical ‘and.’ */
@@ -2381,6 +2431,8 @@ export enum ApplicationStatusHistoriesOrderBy {
   TimeCreatedDesc = 'TIME_CREATED_DESC',
   IsCurrentAsc = 'IS_CURRENT_ASC',
   IsCurrentDesc = 'IS_CURRENT_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -2394,6 +2446,7 @@ export type ApplicationStatusHistory = Node & {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   /** Reads a single `ApplicationStageHistory` that is related to this `ApplicationStatusHistory`. */
   applicationStageHistory?: Maybe<ApplicationStageHistory>;
 };
@@ -2417,6 +2470,7 @@ export type ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStat
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -2483,6 +2537,8 @@ export type ApplicationStatusHistoryCondition = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isCurrent` field. */
   isCurrent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
 };
 
 /** A filter to be used against `ApplicationStatusHistory` object types. All fields are combined with a logical ‘and.’ */
@@ -2497,6 +2553,8 @@ export type ApplicationStatusHistoryFilter = {
   timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isCurrent` field. */
   isCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationStageHistory` relation. */
   applicationStageHistory?: Maybe<ApplicationStageHistoryFilter>;
   /** A related `applicationStageHistory` exists. */
@@ -2516,6 +2574,7 @@ export type ApplicationStatusHistoryInput = {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -2553,6 +2612,7 @@ export type ApplicationStatusHistoryPatch = {
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -8731,8 +8791,8 @@ export type Query = Node & {
   applicationSections?: Maybe<ApplicationSectionsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStageHistory`. */
   applicationStageHistories?: Maybe<ApplicationStageHistoriesConnection>;
-  /** Reads and enables pagination through a set of `ApplicationStageStatus`. */
-  applicationStageStatuses?: Maybe<ApplicationStageStatusesConnection>;
+  /** Reads and enables pagination through a set of `ApplicationStageStatusAll`. */
+  applicationStageStatusAlls?: Maybe<ApplicationStageStatusAllsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStatusHistory`. */
   applicationStatusHistories?: Maybe<ApplicationStatusHistoriesConnection>;
   /** Reads and enables pagination through a set of `ElementTypePlugin`. */
@@ -8809,6 +8869,7 @@ export type Query = Node & {
   triggerQueue?: Maybe<TriggerQueue>;
   user?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
+  applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   jwtCheckPolicy?: Maybe<Scalars['Boolean']>;
   jwtGetKey?: Maybe<Scalars['String']>;
   jwtGetPolicyLinksAsSetofText?: Maybe<JwtGetPolicyLinksAsSetofTextConnection>;
@@ -8959,15 +9020,15 @@ export type QueryApplicationStageHistoriesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryApplicationStageStatusesArgs = {
+export type QueryApplicationStageStatusAllsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ApplicationStageStatusesOrderBy>>;
-  condition?: Maybe<ApplicationStageStatusCondition>;
-  filter?: Maybe<ApplicationStageStatusFilter>;
+  orderBy?: Maybe<Array<ApplicationStageStatusAllsOrderBy>>;
+  condition?: Maybe<ApplicationStageStatusAllCondition>;
+  filter?: Maybe<ApplicationStageStatusAllFilter>;
 };
 
 
@@ -9447,6 +9508,12 @@ export type QueryUserArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUserOrganisationArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationStatusHistoryApplicationIdArgs = {
+  applicationStageHistoryId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -14767,6 +14834,7 @@ export type UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicati
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationStageHistoryToApplicationStageHistoryId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput>;
 };
 
@@ -17780,12 +17848,12 @@ export type ResolversTypes = {
   TemplateAction: ResolverTypeWrapper<TemplateAction>;
   TemplateActionsEdge: ResolverTypeWrapper<TemplateActionsEdge>;
   ActionQueuesEdge: ResolverTypeWrapper<ActionQueuesEdge>;
-  ApplicationStageStatusesOrderBy: ApplicationStageStatusesOrderBy;
-  ApplicationStageStatusCondition: ApplicationStageStatusCondition;
-  ApplicationStageStatusFilter: ApplicationStageStatusFilter;
-  ApplicationStageStatusesConnection: ResolverTypeWrapper<ApplicationStageStatusesConnection>;
-  ApplicationStageStatus: ResolverTypeWrapper<ApplicationStageStatus>;
-  ApplicationStageStatusesEdge: ResolverTypeWrapper<ApplicationStageStatusesEdge>;
+  ApplicationStageStatusAllsOrderBy: ApplicationStageStatusAllsOrderBy;
+  ApplicationStageStatusAllCondition: ApplicationStageStatusAllCondition;
+  ApplicationStageStatusAllFilter: ApplicationStageStatusAllFilter;
+  ApplicationStageStatusAllsConnection: ResolverTypeWrapper<ApplicationStageStatusAllsConnection>;
+  ApplicationStageStatusAll: ResolverTypeWrapper<ApplicationStageStatusAll>;
+  ApplicationStageStatusAllsEdge: ResolverTypeWrapper<ApplicationStageStatusAllsEdge>;
   ElementTypePluginsOrderBy: ElementTypePluginsOrderBy;
   ElementTypePluginCondition: ElementTypePluginCondition;
   ElementTypePluginFilter: ElementTypePluginFilter;
@@ -18844,11 +18912,11 @@ export type ResolversParentTypes = {
   TemplateAction: TemplateAction;
   TemplateActionsEdge: TemplateActionsEdge;
   ActionQueuesEdge: ActionQueuesEdge;
-  ApplicationStageStatusCondition: ApplicationStageStatusCondition;
-  ApplicationStageStatusFilter: ApplicationStageStatusFilter;
-  ApplicationStageStatusesConnection: ApplicationStageStatusesConnection;
-  ApplicationStageStatus: ApplicationStageStatus;
-  ApplicationStageStatusesEdge: ApplicationStageStatusesEdge;
+  ApplicationStageStatusAllCondition: ApplicationStageStatusAllCondition;
+  ApplicationStageStatusAllFilter: ApplicationStageStatusAllFilter;
+  ApplicationStageStatusAllsConnection: ApplicationStageStatusAllsConnection;
+  ApplicationStageStatusAll: ApplicationStageStatusAll;
+  ApplicationStageStatusAllsEdge: ApplicationStageStatusAllsEdge;
   ElementTypePluginCondition: ElementTypePluginCondition;
   ElementTypePluginFilter: ElementTypePluginFilter;
   ElementTypePluginsConnection: ElementTypePluginsConnection;
@@ -19887,26 +19955,33 @@ export type ApplicationStageHistoryResolvers<ContextType = any, ParentType exten
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ApplicationStageStatusResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatus'] = ResolversParentTypes['ApplicationStageStatus']> = {
-  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+export type ApplicationStageStatusAllResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatusAll'] = ResolversParentTypes['ApplicationStageStatusAll']> = {
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  stageHistoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stageHistoryTimeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  stageIsCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  statusHistoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
+  statusHistoryTimeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  statusIsCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ApplicationStageStatusesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatusesConnection'] = ResolversParentTypes['ApplicationStageStatusesConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['ApplicationStageStatus']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['ApplicationStageStatusesEdge']>, ParentType, ContextType>;
+export type ApplicationStageStatusAllsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatusAllsConnection'] = ResolversParentTypes['ApplicationStageStatusAllsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['ApplicationStageStatusAll']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ApplicationStageStatusAllsEdge']>, ParentType, ContextType>;
   pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ApplicationStageStatusesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatusesEdge'] = ResolversParentTypes['ApplicationStageStatusesEdge']> = {
+export type ApplicationStageStatusAllsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageStatusAllsEdge'] = ResolversParentTypes['ApplicationStageStatusAllsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ApplicationStageStatus']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusAll']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -19931,6 +20006,7 @@ export type ApplicationStatusHistoryResolvers<ContextType = any, ParentType exte
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   isCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   applicationStageHistory?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -20903,7 +20979,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationResponses?: Resolver<Maybe<ResolversTypes['ApplicationResponsesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationResponsesArgs, 'orderBy'>>;
   applicationSections?: Resolver<Maybe<ResolversTypes['ApplicationSectionsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationSectionsArgs, 'orderBy'>>;
   applicationStageHistories?: Resolver<Maybe<ResolversTypes['ApplicationStageHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageHistoriesArgs, 'orderBy'>>;
-  applicationStageStatuses?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageStatusesArgs, 'orderBy'>>;
+  applicationStageStatusAlls?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusAllsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageStatusAllsArgs, 'orderBy'>>;
   applicationStatusHistories?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoriesArgs, 'orderBy'>>;
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
   files?: Resolver<Maybe<ResolversTypes['FilesConnection']>, ParentType, ContextType, RequireFields<QueryFilesArgs, 'orderBy'>>;
@@ -20957,6 +21033,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   triggerQueue?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType, RequireFields<QueryTriggerQueueArgs, 'id'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationArgs, 'id'>>;
+  applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
   jwtCheckPolicy?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryJwtCheckPolicyArgs, never>>;
   jwtGetKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetKeyArgs, never>>;
   jwtGetPolicyLinksAsSetofText?: Resolver<Maybe<ResolversTypes['JwtGetPolicyLinksAsSetofTextConnection']>, ParentType, ContextType, RequireFields<QueryJwtGetPolicyLinksAsSetofTextArgs, never>>;
@@ -21702,9 +21779,9 @@ export type Resolvers<ContextType = any> = {
   ApplicationStageHistoriesConnection?: ApplicationStageHistoriesConnectionResolvers<ContextType>;
   ApplicationStageHistoriesEdge?: ApplicationStageHistoriesEdgeResolvers<ContextType>;
   ApplicationStageHistory?: ApplicationStageHistoryResolvers<ContextType>;
-  ApplicationStageStatus?: ApplicationStageStatusResolvers<ContextType>;
-  ApplicationStageStatusesConnection?: ApplicationStageStatusesConnectionResolvers<ContextType>;
-  ApplicationStageStatusesEdge?: ApplicationStageStatusesEdgeResolvers<ContextType>;
+  ApplicationStageStatusAll?: ApplicationStageStatusAllResolvers<ContextType>;
+  ApplicationStageStatusAllsConnection?: ApplicationStageStatusAllsConnectionResolvers<ContextType>;
+  ApplicationStageStatusAllsEdge?: ApplicationStageStatusAllsEdgeResolvers<ContextType>;
   ApplicationStatusHistoriesConnection?: ApplicationStatusHistoriesConnectionResolvers<ContextType>;
   ApplicationStatusHistoriesEdge?: ApplicationStatusHistoriesEdgeResolvers<ContextType>;
   ApplicationStatusHistory?: ApplicationStatusHistoryResolvers<ContextType>;
