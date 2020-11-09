@@ -28,24 +28,6 @@ class GraphQLdb {
     return data.data
   }
 
-  public getOriginalRecordFromActionQueue = async (tableName: string, record_id: number) => {
-    if (tableName !== 'action_queue') throw new Error('Not an action_queue event')
-    const query = `query getTemplateIdFromActionQueue($record_id:Int!) {
-      actionQueue(id: $record_id) {
-        triggerQueueByTriggerEvent {
-          table
-          recordId
-          triggerType
-        }
-      }
-    }`
-    const variables = { record_id }
-    const result = await this.gqlQuery(query, variables)
-    const table = result.actionQueue.triggerQueueByTriggerEvent.table
-    const origRecordId = result.actionQueue.triggerQueueByTriggerEvent.record_id
-    return { table, recordId: origRecordId }
-  }
-
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
     switch (tableName) {
       default:

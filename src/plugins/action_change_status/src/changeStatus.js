@@ -49,81 +49,66 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 module.exports['changeStatus'] = function (parameters, DBConnect) {
     return __awaiter(this, void 0, void 0, function () {
-        var applicationId, newStatus, returnObject, currentStatus, _a, currentStageHistoryId, result_1, result, err_1;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var applicationId, newStatus, returnObject, currentStatus, currentStageHistoryId, result_1, result, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
                     applicationId = parameters.applicationId, newStatus = parameters.newStatus;
                     returnObject = { status: null, error_log: '' };
                     console.log("Changing the Status of Application " + applicationId + "...");
-                    _b.label = 1;
+                    _a.label = 1;
                 case 1:
-                    _b.trys.push([1, 12, , 13]);
+                    _a.trys.push([1, 7, , 8]);
                     return [4 /*yield*/, DBConnect.getCurrentStatusHistory(applicationId)];
                 case 2:
-                    currentStatus = _b.sent();
-                    _a = currentStatus === null || currentStatus === void 0 ? void 0 : currentStatus.status;
-                    switch (_a) {
-                        case undefined: return [3 /*break*/, 3];
-                        case newStatus: return [3 /*break*/, 8];
-                    }
-                    return [3 /*break*/, 9];
-                case 3: return [4 /*yield*/, DBConnect.getCurrentStageHistory(applicationId)];
-                case 4:
-                    currentStageHistoryId = _b.sent();
-                    if (!!currentStageHistoryId) return [3 /*break*/, 5];
-                    console.log("No stage defined for this Application. Can't create a status_history record.");
-                    returnObject.status = 'Fail';
-                    returnObject.error_log = 'Missing stage_history for Application';
-                    return [3 /*break*/, 7];
-                case 5: return [4 /*yield*/, DBConnect.addNewStatusHistory(currentStageHistoryId.id, newStatus)];
-                case 6:
-                    result_1 = _b.sent();
-                    if (result_1.id) {
+                    currentStatus = _a.sent();
+                    if ((currentStatus === null || currentStatus === void 0 ? void 0 : currentStatus.status) === newStatus) {
+                        // Do nothing
+                        console.log("WARNING: Application " + applicationId + " already has status: " + newStatus + ". No changes were made.");
                         returnObject.status = 'Success';
-                        returnObject.output = { status: newStatus, statusId: result_1.id };
+                        returnObject.error_log = 'Status not changed';
+                        returnObject.output = { status: newStatus, statusId: currentStatus.id };
+                        return [2 /*return*/, returnObject];
+                    }
+                    currentStageHistoryId = void 0;
+                    if (!!(currentStatus === null || currentStatus === void 0 ? void 0 : currentStatus.status)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, DBConnect.getCurrentStageHistory(applicationId)];
+                case 3:
+                    result_1 = _a.sent();
+                    if (!result_1) {
+                        returnObject.status = 'Fail';
+                        returnObject.error_log =
+                            "No stage defined for this Application. Can't create a status_history record.";
+                        return [2 /*return*/, returnObject];
+                    }
+                    else
+                        currentStageHistoryId = result_1.id;
+                    return [3 /*break*/, 5];
+                case 4:
+                    currentStageHistoryId = currentStatus.application_stage_history_id;
+                    _a.label = 5;
+                case 5: return [4 /*yield*/, DBConnect.addNewStatusHistory(currentStageHistoryId, newStatus)];
+                case 6:
+                    result = _a.sent();
+                    if (result.id) {
+                        returnObject.status = 'Success';
+                        returnObject.output = { status: newStatus, statusId: result.id };
                         console.log("New status_history created: " + newStatus);
                     }
                     else {
                         returnObject.status = 'Fail';
                         returnObject.error_log = "Couldn't create new application_status_history";
+                        return [2 /*return*/, returnObject];
                     }
-                    _b.label = 7;
-                case 7: return [3 /*break*/, 11];
-                case 8:
-                    // Do nothing
-                    console.log("WARNING: Application " + applicationId + " already has status: " + newStatus + ". No changes were made.");
-                    returnObject.status = 'Success';
-                    returnObject.error_log = 'Status not changed';
-                    returnObject.output = { status: newStatus, statusId: currentStatus.id };
-                    return [3 /*break*/, 11];
-                case 9: return [4 /*yield*/, DBConnect.addNewStatusHistory(currentStatus.application_stage_history_id, newStatus)];
-                case 10:
-                    result = _b.sent();
-                    if (result.id) {
-                        returnObject.status = 'Success';
-                        returnObject.output = { status: newStatus, statusId: result.id };
-                        console.log("Application status changed to: " + newStatus);
-                    }
-                    else {
-                        returnObject.status = 'Fail';
-                        returnObject.error_log = "Couldn't create new application_status_history";
-                        console.log("Couldn't create new application_status_history");
-                    }
-                    _b.label = 11;
-                case 11:
                     // Create output object and return
-                    if (returnObject.status !== 'Fail')
-                        returnObject.output = __assign(__assign({}, returnObject.output), { applicationId: applicationId });
+                    returnObject.output = __assign(__assign({}, returnObject.output), { applicationId: applicationId });
                     return [2 /*return*/, returnObject];
-                case 12:
-                    err_1 = _b.sent();
-                    console.log('Unable to change Status');
-                    console.log(err_1.message);
+                case 7:
+                    err_1 = _a.sent();
                     returnObject.status = 'Fail';
                     returnObject.error_log = 'Unable to change Status';
                     return [2 /*return*/, returnObject];
-                case 13: return [2 /*return*/];
+                case 8: return [2 /*return*/];
             }
         });
     });

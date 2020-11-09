@@ -48,8 +48,6 @@ class DBConnect {
 
   public setApplicationOutcome = PostgresDB.setApplicationOutcome
 
-  public getOriginalRecordFromActionQueue = GraphQLdb.getOriginalRecordFromActionQueue
-
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
     let templateId: number
     switch (tableName) {
@@ -72,11 +70,11 @@ class DBConnect {
 
   public getCurrentStageHistory = PostgresDB.getCurrentStageHistory
 
+  public getNextStage = PostgresDB.getNextStage
+
   public addNewStageHistory = PostgresDB.addNewStageHistory
 
   public getCurrentStatusHistory = PostgresDB.getCurrentStatusHistory
-
-  public getCurrentStatusFromStageHistoryId = PostgresDB.getCurrentStatusFromStageHistoryId
 
   public addNewStatusHistory = PostgresDB.addNewStatusHistory
 

@@ -1,15 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -48,94 +37,76 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 module.exports['incrementStage'] = function (parameters, DBConnect) {
-    var _a, _b, _c, _d;
     return __awaiter(this, void 0, void 0, function () {
-        var applicationId, returnObject, templateId, allStages, maxStageNumber, currentStageHistory, currentStageHistoryId, currentStageId_1, currentStageNum, stageIsMax, newStageNum_1, newStageId, newStageHistoryId, _e, currentStatus, newStatus_1, newStatus, stageName, err_1;
-        return __generator(this, function (_f) {
-            switch (_f.label) {
+        var applicationId, returnObject, templateId, currentStageHistory, currentStageHistoryId, currentStageNum, currentStatus, nextStage, result, newStageHistoryId, newStatusHistory, err_1;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
                 case 0:
                     applicationId = parameters.applicationId;
                     returnObject = { status: null, error_log: '' };
                     console.log("Incrementing the Stage for Application " + applicationId + "...");
-                    _f.label = 1;
+                    _a.label = 1;
                 case 1:
-                    _f.trys.push([1, 14, , 15]);
+                    _a.trys.push([1, 9, , 10]);
                     return [4 /*yield*/, DBConnect.getTemplateId('application', applicationId)];
                 case 2:
-                    templateId = _f.sent();
-                    return [4 /*yield*/, DBConnect.getTemplateStages(templateId)];
-                case 3:
-                    allStages = _f.sent();
-                    maxStageNumber = Math.max.apply(Math, allStages.map(function (stage) { return stage.number; }));
+                    templateId = _a.sent();
                     return [4 /*yield*/, DBConnect.getCurrentStageHistory(applicationId)];
+                case 3:
+                    currentStageHistory = _a.sent();
+                    currentStageHistoryId = currentStageHistory === null || currentStageHistory === void 0 ? void 0 : currentStageHistory.stage_history_id;
+                    currentStageNum = currentStageHistory === null || currentStageHistory === void 0 ? void 0 : currentStageHistory.stage_number;
+                    currentStatus = currentStageHistory === null || currentStageHistory === void 0 ? void 0 : currentStageHistory.status;
+                    return [4 /*yield*/, DBConnect.getNextStage(templateId, currentStageNum)];
                 case 4:
-                    currentStageHistory = _f.sent();
-                    currentStageHistoryId = currentStageHistory === null || currentStageHistory === void 0 ? void 0 : currentStageHistory.id;
-                    currentStageId_1 = currentStageHistory === null || currentStageHistory === void 0 ? void 0 : currentStageHistory.stage_id;
-                    currentStageNum = (_a = allStages.find(function (stage) { return stage.id === currentStageId_1; })) === null || _a === void 0 ? void 0 : _a.number;
-                    stageIsMax = currentStageNum === maxStageNumber;
-                    if (stageIsMax)
+                    nextStage = _a.sent();
+                    if (!nextStage) {
                         console.log('WARNING: Application is already at final stage. No changes made.');
-                    newStageNum_1 = currentStageNum ? (!stageIsMax ? currentStageNum + 1 : currentStageNum) : 1;
-                    newStageId = (_b = allStages.find(function (stage) { return stage.number === newStageNum_1; })) === null || _b === void 0 ? void 0 : _b.id;
-                    if (!stageIsMax) return [3 /*break*/, 5];
-                    _e = currentStageHistoryId;
-                    return [3 /*break*/, 7];
-                case 5: return [4 /*yield*/, DBConnect.addNewStageHistory(applicationId, newStageId)
-                    // Update Status_history -- creates a new record
-                ];
-                case 6:
-                    _e = _f.sent();
-                    _f.label = 7;
-                case 7:
-                    newStageHistoryId = _e;
-                    return [4 /*yield*/, DBConnect.getCurrentStatusFromStageHistoryId(currentStageHistoryId)
-                        // Create new COMPLETED status
-                    ];
-                case 8:
-                    currentStatus = _f.sent();
-                    if (!currentStatus) return [3 /*break*/, 11];
-                    if (!!stageIsMax) return [3 /*break*/, 10];
-                    return [4 /*yield*/, DBConnect.addNewStatusHistory(currentStageHistoryId, 'Completed')];
-                case 9:
-                    newStatus_1 = _f.sent();
-                    if (newStatus_1) {
-                        returnObject.output = { currentStatus: newStatus_1.status, statusId: newStatus_1.id };
-                    }
-                    else {
-                        returnObject.status = 'Fail';
-                        returnObject.error_log = "Couldn't create new status";
-                    }
-                    _f.label = 10;
-                case 10: return [3 /*break*/, 12];
-                case 11:
-                    console.log('No existing status, setting status to Draft');
-                    _f.label = 12;
-                case 12: return [4 /*yield*/, DBConnect.addNewStatusHistory(newStageHistoryId, currentStatus ? currentStatus.status : 'Draft')];
-                case 13:
-                    newStatus = _f.sent();
-                    if (newStatus) {
-                        returnObject.output = { currentStatus: newStatus.status, statusId: newStatus.id };
-                    }
-                    else {
-                        returnObject.status = 'Fail';
-                        returnObject.error_log = "Couldn't create new status";
-                    }
-                    if (returnObject.status !== 'Fail') {
-                        stageName = (_c = allStages.find(function (stage) { return stage.number === newStageNum_1; })) === null || _c === void 0 ? void 0 : _c.title;
-                        console.log("Application Stage: " + stageName + ", Status: " + ((_d = returnObject === null || returnObject === void 0 ? void 0 : returnObject.output) === null || _d === void 0 ? void 0 : _d.currentStatus));
                         returnObject.status = 'Success';
-                        returnObject.output = __assign(__assign({}, returnObject.output), { applicationId: applicationId, stageNumber: newStageNum_1, stageName: stageName, stageHistoryId: newStageHistoryId });
+                        returnObject.error_log = 'Warning: No changes made';
+                        return [2 /*return*/, returnObject];
                     }
+                    if (!currentStageHistory) return [3 /*break*/, 6];
+                    return [4 /*yield*/, DBConnect.addNewStatusHistory(currentStageHistoryId, 'Completed')];
+                case 5:
+                    result = _a.sent();
+                    if (!result) {
+                        returnObject.status = 'Fail';
+                        returnObject.error_log = "Couldn't create new status";
+                        return [2 /*return*/, returnObject];
+                    }
+                    _a.label = 6;
+                case 6: return [4 /*yield*/, DBConnect.addNewStageHistory(applicationId, nextStage.stage_id)
+                    // Create new status_history
+                ];
+                case 7:
+                    newStageHistoryId = _a.sent();
+                    return [4 /*yield*/, DBConnect.addNewStatusHistory(newStageHistoryId, currentStatus ? currentStatus : 'Draft')];
+                case 8:
+                    newStatusHistory = _a.sent();
+                    if (!newStageHistoryId || !newStatusHistory) {
+                        returnObject.status = 'Fail';
+                        returnObject.error_log = 'Problem creating new stage_history or status_history';
+                        return [2 /*return*/, returnObject];
+                    }
+                    returnObject.status = 'Success';
+                    returnObject.output = {
+                        applicationId: applicationId,
+                        stageNumber: nextStage.stage_number,
+                        stageName: nextStage.title,
+                        stageHistoryId: newStageHistoryId,
+                        statusId: newStatusHistory.id,
+                        status: newStatusHistory.status,
+                    };
+                    console.log("Application " + applicationId + " Stage incremented to " + returnObject.output.stageName + ". Status: " + returnObject.output.status);
                     return [2 /*return*/, returnObject];
-                case 14:
-                    err_1 = _f.sent();
-                    console.log('Unable to increment Stage');
+                case 9:
+                    err_1 = _a.sent();
                     console.log(err_1.message);
                     returnObject.status = 'Fail';
                     returnObject.error_log = 'Unable to increment Stage';
                     return [2 /*return*/, returnObject];
-                case 15: return [2 /*return*/];
+                case 10: return [2 /*return*/];
             }
         });
     });

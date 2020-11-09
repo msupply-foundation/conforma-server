@@ -5,3 +5,12 @@ export interface ActionPluginOutput {
   error_log: string
   output?: { [key: string]: any }
 }
+
+export type Status =
+  | 'Draft'
+  | 'Withdrawn'
+  | 'Submitted'
+  | 'Changes Required'
+  | 'Re-submitted'
+  | 'Completed'
+  | 'Expired'
