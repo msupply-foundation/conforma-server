@@ -48,8 +48,6 @@ class DBConnect {
 
   public setApplicationOutcome = PostgresDB.setApplicationOutcome
 
-  public getOriginalRecordFromActionQueue = GraphQLdb.getOriginalRecordFromActionQueue
-
   public getTriggerPayloadData = PostgresDB.getTriggerPayloadData
 
   public getApplicationId = PostgresDB.getApplicationId

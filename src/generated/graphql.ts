@@ -158,6 +158,7 @@ export type ActionQueue = Node & {
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   /** Reads a single `TriggerQueue` that is related to this `ActionQueue`. */
   triggerQueueByTriggerEvent?: Maybe<TriggerQueue>;
@@ -204,6 +205,8 @@ export type ActionQueueCondition = {
   timeQueued?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeCompleted` field. */
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeScheduled` field. */
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `errorLog` field. */
   errorLog?: Maybe<Scalars['String']>;
 };
@@ -234,6 +237,8 @@ export type ActionQueueFilter = {
   timeQueued?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeCompleted` field. */
   timeCompleted?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeScheduled` field. */
+  timeScheduled?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `errorLog` field. */
   errorLog?: Maybe<StringFilter>;
   /** Filter by the object’s `triggerQueueByTriggerEvent` relation. */
@@ -266,6 +271,7 @@ export type ActionQueueInput = {
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -327,6 +333,7 @@ export type ActionQueuePatch = {
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -381,6 +388,8 @@ export enum ActionQueuesOrderBy {
   TimeQueuedDesc = 'TIME_QUEUED_DESC',
   TimeCompletedAsc = 'TIME_COMPLETED_ASC',
   TimeCompletedDesc = 'TIME_COMPLETED_DESC',
+  TimeScheduledAsc = 'TIME_SCHEDULED_ASC',
+  TimeScheduledDesc = 'TIME_SCHEDULED_DESC',
   ErrorLogAsc = 'ERROR_LOG_ASC',
   ErrorLogDesc = 'ERROR_LOG_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -434,6 +443,7 @@ export type ActionQueueTemplateIdFkeyActionQueueCreateInput = {
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -505,6 +515,7 @@ export type ActionQueueTriggerEventFkeyActionQueueCreateInput = {
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -1411,10 +1422,11 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -12242,10 +12254,11 @@ export type TemplateElement = Node & {
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   /** Reads a single `TemplateSection` that is related to this `TemplateElement`. */
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -12317,13 +12330,15 @@ export type TemplateElementCondition = {
   /** Checks for equality with the object’s `elementTypePluginCode` field. */
   elementTypePluginCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `isRequired` field. */
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isEditable` field. */
   isEditable?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameters` field. */
   parameters?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `validation` field. */
   validation?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `validationMessage` field. */
+  validationMessage?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `TemplateElement` object types. All fields are combined with a logical ‘and.’ */
@@ -12345,13 +12360,15 @@ export type TemplateElementFilter = {
   /** Filter by the object’s `elementTypePluginCode` field. */
   elementTypePluginCode?: Maybe<StringFilter>;
   /** Filter by the object’s `isRequired` field. */
-  isRequired?: Maybe<BooleanFilter>;
+  isRequired?: Maybe<JsonFilter>;
   /** Filter by the object’s `isEditable` field. */
   isEditable?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameters` field. */
   parameters?: Maybe<JsonFilter>;
   /** Filter by the object’s `validation` field. */
   validation?: Maybe<JsonFilter>;
+  /** Filter by the object’s `validationMessage` field. */
+  validationMessage?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponses` relation. */
   applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
@@ -12378,10 +12395,11 @@ export type TemplateElementInput = {
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -12438,10 +12456,11 @@ export type TemplateElementPatch = {
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -12506,10 +12525,11 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -12563,6 +12583,8 @@ export enum TemplateElementsOrderBy {
   ParametersDesc = 'PARAMETERS_DESC',
   ValidationAsc = 'VALIDATION_ASC',
   ValidationDesc = 'VALIDATION_DESC',
+  ValidationMessageAsc = 'VALIDATION_MESSAGE_ASC',
+  ValidationMessageDesc = 'VALIDATION_MESSAGE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -14230,6 +14252,7 @@ export type UpdateActionQueueOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -14248,6 +14271,7 @@ export type UpdateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch = 
   output?: Maybe<Scalars['JSON']>;
   timeQueued?: Maybe<Scalars['Datetime']>;
   timeCompleted?: Maybe<Scalars['Datetime']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
   errorLog?: Maybe<Scalars['String']>;
   triggerQueueToTriggerEvent?: Maybe<ActionQueueTriggerEventFkeyInput>;
   templateToTemplateId?: Maybe<ActionQueueTemplateIdFkeyInput>;
@@ -16003,10 +16027,11 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -16020,10 +16045,11 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   category?: Maybe<TemplateElementCategory>;
   visibilityCondition?: Maybe<Scalars['JSON']>;
   elementTypePluginCode?: Maybe<Scalars['String']>;
-  isRequired?: Maybe<Scalars['Boolean']>;
+  isRequired?: Maybe<Scalars['JSON']>;
   isEditable?: Maybe<Scalars['JSON']>;
   parameters?: Maybe<Scalars['JSON']>;
   validation?: Maybe<Scalars['JSON']>;
+  validationMessage?: Maybe<Scalars['String']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
 };
@@ -19791,6 +19817,7 @@ export type ActionQueueResolvers<ContextType = any, ParentType extends Resolvers
   output?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   timeQueued?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   timeCompleted?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  timeScheduled?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   errorLog?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   triggerQueueByTriggerEvent?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
@@ -21257,10 +21284,11 @@ export type TemplateElementResolvers<ContextType = any, ParentType extends Resol
   category?: Resolver<Maybe<ResolversTypes['TemplateElementCategory']>, ParentType, ContextType>;
   visibilityCondition?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   elementTypePluginCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  isRequired?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isRequired?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   isEditable?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   parameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   validation?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  validationMessage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   section?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   applicationResponses?: Resolver<ResolversTypes['ApplicationResponsesConnection'], ParentType, ContextType, RequireFields<TemplateElementApplicationResponsesArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

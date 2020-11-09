@@ -130,7 +130,7 @@ export async function processTrigger(payload: TriggerPayload) {
       application_data: applicationData,
       parameter_queries: action.parameter_queries,
       parameters_evaluated: {},
-      status: action.sequence ? 'Processing' : 'Queued',
+      status: typeof action.sequence === 'number' ? 'Processing' : 'Queued',
     })
   }
   await DBConnect.updateTriggerQueueStatus({ status: 'Actions Dispatched', id: trigger_id })
