@@ -4,12 +4,6 @@ type IParameters = {
   applicationId: number
 }
 
-type Stage = {
-  id: number
-  number: number
-  title: string
-}
-
 module.exports['incrementStage'] = async function (
   parameters: IParameters,
   DBConnect: any
