@@ -1,7 +1,9 @@
 -- Create VIEW which collects ALL application, stage, stage_history, and status_history together
 CREATE OR REPLACE VIEW public.application_stage_status_all AS
  SELECT stage.application_id, 
-	template_id,
+	ts.template_id,
+	serial,
+	name,
 	stage_id,
 	number as stage_number,
 	title as stage,
@@ -16,7 +18,9 @@ FROM application_stage_history stage
 FULL OUTER JOIN application_status_history status
 ON stage.id = status.application_stage_history_id
 JOIN template_stage ts
-ON stage.stage_id = ts.id;
+ON stage.stage_id = ts.id
+JOIN application
+ON stage.application_id = application.id;
 
 
 -- Function to expose stage_number field on application table in GraphQL
