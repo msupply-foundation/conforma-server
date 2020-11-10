@@ -28,8 +28,11 @@ CREATE FUNCTION public.application_stage_number(app public.application)
 RETURNS INT AS $$
 	SELECT stage_number FROM
 		( SELECT application_id, stage_number FROM
-			public.application_stage_status_all ) AS app_stage_num
-	WHERE app_stage_num.application_id = app.id
+			public.application_stage_status_all
+			WHERE stage_is_current = true
+			AND status_is_current = true
+		) AS app_stage_num
+	WHERE app_stage_num.application_id = app.id;
 $$ LANGUAGE sql STABLE;
 
 
@@ -38,8 +41,11 @@ CREATE FUNCTION public.application_stage(app public.application)
 RETURNS VARCHAR AS $$
 	SELECT stage FROM
 		( SELECT application_id, stage FROM
-			public.application_stage_status_all	) AS app_stage
-	WHERE app_stage.application_id = app.id
+			public.application_stage_status_all
+			WHERE stage_is_current = true
+			AND status_is_current = true
+		) AS app_stage
+	WHERE app_stage.application_id = app.id;
 $$ LANGUAGE sql STABLE;
 
 
@@ -48,6 +54,9 @@ CREATE FUNCTION public.application_status(a public.application)
 RETURNS application_status AS $$
 	SELECT status FROM
 		( SELECT application_id, status FROM
-			public.application_stage_status_all ) AS app_status
-	WHERE app_status.application_id = a.id
+			public.application_stage_status_all
+			WHERE stage_is_current = true
+			AND status_is_current = true
+		) AS app_status
+	WHERE app_status.application_id = a.id;
 $$ LANGUAGE sql STABLE;
