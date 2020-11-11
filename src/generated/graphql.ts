@@ -2768,6 +2768,82 @@ export type ApplicationToManyReviewFilter = {
   none?: Maybe<ReviewFilter>;
 };
 
+export type ApplicationTriggerState = {
+  __typename?: 'ApplicationTriggerState';
+  id?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  applicationTrigger?: Maybe<Trigger>;
+  reviewTrigger?: Maybe<Trigger>;
+};
+
+/**
+ * A condition to be used against `ApplicationTriggerState` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type ApplicationTriggerStateCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `serial` field. */
+  serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationTrigger` field. */
+  applicationTrigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `reviewTrigger` field. */
+  reviewTrigger?: Maybe<Trigger>;
+};
+
+/** A filter to be used against `ApplicationTriggerState` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationTriggerStateFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `serial` field. */
+  serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationTrigger` field. */
+  applicationTrigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `reviewTrigger` field. */
+  reviewTrigger?: Maybe<TriggerFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ApplicationTriggerStateFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ApplicationTriggerStateFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ApplicationTriggerStateFilter>;
+};
+
+/** A connection to a list of `ApplicationTriggerState` values. */
+export type ApplicationTriggerStatesConnection = {
+  __typename?: 'ApplicationTriggerStatesConnection';
+  /** A list of `ApplicationTriggerState` objects. */
+  nodes: Array<Maybe<ApplicationTriggerState>>;
+  /** A list of edges which contains the `ApplicationTriggerState` and cursor to aid in pagination. */
+  edges: Array<ApplicationTriggerStatesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ApplicationTriggerState` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ApplicationTriggerState` edge in the connection. */
+export type ApplicationTriggerStatesEdge = {
+  __typename?: 'ApplicationTriggerStatesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ApplicationTriggerState` at the end of the edge. */
+  node?: Maybe<ApplicationTriggerState>;
+};
+
+/** Methods to use when ordering `ApplicationTriggerState`. */
+export enum ApplicationTriggerStatesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  SerialAsc = 'SERIAL_ASC',
+  SerialDesc = 'SERIAL_DESC',
+  ApplicationTriggerAsc = 'APPLICATION_TRIGGER_ASC',
+  ApplicationTriggerDesc = 'APPLICATION_TRIGGER_DESC',
+  ReviewTriggerAsc = 'REVIEW_TRIGGER_ASC',
+  ReviewTriggerDesc = 'REVIEW_TRIGGER_DESC'
+}
+
 /** The `application` to be created by this mutation. */
 export type ApplicationUserIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
@@ -8809,6 +8885,8 @@ export type Query = Node & {
   applicationStageStatusAlls?: Maybe<ApplicationStageStatusAllsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStatusHistory`. */
   applicationStatusHistories?: Maybe<ApplicationStatusHistoriesConnection>;
+  /** Reads and enables pagination through a set of `ApplicationTriggerState`. */
+  applicationTriggerStates?: Maybe<ApplicationTriggerStatesConnection>;
   /** Reads and enables pagination through a set of `ElementTypePlugin`. */
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
@@ -9056,6 +9134,19 @@ export type QueryApplicationStatusHistoriesArgs = {
   orderBy?: Maybe<Array<ApplicationStatusHistoriesOrderBy>>;
   condition?: Maybe<ApplicationStatusHistoryCondition>;
   filter?: Maybe<ApplicationStatusHistoryFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationTriggerStatesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ApplicationTriggerStatesOrderBy>>;
+  condition?: Maybe<ApplicationTriggerStateCondition>;
+  filter?: Maybe<ApplicationTriggerStateFilter>;
 };
 
 
@@ -17870,6 +17961,12 @@ export type ResolversTypes = {
   ApplicationStageStatusAllsConnection: ResolverTypeWrapper<ApplicationStageStatusAllsConnection>;
   ApplicationStageStatusAll: ResolverTypeWrapper<ApplicationStageStatusAll>;
   ApplicationStageStatusAllsEdge: ResolverTypeWrapper<ApplicationStageStatusAllsEdge>;
+  ApplicationTriggerStatesOrderBy: ApplicationTriggerStatesOrderBy;
+  ApplicationTriggerStateCondition: ApplicationTriggerStateCondition;
+  ApplicationTriggerStateFilter: ApplicationTriggerStateFilter;
+  ApplicationTriggerStatesConnection: ResolverTypeWrapper<ApplicationTriggerStatesConnection>;
+  ApplicationTriggerState: ResolverTypeWrapper<ApplicationTriggerState>;
+  ApplicationTriggerStatesEdge: ResolverTypeWrapper<ApplicationTriggerStatesEdge>;
   ElementTypePluginsOrderBy: ElementTypePluginsOrderBy;
   ElementTypePluginCondition: ElementTypePluginCondition;
   ElementTypePluginFilter: ElementTypePluginFilter;
@@ -18933,6 +19030,11 @@ export type ResolversParentTypes = {
   ApplicationStageStatusAllsConnection: ApplicationStageStatusAllsConnection;
   ApplicationStageStatusAll: ApplicationStageStatusAll;
   ApplicationStageStatusAllsEdge: ApplicationStageStatusAllsEdge;
+  ApplicationTriggerStateCondition: ApplicationTriggerStateCondition;
+  ApplicationTriggerStateFilter: ApplicationTriggerStateFilter;
+  ApplicationTriggerStatesConnection: ApplicationTriggerStatesConnection;
+  ApplicationTriggerState: ApplicationTriggerState;
+  ApplicationTriggerStatesEdge: ApplicationTriggerStatesEdge;
   ElementTypePluginCondition: ElementTypePluginCondition;
   ElementTypePluginFilter: ElementTypePluginFilter;
   ElementTypePluginsConnection: ElementTypePluginsConnection;
@@ -20029,6 +20131,28 @@ export type ApplicationStatusHistoryResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ApplicationTriggerStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationTriggerState'] = ResolversParentTypes['ApplicationTriggerState']> = {
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  applicationTrigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  reviewTrigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationTriggerStatesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationTriggerStatesConnection'] = ResolversParentTypes['ApplicationTriggerStatesConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['ApplicationTriggerState']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ApplicationTriggerStatesEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationTriggerStatesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationTriggerStatesEdge'] = ResolversParentTypes['ApplicationTriggerStatesEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ApplicationTriggerState']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateActionPluginPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateActionPluginPayload'] = ResolversParentTypes['CreateActionPluginPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType>;
@@ -20999,6 +21123,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStageHistories?: Resolver<Maybe<ResolversTypes['ApplicationStageHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageHistoriesArgs, 'orderBy'>>;
   applicationStageStatusAlls?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusAllsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageStatusAllsArgs, 'orderBy'>>;
   applicationStatusHistories?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoriesArgs, 'orderBy'>>;
+  applicationTriggerStates?: Resolver<Maybe<ResolversTypes['ApplicationTriggerStatesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationTriggerStatesArgs, 'orderBy'>>;
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
   files?: Resolver<Maybe<ResolversTypes['FilesConnection']>, ParentType, ContextType, RequireFields<QueryFilesArgs, 'orderBy'>>;
   notifications?: Resolver<Maybe<ResolversTypes['NotificationsConnection']>, ParentType, ContextType, RequireFields<QueryNotificationsArgs, 'orderBy'>>;
@@ -21803,6 +21928,9 @@ export type Resolvers<ContextType = any> = {
   ApplicationStatusHistoriesConnection?: ApplicationStatusHistoriesConnectionResolvers<ContextType>;
   ApplicationStatusHistoriesEdge?: ApplicationStatusHistoriesEdgeResolvers<ContextType>;
   ApplicationStatusHistory?: ApplicationStatusHistoryResolvers<ContextType>;
+  ApplicationTriggerState?: ApplicationTriggerStateResolvers<ContextType>;
+  ApplicationTriggerStatesConnection?: ApplicationTriggerStatesConnectionResolvers<ContextType>;
+  ApplicationTriggerStatesEdge?: ApplicationTriggerStatesEdgeResolvers<ContextType>;
   CreateActionPluginPayload?: CreateActionPluginPayloadResolvers<ContextType>;
   CreateActionQueuePayload?: CreateActionQueuePayloadResolvers<ContextType>;
   CreateApplicationPayload?: CreateApplicationPayloadResolvers<ContextType>;
