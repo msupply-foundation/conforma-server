@@ -78,6 +78,9 @@ class DBConnect {
 
   public addNewStatusHistory = PostgresDB.addNewStatusHistory
 
+  public getUserTemplatePermissions = PostgresDB.getUserTemplatePermissions
+
+  public verifyUser = PostgresDB.verifyUser
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
