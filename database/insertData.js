@@ -791,6 +791,58 @@ const queries = [
       }
     }
   }`,
+  // Non Registered User Permissions
+  `mutation {
+    createUser(
+      input: {
+        user: {
+          email: ""
+          passwordHash: ""
+          username: "nonRegistered"
+          permissionJoinsUsingId: {
+            create: [
+              {
+                permissionNameToPermissionNameId: {
+                  create: {
+                    name: "applyUserRegistration"
+                    templatePermissionsUsingId: { create: [{ templateId: 1 }] }
+                    permissionPolicyToPermissionPolicyId: {
+                      create: { type: APPLY }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        id
+        permissionJoins {
+          nodes {
+            id
+            permissionName {
+              name
+              id
+              permissionPolicy {
+                type
+                id
+              }
+              templatePermissions {
+                nodes {
+                  template {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
 ]
 
 const loopQueries = async () => {
