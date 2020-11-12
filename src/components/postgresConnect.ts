@@ -219,13 +219,15 @@ class PostgresDB {
     }
   }
 
-  public getTriggerPayloadData = async (payload: TriggerPayload) => {
-    const applicationId = await this.getApplicationId(payload.table, payload.record_id)
+  public getApplicationData = async (applicationId: number) => {
     const text = `
-      SELECT template_id,
-      stage_id, stage_number, stage,
-      stage_history_id, stage_history_time_created,
-      status_history_id, status, status_history_time_created
+      SELECT application_id as "applicationId",
+      template_id as "templateId",
+      stage_id as "stageId", stage_number as "stageNumber", stage,
+      stage_history_id as "stageHistoryId",
+      stage_history_time_created as "stageHistoryTimeCreated",
+      status_history_id as "statusHistoryId", status, status_history_time_created as "statusHistoryTimeCreated",
+      user_id as "userId"
       FROM application_stage_status_all
       WHERE application_id = $1
       AND stage_is_current = true
@@ -233,23 +235,24 @@ class PostgresDB {
     `
     const result = await this.query({ text, values: [applicationId] })
     if (result.rows.length > 1) throw new Error('Database inconsistency')
-    const dbOutput = result.rows[0]
-    const applicationData = {
-      applicationId,
-      templateId: dbOutput?.template_id,
-      stageId: dbOutput?.stage_id,
-      stageNumber: dbOutput?.stage_number,
-      stage: dbOutput?.stage,
-      stageHistoryId: dbOutput?.stage_history_id,
-      stageHistoryTimeCreated: dbOutput?.stage_history_time_created,
-      statusHistoryId: dbOutput?.status_history_id,
-      status: dbOutput?.status,
-      statusHistoryTimeCreated: dbOutput?.status_history_time_created,
-    }
-    return { ...payload, ...applicationData }
+    const applicationData = result.rows[0]
+    return applicationData
   }
 
-  public getApplicationId = async (tableName: string, recordId: number) => {
+  public getApplicationResponses = async (applicationId: number) => {
+    const text = `
+    SELECT DISTINCT ON (code) code, value
+    FROM application_response JOIN template_element
+    ON template_element.id = application_response.template_element_id
+    WHERE application_id = $1
+    ORDER BY code, time_created DESC
+    `
+    const result = await this.query({ text, values: [applicationId] })
+    const responses = result.rows
+    return responses
+  }
+
+  public getApplicationIdFromTrigger = async (tableName: string, recordId: number) => {
     let text: string
     switch (tableName) {
       case 'application':
@@ -266,7 +269,10 @@ class PostgresDB {
     return result.rows[0].application_id
   }
 
-  public getTemplateId = async (tableName: string, recordId: number): Promise<number> => {
+  public getTemplateIdFromTrigger = async (
+    tableName: string,
+    recordId: number
+  ): Promise<number> => {
     let text: string
     switch (tableName) {
       case 'application':
@@ -335,6 +341,24 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: Object.values(user) })
       return { userId: result.rows[0].id, success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public getUserData = async (userId: number) => {
+    const text = `
+      SELECT first_name as "firstName",
+      last_name as "lastName",
+      username, date_of_birth as "dateOfBirth",
+      email
+      FROM "user"
+      WHERE id = $1
+    `
+    try {
+      const result = await this.query({ text, values: [userId] })
+      const userData = result.rows[0]
+      return userData
     } catch (err) {
       throw err
     }

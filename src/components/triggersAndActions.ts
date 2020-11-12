@@ -14,6 +14,7 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import DBConnect from './databaseConnect'
 import { actionLibrary } from './pluginsConnect'
 import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
+import { fetchDataFromTrigger } from './triggerFetchData'
 
 const schedule = require('node-schedule')
 
@@ -93,12 +94,11 @@ export const loadScheduledActions = async function (
 export async function processTrigger(payload: TriggerPayload) {
   const { trigger_id, trigger, table, record_id } = payload
 
-  const applicationData: ActionApplicationData = await DBConnect.getTriggerPayloadData(payload)
-
-  if (!applicationData?.templateId)
-    applicationData.templateId = await DBConnect.getTemplateId(table, record_id)
+  const applicationData: ActionApplicationData = await fetchDataFromTrigger(payload)
 
   const templateId = applicationData.templateId
+
+  console.log('ApplicationData', applicationData)
 
   // Get Actions from matching Template
   const result = await DBConnect.getActionsByTemplateId(templateId, trigger)

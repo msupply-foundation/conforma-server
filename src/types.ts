@@ -76,6 +76,13 @@ export interface ActionApplicationData {
   statusHistoryId: number
   status: ApplicationStatus
   statusHistoryTimeCreated: Date
+  userId: number
+  firstName: string
+  lastName: string
+  username: string
+  dateOfBirth: Date
+  email: string
+  responses: BasicObject
 }
 
 export interface ActionPayload {

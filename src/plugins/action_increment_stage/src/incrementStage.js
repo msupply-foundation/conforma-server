@@ -48,9 +48,10 @@ module.exports['incrementStage'] = function (parameters, DBConnect) {
                     _a.label = 1;
                 case 1:
                     _a.trys.push([1, 9, , 10]);
-                    return [4 /*yield*/, DBConnect.getTemplateId('application', applicationId)];
+                    return [4 /*yield*/, DBConnect.getTemplateIdFromTrigger('application', applicationId)];
                 case 2:
                     templateId = _a.sent();
+                    console.log('Getting template Id', templateId);
                     return [4 /*yield*/, DBConnect.getCurrentStageHistory(applicationId)];
                 case 3:
                     currentStageHistory = _a.sent();

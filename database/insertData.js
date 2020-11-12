@@ -201,13 +201,29 @@ const queries = [
                 }
               }
               {
-                actionCode: "createUserFromApp"
+                actionCode: "createUser"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: {
-                  applicationId: {
+                  first_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: [{ value: { property: "responses.Q1" } }]
+                  }
+                  last_name: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q2" } }]
+                  }
+                  username: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q3" } }]
+                  }
+                  password_hash: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q5" } }]
+                  }
+                  email: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q4" } }]
                   }
                 }
               }
