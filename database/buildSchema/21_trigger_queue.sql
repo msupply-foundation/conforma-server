@@ -8,7 +8,6 @@ CREATE TABLE public.trigger_queue (
     "table" varchar,
     record_id int,
     timestamp timestamp,
-    payload jsonb,
     status public.trigger_queue_status,
     log jsonb
 );
@@ -29,7 +28,7 @@ CREATE OR REPLACE FUNCTION public.notify_trigger_queue()
 RETURNS trigger as $trigger_event$
 BEGIN
 PERFORM pg_notify('trigger_notifications', json_build_object(
-	'id', NEW.id,
+	'trigger_id', NEW.id,
 	'trigger', NEW.trigger_type,
 	'table', NEW.table,
 	'record_id', NEW.record_id
