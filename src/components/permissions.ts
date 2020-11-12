@@ -44,7 +44,6 @@ const getUsername = async (jwtToken: string) => {
       console.log('cannot verify JWT in authorisation header')
     }
   }
-  console.log('username', username)
 
   return username
 }

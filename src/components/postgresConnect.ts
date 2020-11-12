@@ -422,7 +422,6 @@ class PostgresDB {
     const text = `select count(*) from "user" where username = $1 and password_hash = $2`
     try {
       const result = await this.query({ text, values: [username, passwordHash] })
-      console.log(result.rows)
       return result.rows[0].count != 0
     } catch (err) {
       console.log(err.message)
