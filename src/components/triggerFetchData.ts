@@ -9,7 +9,9 @@ export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
     payload.record_id
   )
 
-  const applicationData = await DBConnect.getApplicationData(applicationId)
+  const applicationResult = await DBConnect.getApplicationData(applicationId)
+
+  const applicationData = applicationResult ? applicationResult : { applicationId }
 
   if (!applicationData?.templateId)
     applicationData.templateId = await DBConnect.getTemplateIdFromTrigger(
