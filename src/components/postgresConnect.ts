@@ -402,11 +402,11 @@ class PostgresDB {
         "template".name as "templateName"
       from 
         "user"
-      right join permission_join on "user".id = permission_join.user_id
-      right join permission_name on permission_name.id = permission_join.permission_name_id
-      right join template_permission on template_permission.permission_name_id = permission_name.id
-      right join permission_policy on permission_policy.id = permission_name.permission_policy_id
-      right join "template" on "template".id = template_permission.template_id
+      join permission_join on "user".id = permission_join.user_id
+      join permission_name on permission_name.id = permission_join.permission_name_id
+      join template_permission on template_permission.permission_name_id = permission_name.id
+      join permission_policy on permission_policy.id = permission_name.permission_policy_id
+      join "template" on "template".id = template_permission.template_id
       where "user".username = $1
     `
     try {

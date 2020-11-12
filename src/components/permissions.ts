@@ -15,11 +15,12 @@ interface TemplatePermissions {
 }
 
 const verifyPromise: any = promisify(verify)
+const signPromise: any = promisify(sign)
 
 const routeUserPermissions = async (request: any, reply: any) => {
-  return reply.send(
-    await getUserPermissions((request?.headers?.authorization || '').replace('Bearer ', ''))
-  )
+  const token = (request?.headers?.authorization || '').replace('Bearer ', '')
+  const username = await getUsername(token)
+  return reply.send(await getUserPermissions(username))
 }
 
 const routeLogin = async (request: any, reply: any) => {
@@ -30,7 +31,7 @@ const routeLogin = async (request: any, reply: any) => {
 
   return reply.send({
     success: true,
-    ...(await getUserPermissions((request?.headers?.authorization || '').replace('Bearer ', ''))),
+    ...(await getUserPermissions(username)),
   })
 }
 
@@ -59,18 +60,17 @@ const getTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) =>
   return templatePermissions
 }
 
-const getJWT = (templatePermissionRows: Array<PermissionRow>) => {
-  return 'not implemented'
+const getJWT = async (username: String, templatePermissionRows: Array<PermissionRow>) => {
+  return await signPromise({ username }, config.jwtSecret) // TODO gaphile/pg row lvl, and token
 }
 
-const getUserPermissions = async (jwtToken: string) => {
-  const username = await getUsername(jwtToken)
+const getUserPermissions = async (username: string) => {
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
 
   return {
     username,
     templatePermissions: getTemplatePermissions(templatePermissionRows),
-    JWT: getJWT(templatePermissionRows),
+    JWT: await getJWT(username, templatePermissionRows),
   }
 }
 
