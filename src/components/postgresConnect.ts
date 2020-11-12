@@ -219,13 +219,13 @@ class PostgresDB {
     }
   }
 
-  public getTriggerPayloadData = async (payload: TriggerPayload) => {
-    const applicationId = await this.getApplicationId(payload.table, payload.record_id)
+  public getApplicationData = async (applicationId: number) => {
     const text = `
       SELECT template_id,
-      stage_id, stage_number, stage,
-      stage_history_id, stage_history_time_created,
-      status_history_id, status, status_history_time_created
+      stage_id as "stageId", stage_number as "stageNumber", stage,
+      stage_history_id as "stageHistoryId",
+      stage_history_time_created as "stageHistoryTimeCreated",
+      status_history_id as "statusHistoryId", status, status_history_time_created as "statusHistoryTimeCreated"
       FROM application_stage_status_all
       WHERE application_id = $1
       AND stage_is_current = true
@@ -233,23 +233,11 @@ class PostgresDB {
     `
     const result = await this.query({ text, values: [applicationId] })
     if (result.rows.length > 1) throw new Error('Database inconsistency')
-    const dbOutput = result.rows[0]
-    const applicationData = {
-      applicationId,
-      templateId: dbOutput?.template_id,
-      stageId: dbOutput?.stage_id,
-      stageNumber: dbOutput?.stage_number,
-      stage: dbOutput?.stage,
-      stageHistoryId: dbOutput?.stage_history_id,
-      stageHistoryTimeCreated: dbOutput?.stage_history_time_created,
-      statusHistoryId: dbOutput?.status_history_id,
-      status: dbOutput?.status,
-      statusHistoryTimeCreated: dbOutput?.status_history_time_created,
-    }
-    return { ...payload, ...applicationData }
+    const applicationData = result.rows[0]
+    return applicationData
   }
 
-  public getApplicationId = async (tableName: string, recordId: number) => {
+  public getApplicationIdFromTrigger = async (tableName: string, recordId: number) => {
     let text: string
     switch (tableName) {
       case 'application':
@@ -266,7 +254,10 @@ class PostgresDB {
     return result.rows[0].application_id
   }
 
-  public getTemplateId = async (tableName: string, recordId: number): Promise<number> => {
+  public getTemplateIdFromTrigger = async (
+    tableName: string,
+    recordId: number
+  ): Promise<number> => {
     let text: string
     switch (tableName) {
       case 'application':

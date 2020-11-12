@@ -48,16 +48,19 @@ class DBConnect {
 
   public setApplicationOutcome = PostgresDB.setApplicationOutcome
 
-  public getTriggerPayloadData = PostgresDB.getTriggerPayloadData
+  public getApplicationData = PostgresDB.getApplicationData
 
-  public getApplicationId = PostgresDB.getApplicationId
+  public getApplicationIdFromTrigger = PostgresDB.getApplicationIdFromTrigger
 
-  public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
+  public getTemplateIdFromTrigger = async (
+    tableName: string,
+    record_id: number
+  ): Promise<number> => {
     let templateId: number
     switch (tableName) {
       case 'application':
       case 'review':
-        templateId = await PostgresDB.getTemplateId(tableName, record_id)
+        templateId = await PostgresDB.getTemplateIdFromTrigger(tableName, record_id)
         break
       // TO-DO: Implement these queries once we have more data in database
       // -- will probably be easier using GraphQL
