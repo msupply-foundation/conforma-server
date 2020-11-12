@@ -234,7 +234,6 @@ class PostgresDB {
       AND status_is_current = true
     `
     const result = await this.query({ text, values: [applicationId] })
-    if (result.rows.length > 1) throw new Error('Database inconsistency')
     const applicationData = result.rows[0]
     return applicationData
   }
