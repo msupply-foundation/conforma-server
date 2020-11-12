@@ -97,9 +97,17 @@ There are two local state objects passed into the expression evaluator (which ca
   - `stageHistoryTimeCreated`
   - `statusHistoryId`
   - `status`: (name of current status)
-  - `statusHistoryTimeCreated`  
-    _Note: more info, such as user/org data and review state will probably be added to this object._  
-    Because this data is only generated once per trigger, it will not be updated between sequential Actions. i.e if the application status is "Draft", then that value will be still be exposed to subsequent Actions in a sequence even if the first one changes the status to "Submitted" (In which case the `cumulativeOutput` object would be useful).
+  - `statusHistoryTimeCreated`
+  - `userId`
+  - `firstName`
+  - `lastName`
+  - `username`
+  - `dateOfBirth`
+  - `email`
+  - `responses` : `{ [questionCode] : value }` (current application responses by code)
+
+    _Note: more info, such as org data and review state will probably be added to this object._  
+     ~~Because this data is only generated once per trigger, it will not be updated between sequential Actions. i.e if the application status is "Draft", then that value will be still be exposed to subsequent Actions in a sequence even if the first one changes the status to "Submitted" (In which case the `cumulativeOutput` object would be useful).~~ **TO BE UPDATED SOON** - will re-fetch between Actions.
 
 - **cumulativeOutput**: When sequential Actions run, the output from each one is collected into this combined object and passed to subsequent Actions in the sequence. So the final Action in a sequence will have access to the output properties from _all_ previous Actions. Note, however, this object is **not** available to the **condition** evaluator, since all Action conditions are evaluated before the Action sequence is run.
 

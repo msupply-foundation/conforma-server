@@ -2,6 +2,7 @@ import { TriggerPayload } from '../types'
 import DBConnect from './databaseConnect'
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 
+// Add more data (such as org/review, etc.) here as required
 export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
   const applicationId = await DBConnect.getApplicationIdFromTrigger(
     payload.table,
