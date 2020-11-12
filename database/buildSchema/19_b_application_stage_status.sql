@@ -4,6 +4,7 @@ CREATE OR REPLACE VIEW public.application_stage_status_all AS
 	ts.template_id,
 	serial,
 	name,
+	user_id,
 	stage_id,
 	number as stage_number,
 	title as stage,

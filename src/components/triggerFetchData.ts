@@ -1,19 +1,6 @@
-import path from 'path'
-import { getAppRootDir } from './utilityFunctions'
-import * as config from '../config.json'
-import {
-  ActionLibrary,
-  ActionInTemplate,
-  TriggerPayload,
-  ActionPayload,
-  ActionSequential,
-  ActionQueueExecutePayload,
-  ActionApplicationData,
-} from '../types'
-import evaluateExpression from '@openmsupply/expression-evaluator'
+import { TriggerPayload } from '../types'
 import DBConnect from './databaseConnect'
-import { actionLibrary } from './pluginsConnect'
-import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 
 export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
   const applicationId = await DBConnect.getApplicationIdFromTrigger(
@@ -29,10 +16,16 @@ export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
       payload.record_id
     )
 
-  // const userData = applicationData?.userId ? await getUserData(userId) : null
+  const userData = applicationData?.userId
+    ? await DBConnect.getUserData(applicationData?.userId)
+    : null
 
-  // const responseData = await getApplicationResponses(applicationId)
+  const responses = await DBConnect.getApplicationResponses(applicationId)
 
-  return { ...payload, ...applicationData }
-  // ...userData, ...responseData }
+  const responseData: BasicObject = {}
+  for (const response of responses) {
+    responseData[response.code] = response.value
+  }
+
+  return { ...payload, ...applicationData, ...userData, responses: responseData }
 }

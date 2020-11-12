@@ -85,6 +85,10 @@ class DBConnect {
 
   public addNewStatusHistory = PostgresDB.addNewStatusHistory
 
+  public getUserData = PostgresDB.getUserData
+
+  public getApplicationResponses = PostgresDB.getApplicationResponses
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
