@@ -13,7 +13,12 @@ module.exports['incrementStage'] = async function (
   console.log(`Incrementing the Stage for Application ${applicationId}...`)
 
   try {
-    const templateId: number = await DBConnect.getTemplateId('application', applicationId)
+    const templateId: number = await DBConnect.getTemplateIdFromTrigger(
+      'application',
+      applicationId
+    )
+
+    console.log('Getting template Id', templateId)
 
     const currentStageHistory = await DBConnect.getCurrentStageHistory(applicationId)
 

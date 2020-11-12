@@ -15,6 +15,7 @@ import {
   FileGetPayload,
   TriggerQueueUpdatePayload,
   ActionSequential,
+  TriggerPayload,
 } from '../types'
 import { ApplicationOutcome, Trigger, User } from '../generated/graphql'
 
@@ -113,7 +114,7 @@ class PostgresDB {
     payload: ActionQueueGetPayload = { status: 'Scheduled' }
   ): Promise<ActionQueue[]> => {
     const text =
-      'SELECT id, action_code, trigger_payload, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
+      'SELECT id, action_code, application_data, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
     try {
       const result = await this.query({
         text,
@@ -127,7 +128,7 @@ class PostgresDB {
 
   public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
     const text =
-      "SELECT id, action_code, trigger_payload, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
+      "SELECT id, action_code, application_data, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
     try {
       const result = await this.query({
         text,
@@ -218,7 +219,59 @@ class PostgresDB {
     }
   }
 
-  public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
+  public getApplicationData = async (applicationId: number) => {
+    const text = `
+      SELECT application_id as "applicationId",
+      template_id as "templateId",
+      stage_id as "stageId", stage_number as "stageNumber", stage,
+      stage_history_id as "stageHistoryId",
+      stage_history_time_created as "stageHistoryTimeCreated",
+      status_history_id as "statusHistoryId", status, status_history_time_created as "statusHistoryTimeCreated",
+      user_id as "userId"
+      FROM application_stage_status_all
+      WHERE application_id = $1
+      AND stage_is_current = true
+      AND status_is_current = true
+    `
+    const result = await this.query({ text, values: [applicationId] })
+    const applicationData = result.rows[0]
+    return applicationData
+  }
+
+  public getApplicationResponses = async (applicationId: number) => {
+    const text = `
+    SELECT DISTINCT ON (code) code, value
+    FROM application_response JOIN template_element
+    ON template_element.id = application_response.template_element_id
+    WHERE application_id = $1
+    ORDER BY code, time_created DESC
+    `
+    const result = await this.query({ text, values: [applicationId] })
+    const responses = result.rows
+    return responses
+  }
+
+  public getApplicationIdFromTrigger = async (tableName: string, recordId: number) => {
+    let text: string
+    switch (tableName) {
+      case 'application':
+        return recordId
+      case 'review':
+        // NB: Check the rest of these queries properly once we have data in the tables
+        text = 'SELECT application_id FROM review WHERE id = $1'
+        break
+      // To-Do: queries for other trigger tables
+      default:
+        throw new Error('Table name not valid')
+    }
+    const result = await this.query({ text, values: [recordId] })
+    return result.rows[0].application_id
+  }
+
+  public getTemplateIdFromTrigger = async (
+    tableName: string,
+    recordId: number
+  ): Promise<number> => {
     let text: string
     switch (tableName) {
       case 'application':
@@ -232,7 +285,7 @@ class PostgresDB {
       default:
         throw new Error('Table name not valid')
     }
-    const result = await this.query({ text, values: [record_id] })
+    const result = await this.query({ text, values: [recordId] })
     return result.rows[0].template_id
   }
 
@@ -287,6 +340,24 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: Object.values(user) })
       return { userId: result.rows[0].id, success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public getUserData = async (userId: number) => {
+    const text = `
+      SELECT first_name as "firstName",
+      last_name as "lastName",
+      username, date_of_birth as "dateOfBirth",
+      email
+      FROM "user"
+      WHERE id = $1
+    `
+    try {
+      const result = await this.query({ text, values: [userId] })
+      const userData = result.rows[0]
+      return userData
     } catch (err) {
       throw err
     }

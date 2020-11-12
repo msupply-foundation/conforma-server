@@ -182,18 +182,16 @@ const queries = [
             create: [
               {
                 actionCode: "incrementStage"
-                condition: { value: true }
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: [{ value: { property: "applicationId" } }]
                   }
                 }
               }
               {
                 actionCode: "cLog"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
                 parameterQueries: {
@@ -203,46 +201,58 @@ const queries = [
                 }
               }
               {
-                actionCode: "createUserFromApp"
-                condition: { value: true }
+                actionCode: "createUser"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: {
-                  applicationId: {
+                  first_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: [{ value: { property: "responses.Q1" } }]
+                  }
+                  last_name: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q2" } }]
+                  }
+                  username: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q3" } }]
+                  }
+                  password_hash: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q5" } }]
+                  }
+                  email: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q4" } }]
                   }
                 }
               }
               {
                 actionCode: "changeStatus"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: [{ value: { property: "applicationId" } }]
                   }
                   newStatus: { value: "Completed" }
                 }
               }
               {
                 actionCode: "changeOutcome"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 4
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: [{ value: { property: "applicationId" } }]
                   }
                   newOutcome: { value: "Approved" }
                 }
               }
               {
                 actionCode: "cLog"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 5
                 parameterQueries: {
@@ -368,7 +378,6 @@ const queries = [
               }
               {
                 actionCode: "cLog"
-                condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
                   message: { value: "Company Registration submission" }
@@ -391,28 +400,30 @@ const queries = [
                 sequence: 1
                 parameterQueries: {
                   applicationId: {
-                    type: "number"
-                    operator: "pgSQL"
-                    children: [
-                      { value: "SELECT application_id FROM review WHERE id = $1" }
-                      {
-                        operator: "objectProperties"
-                        children: [{ value: { property: "record_id" } }]
-                      }
-                    ]
+                    operator: "objectProperties"
+                    children: [{ value: { property: "applicationId" } }]
                   }
                 }
               }
               {
                 actionCode: "changeStatus"
                 trigger: ON_REVIEW_SAVE
-                condition: true
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: [{ value: { property: "status" } }]
+                    }
+                    { value: "Re-submitted" }
+                  ]
+                }
                 sequence: 2
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
                     children: [
-                      { value: { objectIndex: 1, property: "applicationId" } }
+                      { value: { property: "applicationId" } }
                     ]
                   }
                   newStatus: { value: "Submitted" }
