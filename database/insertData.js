@@ -47,7 +47,35 @@ const queries = [
                       title: "Last Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Last Name" }
+                      parameters: {
+                        label: "Last Name"
+                        validation: {
+                          operator: "AND"
+                          children: [
+                            {
+                              operator: "!="
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: [{ value: { property: "Q1" } }]
+                                }
+                                { value: null }
+                              ]
+                            }
+                            {
+                              operator: "!="
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: [{ value: { property: "Q1" } }]
+                                }
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                        validationMessage: "You need a first name."
+                      }
                     }
                     {
                       code: "Q3"
@@ -55,6 +83,16 @@ const queries = [
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "Q1" } }]
+                          }
+                          { value: "" }
+                        ]
+                      }
                       parameters: {
                         label: "Select a username"
                         validation: {
@@ -62,9 +100,9 @@ const queries = [
                           children: [
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q3" } }]
+                              children: [{ value: { property: "thisResponse" } }]
                             }
-                            "^[A-z0-9]{3,}$"
+                            { value: "^[A-z0-9]{3,}$" }
                           ]
                         }
                         validationMessage: "Username must be at least 3 characters long and not contain spaces"
@@ -83,9 +121,11 @@ const queries = [
                           children: [
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q4" } }]
+                              children: [{ value: { property: "thisResponse" } }]
                             }
-                            "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                            {
+                              value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                            }
                           ]
                         }
                         validationMessage: "Not a valid email address"
@@ -100,19 +140,19 @@ const queries = [
                       parameters: {
                         label: "Email"
                         maskedInput: true
+                        placeholder: "Password must be at least 8 chars long"
                         validation: {
                           operator: "REGEX"
                           children: [
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q5" } }]
+                              children: [{ value: { property: "thisResponse" } }]
                             }
-                            "^[\\\\S]{8,}$"
+                            { value: "^[\\\\S]{8,}$" }
                           ]
                         }
                         validationMessage: "Password must be at least 8 characters"
-                      }
-  
+                      } 
                       # Validation:Currently just checks 8 chars, needs more complexity
                     }
                     {
