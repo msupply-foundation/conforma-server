@@ -207,23 +207,23 @@ const queries = [
                 parameterQueries: {
                   first_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q1" } }]
+                    children: [{ value: { property: "responses.Q1.text" } }]
                   }
                   last_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q2" } }]
+                    children: [{ value: { property: "responses.Q2.text" } }]
                   }
                   username: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q3" } }]
+                    children: [{ value: { property: "responses.Q3.text" } }]
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q5" } }]
+                    children: [{ value: { property: "responses.Q5.text" } }]
                   }
                   email: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q4" } }]
+                    children: [{ value: { property: "responses.Q4.text" } }]
                   }
                 }
               }
