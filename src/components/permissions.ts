@@ -7,7 +7,7 @@ type PermissionType = 'Apply' | 'Review' | 'Assign'
 
 interface PermissionRow {
   permissionType: PermissionType
-  templateName: String
+  templateCode: string
 }
 
 interface TemplatePermissions {
@@ -51,9 +51,9 @@ const getUsername = async (jwtToken: string) => {
 const getTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) => {
   const templatePermissions: TemplatePermissions = {} // TODO add type
 
-  templatePermissionRows.forEach(({ permissionType, templateName }: any) => {
-    if (!templatePermissions[templateName]) templatePermissions[templateName] = []
-    templatePermissions[templateName].push(permissionType)
+  templatePermissionRows.forEach(({ permissionType, templateCode }: PermissionRow) => {
+    if (!templatePermissions[templateCode]) templatePermissions[templateCode] = []
+    templatePermissions[templateCode].push(permissionType)
   })
 
   return templatePermissions
