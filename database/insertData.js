@@ -55,9 +55,20 @@ const queries = [
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Select a username" }
-                      validation: { value: true } #Need to write this query
-                      # Validation: Must be unique, Alphanumeric chars only, no spaces
+                      parameters: {
+                        label: "Select a username"
+                        validation: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q3" } }]
+                            }
+                            "^[A-z0-9]{3,}$"
+                          ]
+                        }
+                        validationMessage: "Username must be at least 3 characters long and not contain spaces"
+                      }
                     }
                     {
                       code: "Q4"
@@ -65,9 +76,20 @@ const queries = [
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Email" }
-                      validation: { value: true } #Need to write this query
-                      # Validation: Email REGEX check, must be unique in system
+                      parameters: {
+                        label: "Email"
+                        validation: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q4" } }]
+                            }
+                            "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                          ]
+                        }
+                        validationMessage: "Not a valid email address"
+                      }
                     }
                     {
                       code: "Q5"
@@ -75,9 +97,23 @@ const queries = [
                       title: "Password"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Email", maskedInput: true }
-                      validation: { value: true } #Need to write this query
-                      # Validation: At least 8 chars, must contain at least one letter and one number (REGEX)
+                      parameters: {
+                        label: "Email"
+                        maskedInput: true
+                        validation: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q5" } }]
+                            }
+                            "^[\\\\S]{8,}$"
+                          ]
+                        }
+                        validationMessage: "Password must be at least 8 characters"
+                      }
+  
+                      # Validation:Currently just checks 8 chars, needs more complexity
                     }
                     {
                       code: "PB1"
@@ -337,7 +373,6 @@ const queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: { label: "Unique Name for Company" }
-                      validation: { value: true }
                       # Validation TO-DO: must be unique in system
                     }
                     {
