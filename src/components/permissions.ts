@@ -2,17 +2,17 @@ import databaseConnect from './databaseConnect'
 import config from '../config.json'
 import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
+import { PermissionPolicyType } from '../generated/graphql'
 
-// TODO use generated types
-type PermissionType = 'Apply' | 'Review' | 'Assign'
+type PermissionTypes = keyof typeof PermissionPolicyType
 
 interface PermissionRow {
-  permissionType: PermissionType
+  permissionType: PermissionTypes
   templateName: String
 }
 
 interface TemplatePermissions {
-  [index: string]: Array<PermissionType>
+  [index: string]: Array<PermissionTypes>
 }
 
 const verifyPromise: any = promisify(verify)
