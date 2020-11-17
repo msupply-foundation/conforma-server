@@ -14,6 +14,4 @@ CREATE TABLE public.template_element (
     is_required jsonb DEFAULT '{"value":true}'::jsonb,
     is_editable jsonb DEFAULT '{"value":true}'::jsonb,
     parameters jsonb
---     validation jsonb DEFAULT '{"value":true}'::jsonb,
---     validation_message varchar
 );
