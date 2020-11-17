@@ -1,6 +1,7 @@
 import fastify from 'fastify'
 import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
+import fastifyCors from 'fastify-cors'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
 import { routeUserPermissions, routeLogin } from './components/permissions'
@@ -28,6 +29,8 @@ const startServer = async () => {
   })
 
   server.register(fastifyMultipart)
+
+  server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
 
   // File download endpoint (get by Database ID)
   server.get('/file', async function (request: any, reply: any) {

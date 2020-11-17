@@ -8,7 +8,7 @@ type PermissionTypes = keyof typeof PermissionPolicyType
 
 interface PermissionRow {
   permissionType: PermissionTypes
-  templateName: String
+  templateCode: string
 }
 
 interface TemplatePermissions {
@@ -62,15 +62,15 @@ const getUserPermissions = async (username: string) => {
 const buildTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) => {
   const templatePermissions: TemplatePermissions = {} // TODO add type
 
-  templatePermissionRows.forEach(({ permissionType, templateName }: any) => {
-    if (!templatePermissions[templateName]) templatePermissions[templateName] = []
-    templatePermissions[templateName].push(permissionType)
+  templatePermissionRows.forEach(({ permissionType, templateCode }: PermissionRow) => {
+    if (!templatePermissions[templateCode]) templatePermissions[templateCode] = []
+    templatePermissions[templateCode].push(permissionType)
   })
 
   return templatePermissions
 }
 
-const getJWT = async (username: String, templatePermissionRows: Array<PermissionRow>) => {
+const getJWT = async (username: string, templatePermissionRows: Array<PermissionRow>) => {
   return await signPromise({ username }, config.jwtSecret) // TODO gaphile/pg row lvl, and token
 }
 

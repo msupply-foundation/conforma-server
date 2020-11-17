@@ -470,7 +470,7 @@ class PostgresDB {
     const text = `
       select 
         permission_policy.type as "permissionType", 
-        "template".name as "templateName"
+        "template".code as "templateCode"
       from 
         "user"
       join permission_join on "user".id = permission_join.user_id
