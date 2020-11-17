@@ -89,6 +89,10 @@ class DBConnect {
 
   public getApplicationResponses = PostgresDB.getApplicationResponses
 
+  public getUserTemplatePermissions = PostgresDB.getUserTemplatePermissions
+
+  public verifyUser = PostgresDB.verifyUser
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery

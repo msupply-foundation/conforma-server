@@ -3,6 +3,7 @@ import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
+import { routeUserPermissions, routeLogin } from './components/permissions'
 import {
   saveFiles,
   getFilename,
@@ -34,6 +35,9 @@ const startServer = async () => {
     // TO-DO Check for permission to access file
     return reply.sendFile(filename)
   })
+
+  server.get('/userPermissions', routeUserPermissions)
+  server.post('/login', routeLogin)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {

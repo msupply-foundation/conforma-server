@@ -465,6 +465,40 @@ class PostgresDB {
       throw err
     }
   }
+
+  public getUserTemplatePermissions = async (username: string) => {
+    const text = `
+      select 
+        permission_policy.type as "permissionType", 
+        "template".name as "templateName"
+      from 
+        "user"
+      join permission_join on "user".id = permission_join.user_id
+      join permission_name on permission_name.id = permission_join.permission_name_id
+      join template_permission on template_permission.permission_name_id = permission_name.id
+      join permission_policy on permission_policy.id = permission_name.permission_policy_id
+      join "template" on "template".id = template_permission.template_id
+      where "user".username = $1
+    `
+    try {
+      const result = await this.query({ text, values: [username] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public verifyUser = async (username: string, passwordHash: string) => {
+    const text = `select count(*) from "user" where username = $1 and password_hash = $2`
+    try {
+      const result = await this.query({ text, values: [username, passwordHash] })
+      return result.rows[0].count != 0
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
 }
 
 const postgressDBInstance = PostgresDB.Instance
