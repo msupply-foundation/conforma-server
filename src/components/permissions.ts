@@ -3,6 +3,7 @@ import config from '../config.json'
 import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
 
+// TODO use generated types
 type PermissionType = 'Apply' | 'Review' | 'Assign'
 
 interface PermissionRow {
