@@ -48,7 +48,17 @@ const getUsername = async (jwtToken: string) => {
   return username
 }
 
-const getTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) => {
+const getUserPermissions = async (username: string) => {
+  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
+
+  return {
+    username,
+    templatePermissions: buildTemplatePermissions(templatePermissionRows),
+    JWT: await getJWT(username, templatePermissionRows),
+  }
+}
+
+const buildTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) => {
   const templatePermissions: TemplatePermissions = {} // TODO add type
 
   templatePermissionRows.forEach(({ permissionType, templateName }: any) => {
@@ -61,16 +71,6 @@ const getTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) =>
 
 const getJWT = async (username: String, templatePermissionRows: Array<PermissionRow>) => {
   return await signPromise({ username }, config.jwtSecret) // TODO gaphile/pg row lvl, and token
-}
-
-const getUserPermissions = async (username: string) => {
-  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
-
-  return {
-    username,
-    templatePermissions: getTemplatePermissions(templatePermissionRows),
-    JWT: await getJWT(username, templatePermissionRows),
-  }
 }
 
 export { routeUserPermissions, routeLogin }
