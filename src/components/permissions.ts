@@ -2,16 +2,17 @@ import databaseConnect from './databaseConnect'
 import config from '../config.json'
 import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
+import { PermissionPolicyType } from '../generated/graphql'
 
-type PermissionType = 'Apply' | 'Review' | 'Assign'
+type PermissionTypes = keyof typeof PermissionPolicyType
 
 interface PermissionRow {
-  permissionType: PermissionType
-  templateCode: string
+  permissionType: PermissionTypes
+  templateName: String
 }
 
 interface TemplatePermissions {
-  [index: string]: Array<PermissionType>
+  [index: string]: Array<PermissionTypes>
 }
 
 const verifyPromise: any = promisify(verify)
@@ -48,7 +49,17 @@ const getUsername = async (jwtToken: string) => {
   return username
 }
 
-const getTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) => {
+const getUserPermissions = async (username: string) => {
+  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
+
+  return {
+    username,
+    templatePermissions: buildTemplatePermissions(templatePermissionRows),
+    JWT: await getJWT(username, templatePermissionRows),
+  }
+}
+
+const buildTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) => {
   const templatePermissions: TemplatePermissions = {} // TODO add type
 
   templatePermissionRows.forEach(({ permissionType, templateCode }: PermissionRow) => {
@@ -61,16 +72,6 @@ const getTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) =>
 
 const getJWT = async (username: String, templatePermissionRows: Array<PermissionRow>) => {
   return await signPromise({ username }, config.jwtSecret) // TODO gaphile/pg row lvl, and token
-}
-
-const getUserPermissions = async (username: string) => {
-  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
-
-  return {
-    username,
-    templatePermissions: getTemplatePermissions(templatePermissionRows),
-    JWT: await getJWT(username, templatePermissionRows),
-  }
 }
 
 export { routeUserPermissions, routeLogin }
