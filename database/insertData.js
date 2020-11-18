@@ -143,7 +143,7 @@ const queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
-                        label: "Email"
+                        label: "Password"
                         maskedInput: true
                         placeholder: "Password must be at least 8 chars long"
                         validation: {
