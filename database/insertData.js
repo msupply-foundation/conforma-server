@@ -12,7 +12,6 @@ const queries = [
         template: {
           code: "UserRego1"
           name: "User Registration"
-          isLinear: true 
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
