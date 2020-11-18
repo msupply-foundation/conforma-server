@@ -492,6 +492,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -2705,6 +2706,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -12017,6 +12019,7 @@ export type Template = Node & {
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   /** Reads and enables pagination through a set of `TemplateStage`. */
@@ -12327,6 +12330,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -12348,6 +12352,8 @@ export type TemplateCondition = {
   name?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isLinear` field. */
+  isLinear?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<TemplateStatus>;
   /** Checks for equality with the object’s `versionTimestamp` field. */
@@ -12729,6 +12735,8 @@ export type TemplateFilter = {
   name?: Maybe<StringFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
+  /** Filter by the object’s `isLinear` field. */
+  isLinear?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<TemplateStatusFilter>;
   /** Filter by the object’s `versionTimestamp` field. */
@@ -12770,6 +12778,7 @@ export type TemplateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -12887,6 +12896,7 @@ export type TemplatePatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13185,6 +13195,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13579,6 +13590,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -13659,6 +13671,8 @@ export enum TemplatesOrderBy {
   NameDesc = 'NAME_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
+  IsLinearAsc = 'IS_LINEAR_ASC',
+  IsLinearDesc = 'IS_LINEAR_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   VersionTimestampAsc = 'VERSION_TIMESTAMP_ASC',
@@ -13876,6 +13890,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -16207,6 +16222,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -16222,6 +16238,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -16237,6 +16254,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -16252,6 +16270,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -16267,6 +16286,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -16282,6 +16302,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
   status?: Maybe<TemplateStatus>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -17772,13 +17793,13 @@ export type ResolversTypes = {
   TriggerQueueStatus: TriggerQueueStatus;
   TriggerQueueToManyActionQueueFilter: TriggerQueueToManyActionQueueFilter;
   TemplateFilter: TemplateFilter;
+  BooleanFilter: BooleanFilter;
   TemplateStatusFilter: TemplateStatusFilter;
   TemplateStatus: TemplateStatus;
   TemplateToManyTemplateStageFilter: TemplateToManyTemplateStageFilter;
   TemplateStageFilter: TemplateStageFilter;
   TemplateStageToManyApplicationStageHistoryFilter: TemplateStageToManyApplicationStageHistoryFilter;
   ApplicationStageHistoryFilter: ApplicationStageHistoryFilter;
-  BooleanFilter: BooleanFilter;
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
   ApplicationStatusHistoryFilter: ApplicationStatusHistoryFilter;
   ApplicationStatusFilter: ApplicationStatusFilter;
@@ -18869,12 +18890,12 @@ export type ResolversParentTypes = {
   TriggerQueueStatusFilter: TriggerQueueStatusFilter;
   TriggerQueueToManyActionQueueFilter: TriggerQueueToManyActionQueueFilter;
   TemplateFilter: TemplateFilter;
+  BooleanFilter: BooleanFilter;
   TemplateStatusFilter: TemplateStatusFilter;
   TemplateToManyTemplateStageFilter: TemplateToManyTemplateStageFilter;
   TemplateStageFilter: TemplateStageFilter;
   TemplateStageToManyApplicationStageHistoryFilter: TemplateStageToManyApplicationStageHistoryFilter;
   ApplicationStageHistoryFilter: ApplicationStageHistoryFilter;
-  BooleanFilter: BooleanFilter;
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
   ApplicationStatusHistoryFilter: ApplicationStatusHistoryFilter;
   ApplicationStatusFilter: ApplicationStatusFilter;
@@ -21385,6 +21406,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isLinear?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['TemplateStatus']>, ParentType, ContextType>;
   versionTimestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   templateStages?: Resolver<ResolversTypes['TemplateStagesConnection'], ParentType, ContextType, RequireFields<TemplateTemplateStagesArgs, 'orderBy'>>;

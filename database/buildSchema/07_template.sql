@@ -6,6 +6,7 @@ CREATE TABLE public.template (
     id serial primary key,
     name varchar,
 	code varchar NOT NULL,
+    is_linear boolean,
     status public.template_status,
     version_timestamp timestamp   
 );
