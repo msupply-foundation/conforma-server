@@ -171,7 +171,11 @@ const queries = [
                       category: QUESTION
                       parameters: {
                         label: "Select Importer"
-                        options: ["Importer A", "Importer B", "Importer C"]
+                        options: [
+                          "Importer A",
+                          "Importer B",
+                          "Importer C"
+                        ]
                       }
                       isRequired: false
                     }
@@ -352,14 +356,61 @@ const queries = [
                       category: QUESTION
                       parameters: {
                         label: "Select type of activity"
-                        options: ["Manufacturer", "Importer", "Producer"]
+                        options: [
+                          "Manufacturer",
+                          "Importer",
+                          "Producer"
+                        ]
                       }
                     }
                   ]
                 }
               }
-              { code: "S2", title: "Section 2", index: 1 }
-              { code: "S3", title: "Section 3", index: 2 }
+              { 
+                code: "S2"
+                title: "Section 2"
+                index: 1
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "Q3"
+                      index: 0
+                      title: "Organisation Street"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Start typing the company street" }
+                      validation: { value: true }
+                      isRequired: false
+                    }
+                  ]
+                }
+              }
+              { 
+                code: "S3"
+                title: "Section 3"
+                index: 2
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "Q4"
+                      index: 0
+                      title: "Organisation Size"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: { 
+                        label: "What is the size of the organization"
+                        options: [
+                          "Small",
+                          "Medium",
+                          "Large"
+                        ]
+                      }
+                      validation: { value: true }
+                      isRequired: false
+                    }
+                  ]
+                }
+              }
             ]
           }
           templateStagesUsingId: {
