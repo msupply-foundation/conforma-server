@@ -96,16 +96,21 @@ const queries = [
                       parameters: {
                         label: "Select a username"
                         validation: {
-                          operator: "REGEX"
+                          operator: "API"
                           children: [
+                            { value: "http://localhost:8080/check-unique" }
+                            { value: ["type", "value"] }
+                            { value: "username" }
                             {
                               operator: "objectProperties"
                               children: [{ value: { property: "thisResponse" } }]
                             }
-                            { value: "^[A-z0-9]{3,}$" }
+                            {
+                              value: "unique"
+                            }
                           ]
                         }
-                        validationMessage: "Username must be at least 3 characters long and not contain spaces"
+                        validationMessage: "Username must be unique"
                       }
                     }
                     {
