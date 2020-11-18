@@ -47,7 +47,35 @@ const queries = [
                       title: "Last Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Last Name" }
+                      parameters: {
+                        label: "Last Name"
+                        validation: {
+                          operator: "AND"
+                          children: [
+                            {
+                              operator: "!="
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: [{ value: { property: "Q1" } }]
+                                }
+                                { value: null }
+                              ]
+                            }
+                            {
+                              operator: "!="
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: [{ value: { property: "Q1" } }]
+                                }
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                        validationMessage: "You need a first name."
+                      }
                     }
                     {
                       code: "Q3"
@@ -55,9 +83,35 @@ const queries = [
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Select a username" }
-                      validation: { value: true } #Need to write this query
-                      # Validation: Must be unique, Alphanumeric chars only, no spaces
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "Q1" } }]
+                          }
+                          { value: "" }
+                        ]
+                      }
+                      parameters: {
+                        label: "Select a username"
+                        validation: {
+                          operator: "API"
+                          children: [
+                            { value: "http://localhost:8080/check-unique" }
+                            { value: ["type", "value"] }
+                            { value: "username" }
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "thisResponse" } }]
+                            }
+                            {
+                              value: "unique"
+                            }
+                          ]
+                        }
+                        validationMessage: "Username must be unique"
+                      }
                     }
                     {
                       code: "Q4"
@@ -65,9 +119,22 @@ const queries = [
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Email" }
-                      validation: { value: true } #Need to write this query
-                      # Validation: Email REGEX check, must be unique in system
+                      parameters: {
+                        label: "Email"
+                        validation: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "thisResponse" } }]
+                            }
+                            {
+                              value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                            }
+                          ]
+                        }
+                        validationMessage: "Not a valid email address"
+                      }
                     }
                     {
                       code: "Q5"
@@ -75,9 +142,23 @@ const queries = [
                       title: "Password"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Email", maskedInput: true }
-                      validation: { value: true } #Need to write this query
-                      # Validation: At least 8 chars, must contain at least one letter and one number (REGEX)
+                      parameters: {
+                        label: "Email"
+                        maskedInput: true
+                        placeholder: "Password must be at least 8 chars long"
+                        validation: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "thisResponse" } }]
+                            }
+                            { value: "^[\\\\S]{8,}$" }
+                          ]
+                        }
+                        validationMessage: "Password must be at least 8 characters"
+                      } 
+                      # Validation:Currently just checks 8 chars, needs more complexity
                     }
                     {
                       code: "PB1"
@@ -337,7 +418,6 @@ const queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: { label: "Unique Name for Company" }
-                      validation: { value: true }
                       # Validation TO-DO: must be unique in system
                     }
                     {
