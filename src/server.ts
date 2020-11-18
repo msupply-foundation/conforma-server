@@ -1,8 +1,10 @@
 import fastify from 'fastify'
 import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
+import fastifyCors from 'fastify-cors'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
+import { routeUserPermissions, routeLogin } from './components/permissions'
 import {
   saveFiles,
   getFilename,
@@ -28,12 +30,17 @@ const startServer = async () => {
 
   server.register(fastifyMultipart)
 
+  server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
+
   // File download endpoint (get by Database ID)
   server.get('/file', async function (request: any, reply: any) {
     const filename = await getFilename(request.query.id)
     // TO-DO Check for permission to access file
     return reply.sendFile(filename)
   })
+
+  server.get('/userPermissions', routeUserPermissions)
+  server.post('/login', routeLogin)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {

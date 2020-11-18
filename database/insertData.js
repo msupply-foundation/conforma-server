@@ -877,6 +877,163 @@ const queries = [
       }
     }
   }`,
+  // Non Registered User Permissions
+  `mutation {
+    createUser(
+      input: {
+        user: {
+          email: ""
+          passwordHash: ""
+          username: "nonRegistered"
+          permissionJoinsUsingId: {
+            create: [
+              {
+                permissionNameToPermissionNameId: {
+                  create: {
+                    name: "applyUserRegistration"
+                    templatePermissionsUsingId: { create: [{ templateId: 1 }] }
+                    permissionPolicyToPermissionPolicyId: {
+                      create: { type: APPLY, name: "oneTimeApply" }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        id
+        permissionJoins {
+          nodes {
+            id
+            permissionName {
+              name
+              id
+              permissionPolicy {
+                type
+                id
+              }
+              templatePermissions {
+                nodes {
+                  template {
+                    name
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`, // Registered User Permissions
+  `
+  mutation {
+    createPermissionPolicy(
+      input: {
+        permissionPolicy: {
+          name: "basicApply"
+          permissionNamesUsingId: {
+            create: {
+              name: "applyCompanyRego"
+              templatePermissionsUsingId: { create: { templateId: 2 } }
+              permissionJoinsUsingId: {
+                create: [
+                  { userId: 1 }
+                  { userId: 2 }
+                  { userId: 3 }
+                  { userId: 4 }
+                ]
+              }
+            }
+          }
+          type: APPLY
+        }
+      }
+    ) {
+      clientMutationId
+      permissionPolicy {
+        name
+        type
+        permissionNames {
+          nodes {
+            name
+            id
+            permissionJoins {
+              nodes {
+                id
+                user {
+                  username
+                  id
+                }
+              }
+            }
+          }
+        }
+        id
+      }
+    }
+  }
+`, // Extra user with multiple permissions (apply company rego, review company rego and apply user rego)
+  `
+mutation MyMutation {
+  createUser(
+    input: {
+      user: {
+        username: "userWithMultiplePermissions"
+        passwordHash: "somehashofpassword"
+        permissionJoinsUsingId: {
+          create: [
+            { permissionNameId: 1 }
+            { permissionNameId: 2 }
+            {
+              permissionNameToPermissionNameId: {
+                create: {
+                  name: "reviewCompanyRego"
+                  templatePermissionsUsingId: { create: [{ templateId: 2 }] }
+                  permissionPolicyToPermissionPolicyId: {
+                    create: { type: REVIEW, name: "basicReview" }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ) {
+    user {
+      username
+      id
+      permissionJoins {
+        nodes {
+          id
+          permissionName {
+            id
+            name
+            permissionPolicy {
+              name
+              type
+              id
+            }
+            templatePermissions {
+              nodes {
+                id
+                template {
+                  name
+                  id
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+`,
 ]
 
 const loopQueries = async () => {
