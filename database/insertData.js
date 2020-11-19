@@ -178,6 +178,7 @@ const queries = [
                         label: "What category of organisation do you wish to join"
                         options: ["Manufacturer", "Distributor", "Importer"]
                       }
+                      isRequired: false
                     }
                     {
                       code: "Q7"
@@ -230,6 +231,7 @@ const queries = [
                           "Distributor C"
                         ]
                       }
+                      isRequired: false
                     }
                     {
                       code: "Q9"
@@ -252,6 +254,7 @@ const queries = [
                         label: "Select Importer"
                         options: ["Importer A", "Importer B", "Importer C"]
                       }
+                      isRequired: false
                     }
                   ]
                 }
@@ -401,6 +404,7 @@ const queries = [
         template: {
           code: "CompRego1"
           name: "Company Registration"
+          isLinear: false
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
