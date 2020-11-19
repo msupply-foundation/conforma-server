@@ -9,9 +9,13 @@ import {
   Grid,
   TextField,
   Typography,
+  Select,
+  MenuItem,
+  InputLabel,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
-import evaluateExpression from './expression-evaluator/evaluateExpression'
+import evaluatorDev from './expression-evaluator/evaluateExpression'
+import evaluatorPublished from '@openmsupply/expression-evaluator'
 import * as config from './config.json'
 import { PostgresInterface } from './postgresInterface'
 
@@ -19,6 +23,8 @@ const looseJSON = require('loose-json')
 const graphQLendpoint = config.graphQLendpoint
 
 const pgInterface = new PostgresInterface()
+
+// const evaluateExpression = evaluatorDev
 
 async function fetchNative(url, obj) {
   const result = await fetch(url, obj)
@@ -50,6 +56,12 @@ function App() {
   const [isObjectsValid, setIsObjectsValid] = useState(true)
   const [strictJSONInput, setStrictJSONInput] = useState(false)
   const [strictJSONObjInput, setStrictJSONObjInput] = useState(false)
+  const [evaluatorSelection, setEvaluatorSelection] = useState(
+    localStorage.getItem('evaluatorSelection') || 'Development'
+  )
+  const [evaluate, setEvaluate] = useState(
+    evaluatorSelection === 'Development' ? () => evaluatorDev : () => evaluatorPublished
+  )
 
   // Evaluate output whenever input or input objects change
   useEffect(() => {
@@ -63,7 +75,7 @@ function App() {
     } catch {
       cleanInput = { value: '< Invalid input >' }
     }
-    evaluateExpression(cleanInput, {
+    evaluate(cleanInput, {
       objects: objectArray,
       pgConnection: pgInterface,
       graphQLConnection: { fetch: fetchNative, endpoint: graphQLendpoint },
@@ -105,6 +117,13 @@ function App() {
 
   const handleObjectsChange = (event) => {
     setObjectsInput(event.target.value)
+  }
+
+  const handleSelect = (event) => {
+    setEvaluatorSelection(event.target.value)
+    localStorage.setItem('evaluatorSelection', event.target.value)
+    if (event.target.value === 'Development') setEvaluate(() => evaluatorDev)
+    else setEvaluate(() => evaluatorPublished)
   }
 
   const JSONstringify = (input, compact = false, strict = false) => {
@@ -275,7 +294,14 @@ function App() {
       </Grid>
       <Grid item xs className={classes.margin}>
         <h1>Output</h1>
-        <Card className={classes.root} style={{ marginTop: 76 }} variant="outlined">
+        <InputLabel shrink id="demo-simple-select-placeholder-label-label">
+          Evaluator version
+        </InputLabel>
+        <Select id="evalSelect" value={evaluatorSelection} autoWidth onChange={handleSelect}>
+          <MenuItem value={'Development'}>Development</MenuItem>
+          <MenuItem value={'Published'}>Published</MenuItem>
+        </Select>
+        <Card className={classes.root} style={{ marginTop: 7 }} variant="outlined">
           <CardContent>
             <Typography variant="body1" component="p">
               {resultType === 'object' && <pre>{result}</pre>}
