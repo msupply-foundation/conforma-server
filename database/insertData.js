@@ -459,7 +459,6 @@ const queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: { label: "Start typing the company street" }
-                      validation: { value: true }
                       isRequired: false
                     }
                   ]
@@ -485,7 +484,6 @@ const queries = [
                           "Large"
                         ]
                       }
-                      validation: { value: true }
                       isRequired: false
                     }
                   ]
