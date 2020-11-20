@@ -172,11 +172,14 @@ const queries = [
                       code: "Q6"
                       index: 7
                       title: "Organisation Category"
-                      elementTypePluginCode: "radioChoice"
+                      elementTypePluginCode: "dropdownChoice"
+                      # Change this to "radioChoice" once we've made the plugin
                       category: QUESTION
                       parameters: {
-                        label: "What category of organisation do you wish to join"
+                        label: "Organisation Type"
+                        description: "Select which type of organisation you belong to."
                         options: ["Manufacturer", "Distributor", "Importer"]
+                        validation: { value: true }
                       }
                       isRequired: false
                     }
@@ -199,18 +202,20 @@ const queries = [
                       category: QUESTION
                       parameters: {
                         label: "Select Manufacturer"
+                        placeholder: "Select"
                         options: [
                           "Manufacturer A"
                           "Manufacturer B"
                           "Manufacturer C"
                         ]
+                        validation: { value: true }
                       }
                     }
                     {
                       code: "Q8"
                       index: 9
                       title: "Select Distributor"
-                      elementTypePluginCode: "dropDown"
+                      elementTypePluginCode: "dropdownChoice"
                       # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
@@ -225,11 +230,13 @@ const queries = [
                       category: QUESTION
                       parameters: {
                         label: "Select Distributor"
+                        placeholder: "Select"
                         options: [
                           "Distributor A"
                           "Distributor B"
                           "Distributor C"
                         ]
+                        validation: { value: true }
                       }
                       isRequired: false
                     }
@@ -237,7 +244,7 @@ const queries = [
                       code: "Q9"
                       index: 10
                       title: "Select Importer"
-                      elementTypePluginCode: "dropDown"
+                      elementTypePluginCode: "dropdownChoice"
                       # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
@@ -252,11 +259,13 @@ const queries = [
                       category: QUESTION
                       parameters: {
                         label: "Select Importer"
+                        placeholder: "Select"
                         options: [
                           "Importer A",
                           "Importer B",
                           "Importer C"
                         ]
+                        validation:  { value: true }
                       }
                       isRequired: false
                     }
