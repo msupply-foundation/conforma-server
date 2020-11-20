@@ -316,9 +316,23 @@ const queries = [
                 }
               }
               {
-                actionCode: "changeStatus"
+                actionCode: "grantPermissions"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
+                parameterQueries: {
+                  username: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q3.text" } }]
+                  }
+                  permissionNames: {
+                    value: ["applyCompanyRego"]
+                  }
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 4
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
@@ -330,7 +344,7 @@ const queries = [
               {
                 actionCode: "changeOutcome"
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 4
+                sequence: 5
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
