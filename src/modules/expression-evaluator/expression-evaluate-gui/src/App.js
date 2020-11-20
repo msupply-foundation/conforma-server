@@ -24,8 +24,6 @@ const graphQLendpoint = config.graphQLendpoint
 
 const pgInterface = new PostgresInterface()
 
-// const evaluateExpression = evaluatorDev
-
 async function fetchNative(url, obj) {
   const result = await fetch(url, obj)
   return result
