@@ -91,7 +91,7 @@ function App() {
         setResultType('error')
       })
     localStorage.setItem('inputText', input)
-  }, [input, objectsInput, objectArray])
+  }, [input, objectsInput, objectArray, evaluatorSelection])
 
   // Try and turn object(s) input string into object array
   useEffect(() => {
