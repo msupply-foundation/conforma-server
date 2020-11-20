@@ -525,7 +525,6 @@ class PostgresDB {
         (select id from permission_name where name = $2))
     `
     try {
-      console.log(username, permissionName)
       const result = await this.query({ text, values: [username, permissionName] })
     } catch (err) {
       console.log(err.message)
