@@ -104,7 +104,12 @@ export default async function evaluateExpression(
         } catch {
           throw new Error('Invalid API query')
         }
-        const data = await fetchAPIdata(urlWithQuery, params.APIfetch)
+        let data
+        try {
+          data = await fetchAPIdata(urlWithQuery, params.APIfetch)
+        } catch {
+          throw new Error('Problem with API call')
+        }
         try {
           return extractAndSimplify(data, returnProperty)
         } catch {
