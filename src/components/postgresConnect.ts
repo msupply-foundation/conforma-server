@@ -499,6 +499,39 @@ class PostgresDB {
       throw err
     }
   }
+
+  public getUserPermissionNames = async (username: string) => {
+    const text = `
+    select permission_name.id, permission_name.name 
+    from "user"
+    join permission_join on "user".id = permission_join.user_id
+    join permission_name on permission_name.id = permission_join.permission_name_id
+    where "username" = $1
+    `
+    try {
+      const result = await this.query({ text, values: [username] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public joinPermissionNameToUser = async (username: string, permissionName: string) => {
+    const text = `
+    insert into permission_join (user_id, permission_name_id) 
+    values (
+        (select id from "user" where username = $1), 
+        (select id from permission_name where name = $2))
+    `
+    try {
+      console.log(username, permissionName)
+      const result = await this.query({ text, values: [username, permissionName] })
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
 }
 
 const postgressDBInstance = PostgresDB.Instance
