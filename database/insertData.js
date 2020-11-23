@@ -436,7 +436,42 @@ const queries = [
                       title: "Organisation Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Unique Name for Company" }
+                      parameters: { 
+                        label: "Unique Name for Company",
+                        validation: {
+                          operator:"AND",
+                          children: [
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value:null }
+                              ]
+                            },
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
                       # Validation TO-DO: must be unique in system
                     },
                     {
@@ -520,7 +555,7 @@ const queries = [
                       title: "Intro Section 2 - Page 1/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "Company location" }
+                      parameters: { label: "Company location" }
                       # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
@@ -539,8 +574,42 @@ const queries = [
                       title: "Organisation Street"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Enter the company street" }
-                      isRequired: false
+                      parameters: { 
+                        label: "Enter the company street",
+                        validation: {
+                          operator:"AND",
+                          children: [
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value:null }
+                              ]
+                            },
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
                       # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
@@ -559,8 +628,42 @@ const queries = [
                       title: "Organisation region"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Enter the company region" }
-                      isRequired: false
+                      parameters: { 
+                        label: "Enter the company region",
+                        validation: {
+                          operator:"AND",
+                          children: [
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value:null }
+                              ]
+                            },
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
                       # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
@@ -608,8 +711,42 @@ const queries = [
                       title: "Billing account"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Enter the company billing account" }
-                      isRequired: true
+                      parameters: { 
+                        label: "Enter the company billing account",
+                        validation: {
+                          operator:"AND",
+                          children: [
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value:null }
+                              ]
+                            },
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
                     },
                     {
                       code: "S2Q4"
@@ -617,8 +754,42 @@ const queries = [
                       title: "Name of account"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Enter the company acount name" }
-                      isRequired: true
+                      parameters: { 
+                        label: "Enter the company acount name",
+                        validation: {
+                          operator:"AND",
+                          children: [
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value:null }
+                              ]
+                            },
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
                     }
                   ]
                 }
@@ -636,7 +807,7 @@ const queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Company bank account"
+                        title: "Company staff details"
                       }
                     },
                     {
