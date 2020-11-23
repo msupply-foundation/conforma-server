@@ -39,7 +39,9 @@ const queries = [
                       title: "First Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "First Name" }
+                      parameters: {
+                        label: "First Name"
+                      }
                     }
                     {
                       code: "Q2"
@@ -105,9 +107,7 @@ const queries = [
                               operator: "objectProperties"
                               children: [{ value: { property: "thisResponse" } }]
                             }
-                            {
-                              value: "unique"
-                            }
+                            { value: "unique" }
                           ]
                         }
                         validationMessage: "Username must be unique"
@@ -157,7 +157,7 @@ const queries = [
                           ]
                         }
                         validationMessage: "Password must be at least 8 characters"
-                      } 
+                      }
                       # Validation:Currently just checks 8 chars, needs more complexity
                     }
                     {
@@ -260,12 +260,8 @@ const queries = [
                       parameters: {
                         label: "Select Importer"
                         placeholder: "Select"
-                        options: [
-                          "Importer A",
-                          "Importer B",
-                          "Importer C"
-                        ]
-                        validation:  { value: true }
+                        options: ["Importer A", "Importer B", "Importer C"]
+                        validation: { value: true }
                       }
                       isRequired: false
                     }
