@@ -100,6 +100,8 @@ Equality test for child nodes
 - Input: 1 or more nodes of either **string** or **number** type.
 - Output: **boolean**
 
+_Note: uses javascript "loose" equality, so `2 == "2"` and `null == undefined`._
+
 ## != (Not equal)
 
 Inequality test for child nodes
@@ -560,7 +562,7 @@ The app can be launched from either this app's folder or the root back-end folde
 
 Additional notes:
 
-- It imports the `evaluateExpression` package from the dev folder (not the published package) as this will enable live testing when actually making new changes to the evaluator.
-- `create-react-app` won't allow importing local modules outside the `src` folder. The workaround is to just re-copy the relevant files into this app's src folder on launch. This means that any changes made to the original `evaluateExpression.ts` won't show up with a hot reload -- you'll have to stop and start the app.
+- You have the option (Selector under Output header) of using the Development version or the Published (package) version of the expression-evaluator. Useful when making modifications and want to see how your changes have effected query output.
+- `create-react-app` won't allow importing local modules outside the `src` folder. The workaround is to just re-copy the relevant files into this app's src folder on launch. This means that any changes made to the original `evaluateExpression.ts` won't show up with a hot reload -- you'll have to stop and start the app. If making changes to the module, I'd recommend working on the version in the GUI project folder, then manually copying this back to the module folder when ready to commit.
 - the `node-postgres` package won't run directly from the browser, so there's a little Express server that also runs with this app that simply relays postgres queries from this app to postgres
 - API calls to local server (e.g. `http://localhost:8080/check-unique)` don't work. I don't fully understand why, but I got round it by specifying a proxy to `http://localhost:8080` in `package.json` -- you just have to put relative links as the URL. i.e. `/check-unique`

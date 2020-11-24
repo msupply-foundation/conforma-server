@@ -1428,10 +1428,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@openmsupply/expression-evaluator@^1.0.0":
-  version "1.0.0"
-  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.0.0/0b2374f34fd5a0f4c9fb8d0d5e0c279d706e1717a8fc7595b601738f4440e379#cad520468762177311643d3ade4d59c20a46c603"
-  integrity sha512-Og0Eqrr+UowuvD6UtdmiuBi7U8GFtZrndJ85Fy/YSyUlUSNjESWj16AKqc7RzFs1/Ff+dvnmUVI7jB54fNCL/w==
+"@openmsupply/expression-evaluator@^1.2.0":
+  version "1.2.0"
+  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.2.0/5fa5230f3913ce48aaf8cb60fc7a4c3ffda5270872bb5c28ca9bc4de83da7249#5afa535a7723d09939f9db3d6b8ffe795e3033d5"
+  integrity sha512-bnMMj+sg8+ybN0JD2bBJYT4pveHXXB/9+LFjpD2GDIV5WcvN1504SoGjTZ6dmiMhDTnLJlz09iocqYF/+FmxeQ==
 
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
