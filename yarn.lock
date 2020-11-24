@@ -1171,10 +1171,10 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@openmsupply/expression-evaluator@^1.0.0":
-  version "1.1.1"
-  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.1.1/106eb86673f3e3bb638dbc1df0691de026d577c25574935cb530ba721e6761fa#2420db0a3b5a4dfdb40ec75f8b66a17f481034e6"
-  integrity sha512-d5o4XRm2kRs378hVAeM6Iy9nO3khsvLO5tisyK/lslaZd4X45NRvztpYyBMwOegQe9jauW60+qRN21gb8C+BQg==
+"@openmsupply/expression-evaluator@^1.2.0":
+  version "1.2.0"
+  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.2.0/5fa5230f3913ce48aaf8cb60fc7a4c3ffda5270872bb5c28ca9bc4de83da7249#5afa535a7723d09939f9db3d6b8ffe795e3033d5"
+  integrity sha512-bnMMj+sg8+ybN0JD2bBJYT4pveHXXB/9+LFjpD2GDIV5WcvN1504SoGjTZ6dmiMhDTnLJlz09iocqYF/+FmxeQ==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
