@@ -1,0 +1,24 @@
+{
+  "type": "action_grant_permissions",
+  "code": "grantPermissions",
+  "name": "Grant Permissions",
+  "file": "grantPermissions",
+  "function_name": "grantPermissions",
+  "description": "Grants permission to user, creates permission join from user to permission name",
+  "required_parameters": ["username", "permissionNames"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2020-11-20"
+  }
+}

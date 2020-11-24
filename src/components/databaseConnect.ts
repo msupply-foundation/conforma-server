@@ -93,6 +93,10 @@ class DBConnect {
 
   public verifyUser = PostgresDB.verifyUser
 
+  public getUserPermissionNames = PostgresDB.getUserPermissionNames
+
+  public joinPermissionNameToUser = PostgresDB.joinPermissionNameToUser
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
