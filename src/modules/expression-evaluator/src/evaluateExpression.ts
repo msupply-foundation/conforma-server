@@ -8,7 +8,12 @@ export default async function evaluateExpression(
 ): Promise<string | number | boolean | BasicObject | any[]> {
   // If input is not object, try and parse it as a JSON string. If that fails, return the input without any processing.
   let query
-  if (!(inputQuery instanceof Object) || Array.isArray(inputQuery) || inputQuery === null) {
+  if (
+    !(inputQuery instanceof Object) ||
+    Array.isArray(inputQuery) ||
+    inputQuery === null ||
+    inputQuery === undefined
+  ) {
     if (typeof inputQuery === 'string') {
       try {
         query = JSON.parse(inputQuery)
@@ -20,7 +25,7 @@ export default async function evaluateExpression(
 
   // Base case
   if (!query.children) {
-    return query.value
+    return query.value !== undefined ? query.value : query
   }
 
   // Recursive case
@@ -60,10 +65,12 @@ export default async function evaluateExpression(
         }
 
       case '=':
-        return childrenResolved.every((child) => child === childrenResolved[0])
+        // eslint-disable-next-line
+        return childrenResolved.every((child) => child == childrenResolved[0])
 
       case '!=':
-        return childrenResolved[0] !== childrenResolved[1]
+        // eslint-disable-next-line
+        return childrenResolved[0] != childrenResolved[1]
 
       case '+':
         return childrenResolved.reduce((acc: number, child: number) => {
@@ -142,7 +149,7 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
         return res.rows
     }
   } catch (err) {
-    return err
+    throw err
   }
 }
 
@@ -155,10 +162,14 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
     const variables = zipArraysToObject(variableNames, variableValues)
 
     const data = await graphQLquery(query, variables, connection)
-
-    return extractAndSimplify(data, returnProperty)
-  } catch {
-    throw new Error('GraphQL error')
+    if (!data) throw new Error('GraphQL query problem')
+    try {
+      return extractAndSimplify(data, returnProperty)
+    } catch (err) {
+      throw new Error('GraphQL -- unable to retrieve node')
+    }
+  } catch (err) {
+    throw new Error('GraphQL problem')
   }
 }
 

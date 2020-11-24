@@ -29,7 +29,7 @@ export interface IQueryNode {
   value?: string | number | boolean | object
   type?: NodeType
   operator?: Operator
-  children?: Array<IQueryNode>
+  children?: Array<IQueryNode | string | boolean | number | null | undefined>
 }
 
 type NodeType = 'string' | 'number' | 'boolean' | 'array'
