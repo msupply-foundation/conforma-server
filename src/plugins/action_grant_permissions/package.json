@@ -1,7 +1,7 @@
 {
-  "name": "console_log_action",
+  "name": "action_grant_permissions",
   "version": "0.1",
-  "description": "All it does is print a message to the console.",
+  "description": "Grants permission to user, creates permission join from user to permission name",
   "main": "grantPermissions.ts",
   "author": "The mSupplyFoundation",
   "license": "MIT",

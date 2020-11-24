@@ -1,4 +1,5 @@
-// Test suite for the createUser Action -- just confirms that users are written to database.
+// Test suite for the grantPermissions Action -- adds a permisison to valerio user to reviewCompanyRego
+// Ideally would verify that logic works by checking db (permission_join table) before and after
 
 import PostgresDB from '../../../components/databaseConnect'
 

@@ -4,6 +4,8 @@ module.exports['grantPermissions'] = async function (
 ) {
   try {
     console.log('\nGranting permission/s:')
+    console.log({ username, permissionNames })
+
     const currentUserPermisionsNames = (await DBConnect.getUserPermissionNames(username)).map(
       ({ name }: any) => name
     )

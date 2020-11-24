@@ -356,7 +356,7 @@ const queries = [
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 5
+                sequence: 6
                 parameterQueries: {
                   message: {
                     operator: "CONCAT"
