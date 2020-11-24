@@ -644,7 +644,7 @@ const queries = [
       }
     }
   }`,
-  //   Add one organisation
+  //   Add some organisations
   `mutation {
     createOrganisation(
       input: {
@@ -652,6 +652,51 @@ const queries = [
           address: "123 Nowhere St\\nAuckland"
           licenceNumber: "XYZ1234"
           name: "Drugs-R-Us"
+        }
+      }
+    ) {
+      organisation {
+        name
+      }
+    }
+  }`,
+  `mutation {
+    createOrganisation(
+      input: {
+        organisation: {
+          address: "Queen St\\nAuckland"
+          licenceNumber: "ABC1982"
+          name: "Medicinal Importers, Ltd."
+        }
+      }
+    ) {
+      organisation {
+        name
+      }
+    }
+  }`,
+  `mutation {
+    createOrganisation(
+      input: {
+        organisation: {
+          address: "West Auckland"
+          licenceNumber: "XXX8798"
+          name: "Drug Dealers West"
+        }
+      }
+    ) {
+      organisation {
+        name
+      }
+    }
+  }`,
+  `mutation {
+    createOrganisation(
+      input: {
+        organisation: {
+          address: "1 Downtown Drive\\nAuckland"
+          licenceNumber: "QRS9999"
+          name: "Lab Facilities Inc."
         }
       }
     ) {
