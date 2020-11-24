@@ -507,6 +507,55 @@ test('Input is an string', () => {
   })
 })
 
+test('Compare two literal strings', () => {
+  return evaluateExpression({ operator: '=', children: ['monkeys', 'monkeys'] }).then(
+    (result: any) => {
+      expect(result).toEqual(true)
+    }
+  )
+})
+
+test('Compare literal string vs object value string', () => {
+  return evaluateExpression({ operator: '=', children: ['monkey', { value: 'monkey' }] }).then(
+    (result: any) => {
+      expect(result).toEqual(true)
+    }
+  )
+})
+
+test('Compare literal numbers', () => {
+  return evaluateExpression({ operator: '=', children: [234, 234] }).then((result: any) => {
+    expect(result).toEqual(true)
+  })
+})
+
+test('Compare two unequal literal strings', () => {
+  return evaluateExpression({ operator: '=', children: ['boys', 'girls'] }).then((result: any) => {
+    expect(result).toEqual(false)
+  })
+})
+
+test('Compare unequal literal string vs object value string', () => {
+  return evaluateExpression({ operator: '=', children: ['beer', { value: 'wine' }] }).then(
+    (result: any) => {
+      expect(result).toEqual(false)
+    }
+  )
+})
+
+test('Compare unequal literal numbers', () => {
+  return evaluateExpression({ operator: '=', children: [234, 7] }).then((result: any) => {
+    expect(result).toEqual(false)
+  })
+})
+
+// Null matches undefined with loose equality (==)
+test('Compare null vs undefined', () => {
+  return evaluateExpression({ operator: '=', children: [null, undefined] }).then((result: any) => {
+    expect(result).toEqual(true)
+  })
+})
+
 afterAll(() => {
   pgConnect.end()
 })
