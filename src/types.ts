@@ -56,9 +56,9 @@ export interface ActionQueueGetPayload {
 export interface ActionQueueExecutePayload {
   id: number
   error_log: string
-  parameters_evaluated: { [key: string]: any }
+  parameters_evaluated: { [key: string]: any } | null
   status: ActionQueueStatus
-  output: BasicObject
+  output: BasicObject | null
 }
 
 export interface ActionApplicationData {
