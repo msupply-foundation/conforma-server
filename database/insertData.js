@@ -180,6 +180,7 @@ const queries = [
                         description: "Select which type of organisation you belong to."
                         options: ["Manufacturer", "Distributor", "Importer"]
                         validation: { value: true }
+                        default: 0
                       }
                       isRequired: false
                     }
