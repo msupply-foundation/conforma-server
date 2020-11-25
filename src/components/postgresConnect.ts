@@ -153,12 +153,17 @@ class PostgresDB {
     }
   }
 
-  public resetTrigger = async (table: string, record_id: number): Promise<boolean> => {
-    const text = `UPDATE ${table} SET trigger = NULL WHERE id = $1`
+  public resetTrigger = async (
+    table: string,
+    record_id: number,
+    fail = false
+  ): Promise<boolean> => {
+    const triggerStatus = fail ? 'Error' : null
+    const text = `UPDATE ${table} SET trigger = $1 WHERE id = $2`
     try {
       const result = await this.query({
         text,
-        values: [record_id],
+        values: [triggerStatus, record_id],
       })
       return true
     } catch (err) {
