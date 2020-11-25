@@ -154,7 +154,6 @@ export async function processTrigger(payload: TriggerPayload) {
       continue
     }
     try {
-      console.log('Success')
       const actionPayload = {
         id: action.id,
         code: action.action_code,
@@ -165,7 +164,6 @@ export async function processTrigger(payload: TriggerPayload) {
       outputCumulative = { ...outputCumulative, ...result.output }
       if (result.status === 'Fail') console.log(result.error_log)
     } catch (err) {
-      console.log('Fail')
       actionFailed.fail = true
       actionFailed.action = action.action_code
     }
@@ -217,10 +215,10 @@ export async function executeAction(
       id: payload.id,
     })
   } catch (err) {
-    // console.error('>> Error executing action:', payload.code)
+    console.error('>> Error executing action:', payload.code)
     await DBConnect.executedActionStatusUpdate({
       status: 'Fail',
-      error_log: "Couldn't execute Action",
+      error_log: "Couldn't execute Action: " + err.message,
       parameters_evaluated: null,
       output: null,
       id: payload.id,
