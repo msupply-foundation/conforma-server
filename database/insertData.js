@@ -39,9 +39,7 @@ const queries = [
                       title: "First Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "First Name"
-                      }
+                      parameters: { label: "First Name" }
                     }
                     {
                       code: "Q2"
@@ -261,11 +259,7 @@ const queries = [
                       parameters: {
                         label: "Select Importer"
                         placeholder: "Select"
-                        options: [
-                          "Importer A", 
-                          "Importer B", 
-                          "Importer C"
-                        ]
+                        options: ["Importer A", "Importer B", "Importer C"]
                         validation: { value: true }
                       }
                       isRequired: false
