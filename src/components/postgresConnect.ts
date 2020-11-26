@@ -42,7 +42,7 @@ class PostgresDB {
     listener.connect()
     listener.query('LISTEN trigger_notifications')
     listener.query('LISTEN action_notifications')
-    listener.on('notification', ({ channel, payload }) => {
+    listener.on('notification', async ({ channel, payload }) => {
       if (!payload) {
         console.log(`Notification ${channel} received with no payload!`)
         return
@@ -54,7 +54,7 @@ class PostgresDB {
         case 'action_notifications':
           // For Async Actions only
           try {
-            executeAction(JSON.parse(payload), actionLibrary)
+            await executeAction(JSON.parse(payload), actionLibrary)
           } catch (err) {
             console.log(err.message)
           } finally {
