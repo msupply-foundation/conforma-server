@@ -166,7 +166,6 @@ const queries = [
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
-                      parameters: { previousValidityCheck: true }
                     }
                     {
                       code: "Q6"
@@ -185,7 +184,6 @@ const queries = [
                       index: 8
                       title: "Select Manufacturer"
                       elementTypePluginCode: "dropdownChoice"
-                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -495,7 +493,6 @@ const queries = [
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
-                      parameters: { previousValidityCheck: true }
                     },
                     {
                       code: "S1T2"
@@ -509,7 +506,7 @@ const queries = [
                       code: "S1Q3"
                       index: 5
                       title: "Organisation national or international"
-                      elementTypePluginCode: "radioChoice"
+                      elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
                         label: "Select the nationality of this company:"
@@ -524,7 +521,7 @@ const queries = [
                       index: 6
                       title: "Import permit upload"
                       elementTypePluginCode: "textInfo"
-                      # Remember to pass Responses object into visibilityCondition
+                      category: INFORMATION
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -556,7 +553,6 @@ const queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: { label: "Company location" }
-                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -610,7 +606,6 @@ const queries = [
                           ]
                         }
                       }
-                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -664,7 +659,6 @@ const queries = [
                           ]
                         }
                       }
-                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -682,8 +676,6 @@ const queries = [
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
-                      parameters: { previousValidityCheck: true }
-                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
