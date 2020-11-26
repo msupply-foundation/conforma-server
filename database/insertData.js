@@ -261,7 +261,11 @@ const queries = [
                       parameters: {
                         label: "Select Importer"
                         placeholder: "Select"
-                        options: ["Importer A", "Importer B", "Importer C"]
+                        options: [
+                          "Importer A", 
+                          "Importer B", 
+                          "Importer C"
+                        ]
                         validation: { value: true }
                       }
                       isRequired: false
