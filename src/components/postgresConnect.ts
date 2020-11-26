@@ -53,8 +53,13 @@ class PostgresDB {
           break
         case 'action_notifications':
           // For Async Actions only
-          executeAction(JSON.parse(payload), actionLibrary)
-          break
+          try {
+            executeAction(JSON.parse(payload), actionLibrary)
+          } catch (err) {
+            console.log(err.message)
+          } finally {
+            break
+          }
       }
     })
   }
