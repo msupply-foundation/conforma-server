@@ -139,14 +139,14 @@ export async function processTrigger(payload: TriggerPayload) {
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
   let outputCumulative = {} // Collect output properties of actions in sequence
+
   // Execute Actions one by one
-  const actionFailed = { action: '', fail: false }
+  let actionFailed = ''
   for (const action of actionsToExecute) {
-    if (actionFailed.fail) {
+    if (actionFailed) {
       await DBConnect.executedActionStatusUpdate({
         status: 'Fail',
-        error_log:
-          'Action cancelled due to failure of previous sequential action ' + actionFailed.action,
+        error_log: 'Action cancelled due to failure of previous sequential action ' + actionFailed,
         parameters_evaluated: null,
         output: null,
         id: action.id,
@@ -164,12 +164,11 @@ export async function processTrigger(payload: TriggerPayload) {
       outputCumulative = { ...outputCumulative, ...result.output }
       if (result.status === 'Fail') console.log(result.error_log)
     } catch (err) {
-      actionFailed.fail = true
-      actionFailed.action = action.action_code
+      actionFailed = action.action_code
     }
   }
   // After all done, set Trigger on table back to NULL (or Error)
-  DBConnect.resetTrigger(table, record_id, actionFailed.fail)
+  DBConnect.resetTrigger(table, record_id, actionFailed !== '')
 }
 
 async function evaluateParameters(
