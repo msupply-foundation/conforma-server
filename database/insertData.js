@@ -593,6 +593,240 @@ const queries = [
       }
     }
   }`,
+  // Template C -- ACTUAL user registration form
+  `mutation {
+    createTemplate(
+      input: {
+        template: {
+          code: "UserRegistration"
+          name: "User Registration"
+          status: AVAILABLE
+          versionTimestamp: "NOW()"
+          templateSectionsUsingId: {
+            create: [
+              {
+                code: "S1"
+                title: "User information"
+                index: 0
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "Text1"
+                      index: 0
+                      title: "Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "Create a user account"
+                        text: "Please fill in your details to **register** for a user account."
+                      }
+                    }
+                    {
+                      code: "Q1"
+                      index: 1
+                      title: "First Name"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "First Name"
+                        validation: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "thisResponse" } }]
+                            }
+                            { value: ".+" }
+                          ]
+                        }
+                        validationMessage: "First name must not be blank"
+                      }
+                    }
+                    {
+                      code: "Q2"
+                      index: 2
+                      title: "Last Name"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Last Name" }
+                    }
+                    {
+                      code: "Q3"
+                      index: 3
+                      title: "Username"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "Q1" } }]
+                          }
+                          { value: "" }
+                        ]
+                      }
+                      parameters: {
+                        label: "Select a username"
+                        validation: {
+                          operator: "API"
+                          children: [
+                            { value: "http://localhost:8080/check-unique" }
+                            { value: ["type", "value"] }
+                            { value: "username" }
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "thisResponse" } }]
+                            }
+                            { value: "unique" }
+                          ]
+                        }
+                        validationMessage: "Username must be unique"
+                      }
+                    }
+                    {
+                      code: "Q4"
+                      index: 4
+                      title: "Email"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Email"
+                        validation: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "thisResponse" } }]
+                            }
+                            {
+                              value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                            }
+                          ]
+                        }
+                        validationMessage: "Not a valid email address"
+                      }
+                    }
+                    {
+                      code: "Q5"
+                      index: 5
+                      title: "Password"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Password"
+                        maskedInput: true
+                        placeholder: "Password must be at least 8 chars long"
+                        validation: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "thisResponse" } }]
+                            }
+                            { value: "^[\\\\S]{8,}$" }
+                          ]
+                        }
+                        validationMessage: "Password must be at least 8 characters"
+                      }
+                      # Validation:Currently just checks 8 chars, needs more complexity
+                    }
+                    # TO-DO: Add Date of birth question once we have DatePicker element type
+                  ]
+                }
+              }
+            ]
+          }
+          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateActionsUsingId: {
+            create: [
+              {
+                actionCode: "incrementStage"
+                trigger: ON_APPLICATION_CREATE
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "applicationId" } }]
+                  }
+                }
+              }
+              {
+                actionCode: "createUser"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 1
+                parameterQueries: {
+                  first_name: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q1.text" } }]
+                  }
+                  last_name: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q2.text" } }]
+                  }
+                  username: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q3.text" } }]
+                  }
+                  password_hash: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q5.text" } }]
+                  }
+                  email: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "responses.Q4.text" } }]
+                  }
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 2
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "applicationId" } }]
+                  }
+                  newStatus: { value: "Completed" }
+                }
+              }
+              {
+                actionCode: "changeOutcome"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 3
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "applicationId" } }]
+                  }
+                  newOutcome: { value: "Approved" }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      template {
+        code
+        name
+        templateSections {
+          nodes {
+            code
+            title
+            templateElementsBySectionId {
+              nodes {
+                code
+                visibilityCondition
+                parameters
+                title
+                category
+              }
+            }
+          }
+        }
+      }
+    }
+  }`,
   //   Add some users
   `mutation {
         createUser(
