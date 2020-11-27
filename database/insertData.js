@@ -5,13 +5,13 @@ const config = require('../src/config.json')
 const graphQLendpoint = config.graphQLendpoint
 
 const queries = [
-  // Template A -- User Registration
+  // Template A -- Test - General Registration
   `mutation {
     createTemplate(
       input: {
         template: {
-          code: "UserRego1"
-          name: "User Registration"
+          code: "TestRego"
+          name: "Test -- General Registration"
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
