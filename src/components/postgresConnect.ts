@@ -42,7 +42,7 @@ class PostgresDB {
     listener.connect()
     listener.query('LISTEN trigger_notifications')
     listener.query('LISTEN action_notifications')
-    listener.on('notification', ({ channel, payload }) => {
+    listener.on('notification', async ({ channel, payload }) => {
       if (!payload) {
         console.log(`Notification ${channel} received with no payload!`)
         return
@@ -53,8 +53,13 @@ class PostgresDB {
           break
         case 'action_notifications':
           // For Async Actions only
-          executeAction(JSON.parse(payload), actionLibrary)
-          break
+          try {
+            await executeAction(JSON.parse(payload), actionLibrary)
+          } catch (err) {
+            console.log(err.message)
+          } finally {
+            break
+          }
       }
     })
   }
@@ -153,12 +158,17 @@ class PostgresDB {
     }
   }
 
-  public resetTrigger = async (table: string, record_id: number): Promise<boolean> => {
-    const text = `UPDATE ${table} SET trigger = NULL WHERE id = $1`
+  public resetTrigger = async (
+    table: string,
+    record_id: number,
+    fail = false
+  ): Promise<boolean> => {
+    const triggerStatus = fail ? 'Error' : null
+    const text = `UPDATE ${table} SET trigger = $1 WHERE id = $2`
     try {
       const result = await this.query({
         text,
-        values: [record_id],
+        values: [triggerStatus, record_id],
       })
       return true
     } catch (err) {
@@ -494,6 +504,38 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [username, passwordHash] })
       return result.rows[0].count != 0
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getUserPermissionNames = async (username: string) => {
+    const text = `
+    select permission_name.id, permission_name.name 
+    from "user"
+    join permission_join on "user".id = permission_join.user_id
+    join permission_name on permission_name.id = permission_join.permission_name_id
+    where "username" = $1
+    `
+    try {
+      const result = await this.query({ text, values: [username] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public joinPermissionNameToUser = async (username: string, permissionName: string) => {
+    const text = `
+    insert into permission_join (user_id, permission_name_id) 
+    values (
+        (select id from "user" where username = $1), 
+        (select id from permission_name where name = $2))
+    `
+    try {
+      const result = await this.query({ text, values: [username, permissionName] })
     } catch (err) {
       console.log(err.message)
       throw err

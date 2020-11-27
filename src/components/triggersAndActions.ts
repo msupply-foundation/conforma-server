@@ -139,20 +139,36 @@ export async function processTrigger(payload: TriggerPayload) {
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
   let outputCumulative = {} // Collect output properties of actions in sequence
+
   // Execute Actions one by one
+  let actionFailed = ''
   for (const action of actionsToExecute) {
-    const actionPayload = {
-      id: action.id,
-      code: action.action_code,
-      application_data: applicationData,
-      parameter_queries: action.parameter_queries,
+    if (actionFailed) {
+      await DBConnect.executedActionStatusUpdate({
+        status: 'Fail',
+        error_log: 'Action cancelled due to failure of previous sequential action ' + actionFailed,
+        parameters_evaluated: null,
+        output: null,
+        id: action.id,
+      })
+      continue
     }
-    const result = await executeAction(actionPayload, actionLibrary, [outputCumulative])
-    outputCumulative = { ...outputCumulative, ...result.output }
-    if (result.status === 'Fail') console.log(result.error_log)
+    try {
+      const actionPayload = {
+        id: action.id,
+        code: action.action_code,
+        application_data: applicationData,
+        parameter_queries: action.parameter_queries,
+      }
+      const result = await executeAction(actionPayload, actionLibrary, [outputCumulative])
+      outputCumulative = { ...outputCumulative, ...result.output }
+      if (result.status === 'Fail') console.log(result.error_log)
+    } catch (err) {
+      actionFailed = action.action_code
+    }
   }
-  // After all done, set Trigger on table back to NULL
-  DBConnect.resetTrigger(table, record_id)
+  // After all done, set Trigger on table back to NULL (or Error)
+  DBConnect.resetTrigger(table, record_id, actionFailed !== '')
 }
 
 async function evaluateParameters(
@@ -183,17 +199,29 @@ export async function executeAction(
     pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
   }
 
-  // Evaluate parameters
-  const parametersEvaluated = await evaluateParameters(payload.parameter_queries, evaluatorParams)
+  try {
+    // Evaluate parameters
+    const parametersEvaluated = await evaluateParameters(payload.parameter_queries, evaluatorParams)
 
-  // TO-DO: If Scheduled, create a Job instead
-  const actionResult = await actionLibrary[payload.code](parametersEvaluated, DBConnect)
+    // TO-DO: If Scheduled, create a Job instead
+    const actionResult = await actionLibrary[payload.code](parametersEvaluated, DBConnect)
 
-  return await DBConnect.executedActionStatusUpdate({
-    status: actionResult.status,
-    error_log: actionResult.error_log,
-    parameters_evaluated: parametersEvaluated,
-    output: actionResult.output,
-    id: payload.id,
-  })
+    return await DBConnect.executedActionStatusUpdate({
+      status: actionResult.status,
+      error_log: actionResult.error_log,
+      parameters_evaluated: parametersEvaluated,
+      output: actionResult.output,
+      id: payload.id,
+    })
+  } catch (err) {
+    console.error('>> Error executing action:', payload.code)
+    await DBConnect.executedActionStatusUpdate({
+      status: 'Fail',
+      error_log: "Couldn't execute Action: " + err.message,
+      parameters_evaluated: null,
+      output: null,
+      id: payload.id,
+    })
+    throw err
+  }
 }
