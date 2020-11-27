@@ -166,7 +166,6 @@ const queries = [
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
-                      parameters: { previousValidityCheck: true }
                     }
                     {
                       code: "Q6"
@@ -185,7 +184,6 @@ const queries = [
                       index: 8
                       title: "Select Manufacturer"
                       elementTypePluginCode: "dropdownChoice"
-                      # Remember to pass Responses object into visibilityCondition
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -434,17 +432,63 @@ const queries = [
                 templateElementsUsingId: {
                   create: [
                     {
-                      code: "Q1"
+                      code: "S1T1"
                       index: 0
+                      title: "Intro Section 1 - Page 1/2"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "Company details"
+                        text: "The details entered should match with your registered company documents attached."
+                      }
+                    },
+                    {
+                      code: "S1Q1"
+                      index: 1
                       title: "Organisation Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Unique Name for Company" }
+                      parameters: { 
+                        label: "Unique Name for Company",
+                        validation: {
+                          operator:"AND",
+                          children: [
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value:null }
+                              ]
+                            },
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
                       # Validation TO-DO: must be unique in system
-                    }
+                    },
                     {
-                      code: "Q2"
-                      index: 1
+                      code: "S1Q2"
+                      index: 2
                       title: "Organisation Activity"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
@@ -456,6 +500,56 @@ const queries = [
                           "Producer"
                         ]
                       }
+                    },
+                    {
+                      code: "S1PB1"
+                      index: 3
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    },
+                    {
+                      code: "S1T2"
+                      index: 4
+                      title: "Intro Section 1 - Page 2/2"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: { title: "Company nationality" }
+                    },
+                    {
+                      code: "S1Q3"
+                      index: 5
+                      title: "Organisation national or international"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select the nationality of this company:"
+                        options: [
+                          "National",
+                          "International"
+                        ]
+                      }
+                    },
+                    {
+                      code: "S1Q4"
+                      index: 6
+                      title: "Import permit upload"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "S1Q3" } }]
+                          }
+                          { value: "International" }
+                        ]
+                      }
+                      parameters: {
+                        label: "Upload your valid import permit"
+                      }
+                      isRequired: false
                     }
                   ]
                 }
@@ -467,17 +561,245 @@ const queries = [
                 templateElementsUsingId: {
                   create: [
                     {
-                      code: "Q3"
+                      code: "S2T1"
                       index: 0
+                      title: "Intro Section 2 - Page 1/2"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: { label: "Company location" }
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "S1Q3" } }]
+                          }
+                          { value: "National" }
+                        ]
+                      }
+                    },
+                    {
+                      code: "S2Q1"
+                      index: 1
                       title: "Organisation Street"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Start typing the company street" }
-                      isRequired: false
+                      parameters: { 
+                        label: "Enter the company street",
+                        validation: {
+                          operator:"AND",
+                          children: [
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value:null }
+                              ]
+                            },
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "S1Q3" } }]
+                          }
+                          { value: "National" }
+                        ]
+                      }
+                    },
+                    {
+                      code: "S2Q2"
+                      index: 2
+                      title: "Organisation region"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { 
+                        label: "Enter the company region",
+                        validation: {
+                          operator:"AND",
+                          children: [
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value:null }
+                              ]
+                            },
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "S1Q3" } }]
+                          }
+                          { value: "National" }
+                        ]
+                      }
+                    },
+                    {
+                      code: "S2PB1"
+                      index: 3
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "S1Q3" } }]
+                          }
+                          { value: "National" }
+                        ]
+                      }
+                    },
+                    {
+                      code: "S2T2"
+                      index: 4
+                      title: "Intro Section 2 - Page 2/2"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "Company bank account"
+                      }
+                    },
+                    {
+                      code: "S2Q3"
+                      index: 5
+                      title: "Billing account"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { 
+                        label: "Enter the company billing account",
+                        validation: {
+                          operator:"AND",
+                          children: [
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value:null }
+                              ]
+                            },
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      code: "S2Q4"
+                      index: 4
+                      title: "Name of account"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { 
+                        label: "Enter the company acount name",
+                        validation: {
+                          operator:"AND",
+                          children: [
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value:null }
+                              ]
+                            },
+                            {
+                              operator:"!=",
+                              children: [
+                                {
+                                  operator:"objectProperties",
+                                  children: [
+                                    {
+                                      value: { property:"thisResponse" }
+                                    }
+                                  ]
+                                },
+                                { value: "" }
+                              ]
+                            }
+                          ]
+                        }
+                      }
                     }
                   ]
                 }
-              }
+              },
               { 
                 code: "S3"
                 title: "Section 3"
@@ -485,7 +807,17 @@ const queries = [
                 templateElementsUsingId: {
                   create: [
                     {
-                      code: "Q4"
+                      code: "S3T1"
+                      index: 0
+                      title: "Intro Section 1 - Page 1/1"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "Company staff details"
+                      }
+                    },
+                    {
+                      code: "S3Q1"
                       index: 0
                       title: "Organisation Size"
                       elementTypePluginCode: "dropdownChoice"
