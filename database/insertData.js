@@ -57,7 +57,7 @@ const queries = [
                               children: [
                                 {
                                   operator: "objectProperties"
-                                  children: [{ value: { property: "Q1.text" } }]
+                                  children: [{ value: { property: "Q1" } }]
                                 }
                                 { value: null }
                               ]
@@ -67,7 +67,7 @@ const queries = [
                               children: [
                                 {
                                   operator: "objectProperties"
-                                  children: [{ value: { property: "Q1.text" } }]
+                                  children: [{ value: { property: "Q1" } }]
                                 }
                                 { value: "" }
                               ]
@@ -88,7 +88,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q1.text" } }]
+                            children: [{ value: { property: "Q1" } }]
                           }
                           { value: "" }
                         ]
@@ -191,7 +191,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q6.text" } }]
+                            children: [{ value: { property: "Q6" } }]
                           }
                           { value: "Manufacturer" }
                         ]
@@ -219,7 +219,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q6.text" } }]
+                            children: [{ value: { property: "Q6" } }]
                           }
                           { value: "Distributor" }
                         ]
@@ -248,7 +248,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q6.text" } }]
+                            children: [{ value: { property: "Q6" } }]
                           }
                           { value: "Importer" }
                         ]
@@ -545,7 +545,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: [{ value: { property: "S1Q3" } }]
                           }
                           { value: "International" }
                         ]
@@ -576,7 +576,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: [{ value: { property: "S1Q3" } }]
                           }
                           { value: "National" }
                         ]
@@ -629,7 +629,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: [{ value: { property: "S1Q3" } }]
                           }
                           { value: "National" }
                         ]
@@ -682,7 +682,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: [{ value: { property: "S1Q3" } }]
                           }
                           { value: "National" }
                         ]
@@ -699,7 +699,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: [{ value: { property: "S1Q3" } }]
                           }
                           { value: "National" }
                         ]
@@ -1002,6 +1002,16 @@ const queries = [
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "Q1" } }]
+                          }
+                          { value: "" }
+                        ]
+                      }
                       parameters: {
                         label: "Select a username"
                         validation: {
