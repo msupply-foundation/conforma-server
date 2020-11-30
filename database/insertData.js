@@ -103,7 +103,7 @@ const queries = [
                             { value: "username" }
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse.text" } }]
+                              children: [{ value: { property: "thisResponse" } }]
                             }
                             { value: "unique" }
                           ]
@@ -124,7 +124,7 @@ const queries = [
                           children: [
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse.text" } }]
+                              children: [{ value: { property: "thisResponse" } }]
                             }
                             {
                               value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
@@ -149,7 +149,7 @@ const queries = [
                           children: [
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse.text" } }]
+                              children: [{ value: { property: "thisResponse" } }]
                             }
                             { value: "^[\\\\S]{8,}$" }
                           ]
@@ -464,7 +464,7 @@ const queries = [
                                   operator:"objectProperties",
                                   children: [
                                     {
-                                      value: { property:"thisResponse.text" }
+                                      value: { property:"thisResponse" }
                                     }
                                   ]
                                 },
@@ -478,7 +478,7 @@ const queries = [
                                   operator:"objectProperties",
                                   children: [
                                     {
-                                      value: { property:"thisResponse.text" }
+                                      value: { property:"thisResponse" }
                                     }
                                   ]
                                 },
@@ -600,7 +600,7 @@ const queries = [
                                   operator:"objectProperties",
                                   children: [
                                     {
-                                      value: { property:"thisResponse.text" }
+                                      value: { property:"thisResponse" }
                                     }
                                   ]
                                 },
@@ -614,7 +614,7 @@ const queries = [
                                   operator:"objectProperties",
                                   children: [
                                     {
-                                      value: { property:"thisResponse.text" }
+                                      value: { property:"thisResponse" }
                                     }
                                   ]
                                 },
@@ -653,7 +653,7 @@ const queries = [
                                   operator:"objectProperties",
                                   children: [
                                     {
-                                      value: { property:"thisResponse.text" }
+                                      value: { property:"thisResponse" }
                                     }
                                   ]
                                 },
@@ -667,7 +667,7 @@ const queries = [
                                   operator:"objectProperties",
                                   children: [
                                     {
-                                      value: { property:"thisResponse.text" }
+                                      value: { property:"thisResponse" }
                                     }
                                   ]
                                 },
@@ -733,7 +733,7 @@ const queries = [
                                   operator:"objectProperties",
                                   children: [
                                     {
-                                      value: { property:"thisResponse.text" }
+                                      value: { property:"thisResponse" }
                                     }
                                   ]
                                 },
@@ -747,7 +747,7 @@ const queries = [
                                   operator:"objectProperties",
                                   children: [
                                     {
-                                      value: { property:"thisResponse.text" }
+                                      value: { property:"thisResponse" }
                                     }
                                   ]
                                 },
@@ -776,7 +776,7 @@ const queries = [
                                   operator:"objectProperties",
                                   children: [
                                     {
-                                      value: { property:"thisResponse.text" }
+                                      value: { property:"thisResponse" }
                                     }
                                   ]
                                 },
@@ -790,7 +790,7 @@ const queries = [
                                   operator:"objectProperties",
                                   children: [
                                     {
-                                      value: { property:"thisResponse.text" }
+                                      value: { property:"thisResponse" }
                                     }
                                   ]
                                 },
@@ -980,7 +980,7 @@ const queries = [
                           children: [
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse.text" } }]
+                              children: [{ value: { property: "thisResponse" } }]
                             }
                             { value: ".+" }
                           ]
@@ -1012,7 +1012,7 @@ const queries = [
                             { value: "username" }
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse.text" } }]
+                              children: [{ value: { property: "thisResponse" } }]
                             }
                             { value: "unique" }
                           ]
@@ -1033,7 +1033,7 @@ const queries = [
                           children: [
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse.text" } }]
+                              children: [{ value: { property: "thisResponse" } }]
                             }
                             {
                               value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
@@ -1058,7 +1058,7 @@ const queries = [
                           children: [
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse.text" } }]
+                              children: [{ value: { property: "thisResponse" } }]
                             }
                             { value: "^[\\\\S]{8,}$" }
                           ]
