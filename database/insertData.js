@@ -48,7 +48,10 @@ const queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
-                        label: "Last Name"
+                        label: {
+                          operator: "objectProperties"
+                          children: [{ value: { property: "Q1.text" } }]
+                        }
                         validation: {
                           operator: "AND"
                           children: [
@@ -262,6 +265,30 @@ const queries = [
                       }
                       isRequired: false
                     }
+                    {
+                      code: "Q10"
+                      index: 11
+                      title: "API Selection demo"
+                      elementTypePluginCode: "dropdownChoice"
+                      # Remember to pass Responses object into visibilityCondition
+                      category: QUESTION
+                      parameters: {
+                        label: "Choose a name from this list"
+                        placeholder: "Select"
+                        options: {
+                          operator: "API"
+                          children: [
+                            {
+                              value: "https://jsonplaceholder.typicode.com/users"
+                            }
+                            { value: [] }
+                            { value: "name" }
+                          ]
+                        }
+                        validation: { value: true }
+                      }
+                      isRequired: false
+                    }
                   ]
                 }
               }
@@ -326,9 +353,7 @@ const queries = [
                     operator: "objectProperties"
                     children: [{ value: { property: "responses.Q3.text" } }]
                   }
-                  permissionNames: {
-                    value: ["applyCompanyRego"]
-                  }
+                  permissionNames: { value: ["applyCompanyRego"] }
                 }
               }
               {
