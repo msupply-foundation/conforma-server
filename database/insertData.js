@@ -12,6 +12,7 @@ const queries = [
         template: {
           code: "TestRego"
           name: "Test -- General Registration"
+          isLinear: false
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -288,6 +289,35 @@ const queries = [
                         validation: { value: true }
                       }
                       isRequired: false
+                    }
+                    {
+                      code: "Q10"
+                      index: 11
+                      title: "Test Visibility"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Enter 'drug' to see text box" }
+                    }
+                    {
+                      code: "TextTest"
+                      index: 12
+                      title: "Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "Q10.text" } }]
+                          }
+                          { value: "drug" }
+                        ]
+                      }
+                      parameters: {
+                        title: "This has appeared"
+                        text: "This box should show up if you type 'drug' in the previous question"
+                      }
                     }
                   ]
                 }
