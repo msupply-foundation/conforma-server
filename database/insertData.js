@@ -50,8 +50,14 @@ const queries = [
                       category: QUESTION
                       parameters: {
                         label: {
-                          operator: "objectProperties"
-                          children: [{ value: { property: "Q1.text" } }]
+                          operator: "CONCAT"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q1.text" } }]
+                            }
+                            ", what is your last name?"
+                          ]
                         }
                         validation: {
                           operator: "AND"
@@ -82,8 +88,33 @@ const queries = [
                       }
                     }
                     {
-                      code: "Q3"
+                      code: "Text2"
                       index: 3
+                      title: "User Info"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "New User Details"
+                        text: {
+                          operator: "CONCAT"
+                          children: [
+                            "The new user's name is: "
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q1.text" } }]
+                            }
+                            " "
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q2.text" } }]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                    {
+                      code: "Q3"
+                      index: 4
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -117,7 +148,7 @@ const queries = [
                     }
                     {
                       code: "Q4"
-                      index: 4
+                      index: 5
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -140,7 +171,7 @@ const queries = [
                     }
                     {
                       code: "Q5"
-                      index: 5
+                      index: 6
                       title: "Password"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -163,15 +194,51 @@ const queries = [
                       # Validation:Currently just checks 8 chars, needs more complexity
                     }
                     {
+                      code: "Xtra"
+                      index: 7
+                      title: "API Selection demo"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Choose a name from this list"
+                        placeholder: "Select"
+                        options: {
+                          operator: "CONCAT"
+                          type: "array"
+                          children: [
+                            []
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q1.text" } }]
+                            }
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q2.text" } }]
+                            }
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q3.text" } }]
+                            }
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q4.text" } }]
+                            }
+                          ]
+                        }
+                        validation: { value: true }
+                      }
+                      isRequired: false
+                    }
+                    {
                       code: "PB1"
-                      index: 6
+                      index: 8
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
                       code: "Q6"
-                      index: 7
+                      index: 9
                       title: "Organisation Category"
                       elementTypePluginCode: "dropdownChoice"
                       # Change this to "radioChoice" once we've made the plugin
@@ -187,7 +254,7 @@ const queries = [
                     }
                     {
                       code: "Q7"
-                      index: 8
+                      index: 10
                       title: "Select Manufacturer"
                       elementTypePluginCode: "dropdownChoice"
                       visibilityCondition: {
@@ -214,7 +281,7 @@ const queries = [
                     }
                     {
                       code: "Q8"
-                      index: 9
+                      index: 11
                       title: "Select Distributor"
                       elementTypePluginCode: "dropdownChoice"
                       # Remember to pass Responses object into visibilityCondition
@@ -243,7 +310,7 @@ const queries = [
                     }
                     {
                       code: "Q9"
-                      index: 10
+                      index: 12
                       title: "Select Importer"
                       elementTypePluginCode: "dropdownChoice"
                       # Remember to pass Responses object into visibilityCondition
@@ -268,10 +335,9 @@ const queries = [
                     }
                     {
                       code: "Q10"
-                      index: 11
+                      index: 13
                       title: "API Selection demo"
                       elementTypePluginCode: "dropdownChoice"
-                      # Remember to pass Responses object into visibilityCondition
                       category: QUESTION
                       parameters: {
                         label: "Choose a name from this list"
@@ -291,16 +357,16 @@ const queries = [
                       isRequired: false
                     }
                     {
-                      code: "Q10"
-                      index: 11
+                      code: "Q11"
+                      index: 14
                       title: "Test Visibility"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Enter 'drug' to see text box" }
+                      parameters: { label: "Enter 'magicword' to see text box" }
                     }
                     {
                       code: "TextTest"
-                      index: 12
+                      index: 15
                       title: "Intro"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -309,14 +375,24 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q10.text" } }]
+                            children: [{ value: { property: "Q11.text" } }]
                           }
-                          { value: "drug" }
+                          { value: "magicword" }
                         ]
                       }
                       parameters: {
-                        title: "This has appeared"
-                        text: "This box should show up if you type 'drug' in the previous question"
+                        title: "This has appeared because you typed 'magicword' above."
+                        text: {
+                          operator: "CONCAT"
+                          children: [
+                            "You chose "
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q10.text" } }]
+                            }
+                            "in the API lookup"
+                          ]
+                        }
                       }
                     }
                   ]
