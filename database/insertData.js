@@ -196,7 +196,7 @@ const queries = [
                     {
                       code: "Xtra"
                       index: 7
-                      title: "API Selection demo"
+                      title: "Dynamic Options demo"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
@@ -340,7 +340,7 @@ const queries = [
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
-                        label: "Choose a name from this list"
+                        label: "API Lookup: Choose a name from this list"
                         placeholder: "Select"
                         options: {
                           operator: "API"
