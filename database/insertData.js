@@ -200,7 +200,7 @@ const queries = [
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
-                        label: "Choose a name from this list"
+                        label: "Which is your favourite response?"
                         placeholder: "Select"
                         options: {
                           operator: "CONCAT"
