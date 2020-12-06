@@ -390,7 +390,12 @@ const queries = [
                               operator: "objectProperties"
                               children: [{ value: { property: "Q10.text" } }]
                             }
-                            "in the API lookup"
+                            " (index number "
+                            {
+                              operator: "objectProperties"
+                              children: [{ value: { property: "Q10.optionIndex" } }]
+                            }
+                            ") in the API lookup"
                           ]
                         }
                       }
