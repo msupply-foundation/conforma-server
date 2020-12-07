@@ -1491,7 +1491,7 @@ const queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       isRequired: false
-                      parameters: { label: "Please list any side effect" }
+                      parameters: { label: "Please list any side effects" }
                     }
                   ]
                 }
@@ -1606,6 +1606,21 @@ const queries = [
     createUser(
       input: {
         user: { email: "valerio@nra.org", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "valerio" }
+      }
+    ) {
+      user {
+        email
+        passwordHash
+        username
+      }
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "js@nowhere.com", passwordHash: "123456", username: "js",
+        firstName: "John", lastName: "Smith"
+       }
       }
     ) {
       user {
@@ -1931,6 +1946,75 @@ const queries = [
         }
         user {
           username
+        }
+      }
+    }
+  }`,
+  `mutation ReviewTestApplication {
+    createApplication(
+      input: {
+        application: {
+          serial: "12345"
+          applicationSectionsUsingId: {
+            create: [{ templateSectionId: 6 }, { templateSectionId: 7 }]
+          }
+          name: "Test Review -- Vitamin C"
+          outcome: PENDING
+          templateId: 4
+          userId: 5
+          applicationStageHistoriesUsingId: {
+            create: {
+              isCurrent: true
+              templateStageToStageId: { connectById: { id: 5 } }
+              applicationStatusHistoriesUsingId: {
+                create: { isCurrent: true, status: SUBMITTED }
+              }
+            }
+          }
+          applicationResponsesUsingId: {
+            create: [
+              { isValid: null, value: null, templateElementId: 39 }
+              { isValid: true, templateElementId: 40, value: { text: "John" } }
+              { isValid: true, templateElementId: 41, value: { text: "Smith" } }
+              {
+                isValid: true
+                templateElementId: 42
+                value: { text: "js@nowhere.com" }
+              }
+              { isValid: null, value: null, templateElementId: 43 }
+              { isValid: true, templateElementId: 44, value: { text: "39" } }
+              {
+                isValid: true
+                templateElementId: 45
+                value: { text: "New Zealand" }
+              }
+              { isValid: null, value: null, templateElementId: 46 }
+              {
+                isValid: true
+                templateElementId: 47
+                value: { text: "Vitamin C" }
+              }
+              {
+                isValid: true
+                templateElementId: 48
+                value: { text: "Natural Product", optionIndex: 1 }
+              }
+              { isValid: null, value: null, templateElementId: 49 }
+              { isValid: true, templateElementId: 50, value: { text: "50mg" } }
+              { isValid: true, templateElementId: 51, value: { text: "100" } }
+              {
+                isValid: true
+                templateElementId: 52
+                value: { text: "Turning orange" }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      query {
+        applicationBySerial(serial: "12345") {
+          id
         }
       }
     }
