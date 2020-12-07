@@ -14,8 +14,8 @@ CREATE TABLE public.review (
 	application_id integer GENERATED ALWAYS AS (public.review_application_id(review_assignment_id)) STORED references application(id)
 );
 
--- TRIGGER (Listener) on Review table
+-- TRIGGER (Listener) on review table
 CREATE TRIGGER review_trigger AFTER INSERT OR UPDATE OF trigger ON public.review
 FOR EACH ROW
-WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'Processing')
+WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'Processing' AND NEW.trigger <> 'Error')
 EXECUTE FUNCTION public.add_event_to_trigger_queue();
