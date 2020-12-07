@@ -1,15 +1,13 @@
 -- review response
 
+CREATE TYPE public.review_response_decision as ENUM ('Approve', 'Decline');
+
 CREATE TABLE public.review_response (
 	id serial primary key,
-	application_response_id integer references public.application_response(id),
-	review_decision public.review_decision,
 	comment varchar,
-	trigger public.trigger
+	decision public.review_response_decision,
+	review_question_assignment_id integer references public.review_question_assignment(id),
+	application_response_id integer references public.application_response(id),
+	review_id integer references public.review(id),
+    "timestamp" timestamp with time zone
 );
-
--- TRIGGER (Listener) on Review_response table
-CREATE TRIGGER review_response_trigger AFTER INSERT OR UPDATE OF trigger ON public.review_response
-FOR EACH ROW
-WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'Processing')
-EXECUTE FUNCTION public.add_event_to_trigger_queue();
