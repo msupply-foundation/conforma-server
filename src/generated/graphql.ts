@@ -594,6 +594,10 @@ export type Application = Node & {
   applicationStageHistories: ApplicationStageHistoriesConnection;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
   applicationResponses: ApplicationResponsesConnection;
+  /** Reads and enables pagination through a set of `ReviewAssignment`. */
+  reviewAssignments: ReviewAssignmentsConnection;
+  /** Reads and enables pagination through a set of `Review`. */
+  reviewsByReviewAssignmentId: ReviewsConnection;
   /** Reads and enables pagination through a set of `Review`. */
   reviews: ReviewsConnection;
   /** Reads and enables pagination through a set of `File`. */
@@ -639,6 +643,30 @@ export type ApplicationApplicationResponsesArgs = {
   orderBy?: Maybe<Array<ApplicationResponsesOrderBy>>;
   condition?: Maybe<ApplicationResponseCondition>;
   filter?: Maybe<ApplicationResponseFilter>;
+};
+
+
+export type ApplicationReviewAssignmentsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
+  condition?: Maybe<ReviewAssignmentCondition>;
+  filter?: Maybe<ReviewAssignmentFilter>;
+};
+
+
+export type ApplicationReviewsByReviewAssignmentIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewsOrderBy>>;
+  condition?: Maybe<ReviewCondition>;
+  filter?: Maybe<ReviewFilter>;
 };
 
 
@@ -756,6 +784,14 @@ export type ApplicationFilter = {
   applicationResponses?: Maybe<ApplicationToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
   applicationResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewAssignments` relation. */
+  reviewAssignments?: Maybe<ApplicationToManyReviewAssignmentFilter>;
+  /** Some related `reviewAssignments` exist. */
+  reviewAssignmentsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewsByReviewAssignmentId` relation. */
+  reviewsByReviewAssignmentId?: Maybe<ApplicationToManyReviewFilter>;
+  /** Some related `reviewsByReviewAssignmentId` exist. */
+  reviewsByReviewAssignmentIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviews` relation. */
   reviews?: Maybe<ApplicationToManyReviewFilter>;
   /** Some related `reviews` exist. */
@@ -799,7 +835,9 @@ export type ApplicationInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -971,6 +1009,28 @@ export type ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplic
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: ReviewAssignmentPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `review` to be connected. */
   nodeId: Scalars['ID'];
@@ -989,6 +1049,28 @@ export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpd
 export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `review` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: ReviewPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnReviewForReviewReviewAssignmentIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnReviewForReviewReviewAssignmentIdFkeyPatch;
   serial: Scalars['String'];
 };
 
@@ -1039,7 +1121,9 @@ export type ApplicationPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -1103,7 +1187,9 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -1439,6 +1525,7 @@ export type ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput =
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
 };
 
 /** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
@@ -1485,20 +1572,6 @@ export type ApplicationSection = Node & {
   application?: Maybe<Application>;
   /** Reads a single `TemplateSection` that is related to this `ApplicationSection`. */
   templateSection?: Maybe<TemplateSection>;
-  /** Reads and enables pagination through a set of `ReviewSectionAssignment`. */
-  reviewSectionAssignmentsBySectionId: ReviewSectionAssignmentsConnection;
-};
-
-
-export type ApplicationSectionReviewSectionAssignmentsBySectionIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionAssignmentsOrderBy>>;
-  condition?: Maybe<ReviewSectionAssignmentCondition>;
-  filter?: Maybe<ReviewSectionAssignmentFilter>;
 };
 
 /** The `application` to be created by this mutation. */
@@ -1516,7 +1589,9 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -1527,7 +1602,6 @@ export type ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput = {
   templateSectionId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<ApplicationSectionApplicationIdFkeyInput>;
   templateSectionToTemplateSectionId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ApplicationSectionInput` mutation. */
@@ -1605,10 +1679,6 @@ export type ApplicationSectionFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `templateSectionId` field. */
   templateSectionId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewSectionAssignmentsBySectionId` relation. */
-  reviewSectionAssignmentsBySectionId?: Maybe<ApplicationSectionToManyReviewSectionAssignmentFilter>;
-  /** Some related `reviewSectionAssignmentsBySectionId` exist. */
-  reviewSectionAssignmentsBySectionIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** A related `application` exists. */
@@ -1632,7 +1702,6 @@ export type ApplicationSectionInput = {
   templateSectionId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<ApplicationSectionApplicationIdFkeyInput>;
   templateSectionToTemplateSectionId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -1677,21 +1746,6 @@ export type ApplicationSectionOnApplicationSectionForApplicationSectionTemplateS
   id: Scalars['Int'];
 };
 
-/** The globally unique `ID` look up for the row to update. */
-export type ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionAssignment` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-  patch: ReviewSectionAssignmentPatch;
-};
-
-/** The fields on `applicationSection` to look up the row to update. */
-export type ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingApplicationSectionPkeyUpdate = {
-  /** An object where the defined keys will be set on the `applicationSection` being updated. */
-  patch: UpdateApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
 /** Represents an update to a `ApplicationSection`. Fields that are set will be updated. */
 export type ApplicationSectionPatch = {
   id?: Maybe<Scalars['Int']>;
@@ -1699,7 +1753,6 @@ export type ApplicationSectionPatch = {
   templateSectionId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<ApplicationSectionApplicationIdFkeyInput>;
   templateSectionToTemplateSectionId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `ApplicationSection` values. */
@@ -1743,7 +1796,6 @@ export type ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput
   applicationId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<ApplicationSectionApplicationIdFkeyInput>;
   templateSectionToTemplateSectionId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `templateSection` in the `ApplicationSectionInput` mutation. */
@@ -1795,16 +1847,6 @@ export type ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput = 
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
-};
-
-/** A filter to be used against many `ReviewSectionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationSectionToManyReviewSectionAssignmentFilter = {
-  /** Every related `ReviewSectionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewSectionAssignmentFilter>;
-  /** Some related `ReviewSectionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewSectionAssignmentFilter>;
-  /** No related `ReviewSectionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewSectionAssignmentFilter>;
 };
 
 /** A `Application` edge in the connection. */
@@ -1893,8 +1935,6 @@ export type ApplicationStageHistory = Node & {
   stage?: Maybe<TemplateStage>;
   /** Reads and enables pagination through a set of `ApplicationStatusHistory`. */
   applicationStatusHistories: ApplicationStatusHistoriesConnection;
-  /** Reads and enables pagination through a set of `ReviewSectionAssignment`. */
-  reviewSectionAssignmentsByStageId: ReviewSectionAssignmentsConnection;
 };
 
 
@@ -1907,18 +1947,6 @@ export type ApplicationStageHistoryApplicationStatusHistoriesArgs = {
   orderBy?: Maybe<Array<ApplicationStatusHistoriesOrderBy>>;
   condition?: Maybe<ApplicationStatusHistoryCondition>;
   filter?: Maybe<ApplicationStatusHistoryFilter>;
-};
-
-
-export type ApplicationStageHistoryReviewSectionAssignmentsByStageIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionAssignmentsOrderBy>>;
-  condition?: Maybe<ReviewSectionAssignmentCondition>;
-  filter?: Maybe<ReviewSectionAssignmentFilter>;
 };
 
 /** The `application` to be created by this mutation. */
@@ -1936,7 +1964,9 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -1950,7 +1980,6 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreat
   applicationToApplicationId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInput>;
   templateStageToStageId?: Maybe<ApplicationStageHistoryStageIdFkeyInput>;
   applicationStatusHistoriesUsingId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ApplicationStageHistoryInput` mutation. */
@@ -2040,10 +2069,6 @@ export type ApplicationStageHistoryFilter = {
   applicationStatusHistories?: Maybe<ApplicationStageHistoryToManyApplicationStatusHistoryFilter>;
   /** Some related `applicationStatusHistories` exist. */
   applicationStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewSectionAssignmentsByStageId` relation. */
-  reviewSectionAssignmentsByStageId?: Maybe<ApplicationStageHistoryToManyReviewSectionAssignmentFilter>;
-  /** Some related `reviewSectionAssignmentsByStageId` exist. */
-  reviewSectionAssignmentsByStageIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** A related `application` exists. */
@@ -2070,7 +2095,6 @@ export type ApplicationStageHistoryInput = {
   applicationToApplicationId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInput>;
   templateStageToStageId?: Maybe<ApplicationStageHistoryStageIdFkeyInput>;
   applicationStatusHistoriesUsingId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -2130,21 +2154,6 @@ export type ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatu
   id: Scalars['Int'];
 };
 
-/** The globally unique `ID` look up for the row to update. */
-export type ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionAssignment` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-  patch: ReviewSectionAssignmentPatch;
-};
-
-/** The fields on `applicationStageHistory` to look up the row to update. */
-export type ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingApplicationStageHistoryPkeyUpdate = {
-  /** An object where the defined keys will be set on the `applicationStageHistory` being updated. */
-  patch: UpdateApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
 /** Represents an update to a `ApplicationStageHistory`. Fields that are set will be updated. */
 export type ApplicationStageHistoryPatch = {
   id?: Maybe<Scalars['Int']>;
@@ -2155,7 +2164,6 @@ export type ApplicationStageHistoryPatch = {
   applicationToApplicationId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInput>;
   templateStageToStageId?: Maybe<ApplicationStageHistoryStageIdFkeyInput>;
   applicationStatusHistoriesUsingId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
 };
 
 /** The `applicationStageHistory` to be created by this mutation. */
@@ -2167,7 +2175,6 @@ export type ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput
   applicationToApplicationId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInput>;
   templateStageToStageId?: Maybe<ApplicationStageHistoryStageIdFkeyInput>;
   applicationStatusHistoriesUsingId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `templateStage` in the `ApplicationStageHistoryInput` mutation. */
@@ -2216,6 +2223,7 @@ export type ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
 
 /** A filter to be used against many `ApplicationStatusHistory` object types. All fields are combined with a logical ‘and.’ */
@@ -2226,16 +2234,6 @@ export type ApplicationStageHistoryToManyApplicationStatusHistoryFilter = {
   some?: Maybe<ApplicationStatusHistoryFilter>;
   /** No related `ApplicationStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ApplicationStatusHistoryFilter>;
-};
-
-/** A filter to be used against many `ReviewSectionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationStageHistoryToManyReviewSectionAssignmentFilter = {
-  /** Every related `ReviewSectionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewSectionAssignmentFilter>;
-  /** Some related `ReviewSectionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewSectionAssignmentFilter>;
-  /** No related `ReviewSectionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewSectionAssignmentFilter>;
 };
 
 export type ApplicationStageStatusAll = {
@@ -2492,7 +2490,6 @@ export type ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStag
   applicationToApplicationId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInput>;
   templateStageToStageId?: Maybe<ApplicationStageHistoryStageIdFkeyInput>;
   applicationStatusHistoriesUsingId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
 };
 
 /** The `applicationStatusHistory` to be created by this mutation. */
@@ -2661,7 +2658,9 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -2776,6 +2775,16 @@ export type ApplicationToManyNotificationFilter = {
   none?: Maybe<NotificationFilter>;
 };
 
+/** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyReviewAssignmentFilter = {
+  /** Every related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewAssignmentFilter>;
+  /** Some related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewAssignmentFilter>;
+  /** No related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewAssignmentFilter>;
+};
+
 /** A filter to be used against many `Review` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationToManyReviewFilter = {
   /** Every related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -2876,7 +2885,9 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -2937,8 +2948,9 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -3475,6 +3487,47 @@ export type CreatePermissionPolicyPayloadPermissionPolicyEdgeArgs = {
   orderBy?: Maybe<Array<PermissionPoliciesOrderBy>>;
 };
 
+/** All input for the create `ReviewAssignment` mutation. */
+export type CreateReviewAssignmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewAssignment` to be created by this mutation. */
+  reviewAssignment: ReviewAssignmentInput;
+};
+
+/** The output of our create `ReviewAssignment` mutation. */
+export type CreateReviewAssignmentPayload = {
+  __typename?: 'CreateReviewAssignmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewAssignment` that was created by this mutation. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `ReviewAssignment`. */
+  assigner?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ReviewAssignment`. */
+  reviewer?: Maybe<User>;
+  /** Reads a single `TemplateStage` that is related to this `ReviewAssignment`. */
+  stage?: Maybe<TemplateStage>;
+  /** Reads a single `Application` that is related to this `ReviewAssignment`. */
+  application?: Maybe<Application>;
+  /** An edge for our `ReviewAssignment`. May be used by Relay 1. */
+  reviewAssignmentEdge?: Maybe<ReviewAssignmentsEdge>;
+};
+
+
+/** The output of our create `ReviewAssignment` mutation. */
+export type CreateReviewAssignmentPayloadReviewAssignmentEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
+};
+
 /** All input for the create `Review` mutation. */
 export type CreateReviewInput = {
   /**
@@ -3499,6 +3552,10 @@ export type CreateReviewPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Application` that is related to this `Review`. */
+  reviewAssignment?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `Review`. */
+  reviewer?: Maybe<User>;
+  /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
   /** An edge for our `Review`. May be used by Relay 1. */
   reviewEdge?: Maybe<ReviewsEdge>;
@@ -3508,6 +3565,43 @@ export type CreateReviewPayload = {
 /** The output of our create `Review` mutation. */
 export type CreateReviewPayloadReviewEdgeArgs = {
   orderBy?: Maybe<Array<ReviewsOrderBy>>;
+};
+
+/** All input for the create `ReviewQuestionAssignment` mutation. */
+export type CreateReviewQuestionAssignmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewQuestionAssignment` to be created by this mutation. */
+  reviewQuestionAssignment: ReviewQuestionAssignmentInput;
+};
+
+/** The output of our create `ReviewQuestionAssignment` mutation. */
+export type CreateReviewQuestionAssignmentPayload = {
+  __typename?: 'CreateReviewQuestionAssignmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewQuestionAssignment` that was created by this mutation. */
+  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
+  templateElement?: Maybe<TemplateElement>;
+  /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
+  /** An edge for our `ReviewQuestionAssignment`. May be used by Relay 1. */
+  reviewQuestionAssignmentEdge?: Maybe<ReviewQuestionAssignmentsEdge>;
+};
+
+
+/** The output of our create `ReviewQuestionAssignment` mutation. */
+export type CreateReviewQuestionAssignmentPayloadReviewQuestionAssignmentEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
 };
 
 /** All input for the create `ReviewResponse` mutation. */
@@ -3533,8 +3627,12 @@ export type CreateReviewResponsePayload = {
   reviewResponse?: Maybe<ReviewResponse>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
+  /** Reads a single `ReviewQuestionAssignment` that is related to this `ReviewResponse`. */
+  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `Review` that is related to this `ReviewResponse`. */
+  review?: Maybe<Review>;
   /** An edge for our `ReviewResponse`. May be used by Relay 1. */
   reviewResponseEdge?: Maybe<ReviewResponsesEdge>;
 };
@@ -3545,154 +3643,39 @@ export type CreateReviewResponsePayloadReviewResponseEdgeArgs = {
   orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
 };
 
-/** All input for the create `ReviewSectionAssignment` mutation. */
-export type CreateReviewSectionAssignmentInput = {
+/** All input for the create `ReviewStatusHistory` mutation. */
+export type CreateReviewStatusHistoryInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionAssignment` to be created by this mutation. */
-  reviewSectionAssignment: ReviewSectionAssignmentInput;
+  /** The `ReviewStatusHistory` to be created by this mutation. */
+  reviewStatusHistory: ReviewStatusHistoryInput;
 };
 
-/** The output of our create `ReviewSectionAssignment` mutation. */
-export type CreateReviewSectionAssignmentPayload = {
-  __typename?: 'CreateReviewSectionAssignmentPayload';
+/** The output of our create `ReviewStatusHistory` mutation. */
+export type CreateReviewStatusHistoryPayload = {
+  __typename?: 'CreateReviewStatusHistoryPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionAssignment` that was created by this mutation. */
-  reviewSectionAssignment?: Maybe<ReviewSectionAssignment>;
+  /** The `ReviewStatusHistory` that was created by this mutation. */
+  reviewStatusHistory?: Maybe<ReviewStatusHistory>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** Reads a single `User` that is related to this `ReviewSectionAssignment`. */
-  reviewer?: Maybe<User>;
-  /** Reads a single `User` that is related to this `ReviewSectionAssignment`. */
-  assigner?: Maybe<User>;
-  /** Reads a single `ApplicationStageHistory` that is related to this `ReviewSectionAssignment`. */
-  stage?: Maybe<ApplicationStageHistory>;
-  /** Reads a single `ApplicationSection` that is related to this `ReviewSectionAssignment`. */
-  section?: Maybe<ApplicationSection>;
-  /** An edge for our `ReviewSectionAssignment`. May be used by Relay 1. */
-  reviewSectionAssignmentEdge?: Maybe<ReviewSectionAssignmentsEdge>;
-};
-
-
-/** The output of our create `ReviewSectionAssignment` mutation. */
-export type CreateReviewSectionAssignmentPayloadReviewSectionAssignmentEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionAssignmentsOrderBy>>;
-};
-
-/** All input for the create `ReviewSection` mutation. */
-export type CreateReviewSectionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSection` to be created by this mutation. */
-  reviewSection: ReviewSectionInput;
-};
-
-/** All input for the create `ReviewSectionJoin` mutation. */
-export type CreateReviewSectionJoinInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionJoin` to be created by this mutation. */
-  reviewSectionJoin: ReviewSectionJoinInput;
-};
-
-/** The output of our create `ReviewSectionJoin` mutation. */
-export type CreateReviewSectionJoinPayload = {
-  __typename?: 'CreateReviewSectionJoinPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionJoin` that was created by this mutation. */
-  reviewSectionJoin?: Maybe<ReviewSectionJoin>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `Review` that is related to this `ReviewSectionJoin`. */
+  /** Reads a single `Review` that is related to this `ReviewStatusHistory`. */
   review?: Maybe<Review>;
-  /** Reads a single `ReviewSectionAssignment` that is related to this `ReviewSectionJoin`. */
-  sectionAssignment?: Maybe<ReviewSectionAssignment>;
-  /** Reads a single `ReviewSection` that is related to this `ReviewSectionJoin`. */
-  reviewSection?: Maybe<ReviewSection>;
-  /** An edge for our `ReviewSectionJoin`. May be used by Relay 1. */
-  reviewSectionJoinEdge?: Maybe<ReviewSectionJoinsEdge>;
+  /** An edge for our `ReviewStatusHistory`. May be used by Relay 1. */
+  reviewStatusHistoryEdge?: Maybe<ReviewStatusHistoriesEdge>;
 };
 
 
-/** The output of our create `ReviewSectionJoin` mutation. */
-export type CreateReviewSectionJoinPayloadReviewSectionJoinEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionJoinsOrderBy>>;
-};
-
-/** The output of our create `ReviewSection` mutation. */
-export type CreateReviewSectionPayload = {
-  __typename?: 'CreateReviewSectionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSection` that was created by this mutation. */
-  reviewSection?: Maybe<ReviewSection>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `ReviewSection`. May be used by Relay 1. */
-  reviewSectionEdge?: Maybe<ReviewSectionsEdge>;
-};
-
-
-/** The output of our create `ReviewSection` mutation. */
-export type CreateReviewSectionPayloadReviewSectionEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionsOrderBy>>;
-};
-
-/** All input for the create `ReviewSectionResponseJoin` mutation. */
-export type CreateReviewSectionResponseJoinInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionResponseJoin` to be created by this mutation. */
-  reviewSectionResponseJoin: ReviewSectionResponseJoinInput;
-};
-
-/** The output of our create `ReviewSectionResponseJoin` mutation. */
-export type CreateReviewSectionResponseJoinPayload = {
-  __typename?: 'CreateReviewSectionResponseJoinPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionResponseJoin` that was created by this mutation. */
-  reviewSectionResponseJoin?: Maybe<ReviewSectionResponseJoin>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `ReviewSectionJoin` that is related to this `ReviewSectionResponseJoin`. */
-  reviewSectionJoin?: Maybe<ReviewSectionJoin>;
-  /** Reads a single `ReviewResponse` that is related to this `ReviewSectionResponseJoin`. */
-  reviewResponse?: Maybe<ReviewResponse>;
-  /** An edge for our `ReviewSectionResponseJoin`. May be used by Relay 1. */
-  reviewSectionResponseJoinEdge?: Maybe<ReviewSectionResponseJoinsEdge>;
-};
-
-
-/** The output of our create `ReviewSectionResponseJoin` mutation. */
-export type CreateReviewSectionResponseJoinPayloadReviewSectionResponseJoinEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionResponseJoinsOrderBy>>;
+/** The output of our create `ReviewStatusHistory` mutation. */
+export type CreateReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
 };
 
 /** All input for the create `TemplateAction` mutation. */
@@ -4735,6 +4718,58 @@ export type DeletePermissionPolicyPayloadPermissionPolicyEdgeArgs = {
   orderBy?: Maybe<Array<PermissionPoliciesOrderBy>>;
 };
 
+/** All input for the `deleteReviewAssignmentByNodeId` mutation. */
+export type DeleteReviewAssignmentByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ReviewAssignment` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteReviewAssignment` mutation. */
+export type DeleteReviewAssignmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `ReviewAssignment` mutation. */
+export type DeleteReviewAssignmentPayload = {
+  __typename?: 'DeleteReviewAssignmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewAssignment` that was deleted by this mutation. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
+  deletedReviewAssignmentNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `ReviewAssignment`. */
+  assigner?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ReviewAssignment`. */
+  reviewer?: Maybe<User>;
+  /** Reads a single `TemplateStage` that is related to this `ReviewAssignment`. */
+  stage?: Maybe<TemplateStage>;
+  /** Reads a single `Application` that is related to this `ReviewAssignment`. */
+  application?: Maybe<Application>;
+  /** An edge for our `ReviewAssignment`. May be used by Relay 1. */
+  reviewAssignmentEdge?: Maybe<ReviewAssignmentsEdge>;
+};
+
+
+/** The output of our delete `ReviewAssignment` mutation. */
+export type DeleteReviewAssignmentPayloadReviewAssignmentEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
+};
+
 /** All input for the `deleteReviewByNodeId` mutation. */
 export type DeleteReviewByNodeIdInput = {
   /**
@@ -4770,6 +4805,10 @@ export type DeleteReviewPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Application` that is related to this `Review`. */
+  reviewAssignment?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `Review`. */
+  reviewer?: Maybe<User>;
+  /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
   /** An edge for our `Review`. May be used by Relay 1. */
   reviewEdge?: Maybe<ReviewsEdge>;
@@ -4779,6 +4818,54 @@ export type DeleteReviewPayload = {
 /** The output of our delete `Review` mutation. */
 export type DeleteReviewPayloadReviewEdgeArgs = {
   orderBy?: Maybe<Array<ReviewsOrderBy>>;
+};
+
+/** All input for the `deleteReviewQuestionAssignmentByNodeId` mutation. */
+export type DeleteReviewQuestionAssignmentByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ReviewQuestionAssignment` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteReviewQuestionAssignment` mutation. */
+export type DeleteReviewQuestionAssignmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `ReviewQuestionAssignment` mutation. */
+export type DeleteReviewQuestionAssignmentPayload = {
+  __typename?: 'DeleteReviewQuestionAssignmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewQuestionAssignment` that was deleted by this mutation. */
+  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
+  deletedReviewQuestionAssignmentNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
+  templateElement?: Maybe<TemplateElement>;
+  /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
+  /** An edge for our `ReviewQuestionAssignment`. May be used by Relay 1. */
+  reviewQuestionAssignmentEdge?: Maybe<ReviewQuestionAssignmentsEdge>;
+};
+
+
+/** The output of our delete `ReviewQuestionAssignment` mutation. */
+export type DeleteReviewQuestionAssignmentPayloadReviewQuestionAssignmentEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
 };
 
 /** All input for the `deleteReviewResponseByNodeId` mutation. */
@@ -4815,8 +4902,12 @@ export type DeleteReviewResponsePayload = {
   deletedReviewResponseNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
+  /** Reads a single `ReviewQuestionAssignment` that is related to this `ReviewResponse`. */
+  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `Review` that is related to this `ReviewResponse`. */
+  review?: Maybe<Review>;
   /** An edge for our `ReviewResponse`. May be used by Relay 1. */
   reviewResponseEdge?: Maybe<ReviewResponsesEdge>;
 };
@@ -4827,19 +4918,19 @@ export type DeleteReviewResponsePayloadReviewResponseEdgeArgs = {
   orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
 };
 
-/** All input for the `deleteReviewSectionAssignmentByNodeId` mutation. */
-export type DeleteReviewSectionAssignmentByNodeIdInput = {
+/** All input for the `deleteReviewStatusHistoryByNodeId` mutation. */
+export type DeleteReviewStatusHistoryByNodeIdInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ReviewSectionAssignment` to be deleted. */
+  /** The globally unique `ID` which will identify a single `ReviewStatusHistory` to be deleted. */
   nodeId: Scalars['ID'];
 };
 
-/** All input for the `deleteReviewSectionAssignment` mutation. */
-export type DeleteReviewSectionAssignmentInput = {
+/** All input for the `deleteReviewStatusHistory` mutation. */
+export type DeleteReviewStatusHistoryInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
@@ -4848,177 +4939,29 @@ export type DeleteReviewSectionAssignmentInput = {
   id: Scalars['Int'];
 };
 
-/** The output of our delete `ReviewSectionAssignment` mutation. */
-export type DeleteReviewSectionAssignmentPayload = {
-  __typename?: 'DeleteReviewSectionAssignmentPayload';
+/** The output of our delete `ReviewStatusHistory` mutation. */
+export type DeleteReviewStatusHistoryPayload = {
+  __typename?: 'DeleteReviewStatusHistoryPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionAssignment` that was deleted by this mutation. */
-  reviewSectionAssignment?: Maybe<ReviewSectionAssignment>;
-  deletedReviewSectionAssignmentNodeId?: Maybe<Scalars['ID']>;
+  /** The `ReviewStatusHistory` that was deleted by this mutation. */
+  reviewStatusHistory?: Maybe<ReviewStatusHistory>;
+  deletedReviewStatusHistoryNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** Reads a single `User` that is related to this `ReviewSectionAssignment`. */
-  reviewer?: Maybe<User>;
-  /** Reads a single `User` that is related to this `ReviewSectionAssignment`. */
-  assigner?: Maybe<User>;
-  /** Reads a single `ApplicationStageHistory` that is related to this `ReviewSectionAssignment`. */
-  stage?: Maybe<ApplicationStageHistory>;
-  /** Reads a single `ApplicationSection` that is related to this `ReviewSectionAssignment`. */
-  section?: Maybe<ApplicationSection>;
-  /** An edge for our `ReviewSectionAssignment`. May be used by Relay 1. */
-  reviewSectionAssignmentEdge?: Maybe<ReviewSectionAssignmentsEdge>;
-};
-
-
-/** The output of our delete `ReviewSectionAssignment` mutation. */
-export type DeleteReviewSectionAssignmentPayloadReviewSectionAssignmentEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionAssignmentsOrderBy>>;
-};
-
-/** All input for the `deleteReviewSectionByNodeId` mutation. */
-export type DeleteReviewSectionByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ReviewSection` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** All input for the `deleteReviewSection` mutation. */
-export type DeleteReviewSectionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
-/** All input for the `deleteReviewSectionJoinByNodeId` mutation. */
-export type DeleteReviewSectionJoinByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ReviewSectionJoin` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** All input for the `deleteReviewSectionJoin` mutation. */
-export type DeleteReviewSectionJoinInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
-/** The output of our delete `ReviewSectionJoin` mutation. */
-export type DeleteReviewSectionJoinPayload = {
-  __typename?: 'DeleteReviewSectionJoinPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionJoin` that was deleted by this mutation. */
-  reviewSectionJoin?: Maybe<ReviewSectionJoin>;
-  deletedReviewSectionJoinNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `Review` that is related to this `ReviewSectionJoin`. */
+  /** Reads a single `Review` that is related to this `ReviewStatusHistory`. */
   review?: Maybe<Review>;
-  /** Reads a single `ReviewSectionAssignment` that is related to this `ReviewSectionJoin`. */
-  sectionAssignment?: Maybe<ReviewSectionAssignment>;
-  /** Reads a single `ReviewSection` that is related to this `ReviewSectionJoin`. */
-  reviewSection?: Maybe<ReviewSection>;
-  /** An edge for our `ReviewSectionJoin`. May be used by Relay 1. */
-  reviewSectionJoinEdge?: Maybe<ReviewSectionJoinsEdge>;
+  /** An edge for our `ReviewStatusHistory`. May be used by Relay 1. */
+  reviewStatusHistoryEdge?: Maybe<ReviewStatusHistoriesEdge>;
 };
 
 
-/** The output of our delete `ReviewSectionJoin` mutation. */
-export type DeleteReviewSectionJoinPayloadReviewSectionJoinEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionJoinsOrderBy>>;
-};
-
-/** The output of our delete `ReviewSection` mutation. */
-export type DeleteReviewSectionPayload = {
-  __typename?: 'DeleteReviewSectionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSection` that was deleted by this mutation. */
-  reviewSection?: Maybe<ReviewSection>;
-  deletedReviewSectionNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `ReviewSection`. May be used by Relay 1. */
-  reviewSectionEdge?: Maybe<ReviewSectionsEdge>;
-};
-
-
-/** The output of our delete `ReviewSection` mutation. */
-export type DeleteReviewSectionPayloadReviewSectionEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionsOrderBy>>;
-};
-
-/** All input for the `deleteReviewSectionResponseJoinByNodeId` mutation. */
-export type DeleteReviewSectionResponseJoinByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ReviewSectionResponseJoin` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** All input for the `deleteReviewSectionResponseJoin` mutation. */
-export type DeleteReviewSectionResponseJoinInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
-/** The output of our delete `ReviewSectionResponseJoin` mutation. */
-export type DeleteReviewSectionResponseJoinPayload = {
-  __typename?: 'DeleteReviewSectionResponseJoinPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionResponseJoin` that was deleted by this mutation. */
-  reviewSectionResponseJoin?: Maybe<ReviewSectionResponseJoin>;
-  deletedReviewSectionResponseJoinNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `ReviewSectionJoin` that is related to this `ReviewSectionResponseJoin`. */
-  reviewSectionJoin?: Maybe<ReviewSectionJoin>;
-  /** Reads a single `ReviewResponse` that is related to this `ReviewSectionResponseJoin`. */
-  reviewResponse?: Maybe<ReviewResponse>;
-  /** An edge for our `ReviewSectionResponseJoin`. May be used by Relay 1. */
-  reviewSectionResponseJoinEdge?: Maybe<ReviewSectionResponseJoinsEdge>;
-};
-
-
-/** The output of our delete `ReviewSectionResponseJoin` mutation. */
-export type DeleteReviewSectionResponseJoinPayloadReviewSectionResponseJoinEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionResponseJoinsOrderBy>>;
+/** The output of our delete `ReviewStatusHistory` mutation. */
+export type DeleteReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
 };
 
 /** All input for the `deleteTemplateActionByNodeId` mutation. */
@@ -5615,7 +5558,9 @@ export type FileApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -6031,8 +5976,9 @@ export type FileUserIdFkeyUserCreateInput = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -6153,16 +6099,14 @@ export type Mutation = {
   createPermissionPolicy?: Maybe<CreatePermissionPolicyPayload>;
   /** Creates a single `Review`. */
   createReview?: Maybe<CreateReviewPayload>;
+  /** Creates a single `ReviewAssignment`. */
+  createReviewAssignment?: Maybe<CreateReviewAssignmentPayload>;
+  /** Creates a single `ReviewQuestionAssignment`. */
+  createReviewQuestionAssignment?: Maybe<CreateReviewQuestionAssignmentPayload>;
   /** Creates a single `ReviewResponse`. */
   createReviewResponse?: Maybe<CreateReviewResponsePayload>;
-  /** Creates a single `ReviewSection`. */
-  createReviewSection?: Maybe<CreateReviewSectionPayload>;
-  /** Creates a single `ReviewSectionAssignment`. */
-  createReviewSectionAssignment?: Maybe<CreateReviewSectionAssignmentPayload>;
-  /** Creates a single `ReviewSectionJoin`. */
-  createReviewSectionJoin?: Maybe<CreateReviewSectionJoinPayload>;
-  /** Creates a single `ReviewSectionResponseJoin`. */
-  createReviewSectionResponseJoin?: Maybe<CreateReviewSectionResponseJoinPayload>;
+  /** Creates a single `ReviewStatusHistory`. */
+  createReviewStatusHistory?: Maybe<CreateReviewStatusHistoryPayload>;
   /** Creates a single `Template`. */
   createTemplate?: Maybe<CreateTemplatePayload>;
   /** Creates a single `TemplateAction`. */
@@ -6243,26 +6187,22 @@ export type Mutation = {
   updateReviewByNodeId?: Maybe<UpdateReviewPayload>;
   /** Updates a single `Review` using a unique key and a patch. */
   updateReview?: Maybe<UpdateReviewPayload>;
+  /** Updates a single `ReviewAssignment` using its globally unique id and a patch. */
+  updateReviewAssignmentByNodeId?: Maybe<UpdateReviewAssignmentPayload>;
+  /** Updates a single `ReviewAssignment` using a unique key and a patch. */
+  updateReviewAssignment?: Maybe<UpdateReviewAssignmentPayload>;
+  /** Updates a single `ReviewQuestionAssignment` using its globally unique id and a patch. */
+  updateReviewQuestionAssignmentByNodeId?: Maybe<UpdateReviewQuestionAssignmentPayload>;
+  /** Updates a single `ReviewQuestionAssignment` using a unique key and a patch. */
+  updateReviewQuestionAssignment?: Maybe<UpdateReviewQuestionAssignmentPayload>;
   /** Updates a single `ReviewResponse` using its globally unique id and a patch. */
   updateReviewResponseByNodeId?: Maybe<UpdateReviewResponsePayload>;
   /** Updates a single `ReviewResponse` using a unique key and a patch. */
   updateReviewResponse?: Maybe<UpdateReviewResponsePayload>;
-  /** Updates a single `ReviewSection` using its globally unique id and a patch. */
-  updateReviewSectionByNodeId?: Maybe<UpdateReviewSectionPayload>;
-  /** Updates a single `ReviewSection` using a unique key and a patch. */
-  updateReviewSection?: Maybe<UpdateReviewSectionPayload>;
-  /** Updates a single `ReviewSectionAssignment` using its globally unique id and a patch. */
-  updateReviewSectionAssignmentByNodeId?: Maybe<UpdateReviewSectionAssignmentPayload>;
-  /** Updates a single `ReviewSectionAssignment` using a unique key and a patch. */
-  updateReviewSectionAssignment?: Maybe<UpdateReviewSectionAssignmentPayload>;
-  /** Updates a single `ReviewSectionJoin` using its globally unique id and a patch. */
-  updateReviewSectionJoinByNodeId?: Maybe<UpdateReviewSectionJoinPayload>;
-  /** Updates a single `ReviewSectionJoin` using a unique key and a patch. */
-  updateReviewSectionJoin?: Maybe<UpdateReviewSectionJoinPayload>;
-  /** Updates a single `ReviewSectionResponseJoin` using its globally unique id and a patch. */
-  updateReviewSectionResponseJoinByNodeId?: Maybe<UpdateReviewSectionResponseJoinPayload>;
-  /** Updates a single `ReviewSectionResponseJoin` using a unique key and a patch. */
-  updateReviewSectionResponseJoin?: Maybe<UpdateReviewSectionResponseJoinPayload>;
+  /** Updates a single `ReviewStatusHistory` using its globally unique id and a patch. */
+  updateReviewStatusHistoryByNodeId?: Maybe<UpdateReviewStatusHistoryPayload>;
+  /** Updates a single `ReviewStatusHistory` using a unique key and a patch. */
+  updateReviewStatusHistory?: Maybe<UpdateReviewStatusHistoryPayload>;
   /** Updates a single `Template` using its globally unique id and a patch. */
   updateTemplateByNodeId?: Maybe<UpdateTemplatePayload>;
   /** Updates a single `Template` using a unique key and a patch. */
@@ -6361,26 +6301,22 @@ export type Mutation = {
   deleteReviewByNodeId?: Maybe<DeleteReviewPayload>;
   /** Deletes a single `Review` using a unique key. */
   deleteReview?: Maybe<DeleteReviewPayload>;
+  /** Deletes a single `ReviewAssignment` using its globally unique id. */
+  deleteReviewAssignmentByNodeId?: Maybe<DeleteReviewAssignmentPayload>;
+  /** Deletes a single `ReviewAssignment` using a unique key. */
+  deleteReviewAssignment?: Maybe<DeleteReviewAssignmentPayload>;
+  /** Deletes a single `ReviewQuestionAssignment` using its globally unique id. */
+  deleteReviewQuestionAssignmentByNodeId?: Maybe<DeleteReviewQuestionAssignmentPayload>;
+  /** Deletes a single `ReviewQuestionAssignment` using a unique key. */
+  deleteReviewQuestionAssignment?: Maybe<DeleteReviewQuestionAssignmentPayload>;
   /** Deletes a single `ReviewResponse` using its globally unique id. */
   deleteReviewResponseByNodeId?: Maybe<DeleteReviewResponsePayload>;
   /** Deletes a single `ReviewResponse` using a unique key. */
   deleteReviewResponse?: Maybe<DeleteReviewResponsePayload>;
-  /** Deletes a single `ReviewSection` using its globally unique id. */
-  deleteReviewSectionByNodeId?: Maybe<DeleteReviewSectionPayload>;
-  /** Deletes a single `ReviewSection` using a unique key. */
-  deleteReviewSection?: Maybe<DeleteReviewSectionPayload>;
-  /** Deletes a single `ReviewSectionAssignment` using its globally unique id. */
-  deleteReviewSectionAssignmentByNodeId?: Maybe<DeleteReviewSectionAssignmentPayload>;
-  /** Deletes a single `ReviewSectionAssignment` using a unique key. */
-  deleteReviewSectionAssignment?: Maybe<DeleteReviewSectionAssignmentPayload>;
-  /** Deletes a single `ReviewSectionJoin` using its globally unique id. */
-  deleteReviewSectionJoinByNodeId?: Maybe<DeleteReviewSectionJoinPayload>;
-  /** Deletes a single `ReviewSectionJoin` using a unique key. */
-  deleteReviewSectionJoin?: Maybe<DeleteReviewSectionJoinPayload>;
-  /** Deletes a single `ReviewSectionResponseJoin` using its globally unique id. */
-  deleteReviewSectionResponseJoinByNodeId?: Maybe<DeleteReviewSectionResponseJoinPayload>;
-  /** Deletes a single `ReviewSectionResponseJoin` using a unique key. */
-  deleteReviewSectionResponseJoin?: Maybe<DeleteReviewSectionResponseJoinPayload>;
+  /** Deletes a single `ReviewStatusHistory` using its globally unique id. */
+  deleteReviewStatusHistoryByNodeId?: Maybe<DeleteReviewStatusHistoryPayload>;
+  /** Deletes a single `ReviewStatusHistory` using a unique key. */
+  deleteReviewStatusHistory?: Maybe<DeleteReviewStatusHistoryPayload>;
   /** Deletes a single `Template` using its globally unique id. */
   deleteTemplateByNodeId?: Maybe<DeleteTemplatePayload>;
   /** Deletes a single `Template` using a unique key. */
@@ -6511,32 +6447,26 @@ export type MutationCreateReviewArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateReviewAssignmentArgs = {
+  input: CreateReviewAssignmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateReviewQuestionAssignmentArgs = {
+  input: CreateReviewQuestionAssignmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateReviewResponseArgs = {
   input: CreateReviewResponseInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateReviewSectionArgs = {
-  input: CreateReviewSectionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateReviewSectionAssignmentArgs = {
-  input: CreateReviewSectionAssignmentInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateReviewSectionJoinArgs = {
-  input: CreateReviewSectionJoinInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateReviewSectionResponseJoinArgs = {
-  input: CreateReviewSectionResponseJoinInput;
+export type MutationCreateReviewStatusHistoryArgs = {
+  input: CreateReviewStatusHistoryInput;
 };
 
 
@@ -6781,6 +6711,30 @@ export type MutationUpdateReviewArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateReviewAssignmentByNodeIdArgs = {
+  input: UpdateReviewAssignmentByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateReviewAssignmentArgs = {
+  input: UpdateReviewAssignmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateReviewQuestionAssignmentByNodeIdArgs = {
+  input: UpdateReviewQuestionAssignmentByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateReviewQuestionAssignmentArgs = {
+  input: UpdateReviewQuestionAssignmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateReviewResponseByNodeIdArgs = {
   input: UpdateReviewResponseByNodeIdInput;
 };
@@ -6793,50 +6747,14 @@ export type MutationUpdateReviewResponseArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReviewSectionByNodeIdArgs = {
-  input: UpdateReviewSectionByNodeIdInput;
+export type MutationUpdateReviewStatusHistoryByNodeIdArgs = {
+  input: UpdateReviewStatusHistoryByNodeIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReviewSectionArgs = {
-  input: UpdateReviewSectionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReviewSectionAssignmentByNodeIdArgs = {
-  input: UpdateReviewSectionAssignmentByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReviewSectionAssignmentArgs = {
-  input: UpdateReviewSectionAssignmentInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReviewSectionJoinByNodeIdArgs = {
-  input: UpdateReviewSectionJoinByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReviewSectionJoinArgs = {
-  input: UpdateReviewSectionJoinInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReviewSectionResponseJoinByNodeIdArgs = {
-  input: UpdateReviewSectionResponseJoinByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateReviewSectionResponseJoinArgs = {
-  input: UpdateReviewSectionResponseJoinInput;
+export type MutationUpdateReviewStatusHistoryArgs = {
+  input: UpdateReviewStatusHistoryInput;
 };
 
 
@@ -7135,6 +7053,30 @@ export type MutationDeleteReviewArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteReviewAssignmentByNodeIdArgs = {
+  input: DeleteReviewAssignmentByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteReviewAssignmentArgs = {
+  input: DeleteReviewAssignmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteReviewQuestionAssignmentByNodeIdArgs = {
+  input: DeleteReviewQuestionAssignmentByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteReviewQuestionAssignmentArgs = {
+  input: DeleteReviewQuestionAssignmentInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteReviewResponseByNodeIdArgs = {
   input: DeleteReviewResponseByNodeIdInput;
 };
@@ -7147,50 +7089,14 @@ export type MutationDeleteReviewResponseArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReviewSectionByNodeIdArgs = {
-  input: DeleteReviewSectionByNodeIdInput;
+export type MutationDeleteReviewStatusHistoryByNodeIdArgs = {
+  input: DeleteReviewStatusHistoryByNodeIdInput;
 };
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReviewSectionArgs = {
-  input: DeleteReviewSectionInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReviewSectionAssignmentByNodeIdArgs = {
-  input: DeleteReviewSectionAssignmentByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReviewSectionAssignmentArgs = {
-  input: DeleteReviewSectionAssignmentInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReviewSectionJoinByNodeIdArgs = {
-  input: DeleteReviewSectionJoinByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReviewSectionJoinArgs = {
-  input: DeleteReviewSectionJoinInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReviewSectionResponseJoinByNodeIdArgs = {
-  input: DeleteReviewSectionResponseJoinByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteReviewSectionResponseJoinArgs = {
-  input: DeleteReviewSectionResponseJoinInput;
+export type MutationDeleteReviewStatusHistoryArgs = {
+  input: DeleteReviewStatusHistoryInput;
 };
 
 
@@ -7344,7 +7250,9 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -7711,13 +7619,15 @@ export type NotificationReviewIdFkeyNotificationCreateInput = {
 /** The `review` to be created by this mutation. */
 export type NotificationReviewIdFkeyReviewCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewStatus>;
-  comment?: Maybe<Scalars['String']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewIdFkeyInverseInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
@@ -7831,8 +7741,9 @@ export type NotificationUserIdFkeyUserCreateInput = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -8318,8 +8229,9 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -8922,16 +8834,14 @@ export type Query = Node & {
   permissionPolicies?: Maybe<PermissionPoliciesConnection>;
   /** Reads and enables pagination through a set of `Review`. */
   reviews?: Maybe<ReviewsConnection>;
+  /** Reads and enables pagination through a set of `ReviewAssignment`. */
+  reviewAssignments?: Maybe<ReviewAssignmentsConnection>;
+  /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
+  reviewQuestionAssignments?: Maybe<ReviewQuestionAssignmentsConnection>;
   /** Reads and enables pagination through a set of `ReviewResponse`. */
   reviewResponses?: Maybe<ReviewResponsesConnection>;
-  /** Reads and enables pagination through a set of `ReviewSection`. */
-  reviewSections?: Maybe<ReviewSectionsConnection>;
-  /** Reads and enables pagination through a set of `ReviewSectionAssignment`. */
-  reviewSectionAssignments?: Maybe<ReviewSectionAssignmentsConnection>;
-  /** Reads and enables pagination through a set of `ReviewSectionJoin`. */
-  reviewSectionJoins?: Maybe<ReviewSectionJoinsConnection>;
-  /** Reads and enables pagination through a set of `ReviewSectionResponseJoin`. */
-  reviewSectionResponseJoins?: Maybe<ReviewSectionResponseJoinsConnection>;
+  /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
+  reviewStatusHistories?: Maybe<ReviewStatusHistoriesConnection>;
   /** Reads and enables pagination through a set of `Template`. */
   templates?: Maybe<TemplatesConnection>;
   /** Reads and enables pagination through a set of `TemplateAction`. */
@@ -8966,11 +8876,10 @@ export type Query = Node & {
   permissionName?: Maybe<PermissionName>;
   permissionPolicy?: Maybe<PermissionPolicy>;
   review?: Maybe<Review>;
+  reviewAssignment?: Maybe<ReviewAssignment>;
+  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   reviewResponse?: Maybe<ReviewResponse>;
-  reviewSection?: Maybe<ReviewSection>;
-  reviewSectionAssignment?: Maybe<ReviewSectionAssignment>;
-  reviewSectionJoin?: Maybe<ReviewSectionJoin>;
-  reviewSectionResponseJoin?: Maybe<ReviewSectionResponseJoin>;
+  reviewStatusHistory?: Maybe<ReviewStatusHistory>;
   template?: Maybe<Template>;
   templateAction?: Maybe<TemplateAction>;
   templateElement?: Maybe<TemplateElement>;
@@ -8985,6 +8894,7 @@ export type Query = Node & {
   jwtGetKey?: Maybe<Scalars['String']>;
   jwtGetPolicyLinksAsSetofText?: Maybe<JwtGetPolicyLinksAsSetofTextConnection>;
   jwtGetPolicyLinksAsText?: Maybe<Scalars['String']>;
+  reviewApplicationId?: Maybe<Scalars['Int']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
@@ -9015,16 +8925,14 @@ export type Query = Node & {
   permissionPolicyByNodeId?: Maybe<PermissionPolicy>;
   /** Reads a single `Review` using its globally unique `ID`. */
   reviewByNodeId?: Maybe<Review>;
+  /** Reads a single `ReviewAssignment` using its globally unique `ID`. */
+  reviewAssignmentByNodeId?: Maybe<ReviewAssignment>;
+  /** Reads a single `ReviewQuestionAssignment` using its globally unique `ID`. */
+  reviewQuestionAssignmentByNodeId?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ReviewResponse` using its globally unique `ID`. */
   reviewResponseByNodeId?: Maybe<ReviewResponse>;
-  /** Reads a single `ReviewSection` using its globally unique `ID`. */
-  reviewSectionByNodeId?: Maybe<ReviewSection>;
-  /** Reads a single `ReviewSectionAssignment` using its globally unique `ID`. */
-  reviewSectionAssignmentByNodeId?: Maybe<ReviewSectionAssignment>;
-  /** Reads a single `ReviewSectionJoin` using its globally unique `ID`. */
-  reviewSectionJoinByNodeId?: Maybe<ReviewSectionJoin>;
-  /** Reads a single `ReviewSectionResponseJoin` using its globally unique `ID`. */
-  reviewSectionResponseJoinByNodeId?: Maybe<ReviewSectionResponseJoin>;
+  /** Reads a single `ReviewStatusHistory` using its globally unique `ID`. */
+  reviewStatusHistoryByNodeId?: Maybe<ReviewStatusHistory>;
   /** Reads a single `Template` using its globally unique `ID`. */
   templateByNodeId?: Maybe<Template>;
   /** Reads a single `TemplateAction` using its globally unique `ID`. */
@@ -9274,6 +9182,32 @@ export type QueryReviewsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReviewAssignmentsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
+  condition?: Maybe<ReviewAssignmentCondition>;
+  filter?: Maybe<ReviewAssignmentFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewQuestionAssignmentsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
+  condition?: Maybe<ReviewQuestionAssignmentCondition>;
+  filter?: Maybe<ReviewQuestionAssignmentFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReviewResponsesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -9287,54 +9221,15 @@ export type QueryReviewResponsesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionsArgs = {
+export type QueryReviewStatusHistoriesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionsOrderBy>>;
-  condition?: Maybe<ReviewSectionCondition>;
-  filter?: Maybe<ReviewSectionFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionAssignmentsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionAssignmentsOrderBy>>;
-  condition?: Maybe<ReviewSectionAssignmentCondition>;
-  filter?: Maybe<ReviewSectionAssignmentFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionJoinsOrderBy>>;
-  condition?: Maybe<ReviewSectionJoinCondition>;
-  filter?: Maybe<ReviewSectionJoinFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionResponseJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionResponseJoinsOrderBy>>;
-  condition?: Maybe<ReviewSectionResponseJoinCondition>;
-  filter?: Maybe<ReviewSectionResponseJoinFilter>;
+  orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
+  condition?: Maybe<ReviewStatusHistoryCondition>;
+  filter?: Maybe<ReviewStatusHistoryFilter>;
 };
 
 
@@ -9552,31 +9447,25 @@ export type QueryReviewArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReviewAssignmentArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewQuestionAssignmentArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReviewResponseArgs = {
   id: Scalars['Int'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionAssignmentArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionJoinArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionResponseJoinArgs = {
+export type QueryReviewStatusHistoryArgs = {
   id: Scalars['Int'];
 };
 
@@ -9672,6 +9561,12 @@ export type QueryJwtGetPolicyLinksAsTextArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReviewApplicationIdArgs = {
+  reviewId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryActionPluginByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -9762,31 +9657,25 @@ export type QueryReviewByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReviewAssignmentByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewQuestionAssignmentByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryReviewResponseByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionAssignmentByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionJoinByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewSectionResponseJoinByNodeIdArgs = {
+export type QueryReviewStatusHistoryByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -9849,29 +9738,47 @@ export type Review = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewStatus>;
-  comment?: Maybe<Scalars['String']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Reads a single `Application` that is related to this `Review`. */
+  reviewAssignment?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `Review`. */
+  reviewer?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
-  /** Reads and enables pagination through a set of `ReviewSectionJoin`. */
-  reviewSectionJoins: ReviewSectionJoinsConnection;
+  /** Reads and enables pagination through a set of `ReviewResponse`. */
+  reviewResponses: ReviewResponsesConnection;
+  /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
+  reviewStatusHistories: ReviewStatusHistoriesConnection;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
+  status?: Maybe<Scalars['String']>;
 };
 
 
-export type ReviewReviewSectionJoinsArgs = {
+export type ReviewReviewResponsesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionJoinsOrderBy>>;
-  condition?: Maybe<ReviewSectionJoinCondition>;
-  filter?: Maybe<ReviewSectionJoinFilter>;
+  orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
+  condition?: Maybe<ReviewResponseCondition>;
+  filter?: Maybe<ReviewResponseFilter>;
+};
+
+
+export type ReviewReviewStatusHistoriesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
+  condition?: Maybe<ReviewStatusHistoryCondition>;
+  filter?: Maybe<ReviewStatusHistoryFilter>;
 };
 
 
@@ -9901,7 +9808,9 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -9953,85 +9862,610 @@ export type ReviewApplicationIdFkeyInverseInput = {
 /** The `review` to be created by this mutation. */
 export type ReviewApplicationIdFkeyReviewCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewStatus>;
-  comment?: Maybe<Scalars['String']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewIdFkeyInverseInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+export type ReviewAssignment = Node & {
+  __typename?: 'ReviewAssignment';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Reads a single `User` that is related to this `ReviewAssignment`. */
+  assigner?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ReviewAssignment`. */
+  reviewer?: Maybe<User>;
+  /** Reads a single `TemplateStage` that is related to this `ReviewAssignment`. */
+  stage?: Maybe<TemplateStage>;
+  /** Reads a single `Application` that is related to this `ReviewAssignment`. */
+  application?: Maybe<Application>;
+  /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
+  reviewQuestionAssignments: ReviewQuestionAssignmentsConnection;
+};
+
+
+export type ReviewAssignmentReviewQuestionAssignmentsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
+  condition?: Maybe<ReviewQuestionAssignmentCondition>;
+  filter?: Maybe<ReviewQuestionAssignmentFilter>;
+};
+
+/** The `application` to be created by this mutation. */
+export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `application` in the `ReviewAssignmentInput` mutation. */
+export type ReviewAssignmentApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewAssignmentApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** Input for the nested mutation of `reviewAssignment` in the `ApplicationInput` mutation. */
+export type ReviewAssignmentApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewAssignment` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyConnect>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewAssignmentNodeIdConnect>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyDelete>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewAssignmentNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingReviewAssignmentPkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate>>;
+  /** A `ReviewAssignmentInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput>>;
+};
+
+/** The `reviewAssignment` to be created by this mutation. */
+export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `user` in the `ReviewAssignmentInput` mutation. */
+export type ReviewAssignmentAssignerIdFkeyInput = {
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectById?: Maybe<UserUserPkeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByNodeId?: Maybe<UserNodeIdConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteById?: Maybe<UserUserPkeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<UserNodeIdDelete>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateById?: Maybe<UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate>;
+  /** A `UserInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewAssignmentAssignerIdFkeyUserCreateInput>;
+};
+
+/** Input for the nested mutation of `reviewAssignment` in the `UserInput` mutation. */
+export type ReviewAssignmentAssignerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewAssignment` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyConnect>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewAssignmentNodeIdConnect>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyDelete>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewAssignmentNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate>>;
+  /** A `ReviewAssignmentInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput>>;
+};
+
+/** The `reviewAssignment` to be created by this mutation. */
+export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** The `user` to be created by this mutation. */
+export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+};
+
+/**
+ * A condition to be used against `ReviewAssignment` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type ReviewAssignmentCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `assignerId` field. */
+  assignerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewerId` field. */
+  reviewerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageId` field. */
+  stageId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `assignerId` field. */
+  assignerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerId` field. */
+  reviewerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageId` field. */
+  stageId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewQuestionAssignments` relation. */
+  reviewQuestionAssignments?: Maybe<ReviewAssignmentToManyReviewQuestionAssignmentFilter>;
+  /** Some related `reviewQuestionAssignments` exist. */
+  reviewQuestionAssignmentsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `assigner` relation. */
+  assigner?: Maybe<UserFilter>;
+  /** A related `assigner` exists. */
+  assignerExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewer` relation. */
+  reviewer?: Maybe<UserFilter>;
+  /** A related `reviewer` exists. */
+  reviewerExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `stage` relation. */
+  stage?: Maybe<TemplateStageFilter>;
+  /** A related `stage` exists. */
+  stageExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** A related `application` exists. */
+  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewAssignmentFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewAssignmentFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewAssignmentFilter>;
+};
+
+/** An input for mutations affecting `ReviewAssignment` */
+export type ReviewAssignmentInput = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type ReviewAssignmentNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type ReviewAssignmentNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `reviewAssignment` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The fields on `reviewAssignment` to look up the row to update. */
+export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingReviewAssignmentPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `user` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UserPatch;
+};
+
+/** The fields on `reviewAssignment` to look up the row to update. */
+export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `user` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UserPatch;
+};
+
+/** The fields on `reviewAssignment` to look up the row to update. */
+export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateStage` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `templateStage` being updated. */
+  patch: TemplateStagePatch;
+};
+
+/** The fields on `reviewAssignment` to look up the row to update. */
+export type ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewQuestionAssignment` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
+  patch: ReviewQuestionAssignmentPatch;
+};
+
+/** The fields on `reviewAssignment` to look up the row to update. */
+export type ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `ReviewAssignment`. Fields that are set will be updated. */
+export type ReviewAssignmentPatch = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** The fields on `reviewAssignment` to look up the row to connect. */
+export type ReviewAssignmentReviewAssignmentPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `reviewAssignment` to look up the row to delete. */
+export type ReviewAssignmentReviewAssignmentPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** Input for the nested mutation of `user` in the `ReviewAssignmentInput` mutation. */
+export type ReviewAssignmentReviewerIdFkeyInput = {
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectById?: Maybe<UserUserPkeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByNodeId?: Maybe<UserNodeIdConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteById?: Maybe<UserUserPkeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<UserNodeIdDelete>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateById?: Maybe<UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate>;
+  /** A `UserInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewAssignmentReviewerIdFkeyUserCreateInput>;
+};
+
+/** Input for the nested mutation of `reviewAssignment` in the `UserInput` mutation. */
+export type ReviewAssignmentReviewerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewAssignment` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyConnect>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewAssignmentNodeIdConnect>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyDelete>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewAssignmentNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate>>;
+  /** A `ReviewAssignmentInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput>>;
+};
+
+/** The `reviewAssignment` to be created by this mutation. */
+export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** The `user` to be created by this mutation. */
+export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+};
+
+/** A connection to a list of `ReviewAssignment` values. */
+export type ReviewAssignmentsConnection = {
+  __typename?: 'ReviewAssignmentsConnection';
+  /** A list of `ReviewAssignment` objects. */
+  nodes: Array<Maybe<ReviewAssignment>>;
+  /** A list of edges which contains the `ReviewAssignment` and cursor to aid in pagination. */
+  edges: Array<ReviewAssignmentsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReviewAssignment` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ReviewAssignment` edge in the connection. */
+export type ReviewAssignmentsEdge = {
+  __typename?: 'ReviewAssignmentsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewAssignment` at the end of the edge. */
+  node?: Maybe<ReviewAssignment>;
+};
+
+/** Methods to use when ordering `ReviewAssignment`. */
+export enum ReviewAssignmentsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  AssignerIdAsc = 'ASSIGNER_ID_ASC',
+  AssignerIdDesc = 'ASSIGNER_ID_DESC',
+  ReviewerIdAsc = 'REVIEWER_ID_ASC',
+  ReviewerIdDesc = 'REVIEWER_ID_DESC',
+  StageIdAsc = 'STAGE_ID_ASC',
+  StageIdDesc = 'STAGE_ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** Input for the nested mutation of `templateStage` in the `ReviewAssignmentInput` mutation. */
+export type ReviewAssignmentStageIdFkeyInput = {
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  connectById?: Maybe<TemplateStageTemplateStagePkeyConnect>;
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateStageNodeIdConnect>;
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateStageTemplateStagePkeyDelete>;
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateStageNodeIdDelete>;
+  /** The primary key(s) and patch data for `templateStage` for the far side of the relationship. */
+  updateById?: Maybe<TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate>;
+  /** The primary key(s) and patch data for `templateStage` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate>;
+  /** A `TemplateStageInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewAssignmentStageIdFkeyTemplateStageCreateInput>;
+};
+
+/** Input for the nested mutation of `reviewAssignment` in the `TemplateStageInput` mutation. */
+export type ReviewAssignmentStageIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewAssignment` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyConnect>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewAssignmentNodeIdConnect>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewAssignmentReviewAssignmentPkeyDelete>>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewAssignmentNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate>>;
+  /** A `ReviewAssignmentInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput>>;
+};
+
+/** The `reviewAssignment` to be created by this mutation. */
+export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** The `templateStage` to be created by this mutation. */
+export type ReviewAssignmentStageIdFkeyTemplateStageCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  number?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
+};
+
+/** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewAssignmentToManyReviewQuestionAssignmentFilter = {
+  /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** No related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
 /** A condition to be used against `Review` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type ReviewCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `status` field. */
-  status?: Maybe<ReviewStatus>;
-  /** Checks for equality with the object’s `comment` field. */
-  comment?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `timeCreated` field. */
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewerId` field. */
+  reviewerId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
-};
-
-export enum ReviewDecision {
-  Approved = 'APPROVED',
-  Rejected = 'REJECTED',
-  Observations = 'OBSERVATIONS'
-}
-
-/** A filter to be used against ReviewDecision fields. All fields are combined with a logical ‘and.’ */
-export type ReviewDecisionFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<ReviewDecision>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<ReviewDecision>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<ReviewDecision>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<ReviewDecision>;
-  /** Included in the specified list. */
-  in?: Maybe<Array<ReviewDecision>>;
-  /** Not included in the specified list. */
-  notIn?: Maybe<Array<ReviewDecision>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<ReviewDecision>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<ReviewDecision>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<ReviewDecision>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<ReviewDecision>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
 };
 
 /** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
 export type ReviewFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerId` field. */
+  reviewerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `status` field. */
-  status?: Maybe<ReviewStatusFilter>;
-  /** Filter by the object’s `comment` field. */
-  comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `timeCreated` field. */
-  timeCreated?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `reviewSectionJoins` relation. */
-  reviewSectionJoins?: Maybe<ReviewToManyReviewSectionJoinFilter>;
-  /** Some related `reviewSectionJoins` exist. */
-  reviewSectionJoinsExist?: Maybe<Scalars['Boolean']>;
+  status?: Maybe<StringFilter>;
+  /** Filter by the object’s `reviewResponses` relation. */
+  reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
+  /** Some related `reviewResponses` exist. */
+  reviewResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewStatusHistories` relation. */
+  reviewStatusHistories?: Maybe<ReviewToManyReviewStatusHistoryFilter>;
+  /** Some related `reviewStatusHistories` exist. */
+  reviewStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `notifications` relation. */
   notifications?: Maybe<ReviewToManyNotificationFilter>;
   /** Some related `notifications` exist. */
   notificationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewAssignment` relation. */
+  reviewAssignment?: Maybe<ApplicationFilter>;
+  /** A related `reviewAssignment` exists. */
+  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewer` relation. */
+  reviewer?: Maybe<UserFilter>;
+  /** A related `reviewer` exists. */
+  reviewerExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** A related `application` exists. */
@@ -10047,13 +10481,15 @@ export type ReviewFilter = {
 /** An input for mutations affecting `Review` */
 export type ReviewInput = {
   id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewStatus>;
-  comment?: Maybe<Scalars['String']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewIdFkeyInverseInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
@@ -10100,31 +10536,404 @@ export type ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionJoin` to be connected. */
+export type ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-  patch: ReviewSectionJoinPatch;
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
 };
 
 /** The fields on `review` to look up the row to update. */
-export type ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewPkeyUpdate = {
+export type ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate = {
   /** An object where the defined keys will be set on the `review` being updated. */
-  patch: UpdateReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch;
+  patch: UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `user` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UserPatch;
+};
+
+/** The fields on `review` to look up the row to update. */
+export type ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate = {
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewResponse` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewResponse` being updated. */
+  patch: ReviewResponsePatch;
+};
+
+/** The fields on `review` to look up the row to update. */
+export type ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate = {
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewStatusHistory` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewStatusHistory` being updated. */
+  patch: ReviewStatusHistoryPatch;
+};
+
+/** The fields on `review` to look up the row to update. */
+export type ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate = {
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** Represents an update to a `Review`. Fields that are set will be updated. */
 export type ReviewPatch = {
   id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewStatus>;
-  comment?: Maybe<Scalars['String']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewIdFkeyInverseInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+export type ReviewQuestionAssignment = Node & {
+  __typename?: 'ReviewQuestionAssignment';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  templateElementId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
+  templateElement?: Maybe<TemplateElement>;
+  /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
+  /** Reads and enables pagination through a set of `ReviewResponse`. */
+  reviewResponses: ReviewResponsesConnection;
+};
+
+
+export type ReviewQuestionAssignmentReviewResponsesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
+  condition?: Maybe<ReviewResponseCondition>;
+  filter?: Maybe<ReviewResponseFilter>;
+};
+
+/**
+ * A condition to be used against `ReviewQuestionAssignment` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type ReviewQuestionAssignmentCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateElementId` field. */
+  templateElementId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewQuestionAssignmentFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateElementId` field. */
+  templateElementId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewResponses` relation. */
+  reviewResponses?: Maybe<ReviewQuestionAssignmentToManyReviewResponseFilter>;
+  /** Some related `reviewResponses` exist. */
+  reviewResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `templateElement` relation. */
+  templateElement?: Maybe<TemplateElementFilter>;
+  /** A related `templateElement` exists. */
+  templateElementExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewAssignment` relation. */
+  reviewAssignment?: Maybe<ReviewAssignmentFilter>;
+  /** A related `reviewAssignment` exists. */
+  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewQuestionAssignmentFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewQuestionAssignmentFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewQuestionAssignmentFilter>;
+};
+
+/** An input for mutations affecting `ReviewQuestionAssignment` */
+export type ReviewQuestionAssignmentInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateElementId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type ReviewQuestionAssignmentNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `reviewQuestionAssignment` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type ReviewQuestionAssignmentNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `reviewQuestionAssignment` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: ReviewAssignmentPatch;
+};
+
+/** The fields on `reviewQuestionAssignment` to look up the row to update. */
+export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
+  patch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateElement` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `templateElement` being updated. */
+  patch: TemplateElementPatch;
+};
+
+/** The fields on `reviewQuestionAssignment` to look up the row to update. */
+export type ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
+  patch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewResponse` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewResponse` being updated. */
+  patch: ReviewResponsePatch;
+};
+
+/** The fields on `reviewQuestionAssignment` to look up the row to update. */
+export type ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
+  patch: UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `ReviewQuestionAssignment`. Fields that are set will be updated. */
+export type ReviewQuestionAssignmentPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateElementId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `reviewAssignment` in the `ReviewQuestionAssignmentInput` mutation. */
+export type ReviewQuestionAssignmentReviewAssignmentIdFkeyInput = {
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectById?: Maybe<ReviewAssignmentReviewAssignmentPkeyConnect>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ReviewAssignmentNodeIdConnect>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteById?: Maybe<ReviewAssignmentReviewAssignmentPkeyDelete>;
+  /** The primary key(s) for `reviewAssignment` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ReviewAssignmentNodeIdDelete>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateById?: Maybe<ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate>;
+  /** The primary key(s) and patch data for `reviewAssignment` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate>;
+  /** A `ReviewAssignmentInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput>;
+};
+
+/** Input for the nested mutation of `reviewQuestionAssignment` in the `ReviewAssignmentInput` mutation. */
+export type ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewQuestionAssignment` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect>>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewQuestionAssignmentNodeIdConnect>>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete>>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewQuestionAssignmentNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate>>;
+  /** A `ReviewQuestionAssignmentInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput>>;
+};
+
+/** The `reviewAssignment` to be created by this mutation. */
+export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** The `reviewQuestionAssignment` to be created by this mutation. */
+export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateElementId?: Maybe<Scalars['Int']>;
+  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
+};
+
+/** The fields on `reviewQuestionAssignment` to look up the row to connect. */
+export type ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `reviewQuestionAssignment` to look up the row to delete. */
+export type ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** A connection to a list of `ReviewQuestionAssignment` values. */
+export type ReviewQuestionAssignmentsConnection = {
+  __typename?: 'ReviewQuestionAssignmentsConnection';
+  /** A list of `ReviewQuestionAssignment` objects. */
+  nodes: Array<Maybe<ReviewQuestionAssignment>>;
+  /** A list of edges which contains the `ReviewQuestionAssignment` and cursor to aid in pagination. */
+  edges: Array<ReviewQuestionAssignmentsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReviewQuestionAssignment` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ReviewQuestionAssignment` edge in the connection. */
+export type ReviewQuestionAssignmentsEdge = {
+  __typename?: 'ReviewQuestionAssignmentsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewQuestionAssignment` at the end of the edge. */
+  node?: Maybe<ReviewQuestionAssignment>;
+};
+
+/** Methods to use when ordering `ReviewQuestionAssignment`. */
+export enum ReviewQuestionAssignmentsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
+  TemplateElementIdDesc = 'TEMPLATE_ELEMENT_ID_DESC',
+  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
+  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** Input for the nested mutation of `templateElement` in the `ReviewQuestionAssignmentInput` mutation. */
+export type ReviewQuestionAssignmentTemplateElementIdFkeyInput = {
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  connectById?: Maybe<TemplateElementTemplateElementPkeyConnect>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateElementNodeIdConnect>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateElementTemplateElementPkeyDelete>;
+  /** The primary key(s) for `templateElement` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateElementNodeIdDelete>;
+  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
+  updateById?: Maybe<TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate>;
+  /** The primary key(s) and patch data for `templateElement` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate>;
+  /** A `TemplateElementInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput>;
+};
+
+/** Input for the nested mutation of `reviewQuestionAssignment` in the `TemplateElementInput` mutation. */
+export type ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewQuestionAssignment` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect>>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewQuestionAssignmentNodeIdConnect>>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete>>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewQuestionAssignmentNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate>>;
+  /** A `ReviewQuestionAssignmentInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput>>;
+};
+
+/** The `reviewQuestionAssignment` to be created by this mutation. */
+export type ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
+};
+
+/** The `templateElement` to be created by this mutation. */
+export type ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  sectionId?: Maybe<Scalars['Int']>;
+  code: Scalars['String'];
+  index?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  category?: Maybe<TemplateElementCategory>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  isRequired?: Maybe<Scalars['JSON']>;
+  isEditable?: Maybe<Scalars['JSON']>;
+  parameters?: Maybe<Scalars['JSON']>;
+  templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
+};
+
+/** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewQuestionAssignmentToManyReviewResponseFilter = {
+  /** Every related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewResponseFilter>;
+  /** Some related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewResponseFilter>;
+  /** No related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewResponseFilter>;
 };
 
 export type ReviewResponse = Node & {
@@ -10132,26 +10941,18 @@ export type ReviewResponse = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
   comment?: Maybe<Scalars['String']>;
-  trigger?: Maybe<Trigger>;
+  decision?: Maybe<ReviewResponseDecision>;
+  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  /** Reads a single `ReviewQuestionAssignment` that is related to this `ReviewResponse`. */
+  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads and enables pagination through a set of `ReviewSectionResponseJoin`. */
-  reviewSectionResponseJoins: ReviewSectionResponseJoinsConnection;
-};
-
-
-export type ReviewResponseReviewSectionResponseJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionResponseJoinsOrderBy>>;
-  condition?: Maybe<ReviewSectionResponseJoinCondition>;
-  filter?: Maybe<ReviewSectionResponseJoinFilter>;
+  /** Reads a single `Review` that is related to this `ReviewResponse`. */
+  review?: Maybe<Review>;
 };
 
 /** The `applicationResponse` to be created by this mutation. */
@@ -10209,11 +11010,14 @@ export type ReviewResponseApplicationResponseIdFkeyInverseInput = {
 /** The `reviewResponse` to be created by this mutation. */
 export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
   comment?: Maybe<Scalars['String']>;
-  trigger?: Maybe<Trigger>;
+  decision?: Maybe<ReviewResponseDecision>;
+  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput>;
+  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
 /**
@@ -10223,36 +11027,79 @@ export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
 export type ReviewResponseCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationResponseId` field. */
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewDecision` field. */
-  reviewDecision?: Maybe<ReviewDecision>;
   /** Checks for equality with the object’s `comment` field. */
   comment?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `trigger` field. */
-  trigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `decision` field. */
+  decision?: Maybe<ReviewResponseDecision>;
+  /** Checks for equality with the object’s `reviewQuestionAssignmentId` field. */
+  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationResponseId` field. */
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewId` field. */
+  reviewId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
+};
+
+export enum ReviewResponseDecision {
+  Approve = 'APPROVE',
+  Decline = 'DECLINE'
+}
+
+/** A filter to be used against ReviewResponseDecision fields. All fields are combined with a logical ‘and.’ */
+export type ReviewResponseDecisionFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ReviewResponseDecision>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ReviewResponseDecision>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ReviewResponseDecision>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ReviewResponseDecision>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ReviewResponseDecision>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ReviewResponseDecision>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ReviewResponseDecision>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ReviewResponseDecision>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ReviewResponseDecision>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ReviewResponseDecision>;
 };
 
 /** A filter to be used against `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
 export type ReviewResponseFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationResponseId` field. */
-  applicationResponseId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewDecision` field. */
-  reviewDecision?: Maybe<ReviewDecisionFilter>;
   /** Filter by the object’s `comment` field. */
   comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `reviewSectionResponseJoins` relation. */
-  reviewSectionResponseJoins?: Maybe<ReviewResponseToManyReviewSectionResponseJoinFilter>;
-  /** Some related `reviewSectionResponseJoins` exist. */
-  reviewSectionResponseJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `decision` field. */
+  decision?: Maybe<ReviewResponseDecisionFilter>;
+  /** Filter by the object’s `reviewQuestionAssignmentId` field. */
+  reviewQuestionAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationResponseId` field. */
+  applicationResponseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `reviewQuestionAssignment` relation. */
+  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** A related `reviewQuestionAssignment` exists. */
+  reviewQuestionAssignmentExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `applicationResponse` relation. */
   applicationResponse?: Maybe<ApplicationResponseFilter>;
   /** A related `applicationResponse` exists. */
   applicationResponseExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `review` relation. */
+  review?: Maybe<ReviewFilter>;
+  /** A related `review` exists. */
+  reviewExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewResponseFilter>>;
   /** Checks for any expressions in this list. */
@@ -10264,12 +11111,15 @@ export type ReviewResponseFilter = {
 /** An input for mutations affecting `ReviewResponse` */
 export type ReviewResponseInput = {
   id?: Maybe<Scalars['Int']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
   comment?: Maybe<Scalars['String']>;
-  trigger?: Maybe<Trigger>;
+  decision?: Maybe<ReviewResponseDecision>;
+  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput>;
+  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -10300,29 +11150,174 @@ export type ReviewResponseOnReviewResponseForReviewResponseApplicationResponseId
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionResponseJoin` to be connected. */
+export type ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `review` to be connected. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionResponseJoin` being updated. */
-  patch: ReviewSectionResponseJoinPatch;
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: ReviewPatch;
 };
 
 /** The fields on `reviewResponse` to look up the row to update. */
-export type ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewResponsePkeyUpdate = {
+export type ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate = {
   /** An object where the defined keys will be set on the `reviewResponse` being updated. */
-  patch: UpdateReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch;
+  patch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewQuestionAssignment` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
+  patch: ReviewQuestionAssignmentPatch;
+};
+
+/** The fields on `reviewResponse` to look up the row to update. */
+export type ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewResponse` being updated. */
+  patch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** Represents an update to a `ReviewResponse`. Fields that are set will be updated. */
 export type ReviewResponsePatch = {
   id?: Maybe<Scalars['Int']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
   comment?: Maybe<Scalars['String']>;
-  trigger?: Maybe<Trigger>;
+  decision?: Maybe<ReviewResponseDecision>;
+  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput>;
+  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `review` in the `ReviewResponseInput` mutation. */
+export type ReviewResponseReviewIdFkeyInput = {
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectById?: Maybe<ReviewReviewPkeyConnect>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ReviewNodeIdConnect>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteById?: Maybe<ReviewReviewPkeyDelete>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ReviewNodeIdDelete>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateById?: Maybe<ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate>;
+  /** A `ReviewInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewResponseReviewIdFkeyReviewCreateInput>;
+};
+
+/** Input for the nested mutation of `reviewResponse` in the `ReviewInput` mutation. */
+export type ReviewResponseReviewIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewResponse` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewResponseReviewResponsePkeyConnect>>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewResponseNodeIdConnect>>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewResponseReviewResponsePkeyDelete>>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewResponseNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate>>;
+  /** A `ReviewResponseInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewResponseReviewIdFkeyReviewResponseCreateInput>>;
+};
+
+/** The `review` to be created by this mutation. */
+export type ReviewResponseReviewIdFkeyReviewCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** The `reviewResponse` to be created by this mutation. */
+export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
+  decision?: Maybe<ReviewResponseDecision>;
+  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `reviewQuestionAssignment` in the `ReviewResponseInput` mutation. */
+export type ReviewResponseReviewQuestionAssignmentIdFkeyInput = {
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  connectById?: Maybe<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ReviewQuestionAssignmentNodeIdConnect>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  deleteById?: Maybe<ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete>;
+  /** The primary key(s) for `reviewQuestionAssignment` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ReviewQuestionAssignmentNodeIdDelete>;
+  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
+  updateById?: Maybe<ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate>;
+  /** The primary key(s) and patch data for `reviewQuestionAssignment` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate>;
+  /** A `ReviewQuestionAssignmentInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput>;
+};
+
+/** Input for the nested mutation of `reviewResponse` in the `ReviewQuestionAssignmentInput` mutation. */
+export type ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewResponse` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewResponseReviewResponsePkeyConnect>>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewResponseNodeIdConnect>>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewResponseReviewResponsePkeyDelete>>;
+  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewResponseNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate>>;
+  /** A `ReviewResponseInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput>>;
+};
+
+/** The `reviewQuestionAssignment` to be created by this mutation. */
+export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateElementId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
+};
+
+/** The `reviewResponse` to be created by this mutation. */
+export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
+  decision?: Maybe<ReviewResponseDecision>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
 /** The fields on `reviewResponse` to look up the row to connect. */
@@ -10362,26 +11357,171 @@ export enum ReviewResponsesOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
-  ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
-  ReviewDecisionAsc = 'REVIEW_DECISION_ASC',
-  ReviewDecisionDesc = 'REVIEW_DECISION_DESC',
   CommentAsc = 'COMMENT_ASC',
   CommentDesc = 'COMMENT_DESC',
-  TriggerAsc = 'TRIGGER_ASC',
-  TriggerDesc = 'TRIGGER_DESC',
+  DecisionAsc = 'DECISION_ASC',
+  DecisionDesc = 'DECISION_DESC',
+  ReviewQuestionAssignmentIdAsc = 'REVIEW_QUESTION_ASSIGNMENT_ID_ASC',
+  ReviewQuestionAssignmentIdDesc = 'REVIEW_QUESTION_ASSIGNMENT_ID_DESC',
+  ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
+  ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
+  ReviewIdAsc = 'REVIEW_ID_ASC',
+  ReviewIdDesc = 'REVIEW_ID_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A filter to be used against many `ReviewSectionResponseJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewResponseToManyReviewSectionResponseJoinFilter = {
-  /** Every related `ReviewSectionResponseJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewSectionResponseJoinFilter>;
-  /** Some related `ReviewSectionResponseJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewSectionResponseJoinFilter>;
-  /** No related `ReviewSectionResponseJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewSectionResponseJoinFilter>;
+/** The `application` to be created by this mutation. */
+export type ReviewReviewAssignmentIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `application` in the `ReviewInput` mutation. */
+export type ReviewReviewAssignmentIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewReviewAssignmentIdFkeyApplicationCreateInput>;
+};
+
+/** Input for the nested mutation of `review` in the `ApplicationInput` mutation. */
+export type ReviewReviewAssignmentIdFkeyInverseInput = {
+  /** Flag indicating whether all other `review` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewReviewPkeyConnect>>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewNodeIdConnect>>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewReviewPkeyDelete>>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewNodeIdDelete>>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate>>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate>>;
+  /** A `ReviewInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewReviewAssignmentIdFkeyReviewCreateInput>>;
+};
+
+/** The `review` to be created by this mutation. */
+export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `user` in the `ReviewInput` mutation. */
+export type ReviewReviewerIdFkeyInput = {
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectById?: Maybe<UserUserPkeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByNodeId?: Maybe<UserNodeIdConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteById?: Maybe<UserUserPkeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<UserNodeIdDelete>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateById?: Maybe<UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate>;
+  /** A `UserInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewReviewerIdFkeyUserCreateInput>;
+};
+
+/** Input for the nested mutation of `review` in the `UserInput` mutation. */
+export type ReviewReviewerIdFkeyInverseInput = {
+  /** Flag indicating whether all other `review` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewReviewPkeyConnect>>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewNodeIdConnect>>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewReviewPkeyDelete>>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewNodeIdDelete>>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate>>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate>>;
+  /** A `ReviewInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewReviewerIdFkeyReviewCreateInput>>;
+};
+
+/** The `review` to be created by this mutation. */
+export type ReviewReviewerIdFkeyReviewCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** The `user` to be created by this mutation. */
+export type ReviewReviewerIdFkeyUserCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
 
 /** The fields on `review` to look up the row to connect. */
@@ -10407,1408 +11547,6 @@ export type ReviewsConnection = {
   totalCount: Scalars['Int'];
 };
 
-export type ReviewSection = Node & {
-  __typename?: 'ReviewSection';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  reviewDecision?: Maybe<ReviewDecision>;
-  comment?: Maybe<Scalars['String']>;
-  /** Reads and enables pagination through a set of `ReviewSectionJoin`. */
-  reviewSectionJoins: ReviewSectionJoinsConnection;
-};
-
-
-export type ReviewSectionReviewSectionJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionJoinsOrderBy>>;
-  condition?: Maybe<ReviewSectionJoinCondition>;
-  filter?: Maybe<ReviewSectionJoinFilter>;
-};
-
-export type ReviewSectionAssignment = Node & {
-  __typename?: 'ReviewSectionAssignment';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  reviewerId?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  /** Reads a single `User` that is related to this `ReviewSectionAssignment`. */
-  reviewer?: Maybe<User>;
-  /** Reads a single `User` that is related to this `ReviewSectionAssignment`. */
-  assigner?: Maybe<User>;
-  /** Reads a single `ApplicationStageHistory` that is related to this `ReviewSectionAssignment`. */
-  stage?: Maybe<ApplicationStageHistory>;
-  /** Reads a single `ApplicationSection` that is related to this `ReviewSectionAssignment`. */
-  section?: Maybe<ApplicationSection>;
-  /** Reads and enables pagination through a set of `ReviewSectionJoin`. */
-  reviewSectionJoinsBySectionAssignmentId: ReviewSectionJoinsConnection;
-};
-
-
-export type ReviewSectionAssignmentReviewSectionJoinsBySectionAssignmentIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionJoinsOrderBy>>;
-  condition?: Maybe<ReviewSectionJoinCondition>;
-  filter?: Maybe<ReviewSectionJoinFilter>;
-};
-
-/** Input for the nested mutation of `user` in the `ReviewSectionAssignmentInput` mutation. */
-export type ReviewSectionAssignmentAssignerIdFkeyInput = {
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  connectById?: Maybe<UserUserPkeyConnect>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  connectByNodeId?: Maybe<UserNodeIdConnect>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  deleteById?: Maybe<UserUserPkeyDelete>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<UserNodeIdDelete>;
-  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
-  updateById?: Maybe<UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingUserPkeyUpdate>;
-  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate>;
-  /** A `UserInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewSectionAssignmentAssignerIdFkeyUserCreateInput>;
-};
-
-/** Input for the nested mutation of `reviewSectionAssignment` in the `UserInput` mutation. */
-export type ReviewSectionAssignmentAssignerIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewSectionAssignment` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewSectionAssignmentReviewSectionAssignmentPkeyConnect>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewSectionAssignmentNodeIdConnect>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewSectionAssignmentReviewSectionAssignmentPkeyDelete>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewSectionAssignmentNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewSectionAssignment` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingReviewSectionAssignmentPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewSectionAssignment` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate>>;
-  /** A `ReviewSectionAssignmentInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewSectionAssignmentAssignerIdFkeyReviewSectionAssignmentCreateInput>>;
-};
-
-/** The `reviewSectionAssignment` to be created by this mutation. */
-export type ReviewSectionAssignmentAssignerIdFkeyReviewSectionAssignmentCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** The `user` to be created by this mutation. */
-export type ReviewSectionAssignmentAssignerIdFkeyUserCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['Date']>;
-  passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-};
-
-/**
- * A condition to be used against `ReviewSectionAssignment` object types. All
- * fields are tested for equality and combined with a logical ‘and.’
- */
-export type ReviewSectionAssignmentCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewerId` field. */
-  reviewerId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `assignerId` field. */
-  assignerId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `stageId` field. */
-  stageId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `sectionId` field. */
-  sectionId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `level` field. */
-  level?: Maybe<Scalars['String']>;
-};
-
-/** A filter to be used against `ReviewSectionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewSectionAssignmentFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerId` field. */
-  reviewerId?: Maybe<IntFilter>;
-  /** Filter by the object’s `assignerId` field. */
-  assignerId?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageId` field. */
-  stageId?: Maybe<IntFilter>;
-  /** Filter by the object’s `sectionId` field. */
-  sectionId?: Maybe<IntFilter>;
-  /** Filter by the object’s `level` field. */
-  level?: Maybe<StringFilter>;
-  /** Filter by the object’s `reviewSectionJoinsBySectionAssignmentId` relation. */
-  reviewSectionJoinsBySectionAssignmentId?: Maybe<ReviewSectionAssignmentToManyReviewSectionJoinFilter>;
-  /** Some related `reviewSectionJoinsBySectionAssignmentId` exist. */
-  reviewSectionJoinsBySectionAssignmentIdExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewer` relation. */
-  reviewer?: Maybe<UserFilter>;
-  /** A related `reviewer` exists. */
-  reviewerExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `assigner` relation. */
-  assigner?: Maybe<UserFilter>;
-  /** A related `assigner` exists. */
-  assignerExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `stage` relation. */
-  stage?: Maybe<ApplicationStageHistoryFilter>;
-  /** A related `stage` exists. */
-  stageExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `section` relation. */
-  section?: Maybe<ApplicationSectionFilter>;
-  /** A related `section` exists. */
-  sectionExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewSectionAssignmentFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewSectionAssignmentFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewSectionAssignmentFilter>;
-};
-
-/** An input for mutations affecting `ReviewSectionAssignment` */
-export type ReviewSectionAssignmentInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type ReviewSectionAssignmentNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `reviewSectionAssignment` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type ReviewSectionAssignmentNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `reviewSectionAssignment` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `user` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `user` being updated. */
-  patch: UserPatch;
-};
-
-/** The fields on `reviewSectionAssignment` to look up the row to update. */
-export type ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingReviewSectionAssignmentPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-  patch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `user` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `user` being updated. */
-  patch: UserPatch;
-};
-
-/** The fields on `reviewSectionAssignment` to look up the row to update. */
-export type ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingReviewSectionAssignmentPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-  patch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `applicationSection` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `applicationSection` being updated. */
-  patch: ApplicationSectionPatch;
-};
-
-/** The fields on `reviewSectionAssignment` to look up the row to update. */
-export type ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingReviewSectionAssignmentPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-  patch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `applicationStageHistory` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `applicationStageHistory` being updated. */
-  patch: ApplicationStageHistoryPatch;
-};
-
-/** The fields on `reviewSectionAssignment` to look up the row to update. */
-export type ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingReviewSectionAssignmentPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-  patch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionJoin` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-  patch: ReviewSectionJoinPatch;
-};
-
-/** The fields on `reviewSectionAssignment` to look up the row to update. */
-export type ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionAssignmentPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-  patch: UpdateReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** Represents an update to a `ReviewSectionAssignment`. Fields that are set will be updated. */
-export type ReviewSectionAssignmentPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `user` in the `ReviewSectionAssignmentInput` mutation. */
-export type ReviewSectionAssignmentReviewerIdFkeyInput = {
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  connectById?: Maybe<UserUserPkeyConnect>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  connectByNodeId?: Maybe<UserNodeIdConnect>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  deleteById?: Maybe<UserUserPkeyDelete>;
-  /** The primary key(s) for `user` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<UserNodeIdDelete>;
-  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
-  updateById?: Maybe<UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingUserPkeyUpdate>;
-  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate>;
-  /** A `UserInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewSectionAssignmentReviewerIdFkeyUserCreateInput>;
-};
-
-/** Input for the nested mutation of `reviewSectionAssignment` in the `UserInput` mutation. */
-export type ReviewSectionAssignmentReviewerIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewSectionAssignment` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewSectionAssignmentReviewSectionAssignmentPkeyConnect>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewSectionAssignmentNodeIdConnect>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewSectionAssignmentReviewSectionAssignmentPkeyDelete>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewSectionAssignmentNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewSectionAssignment` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingReviewSectionAssignmentPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewSectionAssignment` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate>>;
-  /** A `ReviewSectionAssignmentInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewSectionAssignmentReviewerIdFkeyReviewSectionAssignmentCreateInput>>;
-};
-
-/** The `reviewSectionAssignment` to be created by this mutation. */
-export type ReviewSectionAssignmentReviewerIdFkeyReviewSectionAssignmentCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** The `user` to be created by this mutation. */
-export type ReviewSectionAssignmentReviewerIdFkeyUserCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  username?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['Date']>;
-  passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
-  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
-};
-
-/** The fields on `reviewSectionAssignment` to look up the row to connect. */
-export type ReviewSectionAssignmentReviewSectionAssignmentPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `reviewSectionAssignment` to look up the row to delete. */
-export type ReviewSectionAssignmentReviewSectionAssignmentPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** A connection to a list of `ReviewSectionAssignment` values. */
-export type ReviewSectionAssignmentsConnection = {
-  __typename?: 'ReviewSectionAssignmentsConnection';
-  /** A list of `ReviewSectionAssignment` objects. */
-  nodes: Array<Maybe<ReviewSectionAssignment>>;
-  /** A list of edges which contains the `ReviewSectionAssignment` and cursor to aid in pagination. */
-  edges: Array<ReviewSectionAssignmentsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ReviewSectionAssignment` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** The `applicationSection` to be created by this mutation. */
-export type ReviewSectionAssignmentSectionIdFkeyApplicationSectionCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<ApplicationSectionApplicationIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `applicationSection` in the `ReviewSectionAssignmentInput` mutation. */
-export type ReviewSectionAssignmentSectionIdFkeyInput = {
-  /** The primary key(s) for `applicationSection` for the far side of the relationship. */
-  connectById?: Maybe<ApplicationSectionApplicationSectionPkeyConnect>;
-  /** The primary key(s) for `applicationSection` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ApplicationSectionNodeIdConnect>;
-  /** The primary key(s) for `applicationSection` for the far side of the relationship. */
-  deleteById?: Maybe<ApplicationSectionApplicationSectionPkeyDelete>;
-  /** The primary key(s) for `applicationSection` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ApplicationSectionNodeIdDelete>;
-  /** The primary key(s) and patch data for `applicationSection` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingApplicationSectionPkeyUpdate>;
-  /** The primary key(s) and patch data for `applicationSection` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate>;
-  /** A `ApplicationSectionInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewSectionAssignmentSectionIdFkeyApplicationSectionCreateInput>;
-};
-
-/** Input for the nested mutation of `reviewSectionAssignment` in the `ApplicationSectionInput` mutation. */
-export type ReviewSectionAssignmentSectionIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewSectionAssignment` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewSectionAssignmentReviewSectionAssignmentPkeyConnect>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewSectionAssignmentNodeIdConnect>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewSectionAssignmentReviewSectionAssignmentPkeyDelete>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewSectionAssignmentNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewSectionAssignment` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingReviewSectionAssignmentPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewSectionAssignment` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate>>;
-  /** A `ReviewSectionAssignmentInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewSectionAssignmentSectionIdFkeyReviewSectionAssignmentCreateInput>>;
-};
-
-/** The `reviewSectionAssignment` to be created by this mutation. */
-export type ReviewSectionAssignmentSectionIdFkeyReviewSectionAssignmentCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** A `ReviewSectionAssignment` edge in the connection. */
-export type ReviewSectionAssignmentsEdge = {
-  __typename?: 'ReviewSectionAssignmentsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewSectionAssignment` at the end of the edge. */
-  node?: Maybe<ReviewSectionAssignment>;
-};
-
-/** Methods to use when ordering `ReviewSectionAssignment`. */
-export enum ReviewSectionAssignmentsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ReviewerIdAsc = 'REVIEWER_ID_ASC',
-  ReviewerIdDesc = 'REVIEWER_ID_DESC',
-  AssignerIdAsc = 'ASSIGNER_ID_ASC',
-  AssignerIdDesc = 'ASSIGNER_ID_DESC',
-  StageIdAsc = 'STAGE_ID_ASC',
-  StageIdDesc = 'STAGE_ID_DESC',
-  SectionIdAsc = 'SECTION_ID_ASC',
-  SectionIdDesc = 'SECTION_ID_DESC',
-  LevelAsc = 'LEVEL_ASC',
-  LevelDesc = 'LEVEL_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** The `applicationStageHistory` to be created by this mutation. */
-export type ReviewSectionAssignmentStageIdFkeyApplicationStageHistoryCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
-  isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationToApplicationId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInput>;
-  templateStageToStageId?: Maybe<ApplicationStageHistoryStageIdFkeyInput>;
-  applicationStatusHistoriesUsingId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `applicationStageHistory` in the `ReviewSectionAssignmentInput` mutation. */
-export type ReviewSectionAssignmentStageIdFkeyInput = {
-  /** The primary key(s) for `applicationStageHistory` for the far side of the relationship. */
-  connectById?: Maybe<ApplicationStageHistoryApplicationStageHistoryPkeyConnect>;
-  /** The primary key(s) for `applicationStageHistory` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ApplicationStageHistoryNodeIdConnect>;
-  /** The primary key(s) for `applicationStageHistory` for the far side of the relationship. */
-  deleteById?: Maybe<ApplicationStageHistoryApplicationStageHistoryPkeyDelete>;
-  /** The primary key(s) for `applicationStageHistory` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ApplicationStageHistoryNodeIdDelete>;
-  /** The primary key(s) and patch data for `applicationStageHistory` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingApplicationStageHistoryPkeyUpdate>;
-  /** The primary key(s) and patch data for `applicationStageHistory` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate>;
-  /** A `ApplicationStageHistoryInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewSectionAssignmentStageIdFkeyApplicationStageHistoryCreateInput>;
-};
-
-/** Input for the nested mutation of `reviewSectionAssignment` in the `ApplicationStageHistoryInput` mutation. */
-export type ReviewSectionAssignmentStageIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewSectionAssignment` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewSectionAssignmentReviewSectionAssignmentPkeyConnect>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewSectionAssignmentNodeIdConnect>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewSectionAssignmentReviewSectionAssignmentPkeyDelete>>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewSectionAssignmentNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewSectionAssignment` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingReviewSectionAssignmentPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewSectionAssignment` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate>>;
-  /** A `ReviewSectionAssignmentInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewSectionAssignmentStageIdFkeyReviewSectionAssignmentCreateInput>>;
-};
-
-/** The `reviewSectionAssignment` to be created by this mutation. */
-export type ReviewSectionAssignmentStageIdFkeyReviewSectionAssignmentCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** A filter to be used against many `ReviewSectionJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewSectionAssignmentToManyReviewSectionJoinFilter = {
-  /** Every related `ReviewSectionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewSectionJoinFilter>;
-  /** Some related `ReviewSectionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewSectionJoinFilter>;
-  /** No related `ReviewSectionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewSectionJoinFilter>;
-};
-
-/**
- * A condition to be used against `ReviewSection` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type ReviewSectionCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewDecision` field. */
-  reviewDecision?: Maybe<ReviewDecision>;
-  /** Checks for equality with the object’s `comment` field. */
-  comment?: Maybe<Scalars['String']>;
-};
-
-/** A filter to be used against `ReviewSection` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewSectionFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewDecision` field. */
-  reviewDecision?: Maybe<ReviewDecisionFilter>;
-  /** Filter by the object’s `comment` field. */
-  comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `reviewSectionJoins` relation. */
-  reviewSectionJoins?: Maybe<ReviewSectionToManyReviewSectionJoinFilter>;
-  /** Some related `reviewSectionJoins` exist. */
-  reviewSectionJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewSectionFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewSectionFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewSectionFilter>;
-};
-
-/** An input for mutations affecting `ReviewSection` */
-export type ReviewSectionInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
-  comment?: Maybe<Scalars['String']>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInverseInput>;
-};
-
-export type ReviewSectionJoin = Node & {
-  __typename?: 'ReviewSectionJoin';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  reviewId?: Maybe<Scalars['Int']>;
-  sectionAssignmentId?: Maybe<Scalars['Int']>;
-  reviewSectionId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  /** Reads a single `Review` that is related to this `ReviewSectionJoin`. */
-  review?: Maybe<Review>;
-  /** Reads a single `ReviewSectionAssignment` that is related to this `ReviewSectionJoin`. */
-  sectionAssignment?: Maybe<ReviewSectionAssignment>;
-  /** Reads a single `ReviewSection` that is related to this `ReviewSectionJoin`. */
-  reviewSection?: Maybe<ReviewSection>;
-  /** Reads and enables pagination through a set of `ReviewSectionResponseJoin`. */
-  reviewSectionResponseJoins: ReviewSectionResponseJoinsConnection;
-};
-
-
-export type ReviewSectionJoinReviewSectionResponseJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionResponseJoinsOrderBy>>;
-  condition?: Maybe<ReviewSectionResponseJoinCondition>;
-  filter?: Maybe<ReviewSectionResponseJoinFilter>;
-};
-
-/**
- * A condition to be used against `ReviewSectionJoin` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type ReviewSectionJoinCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewId` field. */
-  reviewId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `sectionAssignmentId` field. */
-  sectionAssignmentId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewSectionId` field. */
-  reviewSectionId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `sendToApplicant` field. */
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-};
-
-/** A filter to be used against `ReviewSectionJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewSectionJoinFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewId` field. */
-  reviewId?: Maybe<IntFilter>;
-  /** Filter by the object’s `sectionAssignmentId` field. */
-  sectionAssignmentId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewSectionId` field. */
-  reviewSectionId?: Maybe<IntFilter>;
-  /** Filter by the object’s `sendToApplicant` field. */
-  sendToApplicant?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `reviewSectionResponseJoins` relation. */
-  reviewSectionResponseJoins?: Maybe<ReviewSectionJoinToManyReviewSectionResponseJoinFilter>;
-  /** Some related `reviewSectionResponseJoins` exist. */
-  reviewSectionResponseJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `review` relation. */
-  review?: Maybe<ReviewFilter>;
-  /** A related `review` exists. */
-  reviewExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `sectionAssignment` relation. */
-  sectionAssignment?: Maybe<ReviewSectionAssignmentFilter>;
-  /** A related `sectionAssignment` exists. */
-  sectionAssignmentExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewSection` relation. */
-  reviewSection?: Maybe<ReviewSectionFilter>;
-  /** A related `reviewSection` exists. */
-  reviewSectionExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewSectionJoinFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewSectionJoinFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewSectionJoinFilter>;
-};
-
-/** An input for mutations affecting `ReviewSectionJoin` */
-export type ReviewSectionJoinInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  sectionAssignmentId?: Maybe<Scalars['Int']>;
-  reviewSectionId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewToReviewId?: Maybe<ReviewSectionJoinReviewIdFkeyInput>;
-  reviewSectionAssignmentToSectionAssignmentId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInput>;
-  reviewSectionToReviewSectionId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput>;
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type ReviewSectionJoinNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `reviewSectionJoin` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type ReviewSectionJoinNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `reviewSectionJoin` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `review` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `review` being updated. */
-  patch: ReviewPatch;
-};
-
-/** The fields on `reviewSectionJoin` to look up the row to update. */
-export type ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewSectionJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-  patch: UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSection` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSection` being updated. */
-  patch: ReviewSectionPatch;
-};
-
-/** The fields on `reviewSectionJoin` to look up the row to update. */
-export type ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-  patch: UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionAssignment` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-  patch: ReviewSectionAssignmentPatch;
-};
-
-/** The fields on `reviewSectionJoin` to look up the row to update. */
-export type ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-  patch: UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionResponseJoin` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionResponseJoin` being updated. */
-  patch: ReviewSectionResponseJoinPatch;
-};
-
-/** The fields on `reviewSectionJoin` to look up the row to update. */
-export type ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-  patch: UpdateReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** Represents an update to a `ReviewSectionJoin`. Fields that are set will be updated. */
-export type ReviewSectionJoinPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  sectionAssignmentId?: Maybe<Scalars['Int']>;
-  reviewSectionId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewToReviewId?: Maybe<ReviewSectionJoinReviewIdFkeyInput>;
-  reviewSectionAssignmentToSectionAssignmentId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInput>;
-  reviewSectionToReviewSectionId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `review` in the `ReviewSectionJoinInput` mutation. */
-export type ReviewSectionJoinReviewIdFkeyInput = {
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  connectById?: Maybe<ReviewReviewPkeyConnect>;
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ReviewNodeIdConnect>;
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  deleteById?: Maybe<ReviewReviewPkeyDelete>;
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ReviewNodeIdDelete>;
-  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
-  updateById?: Maybe<ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewPkeyUpdate>;
-  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate>;
-  /** A `ReviewInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewSectionJoinReviewIdFkeyReviewCreateInput>;
-};
-
-/** Input for the nested mutation of `reviewSectionJoin` in the `ReviewInput` mutation. */
-export type ReviewSectionJoinReviewIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewSectionJoin` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewSectionJoinReviewSectionJoinPkeyConnect>>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewSectionJoinNodeIdConnect>>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewSectionJoinReviewSectionJoinPkeyDelete>>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewSectionJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewSectionJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewSectionJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewSectionJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate>>;
-  /** A `ReviewSectionJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewSectionJoinReviewIdFkeyReviewSectionJoinCreateInput>>;
-};
-
-/** The `review` to be created by this mutation. */
-export type ReviewSectionJoinReviewIdFkeyReviewCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewStatus>;
-  comment?: Maybe<Scalars['String']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
-  trigger?: Maybe<Trigger>;
-  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
-};
-
-/** The `reviewSectionJoin` to be created by this mutation. */
-export type ReviewSectionJoinReviewIdFkeyReviewSectionJoinCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  sectionAssignmentId?: Maybe<Scalars['Int']>;
-  reviewSectionId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewToReviewId?: Maybe<ReviewSectionJoinReviewIdFkeyInput>;
-  reviewSectionAssignmentToSectionAssignmentId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInput>;
-  reviewSectionToReviewSectionId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `reviewSection` in the `ReviewSectionJoinInput` mutation. */
-export type ReviewSectionJoinReviewSectionIdFkeyInput = {
-  /** The primary key(s) for `reviewSection` for the far side of the relationship. */
-  connectById?: Maybe<ReviewSectionReviewSectionPkeyConnect>;
-  /** The primary key(s) for `reviewSection` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ReviewSectionNodeIdConnect>;
-  /** The primary key(s) for `reviewSection` for the far side of the relationship. */
-  deleteById?: Maybe<ReviewSectionReviewSectionPkeyDelete>;
-  /** The primary key(s) for `reviewSection` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ReviewSectionNodeIdDelete>;
-  /** The primary key(s) and patch data for `reviewSection` for the far side of the relationship. */
-  updateById?: Maybe<ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionPkeyUpdate>;
-  /** The primary key(s) and patch data for `reviewSection` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate>;
-  /** A `ReviewSectionInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewSectionJoinReviewSectionIdFkeyReviewSectionCreateInput>;
-};
-
-/** Input for the nested mutation of `reviewSectionJoin` in the `ReviewSectionInput` mutation. */
-export type ReviewSectionJoinReviewSectionIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewSectionJoin` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewSectionJoinReviewSectionJoinPkeyConnect>>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewSectionJoinNodeIdConnect>>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewSectionJoinReviewSectionJoinPkeyDelete>>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewSectionJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewSectionJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewSectionJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate>>;
-  /** A `ReviewSectionJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewSectionJoinReviewSectionIdFkeyReviewSectionJoinCreateInput>>;
-};
-
-/** The `reviewSection` to be created by this mutation. */
-export type ReviewSectionJoinReviewSectionIdFkeyReviewSectionCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
-  comment?: Maybe<Scalars['String']>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInverseInput>;
-};
-
-/** The `reviewSectionJoin` to be created by this mutation. */
-export type ReviewSectionJoinReviewSectionIdFkeyReviewSectionJoinCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  sectionAssignmentId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewToReviewId?: Maybe<ReviewSectionJoinReviewIdFkeyInput>;
-  reviewSectionAssignmentToSectionAssignmentId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInput>;
-  reviewSectionToReviewSectionId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput>;
-};
-
-/** The fields on `reviewSectionJoin` to look up the row to connect. */
-export type ReviewSectionJoinReviewSectionJoinPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `reviewSectionJoin` to look up the row to delete. */
-export type ReviewSectionJoinReviewSectionJoinPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** A connection to a list of `ReviewSectionJoin` values. */
-export type ReviewSectionJoinsConnection = {
-  __typename?: 'ReviewSectionJoinsConnection';
-  /** A list of `ReviewSectionJoin` objects. */
-  nodes: Array<Maybe<ReviewSectionJoin>>;
-  /** A list of edges which contains the `ReviewSectionJoin` and cursor to aid in pagination. */
-  edges: Array<ReviewSectionJoinsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ReviewSectionJoin` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** Input for the nested mutation of `reviewSectionAssignment` in the `ReviewSectionJoinInput` mutation. */
-export type ReviewSectionJoinSectionAssignmentIdFkeyInput = {
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  connectById?: Maybe<ReviewSectionAssignmentReviewSectionAssignmentPkeyConnect>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ReviewSectionAssignmentNodeIdConnect>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  deleteById?: Maybe<ReviewSectionAssignmentReviewSectionAssignmentPkeyDelete>;
-  /** The primary key(s) for `reviewSectionAssignment` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ReviewSectionAssignmentNodeIdDelete>;
-  /** The primary key(s) and patch data for `reviewSectionAssignment` for the far side of the relationship. */
-  updateById?: Maybe<ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionAssignmentPkeyUpdate>;
-  /** The primary key(s) and patch data for `reviewSectionAssignment` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate>;
-  /** A `ReviewSectionAssignmentInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionAssignmentCreateInput>;
-};
-
-/** Input for the nested mutation of `reviewSectionJoin` in the `ReviewSectionAssignmentInput` mutation. */
-export type ReviewSectionJoinSectionAssignmentIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewSectionJoin` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewSectionJoinReviewSectionJoinPkeyConnect>>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewSectionJoinNodeIdConnect>>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewSectionJoinReviewSectionJoinPkeyDelete>>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewSectionJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewSectionJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewSectionJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate>>;
-  /** A `ReviewSectionJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionJoinCreateInput>>;
-};
-
-/** The `reviewSectionAssignment` to be created by this mutation. */
-export type ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionAssignmentCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** The `reviewSectionJoin` to be created by this mutation. */
-export type ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionJoinCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  reviewSectionId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewToReviewId?: Maybe<ReviewSectionJoinReviewIdFkeyInput>;
-  reviewSectionAssignmentToSectionAssignmentId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInput>;
-  reviewSectionToReviewSectionId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput>;
-};
-
-/** A `ReviewSectionJoin` edge in the connection. */
-export type ReviewSectionJoinsEdge = {
-  __typename?: 'ReviewSectionJoinsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewSectionJoin` at the end of the edge. */
-  node?: Maybe<ReviewSectionJoin>;
-};
-
-/** Methods to use when ordering `ReviewSectionJoin`. */
-export enum ReviewSectionJoinsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ReviewIdAsc = 'REVIEW_ID_ASC',
-  ReviewIdDesc = 'REVIEW_ID_DESC',
-  SectionAssignmentIdAsc = 'SECTION_ASSIGNMENT_ID_ASC',
-  SectionAssignmentIdDesc = 'SECTION_ASSIGNMENT_ID_DESC',
-  ReviewSectionIdAsc = 'REVIEW_SECTION_ID_ASC',
-  ReviewSectionIdDesc = 'REVIEW_SECTION_ID_DESC',
-  SendToApplicantAsc = 'SEND_TO_APPLICANT_ASC',
-  SendToApplicantDesc = 'SEND_TO_APPLICANT_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A filter to be used against many `ReviewSectionResponseJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewSectionJoinToManyReviewSectionResponseJoinFilter = {
-  /** Every related `ReviewSectionResponseJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewSectionResponseJoinFilter>;
-  /** Some related `ReviewSectionResponseJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewSectionResponseJoinFilter>;
-  /** No related `ReviewSectionResponseJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewSectionResponseJoinFilter>;
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type ReviewSectionNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `reviewSection` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type ReviewSectionNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `reviewSection` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionJoin` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-  patch: ReviewSectionJoinPatch;
-};
-
-/** The fields on `reviewSection` to look up the row to update. */
-export type ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSection` being updated. */
-  patch: UpdateReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** Represents an update to a `ReviewSection`. Fields that are set will be updated. */
-export type ReviewSectionPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
-  comment?: Maybe<Scalars['String']>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInverseInput>;
-};
-
-export type ReviewSectionResponseJoin = Node & {
-  __typename?: 'ReviewSectionResponseJoin';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  reviewSectionJoinId?: Maybe<Scalars['Int']>;
-  reviewResponseId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  /** Reads a single `ReviewSectionJoin` that is related to this `ReviewSectionResponseJoin`. */
-  reviewSectionJoin?: Maybe<ReviewSectionJoin>;
-  /** Reads a single `ReviewResponse` that is related to this `ReviewSectionResponseJoin`. */
-  reviewResponse?: Maybe<ReviewResponse>;
-};
-
-/**
- * A condition to be used against `ReviewSectionResponseJoin` object types. All
- * fields are tested for equality and combined with a logical ‘and.’
- */
-export type ReviewSectionResponseJoinCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewSectionJoinId` field. */
-  reviewSectionJoinId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewResponseId` field. */
-  reviewResponseId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `sendToApplicant` field. */
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-};
-
-/** A filter to be used against `ReviewSectionResponseJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewSectionResponseJoinFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewSectionJoinId` field. */
-  reviewSectionJoinId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewResponseId` field. */
-  reviewResponseId?: Maybe<IntFilter>;
-  /** Filter by the object’s `sendToApplicant` field. */
-  sendToApplicant?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `reviewSectionJoin` relation. */
-  reviewSectionJoin?: Maybe<ReviewSectionJoinFilter>;
-  /** A related `reviewSectionJoin` exists. */
-  reviewSectionJoinExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewResponse` relation. */
-  reviewResponse?: Maybe<ReviewResponseFilter>;
-  /** A related `reviewResponse` exists. */
-  reviewResponseExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewSectionResponseJoinFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewSectionResponseJoinFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewSectionResponseJoinFilter>;
-};
-
-/** An input for mutations affecting `ReviewSectionResponseJoin` */
-export type ReviewSectionResponseJoinInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewSectionJoinId?: Maybe<Scalars['Int']>;
-  reviewResponseId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewSectionJoinToReviewSectionJoinId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput>;
-  reviewResponseToReviewResponseId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInput>;
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type ReviewSectionResponseJoinNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `reviewSectionResponseJoin` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type ReviewSectionResponseJoinNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `reviewSectionResponseJoin` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewResponse` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewResponse` being updated. */
-  patch: ReviewResponsePatch;
-};
-
-/** The fields on `reviewSectionResponseJoin` to look up the row to update. */
-export type ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewSectionResponseJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionResponseJoin` being updated. */
-  patch: UpdateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionJoin` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-  patch: ReviewSectionJoinPatch;
-};
-
-/** The fields on `reviewSectionResponseJoin` to look up the row to update. */
-export type ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionResponseJoinPkeyUpdate = {
-  /** An object where the defined keys will be set on the `reviewSectionResponseJoin` being updated. */
-  patch: UpdateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** Represents an update to a `ReviewSectionResponseJoin`. Fields that are set will be updated. */
-export type ReviewSectionResponseJoinPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewSectionJoinId?: Maybe<Scalars['Int']>;
-  reviewResponseId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewSectionJoinToReviewSectionJoinId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput>;
-  reviewResponseToReviewResponseId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `reviewResponse` in the `ReviewSectionResponseJoinInput` mutation. */
-export type ReviewSectionResponseJoinReviewResponseIdFkeyInput = {
-  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
-  connectById?: Maybe<ReviewResponseReviewResponsePkeyConnect>;
-  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ReviewResponseNodeIdConnect>;
-  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
-  deleteById?: Maybe<ReviewResponseReviewResponsePkeyDelete>;
-  /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ReviewResponseNodeIdDelete>;
-  /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
-  updateById?: Maybe<ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewResponsePkeyUpdate>;
-  /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate>;
-  /** A `ReviewResponseInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyReviewResponseCreateInput>;
-};
-
-/** Input for the nested mutation of `reviewSectionResponseJoin` in the `ReviewResponseInput` mutation. */
-export type ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewSectionResponseJoin` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewSectionResponseJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewSectionResponseJoinReviewSectionResponseJoinPkeyConnect>>;
-  /** The primary key(s) for `reviewSectionResponseJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewSectionResponseJoinNodeIdConnect>>;
-  /** The primary key(s) for `reviewSectionResponseJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewSectionResponseJoinReviewSectionResponseJoinPkeyDelete>>;
-  /** The primary key(s) for `reviewSectionResponseJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewSectionResponseJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewSectionResponseJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewSectionResponseJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewSectionResponseJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate>>;
-  /** A `ReviewSectionResponseJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewSectionResponseJoinReviewResponseIdFkeyReviewSectionResponseJoinCreateInput>>;
-};
-
-/** The `reviewResponse` to be created by this mutation. */
-export type ReviewSectionResponseJoinReviewResponseIdFkeyReviewResponseCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
-  comment?: Maybe<Scalars['String']>;
-  trigger?: Maybe<Trigger>;
-  applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput>;
-};
-
-/** The `reviewSectionResponseJoin` to be created by this mutation. */
-export type ReviewSectionResponseJoinReviewResponseIdFkeyReviewSectionResponseJoinCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewSectionJoinId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewSectionJoinToReviewSectionJoinId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput>;
-  reviewResponseToReviewResponseId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `reviewSectionJoin` in the `ReviewSectionResponseJoinInput` mutation. */
-export type ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput = {
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  connectById?: Maybe<ReviewSectionJoinReviewSectionJoinPkeyConnect>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ReviewSectionJoinNodeIdConnect>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  deleteById?: Maybe<ReviewSectionJoinReviewSectionJoinPkeyDelete>;
-  /** The primary key(s) for `reviewSectionJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ReviewSectionJoinNodeIdDelete>;
-  /** The primary key(s) and patch data for `reviewSectionJoin` for the far side of the relationship. */
-  updateById?: Maybe<ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionJoinPkeyUpdate>;
-  /** The primary key(s) and patch data for `reviewSectionJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate>;
-  /** A `ReviewSectionJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionJoinCreateInput>;
-};
-
-/** Input for the nested mutation of `reviewSectionResponseJoin` in the `ReviewSectionJoinInput` mutation. */
-export type ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput = {
-  /** Flag indicating whether all other `reviewSectionResponseJoin` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `reviewSectionResponseJoin` for the far side of the relationship. */
-  connectById?: Maybe<Array<ReviewSectionResponseJoinReviewSectionResponseJoinPkeyConnect>>;
-  /** The primary key(s) for `reviewSectionResponseJoin` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ReviewSectionResponseJoinNodeIdConnect>>;
-  /** The primary key(s) for `reviewSectionResponseJoin` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ReviewSectionResponseJoinReviewSectionResponseJoinPkeyDelete>>;
-  /** The primary key(s) for `reviewSectionResponseJoin` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ReviewSectionResponseJoinNodeIdDelete>>;
-  /** The primary key(s) and patch data for `reviewSectionResponseJoin` for the far side of the relationship. */
-  updateById?: Maybe<Array<ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionResponseJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `reviewSectionResponseJoin` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate>>;
-  /** A `ReviewSectionResponseJoinInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionResponseJoinCreateInput>>;
-};
-
-/** The `reviewSectionJoin` to be created by this mutation. */
-export type ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionJoinCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  sectionAssignmentId?: Maybe<Scalars['Int']>;
-  reviewSectionId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewToReviewId?: Maybe<ReviewSectionJoinReviewIdFkeyInput>;
-  reviewSectionAssignmentToSectionAssignmentId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInput>;
-  reviewSectionToReviewSectionId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput>;
-};
-
-/** The `reviewSectionResponseJoin` to be created by this mutation. */
-export type ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionResponseJoinCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewResponseId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewSectionJoinToReviewSectionJoinId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput>;
-  reviewResponseToReviewResponseId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInput>;
-};
-
-/** The fields on `reviewSectionResponseJoin` to look up the row to connect. */
-export type ReviewSectionResponseJoinReviewSectionResponseJoinPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `reviewSectionResponseJoin` to look up the row to delete. */
-export type ReviewSectionResponseJoinReviewSectionResponseJoinPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** A connection to a list of `ReviewSectionResponseJoin` values. */
-export type ReviewSectionResponseJoinsConnection = {
-  __typename?: 'ReviewSectionResponseJoinsConnection';
-  /** A list of `ReviewSectionResponseJoin` objects. */
-  nodes: Array<Maybe<ReviewSectionResponseJoin>>;
-  /** A list of edges which contains the `ReviewSectionResponseJoin` and cursor to aid in pagination. */
-  edges: Array<ReviewSectionResponseJoinsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ReviewSectionResponseJoin` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `ReviewSectionResponseJoin` edge in the connection. */
-export type ReviewSectionResponseJoinsEdge = {
-  __typename?: 'ReviewSectionResponseJoinsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewSectionResponseJoin` at the end of the edge. */
-  node?: Maybe<ReviewSectionResponseJoin>;
-};
-
-/** Methods to use when ordering `ReviewSectionResponseJoin`. */
-export enum ReviewSectionResponseJoinsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ReviewSectionJoinIdAsc = 'REVIEW_SECTION_JOIN_ID_ASC',
-  ReviewSectionJoinIdDesc = 'REVIEW_SECTION_JOIN_ID_DESC',
-  ReviewResponseIdAsc = 'REVIEW_RESPONSE_ID_ASC',
-  ReviewResponseIdDesc = 'REVIEW_RESPONSE_ID_DESC',
-  SendToApplicantAsc = 'SEND_TO_APPLICANT_ASC',
-  SendToApplicantDesc = 'SEND_TO_APPLICANT_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** The fields on `reviewSection` to look up the row to connect. */
-export type ReviewSectionReviewSectionPkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `reviewSection` to look up the row to delete. */
-export type ReviewSectionReviewSectionPkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** A connection to a list of `ReviewSection` values. */
-export type ReviewSectionsConnection = {
-  __typename?: 'ReviewSectionsConnection';
-  /** A list of `ReviewSection` objects. */
-  nodes: Array<Maybe<ReviewSection>>;
-  /** A list of edges which contains the `ReviewSection` and cursor to aid in pagination. */
-  edges: Array<ReviewSectionsEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ReviewSection` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `ReviewSection` edge in the connection. */
-export type ReviewSectionsEdge = {
-  __typename?: 'ReviewSectionsEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewSection` at the end of the edge. */
-  node?: Maybe<ReviewSection>;
-};
-
-/** Methods to use when ordering `ReviewSection`. */
-export enum ReviewSectionsOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  ReviewDecisionAsc = 'REVIEW_DECISION_ASC',
-  ReviewDecisionDesc = 'REVIEW_DECISION_DESC',
-  CommentAsc = 'COMMENT_ASC',
-  CommentDesc = 'COMMENT_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** A filter to be used against many `ReviewSectionJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewSectionToManyReviewSectionJoinFilter = {
-  /** Every related `ReviewSectionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewSectionJoinFilter>;
-  /** Some related `ReviewSectionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewSectionJoinFilter>;
-  /** No related `ReviewSectionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewSectionJoinFilter>;
-};
-
 /** A `Review` edge in the connection. */
 export type ReviewsEdge = {
   __typename?: 'ReviewsEdge';
@@ -11823,26 +11561,23 @@ export enum ReviewsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  StatusAsc = 'STATUS_ASC',
-  StatusDesc = 'STATUS_DESC',
-  CommentAsc = 'COMMENT_ASC',
-  CommentDesc = 'COMMENT_DESC',
-  TimeCreatedAsc = 'TIME_CREATED_ASC',
-  TimeCreatedDesc = 'TIME_CREATED_DESC',
+  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
+  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  ReviewerIdAsc = 'REVIEWER_ID_ASC',
+  ReviewerIdDesc = 'REVIEWER_ID_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
 export enum ReviewStatus {
-  AwaitingReview = 'AWAITING_REVIEW',
-  InProgress = 'IN_PROGRESS',
-  Ready = 'READY',
-  Approvable = 'APPROVABLE',
-  NonApprovable = 'NON_APPROVABLE'
+  Draft = 'DRAFT',
+  Submitted = 'SUBMITTED',
+  ChangesRequired = 'CHANGES_REQUIRED',
+  ReviewPending = 'REVIEW_PENDING'
 }
 
 /** A filter to be used against ReviewStatus fields. All fields are combined with a logical ‘and.’ */
@@ -11871,6 +11606,218 @@ export type ReviewStatusFilter = {
   greaterThanOrEqualTo?: Maybe<ReviewStatus>;
 };
 
+/** A connection to a list of `ReviewStatusHistory` values. */
+export type ReviewStatusHistoriesConnection = {
+  __typename?: 'ReviewStatusHistoriesConnection';
+  /** A list of `ReviewStatusHistory` objects. */
+  nodes: Array<Maybe<ReviewStatusHistory>>;
+  /** A list of edges which contains the `ReviewStatusHistory` and cursor to aid in pagination. */
+  edges: Array<ReviewStatusHistoriesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ReviewStatusHistory` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ReviewStatusHistory` edge in the connection. */
+export type ReviewStatusHistoriesEdge = {
+  __typename?: 'ReviewStatusHistoriesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ReviewStatusHistory` at the end of the edge. */
+  node?: Maybe<ReviewStatusHistory>;
+};
+
+/** Methods to use when ordering `ReviewStatusHistory`. */
+export enum ReviewStatusHistoriesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ReviewIdAsc = 'REVIEW_ID_ASC',
+  ReviewIdDesc = 'REVIEW_ID_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
+  IsCurrentAsc = 'IS_CURRENT_ASC',
+  IsCurrentDesc = 'IS_CURRENT_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+export type ReviewStatusHistory = Node & {
+  __typename?: 'ReviewStatusHistory';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  reviewId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewStatus>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  isCurrent?: Maybe<Scalars['Boolean']>;
+  /** Reads a single `Review` that is related to this `ReviewStatusHistory`. */
+  review?: Maybe<Review>;
+};
+
+/**
+ * A condition to be used against `ReviewStatusHistory` object types. All fields
+ * are tested for equality and combined with a logical ‘and.’
+ */
+export type ReviewStatusHistoryCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewId` field. */
+  reviewId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: Maybe<ReviewStatus>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `isCurrent` field. */
+  isCurrent?: Maybe<Scalars['Boolean']>;
+};
+
+/** A filter to be used against `ReviewStatusHistory` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewStatusHistoryFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ReviewStatusFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isCurrent` field. */
+  isCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `review` relation. */
+  review?: Maybe<ReviewFilter>;
+  /** A related `review` exists. */
+  reviewExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ReviewStatusHistoryFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ReviewStatusHistoryFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ReviewStatusHistoryFilter>;
+};
+
+/** An input for mutations affecting `ReviewStatusHistory` */
+export type ReviewStatusHistoryInput = {
+  id?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewStatus>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  isCurrent?: Maybe<Scalars['Boolean']>;
+  reviewToReviewId?: Maybe<ReviewStatusHistoryReviewIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type ReviewStatusHistoryNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `reviewStatusHistory` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type ReviewStatusHistoryNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `reviewStatusHistory` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `review` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: ReviewPatch;
+};
+
+/** The fields on `reviewStatusHistory` to look up the row to update. */
+export type ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewStatusHistoryPkeyUpdate = {
+  /** An object where the defined keys will be set on the `reviewStatusHistory` being updated. */
+  patch: UpdateReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `ReviewStatusHistory`. Fields that are set will be updated. */
+export type ReviewStatusHistoryPatch = {
+  id?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewStatus>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  isCurrent?: Maybe<Scalars['Boolean']>;
+  reviewToReviewId?: Maybe<ReviewStatusHistoryReviewIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `review` in the `ReviewStatusHistoryInput` mutation. */
+export type ReviewStatusHistoryReviewIdFkeyInput = {
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectById?: Maybe<ReviewReviewPkeyConnect>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ReviewNodeIdConnect>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteById?: Maybe<ReviewReviewPkeyDelete>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ReviewNodeIdDelete>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateById?: Maybe<ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate>;
+  /** A `ReviewInput` object that will be created and connected to this object. */
+  create?: Maybe<ReviewStatusHistoryReviewIdFkeyReviewCreateInput>;
+};
+
+/** Input for the nested mutation of `reviewStatusHistory` in the `ReviewInput` mutation. */
+export type ReviewStatusHistoryReviewIdFkeyInverseInput = {
+  /** Flag indicating whether all other `reviewStatusHistory` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `reviewStatusHistory` for the far side of the relationship. */
+  connectById?: Maybe<Array<ReviewStatusHistoryReviewStatusHistoryPkeyConnect>>;
+  /** The primary key(s) for `reviewStatusHistory` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ReviewStatusHistoryNodeIdConnect>>;
+  /** The primary key(s) for `reviewStatusHistory` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ReviewStatusHistoryReviewStatusHistoryPkeyDelete>>;
+  /** The primary key(s) for `reviewStatusHistory` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ReviewStatusHistoryNodeIdDelete>>;
+  /** The primary key(s) and patch data for `reviewStatusHistory` for the far side of the relationship. */
+  updateById?: Maybe<Array<ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewStatusHistoryPkeyUpdate>>;
+  /** The primary key(s) and patch data for `reviewStatusHistory` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate>>;
+  /** A `ReviewStatusHistoryInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ReviewStatusHistoryReviewIdFkeyReviewStatusHistoryCreateInput>>;
+};
+
+/** The `review` to be created by this mutation. */
+export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** The `reviewStatusHistory` to be created by this mutation. */
+export type ReviewStatusHistoryReviewIdFkeyReviewStatusHistoryCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  status?: Maybe<ReviewStatus>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  isCurrent?: Maybe<Scalars['Boolean']>;
+  reviewToReviewId?: Maybe<ReviewStatusHistoryReviewIdFkeyInput>;
+};
+
+/** The fields on `reviewStatusHistory` to look up the row to connect. */
+export type ReviewStatusHistoryReviewStatusHistoryPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `reviewStatusHistory` to look up the row to delete. */
+export type ReviewStatusHistoryReviewStatusHistoryPkeyDelete = {
+  id: Scalars['Int'];
+};
+
 /** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
 export type ReviewToManyNotificationFilter = {
   /** Every related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -11881,14 +11828,24 @@ export type ReviewToManyNotificationFilter = {
   none?: Maybe<NotificationFilter>;
 };
 
-/** A filter to be used against many `ReviewSectionJoin` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewToManyReviewSectionJoinFilter = {
-  /** Every related `ReviewSectionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewSectionJoinFilter>;
-  /** Some related `ReviewSectionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewSectionJoinFilter>;
-  /** No related `ReviewSectionJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewSectionJoinFilter>;
+/** A filter to be used against many `ReviewResponse` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewToManyReviewResponseFilter = {
+  /** Every related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewResponseFilter>;
+  /** Some related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewResponseFilter>;
+  /** No related `ReviewResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewResponseFilter>;
+};
+
+/** A filter to be used against many `ReviewStatusHistory` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewToManyReviewStatusHistoryFilter = {
+  /** Every related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewStatusHistoryFilter>;
+  /** Some related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewStatusHistoryFilter>;
+  /** No related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewStatusHistoryFilter>;
 };
 
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
@@ -12390,6 +12347,8 @@ export type TemplateElement = Node & {
   section?: Maybe<TemplateSection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
   applicationResponses: ApplicationResponsesConnection;
+  /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
+  reviewQuestionAssignments: ReviewQuestionAssignmentsConnection;
 };
 
 
@@ -12402,6 +12361,18 @@ export type TemplateElementApplicationResponsesArgs = {
   orderBy?: Maybe<Array<ApplicationResponsesOrderBy>>;
   condition?: Maybe<ApplicationResponseCondition>;
   filter?: Maybe<ApplicationResponseFilter>;
+};
+
+
+export type TemplateElementReviewQuestionAssignmentsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
+  condition?: Maybe<ReviewQuestionAssignmentCondition>;
+  filter?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
 export enum TemplateElementCategory {
@@ -12492,6 +12463,10 @@ export type TemplateElementFilter = {
   applicationResponses?: Maybe<TemplateElementToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
   applicationResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewQuestionAssignments` relation. */
+  reviewQuestionAssignments?: Maybe<TemplateElementToManyReviewQuestionAssignmentFilter>;
+  /** Some related `reviewQuestionAssignments` exist. */
+  reviewQuestionAssignmentsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `section` relation. */
   section?: Maybe<TemplateSectionFilter>;
   /** A related `section` exists. */
@@ -12519,6 +12494,7 @@ export type TemplateElementInput = {
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -12545,6 +12521,21 @@ export type TemplateElementOnApplicationResponseForApplicationResponseTemplateEl
 export type TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate = {
   /** An object where the defined keys will be set on the `templateElement` being updated. */
   patch: UpdateTemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewQuestionAssignment` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
+  patch: ReviewQuestionAssignmentPatch;
+};
+
+/** The fields on `templateElement` to look up the row to update. */
+export type TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate = {
+  /** An object where the defined keys will be set on the `templateElement` being updated. */
+  patch: UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -12578,6 +12569,7 @@ export type TemplateElementPatch = {
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `TemplateElement` values. */
@@ -12645,6 +12637,7 @@ export type TemplateElementSectionIdFkeyTemplateElementCreateInput = {
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
 };
 
 /** The `templateSection` to be created by this mutation. */
@@ -12716,6 +12709,16 @@ export type TemplateElementToManyApplicationResponseFilter = {
   some?: Maybe<ApplicationResponseFilter>;
   /** No related `ApplicationResponse` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ApplicationResponseFilter>;
+};
+
+/** A filter to be used against many `ReviewQuestionAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateElementToManyReviewQuestionAssignmentFilter = {
+  /** Every related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** Some related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewQuestionAssignmentFilter>;
+  /** No related `ReviewQuestionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewQuestionAssignmentFilter>;
 };
 
 /** A filter to be used against `Template` object types. All fields are combined with a logical ‘and.’ */
@@ -13684,6 +13687,8 @@ export type TemplateStage = Node & {
   template?: Maybe<Template>;
   /** Reads and enables pagination through a set of `ApplicationStageHistory`. */
   applicationStageHistoriesByStageId: ApplicationStageHistoriesConnection;
+  /** Reads and enables pagination through a set of `ReviewAssignment`. */
+  reviewAssignmentsByStageId: ReviewAssignmentsConnection;
 };
 
 
@@ -13696,6 +13701,18 @@ export type TemplateStageApplicationStageHistoriesByStageIdArgs = {
   orderBy?: Maybe<Array<ApplicationStageHistoriesOrderBy>>;
   condition?: Maybe<ApplicationStageHistoryCondition>;
   filter?: Maybe<ApplicationStageHistoryFilter>;
+};
+
+
+export type TemplateStageReviewAssignmentsByStageIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
+  condition?: Maybe<ReviewAssignmentCondition>;
+  filter?: Maybe<ReviewAssignmentFilter>;
 };
 
 /**
@@ -13727,6 +13744,10 @@ export type TemplateStageFilter = {
   applicationStageHistoriesByStageId?: Maybe<TemplateStageToManyApplicationStageHistoryFilter>;
   /** Some related `applicationStageHistoriesByStageId` exist. */
   applicationStageHistoriesByStageIdExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewAssignmentsByStageId` relation. */
+  reviewAssignmentsByStageId?: Maybe<TemplateStageToManyReviewAssignmentFilter>;
+  /** Some related `reviewAssignmentsByStageId` exist. */
+  reviewAssignmentsByStageIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** A related `template` exists. */
@@ -13747,6 +13768,7 @@ export type TemplateStageInput = {
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -13777,6 +13799,21 @@ export type TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStag
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: ReviewAssignmentPatch;
+};
+
+/** The fields on `templateStage` to look up the row to update. */
+export type TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate = {
+  /** An object where the defined keys will be set on the `templateStage` being updated. */
+  patch: UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `template` to be connected. */
   nodeId: Scalars['ID'];
@@ -13799,6 +13836,7 @@ export type TemplateStagePatch = {
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `TemplateStage` values. */
@@ -13899,6 +13937,7 @@ export type TemplateStageTemplateIdFkeyTemplateStageCreateInput = {
   title?: Maybe<Scalars['String']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
 
 /** The fields on `templateStage` to look up the row to connect. */
@@ -13919,6 +13958,16 @@ export type TemplateStageToManyApplicationStageHistoryFilter = {
   some?: Maybe<ApplicationStageHistoryFilter>;
   /** No related `ApplicationStageHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ApplicationStageHistoryFilter>;
+};
+
+/** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateStageToManyReviewAssignmentFilter = {
+  /** Every related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewAssignmentFilter>;
+  /** Some related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewAssignmentFilter>;
+  /** No related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewAssignmentFilter>;
 };
 
 export enum TemplateStatus {
@@ -14473,7 +14522,9 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -14492,7 +14543,9 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -14512,7 +14565,9 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -14532,7 +14587,9 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -14552,7 +14609,9 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -14572,7 +14631,9 @@ export type UpdateApplicationOnFileForFileApplicationIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -14592,7 +14653,31 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -14612,7 +14697,31 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnReviewForReviewReviewAssignmentIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsToReviewAssignmentIdUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
+  reviewsToApplicationIdUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
@@ -14779,7 +14888,6 @@ export type UpdateApplicationSectionOnApplicationSectionForApplicationSectionApp
   templateSectionId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<ApplicationSectionApplicationIdFkeyInput>;
   templateSectionToTemplateSectionId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `applicationSection` being updated. */
@@ -14788,17 +14896,6 @@ export type UpdateApplicationSectionOnApplicationSectionForApplicationSectionTem
   applicationId?: Maybe<Scalars['Int']>;
   applicationToApplicationId?: Maybe<ApplicationSectionApplicationIdFkeyInput>;
   templateSectionToTemplateSectionId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `applicationSection` being updated. */
-export type UpdateApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
-  applicationToApplicationId?: Maybe<ApplicationSectionApplicationIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInverseInput>;
 };
 
 /** The output of our update `ApplicationSection` mutation. */
@@ -14861,7 +14958,6 @@ export type UpdateApplicationStageHistoryOnApplicationStageHistoryForApplication
   applicationToApplicationId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInput>;
   templateStageToStageId?: Maybe<ApplicationStageHistoryStageIdFkeyInput>;
   applicationStatusHistoriesUsingId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `applicationStageHistory` being updated. */
@@ -14873,7 +14969,6 @@ export type UpdateApplicationStageHistoryOnApplicationStageHistoryForApplication
   applicationToApplicationId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInput>;
   templateStageToStageId?: Maybe<ApplicationStageHistoryStageIdFkeyInput>;
   applicationStatusHistoriesUsingId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `applicationStageHistory` being updated. */
@@ -14886,19 +14981,6 @@ export type UpdateApplicationStageHistoryOnApplicationStatusHistoryForApplicatio
   applicationToApplicationId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInput>;
   templateStageToStageId?: Maybe<ApplicationStageHistoryStageIdFkeyInput>;
   applicationStatusHistoriesUsingId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `applicationStageHistory` being updated. */
-export type UpdateApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
-  isCurrent?: Maybe<Scalars['Boolean']>;
-  applicationToApplicationId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInput>;
-  templateStageToStageId?: Maybe<ApplicationStageHistoryStageIdFkeyInput>;
-  applicationStatusHistoriesUsingId?: Maybe<ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput>;
-  reviewSectionAssignmentsUsingId?: Maybe<ReviewSectionAssignmentStageIdFkeyInverseInput>;
 };
 
 /** The output of our update `ApplicationStageHistory` mutation. */
@@ -15533,6 +15615,127 @@ export type UpdatePermissionPolicyPayloadPermissionPolicyEdgeArgs = {
   orderBy?: Maybe<Array<PermissionPoliciesOrderBy>>;
 };
 
+/** All input for the `updateReviewAssignmentByNodeId` mutation. */
+export type UpdateReviewAssignmentByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ReviewAssignment` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `ReviewAssignment` being updated. */
+  patch: ReviewAssignmentPatch;
+};
+
+/** All input for the `updateReviewAssignment` mutation. */
+export type UpdateReviewAssignmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `ReviewAssignment` being updated. */
+  patch: ReviewAssignmentPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  assignerId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
+  templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+};
+
+/** The output of our update `ReviewAssignment` mutation. */
+export type UpdateReviewAssignmentPayload = {
+  __typename?: 'UpdateReviewAssignmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewAssignment` that was updated by this mutation. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `User` that is related to this `ReviewAssignment`. */
+  assigner?: Maybe<User>;
+  /** Reads a single `User` that is related to this `ReviewAssignment`. */
+  reviewer?: Maybe<User>;
+  /** Reads a single `TemplateStage` that is related to this `ReviewAssignment`. */
+  stage?: Maybe<TemplateStage>;
+  /** Reads a single `Application` that is related to this `ReviewAssignment`. */
+  application?: Maybe<Application>;
+  /** An edge for our `ReviewAssignment`. May be used by Relay 1. */
+  reviewAssignmentEdge?: Maybe<ReviewAssignmentsEdge>;
+};
+
+
+/** The output of our update `ReviewAssignment` mutation. */
+export type UpdateReviewAssignmentPayloadReviewAssignmentEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
+};
+
 /** All input for the `updateReviewByNodeId` mutation. */
 export type UpdateReviewByNodeIdInput = {
   /**
@@ -15561,38 +15764,87 @@ export type UpdateReviewInput = {
 /** An object where the defined keys will be set on the `review` being updated. */
 export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewStatus>;
-  comment?: Maybe<Scalars['String']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewIdFkeyInverseInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
 export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewStatus>;
-  comment?: Maybe<Scalars['String']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewIdFkeyInverseInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
-export type UpdateReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch = {
+export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewStatus>;
-  comment?: Maybe<Scalars['String']>;
-  timeCreated?: Maybe<Scalars['Datetime']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewIdFkeyInverseInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `review` being updated. */
+export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `review` being updated. */
+export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `review` being updated. */
+export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
@@ -15609,6 +15861,10 @@ export type UpdateReviewPayload = {
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
   /** Reads a single `Application` that is related to this `Review`. */
+  reviewAssignment?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `Review`. */
+  reviewer?: Maybe<User>;
+  /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
   /** An edge for our `Review`. May be used by Relay 1. */
   reviewEdge?: Maybe<ReviewsEdge>;
@@ -15618,6 +15874,85 @@ export type UpdateReviewPayload = {
 /** The output of our update `Review` mutation. */
 export type UpdateReviewPayloadReviewEdgeArgs = {
   orderBy?: Maybe<Array<ReviewsOrderBy>>;
+};
+
+/** All input for the `updateReviewQuestionAssignmentByNodeId` mutation. */
+export type UpdateReviewQuestionAssignmentByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ReviewQuestionAssignment` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `ReviewQuestionAssignment` being updated. */
+  patch: ReviewQuestionAssignmentPatch;
+};
+
+/** All input for the `updateReviewQuestionAssignment` mutation. */
+export type UpdateReviewQuestionAssignmentInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `ReviewQuestionAssignment` being updated. */
+  patch: ReviewQuestionAssignmentPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
+export type UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateElementId?: Maybe<Scalars['Int']>;
+  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
+export type UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `reviewQuestionAssignment` being updated. */
+export type UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateElementId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  templateElementToTemplateElementId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInput>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput>;
+};
+
+/** The output of our update `ReviewQuestionAssignment` mutation. */
+export type UpdateReviewQuestionAssignmentPayload = {
+  __typename?: 'UpdateReviewQuestionAssignmentPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ReviewQuestionAssignment` that was updated by this mutation. */
+  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
+  templateElement?: Maybe<TemplateElement>;
+  /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
+  reviewAssignment?: Maybe<ReviewAssignment>;
+  /** An edge for our `ReviewQuestionAssignment`. May be used by Relay 1. */
+  reviewQuestionAssignmentEdge?: Maybe<ReviewQuestionAssignmentsEdge>;
+};
+
+
+/** The output of our update `ReviewQuestionAssignment` mutation. */
+export type UpdateReviewQuestionAssignmentPayloadReviewQuestionAssignmentEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
 };
 
 /** All input for the `updateReviewResponseByNodeId` mutation. */
@@ -15648,22 +15983,40 @@ export type UpdateReviewResponseInput = {
 /** An object where the defined keys will be set on the `reviewResponse` being updated. */
 export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
   comment?: Maybe<Scalars['String']>;
-  trigger?: Maybe<Trigger>;
+  decision?: Maybe<ReviewResponseDecision>;
+  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput>;
+  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `reviewResponse` being updated. */
-export type UpdateReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch = {
+export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
   comment?: Maybe<Scalars['String']>;
-  trigger?: Maybe<Trigger>;
+  decision?: Maybe<ReviewResponseDecision>;
+  reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput>;
+  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `reviewResponse` being updated. */
+export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  comment?: Maybe<Scalars['String']>;
+  decision?: Maybe<ReviewResponseDecision>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
+  reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
 };
 
 /** The output of our update `ReviewResponse` mutation. */
@@ -15678,8 +16031,12 @@ export type UpdateReviewResponsePayload = {
   reviewResponse?: Maybe<ReviewResponse>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
+  /** Reads a single `ReviewQuestionAssignment` that is related to this `ReviewResponse`. */
+  reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
   /** Reads a single `ApplicationResponse` that is related to this `ReviewResponse`. */
   applicationResponse?: Maybe<ApplicationResponse>;
+  /** Reads a single `Review` that is related to this `ReviewResponse`. */
+  review?: Maybe<Review>;
   /** An edge for our `ReviewResponse`. May be used by Relay 1. */
   reviewResponseEdge?: Maybe<ReviewResponsesEdge>;
 };
@@ -15690,356 +16047,62 @@ export type UpdateReviewResponsePayloadReviewResponseEdgeArgs = {
   orderBy?: Maybe<Array<ReviewResponsesOrderBy>>;
 };
 
-/** All input for the `updateReviewSectionAssignmentByNodeId` mutation. */
-export type UpdateReviewSectionAssignmentByNodeIdInput = {
+/** All input for the `updateReviewStatusHistoryByNodeId` mutation. */
+export type UpdateReviewStatusHistoryByNodeIdInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ReviewSectionAssignment` to be updated. */
+  /** The globally unique `ID` which will identify a single `ReviewStatusHistory` to be updated. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `ReviewSectionAssignment` being updated. */
-  patch: ReviewSectionAssignmentPatch;
+  /** An object where the defined keys will be set on the `ReviewStatusHistory` being updated. */
+  patch: ReviewStatusHistoryPatch;
 };
 
-/** All input for the `updateReviewSectionAssignment` mutation. */
-export type UpdateReviewSectionAssignmentInput = {
+/** All input for the `updateReviewStatusHistory` mutation. */
+export type UpdateReviewStatusHistoryInput = {
   /**
    * An arbitrary string value with no semantic meaning. Will be included in the
    * payload verbatim. May be used to track mutations by the client.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `ReviewSectionAssignment` being updated. */
-  patch: ReviewSectionAssignmentPatch;
+  /** An object where the defined keys will be set on the `ReviewStatusHistory` being updated. */
+  patch: ReviewStatusHistoryPatch;
   id: Scalars['Int'];
 };
 
-/** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-export type UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch = {
+/** An object where the defined keys will be set on the `reviewStatusHistory` being updated. */
+export type UpdateReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
+  status?: Maybe<ReviewStatus>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  isCurrent?: Maybe<Scalars['Boolean']>;
+  reviewToReviewId?: Maybe<ReviewStatusHistoryReviewIdFkeyInput>;
 };
 
-/** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-export type UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-export type UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-export type UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-export type UpdateReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  assignerId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  sectionId?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['String']>;
-  userToReviewerId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInput>;
-  userToAssignerId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInput>;
-  applicationStageHistoryToStageId?: Maybe<ReviewSectionAssignmentStageIdFkeyInput>;
-  applicationSectionToSectionId?: Maybe<ReviewSectionAssignmentSectionIdFkeyInput>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInverseInput>;
-};
-
-/** The output of our update `ReviewSectionAssignment` mutation. */
-export type UpdateReviewSectionAssignmentPayload = {
-  __typename?: 'UpdateReviewSectionAssignmentPayload';
+/** The output of our update `ReviewStatusHistory` mutation. */
+export type UpdateReviewStatusHistoryPayload = {
+  __typename?: 'UpdateReviewStatusHistoryPayload';
   /**
    * The exact same `clientMutationId` that was provided in the mutation input,
    * unchanged and unused. May be used by a client to track mutations.
    */
   clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionAssignment` that was updated by this mutation. */
-  reviewSectionAssignment?: Maybe<ReviewSectionAssignment>;
+  /** The `ReviewStatusHistory` that was updated by this mutation. */
+  reviewStatusHistory?: Maybe<ReviewStatusHistory>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
-  /** Reads a single `User` that is related to this `ReviewSectionAssignment`. */
-  reviewer?: Maybe<User>;
-  /** Reads a single `User` that is related to this `ReviewSectionAssignment`. */
-  assigner?: Maybe<User>;
-  /** Reads a single `ApplicationStageHistory` that is related to this `ReviewSectionAssignment`. */
-  stage?: Maybe<ApplicationStageHistory>;
-  /** Reads a single `ApplicationSection` that is related to this `ReviewSectionAssignment`. */
-  section?: Maybe<ApplicationSection>;
-  /** An edge for our `ReviewSectionAssignment`. May be used by Relay 1. */
-  reviewSectionAssignmentEdge?: Maybe<ReviewSectionAssignmentsEdge>;
-};
-
-
-/** The output of our update `ReviewSectionAssignment` mutation. */
-export type UpdateReviewSectionAssignmentPayloadReviewSectionAssignmentEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionAssignmentsOrderBy>>;
-};
-
-/** All input for the `updateReviewSectionByNodeId` mutation. */
-export type UpdateReviewSectionByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ReviewSection` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `ReviewSection` being updated. */
-  patch: ReviewSectionPatch;
-};
-
-/** All input for the `updateReviewSection` mutation. */
-export type UpdateReviewSectionInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `ReviewSection` being updated. */
-  patch: ReviewSectionPatch;
-  id: Scalars['Int'];
-};
-
-/** All input for the `updateReviewSectionJoinByNodeId` mutation. */
-export type UpdateReviewSectionJoinByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ReviewSectionJoin` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `ReviewSectionJoin` being updated. */
-  patch: ReviewSectionJoinPatch;
-};
-
-/** All input for the `updateReviewSectionJoin` mutation. */
-export type UpdateReviewSectionJoinInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `ReviewSectionJoin` being updated. */
-  patch: ReviewSectionJoinPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-export type UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  sectionAssignmentId?: Maybe<Scalars['Int']>;
-  reviewSectionId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewToReviewId?: Maybe<ReviewSectionJoinReviewIdFkeyInput>;
-  reviewSectionAssignmentToSectionAssignmentId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInput>;
-  reviewSectionToReviewSectionId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-export type UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  sectionAssignmentId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewToReviewId?: Maybe<ReviewSectionJoinReviewIdFkeyInput>;
-  reviewSectionAssignmentToSectionAssignmentId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInput>;
-  reviewSectionToReviewSectionId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-export type UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  reviewSectionId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewToReviewId?: Maybe<ReviewSectionJoinReviewIdFkeyInput>;
-  reviewSectionAssignmentToSectionAssignmentId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInput>;
-  reviewSectionToReviewSectionId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `reviewSectionJoin` being updated. */
-export type UpdateReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  sectionAssignmentId?: Maybe<Scalars['Int']>;
-  reviewSectionId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewToReviewId?: Maybe<ReviewSectionJoinReviewIdFkeyInput>;
-  reviewSectionAssignmentToSectionAssignmentId?: Maybe<ReviewSectionJoinSectionAssignmentIdFkeyInput>;
-  reviewSectionToReviewSectionId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInput>;
-  reviewSectionResponseJoinsUsingId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput>;
-};
-
-/** The output of our update `ReviewSectionJoin` mutation. */
-export type UpdateReviewSectionJoinPayload = {
-  __typename?: 'UpdateReviewSectionJoinPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionJoin` that was updated by this mutation. */
-  reviewSectionJoin?: Maybe<ReviewSectionJoin>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `Review` that is related to this `ReviewSectionJoin`. */
+  /** Reads a single `Review` that is related to this `ReviewStatusHistory`. */
   review?: Maybe<Review>;
-  /** Reads a single `ReviewSectionAssignment` that is related to this `ReviewSectionJoin`. */
-  sectionAssignment?: Maybe<ReviewSectionAssignment>;
-  /** Reads a single `ReviewSection` that is related to this `ReviewSectionJoin`. */
-  reviewSection?: Maybe<ReviewSection>;
-  /** An edge for our `ReviewSectionJoin`. May be used by Relay 1. */
-  reviewSectionJoinEdge?: Maybe<ReviewSectionJoinsEdge>;
+  /** An edge for our `ReviewStatusHistory`. May be used by Relay 1. */
+  reviewStatusHistoryEdge?: Maybe<ReviewStatusHistoriesEdge>;
 };
 
 
-/** The output of our update `ReviewSectionJoin` mutation. */
-export type UpdateReviewSectionJoinPayloadReviewSectionJoinEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionJoinsOrderBy>>;
-};
-
-/** An object where the defined keys will be set on the `reviewSection` being updated. */
-export type UpdateReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<ReviewDecision>;
-  comment?: Maybe<Scalars['String']>;
-  reviewSectionJoinsUsingId?: Maybe<ReviewSectionJoinReviewSectionIdFkeyInverseInput>;
-};
-
-/** The output of our update `ReviewSection` mutation. */
-export type UpdateReviewSectionPayload = {
-  __typename?: 'UpdateReviewSectionPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSection` that was updated by this mutation. */
-  reviewSection?: Maybe<ReviewSection>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** An edge for our `ReviewSection`. May be used by Relay 1. */
-  reviewSectionEdge?: Maybe<ReviewSectionsEdge>;
-};
-
-
-/** The output of our update `ReviewSection` mutation. */
-export type UpdateReviewSectionPayloadReviewSectionEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionsOrderBy>>;
-};
-
-/** All input for the `updateReviewSectionResponseJoinByNodeId` mutation. */
-export type UpdateReviewSectionResponseJoinByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ReviewSectionResponseJoin` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `ReviewSectionResponseJoin` being updated. */
-  patch: ReviewSectionResponseJoinPatch;
-};
-
-/** All input for the `updateReviewSectionResponseJoin` mutation. */
-export type UpdateReviewSectionResponseJoinInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `ReviewSectionResponseJoin` being updated. */
-  patch: ReviewSectionResponseJoinPatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `reviewSectionResponseJoin` being updated. */
-export type UpdateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewSectionJoinId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewSectionJoinToReviewSectionJoinId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput>;
-  reviewResponseToReviewResponseId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInput>;
-};
-
-/** An object where the defined keys will be set on the `reviewSectionResponseJoin` being updated. */
-export type UpdateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewResponseId?: Maybe<Scalars['Int']>;
-  sendToApplicant?: Maybe<Scalars['Boolean']>;
-  reviewSectionJoinToReviewSectionJoinId?: Maybe<ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput>;
-  reviewResponseToReviewResponseId?: Maybe<ReviewSectionResponseJoinReviewResponseIdFkeyInput>;
-};
-
-/** The output of our update `ReviewSectionResponseJoin` mutation. */
-export type UpdateReviewSectionResponseJoinPayload = {
-  __typename?: 'UpdateReviewSectionResponseJoinPayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ReviewSectionResponseJoin` that was updated by this mutation. */
-  reviewSectionResponseJoin?: Maybe<ReviewSectionResponseJoin>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `ReviewSectionJoin` that is related to this `ReviewSectionResponseJoin`. */
-  reviewSectionJoin?: Maybe<ReviewSectionJoin>;
-  /** Reads a single `ReviewResponse` that is related to this `ReviewSectionResponseJoin`. */
-  reviewResponse?: Maybe<ReviewResponse>;
-  /** An edge for our `ReviewSectionResponseJoin`. May be used by Relay 1. */
-  reviewSectionResponseJoinEdge?: Maybe<ReviewSectionResponseJoinsEdge>;
-};
-
-
-/** The output of our update `ReviewSectionResponseJoin` mutation. */
-export type UpdateReviewSectionResponseJoinPayloadReviewSectionResponseJoinEdgeArgs = {
-  orderBy?: Maybe<Array<ReviewSectionResponseJoinsOrderBy>>;
+/** The output of our update `ReviewStatusHistory` mutation. */
+export type UpdateReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs = {
+  orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
 };
 
 /** All input for the `updateTemplateActionByNodeId` mutation. */
@@ -16155,6 +16218,25 @@ export type UpdateTemplateElementOnApplicationResponseForApplicationResponseTemp
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `templateElement` being updated. */
+export type UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  sectionId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  index?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  category?: Maybe<TemplateElementCategory>;
+  visibilityCondition?: Maybe<Scalars['JSON']>;
+  elementTypePluginCode?: Maybe<Scalars['String']>;
+  isRequired?: Maybe<Scalars['JSON']>;
+  isEditable?: Maybe<Scalars['JSON']>;
+  parameters?: Maybe<Scalars['JSON']>;
+  templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `templateElement` being updated. */
@@ -16171,6 +16253,7 @@ export type UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFke
   parameters?: Maybe<Scalars['JSON']>;
   templateSectionToSectionId?: Maybe<TemplateElementSectionIdFkeyInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseTemplateElementIdFkeyInverseInput>;
+  reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput>;
 };
 
 /** The output of our update `TemplateElement` mutation. */
@@ -16546,6 +16629,18 @@ export type UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHisto
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `templateStage` being updated. */
+export type UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  number?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `templateStage` being updated. */
@@ -16555,6 +16650,7 @@ export type UpdateTemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyPatc
   title?: Maybe<Scalars['String']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
 
 /** The output of our update `TemplateStage` mutation. */
@@ -16677,8 +16773,9 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -16695,8 +16792,9 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -16713,8 +16811,9 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -16731,14 +16830,15 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
-export type UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch = {
+export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
@@ -16749,14 +16849,15 @@ export type UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentAssigne
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `user` being updated. */
-export type UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch = {
+export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
@@ -16767,8 +16868,28 @@ export type UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentReviewe
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `user` being updated. */
+export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -16785,8 +16906,9 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -16912,10 +17034,12 @@ export type User = Node & {
   permissionJoins: PermissionJoinsConnection;
   /** Reads and enables pagination through a set of `Application`. */
   applications: ApplicationsConnection;
-  /** Reads and enables pagination through a set of `ReviewSectionAssignment`. */
-  reviewedReviewSectionAssignments: ReviewSectionAssignmentsConnection;
-  /** Reads and enables pagination through a set of `ReviewSectionAssignment`. */
-  reviewSectionAssignmentsByAssignerId: ReviewSectionAssignmentsConnection;
+  /** Reads and enables pagination through a set of `ReviewAssignment`. */
+  reviewAssignmentsByAssignerId: ReviewAssignmentsConnection;
+  /** Reads and enables pagination through a set of `ReviewAssignment`. */
+  reviewedReviewAssignments: ReviewAssignmentsConnection;
+  /** Reads and enables pagination through a set of `Review`. */
+  reviewedReviews: ReviewsConnection;
   /** Reads and enables pagination through a set of `File`. */
   files: FilesConnection;
   /** Reads and enables pagination through a set of `Notification`. */
@@ -16959,27 +17083,39 @@ export type UserApplicationsArgs = {
 };
 
 
-export type UserReviewedReviewSectionAssignmentsArgs = {
+export type UserReviewAssignmentsByAssignerIdArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionAssignmentsOrderBy>>;
-  condition?: Maybe<ReviewSectionAssignmentCondition>;
-  filter?: Maybe<ReviewSectionAssignmentFilter>;
+  orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
+  condition?: Maybe<ReviewAssignmentCondition>;
+  filter?: Maybe<ReviewAssignmentFilter>;
 };
 
 
-export type UserReviewSectionAssignmentsByAssignerIdArgs = {
+export type UserReviewedReviewAssignmentsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewSectionAssignmentsOrderBy>>;
-  condition?: Maybe<ReviewSectionAssignmentCondition>;
-  filter?: Maybe<ReviewSectionAssignmentFilter>;
+  orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
+  condition?: Maybe<ReviewAssignmentCondition>;
+  filter?: Maybe<ReviewAssignmentFilter>;
+};
+
+
+export type UserReviewedReviewsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewsOrderBy>>;
+  condition?: Maybe<ReviewCondition>;
+  filter?: Maybe<ReviewFilter>;
 };
 
 
@@ -17052,14 +17188,18 @@ export type UserFilter = {
   applications?: Maybe<UserToManyApplicationFilter>;
   /** Some related `applications` exist. */
   applicationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewedReviewSectionAssignments` relation. */
-  reviewedReviewSectionAssignments?: Maybe<UserToManyReviewSectionAssignmentFilter>;
-  /** Some related `reviewedReviewSectionAssignments` exist. */
-  reviewedReviewSectionAssignmentsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewSectionAssignmentsByAssignerId` relation. */
-  reviewSectionAssignmentsByAssignerId?: Maybe<UserToManyReviewSectionAssignmentFilter>;
-  /** Some related `reviewSectionAssignmentsByAssignerId` exist. */
-  reviewSectionAssignmentsByAssignerIdExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewAssignmentsByAssignerId` relation. */
+  reviewAssignmentsByAssignerId?: Maybe<UserToManyReviewAssignmentFilter>;
+  /** Some related `reviewAssignmentsByAssignerId` exist. */
+  reviewAssignmentsByAssignerIdExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewedReviewAssignments` relation. */
+  reviewedReviewAssignments?: Maybe<UserToManyReviewAssignmentFilter>;
+  /** Some related `reviewedReviewAssignments` exist. */
+  reviewedReviewAssignmentsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewedReviews` relation. */
+  reviewedReviews?: Maybe<UserToManyReviewFilter>;
+  /** Some related `reviewedReviews` exist. */
+  reviewedReviewsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `files` relation. */
   files?: Maybe<UserToManyFileFilter>;
   /** Some related `files` exist. */
@@ -17088,8 +17228,9 @@ export type UserInput = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -17167,32 +17308,47 @@ export type UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserPkeyUpdate =
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionAssignment` to be connected. */
+export type UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-  patch: ReviewSectionAssignmentPatch;
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: ReviewAssignmentPatch;
 };
 
 /** The fields on `user` to look up the row to update. */
-export type UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingUserPkeyUpdate = {
+export type UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate = {
   /** An object where the defined keys will be set on the `user` being updated. */
-  patch: UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch;
+  patch: UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `reviewSectionAssignment` to be connected. */
+export type UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
   nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `reviewSectionAssignment` being updated. */
-  patch: ReviewSectionAssignmentPatch;
+  /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
+  patch: ReviewAssignmentPatch;
 };
 
 /** The fields on `user` to look up the row to update. */
-export type UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingUserPkeyUpdate = {
+export type UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate = {
   /** An object where the defined keys will be set on the `user` being updated. */
-  patch: UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch;
+  patch: UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `review` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: ReviewPatch;
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -17517,8 +17673,9 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -17555,8 +17712,9 @@ export type UserPatch = {
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
-  reviewSectionAssignmentsToReviewerIdUsingId?: Maybe<ReviewSectionAssignmentReviewerIdFkeyInverseInput>;
-  reviewSectionAssignmentsToAssignerIdUsingId?: Maybe<ReviewSectionAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToAssignerIdUsingId?: Maybe<ReviewAssignmentAssignerIdFkeyInverseInput>;
+  reviewAssignmentsToReviewerIdUsingId?: Maybe<ReviewAssignmentReviewerIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewerIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
@@ -17644,14 +17802,24 @@ export type UserToManyPermissionJoinFilter = {
   none?: Maybe<PermissionJoinFilter>;
 };
 
-/** A filter to be used against many `ReviewSectionAssignment` object types. All fields are combined with a logical ‘and.’ */
-export type UserToManyReviewSectionAssignmentFilter = {
-  /** Every related `ReviewSectionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ReviewSectionAssignmentFilter>;
-  /** Some related `ReviewSectionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ReviewSectionAssignmentFilter>;
-  /** No related `ReviewSectionAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ReviewSectionAssignmentFilter>;
+/** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyReviewAssignmentFilter = {
+  /** Every related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewAssignmentFilter>;
+  /** Some related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewAssignmentFilter>;
+  /** No related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewAssignmentFilter>;
+};
+
+/** A filter to be used against many `Review` object types. All fields are combined with a logical ‘and.’ */
+export type UserToManyReviewFilter = {
+  /** Every related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ReviewFilter>;
+  /** Some related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ReviewFilter>;
+  /** No related `Review` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ReviewFilter>;
 };
 
 /** A filter to be used against many `UserOrganisation` object types. All fields are combined with a logical ‘and.’ */
@@ -17753,7 +17921,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewSectionResponseJoin'] | ResolversTypes['ReviewSectionJoin'] | ResolversTypes['Review'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ReviewSectionAssignment'] | ResolversTypes['ApplicationSection'] | ResolversTypes['ReviewSection'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationSection'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -17796,70 +17964,70 @@ export type ResolversTypes = {
   ApplicationStatusHistoryFilter: ApplicationStatusHistoryFilter;
   ApplicationStatusFilter: ApplicationStatusFilter;
   ApplicationStatus: ApplicationStatus;
-  ApplicationStageHistoryToManyReviewSectionAssignmentFilter: ApplicationStageHistoryToManyReviewSectionAssignmentFilter;
-  ReviewSectionAssignmentFilter: ReviewSectionAssignmentFilter;
-  ReviewSectionAssignmentToManyReviewSectionJoinFilter: ReviewSectionAssignmentToManyReviewSectionJoinFilter;
-  ReviewSectionJoinFilter: ReviewSectionJoinFilter;
-  ReviewSectionJoinToManyReviewSectionResponseJoinFilter: ReviewSectionJoinToManyReviewSectionResponseJoinFilter;
-  ReviewSectionResponseJoinFilter: ReviewSectionResponseJoinFilter;
-  ReviewResponseFilter: ReviewResponseFilter;
-  ReviewDecisionFilter: ReviewDecisionFilter;
-  ReviewDecision: ReviewDecision;
-  ReviewResponseToManyReviewSectionResponseJoinFilter: ReviewResponseToManyReviewSectionResponseJoinFilter;
-  ApplicationResponseFilter: ApplicationResponseFilter;
-  ApplicationResponseToManyReviewResponseFilter: ApplicationResponseToManyReviewResponseFilter;
-  ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
-  FileFilter: FileFilter;
-  FileToManyNotificationFilter: FileToManyNotificationFilter;
-  NotificationFilter: NotificationFilter;
+  ApplicationFilter: ApplicationFilter;
+  ApplicationOutcomeFilter: ApplicationOutcomeFilter;
+  ApplicationOutcome: ApplicationOutcome;
+  ApplicationToManyApplicationSectionFilter: ApplicationToManyApplicationSectionFilter;
+  ApplicationSectionFilter: ApplicationSectionFilter;
+  TemplateSectionFilter: TemplateSectionFilter;
+  TemplateSectionToManyTemplatePermissionFilter: TemplateSectionToManyTemplatePermissionFilter;
+  TemplatePermissionFilter: TemplatePermissionFilter;
+  PermissionNameFilter: PermissionNameFilter;
+  PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
+  PermissionJoinFilter: PermissionJoinFilter;
   UserFilter: UserFilter;
   DateFilter: DateFilter;
   Date: ResolverTypeWrapper<Scalars['Date']>;
   UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
   UserOrganisationFilter: UserOrganisationFilter;
   UserOrganisationToManyPermissionJoinFilter: UserOrganisationToManyPermissionJoinFilter;
-  PermissionJoinFilter: PermissionJoinFilter;
-  PermissionNameFilter: PermissionNameFilter;
-  PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
-  PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
-  TemplatePermissionFilter: TemplatePermissionFilter;
-  TemplateSectionFilter: TemplateSectionFilter;
-  TemplateSectionToManyTemplatePermissionFilter: TemplateSectionToManyTemplatePermissionFilter;
-  TemplateSectionToManyTemplateElementFilter: TemplateSectionToManyTemplateElementFilter;
-  TemplateElementFilter: TemplateElementFilter;
-  TemplateElementCategoryFilter: TemplateElementCategoryFilter;
-  TemplateElementCategory: TemplateElementCategory;
-  TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
-  TemplateSectionToManyApplicationSectionFilter: TemplateSectionToManyApplicationSectionFilter;
-  ApplicationSectionFilter: ApplicationSectionFilter;
-  ApplicationSectionToManyReviewSectionAssignmentFilter: ApplicationSectionToManyReviewSectionAssignmentFilter;
-  ApplicationFilter: ApplicationFilter;
-  ApplicationOutcomeFilter: ApplicationOutcomeFilter;
-  ApplicationOutcome: ApplicationOutcome;
-  ApplicationToManyApplicationSectionFilter: ApplicationToManyApplicationSectionFilter;
-  ApplicationToManyApplicationStageHistoryFilter: ApplicationToManyApplicationStageHistoryFilter;
-  ApplicationToManyApplicationResponseFilter: ApplicationToManyApplicationResponseFilter;
-  ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
-  ReviewFilter: ReviewFilter;
-  ReviewStatusFilter: ReviewStatusFilter;
-  ReviewStatus: ReviewStatus;
-  ReviewToManyReviewSectionJoinFilter: ReviewToManyReviewSectionJoinFilter;
-  ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
-  ApplicationToManyFileFilter: ApplicationToManyFileFilter;
-  ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
-  PermissionPolicyFilter: PermissionPolicyFilter;
-  PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
-  PermissionPolicyType: PermissionPolicyType;
-  PermissionPolicyToManyPermissionNameFilter: PermissionPolicyToManyPermissionNameFilter;
   OrganisationFilter: OrganisationFilter;
   OrganisationToManyUserOrganisationFilter: OrganisationToManyUserOrganisationFilter;
   UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
   UserToManyApplicationFilter: UserToManyApplicationFilter;
-  UserToManyReviewSectionAssignmentFilter: UserToManyReviewSectionAssignmentFilter;
+  UserToManyReviewAssignmentFilter: UserToManyReviewAssignmentFilter;
+  ReviewAssignmentFilter: ReviewAssignmentFilter;
+  ReviewAssignmentToManyReviewQuestionAssignmentFilter: ReviewAssignmentToManyReviewQuestionAssignmentFilter;
+  ReviewQuestionAssignmentFilter: ReviewQuestionAssignmentFilter;
+  ReviewQuestionAssignmentToManyReviewResponseFilter: ReviewQuestionAssignmentToManyReviewResponseFilter;
+  ReviewResponseFilter: ReviewResponseFilter;
+  ReviewResponseDecisionFilter: ReviewResponseDecisionFilter;
+  ReviewResponseDecision: ReviewResponseDecision;
+  ApplicationResponseFilter: ApplicationResponseFilter;
+  ApplicationResponseToManyReviewResponseFilter: ApplicationResponseToManyReviewResponseFilter;
+  ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
+  FileFilter: FileFilter;
+  FileToManyNotificationFilter: FileToManyNotificationFilter;
+  NotificationFilter: NotificationFilter;
+  ReviewFilter: ReviewFilter;
+  ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
+  ReviewToManyReviewStatusHistoryFilter: ReviewToManyReviewStatusHistoryFilter;
+  ReviewStatusHistoryFilter: ReviewStatusHistoryFilter;
+  ReviewStatusFilter: ReviewStatusFilter;
+  ReviewStatus: ReviewStatus;
+  ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
+  TemplateElementFilter: TemplateElementFilter;
+  TemplateElementCategoryFilter: TemplateElementCategoryFilter;
+  TemplateElementCategory: TemplateElementCategory;
+  TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
+  TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
+  UserToManyReviewFilter: UserToManyReviewFilter;
   UserToManyFileFilter: UserToManyFileFilter;
   UserToManyNotificationFilter: UserToManyNotificationFilter;
-  ReviewSectionFilter: ReviewSectionFilter;
-  ReviewSectionToManyReviewSectionJoinFilter: ReviewSectionToManyReviewSectionJoinFilter;
+  PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
+  PermissionPolicyFilter: PermissionPolicyFilter;
+  PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
+  PermissionPolicyType: PermissionPolicyType;
+  PermissionPolicyToManyPermissionNameFilter: PermissionPolicyToManyPermissionNameFilter;
+  TemplateSectionToManyTemplateElementFilter: TemplateSectionToManyTemplateElementFilter;
+  TemplateSectionToManyApplicationSectionFilter: TemplateSectionToManyApplicationSectionFilter;
+  ApplicationToManyApplicationStageHistoryFilter: ApplicationToManyApplicationStageHistoryFilter;
+  ApplicationToManyApplicationResponseFilter: ApplicationToManyApplicationResponseFilter;
+  ApplicationToManyReviewAssignmentFilter: ApplicationToManyReviewAssignmentFilter;
+  ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
+  ApplicationToManyFileFilter: ApplicationToManyFileFilter;
+  ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
+  TemplateStageToManyReviewAssignmentFilter: TemplateStageToManyReviewAssignmentFilter;
   TemplateToManyTemplateSectionFilter: TemplateToManyTemplateSectionFilter;
   TemplateToManyTemplatePermissionFilter: TemplateToManyTemplatePermissionFilter;
   TemplateToManyApplicationFilter: TemplateToManyApplicationFilter;
@@ -17912,30 +18080,24 @@ export type ResolversTypes = {
   ReviewResponseCondition: ReviewResponseCondition;
   ReviewResponsesConnection: ResolverTypeWrapper<ReviewResponsesConnection>;
   ReviewResponse: ResolverTypeWrapper<ReviewResponse>;
-  ReviewSectionResponseJoinsOrderBy: ReviewSectionResponseJoinsOrderBy;
-  ReviewSectionResponseJoinCondition: ReviewSectionResponseJoinCondition;
-  ReviewSectionResponseJoinsConnection: ResolverTypeWrapper<ReviewSectionResponseJoinsConnection>;
-  ReviewSectionResponseJoin: ResolverTypeWrapper<ReviewSectionResponseJoin>;
-  ReviewSectionJoin: ResolverTypeWrapper<ReviewSectionJoin>;
+  ReviewQuestionAssignment: ResolverTypeWrapper<ReviewQuestionAssignment>;
+  ReviewAssignment: ResolverTypeWrapper<ReviewAssignment>;
+  ReviewQuestionAssignmentsOrderBy: ReviewQuestionAssignmentsOrderBy;
+  ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
+  ReviewQuestionAssignmentsConnection: ResolverTypeWrapper<ReviewQuestionAssignmentsConnection>;
+  ReviewQuestionAssignmentsEdge: ResolverTypeWrapper<ReviewQuestionAssignmentsEdge>;
   Review: ResolverTypeWrapper<Review>;
-  ReviewSectionJoinsOrderBy: ReviewSectionJoinsOrderBy;
-  ReviewSectionJoinCondition: ReviewSectionJoinCondition;
-  ReviewSectionJoinsConnection: ResolverTypeWrapper<ReviewSectionJoinsConnection>;
-  ReviewSectionJoinsEdge: ResolverTypeWrapper<ReviewSectionJoinsEdge>;
+  ReviewStatusHistoriesOrderBy: ReviewStatusHistoriesOrderBy;
+  ReviewStatusHistoryCondition: ReviewStatusHistoryCondition;
+  ReviewStatusHistoriesConnection: ResolverTypeWrapper<ReviewStatusHistoriesConnection>;
+  ReviewStatusHistory: ResolverTypeWrapper<ReviewStatusHistory>;
+  ReviewStatusHistoriesEdge: ResolverTypeWrapper<ReviewStatusHistoriesEdge>;
   NotificationsOrderBy: NotificationsOrderBy;
   NotificationCondition: NotificationCondition;
   NotificationsConnection: ResolverTypeWrapper<NotificationsConnection>;
   Notification: ResolverTypeWrapper<Notification>;
   File: ResolverTypeWrapper<File>;
   NotificationsEdge: ResolverTypeWrapper<NotificationsEdge>;
-  ReviewSectionAssignment: ResolverTypeWrapper<ReviewSectionAssignment>;
-  ApplicationSection: ResolverTypeWrapper<ApplicationSection>;
-  ReviewSectionAssignmentsOrderBy: ReviewSectionAssignmentsOrderBy;
-  ReviewSectionAssignmentCondition: ReviewSectionAssignmentCondition;
-  ReviewSectionAssignmentsConnection: ResolverTypeWrapper<ReviewSectionAssignmentsConnection>;
-  ReviewSectionAssignmentsEdge: ResolverTypeWrapper<ReviewSectionAssignmentsEdge>;
-  ReviewSection: ResolverTypeWrapper<ReviewSection>;
-  ReviewSectionResponseJoinsEdge: ResolverTypeWrapper<ReviewSectionResponseJoinsEdge>;
   ReviewResponsesEdge: ResolverTypeWrapper<ReviewResponsesEdge>;
   FilesOrderBy: FilesOrderBy;
   FileCondition: FileCondition;
@@ -17946,6 +18108,7 @@ export type ResolversTypes = {
   ApplicationSectionsOrderBy: ApplicationSectionsOrderBy;
   ApplicationSectionCondition: ApplicationSectionCondition;
   ApplicationSectionsConnection: ResolverTypeWrapper<ApplicationSectionsConnection>;
+  ApplicationSection: ResolverTypeWrapper<ApplicationSection>;
   ApplicationSectionsEdge: ResolverTypeWrapper<ApplicationSectionsEdge>;
   TemplatePermissionsEdge: ResolverTypeWrapper<TemplatePermissionsEdge>;
   PermissionJoinsEdge: ResolverTypeWrapper<PermissionJoinsEdge>;
@@ -17954,6 +18117,10 @@ export type ResolversTypes = {
   ApplicationCondition: ApplicationCondition;
   ApplicationsConnection: ResolverTypeWrapper<ApplicationsConnection>;
   ApplicationsEdge: ResolverTypeWrapper<ApplicationsEdge>;
+  ReviewAssignmentsOrderBy: ReviewAssignmentsOrderBy;
+  ReviewAssignmentCondition: ReviewAssignmentCondition;
+  ReviewAssignmentsConnection: ResolverTypeWrapper<ReviewAssignmentsConnection>;
+  ReviewAssignmentsEdge: ResolverTypeWrapper<ReviewAssignmentsEdge>;
   ReviewsOrderBy: ReviewsOrderBy;
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ResolverTypeWrapper<ReviewsConnection>;
@@ -18001,10 +18168,6 @@ export type ResolversTypes = {
   PermissionPolicyCondition: PermissionPolicyCondition;
   PermissionPoliciesConnection: ResolverTypeWrapper<PermissionPoliciesConnection>;
   PermissionPoliciesEdge: ResolverTypeWrapper<PermissionPoliciesEdge>;
-  ReviewSectionsOrderBy: ReviewSectionsOrderBy;
-  ReviewSectionCondition: ReviewSectionCondition;
-  ReviewSectionsConnection: ResolverTypeWrapper<ReviewSectionsConnection>;
-  ReviewSectionsEdge: ResolverTypeWrapper<ReviewSectionsEdge>;
   TemplatesOrderBy: TemplatesOrderBy;
   TemplateCondition: TemplateCondition;
   TemplatesConnection: ResolverTypeWrapper<TemplatesConnection>;
@@ -18236,13 +18399,59 @@ export type ResolversTypes = {
   ApplicationResponseApplicationIdFkeyInput: ApplicationResponseApplicationIdFkeyInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
-  ReviewApplicationIdFkeyInverseInput: ReviewApplicationIdFkeyInverseInput;
+  ReviewAssignmentApplicationIdFkeyInverseInput: ReviewAssignmentApplicationIdFkeyInverseInput;
+  ReviewAssignmentReviewAssignmentPkeyConnect: ReviewAssignmentReviewAssignmentPkeyConnect;
+  ReviewAssignmentNodeIdConnect: ReviewAssignmentNodeIdConnect;
+  ReviewAssignmentReviewAssignmentPkeyDelete: ReviewAssignmentReviewAssignmentPkeyDelete;
+  ReviewAssignmentNodeIdDelete: ReviewAssignmentNodeIdDelete;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
+  ReviewAssignmentAssignerIdFkeyInput: ReviewAssignmentAssignerIdFkeyInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  ReviewAssignmentAssignerIdFkeyInverseInput: ReviewAssignmentAssignerIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  ReviewAssignmentReviewerIdFkeyInput: ReviewAssignmentReviewerIdFkeyInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  ReviewAssignmentReviewerIdFkeyInverseInput: ReviewAssignmentReviewerIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  ReviewAssignmentStageIdFkeyInput: ReviewAssignmentStageIdFkeyInput;
+  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  ApplicationStageHistoryStageIdFkeyInverseInput: ApplicationStageHistoryStageIdFkeyInverseInput;
+  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
+  updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
+  ApplicationStageHistoryStageIdFkeyInput: ApplicationStageHistoryStageIdFkeyInput;
+  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
+  ReviewAssignmentStageIdFkeyInverseInput: ReviewAssignmentStageIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  ReviewAssignmentApplicationIdFkeyInput: ReviewAssignmentApplicationIdFkeyInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
+  ReviewReviewAssignmentIdFkeyInverseInput: ReviewReviewAssignmentIdFkeyInverseInput;
   ReviewReviewPkeyConnect: ReviewReviewPkeyConnect;
   ReviewNodeIdConnect: ReviewNodeIdConnect;
   ReviewReviewPkeyDelete: ReviewReviewPkeyDelete;
   ReviewNodeIdDelete: ReviewNodeIdDelete;
+  ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch;
+  ReviewReviewAssignmentIdFkeyInput: ReviewReviewAssignmentIdFkeyInput;
+  ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateApplicationOnReviewForReviewReviewAssignmentIdFkeyPatch;
+  ReviewApplicationIdFkeyInverseInput: ReviewApplicationIdFkeyInverseInput;
   ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewForReviewApplicationIdFkeyPatch: UpdateReviewOnReviewForReviewApplicationIdFkeyPatch;
+  ReviewReviewerIdFkeyInput: ReviewReviewerIdFkeyInput;
+  UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewForReviewReviewerIdFkeyPatch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
+  ReviewReviewerIdFkeyInverseInput: ReviewReviewerIdFkeyInverseInput;
+  ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewForReviewReviewerIdFkeyPatch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
   ReviewApplicationIdFkeyInput: ReviewApplicationIdFkeyInput;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnReviewForReviewApplicationIdFkeyPatch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
@@ -18256,22 +18465,6 @@ export type ResolversTypes = {
   FileUserIdFkeyInput: FileUserIdFkeyInput;
   UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
-  ReviewSectionAssignmentReviewerIdFkeyInverseInput: ReviewSectionAssignmentReviewerIdFkeyInverseInput;
-  ReviewSectionAssignmentReviewSectionAssignmentPkeyConnect: ReviewSectionAssignmentReviewSectionAssignmentPkeyConnect;
-  ReviewSectionAssignmentNodeIdConnect: ReviewSectionAssignmentNodeIdConnect;
-  ReviewSectionAssignmentReviewSectionAssignmentPkeyDelete: ReviewSectionAssignmentReviewSectionAssignmentPkeyDelete;
-  ReviewSectionAssignmentNodeIdDelete: ReviewSectionAssignmentNodeIdDelete;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingReviewSectionAssignmentPkeyUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingReviewSectionAssignmentPkeyUpdate;
-  updateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch;
-  ReviewSectionAssignmentReviewerIdFkeyInput: ReviewSectionAssignmentReviewerIdFkeyInput;
-  UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch: UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch;
-  ReviewSectionAssignmentAssignerIdFkeyInverseInput: ReviewSectionAssignmentAssignerIdFkeyInverseInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingReviewSectionAssignmentPkeyUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingReviewSectionAssignmentPkeyUpdate;
-  updateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch;
-  ReviewSectionAssignmentAssignerIdFkeyInput: ReviewSectionAssignmentAssignerIdFkeyInput;
-  UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch: UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch;
   FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
   FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
@@ -18301,16 +18494,54 @@ export type ResolversTypes = {
   NotificationReviewIdFkeyInput: NotificationReviewIdFkeyInput;
   ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnNotificationForNotificationReviewIdFkeyPatch: UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch;
-  ReviewSectionJoinReviewIdFkeyInverseInput: ReviewSectionJoinReviewIdFkeyInverseInput;
-  ReviewSectionJoinReviewSectionJoinPkeyConnect: ReviewSectionJoinReviewSectionJoinPkeyConnect;
-  ReviewSectionJoinNodeIdConnect: ReviewSectionJoinNodeIdConnect;
-  ReviewSectionJoinReviewSectionJoinPkeyDelete: ReviewSectionJoinReviewSectionJoinPkeyDelete;
-  ReviewSectionJoinNodeIdDelete: ReviewSectionJoinNodeIdDelete;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewSectionJoinPkeyUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewSectionJoinPkeyUpdate;
-  updateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch: UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch;
-  ReviewSectionJoinReviewIdFkeyInput: ReviewSectionJoinReviewIdFkeyInput;
-  ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewPkeyUpdate;
-  updateReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch: UpdateReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch;
+  ReviewResponseReviewIdFkeyInverseInput: ReviewResponseReviewIdFkeyInverseInput;
+  ReviewResponseReviewResponsePkeyConnect: ReviewResponseReviewResponsePkeyConnect;
+  ReviewResponseNodeIdConnect: ReviewResponseNodeIdConnect;
+  ReviewResponseReviewResponsePkeyDelete: ReviewResponseReviewResponsePkeyDelete;
+  ReviewResponseNodeIdDelete: ReviewResponseNodeIdDelete;
+  ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  ReviewResponseReviewQuestionAssignmentIdFkeyInput: ReviewResponseReviewQuestionAssignmentIdFkeyInput;
+  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect;
+  ReviewQuestionAssignmentNodeIdConnect: ReviewQuestionAssignmentNodeIdConnect;
+  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete;
+  ReviewQuestionAssignmentNodeIdDelete: ReviewQuestionAssignmentNodeIdDelete;
+  ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
+  updateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
+  ReviewQuestionAssignmentTemplateElementIdFkeyInput: ReviewQuestionAssignmentTemplateElementIdFkeyInput;
+  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
+  updateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
+  ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput: ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
+  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInput;
+  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
+  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
+  ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput: ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput;
+  ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
+  ReviewResponseApplicationResponseIdFkeyInput: ReviewResponseApplicationResponseIdFkeyInput;
+  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
+  updateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
+  ReviewResponseApplicationResponseIdFkeyInverseInput: ReviewResponseApplicationResponseIdFkeyInverseInput;
+  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
+  ReviewResponseReviewIdFkeyInput: ReviewResponseReviewIdFkeyInput;
+  ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  ReviewStatusHistoryReviewIdFkeyInverseInput: ReviewStatusHistoryReviewIdFkeyInverseInput;
+  ReviewStatusHistoryReviewStatusHistoryPkeyConnect: ReviewStatusHistoryReviewStatusHistoryPkeyConnect;
+  ReviewStatusHistoryNodeIdConnect: ReviewStatusHistoryNodeIdConnect;
+  ReviewStatusHistoryReviewStatusHistoryPkeyDelete: ReviewStatusHistoryReviewStatusHistoryPkeyDelete;
+  ReviewStatusHistoryNodeIdDelete: ReviewStatusHistoryNodeIdDelete;
+  ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewStatusHistoryPkeyUpdate: ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewStatusHistoryPkeyUpdate;
+  updateReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch: UpdateReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch;
+  ReviewStatusHistoryReviewIdFkeyInput: ReviewStatusHistoryReviewIdFkeyInput;
+  ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch: UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch;
   NotificationReviewIdFkeyInverseInput: NotificationReviewIdFkeyInverseInput;
   NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate;
   updateNotificationOnNotificationForNotificationReviewIdFkeyPatch: UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch;
@@ -18320,16 +18551,6 @@ export type ResolversTypes = {
   FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
   ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
   updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
-  ReviewResponseApplicationResponseIdFkeyInverseInput: ReviewResponseApplicationResponseIdFkeyInverseInput;
-  ReviewResponseReviewResponsePkeyConnect: ReviewResponseReviewResponsePkeyConnect;
-  ReviewResponseNodeIdConnect: ReviewResponseNodeIdConnect;
-  ReviewResponseReviewResponsePkeyDelete: ReviewResponseReviewResponsePkeyDelete;
-  ReviewResponseNodeIdDelete: ReviewResponseNodeIdDelete;
-  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
-  ReviewResponseApplicationResponseIdFkeyInput: ReviewResponseApplicationResponseIdFkeyInput;
-  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
-  updateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
   FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
   FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
@@ -18342,134 +18563,43 @@ export type ResolversTypes = {
   ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
   FilePatch: FilePatch;
   FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
-  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
-  ApplicationResponsePatch: ApplicationResponsePatch;
-  ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
-  ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput: ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput;
-  ReviewSectionResponseJoinReviewSectionResponseJoinPkeyConnect: ReviewSectionResponseJoinReviewSectionResponseJoinPkeyConnect;
-  ReviewSectionResponseJoinNodeIdConnect: ReviewSectionResponseJoinNodeIdConnect;
-  ReviewSectionResponseJoinReviewSectionResponseJoinPkeyDelete: ReviewSectionResponseJoinReviewSectionResponseJoinPkeyDelete;
-  ReviewSectionResponseJoinNodeIdDelete: ReviewSectionResponseJoinNodeIdDelete;
-  ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewSectionResponseJoinPkeyUpdate: ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewSectionResponseJoinPkeyUpdate;
-  updateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch: UpdateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch;
-  ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput: ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput;
-  ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionJoinPkeyUpdate: ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionJoinPkeyUpdate;
-  updateReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch: UpdateReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch;
-  ReviewSectionJoinSectionAssignmentIdFkeyInput: ReviewSectionJoinSectionAssignmentIdFkeyInput;
-  ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionAssignmentPkeyUpdate: ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionAssignmentPkeyUpdate;
-  updateReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch: UpdateReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch;
-  ReviewSectionAssignmentStageIdFkeyInput: ReviewSectionAssignmentStageIdFkeyInput;
-  ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
-  updateApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch: UpdateApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch;
-  ApplicationStageHistoryStageIdFkeyInput: ApplicationStageHistoryStageIdFkeyInput;
-  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate;
-  updateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
-  ApplicationStageHistoryStageIdFkeyInverseInput: ApplicationStageHistoryStageIdFkeyInverseInput;
-  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
-  updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput;
-  ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect: ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect;
-  ApplicationStatusHistoryNodeIdConnect: ApplicationStatusHistoryNodeIdConnect;
-  ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete: ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete;
-  ApplicationStatusHistoryNodeIdDelete: ApplicationStatusHistoryNodeIdDelete;
-  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate;
-  updateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput;
-  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate;
-  updateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
-  ReviewSectionAssignmentStageIdFkeyInverseInput: ReviewSectionAssignmentStageIdFkeyInverseInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingReviewSectionAssignmentPkeyUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingReviewSectionAssignmentPkeyUpdate;
-  updateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch;
-  ReviewSectionAssignmentSectionIdFkeyInput: ReviewSectionAssignmentSectionIdFkeyInput;
-  ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingApplicationSectionPkeyUpdate: ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingApplicationSectionPkeyUpdate;
-  updateApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch: UpdateApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch;
-  ApplicationSectionTemplateSectionIdFkeyInput: ApplicationSectionTemplateSectionIdFkeyInput;
-  TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate: TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate;
-  updateTemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch: UpdateTemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch;
-  ApplicationSectionTemplateSectionIdFkeyInverseInput: ApplicationSectionTemplateSectionIdFkeyInverseInput;
-  ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingApplicationSectionPkeyUpdate: ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingApplicationSectionPkeyUpdate;
-  updateApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch: UpdateApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch;
-  ReviewSectionAssignmentSectionIdFkeyInverseInput: ReviewSectionAssignmentSectionIdFkeyInverseInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingReviewSectionAssignmentPkeyUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingReviewSectionAssignmentPkeyUpdate;
-  updateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch;
-  ReviewSectionJoinSectionAssignmentIdFkeyInverseInput: ReviewSectionJoinSectionAssignmentIdFkeyInverseInput;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionJoinPkeyUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionJoinPkeyUpdate;
-  updateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch: UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch;
-  ReviewSectionJoinReviewSectionIdFkeyInput: ReviewSectionJoinReviewSectionIdFkeyInput;
-  ReviewSectionReviewSectionPkeyConnect: ReviewSectionReviewSectionPkeyConnect;
-  ReviewSectionNodeIdConnect: ReviewSectionNodeIdConnect;
-  ReviewSectionReviewSectionPkeyDelete: ReviewSectionReviewSectionPkeyDelete;
-  ReviewSectionNodeIdDelete: ReviewSectionNodeIdDelete;
-  ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionPkeyUpdate: ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionPkeyUpdate;
-  updateReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch: UpdateReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch;
-  ReviewSectionJoinReviewSectionIdFkeyInverseInput: ReviewSectionJoinReviewSectionIdFkeyInverseInput;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionJoinPkeyUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionJoinPkeyUpdate;
-  updateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch: UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch;
-  ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput: ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput;
-  ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionResponseJoinPkeyUpdate: ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionResponseJoinPkeyUpdate;
-  updateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch: UpdateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch;
-  ReviewSectionResponseJoinReviewResponseIdFkeyInput: ReviewSectionResponseJoinReviewResponseIdFkeyInput;
-  ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch: UpdateReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch;
-  ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate: ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate;
-  ReviewResponsePatch: ReviewResponsePatch;
-  ReviewSectionResponseJoinReviewResponseIdFkeyReviewResponseCreateInput: ReviewSectionResponseJoinReviewResponseIdFkeyReviewResponseCreateInput;
-  ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate: ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate;
-  ReviewSectionResponseJoinPatch: ReviewSectionResponseJoinPatch;
-  ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionResponseJoinCreateInput: ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionResponseJoinCreateInput;
-  ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate: ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate;
-  ReviewSectionJoinPatch: ReviewSectionJoinPatch;
-  ReviewSectionJoinReviewSectionIdFkeyReviewSectionJoinCreateInput: ReviewSectionJoinReviewSectionIdFkeyReviewSectionJoinCreateInput;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate;
-  ReviewSectionPatch: ReviewSectionPatch;
-  ReviewSectionJoinReviewSectionIdFkeyReviewSectionCreateInput: ReviewSectionJoinReviewSectionIdFkeyReviewSectionCreateInput;
-  ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate: ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate;
-  ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionJoinCreateInput: ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionJoinCreateInput;
-  ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate: ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentPatch: ReviewSectionAssignmentPatch;
-  ReviewSectionAssignmentSectionIdFkeyReviewSectionAssignmentCreateInput: ReviewSectionAssignmentSectionIdFkeyReviewSectionAssignmentCreateInput;
-  TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate: TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate;
-  ApplicationSectionPatch: ApplicationSectionPatch;
-  ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput: ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput;
-  ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate: ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate;
-  TemplateSectionPatch: TemplateSectionPatch;
-  ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput: ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentSectionIdFkeyApplicationSectionCreateInput: ReviewSectionAssignmentSectionIdFkeyApplicationSectionCreateInput;
-  ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate: ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentStageIdFkeyReviewSectionAssignmentCreateInput: ReviewSectionAssignmentStageIdFkeyReviewSectionAssignmentCreateInput;
-  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
-  ApplicationStageHistoryPatch: ApplicationStageHistoryPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput;
-  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
-  ApplicationStatusHistoryPatch: ApplicationStatusHistoryPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput;
-  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
-  ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput;
-  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
-  TemplateStagePatch: TemplateStagePatch;
-  ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput: ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentStageIdFkeyApplicationStageHistoryCreateInput: ReviewSectionAssignmentStageIdFkeyApplicationStageHistoryCreateInput;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate;
-  ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionAssignmentCreateInput: ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionAssignmentCreateInput;
-  ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate: ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate;
-  ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionJoinCreateInput: ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionJoinCreateInput;
-  ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate;
-  ReviewSectionResponseJoinReviewResponseIdFkeyReviewSectionResponseJoinCreateInput: ReviewSectionResponseJoinReviewResponseIdFkeyReviewSectionResponseJoinCreateInput;
-  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
-  ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
   FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  ApplicationResponsePatch: ApplicationResponsePatch;
   FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
   NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate;
   NotificationDocumentIdFkeyFileCreateInput: NotificationDocumentIdFkeyFileCreateInput;
   ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
   NotificationReviewIdFkeyNotificationCreateInput: NotificationReviewIdFkeyNotificationCreateInput;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate;
+  ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
   ReviewPatch: ReviewPatch;
-  ReviewSectionJoinReviewIdFkeyReviewCreateInput: ReviewSectionJoinReviewIdFkeyReviewCreateInput;
-  ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate: ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate;
-  ReviewSectionJoinReviewIdFkeyReviewSectionJoinCreateInput: ReviewSectionJoinReviewIdFkeyReviewSectionJoinCreateInput;
+  ReviewStatusHistoryReviewIdFkeyReviewCreateInput: ReviewStatusHistoryReviewIdFkeyReviewCreateInput;
+  ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
+  ReviewStatusHistoryPatch: ReviewStatusHistoryPatch;
+  ReviewStatusHistoryReviewIdFkeyReviewStatusHistoryCreateInput: ReviewStatusHistoryReviewIdFkeyReviewStatusHistoryCreateInput;
+  ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
+  ReviewResponseReviewIdFkeyReviewCreateInput: ReviewResponseReviewIdFkeyReviewCreateInput;
+  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
+  ReviewResponsePatch: ReviewResponsePatch;
+  ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
+  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
+  ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
+  ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
+  ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput;
+  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentPatch: ReviewQuestionAssignmentPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewAssignmentPatch: ReviewAssignmentPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput;
+  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
+  TemplateElementPatch: TemplateElementPatch;
+  ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput;
+  ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
+  ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
+  ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
+  ReviewResponseReviewIdFkeyReviewResponseCreateInput: ReviewResponseReviewIdFkeyReviewResponseCreateInput;
   NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
   NotificationReviewIdFkeyReviewCreateInput: NotificationReviewIdFkeyReviewCreateInput;
   UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
@@ -18484,14 +18614,6 @@ export type ResolversTypes = {
   FileApplicationIdFkeyApplicationCreateInput: FileApplicationIdFkeyApplicationCreateInput;
   UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentAssignerIdFkeyUserCreateInput: ReviewSectionAssignmentAssignerIdFkeyUserCreateInput;
-  UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentAssignerIdFkeyReviewSectionAssignmentCreateInput: ReviewSectionAssignmentAssignerIdFkeyReviewSectionAssignmentCreateInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentReviewerIdFkeyUserCreateInput: ReviewSectionAssignmentReviewerIdFkeyUserCreateInput;
-  UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate: UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentReviewerIdFkeyReviewSectionAssignmentCreateInput: ReviewSectionAssignmentReviewerIdFkeyReviewSectionAssignmentCreateInput;
   FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
   ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate;
@@ -18499,16 +18621,74 @@ export type ResolversTypes = {
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyApplicationCreateInput: ReviewApplicationIdFkeyApplicationCreateInput;
+  UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
+  ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
+  ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
+  ReviewReviewerIdFkeyUserCreateInput: ReviewReviewerIdFkeyUserCreateInput;
   ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyReviewCreateInput: ReviewApplicationIdFkeyReviewCreateInput;
+  ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate;
+  ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewReviewAssignmentIdFkeyApplicationCreateInput: ReviewReviewAssignmentIdFkeyApplicationCreateInput;
+  ApplicationOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ApplicationOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewReviewAssignmentIdFkeyReviewCreateInput: ReviewReviewAssignmentIdFkeyReviewCreateInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
+  ReviewAssignmentApplicationIdFkeyApplicationCreateInput: ReviewAssignmentApplicationIdFkeyApplicationCreateInput;
+  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
+  ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput: ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput;
+  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
+  TemplateStagePatch: TemplateStagePatch;
+  ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput: ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput;
+  ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect: ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect;
+  ApplicationStatusHistoryNodeIdConnect: ApplicationStatusHistoryNodeIdConnect;
+  ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete: ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete;
+  ApplicationStatusHistoryNodeIdDelete: ApplicationStatusHistoryNodeIdDelete;
+  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate;
+  updateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput;
+  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate;
+  updateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
+  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
+  ApplicationStageHistoryPatch: ApplicationStageHistoryPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput;
+  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
+  ApplicationStatusHistoryPatch: ApplicationStatusHistoryPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput;
+  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
+  ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
+  ReviewAssignmentStageIdFkeyTemplateStageCreateInput: ReviewAssignmentStageIdFkeyTemplateStageCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
+  ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
+  ReviewAssignmentReviewerIdFkeyUserCreateInput: ReviewAssignmentReviewerIdFkeyUserCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
+  ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationCreateInput: ApplicationResponseApplicationIdFkeyApplicationCreateInput;
   TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate;
   ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput: ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput;
   TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate: TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate;
-  TemplateElementPatch: TemplateElementPatch;
   TemplateElementSectionIdFkeyTemplateElementCreateInput: TemplateElementSectionIdFkeyTemplateElementCreateInput;
+  ApplicationSectionTemplateSectionIdFkeyInverseInput: ApplicationSectionTemplateSectionIdFkeyInverseInput;
+  ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingApplicationSectionPkeyUpdate: ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingApplicationSectionPkeyUpdate;
+  updateApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch: UpdateApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch;
+  ApplicationSectionTemplateSectionIdFkeyInput: ApplicationSectionTemplateSectionIdFkeyInput;
+  TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate: TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate;
+  updateTemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch: UpdateTemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch;
+  ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate: ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate;
+  TemplateSectionPatch: TemplateSectionPatch;
+  ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput: ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput;
+  TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate: TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate;
+  ApplicationSectionPatch: ApplicationSectionPatch;
+  ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput: ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput;
   TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate: TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate;
   TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput: TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput;
   TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate: TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate;
@@ -18630,21 +18810,18 @@ export type ResolversTypes = {
   CreateReviewInput: CreateReviewInput;
   ReviewInput: ReviewInput;
   CreateReviewPayload: ResolverTypeWrapper<CreateReviewPayload>;
+  CreateReviewAssignmentInput: CreateReviewAssignmentInput;
+  ReviewAssignmentInput: ReviewAssignmentInput;
+  CreateReviewAssignmentPayload: ResolverTypeWrapper<CreateReviewAssignmentPayload>;
+  CreateReviewQuestionAssignmentInput: CreateReviewQuestionAssignmentInput;
+  ReviewQuestionAssignmentInput: ReviewQuestionAssignmentInput;
+  CreateReviewQuestionAssignmentPayload: ResolverTypeWrapper<CreateReviewQuestionAssignmentPayload>;
   CreateReviewResponseInput: CreateReviewResponseInput;
   ReviewResponseInput: ReviewResponseInput;
   CreateReviewResponsePayload: ResolverTypeWrapper<CreateReviewResponsePayload>;
-  CreateReviewSectionInput: CreateReviewSectionInput;
-  ReviewSectionInput: ReviewSectionInput;
-  CreateReviewSectionPayload: ResolverTypeWrapper<CreateReviewSectionPayload>;
-  CreateReviewSectionAssignmentInput: CreateReviewSectionAssignmentInput;
-  ReviewSectionAssignmentInput: ReviewSectionAssignmentInput;
-  CreateReviewSectionAssignmentPayload: ResolverTypeWrapper<CreateReviewSectionAssignmentPayload>;
-  CreateReviewSectionJoinInput: CreateReviewSectionJoinInput;
-  ReviewSectionJoinInput: ReviewSectionJoinInput;
-  CreateReviewSectionJoinPayload: ResolverTypeWrapper<CreateReviewSectionJoinPayload>;
-  CreateReviewSectionResponseJoinInput: CreateReviewSectionResponseJoinInput;
-  ReviewSectionResponseJoinInput: ReviewSectionResponseJoinInput;
-  CreateReviewSectionResponseJoinPayload: ResolverTypeWrapper<CreateReviewSectionResponseJoinPayload>;
+  CreateReviewStatusHistoryInput: CreateReviewStatusHistoryInput;
+  ReviewStatusHistoryInput: ReviewStatusHistoryInput;
+  CreateReviewStatusHistoryPayload: ResolverTypeWrapper<CreateReviewStatusHistoryPayload>;
   CreateTemplateInput: CreateTemplateInput;
   TemplateInput: TemplateInput;
   CreateTemplatePayload: ResolverTypeWrapper<CreateTemplatePayload>;
@@ -18720,21 +18897,18 @@ export type ResolversTypes = {
   UpdateReviewByNodeIdInput: UpdateReviewByNodeIdInput;
   UpdateReviewPayload: ResolverTypeWrapper<UpdateReviewPayload>;
   UpdateReviewInput: UpdateReviewInput;
+  UpdateReviewAssignmentByNodeIdInput: UpdateReviewAssignmentByNodeIdInput;
+  UpdateReviewAssignmentPayload: ResolverTypeWrapper<UpdateReviewAssignmentPayload>;
+  UpdateReviewAssignmentInput: UpdateReviewAssignmentInput;
+  UpdateReviewQuestionAssignmentByNodeIdInput: UpdateReviewQuestionAssignmentByNodeIdInput;
+  UpdateReviewQuestionAssignmentPayload: ResolverTypeWrapper<UpdateReviewQuestionAssignmentPayload>;
+  UpdateReviewQuestionAssignmentInput: UpdateReviewQuestionAssignmentInput;
   UpdateReviewResponseByNodeIdInput: UpdateReviewResponseByNodeIdInput;
   UpdateReviewResponsePayload: ResolverTypeWrapper<UpdateReviewResponsePayload>;
   UpdateReviewResponseInput: UpdateReviewResponseInput;
-  UpdateReviewSectionByNodeIdInput: UpdateReviewSectionByNodeIdInput;
-  UpdateReviewSectionPayload: ResolverTypeWrapper<UpdateReviewSectionPayload>;
-  UpdateReviewSectionInput: UpdateReviewSectionInput;
-  UpdateReviewSectionAssignmentByNodeIdInput: UpdateReviewSectionAssignmentByNodeIdInput;
-  UpdateReviewSectionAssignmentPayload: ResolverTypeWrapper<UpdateReviewSectionAssignmentPayload>;
-  UpdateReviewSectionAssignmentInput: UpdateReviewSectionAssignmentInput;
-  UpdateReviewSectionJoinByNodeIdInput: UpdateReviewSectionJoinByNodeIdInput;
-  UpdateReviewSectionJoinPayload: ResolverTypeWrapper<UpdateReviewSectionJoinPayload>;
-  UpdateReviewSectionJoinInput: UpdateReviewSectionJoinInput;
-  UpdateReviewSectionResponseJoinByNodeIdInput: UpdateReviewSectionResponseJoinByNodeIdInput;
-  UpdateReviewSectionResponseJoinPayload: ResolverTypeWrapper<UpdateReviewSectionResponseJoinPayload>;
-  UpdateReviewSectionResponseJoinInput: UpdateReviewSectionResponseJoinInput;
+  UpdateReviewStatusHistoryByNodeIdInput: UpdateReviewStatusHistoryByNodeIdInput;
+  UpdateReviewStatusHistoryPayload: ResolverTypeWrapper<UpdateReviewStatusHistoryPayload>;
+  UpdateReviewStatusHistoryInput: UpdateReviewStatusHistoryInput;
   UpdateTemplateByNodeIdInput: UpdateTemplateByNodeIdInput;
   UpdateTemplatePayload: ResolverTypeWrapper<UpdateTemplatePayload>;
   UpdateTemplateInput: UpdateTemplateInput;
@@ -18808,21 +18982,18 @@ export type ResolversTypes = {
   DeleteReviewByNodeIdInput: DeleteReviewByNodeIdInput;
   DeleteReviewPayload: ResolverTypeWrapper<DeleteReviewPayload>;
   DeleteReviewInput: DeleteReviewInput;
+  DeleteReviewAssignmentByNodeIdInput: DeleteReviewAssignmentByNodeIdInput;
+  DeleteReviewAssignmentPayload: ResolverTypeWrapper<DeleteReviewAssignmentPayload>;
+  DeleteReviewAssignmentInput: DeleteReviewAssignmentInput;
+  DeleteReviewQuestionAssignmentByNodeIdInput: DeleteReviewQuestionAssignmentByNodeIdInput;
+  DeleteReviewQuestionAssignmentPayload: ResolverTypeWrapper<DeleteReviewQuestionAssignmentPayload>;
+  DeleteReviewQuestionAssignmentInput: DeleteReviewQuestionAssignmentInput;
   DeleteReviewResponseByNodeIdInput: DeleteReviewResponseByNodeIdInput;
   DeleteReviewResponsePayload: ResolverTypeWrapper<DeleteReviewResponsePayload>;
   DeleteReviewResponseInput: DeleteReviewResponseInput;
-  DeleteReviewSectionByNodeIdInput: DeleteReviewSectionByNodeIdInput;
-  DeleteReviewSectionPayload: ResolverTypeWrapper<DeleteReviewSectionPayload>;
-  DeleteReviewSectionInput: DeleteReviewSectionInput;
-  DeleteReviewSectionAssignmentByNodeIdInput: DeleteReviewSectionAssignmentByNodeIdInput;
-  DeleteReviewSectionAssignmentPayload: ResolverTypeWrapper<DeleteReviewSectionAssignmentPayload>;
-  DeleteReviewSectionAssignmentInput: DeleteReviewSectionAssignmentInput;
-  DeleteReviewSectionJoinByNodeIdInput: DeleteReviewSectionJoinByNodeIdInput;
-  DeleteReviewSectionJoinPayload: ResolverTypeWrapper<DeleteReviewSectionJoinPayload>;
-  DeleteReviewSectionJoinInput: DeleteReviewSectionJoinInput;
-  DeleteReviewSectionResponseJoinByNodeIdInput: DeleteReviewSectionResponseJoinByNodeIdInput;
-  DeleteReviewSectionResponseJoinPayload: ResolverTypeWrapper<DeleteReviewSectionResponseJoinPayload>;
-  DeleteReviewSectionResponseJoinInput: DeleteReviewSectionResponseJoinInput;
+  DeleteReviewStatusHistoryByNodeIdInput: DeleteReviewStatusHistoryByNodeIdInput;
+  DeleteReviewStatusHistoryPayload: ResolverTypeWrapper<DeleteReviewStatusHistoryPayload>;
+  DeleteReviewStatusHistoryInput: DeleteReviewStatusHistoryInput;
   DeleteTemplateByNodeIdInput: DeleteTemplateByNodeIdInput;
   DeleteTemplatePayload: ResolverTypeWrapper<DeleteTemplatePayload>;
   DeleteTemplateInput: DeleteTemplateInput;
@@ -18855,7 +19026,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewSectionResponseJoin'] | ResolversParentTypes['ReviewSectionJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ReviewSectionAssignment'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['ReviewSection'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -18891,65 +19062,65 @@ export type ResolversParentTypes = {
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
   ApplicationStatusHistoryFilter: ApplicationStatusHistoryFilter;
   ApplicationStatusFilter: ApplicationStatusFilter;
-  ApplicationStageHistoryToManyReviewSectionAssignmentFilter: ApplicationStageHistoryToManyReviewSectionAssignmentFilter;
-  ReviewSectionAssignmentFilter: ReviewSectionAssignmentFilter;
-  ReviewSectionAssignmentToManyReviewSectionJoinFilter: ReviewSectionAssignmentToManyReviewSectionJoinFilter;
-  ReviewSectionJoinFilter: ReviewSectionJoinFilter;
-  ReviewSectionJoinToManyReviewSectionResponseJoinFilter: ReviewSectionJoinToManyReviewSectionResponseJoinFilter;
-  ReviewSectionResponseJoinFilter: ReviewSectionResponseJoinFilter;
-  ReviewResponseFilter: ReviewResponseFilter;
-  ReviewDecisionFilter: ReviewDecisionFilter;
-  ReviewResponseToManyReviewSectionResponseJoinFilter: ReviewResponseToManyReviewSectionResponseJoinFilter;
-  ApplicationResponseFilter: ApplicationResponseFilter;
-  ApplicationResponseToManyReviewResponseFilter: ApplicationResponseToManyReviewResponseFilter;
-  ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
-  FileFilter: FileFilter;
-  FileToManyNotificationFilter: FileToManyNotificationFilter;
-  NotificationFilter: NotificationFilter;
+  ApplicationFilter: ApplicationFilter;
+  ApplicationOutcomeFilter: ApplicationOutcomeFilter;
+  ApplicationToManyApplicationSectionFilter: ApplicationToManyApplicationSectionFilter;
+  ApplicationSectionFilter: ApplicationSectionFilter;
+  TemplateSectionFilter: TemplateSectionFilter;
+  TemplateSectionToManyTemplatePermissionFilter: TemplateSectionToManyTemplatePermissionFilter;
+  TemplatePermissionFilter: TemplatePermissionFilter;
+  PermissionNameFilter: PermissionNameFilter;
+  PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
+  PermissionJoinFilter: PermissionJoinFilter;
   UserFilter: UserFilter;
   DateFilter: DateFilter;
   Date: Scalars['Date'];
   UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
   UserOrganisationFilter: UserOrganisationFilter;
   UserOrganisationToManyPermissionJoinFilter: UserOrganisationToManyPermissionJoinFilter;
-  PermissionJoinFilter: PermissionJoinFilter;
-  PermissionNameFilter: PermissionNameFilter;
-  PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
-  PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
-  TemplatePermissionFilter: TemplatePermissionFilter;
-  TemplateSectionFilter: TemplateSectionFilter;
-  TemplateSectionToManyTemplatePermissionFilter: TemplateSectionToManyTemplatePermissionFilter;
-  TemplateSectionToManyTemplateElementFilter: TemplateSectionToManyTemplateElementFilter;
-  TemplateElementFilter: TemplateElementFilter;
-  TemplateElementCategoryFilter: TemplateElementCategoryFilter;
-  TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
-  TemplateSectionToManyApplicationSectionFilter: TemplateSectionToManyApplicationSectionFilter;
-  ApplicationSectionFilter: ApplicationSectionFilter;
-  ApplicationSectionToManyReviewSectionAssignmentFilter: ApplicationSectionToManyReviewSectionAssignmentFilter;
-  ApplicationFilter: ApplicationFilter;
-  ApplicationOutcomeFilter: ApplicationOutcomeFilter;
-  ApplicationToManyApplicationSectionFilter: ApplicationToManyApplicationSectionFilter;
-  ApplicationToManyApplicationStageHistoryFilter: ApplicationToManyApplicationStageHistoryFilter;
-  ApplicationToManyApplicationResponseFilter: ApplicationToManyApplicationResponseFilter;
-  ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
-  ReviewFilter: ReviewFilter;
-  ReviewStatusFilter: ReviewStatusFilter;
-  ReviewToManyReviewSectionJoinFilter: ReviewToManyReviewSectionJoinFilter;
-  ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
-  ApplicationToManyFileFilter: ApplicationToManyFileFilter;
-  ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
-  PermissionPolicyFilter: PermissionPolicyFilter;
-  PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
-  PermissionPolicyToManyPermissionNameFilter: PermissionPolicyToManyPermissionNameFilter;
   OrganisationFilter: OrganisationFilter;
   OrganisationToManyUserOrganisationFilter: OrganisationToManyUserOrganisationFilter;
   UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
   UserToManyApplicationFilter: UserToManyApplicationFilter;
-  UserToManyReviewSectionAssignmentFilter: UserToManyReviewSectionAssignmentFilter;
+  UserToManyReviewAssignmentFilter: UserToManyReviewAssignmentFilter;
+  ReviewAssignmentFilter: ReviewAssignmentFilter;
+  ReviewAssignmentToManyReviewQuestionAssignmentFilter: ReviewAssignmentToManyReviewQuestionAssignmentFilter;
+  ReviewQuestionAssignmentFilter: ReviewQuestionAssignmentFilter;
+  ReviewQuestionAssignmentToManyReviewResponseFilter: ReviewQuestionAssignmentToManyReviewResponseFilter;
+  ReviewResponseFilter: ReviewResponseFilter;
+  ReviewResponseDecisionFilter: ReviewResponseDecisionFilter;
+  ApplicationResponseFilter: ApplicationResponseFilter;
+  ApplicationResponseToManyReviewResponseFilter: ApplicationResponseToManyReviewResponseFilter;
+  ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
+  FileFilter: FileFilter;
+  FileToManyNotificationFilter: FileToManyNotificationFilter;
+  NotificationFilter: NotificationFilter;
+  ReviewFilter: ReviewFilter;
+  ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
+  ReviewToManyReviewStatusHistoryFilter: ReviewToManyReviewStatusHistoryFilter;
+  ReviewStatusHistoryFilter: ReviewStatusHistoryFilter;
+  ReviewStatusFilter: ReviewStatusFilter;
+  ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
+  TemplateElementFilter: TemplateElementFilter;
+  TemplateElementCategoryFilter: TemplateElementCategoryFilter;
+  TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
+  TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
+  UserToManyReviewFilter: UserToManyReviewFilter;
   UserToManyFileFilter: UserToManyFileFilter;
   UserToManyNotificationFilter: UserToManyNotificationFilter;
-  ReviewSectionFilter: ReviewSectionFilter;
-  ReviewSectionToManyReviewSectionJoinFilter: ReviewSectionToManyReviewSectionJoinFilter;
+  PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
+  PermissionPolicyFilter: PermissionPolicyFilter;
+  PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
+  PermissionPolicyToManyPermissionNameFilter: PermissionPolicyToManyPermissionNameFilter;
+  TemplateSectionToManyTemplateElementFilter: TemplateSectionToManyTemplateElementFilter;
+  TemplateSectionToManyApplicationSectionFilter: TemplateSectionToManyApplicationSectionFilter;
+  ApplicationToManyApplicationStageHistoryFilter: ApplicationToManyApplicationStageHistoryFilter;
+  ApplicationToManyApplicationResponseFilter: ApplicationToManyApplicationResponseFilter;
+  ApplicationToManyReviewAssignmentFilter: ApplicationToManyReviewAssignmentFilter;
+  ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
+  ApplicationToManyFileFilter: ApplicationToManyFileFilter;
+  ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
+  TemplateStageToManyReviewAssignmentFilter: TemplateStageToManyReviewAssignmentFilter;
   TemplateToManyTemplateSectionFilter: TemplateToManyTemplateSectionFilter;
   TemplateToManyTemplatePermissionFilter: TemplateToManyTemplatePermissionFilter;
   TemplateToManyApplicationFilter: TemplateToManyApplicationFilter;
@@ -18993,26 +19164,21 @@ export type ResolversParentTypes = {
   ReviewResponseCondition: ReviewResponseCondition;
   ReviewResponsesConnection: ReviewResponsesConnection;
   ReviewResponse: ReviewResponse;
-  ReviewSectionResponseJoinCondition: ReviewSectionResponseJoinCondition;
-  ReviewSectionResponseJoinsConnection: ReviewSectionResponseJoinsConnection;
-  ReviewSectionResponseJoin: ReviewSectionResponseJoin;
-  ReviewSectionJoin: ReviewSectionJoin;
+  ReviewQuestionAssignment: ReviewQuestionAssignment;
+  ReviewAssignment: ReviewAssignment;
+  ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
+  ReviewQuestionAssignmentsConnection: ReviewQuestionAssignmentsConnection;
+  ReviewQuestionAssignmentsEdge: ReviewQuestionAssignmentsEdge;
   Review: Review;
-  ReviewSectionJoinCondition: ReviewSectionJoinCondition;
-  ReviewSectionJoinsConnection: ReviewSectionJoinsConnection;
-  ReviewSectionJoinsEdge: ReviewSectionJoinsEdge;
+  ReviewStatusHistoryCondition: ReviewStatusHistoryCondition;
+  ReviewStatusHistoriesConnection: ReviewStatusHistoriesConnection;
+  ReviewStatusHistory: ReviewStatusHistory;
+  ReviewStatusHistoriesEdge: ReviewStatusHistoriesEdge;
   NotificationCondition: NotificationCondition;
   NotificationsConnection: NotificationsConnection;
   Notification: Notification;
   File: File;
   NotificationsEdge: NotificationsEdge;
-  ReviewSectionAssignment: ReviewSectionAssignment;
-  ApplicationSection: ApplicationSection;
-  ReviewSectionAssignmentCondition: ReviewSectionAssignmentCondition;
-  ReviewSectionAssignmentsConnection: ReviewSectionAssignmentsConnection;
-  ReviewSectionAssignmentsEdge: ReviewSectionAssignmentsEdge;
-  ReviewSection: ReviewSection;
-  ReviewSectionResponseJoinsEdge: ReviewSectionResponseJoinsEdge;
   ReviewResponsesEdge: ReviewResponsesEdge;
   FileCondition: FileCondition;
   FilesConnection: FilesConnection;
@@ -19021,6 +19187,7 @@ export type ResolversParentTypes = {
   TemplateElementsEdge: TemplateElementsEdge;
   ApplicationSectionCondition: ApplicationSectionCondition;
   ApplicationSectionsConnection: ApplicationSectionsConnection;
+  ApplicationSection: ApplicationSection;
   ApplicationSectionsEdge: ApplicationSectionsEdge;
   TemplatePermissionsEdge: TemplatePermissionsEdge;
   PermissionJoinsEdge: PermissionJoinsEdge;
@@ -19028,6 +19195,9 @@ export type ResolversParentTypes = {
   ApplicationCondition: ApplicationCondition;
   ApplicationsConnection: ApplicationsConnection;
   ApplicationsEdge: ApplicationsEdge;
+  ReviewAssignmentCondition: ReviewAssignmentCondition;
+  ReviewAssignmentsConnection: ReviewAssignmentsConnection;
+  ReviewAssignmentsEdge: ReviewAssignmentsEdge;
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ReviewsConnection;
   ReviewsEdge: ReviewsEdge;
@@ -19066,9 +19236,6 @@ export type ResolversParentTypes = {
   PermissionPolicyCondition: PermissionPolicyCondition;
   PermissionPoliciesConnection: PermissionPoliciesConnection;
   PermissionPoliciesEdge: PermissionPoliciesEdge;
-  ReviewSectionCondition: ReviewSectionCondition;
-  ReviewSectionsConnection: ReviewSectionsConnection;
-  ReviewSectionsEdge: ReviewSectionsEdge;
   TemplateCondition: TemplateCondition;
   TemplatesConnection: TemplatesConnection;
   TemplatesEdge: TemplatesEdge;
@@ -19297,13 +19464,59 @@ export type ResolversParentTypes = {
   ApplicationResponseApplicationIdFkeyInput: ApplicationResponseApplicationIdFkeyInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
-  ReviewApplicationIdFkeyInverseInput: ReviewApplicationIdFkeyInverseInput;
+  ReviewAssignmentApplicationIdFkeyInverseInput: ReviewAssignmentApplicationIdFkeyInverseInput;
+  ReviewAssignmentReviewAssignmentPkeyConnect: ReviewAssignmentReviewAssignmentPkeyConnect;
+  ReviewAssignmentNodeIdConnect: ReviewAssignmentNodeIdConnect;
+  ReviewAssignmentReviewAssignmentPkeyDelete: ReviewAssignmentReviewAssignmentPkeyDelete;
+  ReviewAssignmentNodeIdDelete: ReviewAssignmentNodeIdDelete;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
+  ReviewAssignmentAssignerIdFkeyInput: ReviewAssignmentAssignerIdFkeyInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  ReviewAssignmentAssignerIdFkeyInverseInput: ReviewAssignmentAssignerIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  ReviewAssignmentReviewerIdFkeyInput: ReviewAssignmentReviewerIdFkeyInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  ReviewAssignmentReviewerIdFkeyInverseInput: ReviewAssignmentReviewerIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  ReviewAssignmentStageIdFkeyInput: ReviewAssignmentStageIdFkeyInput;
+  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  ApplicationStageHistoryStageIdFkeyInverseInput: ApplicationStageHistoryStageIdFkeyInverseInput;
+  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
+  updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
+  ApplicationStageHistoryStageIdFkeyInput: ApplicationStageHistoryStageIdFkeyInput;
+  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
+  ReviewAssignmentStageIdFkeyInverseInput: ReviewAssignmentStageIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  ReviewAssignmentApplicationIdFkeyInput: ReviewAssignmentApplicationIdFkeyInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
+  ReviewReviewAssignmentIdFkeyInverseInput: ReviewReviewAssignmentIdFkeyInverseInput;
   ReviewReviewPkeyConnect: ReviewReviewPkeyConnect;
   ReviewNodeIdConnect: ReviewNodeIdConnect;
   ReviewReviewPkeyDelete: ReviewReviewPkeyDelete;
   ReviewNodeIdDelete: ReviewNodeIdDelete;
+  ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch;
+  ReviewReviewAssignmentIdFkeyInput: ReviewReviewAssignmentIdFkeyInput;
+  ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateApplicationOnReviewForReviewReviewAssignmentIdFkeyPatch;
+  ReviewApplicationIdFkeyInverseInput: ReviewApplicationIdFkeyInverseInput;
   ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewForReviewApplicationIdFkeyPatch: UpdateReviewOnReviewForReviewApplicationIdFkeyPatch;
+  ReviewReviewerIdFkeyInput: ReviewReviewerIdFkeyInput;
+  UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewForReviewReviewerIdFkeyPatch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
+  ReviewReviewerIdFkeyInverseInput: ReviewReviewerIdFkeyInverseInput;
+  ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewForReviewReviewerIdFkeyPatch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
   ReviewApplicationIdFkeyInput: ReviewApplicationIdFkeyInput;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnReviewForReviewApplicationIdFkeyPatch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
@@ -19317,22 +19530,6 @@ export type ResolversParentTypes = {
   FileUserIdFkeyInput: FileUserIdFkeyInput;
   UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
-  ReviewSectionAssignmentReviewerIdFkeyInverseInput: ReviewSectionAssignmentReviewerIdFkeyInverseInput;
-  ReviewSectionAssignmentReviewSectionAssignmentPkeyConnect: ReviewSectionAssignmentReviewSectionAssignmentPkeyConnect;
-  ReviewSectionAssignmentNodeIdConnect: ReviewSectionAssignmentNodeIdConnect;
-  ReviewSectionAssignmentReviewSectionAssignmentPkeyDelete: ReviewSectionAssignmentReviewSectionAssignmentPkeyDelete;
-  ReviewSectionAssignmentNodeIdDelete: ReviewSectionAssignmentNodeIdDelete;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingReviewSectionAssignmentPkeyUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingReviewSectionAssignmentPkeyUpdate;
-  updateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch;
-  ReviewSectionAssignmentReviewerIdFkeyInput: ReviewSectionAssignmentReviewerIdFkeyInput;
-  UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch: UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyPatch;
-  ReviewSectionAssignmentAssignerIdFkeyInverseInput: ReviewSectionAssignmentAssignerIdFkeyInverseInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingReviewSectionAssignmentPkeyUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingReviewSectionAssignmentPkeyUpdate;
-  updateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch;
-  ReviewSectionAssignmentAssignerIdFkeyInput: ReviewSectionAssignmentAssignerIdFkeyInput;
-  UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch: UpdateUserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyPatch;
   FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
   FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
@@ -19362,16 +19559,54 @@ export type ResolversParentTypes = {
   NotificationReviewIdFkeyInput: NotificationReviewIdFkeyInput;
   ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnNotificationForNotificationReviewIdFkeyPatch: UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch;
-  ReviewSectionJoinReviewIdFkeyInverseInput: ReviewSectionJoinReviewIdFkeyInverseInput;
-  ReviewSectionJoinReviewSectionJoinPkeyConnect: ReviewSectionJoinReviewSectionJoinPkeyConnect;
-  ReviewSectionJoinNodeIdConnect: ReviewSectionJoinNodeIdConnect;
-  ReviewSectionJoinReviewSectionJoinPkeyDelete: ReviewSectionJoinReviewSectionJoinPkeyDelete;
-  ReviewSectionJoinNodeIdDelete: ReviewSectionJoinNodeIdDelete;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewSectionJoinPkeyUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewSectionJoinPkeyUpdate;
-  updateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch: UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch;
-  ReviewSectionJoinReviewIdFkeyInput: ReviewSectionJoinReviewIdFkeyInput;
-  ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyUsingReviewPkeyUpdate;
-  updateReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch: UpdateReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyPatch;
+  ReviewResponseReviewIdFkeyInverseInput: ReviewResponseReviewIdFkeyInverseInput;
+  ReviewResponseReviewResponsePkeyConnect: ReviewResponseReviewResponsePkeyConnect;
+  ReviewResponseNodeIdConnect: ReviewResponseNodeIdConnect;
+  ReviewResponseReviewResponsePkeyDelete: ReviewResponseReviewResponsePkeyDelete;
+  ReviewResponseNodeIdDelete: ReviewResponseNodeIdDelete;
+  ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  ReviewResponseReviewQuestionAssignmentIdFkeyInput: ReviewResponseReviewQuestionAssignmentIdFkeyInput;
+  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect;
+  ReviewQuestionAssignmentNodeIdConnect: ReviewQuestionAssignmentNodeIdConnect;
+  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete;
+  ReviewQuestionAssignmentNodeIdDelete: ReviewQuestionAssignmentNodeIdDelete;
+  ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
+  updateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
+  ReviewQuestionAssignmentTemplateElementIdFkeyInput: ReviewQuestionAssignmentTemplateElementIdFkeyInput;
+  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
+  updateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
+  ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput: ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
+  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInput;
+  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
+  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
+  ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput: ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput;
+  ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
+  ReviewResponseApplicationResponseIdFkeyInput: ReviewResponseApplicationResponseIdFkeyInput;
+  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
+  updateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
+  ReviewResponseApplicationResponseIdFkeyInverseInput: ReviewResponseApplicationResponseIdFkeyInverseInput;
+  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
+  ReviewResponseReviewIdFkeyInput: ReviewResponseReviewIdFkeyInput;
+  ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  ReviewStatusHistoryReviewIdFkeyInverseInput: ReviewStatusHistoryReviewIdFkeyInverseInput;
+  ReviewStatusHistoryReviewStatusHistoryPkeyConnect: ReviewStatusHistoryReviewStatusHistoryPkeyConnect;
+  ReviewStatusHistoryNodeIdConnect: ReviewStatusHistoryNodeIdConnect;
+  ReviewStatusHistoryReviewStatusHistoryPkeyDelete: ReviewStatusHistoryReviewStatusHistoryPkeyDelete;
+  ReviewStatusHistoryNodeIdDelete: ReviewStatusHistoryNodeIdDelete;
+  ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewStatusHistoryPkeyUpdate: ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewStatusHistoryPkeyUpdate;
+  updateReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch: UpdateReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch;
+  ReviewStatusHistoryReviewIdFkeyInput: ReviewStatusHistoryReviewIdFkeyInput;
+  ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch: UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch;
   NotificationReviewIdFkeyInverseInput: NotificationReviewIdFkeyInverseInput;
   NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate;
   updateNotificationOnNotificationForNotificationReviewIdFkeyPatch: UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch;
@@ -19381,16 +19616,6 @@ export type ResolversParentTypes = {
   FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
   ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
   updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
-  ReviewResponseApplicationResponseIdFkeyInverseInput: ReviewResponseApplicationResponseIdFkeyInverseInput;
-  ReviewResponseReviewResponsePkeyConnect: ReviewResponseReviewResponsePkeyConnect;
-  ReviewResponseNodeIdConnect: ReviewResponseNodeIdConnect;
-  ReviewResponseReviewResponsePkeyDelete: ReviewResponseReviewResponsePkeyDelete;
-  ReviewResponseNodeIdDelete: ReviewResponseNodeIdDelete;
-  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
-  ReviewResponseApplicationResponseIdFkeyInput: ReviewResponseApplicationResponseIdFkeyInput;
-  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
-  updateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
   FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
   FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
@@ -19403,134 +19628,43 @@ export type ResolversParentTypes = {
   ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
   FilePatch: FilePatch;
   FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
-  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
-  ApplicationResponsePatch: ApplicationResponsePatch;
-  ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
-  ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput: ReviewSectionResponseJoinReviewResponseIdFkeyInverseInput;
-  ReviewSectionResponseJoinReviewSectionResponseJoinPkeyConnect: ReviewSectionResponseJoinReviewSectionResponseJoinPkeyConnect;
-  ReviewSectionResponseJoinNodeIdConnect: ReviewSectionResponseJoinNodeIdConnect;
-  ReviewSectionResponseJoinReviewSectionResponseJoinPkeyDelete: ReviewSectionResponseJoinReviewSectionResponseJoinPkeyDelete;
-  ReviewSectionResponseJoinNodeIdDelete: ReviewSectionResponseJoinNodeIdDelete;
-  ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewSectionResponseJoinPkeyUpdate: ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewSectionResponseJoinPkeyUpdate;
-  updateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch: UpdateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch;
-  ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput: ReviewSectionResponseJoinReviewSectionJoinIdFkeyInput;
-  ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionJoinPkeyUpdate: ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionJoinPkeyUpdate;
-  updateReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch: UpdateReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch;
-  ReviewSectionJoinSectionAssignmentIdFkeyInput: ReviewSectionJoinSectionAssignmentIdFkeyInput;
-  ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionAssignmentPkeyUpdate: ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionAssignmentPkeyUpdate;
-  updateReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch: UpdateReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch;
-  ReviewSectionAssignmentStageIdFkeyInput: ReviewSectionAssignmentStageIdFkeyInput;
-  ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
-  updateApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch: UpdateApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch;
-  ApplicationStageHistoryStageIdFkeyInput: ApplicationStageHistoryStageIdFkeyInput;
-  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate;
-  updateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
-  ApplicationStageHistoryStageIdFkeyInverseInput: ApplicationStageHistoryStageIdFkeyInverseInput;
-  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
-  updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput;
-  ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect: ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect;
-  ApplicationStatusHistoryNodeIdConnect: ApplicationStatusHistoryNodeIdConnect;
-  ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete: ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete;
-  ApplicationStatusHistoryNodeIdDelete: ApplicationStatusHistoryNodeIdDelete;
-  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate;
-  updateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput;
-  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate;
-  updateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
-  ReviewSectionAssignmentStageIdFkeyInverseInput: ReviewSectionAssignmentStageIdFkeyInverseInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingReviewSectionAssignmentPkeyUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyUsingReviewSectionAssignmentPkeyUpdate;
-  updateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyPatch;
-  ReviewSectionAssignmentSectionIdFkeyInput: ReviewSectionAssignmentSectionIdFkeyInput;
-  ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingApplicationSectionPkeyUpdate: ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingApplicationSectionPkeyUpdate;
-  updateApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch: UpdateApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch;
-  ApplicationSectionTemplateSectionIdFkeyInput: ApplicationSectionTemplateSectionIdFkeyInput;
-  TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate: TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate;
-  updateTemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch: UpdateTemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch;
-  ApplicationSectionTemplateSectionIdFkeyInverseInput: ApplicationSectionTemplateSectionIdFkeyInverseInput;
-  ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingApplicationSectionPkeyUpdate: ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingApplicationSectionPkeyUpdate;
-  updateApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch: UpdateApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch;
-  ReviewSectionAssignmentSectionIdFkeyInverseInput: ReviewSectionAssignmentSectionIdFkeyInverseInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingReviewSectionAssignmentPkeyUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyUsingReviewSectionAssignmentPkeyUpdate;
-  updateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch: UpdateReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyPatch;
-  ReviewSectionJoinSectionAssignmentIdFkeyInverseInput: ReviewSectionJoinSectionAssignmentIdFkeyInverseInput;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionJoinPkeyUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyUsingReviewSectionJoinPkeyUpdate;
-  updateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch: UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyPatch;
-  ReviewSectionJoinReviewSectionIdFkeyInput: ReviewSectionJoinReviewSectionIdFkeyInput;
-  ReviewSectionReviewSectionPkeyConnect: ReviewSectionReviewSectionPkeyConnect;
-  ReviewSectionNodeIdConnect: ReviewSectionNodeIdConnect;
-  ReviewSectionReviewSectionPkeyDelete: ReviewSectionReviewSectionPkeyDelete;
-  ReviewSectionNodeIdDelete: ReviewSectionNodeIdDelete;
-  ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionPkeyUpdate: ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionPkeyUpdate;
-  updateReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch: UpdateReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch;
-  ReviewSectionJoinReviewSectionIdFkeyInverseInput: ReviewSectionJoinReviewSectionIdFkeyInverseInput;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionJoinPkeyUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyUsingReviewSectionJoinPkeyUpdate;
-  updateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch: UpdateReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyPatch;
-  ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput: ReviewSectionResponseJoinReviewSectionJoinIdFkeyInverseInput;
-  ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionResponseJoinPkeyUpdate: ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyUsingReviewSectionResponseJoinPkeyUpdate;
-  updateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch: UpdateReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyPatch;
-  ReviewSectionResponseJoinReviewResponseIdFkeyInput: ReviewSectionResponseJoinReviewResponseIdFkeyInput;
-  ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch: UpdateReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyPatch;
-  ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate: ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate;
-  ReviewResponsePatch: ReviewResponsePatch;
-  ReviewSectionResponseJoinReviewResponseIdFkeyReviewResponseCreateInput: ReviewSectionResponseJoinReviewResponseIdFkeyReviewResponseCreateInput;
-  ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate: ReviewSectionJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate;
-  ReviewSectionResponseJoinPatch: ReviewSectionResponseJoinPatch;
-  ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionResponseJoinCreateInput: ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionResponseJoinCreateInput;
-  ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate: ReviewSectionOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate;
-  ReviewSectionJoinPatch: ReviewSectionJoinPatch;
-  ReviewSectionJoinReviewSectionIdFkeyReviewSectionJoinCreateInput: ReviewSectionJoinReviewSectionIdFkeyReviewSectionJoinCreateInput;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewSectionIdFkeyNodeIdUpdate;
-  ReviewSectionPatch: ReviewSectionPatch;
-  ReviewSectionJoinReviewSectionIdFkeyReviewSectionCreateInput: ReviewSectionJoinReviewSectionIdFkeyReviewSectionCreateInput;
-  ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate: ReviewSectionAssignmentOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate;
-  ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionJoinCreateInput: ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionJoinCreateInput;
-  ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate: ApplicationSectionOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentPatch: ReviewSectionAssignmentPatch;
-  ReviewSectionAssignmentSectionIdFkeyReviewSectionAssignmentCreateInput: ReviewSectionAssignmentSectionIdFkeyReviewSectionAssignmentCreateInput;
-  TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate: TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate;
-  ApplicationSectionPatch: ApplicationSectionPatch;
-  ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput: ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput;
-  ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate: ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate;
-  TemplateSectionPatch: TemplateSectionPatch;
-  ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput: ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentSectionIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentSectionIdFkeyApplicationSectionCreateInput: ReviewSectionAssignmentSectionIdFkeyApplicationSectionCreateInput;
-  ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate: ApplicationStageHistoryOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentStageIdFkeyReviewSectionAssignmentCreateInput: ReviewSectionAssignmentStageIdFkeyReviewSectionAssignmentCreateInput;
-  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
-  ApplicationStageHistoryPatch: ApplicationStageHistoryPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput;
-  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
-  ApplicationStatusHistoryPatch: ApplicationStatusHistoryPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput;
-  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
-  ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput;
-  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
-  TemplateStagePatch: TemplateStagePatch;
-  ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput: ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentStageIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentStageIdFkeyApplicationStageHistoryCreateInput: ReviewSectionAssignmentStageIdFkeyApplicationStageHistoryCreateInput;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinSectionAssignmentIdFkeyNodeIdUpdate;
-  ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionAssignmentCreateInput: ReviewSectionJoinSectionAssignmentIdFkeyReviewSectionAssignmentCreateInput;
-  ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate: ReviewSectionResponseJoinOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewSectionJoinIdFkeyNodeIdUpdate;
-  ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionJoinCreateInput: ReviewSectionResponseJoinReviewSectionJoinIdFkeyReviewSectionJoinCreateInput;
-  ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewSectionResponseJoinForReviewSectionResponseJoinReviewResponseIdFkeyNodeIdUpdate;
-  ReviewSectionResponseJoinReviewResponseIdFkeyReviewSectionResponseJoinCreateInput: ReviewSectionResponseJoinReviewResponseIdFkeyReviewSectionResponseJoinCreateInput;
-  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
-  ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
   FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  ApplicationResponsePatch: ApplicationResponsePatch;
   FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
   NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate;
   NotificationDocumentIdFkeyFileCreateInput: NotificationDocumentIdFkeyFileCreateInput;
   ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
   NotificationReviewIdFkeyNotificationCreateInput: NotificationReviewIdFkeyNotificationCreateInput;
-  ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate: ReviewSectionJoinOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate;
+  ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
   ReviewPatch: ReviewPatch;
-  ReviewSectionJoinReviewIdFkeyReviewCreateInput: ReviewSectionJoinReviewIdFkeyReviewCreateInput;
-  ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate: ReviewOnReviewSectionJoinForReviewSectionJoinReviewIdFkeyNodeIdUpdate;
-  ReviewSectionJoinReviewIdFkeyReviewSectionJoinCreateInput: ReviewSectionJoinReviewIdFkeyReviewSectionJoinCreateInput;
+  ReviewStatusHistoryReviewIdFkeyReviewCreateInput: ReviewStatusHistoryReviewIdFkeyReviewCreateInput;
+  ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
+  ReviewStatusHistoryPatch: ReviewStatusHistoryPatch;
+  ReviewStatusHistoryReviewIdFkeyReviewStatusHistoryCreateInput: ReviewStatusHistoryReviewIdFkeyReviewStatusHistoryCreateInput;
+  ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
+  ReviewResponseReviewIdFkeyReviewCreateInput: ReviewResponseReviewIdFkeyReviewCreateInput;
+  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
+  ReviewResponsePatch: ReviewResponsePatch;
+  ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
+  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
+  ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
+  ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
+  ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput;
+  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentPatch: ReviewQuestionAssignmentPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewAssignmentPatch: ReviewAssignmentPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput;
+  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
+  TemplateElementPatch: TemplateElementPatch;
+  ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput;
+  ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
+  ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
+  ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
+  ReviewResponseReviewIdFkeyReviewResponseCreateInput: ReviewResponseReviewIdFkeyReviewResponseCreateInput;
   NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
   NotificationReviewIdFkeyReviewCreateInput: NotificationReviewIdFkeyReviewCreateInput;
   UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
@@ -19545,14 +19679,6 @@ export type ResolversParentTypes = {
   FileApplicationIdFkeyApplicationCreateInput: FileApplicationIdFkeyApplicationCreateInput;
   UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentAssignerIdFkeyUserCreateInput: ReviewSectionAssignmentAssignerIdFkeyUserCreateInput;
-  UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewSectionAssignmentForReviewSectionAssignmentAssignerIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentAssignerIdFkeyReviewSectionAssignmentCreateInput: ReviewSectionAssignmentAssignerIdFkeyReviewSectionAssignmentCreateInput;
-  ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate: ReviewSectionAssignmentOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentReviewerIdFkeyUserCreateInput: ReviewSectionAssignmentReviewerIdFkeyUserCreateInput;
-  UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate: UserOnReviewSectionAssignmentForReviewSectionAssignmentReviewerIdFkeyNodeIdUpdate;
-  ReviewSectionAssignmentReviewerIdFkeyReviewSectionAssignmentCreateInput: ReviewSectionAssignmentReviewerIdFkeyReviewSectionAssignmentCreateInput;
   FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
   ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate;
@@ -19560,16 +19686,74 @@ export type ResolversParentTypes = {
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyApplicationCreateInput: ReviewApplicationIdFkeyApplicationCreateInput;
+  UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
+  ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
+  ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
+  ReviewReviewerIdFkeyUserCreateInput: ReviewReviewerIdFkeyUserCreateInput;
   ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyReviewCreateInput: ReviewApplicationIdFkeyReviewCreateInput;
+  ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate;
+  ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewReviewAssignmentIdFkeyApplicationCreateInput: ReviewReviewAssignmentIdFkeyApplicationCreateInput;
+  ApplicationOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ApplicationOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewReviewAssignmentIdFkeyReviewCreateInput: ReviewReviewAssignmentIdFkeyReviewCreateInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
+  ReviewAssignmentApplicationIdFkeyApplicationCreateInput: ReviewAssignmentApplicationIdFkeyApplicationCreateInput;
+  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
+  ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput: ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput;
+  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
+  TemplateStagePatch: TemplateStagePatch;
+  ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput: ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput;
+  ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect: ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect;
+  ApplicationStatusHistoryNodeIdConnect: ApplicationStatusHistoryNodeIdConnect;
+  ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete: ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete;
+  ApplicationStatusHistoryNodeIdDelete: ApplicationStatusHistoryNodeIdDelete;
+  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate;
+  updateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput;
+  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate;
+  updateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
+  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
+  ApplicationStageHistoryPatch: ApplicationStageHistoryPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput;
+  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
+  ApplicationStatusHistoryPatch: ApplicationStatusHistoryPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput;
+  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
+  ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
+  ReviewAssignmentStageIdFkeyTemplateStageCreateInput: ReviewAssignmentStageIdFkeyTemplateStageCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
+  ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
+  ReviewAssignmentReviewerIdFkeyUserCreateInput: ReviewAssignmentReviewerIdFkeyUserCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
+  ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationCreateInput: ApplicationResponseApplicationIdFkeyApplicationCreateInput;
   TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate;
   ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput: ApplicationResponseTemplateElementIdFkeyApplicationResponseCreateInput;
   TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate: TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate;
-  TemplateElementPatch: TemplateElementPatch;
   TemplateElementSectionIdFkeyTemplateElementCreateInput: TemplateElementSectionIdFkeyTemplateElementCreateInput;
+  ApplicationSectionTemplateSectionIdFkeyInverseInput: ApplicationSectionTemplateSectionIdFkeyInverseInput;
+  ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingApplicationSectionPkeyUpdate: ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingApplicationSectionPkeyUpdate;
+  updateApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch: UpdateApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch;
+  ApplicationSectionTemplateSectionIdFkeyInput: ApplicationSectionTemplateSectionIdFkeyInput;
+  TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate: TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate;
+  updateTemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch: UpdateTemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyPatch;
+  ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate: ApplicationSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate;
+  TemplateSectionPatch: TemplateSectionPatch;
+  ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput: ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput;
+  TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate: TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate;
+  ApplicationSectionPatch: ApplicationSectionPatch;
+  ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput: ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput;
   TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate: TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate;
   TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput: TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput;
   TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate: TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate;
@@ -19691,21 +19875,18 @@ export type ResolversParentTypes = {
   CreateReviewInput: CreateReviewInput;
   ReviewInput: ReviewInput;
   CreateReviewPayload: CreateReviewPayload;
+  CreateReviewAssignmentInput: CreateReviewAssignmentInput;
+  ReviewAssignmentInput: ReviewAssignmentInput;
+  CreateReviewAssignmentPayload: CreateReviewAssignmentPayload;
+  CreateReviewQuestionAssignmentInput: CreateReviewQuestionAssignmentInput;
+  ReviewQuestionAssignmentInput: ReviewQuestionAssignmentInput;
+  CreateReviewQuestionAssignmentPayload: CreateReviewQuestionAssignmentPayload;
   CreateReviewResponseInput: CreateReviewResponseInput;
   ReviewResponseInput: ReviewResponseInput;
   CreateReviewResponsePayload: CreateReviewResponsePayload;
-  CreateReviewSectionInput: CreateReviewSectionInput;
-  ReviewSectionInput: ReviewSectionInput;
-  CreateReviewSectionPayload: CreateReviewSectionPayload;
-  CreateReviewSectionAssignmentInput: CreateReviewSectionAssignmentInput;
-  ReviewSectionAssignmentInput: ReviewSectionAssignmentInput;
-  CreateReviewSectionAssignmentPayload: CreateReviewSectionAssignmentPayload;
-  CreateReviewSectionJoinInput: CreateReviewSectionJoinInput;
-  ReviewSectionJoinInput: ReviewSectionJoinInput;
-  CreateReviewSectionJoinPayload: CreateReviewSectionJoinPayload;
-  CreateReviewSectionResponseJoinInput: CreateReviewSectionResponseJoinInput;
-  ReviewSectionResponseJoinInput: ReviewSectionResponseJoinInput;
-  CreateReviewSectionResponseJoinPayload: CreateReviewSectionResponseJoinPayload;
+  CreateReviewStatusHistoryInput: CreateReviewStatusHistoryInput;
+  ReviewStatusHistoryInput: ReviewStatusHistoryInput;
+  CreateReviewStatusHistoryPayload: CreateReviewStatusHistoryPayload;
   CreateTemplateInput: CreateTemplateInput;
   TemplateInput: TemplateInput;
   CreateTemplatePayload: CreateTemplatePayload;
@@ -19781,21 +19962,18 @@ export type ResolversParentTypes = {
   UpdateReviewByNodeIdInput: UpdateReviewByNodeIdInput;
   UpdateReviewPayload: UpdateReviewPayload;
   UpdateReviewInput: UpdateReviewInput;
+  UpdateReviewAssignmentByNodeIdInput: UpdateReviewAssignmentByNodeIdInput;
+  UpdateReviewAssignmentPayload: UpdateReviewAssignmentPayload;
+  UpdateReviewAssignmentInput: UpdateReviewAssignmentInput;
+  UpdateReviewQuestionAssignmentByNodeIdInput: UpdateReviewQuestionAssignmentByNodeIdInput;
+  UpdateReviewQuestionAssignmentPayload: UpdateReviewQuestionAssignmentPayload;
+  UpdateReviewQuestionAssignmentInput: UpdateReviewQuestionAssignmentInput;
   UpdateReviewResponseByNodeIdInput: UpdateReviewResponseByNodeIdInput;
   UpdateReviewResponsePayload: UpdateReviewResponsePayload;
   UpdateReviewResponseInput: UpdateReviewResponseInput;
-  UpdateReviewSectionByNodeIdInput: UpdateReviewSectionByNodeIdInput;
-  UpdateReviewSectionPayload: UpdateReviewSectionPayload;
-  UpdateReviewSectionInput: UpdateReviewSectionInput;
-  UpdateReviewSectionAssignmentByNodeIdInput: UpdateReviewSectionAssignmentByNodeIdInput;
-  UpdateReviewSectionAssignmentPayload: UpdateReviewSectionAssignmentPayload;
-  UpdateReviewSectionAssignmentInput: UpdateReviewSectionAssignmentInput;
-  UpdateReviewSectionJoinByNodeIdInput: UpdateReviewSectionJoinByNodeIdInput;
-  UpdateReviewSectionJoinPayload: UpdateReviewSectionJoinPayload;
-  UpdateReviewSectionJoinInput: UpdateReviewSectionJoinInput;
-  UpdateReviewSectionResponseJoinByNodeIdInput: UpdateReviewSectionResponseJoinByNodeIdInput;
-  UpdateReviewSectionResponseJoinPayload: UpdateReviewSectionResponseJoinPayload;
-  UpdateReviewSectionResponseJoinInput: UpdateReviewSectionResponseJoinInput;
+  UpdateReviewStatusHistoryByNodeIdInput: UpdateReviewStatusHistoryByNodeIdInput;
+  UpdateReviewStatusHistoryPayload: UpdateReviewStatusHistoryPayload;
+  UpdateReviewStatusHistoryInput: UpdateReviewStatusHistoryInput;
   UpdateTemplateByNodeIdInput: UpdateTemplateByNodeIdInput;
   UpdateTemplatePayload: UpdateTemplatePayload;
   UpdateTemplateInput: UpdateTemplateInput;
@@ -19869,21 +20047,18 @@ export type ResolversParentTypes = {
   DeleteReviewByNodeIdInput: DeleteReviewByNodeIdInput;
   DeleteReviewPayload: DeleteReviewPayload;
   DeleteReviewInput: DeleteReviewInput;
+  DeleteReviewAssignmentByNodeIdInput: DeleteReviewAssignmentByNodeIdInput;
+  DeleteReviewAssignmentPayload: DeleteReviewAssignmentPayload;
+  DeleteReviewAssignmentInput: DeleteReviewAssignmentInput;
+  DeleteReviewQuestionAssignmentByNodeIdInput: DeleteReviewQuestionAssignmentByNodeIdInput;
+  DeleteReviewQuestionAssignmentPayload: DeleteReviewQuestionAssignmentPayload;
+  DeleteReviewQuestionAssignmentInput: DeleteReviewQuestionAssignmentInput;
   DeleteReviewResponseByNodeIdInput: DeleteReviewResponseByNodeIdInput;
   DeleteReviewResponsePayload: DeleteReviewResponsePayload;
   DeleteReviewResponseInput: DeleteReviewResponseInput;
-  DeleteReviewSectionByNodeIdInput: DeleteReviewSectionByNodeIdInput;
-  DeleteReviewSectionPayload: DeleteReviewSectionPayload;
-  DeleteReviewSectionInput: DeleteReviewSectionInput;
-  DeleteReviewSectionAssignmentByNodeIdInput: DeleteReviewSectionAssignmentByNodeIdInput;
-  DeleteReviewSectionAssignmentPayload: DeleteReviewSectionAssignmentPayload;
-  DeleteReviewSectionAssignmentInput: DeleteReviewSectionAssignmentInput;
-  DeleteReviewSectionJoinByNodeIdInput: DeleteReviewSectionJoinByNodeIdInput;
-  DeleteReviewSectionJoinPayload: DeleteReviewSectionJoinPayload;
-  DeleteReviewSectionJoinInput: DeleteReviewSectionJoinInput;
-  DeleteReviewSectionResponseJoinByNodeIdInput: DeleteReviewSectionResponseJoinByNodeIdInput;
-  DeleteReviewSectionResponseJoinPayload: DeleteReviewSectionResponseJoinPayload;
-  DeleteReviewSectionResponseJoinInput: DeleteReviewSectionResponseJoinInput;
+  DeleteReviewStatusHistoryByNodeIdInput: DeleteReviewStatusHistoryByNodeIdInput;
+  DeleteReviewStatusHistoryPayload: DeleteReviewStatusHistoryPayload;
+  DeleteReviewStatusHistoryInput: DeleteReviewStatusHistoryInput;
   DeleteTemplateByNodeIdInput: DeleteTemplateByNodeIdInput;
   DeleteTemplatePayload: DeleteTemplatePayload;
   DeleteTemplateInput: DeleteTemplateInput;
@@ -19989,6 +20164,8 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   applicationSections?: Resolver<ResolversTypes['ApplicationSectionsConnection'], ParentType, ContextType, RequireFields<ApplicationApplicationSectionsArgs, 'orderBy'>>;
   applicationStageHistories?: Resolver<ResolversTypes['ApplicationStageHistoriesConnection'], ParentType, ContextType, RequireFields<ApplicationApplicationStageHistoriesArgs, 'orderBy'>>;
   applicationResponses?: Resolver<ResolversTypes['ApplicationResponsesConnection'], ParentType, ContextType, RequireFields<ApplicationApplicationResponsesArgs, 'orderBy'>>;
+  reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewAssignmentsArgs, 'orderBy'>>;
+  reviewsByReviewAssignmentId?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewsByReviewAssignmentIdArgs, 'orderBy'>>;
   reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewsArgs, 'orderBy'>>;
   files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationFilesArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ApplicationNotificationsArgs, 'orderBy'>>;
@@ -20042,7 +20219,6 @@ export type ApplicationSectionResolvers<ContextType = any, ParentType extends Re
   templateSectionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   templateSection?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
-  reviewSectionAssignmentsBySectionId?: Resolver<ResolversTypes['ReviewSectionAssignmentsConnection'], ParentType, ContextType, RequireFields<ApplicationSectionReviewSectionAssignmentsBySectionIdArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -20090,7 +20266,6 @@ export type ApplicationStageHistoryResolvers<ContextType = any, ParentType exten
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
   applicationStatusHistories?: Resolver<ResolversTypes['ApplicationStatusHistoriesConnection'], ParentType, ContextType, RequireFields<ApplicationStageHistoryApplicationStatusHistoriesArgs, 'orderBy'>>;
-  reviewSectionAssignmentsByStageId?: Resolver<ResolversTypes['ReviewSectionAssignmentsConnection'], ParentType, ContextType, RequireFields<ApplicationStageHistoryReviewSectionAssignmentsByStageIdArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -20309,12 +20484,36 @@ export type CreatePermissionPolicyPayloadResolvers<ContextType = any, ParentType
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateReviewAssignmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateReviewAssignmentPayload'] = ResolversParentTypes['CreateReviewAssignmentPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewAssignmentEdge?: Resolver<Maybe<ResolversTypes['ReviewAssignmentsEdge']>, ParentType, ContextType, RequireFields<CreateReviewAssignmentPayloadReviewAssignmentEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateReviewPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateReviewPayload'] = ResolversParentTypes['CreateReviewPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   reviewEdge?: Resolver<Maybe<ResolversTypes['ReviewsEdge']>, ParentType, ContextType, RequireFields<CreateReviewPayloadReviewEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type CreateReviewQuestionAssignmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateReviewQuestionAssignmentPayload'] = ResolversParentTypes['CreateReviewQuestionAssignmentPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
+  reviewQuestionAssignmentEdge?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignmentsEdge']>, ParentType, ContextType, RequireFields<CreateReviewQuestionAssignmentPayloadReviewQuestionAssignmentEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -20322,49 +20521,19 @@ export type CreateReviewResponsePayloadResolvers<ContextType = any, ParentType e
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   reviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
+  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   reviewResponseEdge?: Resolver<Maybe<ResolversTypes['ReviewResponsesEdge']>, ParentType, ContextType, RequireFields<CreateReviewResponsePayloadReviewResponseEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CreateReviewSectionAssignmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateReviewSectionAssignmentPayload'] = ResolversParentTypes['CreateReviewSectionAssignmentPayload']> = {
+export type CreateReviewStatusHistoryPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateReviewStatusHistoryPayload'] = ResolversParentTypes['CreateReviewStatusHistoryPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSectionAssignment?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignment']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  stage?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType>;
-  section?: Resolver<Maybe<ResolversTypes['ApplicationSection']>, ParentType, ContextType>;
-  reviewSectionAssignmentEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignmentsEdge']>, ParentType, ContextType, RequireFields<CreateReviewSectionAssignmentPayloadReviewSectionAssignmentEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreateReviewSectionJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateReviewSectionJoinPayload'] = ResolversParentTypes['CreateReviewSectionJoinPayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSectionJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionJoin']>, ParentType, ContextType>;
+  reviewStatusHistory?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
-  sectionAssignment?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignment']>, ParentType, ContextType>;
-  reviewSection?: Resolver<Maybe<ResolversTypes['ReviewSection']>, ParentType, ContextType>;
-  reviewSectionJoinEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionJoinsEdge']>, ParentType, ContextType, RequireFields<CreateReviewSectionJoinPayloadReviewSectionJoinEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreateReviewSectionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateReviewSectionPayload'] = ResolversParentTypes['CreateReviewSectionPayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSection?: Resolver<Maybe<ResolversTypes['ReviewSection']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  reviewSectionEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionsEdge']>, ParentType, ContextType, RequireFields<CreateReviewSectionPayloadReviewSectionEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type CreateReviewSectionResponseJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateReviewSectionResponseJoinPayload'] = ResolversParentTypes['CreateReviewSectionResponseJoinPayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSectionResponseJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionResponseJoin']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  reviewSectionJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionJoin']>, ParentType, ContextType>;
-  reviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
-  reviewSectionResponseJoinEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionResponseJoinsEdge']>, ParentType, ContextType, RequireFields<CreateReviewSectionResponseJoinPayloadReviewSectionResponseJoinEdgeArgs, 'orderBy'>>;
+  reviewStatusHistoryEdge?: Resolver<Maybe<ResolversTypes['ReviewStatusHistoriesEdge']>, ParentType, ContextType, RequireFields<CreateReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -20609,13 +20778,39 @@ export type DeletePermissionPolicyPayloadResolvers<ContextType = any, ParentType
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteReviewAssignmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteReviewAssignmentPayload'] = ResolversParentTypes['DeleteReviewAssignmentPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
+  deletedReviewAssignmentNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewAssignmentEdge?: Resolver<Maybe<ResolversTypes['ReviewAssignmentsEdge']>, ParentType, ContextType, RequireFields<DeleteReviewAssignmentPayloadReviewAssignmentEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteReviewPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteReviewPayload'] = ResolversParentTypes['DeleteReviewPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   deletedReviewNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   reviewEdge?: Resolver<Maybe<ResolversTypes['ReviewsEdge']>, ParentType, ContextType, RequireFields<DeleteReviewPayloadReviewEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteReviewQuestionAssignmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteReviewQuestionAssignmentPayload'] = ResolversParentTypes['DeleteReviewQuestionAssignmentPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
+  deletedReviewQuestionAssignmentNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
+  reviewQuestionAssignmentEdge?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignmentsEdge']>, ParentType, ContextType, RequireFields<DeleteReviewQuestionAssignmentPayloadReviewQuestionAssignmentEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -20624,53 +20819,20 @@ export type DeleteReviewResponsePayloadResolvers<ContextType = any, ParentType e
   reviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
   deletedReviewResponseNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
+  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   reviewResponseEdge?: Resolver<Maybe<ResolversTypes['ReviewResponsesEdge']>, ParentType, ContextType, RequireFields<DeleteReviewResponsePayloadReviewResponseEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type DeleteReviewSectionAssignmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteReviewSectionAssignmentPayload'] = ResolversParentTypes['DeleteReviewSectionAssignmentPayload']> = {
+export type DeleteReviewStatusHistoryPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteReviewStatusHistoryPayload'] = ResolversParentTypes['DeleteReviewStatusHistoryPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSectionAssignment?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignment']>, ParentType, ContextType>;
-  deletedReviewSectionAssignmentNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  stage?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType>;
-  section?: Resolver<Maybe<ResolversTypes['ApplicationSection']>, ParentType, ContextType>;
-  reviewSectionAssignmentEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignmentsEdge']>, ParentType, ContextType, RequireFields<DeleteReviewSectionAssignmentPayloadReviewSectionAssignmentEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DeleteReviewSectionJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteReviewSectionJoinPayload'] = ResolversParentTypes['DeleteReviewSectionJoinPayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSectionJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionJoin']>, ParentType, ContextType>;
-  deletedReviewSectionJoinNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  reviewStatusHistory?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType>;
+  deletedReviewStatusHistoryNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
-  sectionAssignment?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignment']>, ParentType, ContextType>;
-  reviewSection?: Resolver<Maybe<ResolversTypes['ReviewSection']>, ParentType, ContextType>;
-  reviewSectionJoinEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionJoinsEdge']>, ParentType, ContextType, RequireFields<DeleteReviewSectionJoinPayloadReviewSectionJoinEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DeleteReviewSectionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteReviewSectionPayload'] = ResolversParentTypes['DeleteReviewSectionPayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSection?: Resolver<Maybe<ResolversTypes['ReviewSection']>, ParentType, ContextType>;
-  deletedReviewSectionNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  reviewSectionEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionsEdge']>, ParentType, ContextType, RequireFields<DeleteReviewSectionPayloadReviewSectionEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DeleteReviewSectionResponseJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteReviewSectionResponseJoinPayload'] = ResolversParentTypes['DeleteReviewSectionResponseJoinPayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSectionResponseJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionResponseJoin']>, ParentType, ContextType>;
-  deletedReviewSectionResponseJoinNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  reviewSectionJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionJoin']>, ParentType, ContextType>;
-  reviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
-  reviewSectionResponseJoinEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionResponseJoinsEdge']>, ParentType, ContextType, RequireFields<DeleteReviewSectionResponseJoinPayloadReviewSectionResponseJoinEdgeArgs, 'orderBy'>>;
+  reviewStatusHistoryEdge?: Resolver<Maybe<ResolversTypes['ReviewStatusHistoriesEdge']>, ParentType, ContextType, RequireFields<DeleteReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -20854,11 +21016,10 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createPermissionName?: Resolver<Maybe<ResolversTypes['CreatePermissionNamePayload']>, ParentType, ContextType, RequireFields<MutationCreatePermissionNameArgs, 'input'>>;
   createPermissionPolicy?: Resolver<Maybe<ResolversTypes['CreatePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationCreatePermissionPolicyArgs, 'input'>>;
   createReview?: Resolver<Maybe<ResolversTypes['CreateReviewPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewArgs, 'input'>>;
+  createReviewAssignment?: Resolver<Maybe<ResolversTypes['CreateReviewAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewAssignmentArgs, 'input'>>;
+  createReviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['CreateReviewQuestionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewQuestionAssignmentArgs, 'input'>>;
   createReviewResponse?: Resolver<Maybe<ResolversTypes['CreateReviewResponsePayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewResponseArgs, 'input'>>;
-  createReviewSection?: Resolver<Maybe<ResolversTypes['CreateReviewSectionPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewSectionArgs, 'input'>>;
-  createReviewSectionAssignment?: Resolver<Maybe<ResolversTypes['CreateReviewSectionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewSectionAssignmentArgs, 'input'>>;
-  createReviewSectionJoin?: Resolver<Maybe<ResolversTypes['CreateReviewSectionJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewSectionJoinArgs, 'input'>>;
-  createReviewSectionResponseJoin?: Resolver<Maybe<ResolversTypes['CreateReviewSectionResponseJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewSectionResponseJoinArgs, 'input'>>;
+  createReviewStatusHistory?: Resolver<Maybe<ResolversTypes['CreateReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewStatusHistoryArgs, 'input'>>;
   createTemplate?: Resolver<Maybe<ResolversTypes['CreateTemplatePayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateArgs, 'input'>>;
   createTemplateAction?: Resolver<Maybe<ResolversTypes['CreateTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateActionArgs, 'input'>>;
   createTemplateElement?: Resolver<Maybe<ResolversTypes['CreateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateElementArgs, 'input'>>;
@@ -20899,16 +21060,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updatePermissionPolicy?: Resolver<Maybe<ResolversTypes['UpdatePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionPolicyArgs, 'input'>>;
   updateReviewByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewByNodeIdArgs, 'input'>>;
   updateReview?: Resolver<Maybe<ResolversTypes['UpdateReviewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewArgs, 'input'>>;
+  updateReviewAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewAssignmentByNodeIdArgs, 'input'>>;
+  updateReviewAssignment?: Resolver<Maybe<ResolversTypes['UpdateReviewAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewAssignmentArgs, 'input'>>;
+  updateReviewQuestionAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewQuestionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewQuestionAssignmentByNodeIdArgs, 'input'>>;
+  updateReviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['UpdateReviewQuestionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewQuestionAssignmentArgs, 'input'>>;
   updateReviewResponseByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewResponsePayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewResponseByNodeIdArgs, 'input'>>;
   updateReviewResponse?: Resolver<Maybe<ResolversTypes['UpdateReviewResponsePayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewResponseArgs, 'input'>>;
-  updateReviewSectionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewSectionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewSectionByNodeIdArgs, 'input'>>;
-  updateReviewSection?: Resolver<Maybe<ResolversTypes['UpdateReviewSectionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewSectionArgs, 'input'>>;
-  updateReviewSectionAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewSectionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewSectionAssignmentByNodeIdArgs, 'input'>>;
-  updateReviewSectionAssignment?: Resolver<Maybe<ResolversTypes['UpdateReviewSectionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewSectionAssignmentArgs, 'input'>>;
-  updateReviewSectionJoinByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewSectionJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewSectionJoinByNodeIdArgs, 'input'>>;
-  updateReviewSectionJoin?: Resolver<Maybe<ResolversTypes['UpdateReviewSectionJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewSectionJoinArgs, 'input'>>;
-  updateReviewSectionResponseJoinByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewSectionResponseJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewSectionResponseJoinByNodeIdArgs, 'input'>>;
-  updateReviewSectionResponseJoin?: Resolver<Maybe<ResolversTypes['UpdateReviewSectionResponseJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewSectionResponseJoinArgs, 'input'>>;
+  updateReviewStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewStatusHistoryByNodeIdArgs, 'input'>>;
+  updateReviewStatusHistory?: Resolver<Maybe<ResolversTypes['UpdateReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewStatusHistoryArgs, 'input'>>;
   updateTemplateByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplatePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateByNodeIdArgs, 'input'>>;
   updateTemplate?: Resolver<Maybe<ResolversTypes['UpdateTemplatePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateArgs, 'input'>>;
   updateTemplateActionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateActionByNodeIdArgs, 'input'>>;
@@ -20958,16 +21117,14 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deletePermissionPolicy?: Resolver<Maybe<ResolversTypes['DeletePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionPolicyArgs, 'input'>>;
   deleteReviewByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewByNodeIdArgs, 'input'>>;
   deleteReview?: Resolver<Maybe<ResolversTypes['DeleteReviewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewArgs, 'input'>>;
+  deleteReviewAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewAssignmentByNodeIdArgs, 'input'>>;
+  deleteReviewAssignment?: Resolver<Maybe<ResolversTypes['DeleteReviewAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewAssignmentArgs, 'input'>>;
+  deleteReviewQuestionAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewQuestionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewQuestionAssignmentByNodeIdArgs, 'input'>>;
+  deleteReviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['DeleteReviewQuestionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewQuestionAssignmentArgs, 'input'>>;
   deleteReviewResponseByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewResponsePayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewResponseByNodeIdArgs, 'input'>>;
   deleteReviewResponse?: Resolver<Maybe<ResolversTypes['DeleteReviewResponsePayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewResponseArgs, 'input'>>;
-  deleteReviewSectionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewSectionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewSectionByNodeIdArgs, 'input'>>;
-  deleteReviewSection?: Resolver<Maybe<ResolversTypes['DeleteReviewSectionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewSectionArgs, 'input'>>;
-  deleteReviewSectionAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewSectionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewSectionAssignmentByNodeIdArgs, 'input'>>;
-  deleteReviewSectionAssignment?: Resolver<Maybe<ResolversTypes['DeleteReviewSectionAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewSectionAssignmentArgs, 'input'>>;
-  deleteReviewSectionJoinByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewSectionJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewSectionJoinByNodeIdArgs, 'input'>>;
-  deleteReviewSectionJoin?: Resolver<Maybe<ResolversTypes['DeleteReviewSectionJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewSectionJoinArgs, 'input'>>;
-  deleteReviewSectionResponseJoinByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewSectionResponseJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewSectionResponseJoinByNodeIdArgs, 'input'>>;
-  deleteReviewSectionResponseJoin?: Resolver<Maybe<ResolversTypes['DeleteReviewSectionResponseJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewSectionResponseJoinArgs, 'input'>>;
+  deleteReviewStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewStatusHistoryByNodeIdArgs, 'input'>>;
+  deleteReviewStatusHistory?: Resolver<Maybe<ResolversTypes['DeleteReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewStatusHistoryArgs, 'input'>>;
   deleteTemplateByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplatePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateByNodeIdArgs, 'input'>>;
   deleteTemplate?: Resolver<Maybe<ResolversTypes['DeleteTemplatePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateArgs, 'input'>>;
   deleteTemplateActionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateActionByNodeIdArgs, 'input'>>;
@@ -20989,7 +21146,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'ApplicationStageHistory' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewSectionResponseJoin' | 'ReviewSectionJoin' | 'Review' | 'Notification' | 'File' | 'ReviewSectionAssignment' | 'ApplicationSection' | 'ReviewSection' | 'ApplicationStatusHistory' | 'TemplateAction' | 'ElementTypePlugin', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'ApplicationStageHistory' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'ReviewAssignment' | 'Review' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationSection' | 'ApplicationStatusHistory' | 'TemplateAction' | 'ElementTypePlugin', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -21154,11 +21311,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   permissionNames?: Resolver<Maybe<ResolversTypes['PermissionNamesConnection']>, ParentType, ContextType, RequireFields<QueryPermissionNamesArgs, 'orderBy'>>;
   permissionPolicies?: Resolver<Maybe<ResolversTypes['PermissionPoliciesConnection']>, ParentType, ContextType, RequireFields<QueryPermissionPoliciesArgs, 'orderBy'>>;
   reviews?: Resolver<Maybe<ResolversTypes['ReviewsConnection']>, ParentType, ContextType, RequireFields<QueryReviewsArgs, 'orderBy'>>;
+  reviewAssignments?: Resolver<Maybe<ResolversTypes['ReviewAssignmentsConnection']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentsArgs, 'orderBy'>>;
+  reviewQuestionAssignments?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignmentsConnection']>, ParentType, ContextType, RequireFields<QueryReviewQuestionAssignmentsArgs, 'orderBy'>>;
   reviewResponses?: Resolver<Maybe<ResolversTypes['ReviewResponsesConnection']>, ParentType, ContextType, RequireFields<QueryReviewResponsesArgs, 'orderBy'>>;
-  reviewSections?: Resolver<Maybe<ResolversTypes['ReviewSectionsConnection']>, ParentType, ContextType, RequireFields<QueryReviewSectionsArgs, 'orderBy'>>;
-  reviewSectionAssignments?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignmentsConnection']>, ParentType, ContextType, RequireFields<QueryReviewSectionAssignmentsArgs, 'orderBy'>>;
-  reviewSectionJoins?: Resolver<Maybe<ResolversTypes['ReviewSectionJoinsConnection']>, ParentType, ContextType, RequireFields<QueryReviewSectionJoinsArgs, 'orderBy'>>;
-  reviewSectionResponseJoins?: Resolver<Maybe<ResolversTypes['ReviewSectionResponseJoinsConnection']>, ParentType, ContextType, RequireFields<QueryReviewSectionResponseJoinsArgs, 'orderBy'>>;
+  reviewStatusHistories?: Resolver<Maybe<ResolversTypes['ReviewStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoriesArgs, 'orderBy'>>;
   templates?: Resolver<Maybe<ResolversTypes['TemplatesConnection']>, ParentType, ContextType, RequireFields<QueryTemplatesArgs, 'orderBy'>>;
   templateActions?: Resolver<Maybe<ResolversTypes['TemplateActionsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateActionsArgs, 'orderBy'>>;
   templateElements?: Resolver<Maybe<ResolversTypes['TemplateElementsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateElementsArgs, 'orderBy'>>;
@@ -21184,11 +21340,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType, RequireFields<QueryPermissionNameArgs, 'id'>>;
   permissionPolicy?: Resolver<Maybe<ResolversTypes['PermissionPolicy']>, ParentType, ContextType, RequireFields<QueryPermissionPolicyArgs, 'id'>>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<QueryReviewArgs, 'id'>>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentArgs, 'id'>>;
+  reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType, RequireFields<QueryReviewQuestionAssignmentArgs, 'id'>>;
   reviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType, RequireFields<QueryReviewResponseArgs, 'id'>>;
-  reviewSection?: Resolver<Maybe<ResolversTypes['ReviewSection']>, ParentType, ContextType, RequireFields<QueryReviewSectionArgs, 'id'>>;
-  reviewSectionAssignment?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignment']>, ParentType, ContextType, RequireFields<QueryReviewSectionAssignmentArgs, 'id'>>;
-  reviewSectionJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionJoin']>, ParentType, ContextType, RequireFields<QueryReviewSectionJoinArgs, 'id'>>;
-  reviewSectionResponseJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionResponseJoin']>, ParentType, ContextType, RequireFields<QueryReviewSectionResponseJoinArgs, 'id'>>;
+  reviewStatusHistory?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryArgs, 'id'>>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType, RequireFields<QueryTemplateArgs, 'id'>>;
   templateAction?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType, RequireFields<QueryTemplateActionArgs, 'id'>>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType, RequireFields<QueryTemplateElementArgs, 'id'>>;
@@ -21203,6 +21358,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   jwtGetKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetKeyArgs, never>>;
   jwtGetPolicyLinksAsSetofText?: Resolver<Maybe<ResolversTypes['JwtGetPolicyLinksAsSetofTextConnection']>, ParentType, ContextType, RequireFields<QueryJwtGetPolicyLinksAsSetofTextArgs, never>>;
   jwtGetPolicyLinksAsText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetPolicyLinksAsTextArgs, never>>;
+  reviewApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewApplicationIdArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
   actionQueueByNodeId?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueByNodeIdArgs, 'nodeId'>>;
   applicationByNodeId?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationByNodeIdArgs, 'nodeId'>>;
@@ -21218,11 +21374,10 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   permissionNameByNodeId?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType, RequireFields<QueryPermissionNameByNodeIdArgs, 'nodeId'>>;
   permissionPolicyByNodeId?: Resolver<Maybe<ResolversTypes['PermissionPolicy']>, ParentType, ContextType, RequireFields<QueryPermissionPolicyByNodeIdArgs, 'nodeId'>>;
   reviewByNodeId?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<QueryReviewByNodeIdArgs, 'nodeId'>>;
+  reviewAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentByNodeIdArgs, 'nodeId'>>;
+  reviewQuestionAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType, RequireFields<QueryReviewQuestionAssignmentByNodeIdArgs, 'nodeId'>>;
   reviewResponseByNodeId?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType, RequireFields<QueryReviewResponseByNodeIdArgs, 'nodeId'>>;
-  reviewSectionByNodeId?: Resolver<Maybe<ResolversTypes['ReviewSection']>, ParentType, ContextType, RequireFields<QueryReviewSectionByNodeIdArgs, 'nodeId'>>;
-  reviewSectionAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignment']>, ParentType, ContextType, RequireFields<QueryReviewSectionAssignmentByNodeIdArgs, 'nodeId'>>;
-  reviewSectionJoinByNodeId?: Resolver<Maybe<ResolversTypes['ReviewSectionJoin']>, ParentType, ContextType, RequireFields<QueryReviewSectionJoinByNodeIdArgs, 'nodeId'>>;
-  reviewSectionResponseJoinByNodeId?: Resolver<Maybe<ResolversTypes['ReviewSectionResponseJoin']>, ParentType, ContextType, RequireFields<QueryReviewSectionResponseJoinByNodeIdArgs, 'nodeId'>>;
+  reviewStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryByNodeIdArgs, 'nodeId'>>;
   templateByNodeId?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType, RequireFields<QueryTemplateByNodeIdArgs, 'nodeId'>>;
   templateActionByNodeId?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType, RequireFields<QueryTemplateActionByNodeIdArgs, 'nodeId'>>;
   templateElementByNodeId?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType, RequireFields<QueryTemplateElementByNodeIdArgs, 'nodeId'>>;
@@ -21237,26 +21392,86 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type ReviewResolvers<ContextType = any, ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  status?: Resolver<Maybe<ResolversTypes['ReviewStatus']>, ParentType, ContextType>;
-  comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  reviewAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  reviewSectionJoins?: Resolver<ResolversTypes['ReviewSectionJoinsConnection'], ParentType, ContextType, RequireFields<ReviewReviewSectionJoinsArgs, 'orderBy'>>;
+  reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ReviewReviewResponsesArgs, 'orderBy'>>;
+  reviewStatusHistories?: Resolver<ResolversTypes['ReviewStatusHistoriesConnection'], ParentType, ContextType, RequireFields<ReviewReviewStatusHistoriesArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ReviewNotificationsArgs, 'orderBy'>>;
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewAssignmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewAssignment'] = ResolversParentTypes['ReviewAssignment']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  assignerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewQuestionAssignments?: Resolver<ResolversTypes['ReviewQuestionAssignmentsConnection'], ParentType, ContextType, RequireFields<ReviewAssignmentReviewQuestionAssignmentsArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewAssignmentsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewAssignmentsConnection'] = ResolversParentTypes['ReviewAssignmentsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewAssignment']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ReviewAssignmentsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewAssignmentsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewAssignmentsEdge'] = ResolversParentTypes['ReviewAssignmentsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewQuestionAssignmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewQuestionAssignment'] = ResolversParentTypes['ReviewQuestionAssignment']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  templateElementId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
+  reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ReviewQuestionAssignmentReviewResponsesArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewQuestionAssignmentsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewQuestionAssignmentsConnection'] = ResolversParentTypes['ReviewQuestionAssignmentsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewQuestionAssignment']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ReviewQuestionAssignmentsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewQuestionAssignmentsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewQuestionAssignmentsEdge'] = ResolversParentTypes['ReviewQuestionAssignmentsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ReviewResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewResponse'] = ResolversParentTypes['ReviewResponse']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  applicationResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewDecision?: Resolver<Maybe<ResolversTypes['ReviewDecision']>, ParentType, ContextType>;
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  decision?: Resolver<Maybe<ResolversTypes['ReviewResponseDecision']>, ParentType, ContextType>;
+  reviewQuestionAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  applicationResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
-  reviewSectionResponseJoins?: Resolver<ResolversTypes['ReviewSectionResponseJoinsConnection'], ParentType, ContextType, RequireFields<ReviewResponseReviewSectionResponseJoinsArgs, 'orderBy'>>;
+  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -21282,115 +21497,34 @@ export type ReviewsConnectionResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ReviewSectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSection'] = ResolversParentTypes['ReviewSection']> = {
-  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  reviewDecision?: Resolver<Maybe<ResolversTypes['ReviewDecision']>, ParentType, ContextType>;
-  comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSectionJoins?: Resolver<ResolversTypes['ReviewSectionJoinsConnection'], ParentType, ContextType, RequireFields<ReviewSectionReviewSectionJoinsArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionAssignmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionAssignment'] = ResolversParentTypes['ReviewSectionAssignment']> = {
-  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  reviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  assignerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  sectionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  level?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  stage?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType>;
-  section?: Resolver<Maybe<ResolversTypes['ApplicationSection']>, ParentType, ContextType>;
-  reviewSectionJoinsBySectionAssignmentId?: Resolver<ResolversTypes['ReviewSectionJoinsConnection'], ParentType, ContextType, RequireFields<ReviewSectionAssignmentReviewSectionJoinsBySectionAssignmentIdArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionAssignmentsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionAssignmentsConnection'] = ResolversParentTypes['ReviewSectionAssignmentsConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewSectionAssignment']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['ReviewSectionAssignmentsEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionAssignmentsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionAssignmentsEdge'] = ResolversParentTypes['ReviewSectionAssignmentsEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignment']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionJoinResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionJoin'] = ResolversParentTypes['ReviewSectionJoin']> = {
-  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  sectionAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewSectionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  sendToApplicant?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
-  sectionAssignment?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignment']>, ParentType, ContextType>;
-  reviewSection?: Resolver<Maybe<ResolversTypes['ReviewSection']>, ParentType, ContextType>;
-  reviewSectionResponseJoins?: Resolver<ResolversTypes['ReviewSectionResponseJoinsConnection'], ParentType, ContextType, RequireFields<ReviewSectionJoinReviewSectionResponseJoinsArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionJoinsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionJoinsConnection'] = ResolversParentTypes['ReviewSectionJoinsConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewSectionJoin']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['ReviewSectionJoinsEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionJoinsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionJoinsEdge'] = ResolversParentTypes['ReviewSectionJoinsEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ReviewSectionJoin']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionResponseJoinResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionResponseJoin'] = ResolversParentTypes['ReviewSectionResponseJoin']> = {
-  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  reviewSectionJoinId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  sendToApplicant?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  reviewSectionJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionJoin']>, ParentType, ContextType>;
-  reviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionResponseJoinsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionResponseJoinsConnection'] = ResolversParentTypes['ReviewSectionResponseJoinsConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewSectionResponseJoin']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['ReviewSectionResponseJoinsEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionResponseJoinsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionResponseJoinsEdge'] = ResolversParentTypes['ReviewSectionResponseJoinsEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ReviewSectionResponseJoin']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionsConnection'] = ResolversParentTypes['ReviewSectionsConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewSection']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['ReviewSectionsEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewSectionsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewSectionsEdge'] = ResolversParentTypes['ReviewSectionsEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ReviewSection']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type ReviewsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewsEdge'] = ResolversParentTypes['ReviewsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewStatusHistoriesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewStatusHistoriesConnection'] = ResolversParentTypes['ReviewStatusHistoriesConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewStatusHistory']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ReviewStatusHistoriesEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewStatusHistoriesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewStatusHistoriesEdge'] = ResolversParentTypes['ReviewStatusHistoriesEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ReviewStatusHistoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewStatusHistory'] = ResolversParentTypes['ReviewStatusHistory']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['ReviewStatus']>, ParentType, ContextType>;
+  timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  isCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -21453,6 +21587,7 @@ export type TemplateElementResolvers<ContextType = any, ParentType extends Resol
   parameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   section?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   applicationResponses?: Resolver<ResolversTypes['ApplicationResponsesConnection'], ParentType, ContextType, RequireFields<TemplateElementApplicationResponsesArgs, 'orderBy'>>;
+  reviewQuestionAssignments?: Resolver<ResolversTypes['ReviewQuestionAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateElementReviewQuestionAssignmentsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -21547,6 +21682,7 @@ export type TemplateStageResolvers<ContextType = any, ParentType extends Resolve
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationStageHistoriesByStageId?: Resolver<ResolversTypes['ApplicationStageHistoriesConnection'], ParentType, ContextType, RequireFields<TemplateStageApplicationStageHistoriesByStageIdArgs, 'orderBy'>>;
+  reviewAssignmentsByStageId?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateStageReviewAssignmentsByStageIdArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -21725,12 +21861,36 @@ export type UpdatePermissionPolicyPayloadResolvers<ContextType = any, ParentType
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateReviewAssignmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateReviewAssignmentPayload'] = ResolversParentTypes['UpdateReviewAssignmentPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewAssignmentEdge?: Resolver<Maybe<ResolversTypes['ReviewAssignmentsEdge']>, ParentType, ContextType, RequireFields<UpdateReviewAssignmentPayloadReviewAssignmentEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateReviewPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateReviewPayload'] = ResolversParentTypes['UpdateReviewPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   reviewEdge?: Resolver<Maybe<ResolversTypes['ReviewsEdge']>, ParentType, ContextType, RequireFields<UpdateReviewPayloadReviewEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateReviewQuestionAssignmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateReviewQuestionAssignmentPayload'] = ResolversParentTypes['UpdateReviewQuestionAssignmentPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
+  reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
+  reviewQuestionAssignmentEdge?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignmentsEdge']>, ParentType, ContextType, RequireFields<UpdateReviewQuestionAssignmentPayloadReviewQuestionAssignmentEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -21738,49 +21898,19 @@ export type UpdateReviewResponsePayloadResolvers<ContextType = any, ParentType e
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   reviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
+  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   reviewResponseEdge?: Resolver<Maybe<ResolversTypes['ReviewResponsesEdge']>, ParentType, ContextType, RequireFields<UpdateReviewResponsePayloadReviewResponseEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UpdateReviewSectionAssignmentPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateReviewSectionAssignmentPayload'] = ResolversParentTypes['UpdateReviewSectionAssignmentPayload']> = {
+export type UpdateReviewStatusHistoryPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateReviewStatusHistoryPayload'] = ResolversParentTypes['UpdateReviewStatusHistoryPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSectionAssignment?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignment']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  stage?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType>;
-  section?: Resolver<Maybe<ResolversTypes['ApplicationSection']>, ParentType, ContextType>;
-  reviewSectionAssignmentEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignmentsEdge']>, ParentType, ContextType, RequireFields<UpdateReviewSectionAssignmentPayloadReviewSectionAssignmentEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UpdateReviewSectionJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateReviewSectionJoinPayload'] = ResolversParentTypes['UpdateReviewSectionJoinPayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSectionJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionJoin']>, ParentType, ContextType>;
+  reviewStatusHistory?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
-  sectionAssignment?: Resolver<Maybe<ResolversTypes['ReviewSectionAssignment']>, ParentType, ContextType>;
-  reviewSection?: Resolver<Maybe<ResolversTypes['ReviewSection']>, ParentType, ContextType>;
-  reviewSectionJoinEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionJoinsEdge']>, ParentType, ContextType, RequireFields<UpdateReviewSectionJoinPayloadReviewSectionJoinEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UpdateReviewSectionPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateReviewSectionPayload'] = ResolversParentTypes['UpdateReviewSectionPayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSection?: Resolver<Maybe<ResolversTypes['ReviewSection']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  reviewSectionEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionsEdge']>, ParentType, ContextType, RequireFields<UpdateReviewSectionPayloadReviewSectionEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UpdateReviewSectionResponseJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateReviewSectionResponseJoinPayload'] = ResolversParentTypes['UpdateReviewSectionResponseJoinPayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewSectionResponseJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionResponseJoin']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  reviewSectionJoin?: Resolver<Maybe<ResolversTypes['ReviewSectionJoin']>, ParentType, ContextType>;
-  reviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
-  reviewSectionResponseJoinEdge?: Resolver<Maybe<ResolversTypes['ReviewSectionResponseJoinsEdge']>, ParentType, ContextType, RequireFields<UpdateReviewSectionResponseJoinPayloadReviewSectionResponseJoinEdgeArgs, 'orderBy'>>;
+  reviewStatusHistoryEdge?: Resolver<Maybe<ResolversTypes['ReviewStatusHistoriesEdge']>, ParentType, ContextType, RequireFields<UpdateReviewStatusHistoryPayloadReviewStatusHistoryEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -21877,8 +22007,9 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<UserUserOrganisationsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<UserPermissionJoinsArgs, 'orderBy'>>;
   applications?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<UserApplicationsArgs, 'orderBy'>>;
-  reviewedReviewSectionAssignments?: Resolver<ResolversTypes['ReviewSectionAssignmentsConnection'], ParentType, ContextType, RequireFields<UserReviewedReviewSectionAssignmentsArgs, 'orderBy'>>;
-  reviewSectionAssignmentsByAssignerId?: Resolver<ResolversTypes['ReviewSectionAssignmentsConnection'], ParentType, ContextType, RequireFields<UserReviewSectionAssignmentsByAssignerIdArgs, 'orderBy'>>;
+  reviewAssignmentsByAssignerId?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<UserReviewAssignmentsByAssignerIdArgs, 'orderBy'>>;
+  reviewedReviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<UserReviewedReviewAssignmentsArgs, 'orderBy'>>;
+  reviewedReviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<UserReviewedReviewsArgs, 'orderBy'>>;
   files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<UserFilesArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<UserNotificationsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -21966,12 +22097,11 @@ export type Resolvers<ContextType = any> = {
   CreatePermissionJoinPayload?: CreatePermissionJoinPayloadResolvers<ContextType>;
   CreatePermissionNamePayload?: CreatePermissionNamePayloadResolvers<ContextType>;
   CreatePermissionPolicyPayload?: CreatePermissionPolicyPayloadResolvers<ContextType>;
+  CreateReviewAssignmentPayload?: CreateReviewAssignmentPayloadResolvers<ContextType>;
   CreateReviewPayload?: CreateReviewPayloadResolvers<ContextType>;
+  CreateReviewQuestionAssignmentPayload?: CreateReviewQuestionAssignmentPayloadResolvers<ContextType>;
   CreateReviewResponsePayload?: CreateReviewResponsePayloadResolvers<ContextType>;
-  CreateReviewSectionAssignmentPayload?: CreateReviewSectionAssignmentPayloadResolvers<ContextType>;
-  CreateReviewSectionJoinPayload?: CreateReviewSectionJoinPayloadResolvers<ContextType>;
-  CreateReviewSectionPayload?: CreateReviewSectionPayloadResolvers<ContextType>;
-  CreateReviewSectionResponseJoinPayload?: CreateReviewSectionResponseJoinPayloadResolvers<ContextType>;
+  CreateReviewStatusHistoryPayload?: CreateReviewStatusHistoryPayloadResolvers<ContextType>;
   CreateTemplateActionPayload?: CreateTemplateActionPayloadResolvers<ContextType>;
   CreateTemplateElementPayload?: CreateTemplateElementPayloadResolvers<ContextType>;
   CreateTemplatePayload?: CreateTemplatePayloadResolvers<ContextType>;
@@ -21998,12 +22128,11 @@ export type Resolvers<ContextType = any> = {
   DeletePermissionJoinPayload?: DeletePermissionJoinPayloadResolvers<ContextType>;
   DeletePermissionNamePayload?: DeletePermissionNamePayloadResolvers<ContextType>;
   DeletePermissionPolicyPayload?: DeletePermissionPolicyPayloadResolvers<ContextType>;
+  DeleteReviewAssignmentPayload?: DeleteReviewAssignmentPayloadResolvers<ContextType>;
   DeleteReviewPayload?: DeleteReviewPayloadResolvers<ContextType>;
+  DeleteReviewQuestionAssignmentPayload?: DeleteReviewQuestionAssignmentPayloadResolvers<ContextType>;
   DeleteReviewResponsePayload?: DeleteReviewResponsePayloadResolvers<ContextType>;
-  DeleteReviewSectionAssignmentPayload?: DeleteReviewSectionAssignmentPayloadResolvers<ContextType>;
-  DeleteReviewSectionJoinPayload?: DeleteReviewSectionJoinPayloadResolvers<ContextType>;
-  DeleteReviewSectionPayload?: DeleteReviewSectionPayloadResolvers<ContextType>;
-  DeleteReviewSectionResponseJoinPayload?: DeleteReviewSectionResponseJoinPayloadResolvers<ContextType>;
+  DeleteReviewStatusHistoryPayload?: DeleteReviewStatusHistoryPayloadResolvers<ContextType>;
   DeleteTemplateActionPayload?: DeleteTemplateActionPayloadResolvers<ContextType>;
   DeleteTemplateElementPayload?: DeleteTemplateElementPayloadResolvers<ContextType>;
   DeleteTemplatePayload?: DeleteTemplatePayloadResolvers<ContextType>;
@@ -22042,23 +22171,20 @@ export type Resolvers<ContextType = any> = {
   PermissionPolicy?: PermissionPolicyResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   Review?: ReviewResolvers<ContextType>;
+  ReviewAssignment?: ReviewAssignmentResolvers<ContextType>;
+  ReviewAssignmentsConnection?: ReviewAssignmentsConnectionResolvers<ContextType>;
+  ReviewAssignmentsEdge?: ReviewAssignmentsEdgeResolvers<ContextType>;
+  ReviewQuestionAssignment?: ReviewQuestionAssignmentResolvers<ContextType>;
+  ReviewQuestionAssignmentsConnection?: ReviewQuestionAssignmentsConnectionResolvers<ContextType>;
+  ReviewQuestionAssignmentsEdge?: ReviewQuestionAssignmentsEdgeResolvers<ContextType>;
   ReviewResponse?: ReviewResponseResolvers<ContextType>;
   ReviewResponsesConnection?: ReviewResponsesConnectionResolvers<ContextType>;
   ReviewResponsesEdge?: ReviewResponsesEdgeResolvers<ContextType>;
   ReviewsConnection?: ReviewsConnectionResolvers<ContextType>;
-  ReviewSection?: ReviewSectionResolvers<ContextType>;
-  ReviewSectionAssignment?: ReviewSectionAssignmentResolvers<ContextType>;
-  ReviewSectionAssignmentsConnection?: ReviewSectionAssignmentsConnectionResolvers<ContextType>;
-  ReviewSectionAssignmentsEdge?: ReviewSectionAssignmentsEdgeResolvers<ContextType>;
-  ReviewSectionJoin?: ReviewSectionJoinResolvers<ContextType>;
-  ReviewSectionJoinsConnection?: ReviewSectionJoinsConnectionResolvers<ContextType>;
-  ReviewSectionJoinsEdge?: ReviewSectionJoinsEdgeResolvers<ContextType>;
-  ReviewSectionResponseJoin?: ReviewSectionResponseJoinResolvers<ContextType>;
-  ReviewSectionResponseJoinsConnection?: ReviewSectionResponseJoinsConnectionResolvers<ContextType>;
-  ReviewSectionResponseJoinsEdge?: ReviewSectionResponseJoinsEdgeResolvers<ContextType>;
-  ReviewSectionsConnection?: ReviewSectionsConnectionResolvers<ContextType>;
-  ReviewSectionsEdge?: ReviewSectionsEdgeResolvers<ContextType>;
   ReviewsEdge?: ReviewsEdgeResolvers<ContextType>;
+  ReviewStatusHistoriesConnection?: ReviewStatusHistoriesConnectionResolvers<ContextType>;
+  ReviewStatusHistoriesEdge?: ReviewStatusHistoriesEdgeResolvers<ContextType>;
+  ReviewStatusHistory?: ReviewStatusHistoryResolvers<ContextType>;
   Template?: TemplateResolvers<ContextType>;
   TemplateAction?: TemplateActionResolvers<ContextType>;
   TemplateActionsConnection?: TemplateActionsConnectionResolvers<ContextType>;
@@ -22094,12 +22220,11 @@ export type Resolvers<ContextType = any> = {
   UpdatePermissionJoinPayload?: UpdatePermissionJoinPayloadResolvers<ContextType>;
   UpdatePermissionNamePayload?: UpdatePermissionNamePayloadResolvers<ContextType>;
   UpdatePermissionPolicyPayload?: UpdatePermissionPolicyPayloadResolvers<ContextType>;
+  UpdateReviewAssignmentPayload?: UpdateReviewAssignmentPayloadResolvers<ContextType>;
   UpdateReviewPayload?: UpdateReviewPayloadResolvers<ContextType>;
+  UpdateReviewQuestionAssignmentPayload?: UpdateReviewQuestionAssignmentPayloadResolvers<ContextType>;
   UpdateReviewResponsePayload?: UpdateReviewResponsePayloadResolvers<ContextType>;
-  UpdateReviewSectionAssignmentPayload?: UpdateReviewSectionAssignmentPayloadResolvers<ContextType>;
-  UpdateReviewSectionJoinPayload?: UpdateReviewSectionJoinPayloadResolvers<ContextType>;
-  UpdateReviewSectionPayload?: UpdateReviewSectionPayloadResolvers<ContextType>;
-  UpdateReviewSectionResponseJoinPayload?: UpdateReviewSectionResponseJoinPayloadResolvers<ContextType>;
+  UpdateReviewStatusHistoryPayload?: UpdateReviewStatusHistoryPayloadResolvers<ContextType>;
   UpdateTemplateActionPayload?: UpdateTemplateActionPayloadResolvers<ContextType>;
   UpdateTemplateElementPayload?: UpdateTemplateElementPayloadResolvers<ContextType>;
   UpdateTemplatePayload?: UpdateTemplatePayloadResolvers<ContextType>;
