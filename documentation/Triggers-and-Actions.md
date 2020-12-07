@@ -41,10 +41,9 @@ Actions also return an **output** object (e.g. `createUser` Action returns user 
 | `onApplicationSubmit`    | Postgres trigger on `Application` table                          |
 | `onApplicationSave`      | Postgres trigger on `Application` table                          |
 | `onApplicationWithdrawn` | Postgres trigger on `Application` table                          |
-| `onReviewStart`          | Postgres trigger on `Review` table                               |
+| `onReviewCreate`         | Postgres trigger on `Review` table                               |
 | `onReviewSubmit`         | Postgres trigger on `Review` table                               |
 | `onEditComment`          | Postgres trigger on `Review_response` table                      |
-| `onReviewSave`           | Postgres trigger on `Review` table                               |
 | `onApplicationAssign`    | Postgres trigger on `Review_section_assign` table                |
 | `onApprovalSubmit`       | Postgres trigger on `Review_section` table                       |
 | `onActionComplete`       | Postgres trigger on `Action_queue` table                         |
