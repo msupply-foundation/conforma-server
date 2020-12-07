@@ -1428,37 +1428,30 @@ const queries = [
           applicationResponsesUsingId: {
             create: [
               {
-                timeCreated: "NOW()"
                 value: { text: "Craig" }
                 templateElementToTemplateElementId: { connectById: { id: 2 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { text: "Drown" }
                 templateElementToTemplateElementId: { connectById: { id: 3 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { text: "c_drown" }
                 templateElementToTemplateElementId: { connectById: { id: 4 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { text: "craig@sussol.net" }
                 templateElementToTemplateElementId: { connectById: { id: 5 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220" }
                 templateElementToTemplateElementId: { connectById: { id: 6 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { optionIndex: 0, text: "Manufacturer" }
                 templateElementToTemplateElementId: { connectById: { id: 8 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { optionIndex: 1, text: "Manufacturer B" }
                 templateElementToTemplateElementId: { connectById: { id: 9 } }
               }
@@ -1535,37 +1528,30 @@ const queries = [
           applicationResponsesUsingId: {
             create: [
               {
-                  timeCreated: "NOW()"
                   value: { text: "Carl" }
                   templateElementToTemplateElementId: { connectById: { id: 2 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { text: "Smith" }
                   templateElementToTemplateElementId: { connectById: { id: 3 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { text: "cjsmith" }
                   templateElementToTemplateElementId: { connectById: { id: 4 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { text: "carl@sussol.net" }
                   templateElementToTemplateElementId: { connectById: { id: 5 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220" }
                   templateElementToTemplateElementId: { connectById: { id: 6 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { optionIndex: 0, text: "Importer" }
                   templateElementToTemplateElementId: { connectById: { id: 8 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { optionIndex: 1, text: "Importer A" }
                   templateElementToTemplateElementId: { connectById: { id: 9 } }
                 }
@@ -1649,12 +1635,10 @@ const queries = [
           applicationResponsesUsingId: {
             create: [
               {
-                timeCreated: "NOW()"
                 value: {text: "Company C"}
                 templateElementToTemplateElementId: { connectById: { id: 12 } }
               }
               {
-                timeCreated: "NOW()"
                 value: {option: 2}
                 templateElementToTemplateElementId: { connectById: { id: 13 } }
               }
