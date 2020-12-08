@@ -3553,10 +3553,10 @@ export type CreateReviewPayload = {
   query?: Maybe<Query>;
   /** Reads a single `Application` that is related to this `Review`. */
   reviewAssignment?: Maybe<Application>;
-  /** Reads a single `User` that is related to this `Review`. */
-  reviewer?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `Review`. */
+  reviewer?: Maybe<User>;
   /** An edge for our `Review`. May be used by Relay 1. */
   reviewEdge?: Maybe<ReviewsEdge>;
 };
@@ -4806,10 +4806,10 @@ export type DeleteReviewPayload = {
   query?: Maybe<Query>;
   /** Reads a single `Application` that is related to this `Review`. */
   reviewAssignment?: Maybe<Application>;
-  /** Reads a single `User` that is related to this `Review`. */
-  reviewer?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `Review`. */
+  reviewer?: Maybe<User>;
   /** An edge for our `Review`. May be used by Relay 1. */
   reviewEdge?: Maybe<ReviewsEdge>;
 };
@@ -7620,12 +7620,12 @@ export type NotificationReviewIdFkeyNotificationCreateInput = {
 export type NotificationReviewIdFkeyReviewCreateInput = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -8895,6 +8895,7 @@ export type Query = Node & {
   jwtGetPolicyLinksAsSetofText?: Maybe<JwtGetPolicyLinksAsSetofTextConnection>;
   jwtGetPolicyLinksAsText?: Maybe<Scalars['String']>;
   reviewApplicationId?: Maybe<Scalars['Int']>;
+  reviewReviewerId?: Maybe<Scalars['Int']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
@@ -9562,7 +9563,13 @@ export type QueryJwtGetPolicyLinksAsTextArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewApplicationIdArgs = {
-  reviewId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryReviewReviewerIdArgs = {
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -9739,15 +9746,15 @@ export type Review = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   /** Reads a single `Application` that is related to this `Review`. */
   reviewAssignment?: Maybe<Application>;
-  /** Reads a single `User` that is related to this `Review`. */
-  reviewer?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `Review`. */
+  reviewer?: Maybe<User>;
   /** Reads and enables pagination through a set of `ReviewResponse`. */
   reviewResponses: ReviewResponsesConnection;
   /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
@@ -9863,11 +9870,11 @@ export type ReviewApplicationIdFkeyInverseInput = {
 export type ReviewApplicationIdFkeyReviewCreateInput = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -10424,12 +10431,12 @@ export type ReviewCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewAssignmentId` field. */
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewerId` field. */
-  reviewerId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewerId` field. */
+  reviewerId?: Maybe<Scalars['Int']>;
 };
 
 /** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
@@ -10438,12 +10445,12 @@ export type ReviewFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewAssignmentId` field. */
   reviewAssignmentId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerId` field. */
-  reviewerId?: Maybe<IntFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerId` field. */
+  reviewerId?: Maybe<IntFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<StringFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
@@ -10462,14 +10469,14 @@ export type ReviewFilter = {
   reviewAssignment?: Maybe<ApplicationFilter>;
   /** A related `reviewAssignment` exists. */
   reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewer` relation. */
-  reviewer?: Maybe<UserFilter>;
-  /** A related `reviewer` exists. */
-  reviewerExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
   /** A related `application` exists. */
   applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewer` relation. */
+  reviewer?: Maybe<UserFilter>;
+  /** A related `reviewer` exists. */
+  reviewerExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewFilter>>;
   /** Checks for any expressions in this list. */
@@ -10482,12 +10489,12 @@ export type ReviewFilter = {
 export type ReviewInput = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -10599,12 +10606,12 @@ export type ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingRe
 export type ReviewPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -11235,12 +11242,12 @@ export type ReviewResponseReviewIdFkeyInverseInput = {
 export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -11442,12 +11449,12 @@ export type ReviewReviewAssignmentIdFkeyInverseInput = {
 /** The `review` to be created by this mutation. */
 export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -11498,8 +11505,8 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -11563,12 +11570,12 @@ export enum ReviewsOrderBy {
   IdDesc = 'ID_DESC',
   ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
   ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
-  ReviewerIdAsc = 'REVIEWER_ID_ASC',
-  ReviewerIdDesc = 'REVIEWER_ID_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  ReviewerIdAsc = 'REVIEWER_ID_ASC',
+  ReviewerIdDesc = 'REVIEWER_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -11788,12 +11795,12 @@ export type ReviewStatusHistoryReviewIdFkeyInverseInput = {
 export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -14079,6 +14086,7 @@ export enum Trigger {
   OnApplicationWithdrawn = 'ON_APPLICATION_WITHDRAWN',
   OnReviewCreate = 'ON_REVIEW_CREATE',
   OnReviewSubmit = 'ON_REVIEW_SUBMIT',
+  OnReviewStart = 'ON_REVIEW_START',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
@@ -15764,12 +15772,12 @@ export type UpdateReviewInput = {
 export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -15779,11 +15787,11 @@ export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
 export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -15792,12 +15800,12 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
 /** An object where the defined keys will be set on the `review` being updated. */
 export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -15810,8 +15818,8 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -15821,12 +15829,12 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
 export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -15836,12 +15844,12 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
 export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
   applicationToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
@@ -15861,10 +15869,10 @@ export type UpdateReviewPayload = {
   query?: Maybe<Query>;
   /** Reads a single `Application` that is related to this `Review`. */
   reviewAssignment?: Maybe<Application>;
-  /** Reads a single `User` that is related to this `Review`. */
-  reviewer?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Review`. */
   application?: Maybe<Application>;
+  /** Reads a single `User` that is related to this `Review`. */
+  reviewer?: Maybe<User>;
   /** An edge for our `Review`. May be used by Relay 1. */
   reviewEdge?: Maybe<ReviewsEdge>;
 };
@@ -18445,12 +18453,6 @@ export type ResolversTypes = {
   ReviewApplicationIdFkeyInverseInput: ReviewApplicationIdFkeyInverseInput;
   ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewForReviewApplicationIdFkeyPatch: UpdateReviewOnReviewForReviewApplicationIdFkeyPatch;
-  ReviewReviewerIdFkeyInput: ReviewReviewerIdFkeyInput;
-  UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewForReviewReviewerIdFkeyPatch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
-  ReviewReviewerIdFkeyInverseInput: ReviewReviewerIdFkeyInverseInput;
-  ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate;
-  updateReviewOnReviewForReviewReviewerIdFkeyPatch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
   ReviewApplicationIdFkeyInput: ReviewApplicationIdFkeyInput;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnReviewForReviewApplicationIdFkeyPatch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
@@ -18464,6 +18466,12 @@ export type ResolversTypes = {
   FileUserIdFkeyInput: FileUserIdFkeyInput;
   UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
+  ReviewReviewerIdFkeyInverseInput: ReviewReviewerIdFkeyInverseInput;
+  ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewForReviewReviewerIdFkeyPatch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
+  ReviewReviewerIdFkeyInput: ReviewReviewerIdFkeyInput;
+  UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewForReviewReviewerIdFkeyPatch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
   FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
   FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
@@ -18613,6 +18621,10 @@ export type ResolversTypes = {
   FileApplicationIdFkeyApplicationCreateInput: FileApplicationIdFkeyApplicationCreateInput;
   UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
+  ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
+  ReviewReviewerIdFkeyUserCreateInput: ReviewReviewerIdFkeyUserCreateInput;
+  UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
+  ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
   FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
   ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate;
@@ -18620,10 +18632,6 @@ export type ResolversTypes = {
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyApplicationCreateInput: ReviewApplicationIdFkeyApplicationCreateInput;
-  UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
-  ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
-  ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
-  ReviewReviewerIdFkeyUserCreateInput: ReviewReviewerIdFkeyUserCreateInput;
   ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyReviewCreateInput: ReviewApplicationIdFkeyReviewCreateInput;
   ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate;
@@ -19510,12 +19518,6 @@ export type ResolversParentTypes = {
   ReviewApplicationIdFkeyInverseInput: ReviewApplicationIdFkeyInverseInput;
   ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewApplicationIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewForReviewApplicationIdFkeyPatch: UpdateReviewOnReviewForReviewApplicationIdFkeyPatch;
-  ReviewReviewerIdFkeyInput: ReviewReviewerIdFkeyInput;
-  UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewForReviewReviewerIdFkeyPatch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
-  ReviewReviewerIdFkeyInverseInput: ReviewReviewerIdFkeyInverseInput;
-  ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate;
-  updateReviewOnReviewForReviewReviewerIdFkeyPatch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
   ReviewApplicationIdFkeyInput: ReviewApplicationIdFkeyInput;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnReviewForReviewApplicationIdFkeyPatch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
@@ -19529,6 +19531,12 @@ export type ResolversParentTypes = {
   FileUserIdFkeyInput: FileUserIdFkeyInput;
   UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
+  ReviewReviewerIdFkeyInverseInput: ReviewReviewerIdFkeyInverseInput;
+  ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewForReviewReviewerIdFkeyPatch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
+  ReviewReviewerIdFkeyInput: ReviewReviewerIdFkeyInput;
+  UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewForReviewReviewerIdFkeyPatch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
   FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
   FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
@@ -19678,6 +19686,10 @@ export type ResolversParentTypes = {
   FileApplicationIdFkeyApplicationCreateInput: FileApplicationIdFkeyApplicationCreateInput;
   UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
+  ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
+  ReviewReviewerIdFkeyUserCreateInput: ReviewReviewerIdFkeyUserCreateInput;
+  UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
+  ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
   FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
   ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate;
@@ -19685,10 +19697,6 @@ export type ResolversParentTypes = {
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyApplicationCreateInput: ReviewApplicationIdFkeyApplicationCreateInput;
-  UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
-  ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
-  ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
-  ReviewReviewerIdFkeyUserCreateInput: ReviewReviewerIdFkeyUserCreateInput;
   ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyReviewCreateInput: ReviewApplicationIdFkeyReviewCreateInput;
   ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewReviewAssignmentIdFkeyUsingApplicationSerialKeyUpdate;
@@ -20500,8 +20508,8 @@ export type CreateReviewPayloadResolvers<ContextType = any, ParentType extends R
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   reviewAssignment?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   reviewEdge?: Resolver<Maybe<ResolversTypes['ReviewsEdge']>, ParentType, ContextType, RequireFields<CreateReviewPayloadReviewEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -20796,8 +20804,8 @@ export type DeleteReviewPayloadResolvers<ContextType = any, ParentType extends R
   deletedReviewNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   reviewAssignment?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   reviewEdge?: Resolver<Maybe<ResolversTypes['ReviewsEdge']>, ParentType, ContextType, RequireFields<DeleteReviewPayloadReviewEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -21358,6 +21366,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   jwtGetPolicyLinksAsSetofText?: Resolver<Maybe<ResolversTypes['JwtGetPolicyLinksAsSetofTextConnection']>, ParentType, ContextType, RequireFields<QueryJwtGetPolicyLinksAsSetofTextArgs, never>>;
   jwtGetPolicyLinksAsText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetPolicyLinksAsTextArgs, never>>;
   reviewApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewApplicationIdArgs, never>>;
+  reviewReviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewReviewerIdArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
   actionQueueByNodeId?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueByNodeIdArgs, 'nodeId'>>;
   applicationByNodeId?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationByNodeIdArgs, 'nodeId'>>;
@@ -21392,12 +21401,12 @@ export type ReviewResolvers<ContextType = any, ParentType extends ResolversParen
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   reviewAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewAssignment?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ReviewReviewResponsesArgs, 'orderBy'>>;
   reviewStatusHistories?: Resolver<ResolversTypes['ReviewStatusHistoriesConnection'], ParentType, ContextType, RequireFields<ReviewReviewStatusHistoriesArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ReviewNotificationsArgs, 'orderBy'>>;
@@ -21877,8 +21886,8 @@ export type UpdateReviewPayloadResolvers<ContextType = any, ParentType extends R
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   reviewAssignment?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   reviewEdge?: Resolver<Maybe<ResolversTypes['ReviewsEdge']>, ParentType, ContextType, RequireFields<UpdateReviewPayloadReviewEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
