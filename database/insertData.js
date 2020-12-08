@@ -393,11 +393,54 @@ const queries = [
                             " (index number "
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q10.optionIndex" } }]
+                              children: [
+                                { value: { property: "Q10.optionIndex" } }
+                              ]
                             }
                             ") in the API lookup"
                           ]
                         }
+                      }
+                    }
+                    {
+                      code: "PB3"
+                      index: 15
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "Q12"
+                      index: 16
+                      title: "Role"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "What is your role?"
+                        options: ["Owner", "Supplier", "Other"]
+                        placeholder: "Select one"
+                      }
+                      isRequired: false
+                    }
+                    {
+                      code: "Q13"
+                      index: 17
+                      title: "Other description"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      isEditable: {
+                        operator: "="
+                        children: [
+                          "Other"
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "Q12.text" } }]
+                          }
+                        ]
+                      }
+                      parameters: {
+                        label: "If Other, please describe"
+                        placeholder: "Describe your role"
                       }
                     }
                   ]
