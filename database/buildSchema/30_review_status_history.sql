@@ -16,7 +16,7 @@ CREATE OR REPLACE FUNCTION public.review_status_history_is_current_update()
 RETURNS trigger as $review_status_history_event$
 BEGIN
 	UPDATE public.review_status_history SET is_current = false
-	WHERE review_id = NEW.review_status_history AND id<>NEW.id;
+	WHERE review_id = NEW.review_id AND id<>NEW.id;
 RETURN NULL;
 END;
 $review_status_history_event$
