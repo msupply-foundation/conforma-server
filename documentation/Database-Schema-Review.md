@@ -1,6 +1,6 @@
 # Database Schema Review
 
-![Database Schema](https://user-images.githubusercontent.com/26194949/101306386-a1cb0f00-38a9-11eb-95da-0d3947088e9c.png)
+![Database Schema](images/database-schema-review.png)
 
 ## Statuses
 
