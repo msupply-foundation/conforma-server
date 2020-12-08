@@ -1986,6 +1986,7 @@ const queries = [
       }
     }
   }`,
+  // Application for Review Testing
   `mutation ReviewTestApplication {
     createApplication(
       input: {
