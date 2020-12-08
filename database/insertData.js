@@ -194,7 +194,7 @@ const queries = [
                       # Validation:Currently just checks 8 chars, needs more complexity
                     }
                     {
-                      code: "Xtra"
+                      code: "Q5B"
                       index: 7
                       title: "Dynamic Options demo"
                       elementTypePluginCode: "dropdownChoice"
