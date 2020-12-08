@@ -44,9 +44,8 @@ Actions also return an **output** object (e.g. `createUser` Action returns user 
 | `onReviewCreate`         | Postgres trigger on `Review` table                               |
 | `onReviewStart`          | Postgres trigger on `Review` table                               |
 | `onReviewSubmit`         | Postgres trigger on `Review` table                               |
-| `onEditComment`          | Postgres trigger on `Review_response` table                      |
-| `onApplicationAssign`    | Postgres trigger on `Review_section_assign` table                |
-| `onApprovalSubmit`       | Postgres trigger on `Review_section` table                       |
+| `onReviewAssign`         | Postgres trigger on `Review` table                               |
+| `onApprovalSubmit`       | To be decided                                                    |
 | `onActionComplete`       | Postgres trigger on `Action_queue` table                         |
 | `onScheduledTime`        | Server scheduled service (see [here](link to Scheduled actions)) |
 
