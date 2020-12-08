@@ -7,7 +7,7 @@ CREATE TABLE public.trigger_queue (
     trigger_type public.trigger,
     "table" varchar,
     record_id int,
-    timestamp timestamp,
+    timestamp timestamptz,
     status public.trigger_queue_status,
     log jsonb
 );

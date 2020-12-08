@@ -6,5 +6,5 @@ CREATE TABLE public.application_response (
     application_id integer references public.application(id),
     value jsonb,
     is_valid boolean,
-    timestamp timestamp default current_timestamp
+    timestamp timestamptz default current_timestamp
 );

@@ -8,5 +8,5 @@ CREATE TABLE public.template (
 	code varchar NOT NULL,
 is_linear boolean DEFAULT true,
     status public.template_status,
-    version_timestamp timestamp   
+    version_timestamp timestamptz   
 );
