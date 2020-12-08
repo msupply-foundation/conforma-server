@@ -2012,10 +2012,8 @@ const queries = [
         }
       }
     ) {
-      query {
-        applicationBySerial(serial: "12345") {
-          id
-        }
+      application {
+        name
       }
     }
   }`,
