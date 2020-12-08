@@ -2,6 +2,8 @@ import { ActionPluginOutput, Status } from '../../types'
 
 type IParameters = {
   applicationId: number
+  record_id: number
+  table: string
   newStatus: Status
 }
 
@@ -9,12 +11,28 @@ module.exports['changeStatus'] = async function (
   parameters: IParameters,
   DBConnect: any
 ): Promise<ActionPluginOutput> {
-  const { applicationId, newStatus } = parameters
+  const { applicationId, record_id, newStatus, table } = parameters
+
+  switch (table) {
+    case 'application':
+      return await changeApplicationStatus(applicationId, newStatus, DBConnect)
+    case 'review':
+      return await changeReviewStatus(record_id, newStatus, DBConnect)
+  }
+
+  return { status: 'Fail', error_log: `change status action cannot be used with "${table}" record` }
+}
+
+const changeApplicationStatus = async (
+  applicationId: number,
+  newStatus: string,
+  DBConnect: any
+): Promise<ActionPluginOutput> => {
   const returnObject: ActionPluginOutput = { status: null, error_log: '' }
   console.log(`Changing the Status of Application ${applicationId}...`)
 
   try {
-    const currentStatus = await DBConnect.getCurrentStatusHistory(applicationId)
+    const currentStatus = await DBConnect.getApplicationCurrentStatusHistory(applicationId)
 
     if (currentStatus?.status === newStatus) {
       // Do nothing
@@ -40,7 +58,7 @@ module.exports['changeStatus'] = async function (
     } else currentStageHistoryId = currentStatus.application_stage_history_id
 
     // Create a new application_status_history record
-    const result = await DBConnect.addNewStatusHistory(currentStageHistoryId, newStatus)
+    const result = await DBConnect.addNewApplicationStatusHistory(currentStageHistoryId, newStatus)
     if (result.id) {
       returnObject.status = 'Success'
       returnObject.output = { status: newStatus, statusId: result.id }
@@ -53,6 +71,50 @@ module.exports['changeStatus'] = async function (
 
     // Create output object and return
     returnObject.output = { ...returnObject.output, applicationId }
+    return returnObject
+  } catch (err) {
+    returnObject.status = 'Fail'
+    returnObject.error_log = 'Unable to change Status'
+    return returnObject
+  }
+}
+
+const changeReviewStatus = async (
+  reviewId: number,
+  newStatus: string,
+  DBConnect: any
+): Promise<ActionPluginOutput> => {
+  const returnObject: ActionPluginOutput = { status: null, error_log: '' }
+  console.log(`Changing the Status of Review ${reviewId}...`)
+
+  try {
+    const currentStatus = await DBConnect.getReviewCurrentStatusHistory(reviewId)
+
+    if (currentStatus?.status === newStatus) {
+      // Do nothing
+      console.log(
+        `WARNING: Review ${reviewId} already has status: ${newStatus}. No changes were made.`
+      )
+      returnObject.status = 'Success'
+      returnObject.error_log = 'Status not changed'
+      returnObject.output = { status: newStatus, statusId: currentStatus.id }
+      return returnObject
+    }
+
+    // Create a new review_status_history record
+    const result = await DBConnect.addNewReviewStatusHistory(reviewId, newStatus)
+    if (result.id) {
+      returnObject.status = 'Success'
+      returnObject.output = { status: newStatus, statusId: result.id }
+      console.log(`New review_status_history created: ${newStatus}`)
+    } else {
+      returnObject.status = 'Fail'
+      returnObject.error_log = "Couldn't create new review_status_history"
+      return returnObject
+    }
+
+    // Create output object and return
+    returnObject.output = { ...returnObject.output, reviewId }
     return returnObject
   } catch (err) {
     returnObject.status = 'Fail'
