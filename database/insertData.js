@@ -1638,6 +1638,34 @@ const queries = [
       }
     }
   }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "reviewer@sussol.net", passwordHash: "1234", username: "testReviewer",
+        firstName: "Mr", lastName: "Reviewer" }
+      }
+    ) {
+      user {
+        email
+        passwordHash
+        username
+      }
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "assigner@sussol.net", passwordHash: "1234", username: "testAssigner",
+        firstName: "Ms", lastName: "Assigner" }
+      }
+    ) {
+      user {
+        email
+        passwordHash
+        username
+      }
+    }
+  }`,
   //   Add some organisations
   `mutation {
     createOrganisation(
