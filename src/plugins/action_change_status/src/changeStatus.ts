@@ -2,8 +2,7 @@ import { ActionPluginOutput, Status } from '../../types'
 
 type IParameters = {
   applicationId: number
-  record_id: number
-  table: string
+  reviewId: number
   newStatus: Status
 }
 
@@ -11,16 +10,18 @@ module.exports['changeStatus'] = async function (
   parameters: IParameters,
   DBConnect: any
 ): Promise<ActionPluginOutput> {
-  const { applicationId, record_id, newStatus, table } = parameters
+  const { applicationId, reviewId, newStatus } = parameters
 
-  switch (table) {
-    case 'application':
-      return await changeApplicationStatus(applicationId, newStatus, DBConnect)
-    case 'review':
-      return await changeReviewStatus(record_id, newStatus, DBConnect)
+  if (applicationId) {
+    return await changeApplicationStatus(applicationId, newStatus, DBConnect)
+  } else if (reviewId) {
+    return await changeReviewStatus(reviewId, newStatus, DBConnect)
   }
 
-  return { status: 'Fail', error_log: `change status action cannot be used with "${table}" record` }
+  return {
+    status: 'Fail',
+    error_log: `Neither applicationId or reviewId is provided, cannot run action`,
+  }
 }
 
 const changeApplicationStatus = async (
