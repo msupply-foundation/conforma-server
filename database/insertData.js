@@ -2054,6 +2054,40 @@ const queries = [
       }
     }
   }`,
+  // Assign above application to reviewer (all questions)
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          applicationId: 4
+          assignerId: 7
+          reviewerId: 6
+          stageId: 5
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              { templateElementId: 43 }
+              { templateElementId: 44 }
+              { templateElementId: 45 }
+              { templateElementId: 47 }
+              { templateElementId: 48 }
+              { templateElementId: 49 }
+              { templateElementId: 50 }
+              { templateElementId: 51 }
+              { templateElementId: 53 }
+              { templateElementId: 54 }
+              { templateElementId: 55 }
+            ]
+          }
+        }
+      }
+    ) {
+      reviewAssignment {
+        application {
+          name
+        }
+      }
+    }
+  }`,
   // Non Registered User Permissions
   `mutation {
     createUser(
