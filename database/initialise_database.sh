@@ -20,3 +20,6 @@ wait $PID
 
 echo "Generating types file..."
 yarn generate
+
+# This forces server to restart
+touch "./src/server.ts"
