@@ -9,5 +9,5 @@ CREATE TABLE public.review_response (
 	review_question_assignment_id integer references public.review_question_assignment(id),
 	application_response_id integer references public.application_response(id),
 	review_id integer references public.review(id),
-    "timestamp" timestamp with time zone
+    "timestamp" timestamp with time zone default current_timestamp
 );

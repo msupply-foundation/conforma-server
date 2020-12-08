@@ -7,7 +7,7 @@ CREATE TABLE public.review_status_history (
 	id serial primary key,
 	review_id integer references public.review(id),
 	"status" public.review_status,
-	"timestamp" timestamp with time zone,
+	"timestamp" timestamp with time zone default current_timestamp,
 	is_current boolean DEFAULT true
 );
 
