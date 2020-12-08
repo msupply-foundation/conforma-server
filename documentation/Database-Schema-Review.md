@@ -39,3 +39,11 @@ AND (see consolidation schema TODO)
 ### Creating and editing review
 
 Whenever user starts a review (either first time or subsequent times that they can edit it after submissions), we would create all responses, or duplicate them from existing responses. Trimming is done for unchanged responses after submission via an action (above rules should take into account duplicates)
+
+### Other material
+
+Few more diagrams:
+
+![Review Diagram](images/review-diagram.png)
+![Review Schema Flow with Consolidation](images/consolidation-flow-with-schema-example.png)
+![Complex Review Schema Flow with Consolidation](images/consolidation-flow-with-schema-example-complex.png)
