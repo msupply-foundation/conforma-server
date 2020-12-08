@@ -1411,7 +1411,7 @@ const queries = [
               {
                 code: "S2"
                 title: "Product Info"
-                index: 7
+                index: 1
                 templateElementsUsingId: {
                   create: [
                     {
@@ -1426,7 +1426,7 @@ const queries = [
                     }
                     {
                       code: "Q20"
-                      index: 8
+                      index: 1
                       title: "Product Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -1434,7 +1434,7 @@ const queries = [
                     }
                     {
                       code: "Q21"
-                      index: 9
+                      index: 2
                       title: "Product Type"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
@@ -1446,14 +1446,14 @@ const queries = [
                     }
                     {
                       code: "PB2"
-                      index: 10
+                      index: 3
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
                       code: "Q22"
-                      index: 11
+                      index: 4
                       title: "Dose Size"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -1464,7 +1464,7 @@ const queries = [
                     }
                     {
                       code: "Q23"
-                      index: 12
+                      index: 5
                       title: "Packet Size"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -1486,7 +1486,7 @@ const queries = [
                     }
                     {
                       code: "Q24"
-                      index: 13
+                      index: 6
                       title: "Side Effects"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
