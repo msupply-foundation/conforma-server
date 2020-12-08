@@ -37,7 +37,10 @@ module.exports['incrementStage'] = async function (
 
     if (currentStageHistory) {
       // Make a "Completed" status_history for existing stage_history
-      const result = await DBConnect.addNewStatusHistory(currentStageHistoryId, 'Completed')
+      const result = await DBConnect.addNewApplicationStatusHistory(
+        currentStageHistoryId,
+        'Completed'
+      )
       if (!result) {
         returnObject.status = 'Fail'
         returnObject.error_log = "Couldn't create new status"
@@ -49,7 +52,7 @@ module.exports['incrementStage'] = async function (
     const newStageHistoryId = await DBConnect.addNewStageHistory(applicationId, nextStage.stage_id)
 
     // Create new status_history
-    const newStatusHistory = await DBConnect.addNewStatusHistory(
+    const newStatusHistory = await DBConnect.addNewApplicationStatusHistory(
       newStageHistoryId,
       currentStatus ? currentStatus : 'Draft'
     )
