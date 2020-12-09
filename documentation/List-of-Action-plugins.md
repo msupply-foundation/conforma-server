@@ -49,10 +49,12 @@
 
 ### **Change Status**:
 
-- Changes the application Status to the specifed input parameter
+- Changes the application or review Status to the specifed input parameter
 
-| Required parameters | Output properties |
-| ------------------- | ----------------- |
-| `applicationId`     | `applicationId`   |
-| `newStatus`         | `status`          |
-|                     | `statusId`        |
+| Required parameters           | Output properties             |
+| ----------------------------- | ----------------------------- |
+| `applicationId` or `reviewId` | `applicationId` or `reviewId` |
+| `newStatus`                   | `status`                      |
+|                               | `statusId`                    |
+
+Will determine to change status of review or application based on `applicationId` or `reviewId`

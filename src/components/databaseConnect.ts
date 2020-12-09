@@ -81,9 +81,13 @@ class DBConnect {
 
   public addNewStageHistory = PostgresDB.addNewStageHistory
 
-  public getCurrentStatusHistory = PostgresDB.getCurrentStatusHistory
+  public getApplicationCurrentStatusHistory = PostgresDB.getApplicationCurrentStatusHistory
 
-  public addNewStatusHistory = PostgresDB.addNewStatusHistory
+  public getReviewCurrentStatusHistory = PostgresDB.getReviewCurrentStatusHistory
+
+  public addNewApplicationStatusHistory = PostgresDB.addNewApplicationStatusHistory
+
+  public addNewReviewStatusHistory = PostgresDB.addNewReviewStatusHistory
 
   public getUserData = PostgresDB.getUserData
 
