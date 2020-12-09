@@ -477,7 +477,7 @@ class PostgresDB {
   }
 
   public getReviewCurrentStatusHistory = async (reviewId: number) => {
-    const text = `SELECT id, status, id FROM
+    const text = `SELECT id, status FROM
       review_status_history WHERE
       review_id = $1 and is_current = true;`
     try {
