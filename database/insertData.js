@@ -1542,16 +1542,17 @@ const queries = [
                 sequence: 2
                 parameterQueries: { message: "Application Submitted" }
               }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_REVIEW_CREATE
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: [{ value: { property: "reviewId" } }]
-                  }
-                  newStatus: { value: "Draft" }
+            {
+              actionCode: "changeStatus"
+              trigger: ON_REVIEW_CREATE
+              parameterQueries: {
+                reviewId: {
+                  operator: "objectProperties"
+                  children: [{ value: { property: "record_id" } }]
+                }
+                newStatus: { value: "Draft" }
               }
+            }
             ]
           }
         }
