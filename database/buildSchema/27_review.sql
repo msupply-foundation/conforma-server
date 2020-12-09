@@ -13,7 +13,7 @@ $$ LANGUAGE SQL IMMUTABLE;
 -- review
 CREATE TABLE public.review (
 	id serial primary key,
-	review_assignment_id integer references public.application(id),
+	review_assignment_id integer references public.review_assignment(id),
 	-- status via review_status_history
 	trigger public.trigger,
 	application_id integer GENERATED ALWAYS AS (public.review_application_id(review_assignment_id)) STORED references public.application(id),
