@@ -48,6 +48,32 @@ const queries = [
                       title: "Last Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      validation: {
+                        operator: "AND"
+                        children: [
+                          {
+                            operator: "!="
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: [{ value: { property: "Q1.text" } }]
+                              }
+                              { value: null }
+                            ]
+                          }
+                          {
+                            operator: "!="
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: [{ value: { property: "Q1.text" } }]
+                              }
+                              { value: "" }
+                            ]
+                          }
+                        ]
+                      }
+                      validationMessage: "You need a first name."
                       parameters: {
                         label: {
                           operator: "CONCAT"
@@ -59,32 +85,6 @@ const queries = [
                             ", what is your last name?"
                           ]
                         }
-                        validation: {
-                          operator: "AND"
-                          children: [
-                            {
-                              operator: "!="
-                              children: [
-                                {
-                                  operator: "objectProperties"
-                                  children: [{ value: { property: "Q1.text" } }]
-                                }
-                                { value: null }
-                              ]
-                            }
-                            {
-                              operator: "!="
-                              children: [
-                                {
-                                  operator: "objectProperties"
-                                  children: [{ value: { property: "Q1.text" } }]
-                                }
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
-                        validationMessage: "You need a first name."
                       }
                     }
                     {
@@ -128,23 +128,21 @@ const queries = [
                           { value: "" }
                         ]
                       }
-                      parameters: {
-                        label: "Select a username"
-                        validation: {
-                          operator: "API"
-                          children: [
-                            { value: "http://localhost:8080/check-unique" }
-                            { value: ["type", "value"] }
-                            { value: "username" }
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: "unique" }
-                          ]
-                        }
-                        validationMessage: "Username must be unique"
+                      validation: {
+                        operator: "API"
+                        children: [
+                          { value: "http://localhost:8080/check-unique" }
+                          { value: ["type", "value"] }
+                          { value: "username" }
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: "unique" }
+                        ]
                       }
+                      validationMessage: "Username must be unique"
+                      parameters: { label: "Select a username" }
                     }
                     {
                       code: "Q4"
@@ -152,22 +150,20 @@ const queries = [
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "Email"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            {
-                              value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
-                            }
-                          ]
-                        }
-                        validationMessage: "Not a valid email address"
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          {
+                            value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                          }
+                        ]
                       }
+                      validationMessage: "Not a valid email address"
+                      parameters: { label: "Email" }
                     }
                     {
                       code: "Q5"
@@ -175,23 +171,23 @@ const queries = [
                       title: "Password"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: "^[\\\\S]{8,}$" }
+                        ]
+                      }
+                      validationMessage: "Password must be at least 8 characters"
+                      # Validation:Currently just checks 8 chars, needs more complexity
                       parameters: {
                         label: "Password"
                         maskedInput: true
                         placeholder: "Password must be at least 8 chars long"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: "^[\\\\S]{8,}$" }
-                          ]
-                        }
-                        validationMessage: "Password must be at least 8 characters"
                       }
-                      # Validation:Currently just checks 8 chars, needs more complexity
                     }
                     {
                       code: "Q5B"
@@ -225,7 +221,6 @@ const queries = [
                             }
                           ]
                         }
-                        validation: { value: true }
                       }
                       isRequired: false
                     }
@@ -276,7 +271,6 @@ const queries = [
                           "Manufacturer B"
                           "Manufacturer C"
                         ]
-                        validation: { value: true }
                       }
                     }
                     {
@@ -304,7 +298,6 @@ const queries = [
                           "Distributor B"
                           "Distributor C"
                         ]
-                        validation: { value: true }
                       }
                       isRequired: false
                     }
@@ -329,7 +322,6 @@ const queries = [
                         label: "Select Importer"
                         placeholder: "Select"
                         options: ["Importer A", "Importer B", "Importer C"]
-                        validation: { value: true }
                       }
                       isRequired: false
                     }
@@ -352,7 +344,6 @@ const queries = [
                             { value: "name" }
                           ]
                         }
-                        validation: { value: true }
                       }
                       isRequired: false
                     }
@@ -624,51 +615,27 @@ const queries = [
                         title: "Company details"
                         text: "The details entered should match with your registered company documents attached."
                       }
-                    },
+                    }
                     {
                       code: "S1Q1"
                       index: 1
                       title: "Organisation Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Unique Name for Company",
-                        validation: {
-                          operator:"AND",
-                          children: [
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value:null }
-                              ]
-                            },
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: ".+" }
+                        ]
                       }
                       # Validation TO-DO: must be unique in system
-                    },
+                      validationMessage: "Cannot be blank"
+                      parameters: { label: "Unique Name for Company" }
+                    }
                     {
                       code: "S1Q2"
                       index: 2
@@ -677,20 +644,16 @@ const queries = [
                       category: QUESTION
                       parameters: {
                         label: "Select type of activity"
-                        options: [
-                          "Manufacturer",
-                          "Importer",
-                          "Producer"
-                        ]
+                        options: ["Manufacturer", "Importer", "Producer"]
                       }
-                    },
+                    }
                     {
                       code: "S1PB1"
                       index: 3
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
-                    },
+                    }
                     {
                       code: "S1T2"
                       index: 4
@@ -698,7 +661,7 @@ const queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: { title: "Company nationality" }
-                    },
+                    }
                     {
                       code: "S1Q3"
                       index: 5
@@ -707,12 +670,9 @@ const queries = [
                       category: QUESTION
                       parameters: {
                         label: "Select the nationality of this company:"
-                        options: [
-                          "National",
-                          "International"
-                        ]
+                        options: ["National", "International"]
                       }
-                    },
+                    }
                     {
                       code: "S1Q4"
                       index: 6
@@ -729,15 +689,13 @@ const queries = [
                           { value: "International" }
                         ]
                       }
-                      parameters: {
-                        label: "Upload your valid import permit"
-                      }
+                      parameters: { label: "Upload your valid import permit" }
                       isRequired: false
                     }
                   ]
                 }
               }
-              { 
+              {
                 code: "S2"
                 title: "Section 2"
                 index: 1
@@ -760,49 +718,25 @@ const queries = [
                           { value: "National" }
                         ]
                       }
-                    },
+                    }
                     {
                       code: "S2Q1"
                       index: 1
                       title: "Organisation Street"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Enter the company street",
-                        validation: {
-                          operator:"AND",
-                          children: [
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value:null }
-                              ]
-                            },
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: ".+" }
+                        ]
                       }
+                      validationMessage: "Cannot be blank"
+                      parameters: { label: "Enter the company street" }
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -813,49 +747,25 @@ const queries = [
                           { value: "National" }
                         ]
                       }
-                    },
+                    }
                     {
                       code: "S2Q2"
                       index: 2
                       title: "Organisation region"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Enter the company region",
-                        validation: {
-                          operator:"AND",
-                          children: [
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value:null }
-                              ]
-                            },
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: ".+" }
+                        ]
                       }
+                      validationMessage: "Cannot be blank"
+                      parameters: { label: "Enter the company region" }
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -866,124 +776,64 @@ const queries = [
                           { value: "National" }
                         ]
                       }
-                    },
+                    }
                     {
                       code: "S2PB1"
                       index: 3
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
-                      visibilityCondition: {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
-                          }
-                          { value: "National" }
-                        ]
-                      }
-                    },
+                    }
                     {
                       code: "S2T2"
                       index: 4
                       title: "Intro Section 2 - Page 2/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: {
-                        title: "Company bank account"
-                      }
-                    },
+                      parameters: { title: "Company bank account" }
+                    }
                     {
                       code: "S2Q3"
                       index: 5
                       title: "Billing account"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Enter the company billing account",
-                        validation: {
-                          operator:"AND",
-                          children: [
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value:null }
-                              ]
-                            },
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: ".+" }
+                        ]
                       }
-                    },
+                      validationMessage: "Cannot be blank"
+                      parameters: { label: "Enter the company billing account" }
+                    }
                     {
                       code: "S2Q4"
                       index: 4
                       title: "Name of account"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Enter the company acount name",
-                        validation: {
-                          operator:"AND",
-                          children: [
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value:null }
-                              ]
-                            },
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: ".+" }
+                        ]
                       }
+                      validationMessage: "Cannot be blank"
+                      parameters: { label: "Enter the company acount name" }
                     }
                   ]
                 }
-              },
-              { 
+              }
+              {
                 code: "S3"
                 title: "Section 3"
                 index: 2
@@ -995,23 +845,17 @@ const queries = [
                       title: "Intro Section 1 - Page 1/1"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: {
-                        title: "Company staff details"
-                      }
-                    },
+                      parameters: { title: "Company staff details" }
+                    }
                     {
                       code: "S3Q1"
                       index: 0
                       title: "Organisation Size"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
-                      parameters: { 
+                      parameters: {
                         label: "What is the size of the organization"
-                        options: [
-                          "Small",
-                          "Medium",
-                          "Large"
-                        ]
+                        options: ["Small", "Medium", "Large"]
                       }
                       isRequired: false
                     }
@@ -1117,20 +961,18 @@ const queries = [
                       title: "First Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "First Name"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: ".+" }
-                          ]
-                        }
-                        validationMessage: "First name must not be blank"
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: ".+" }
+                        ]
                       }
+                      validationMessage: "First name must not be blank"
+                      parameters: { label: "First Name" }
                     }
                     {
                       code: "Q2"
@@ -1146,23 +988,21 @@ const queries = [
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "Select a username"
-                        validation: {
-                          operator: "API"
-                          children: [
-                            { value: "http://localhost:8080/check-unique" }
-                            { value: ["type", "value"] }
-                            { value: "username" }
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: "unique" }
-                          ]
-                        }
-                        validationMessage: "Username must be unique"
+                      validation: {
+                        operator: "API"
+                        children: [
+                          { value: "http://localhost:8080/check-unique" }
+                          { value: ["type", "value"] }
+                          { value: "username" }
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: "unique" }
+                        ]
                       }
+                      validationMessage: "Username must be unique"
+                      parameters: { label: "Select a username" }
                     }
                     {
                       code: "Q4"
@@ -1170,22 +1010,20 @@ const queries = [
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "Email"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            {
-                              value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
-                            }
-                          ]
-                        }
-                        validationMessage: "Not a valid email address"
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          {
+                            value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                          }
+                        ]
                       }
+                      validationMessage: "Not a valid email address"
+                      parameters: { label: "Email" }
                     }
                     {
                       code: "Q5"
@@ -1193,23 +1031,23 @@ const queries = [
                       title: "Password"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: "^[\\\\S]{8,}$" }
+                        ]
+                      }
+                      validationMessage: "Password must be at least 8 characters"
+                      # Validation:Currently just checks 8 chars, needs more complexity
                       parameters: {
                         label: "Password"
                         maskedInput: true
                         placeholder: "Password must be at least 8 chars long"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: "^[\\\\S]{8,}$" }
-                          ]
-                        }
-                        validationMessage: "Password must be at least 8 characters"
                       }
-                      # Validation:Currently just checks 8 chars, needs more complexity
                     }
                     # TO-DO: Add Date of birth question once we have DatePicker element type
                   ]
@@ -1356,22 +1194,20 @@ const queries = [
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "Email"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            {
-                              value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
-                            }
-                          ]
-                        }
-                        validationMessage: "Not a valid email address"
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          {
+                            value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                          }
+                        ]
                       }
+                      validationMessage: "Not a valid email address"
+                      parameters: { label: "Email" }
                     }
                     {
                       code: "PB1"
@@ -1387,20 +1223,18 @@ const queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       isRequired: false
-                      parameters: {
-                        label: "Age"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: "^[0-9]+$" }
-                          ]
-                        }
-                        validationMessage: "Response must be a number"
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: "^[0-9]+$" }
+                        ]
                       }
+                      validationMessage: "Response must be a number"
+                      parameters: { label: "Age" }
                     }
                     {
                       code: "Q5"
@@ -1476,20 +1310,20 @@ const queries = [
                       title: "Packet Size"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [{ value: { property: "thisResponse" } }]
+                          }
+                          { value: "^[0-9]+$" }
+                        ]
+                      }
+                      validationMessage: "Must be a number"
                       parameters: {
                         label: "How many doses per packet?"
                         placeholder: "Whole number"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: "^[0-9]+$" }
-                          ]
-                        }
-                        validationMessage: "Must be a number"
                       }
                     }
                     {
@@ -1542,17 +1376,17 @@ const queries = [
                 sequence: 2
                 parameterQueries: { message: "Application Submitted" }
               }
-            {
-              actionCode: "changeStatus"
-              trigger: ON_REVIEW_CREATE
-              parameterQueries: {
-                reviewId: {
-                  operator: "objectProperties"
-                  children: [{ value: { property: "record_id" } }]
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_CREATE
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: [{ value: { property: "record_id" } }]
+                  }
+                  newStatus: { value: "Draft" }
                 }
-                newStatus: { value: "Draft" }
               }
-            }
             ]
           }
         }
