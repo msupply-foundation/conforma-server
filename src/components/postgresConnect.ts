@@ -270,6 +270,10 @@ class PostgresDB {
         // NB: Check the rest of these queries properly once we have data in the tables
         text = 'SELECT application_id FROM review WHERE id = $1'
         break
+      case 'review_assignment':
+        console.log('Review Assignment Table')
+        text = 'SELECT application_id FROM review_assignment WHERE id = $1'
+        break
       // To-Do: queries for other trigger tables
       default:
         throw new Error('Table name not valid')
