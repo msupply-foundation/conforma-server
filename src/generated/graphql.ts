@@ -2751,9 +2751,12 @@ export type ApplicationToManyReviewFilter = {
 
 export type ApplicationTriggerState = {
   __typename?: 'ApplicationTriggerState';
-  id?: Maybe<Scalars['Int']>;
   serial?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
   applicationTrigger?: Maybe<Trigger>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewAssignmentTrigger?: Maybe<Trigger>;
+  reviewId?: Maybe<Scalars['Int']>;
   reviewTrigger?: Maybe<Trigger>;
 };
 
@@ -2762,24 +2765,36 @@ export type ApplicationTriggerState = {
  * fields are tested for equality and combined with a logical ‘and.’
  */
 export type ApplicationTriggerStateCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `serial` field. */
   serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationTrigger` field. */
   applicationTrigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewAssignmentTrigger` field. */
+  reviewAssignmentTrigger?: Maybe<Trigger>;
+  /** Checks for equality with the object’s `reviewId` field. */
+  reviewId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewTrigger` field. */
   reviewTrigger?: Maybe<Trigger>;
 };
 
 /** A filter to be used against `ApplicationTriggerState` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationTriggerStateFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
   /** Filter by the object’s `serial` field. */
   serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationTrigger` field. */
   applicationTrigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `reviewAssignmentId` field. */
+  reviewAssignmentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewAssignmentTrigger` field. */
+  reviewAssignmentTrigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewTrigger` field. */
   reviewTrigger?: Maybe<TriggerFilter>;
   /** Checks for all expressions in this list. */
@@ -2815,12 +2830,18 @@ export type ApplicationTriggerStatesEdge = {
 /** Methods to use when ordering `ApplicationTriggerState`. */
 export enum ApplicationTriggerStatesOrderBy {
   Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
   SerialAsc = 'SERIAL_ASC',
   SerialDesc = 'SERIAL_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
   ApplicationTriggerAsc = 'APPLICATION_TRIGGER_ASC',
   ApplicationTriggerDesc = 'APPLICATION_TRIGGER_DESC',
+  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
+  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
+  ReviewAssignmentTriggerAsc = 'REVIEW_ASSIGNMENT_TRIGGER_ASC',
+  ReviewAssignmentTriggerDesc = 'REVIEW_ASSIGNMENT_TRIGGER_DESC',
+  ReviewIdAsc = 'REVIEW_ID_ASC',
+  ReviewIdDesc = 'REVIEW_ID_DESC',
   ReviewTriggerAsc = 'REVIEW_TRIGGER_ASC',
   ReviewTriggerDesc = 'REVIEW_TRIGGER_DESC'
 }
@@ -20331,9 +20352,12 @@ export type ApplicationStatusHistoryResolvers<ContextType = any, ParentType exte
 };
 
 export type ApplicationTriggerStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationTriggerState'] = ResolversParentTypes['ApplicationTriggerState']> = {
-  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   applicationTrigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  reviewAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewAssignmentTrigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewTrigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
