@@ -271,7 +271,6 @@ class PostgresDB {
         text = 'SELECT application_id FROM review WHERE id = $1'
         break
       case 'review_assignment':
-        console.log('Review Assignment Table')
         text = 'SELECT application_id FROM review_assignment WHERE id = $1'
         break
       // To-Do: queries for other trigger tables
