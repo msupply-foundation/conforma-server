@@ -2008,6 +2008,7 @@ const queries = [
           }
           name: "Test Review -- Vitamin C"
           outcome: PENDING
+          isActive: true
           templateId: 4
           userId: 5
           applicationStageHistoriesUsingId: {
