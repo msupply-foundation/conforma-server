@@ -33,6 +33,7 @@ const routeLogin = async (request: any, reply: any) => {
   return reply.send({
     success: true,
     ...(await getUserPermissions(username)),
+    user: await getUserInfo(username),
   })
 }
 
@@ -47,6 +48,11 @@ const getUsername = async (jwtToken: string) => {
   }
 
   return username
+}
+
+const getUserInfo = async (username: string) => {
+  const userInfo = await databaseConnect.getUserDataByUsername(username)
+  return userInfo
 }
 
 const getUserPermissions = async (username: string) => {

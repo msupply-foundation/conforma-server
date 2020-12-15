@@ -373,6 +373,24 @@ class PostgresDB {
     }
   }
 
+  public getUserDataByUsername = async (username: string) => {
+    const text = `
+      SELECT first_name as "firstName",
+      last_name as "lastName",
+      username, date_of_birth as "dateOfBirth",
+      email
+      FROM "user"
+      WHERE username = $1
+    `
+    try {
+      const result = await this.query({ text, values: [username] })
+      const userData = result.rows[0]
+      return userData
+    } catch (err) {
+      throw err
+    }
+  }
+
   public isUnique = async (table: string, field: string, value: string): Promise<boolean> => {
     const text = `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
     try {
