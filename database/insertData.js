@@ -1581,50 +1581,38 @@ const queries = [
   }`,
   //   Add some users
   `mutation {
-        createUser(
-          input: {
-            user: { email: "nicole@sussol.net", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "nmadruga" }
-          }
-        ) {
-          user {
-            email
-            passwordHash
-            username
-          }
-        }
-      }`,
+    createUser(
+      input: {
+        user: { email: "nicole@sussol.net", passwordHash: "123456", username: "nmadruga" }
+      }
+    ) {
+      clientMutationId
+      }
+    }`,
   `mutation {
     createUser(
       input: {
-        user: { email: "carl@sussol.net", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "carl",
+        user: { email: "carl@sussol.net", passwordHash: "123456", username: "carl",
         firstName: "Carl", lastName: "Smith"
         dateOfBirth: "1976-12-23" }
       }
     ) {
-      user {
-        email
-        passwordHash
-        username
-      }
+      clientMutationId
     }
   }`,
   `mutation {
     createUser(
       input: {
-        user: { email: "andrei@sussol.net", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "andrei" }
+        user: { email: "andrei@sussol.net", passwordHash: "123456", username: "andrei" }
       }
     ) {
-      user {
-        email
-        passwordHash
-        username
-      }
+      clientMutationId
     }
   }`,
   `mutation {
     createUser(
       input: {
-        user: { email: "valerio@nra.org", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "valerio" }
+        user: { email: "valerio@nra.org", passwordHash: "123456", username: "valerio" }
       }
     ) {
       user {
@@ -1642,25 +1630,27 @@ const queries = [
        }
       }
     ) {
-      user {
-        email
-        passwordHash
-        username
-      }
+      clientMutationId
     }
   }`,
   `mutation {
     createUser(
       input: {
-        user: { email: "reviewer@sussol.net", passwordHash: "1234", username: "testReviewer",
-        firstName: "Mr", lastName: "Reviewer" }
+        user: { email: "reviewer1@sussol.net", passwordHash: "1234", username: "testReviewer1",
+        firstName: "Mr", lastName: "Reviewer 1" }
       }
     ) {
-      user {
-        email
-        passwordHash
-        username
+      clientMutationId
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "reviewer2@sussol.net", passwordHash: "1234", username: "testReviewer2",
+        firstName: "Mrs", lastName: "Reviewer 2" }
       }
+    ) {
+      clientMutationId
     }
   }`,
   `mutation {
@@ -1670,11 +1660,7 @@ const queries = [
         firstName: "Ms", lastName: "Assigner" }
       }
     ) {
-      user {
-        email
-        passwordHash
-        username
-      }
+      clientMutationId
     }
   }`,
   //   Add some organisations
@@ -2062,13 +2048,13 @@ const queries = [
       }
     }
   }`,
-  // Assign above application to reviewer (all questions)
+  // Assign test review application to Mr. Reviewer 1 (Section 1)
   `mutation {
     createReviewAssignment(
       input: {
         reviewAssignment: {
           applicationId: 4
-          assignerId: 7
+          assignerId: 8
           reviewerId: 6
           stageId: 5
           reviewQuestionAssignmentsUsingId: {
@@ -2079,6 +2065,25 @@ const queries = [
               { templateElementId: 47 }
               { templateElementId: 48 }
               { templateElementId: 49 }
+            ]
+          }
+        }
+      }
+    ) {
+      clientMutationId
+    }
+  }`,
+  // Assign test review application to Mrs. Reviewer 2 (Section 2)
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          applicationId: 4
+          assignerId: 8
+          reviewerId: 7
+          stageId: 5
+          reviewQuestionAssignmentsUsingId: {
+            create: [
               { templateElementId: 50 }
               { templateElementId: 51 }
               { templateElementId: 53 }
@@ -2089,11 +2094,7 @@ const queries = [
         }
       }
     ) {
-      reviewAssignment {
-        application {
-          name
-        }
-      }
+      clientMutationId
     }
   }`,
   // Non Registered User Permissions
