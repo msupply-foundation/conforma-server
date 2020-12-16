@@ -5,7 +5,7 @@ const config = require('../src/config.json')
 const graphQLendpoint = config.graphQLendpoint
 
 const queries = [
-  // Template A -- Test - General Registration
+  // Template A -- Test - General Registration (Feature showcase)
   `mutation {
     createTemplate(
       input: {
@@ -94,7 +94,29 @@ const queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "New User Details"
+                        title: {
+                          operator: "CONCAT"
+                          children: [
+                            "Current User: "
+                            {
+                              operator: "objectProperties"
+                              children: [
+                                {
+                                  value: { objectIndex: 1, property: "firstName" }
+                                }
+                              ]
+                            }
+                            " "
+                            {
+                              operator: "objectProperties"
+                              children: [
+                                {
+                                  value: { objectIndex: 1, property: "lastName" }
+                                }
+                              ]
+                            }
+                          ]
+                        }
                         text: {
                           operator: "CONCAT"
                           children: [
