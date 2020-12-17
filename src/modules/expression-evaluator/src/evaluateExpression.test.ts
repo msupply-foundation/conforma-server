@@ -156,6 +156,12 @@ test('Testing String concatenation with type undefined', () => {
   })
 })
 
+test('Testing String concatenation output as Array', () => {
+  return evaluateExpression(testData.CONCAT_strings_output_as_array).then((result: any) => {
+    expect(result).toEqual(['One', 'Two', 'Three'])
+  })
+})
+
 // Equal (=) operator
 
 test('Testing Equality (numbers)', () => {

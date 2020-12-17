@@ -49,7 +49,7 @@ export default async function evaluateExpression(
         if (query.type === 'array') {
           return childrenResolved.reduce((acc: any, child: any) => {
             return acc.concat(child) // .flat(1) doesn't work for some reason
-          })
+          }, [])
         } else if (query.type === 'string' || !query.type) {
           return childrenResolved.join('')
         }

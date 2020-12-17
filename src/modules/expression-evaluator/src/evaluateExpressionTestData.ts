@@ -283,6 +283,18 @@ testData.CONCAT_4_Unspecified = {
   ],
 }
 
+testData.CONCAT_strings_output_as_array = {
+  operator: 'CONCAT',
+  type: 'array',
+  children: [
+    {
+      value: 'One',
+    },
+    'Two',
+    'Three',
+  ],
+}
+
 // Equal
 
 testData.EQUAL_Numbers = {
