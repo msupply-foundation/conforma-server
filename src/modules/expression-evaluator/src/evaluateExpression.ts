@@ -81,9 +81,8 @@ export default async function evaluateExpression(
         if (Object.entries(params).length === 0)
           return 'No parameters received for objectProperties node'
         try {
-          const objectIndex = childrenResolved[0].objectIndex ? childrenResolved[0].objectIndex : 0
-          const inputObject = params && params.objects ? params.objects[objectIndex] : {}
-          const property = childrenResolved[0].property
+          const inputObject = params?.objects ? params.objects : {}
+          const property = childrenResolved[0]
           return extractProperty(inputObject, property)
         } catch {
           throw new Error("Can't resolve object")

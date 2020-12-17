@@ -50,7 +50,7 @@ function App() {
   const [objectsInput, setObjectsInput] = useState(
     localStorage.getItem('objectText') || `{firstName: "Carl", lastName: "Smith"}`
   )
-  const [objectArray, setObjectArray] = useState()
+  const [objects, setObjects] = useState()
   const [isObjectsValid, setIsObjectsValid] = useState(true)
   const [strictJSONInput, setStrictJSONInput] = useState(false)
   const [strictJSONObjInput, setStrictJSONObjInput] = useState(false)
@@ -74,7 +74,7 @@ function App() {
       cleanInput = { value: '< Invalid input >' }
     }
     evaluate(cleanInput, {
-      objects: objectArray,
+      objects: objects,
       pgConnection: pgInterface,
       graphQLConnection: { fetch: fetchNative, endpoint: graphQLendpoint },
       APIfetch: fetchNative,
@@ -89,7 +89,7 @@ function App() {
         setResultType('error')
       })
     localStorage.setItem('inputText', input)
-  }, [input, objectsInput, objectArray, evaluatorSelection])
+  }, [input, objectsInput, objects, evaluatorSelection])
 
   // Try and turn object(s) input string into object array
   useEffect(() => {
@@ -97,12 +97,12 @@ function App() {
     try {
       cleanObjectInput = looseJSON(objectsInput)
       if (!Array.isArray(cleanObjectInput)) {
-        cleanObjectInput = looseJSON(`[${objectsInput}]`)
+        cleanObjectInput = looseJSON(`${objectsInput}`)
       }
-      setObjectArray(cleanObjectInput)
+      setObjects(cleanObjectInput)
       setIsObjectsValid(true)
     } catch {
-      setObjectArray([])
+      setObjects({})
       setIsObjectsValid(false)
     } finally {
       localStorage.setItem('objectText', objectsInput)
@@ -168,7 +168,7 @@ function App() {
   }
 
   const prettifyObjects = () => {
-    let objectsInputArrayStr = encloseStringInBrackets(objectsInput)
+    let objectsInputArrayStr = objectsInput
     const pretty = JSONstringify(objectsInputArrayStr, false, strictJSONObjInput)
     if (pretty) setObjectsInput(pretty)
     else alert('Invalid input')
@@ -178,13 +178,6 @@ function App() {
     const compact = JSONstringify(objectsInput, true, strictJSONObjInput)
     if (compact) setObjectsInput(compact)
     else alert('Invalid input')
-  }
-
-  const encloseStringInBrackets = (string) => {
-    let outputString = string[0] !== '[' ? '[' + string : string
-    outputString =
-      outputString.substring(outputString.length - 1) !== ']' ? outputString + ']' : outputString
-    return outputString
   }
 
   return (

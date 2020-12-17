@@ -251,7 +251,7 @@ test('Testing Regex - Email validation', () => {
 // Return User or Form values
 
 test('Test returning single user property', () => {
-  return evaluateExpression(testData.singleUserProperty, { objects: [testData.user] }).then(
+  return evaluateExpression(testData.singleUserProperty, { objects: { user: testData.user } }).then(
     (result: any) => {
       expect(result).toBe('Carl')
     }
@@ -259,8 +259,8 @@ test('Test returning single user property', () => {
 })
 
 test('Test returning single application property, depth 2, no object index', () => {
-  return evaluateExpression(testData.singleApplicationProperty_noIndex_depth2, {
-    objects: [testData.application],
+  return evaluateExpression(testData.singleApplicationProperty_depth2, {
+    objects: { application: testData.application },
   }).then((result: any) => {
     expect(result).toBe('Enter your name')
   })
@@ -435,7 +435,7 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
 
 test('Test GraphQL -- count Sections on current Application', () => {
   return evaluateExpression(testData.GraphQL_CountApplicationSections, {
-    objects: [testData.application],
+    objects: { application: testData.application },
     graphQLConnection: {
       fetch: fetch,
       endpoint: graphQLendpoint,
@@ -450,16 +450,16 @@ test('Test GraphQL -- count Sections on current Application', () => {
 // More complex combinations
 
 test('Test concatenate user First and Last names', () => {
-  return evaluateExpression(testData.concatFirstAndLastNames, { objects: [testData.user] }).then(
-    (result: any) => {
-      expect(result).toBe('Carl Smith')
-    }
-  )
+  return evaluateExpression(testData.concatFirstAndLastNames, {
+    objects: { user: testData.user },
+  }).then((result: any) => {
+    expect(result).toBe('Carl Smith')
+  })
 })
 
 test('Test Validation: Company name is unique', () => {
   return evaluateExpression(testData.complexValidation, {
-    objects: [testData.form2],
+    objects: { form2: testData.form2 },
     graphQLConnection: {
       fetch: fetch,
       endpoint: graphQLendpoint,
@@ -471,7 +471,7 @@ test('Test Validation: Company name is unique', () => {
 
 test('Test email validation -- email is unique and is valid email', () => {
   return evaluateExpression(testData.emailValidation, {
-    objects: [testData.form],
+    objects: { form: testData.form },
     APIfetch: fetch,
   }).then((result: any) => {
     expect(result).toBe(true)
@@ -480,7 +480,7 @@ test('Test email validation -- email is unique and is valid email', () => {
 
 test('Test visibility condition -- Answer to Q1 is Drug Registration and user belongs to at least one organisation', () => {
   return evaluateExpression(testData.complex1, {
-    objects: [testData.form, testData.user],
+    objects: { form: testData.form, user: testData.user },
     pgConnection: pgConnect,
   }).then((result: any) => {
     expect(result).toBe(false)
