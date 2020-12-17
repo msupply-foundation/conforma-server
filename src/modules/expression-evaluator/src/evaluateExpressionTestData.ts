@@ -283,6 +283,18 @@ testData.CONCAT_4_Unspecified = {
   ],
 }
 
+testData.CONCAT_strings_output_as_array = {
+  operator: 'CONCAT',
+  type: 'array',
+  children: [
+    {
+      value: 'One',
+    },
+    'Two',
+    'Three',
+  ],
+}
+
 // Equal
 
 testData.EQUAL_Numbers = {
@@ -507,20 +519,12 @@ testData.application = {
 
 testData.singleUserProperty = {
   operator: 'objectProperties',
-  children: [
-    {
-      value: { objectIndex: 0, property: 'firstName' },
-    },
-  ],
+  children: [{ value: 'user.firstName' }],
 }
 
-testData.singleApplicationProperty_noIndex_depth2 = {
+testData.singleApplicationProperty_depth2 = {
   operator: 'objectProperties',
-  children: [
-    {
-      value: { property: 'questions.q2' },
-    },
-  ],
+  children: ['application.questions.q2'],
 }
 
 // API operator
@@ -718,7 +722,7 @@ testData.GraphQL_CountApplicationSections = {
     { value: ['appId'] },
     {
       operator: 'objectProperties',
-      children: [{ value: { property: 'id' } }],
+      children: ['application.id'],
     },
     { value: 'application.applicationSections.totalCount' },
   ],
@@ -732,14 +736,14 @@ testData.concatFirstAndLastNames = {
   children: [
     {
       operator: 'objectProperties',
-      children: [{ value: { property: 'firstName' } }],
+      children: ['user.firstName'],
     },
     {
       value: ' ',
     },
     {
       operator: 'objectProperties',
-      children: [{ value: { property: 'lastName' } }],
+      children: ['user.lastName'],
     },
   ],
 }
@@ -752,7 +756,7 @@ testData.emailValidation = {
       children: [
         {
           operator: 'objectProperties',
-          children: [{ value: { property: 'q3' } }],
+          children: [{ value: 'form.q3' }],
         },
         {
           value: '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$',
@@ -771,7 +775,7 @@ testData.emailValidation = {
         { value: 'email' },
         {
           operator: 'objectProperties',
-          children: [{ value: { property: 'q3' } }],
+          children: ['form.q3'],
         },
         { value: 'unique' },
       ],
@@ -787,11 +791,7 @@ testData.complex1 = {
       children: [
         {
           operator: 'objectProperties',
-          children: [
-            {
-              value: { objectIndex: 0, property: 'q1' },
-            },
-          ],
+          children: [{ value: 'form.q1' }],
         },
         {
           value: 'Drug Registration',
@@ -808,7 +808,7 @@ testData.complex1 = {
             { value: 'SELECT COUNT(*) FROM user_organisation WHERE user_id = $1' },
             {
               operator: 'objectProperties',
-              children: [{ value: { objectIndex: 1, property: 'id' } }],
+              children: ['user.id'],
             },
           ],
         },
@@ -930,7 +930,7 @@ testData.complexValidation = {
         { value: ['orgName'] },
         {
           operator: 'objectProperties',
-          children: [{ value: { property: 'q2' } }],
+          children: ['form2.q2'],
         },
         { value: 'organisations.totalCount' },
       ],

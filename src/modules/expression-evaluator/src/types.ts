@@ -19,7 +19,7 @@ export interface IGraphQLConnection {
 }
 
 export interface IParameters {
-  objects?: object[]
+  objects?: BasicObject
   pgConnection?: IConnection
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
