@@ -156,6 +156,12 @@ test('Testing String concatenation with type undefined', () => {
   })
 })
 
+test('Testing String concatenation output as Array', () => {
+  return evaluateExpression(testData.CONCAT_strings_output_as_array).then((result: any) => {
+    expect(result).toEqual(['One', 'Two', 'Three'])
+  })
+})
+
 // Equal (=) operator
 
 test('Testing Equality (numbers)', () => {
@@ -251,7 +257,7 @@ test('Testing Regex - Email validation', () => {
 // Return User or Form values
 
 test('Test returning single user property', () => {
-  return evaluateExpression(testData.singleUserProperty, { objects: [testData.user] }).then(
+  return evaluateExpression(testData.singleUserProperty, { objects: { user: testData.user } }).then(
     (result: any) => {
       expect(result).toBe('Carl')
     }
@@ -259,8 +265,8 @@ test('Test returning single user property', () => {
 })
 
 test('Test returning single application property, depth 2, no object index', () => {
-  return evaluateExpression(testData.singleApplicationProperty_noIndex_depth2, {
-    objects: [testData.application],
+  return evaluateExpression(testData.singleApplicationProperty_depth2, {
+    objects: { application: testData.application },
   }).then((result: any) => {
     expect(result).toBe('Enter your name')
   })
@@ -312,7 +318,12 @@ test('Test Postgres lookup single string', () => {
 test('Test Postgres get array of template names', () => {
   return evaluateExpression(testData.getListOfTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual(['User Registration', 'Company Registration'])
+      expect(result).toEqual([
+        'Test -- General Registration',
+        'Company Registration',
+        'User Registration',
+        'Test -- Review Process',
+      ])
     }
   )
 })
@@ -320,7 +331,7 @@ test('Test Postgres get array of template names', () => {
 test('Test Postgres get Count of templates', () => {
   return evaluateExpression(testData.countTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual(2)
+      expect(result).toEqual(4)
     }
   )
 })
@@ -328,7 +339,12 @@ test('Test Postgres get Count of templates', () => {
 test('Test Postgres get template names -- no type', () => {
   return evaluateExpression(testData.getListOfTemplates_noType, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual([{ name: 'User Registration' }, { name: 'Company Registration' }])
+      expect(result).toEqual([
+        { name: 'Test -- General Registration' },
+        { name: 'Company Registration' },
+        { name: 'User Registration' },
+        { name: 'Test -- Review Process' },
+      ])
     }
   )
 })
@@ -341,6 +357,7 @@ test('Test Postgres get application list with IDs', () => {
       { id: 1, name: 'User Registration: Craig Drown' },
       { id: 2, name: 'User Registration: Carl Smith' },
       { id: 3, name: 'Company Registration: Company C' },
+      { id: 4, name: 'Test Review -- Vitamin C' },
     ])
   })
 })
@@ -369,6 +386,7 @@ test('Test GraphQL -- List of Application Names', () => {
       'User Registration: Craig Drown',
       'User Registration: Carl Smith',
       'Company Registration: Company C',
+      'Test Review -- Vitamin C',
     ])
   })
 })
@@ -393,6 +411,10 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
         name: 'Company Registration: Company C',
         id: 3,
       },
+      {
+        name: 'Test Review -- Vitamin C',
+        id: 4,
+      },
     ])
   })
 })
@@ -407,8 +429,10 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
     expect(result).toEqual({
       templates: {
         edges: [
-          { node: { name: 'User Registration' } },
+          { node: { name: 'Test -- General Registration' } },
           { node: { name: 'Company Registration' } },
+          { node: { name: 'User Registration' } },
+          { node: { name: 'Test -- Review Process' } },
         ],
       },
     })
@@ -417,7 +441,7 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
 
 test('Test GraphQL -- count Sections on current Application', () => {
   return evaluateExpression(testData.GraphQL_CountApplicationSections, {
-    objects: [testData.application],
+    objects: { application: testData.application },
     graphQLConnection: {
       fetch: fetch,
       endpoint: graphQLendpoint,
@@ -432,16 +456,16 @@ test('Test GraphQL -- count Sections on current Application', () => {
 // More complex combinations
 
 test('Test concatenate user First and Last names', () => {
-  return evaluateExpression(testData.concatFirstAndLastNames, { objects: [testData.user] }).then(
-    (result: any) => {
-      expect(result).toBe('Carl Smith')
-    }
-  )
+  return evaluateExpression(testData.concatFirstAndLastNames, {
+    objects: { user: testData.user },
+  }).then((result: any) => {
+    expect(result).toBe('Carl Smith')
+  })
 })
 
 test('Test Validation: Company name is unique', () => {
   return evaluateExpression(testData.complexValidation, {
-    objects: [testData.form2],
+    objects: { form2: testData.form2 },
     graphQLConnection: {
       fetch: fetch,
       endpoint: graphQLendpoint,
@@ -453,7 +477,7 @@ test('Test Validation: Company name is unique', () => {
 
 test('Test email validation -- email is unique and is valid email', () => {
   return evaluateExpression(testData.emailValidation, {
-    objects: [testData.form],
+    objects: { form: testData.form },
     APIfetch: fetch,
   }).then((result: any) => {
     expect(result).toBe(true)
@@ -462,7 +486,7 @@ test('Test email validation -- email is unique and is valid email', () => {
 
 test('Test visibility condition -- Answer to Q1 is Drug Registration and user belongs to at least one organisation', () => {
   return evaluateExpression(testData.complex1, {
-    objects: [testData.form, testData.user],
+    objects: { form: testData.form, user: testData.user },
     pgConnection: pgConnect,
   }).then((result: any) => {
     expect(result).toBe(false)
