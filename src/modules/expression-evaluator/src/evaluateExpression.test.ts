@@ -312,7 +312,12 @@ test('Test Postgres lookup single string', () => {
 test('Test Postgres get array of template names', () => {
   return evaluateExpression(testData.getListOfTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual(['User Registration', 'Company Registration'])
+      expect(result).toEqual([
+        'Test -- General Registration',
+        'Company Registration',
+        'User Registration',
+        'Test -- Review Process',
+      ])
     }
   )
 })
@@ -320,7 +325,7 @@ test('Test Postgres get array of template names', () => {
 test('Test Postgres get Count of templates', () => {
   return evaluateExpression(testData.countTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual(2)
+      expect(result).toEqual(4)
     }
   )
 })
@@ -328,7 +333,12 @@ test('Test Postgres get Count of templates', () => {
 test('Test Postgres get template names -- no type', () => {
   return evaluateExpression(testData.getListOfTemplates_noType, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual([{ name: 'User Registration' }, { name: 'Company Registration' }])
+      expect(result).toEqual([
+        { name: 'Test -- General Registration' },
+        { name: 'Company Registration' },
+        { name: 'User Registration' },
+        { name: 'Test -- Review Process' },
+      ])
     }
   )
 })
@@ -341,6 +351,7 @@ test('Test Postgres get application list with IDs', () => {
       { id: 1, name: 'User Registration: Craig Drown' },
       { id: 2, name: 'User Registration: Carl Smith' },
       { id: 3, name: 'Company Registration: Company C' },
+      { id: 4, name: 'Test Review -- Vitamin C' },
     ])
   })
 })
@@ -369,6 +380,7 @@ test('Test GraphQL -- List of Application Names', () => {
       'User Registration: Craig Drown',
       'User Registration: Carl Smith',
       'Company Registration: Company C',
+      'Test Review -- Vitamin C',
     ])
   })
 })
@@ -393,6 +405,10 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
         name: 'Company Registration: Company C',
         id: 3,
       },
+      {
+        name: 'Test Review -- Vitamin C',
+        id: 4,
+      },
     ])
   })
 })
@@ -407,8 +423,10 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
     expect(result).toEqual({
       templates: {
         edges: [
-          { node: { name: 'User Registration' } },
+          { node: { name: 'Test -- General Registration' } },
           { node: { name: 'Company Registration' } },
+          { node: { name: 'User Registration' } },
+          { node: { name: 'Test -- Review Process' } },
         ],
       },
     })
