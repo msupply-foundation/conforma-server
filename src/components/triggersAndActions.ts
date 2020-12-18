@@ -110,7 +110,7 @@ export async function processTrigger(payload: TriggerPayload) {
 
   for (const action of result) {
     const condition = await evaluateExpression(action.condition, {
-      objects: [applicationData],
+      objects: { applicationData },
       pgConnection: DBConnect,
     })
     if (condition) {
@@ -160,7 +160,7 @@ export async function processTrigger(payload: TriggerPayload) {
         application_data: applicationData,
         parameter_queries: action.parameter_queries,
       }
-      const result = await executeAction(actionPayload, actionLibrary, [outputCumulative])
+      const result = await executeAction(actionPayload, actionLibrary, { output: outputCumulative })
       outputCumulative = { ...outputCumulative, ...result.output }
       if (result.status === 'Fail') console.log(result.error_log)
     } catch (err) {
@@ -192,10 +192,10 @@ async function evaluateParameters(
 export async function executeAction(
   payload: ActionPayload,
   actionLibrary: ActionLibrary,
-  additionalObjects: BasicObject[] = []
+  additionalObjects: BasicObject = {}
 ): Promise<ActionQueueExecutePayload> {
   const evaluatorParams = {
-    objects: [payload.application_data, ...additionalObjects],
+    objects: { applicationData: payload.application_data, ...additionalObjects },
     pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
   }
 

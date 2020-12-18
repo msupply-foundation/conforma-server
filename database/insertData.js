@@ -470,7 +470,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                 }
               }
@@ -491,23 +491,23 @@ const queries = [
                 parameterQueries: {
                   first_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q1.text" } }]
+                    children: ["applicationData.responses.Q1.text"]
                   }
                   last_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q2.text" } }]
+                    children: ["applicationData.responses.Q2.text"]
                   }
                   username: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q3.text" } }]
+                    children: ["applicationData.responses.Q3.text"]
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q5.text" } }]
+                    children: ["applicationData.responses.Q5.text"]
                   }
                   email: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q4.text" } }]
+                    children: ["applicationData.responses.Q4.text"]
                   }
                 }
               }
@@ -518,7 +518,7 @@ const queries = [
                 parameterQueries: {
                   username: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q3.text" } }]
+                    children: ["applicationData.responses.Q3.text"]
                   }
                   permissionNames: { value: ["applyCompanyRego"] }
                 }
@@ -530,7 +530,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newStatus: { value: "Completed" }
                 }
@@ -542,7 +542,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newOutcome: { value: "Approved" }
                 }
@@ -558,16 +558,12 @@ const queries = [
                       { value: "Output concatenation: The user " }
                       {
                         operator: "objectProperties"
-                        children: [
-                          { value: { objectIndex: 1, property: "username" } }
-                        ]
+                        children: ["output.username"]
                       }
                       { value: "'s registration has been " }
                       {
                         operator: "objectProperties"
-                        children: [
-                          { value: { objectIndex: 1, property: "newOutcome" } }
-                        ]
+                        children: ["output.newOutcome"]
                       }
                     ]
                   }
