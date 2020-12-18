@@ -896,7 +896,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: ["applicationData.record_id"]
                   }
                 }
               }
@@ -913,7 +913,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: ["applicationData.record_id"]
                   }
                   newStatus: { value: "Submitted" }
                 }
@@ -1082,7 +1082,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                 }
               }
@@ -1093,23 +1093,23 @@ const queries = [
                 parameterQueries: {
                   first_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q1.text" } }]
+                    children: ["applicationData.responses.Q1.text"]
                   }
                   last_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q2.text" } }]
+                    children: ["applicationData.responses.Q2.text"]
                   }
                   username: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q3.text" } }]
+                    children: ["applicationData.responses.Q3.text"]
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q5.text" } }]
+                    children: ["applicationData.responses.Q5.text"]
                   }
                   email: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q4.text" } }]
+                    children: ["applicationData.responses.Q4.text"]
                   }
                 }
               }
@@ -1120,7 +1120,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newStatus: { value: "Completed" }
                 }
@@ -1132,7 +1132,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newOutcome: { value: "Approved" }
                 }
@@ -1372,7 +1372,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                 }
               }
@@ -1383,7 +1383,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newStatus: { value: "Submitted" }
                 }
@@ -1400,7 +1400,7 @@ const queries = [
                 parameterQueries: {
                   reviewId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: ["applicationData.record_id"]
                   }
                   newStatus: { value: "Draft" }
                 }
