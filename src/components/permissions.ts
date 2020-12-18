@@ -21,7 +21,7 @@ const signPromise: any = promisify(sign)
 const routeUserPermissions = async (request: any, reply: any) => {
   const token = (request?.headers?.authorization || '').replace('Bearer ', '')
   const username = await getUsername(token)
-  return reply.send(await getUserPermissions(username))
+  return reply.send(await getUserInfo(username))
 }
 
 const routeLogin = async (request: any, reply: any) => {
@@ -32,7 +32,7 @@ const routeLogin = async (request: any, reply: any) => {
 
   return reply.send({
     success: true,
-    ...(await getUserPermissions(username)),
+    ...(await getUserInfo(username)),
   })
 }
 
@@ -49,13 +49,15 @@ const getUsername = async (jwtToken: string) => {
   return username
 }
 
-const getUserPermissions = async (username: string) => {
+const getUserInfo = async (username: string) => {
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
+  const userInfo = await databaseConnect.getUserDataByUsername(username)
 
   return {
     username,
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getJWT(username, templatePermissionRows),
+    user: userInfo,
   }
 }
 

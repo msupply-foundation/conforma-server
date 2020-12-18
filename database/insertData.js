@@ -5,7 +5,7 @@ const config = require('../src/config.json')
 const graphQLendpoint = config.graphQLendpoint
 
 const queries = [
-  // Template A -- Test - General Registration
+  // Template A -- Test - General Registration (Feature showcase)
   `mutation {
     createTemplate(
       input: {
@@ -94,7 +94,29 @@ const queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "New User Details"
+                        title: {
+                          operator: "CONCAT"
+                          children: [
+                            "Current User: "
+                            {
+                              operator: "objectProperties"
+                              children: [
+                                {
+                                  value: { objectIndex: 1, property: "firstName" }
+                                }
+                              ]
+                            }
+                            " "
+                            {
+                              operator: "objectProperties"
+                              children: [
+                                {
+                                  value: { objectIndex: 1, property: "lastName" }
+                                }
+                              ]
+                            }
+                          ]
+                        }
                         text: {
                           operator: "CONCAT"
                           children: [
@@ -1415,14 +1437,19 @@ const queries = [
   }`,
   //   Add some users
   `mutation {
-    createUser(
-      input: {
-        user: { email: "nicole@sussol.net", passwordHash: "123456", username: "nmadruga" }
-      }
-    ) {
-      clientMutationId
-      }
-    }`,
+        createUser(
+          input: {
+            user: { email: "nicole@sussol.net", passwordHash: "123456", username: "nmadruga",
+            firstName: "Nicole" }
+          }
+        ) {
+          user {
+            email
+            passwordHash
+            username
+          }
+        }
+      }`,
   `mutation {
     createUser(
       input: {
@@ -1437,7 +1464,8 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "andrei@sussol.net", passwordHash: "123456", username: "andrei" }
+        user: { email: "andrei@sussol.net", passwordHash: "123456", username: "andrei",
+        firstName: "Andrei" }
       }
     ) {
       clientMutationId
@@ -1446,7 +1474,8 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "valerio@nra.org", passwordHash: "123456", username: "valerio" }
+        user: { email: "valerio@nra.org", passwordHash: "123456", username: "valerio",
+        firstName: "Valerio" }
       }
     ) {
       user {

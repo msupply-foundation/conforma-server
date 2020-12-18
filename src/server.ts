@@ -39,7 +39,7 @@ const startServer = async () => {
     return reply.sendFile(filename)
   })
 
-  server.get('/userPermissions', routeUserPermissions)
+  server.get('/userInfo', routeUserPermissions)
   server.post('/login', routeLogin)
 
   // File upload endpoint
