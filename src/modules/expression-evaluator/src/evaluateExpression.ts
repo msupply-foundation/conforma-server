@@ -88,6 +88,9 @@ export default async function evaluateExpression(
           throw new Error("Can't resolve object")
         }
 
+      case 'stringSubstitution':
+        return 'Not implemented yet'
+
       case 'API':
         let url, urlWithQuery, queryFields, queryValues: string[], returnProperty
         try {

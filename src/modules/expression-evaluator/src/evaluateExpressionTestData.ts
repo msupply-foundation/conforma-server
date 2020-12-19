@@ -527,6 +527,65 @@ testData.singleApplicationProperty_depth2 = {
   children: ['application.questions.q2'],
 }
 
+// String substitution
+
+testData.stringSubstitutionSingle = {
+  operator: 'stringSubstitution',
+  children: ['Hello, %1, welcome to our site.', 'friend'],
+}
+
+testData.stringSubstitutionMultiple = {
+  operator: 'stringSubstitution',
+  children: [
+    'There are %1 kinds of people in the world:\nthose who understand %2 and those who %3',
+    '10',
+    { value: 'binary' },
+    "don't",
+  ],
+}
+testData.stringSubstitutionNonStringReplacements = {
+  operator: 'stringSubstitution',
+  children: ['We have %1 people listed: %2', 2, { value: ['Boba', 'Mando'] }],
+}
+
+testData.stringSubstitutionTooManyReplacements = {
+  operator: 'stringSubstitution',
+  children: ['The price of milk is %1 per %2', '$2.30', 'liter', 'gallon', '$5.00'],
+}
+
+testData.stringSubstitutionTooFewReplacements = {
+  operator: 'stringSubstitution',
+  children: ["The applicant's name is %1 %2 %3.", 'Carl', 'Smith'],
+}
+
+testData.stringSubstitutionParametersNonOrdered = {
+  operator: 'stringSubstitution',
+  children: ['%2 out of every %3 people are %1', 'stupid', 'Two', 3],
+}
+
+testData.stringSubstitutionParametersNonOrderedAndTooFew = {
+  operator: 'stringSubstitution',
+  children: ['%2 out of every %3 people are %1', 'stupid', 'Two'],
+}
+
+testData.stringSubstitutionIgnoreLiteral = {
+  operator: 'stringSubstitution',
+  children: [
+    `We don't want \%2 to be replaced but we do want %1 to be replaced, and we want there to be a single \\ here.`,
+    'this',
+  ],
+}
+testData.stringSubstitutionParametersNotSequential = {
+  operator: 'stringSubstitution',
+  children: [
+    `It shouldn't matter if %10 are big %100 between %101 %200`,
+    'there',
+    'gaps',
+    'parameter',
+    'numbers',
+  ],
+}
+
 // API operator
 
 testData.APIisUnique = {
