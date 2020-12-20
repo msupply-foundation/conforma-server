@@ -92,13 +92,15 @@ export default async function evaluateExpression(
         const origString: string = childrenResolved[0]
         const replacements = childrenResolved.slice(1)
         const regex = /(?<![\\])%([\d]+)/g
-        const parameters = origString.match(regex) || []
-        const orderedReplacements = parameters
-          .map((param, index) => [Number(param.slice(1)), replacements[index]])
-          .sort((a, b) => a[0] - b[0])
-          .map((pair) => (pair[1] ? pair[1] : ''))
+        const parameters = (origString.match(regex) || []).sort(
+          (a, b) => Number(a.slice(1)) - Number(b.slice(1))
+        )
         let i = 0
-        return origString.replace(regex, () => orderedReplacements[i++])
+        return parameters.reduce(
+          (outputString, param) =>
+            outputString.replace(param, replacements[i] ? replacements[i++] : ''),
+          origString
+        )
 
       case 'API':
         let url, urlWithQuery, queryFields, queryValues: string[], returnProperty
