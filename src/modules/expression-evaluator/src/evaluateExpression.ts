@@ -89,20 +89,16 @@ export default async function evaluateExpression(
         }
 
       case 'stringSubstitution':
-        const origString = childrenResolved[0]
+        const origString: string = childrenResolved[0]
         const replacements = childrenResolved.slice(1)
-        const parameters = [...origString.matchAll(/(?<![\\])%([\d]+)/g)].sort(
-          (a, b) => Number(a[1]) - Number(b[1])
-        )
-        const zippedParametersReplacements = parameters.map((param, index) => [
-          param[0],
-          replacements[index],
-        ])
-
-        return zippedParametersReplacements.reduce(
-          (outputString, [param, replacement]) => outputString.replace(param, replacement),
-          origString
-        )
+        const regex = /(?<![\\])%([\d]+)/g
+        const parameters = origString.match(regex) || []
+        const orderedReplacements = parameters
+          .map((param, index) => [Number(param.slice(1)), replacements[index]])
+          .sort((a, b) => a[0] - b[0])
+          .map((pair) => (pair[1] ? pair[1] : ''))
+        let i = 0
+        return origString.replace(regex, () => orderedReplacements[i++])
 
       case 'API':
         let url, urlWithQuery, queryFields, queryValues: string[], returnProperty

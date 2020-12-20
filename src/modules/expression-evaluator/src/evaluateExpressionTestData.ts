@@ -543,6 +543,7 @@ testData.stringSubstitutionMultiple = {
     "don't",
   ],
 }
+
 testData.stringSubstitutionNonStringReplacements = {
   operator: 'stringSubstitution',
   children: ['We have %1 people listed: %2', 2, { value: ['Boba', 'Mando'] }],
