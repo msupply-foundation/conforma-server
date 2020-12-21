@@ -157,14 +157,11 @@ application = {
 
 ## stringSubstitution
 
-_(Not yet implemented)_
-
-Replaces placeholder parameters (`$1`, `$2`, etc) in strings with values supplied during evaluation.
+Replaces placeholder parameters (`%1`, `%2`, etc) in strings with values supplied during evaluation.
 
 - Input:
 
-  - 1st child node returns a **string** containing a parameterized query (e.g.`"Hello %1, welcome to our application!"` )  
-    Parameters can be written in either percent (`%1, %2`) or dollar-sign (`$1, $2`) notation
+  - 1st child node returns a **string** containing a parameterized query (e.g.`"Hello %1, welcome to our application!"` )
   - 2nd...N nodes provide the replacement **strings** for the parameters in the first string.
 
   **Example**:
