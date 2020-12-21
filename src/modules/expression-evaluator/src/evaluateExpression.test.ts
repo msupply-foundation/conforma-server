@@ -317,17 +317,9 @@ test('String substitution - parameters not ordered', () => {
 test('String substitution - parameters not ordered and too few', () => {
   return evaluateExpression(testData.stringSubstitutionParametersNonOrderedAndTooFew).then(
     (result: any) => {
-      expect(result).toBe('Two out of every %3 people are stupid')
+      expect(result).toBe('Two out of every  people are stupid')
     }
   )
-})
-
-test('String substitution - ignore literals', () => {
-  return evaluateExpression(testData.stringSubstitutionIgnoreLiteral).then((result: any) => {
-    expect(result).toBe(
-      `We don't want %2 to be replaced but we do want this to be replaced, and we want there to be a single \ here.`
-    )
-  })
 })
 
 test('String substitution - parameters not sequential', () => {
@@ -336,6 +328,18 @@ test('String substitution - parameters not sequential', () => {
       expect(result).toBe(`It shouldn't matter if there are big gaps between parameter numbers`)
     }
   )
+})
+
+test('String substitution - no parameters', () => {
+  return evaluateExpression(testData.stringSubstitutionNoParameters).then((result: any) => {
+    expect(result).toBe('This sentence has no replacements.')
+  })
+})
+
+test('String substitution - no replacements supplied', () => {
+  return evaluateExpression(testData.stringSubstitutionNoReplacements).then((result: any) => {
+    expect(result).toBe('Your name is   but we have nothing to replace them with')
+  })
 })
 
 // API operator

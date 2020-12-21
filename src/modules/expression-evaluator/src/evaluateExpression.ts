@@ -91,16 +91,14 @@ export default async function evaluateExpression(
       case 'stringSubstitution':
         const origString: string = childrenResolved[0]
         const replacements = childrenResolved.slice(1)
-        const regex = /(?<![\\])%([\d]+)/g
+        const regex = /%([\d]+)/g // To-Do: handle escaping literal values
         const parameters = (origString.match(regex) || []).sort(
           (a, b) => Number(a.slice(1)) - Number(b.slice(1))
         )
         let i = 0
-        return parameters.reduce(
-          (outputString, param) =>
-            outputString.replace(param, replacements[i] ? replacements[i++] : ''),
-          origString
-        )
+        return parameters.reduce((outputString, param) => {
+          return outputString.replace(param, replacements[i] ? replacements[i++] : '')
+        }, origString)
 
       case 'API':
         let url, urlWithQuery, queryFields, queryValues: string[], returnProperty

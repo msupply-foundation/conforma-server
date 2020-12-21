@@ -569,13 +569,6 @@ testData.stringSubstitutionParametersNonOrderedAndTooFew = {
   children: ['%2 out of every %3 people are %1', 'stupid', 'Two'],
 }
 
-testData.stringSubstitutionIgnoreLiteral = {
-  operator: 'stringSubstitution',
-  children: [
-    `We don't want \%2 to be replaced but we do want %1 to be replaced, and we want there to be a single \\ here.`,
-    'this',
-  ],
-}
 testData.stringSubstitutionParametersNotSequential = {
   operator: 'stringSubstitution',
   children: [
@@ -585,6 +578,16 @@ testData.stringSubstitutionParametersNotSequential = {
     'parameter',
     'numbers',
   ],
+}
+
+testData.stringSubstitutionNoParameters = {
+  operator: 'stringSubstitution',
+  children: ['This sentence has no replacements.', 'nothing', 'will', 'happen'],
+}
+
+testData.stringSubstitutionNoReplacements = {
+  operator: 'stringSubstitution',
+  children: ['Your name is %2 %1 but we have nothing to replace them with'],
 }
 
 // API operator
