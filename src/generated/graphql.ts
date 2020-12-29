@@ -2180,6 +2180,7 @@ export type ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput = {
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -10439,6 +10440,7 @@ export type ReviewAssignmentStageIdFkeyTemplateStageCreateInput = {
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -13777,6 +13779,7 @@ export type TemplateStage = Node & {
   id: Scalars['Int'];
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   /** Reads a single `Template` that is related to this `TemplateStage`. */
   template?: Maybe<Template>;
@@ -13821,6 +13824,8 @@ export type TemplateStageCondition = {
   number?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `title` field. */
   title?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
 };
@@ -13833,6 +13838,8 @@ export type TemplateStageFilter = {
   number?: Maybe<IntFilter>;
   /** Filter by the object’s `title` field. */
   title?: Maybe<StringFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: Maybe<StringFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationStageHistoriesByStageId` relation. */
@@ -13860,6 +13867,7 @@ export type TemplateStageInput = {
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -13928,6 +13936,7 @@ export type TemplateStagePatch = {
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -13965,6 +13974,8 @@ export enum TemplateStagesOrderBy {
   NumberDesc = 'NUMBER_DESC',
   TitleAsc = 'TITLE_ASC',
   TitleDesc = 'TITLE_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -14033,6 +14044,7 @@ export type TemplateStageTemplateIdFkeyTemplateStageCreateInput = {
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
@@ -16743,6 +16755,7 @@ export type UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHisto
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -16754,6 +16767,7 @@ export type UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyP
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
@@ -16765,6 +16779,7 @@ export type UpdateTemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyPatc
   id?: Maybe<Scalars['Int']>;
   number?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
@@ -21806,6 +21821,7 @@ export type TemplateStageResolvers<ContextType = any, ParentType extends Resolve
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   number?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationStageHistoriesByStageId?: Resolver<ResolversTypes['ApplicationStageHistoriesConnection'], ParentType, ContextType, RequireFields<TemplateStageApplicationStageHistoriesByStageIdArgs, 'orderBy'>>;
