@@ -13,6 +13,13 @@ const queries = [
           code: "TestRego"
           name: "Test -- General Registration"
           isLinear: false
+          startTitle: "This is the general registration for feature showcase"
+          startMessage: 
+            """Proof of identity (Passport, Drivers license)\n
+            Proof of your medical certification\n
+            Drug ingredient list\n
+            Product images\n
+            Packging images\n"""
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -618,6 +625,11 @@ const queries = [
           name: "Company Registration"
           isLinear: false
           status: AVAILABLE
+          startTitle: "you will need the following documents ready for upload"
+          startMessage: 
+            """Proof of Company name\n
+            Proof of company address\n
+            Bank account statement\n"""
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -729,7 +741,9 @@ const queries = [
                       title: "Intro Section 2 - Page 1/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { label: "Company location" }
+                      parameters: {
+                        title: "Company location"
+                      }
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -867,7 +881,9 @@ const queries = [
                       title: "Intro Section 1 - Page 1/1"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "Company staff details" }
+                      parameters: { 
+                        title: "Company staff details"
+                      }
                     }
                     {
                       code: "S3Q1"
@@ -956,6 +972,7 @@ const queries = [
         template: {
           code: "UserRegistration"
           name: "User Registration"
+          submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm"
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
