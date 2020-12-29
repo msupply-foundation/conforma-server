@@ -28,7 +28,11 @@ The `submission_message` has a default general message set, that will always be 
 
 ### template stage
 
-There is one or more stages per application template. Each one is defined as a new record that point to `template_id` with the `number` of this stage (1, 2, 3, ...) and title can be anything, but typically would be: `'Screening'`, `'Assessment'`, `'Final Stage'`.
+There is one or more stages per application template. Each one is defined as a new record that point to `template_id` with the `number` of this stage (1, 2, 3, ...).
+
+The `title` is dynamic, but typically would be: `'Screening'`, `'Assessment'`, `'Final Stage'`.
+
+The `description` should also be defined and displayed to the user at the Submission page.
 
 ### template sections
 
