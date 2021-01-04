@@ -1499,7 +1499,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "reviewer1@sussol.net", passwordHash: "1234", username: "testReviewer1",
+        user: { email: "reviewer1@sussol.net", passwordHash: "123456", username: "testReviewer1",
         firstName: "Mr", lastName: "Reviewer 1" }
       }
     ) {
@@ -1509,7 +1509,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "reviewer2@sussol.net", passwordHash: "1234", username: "testReviewer2",
+        user: { email: "reviewer2@sussol.net", passwordHash: "123456", username: "testReviewer2",
         firstName: "Mrs", lastName: "Reviewer 2" }
       }
     ) {
@@ -1519,7 +1519,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "assigner@sussol.net", passwordHash: "1234", username: "testAssigner",
+        user: { email: "assigner@sussol.net", passwordHash: "123456", username: "testAssigner",
         firstName: "Ms", lastName: "Assigner" }
       }
     ) {
@@ -1616,7 +1616,7 @@ const queries = [
                 templateElementToTemplateElementId: { connectById: { id: 5 } }
               }
               {
-                value: { text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220" }
+                value: { text: "123456" }
                 templateElementToTemplateElementId: { connectById: { id: 6 } }
               }
               {
@@ -1716,7 +1716,7 @@ const queries = [
                   templateElementToTemplateElementId: { connectById: { id: 5 } }
                 }
                 {
-                  value: { text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220" }
+                  value: { text: "123456" }
                   templateElementToTemplateElementId: { connectById: { id: 6 } }
                 }
                 {
