@@ -739,9 +739,7 @@ const queries = [
                       title: "Intro Section 2 - Page 1/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: {
-                        title: "Company location"
-                      }
+                      parameters: { title: "Company location" }
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -879,9 +877,7 @@ const queries = [
                       title: "Intro Section 1 - Page 1/1"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { 
-                        title: "Company staff details"
-                      }
+                      parameters: { title: "Company staff details" }
                     }
                     {
                       code: "S3Q1"
