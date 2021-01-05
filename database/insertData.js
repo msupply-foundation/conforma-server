@@ -6,9 +6,7 @@ const graphQLendpoint = config.graphQLendpoint
 
 const queries = [
   // Template A -- Test - General Registration (Feature showcase)
-  `
-
-  mutation {
+  `mutation {
     createTemplate(
       input: {
         template: {
@@ -16,7 +14,7 @@ const queries = [
           name: "Test -- General Registration"
           isLinear: false
           startMessage: """
-          ## This is the general registration for feature showcase\n- Proof of identity (Passport, Drivers license)\n- Proof of your medical certification\n- Drug ingredient list\n- Product images\n- Packging images\n
+          ## This is the general registration for feature showcase\n- Proof of identity (Passport, Drivers license)\n- Proof of your medical certification\n- Drug ingredient list\n- Product images\n- Packging images
           """
           status: AVAILABLE
           versionTimestamp: "NOW()"
