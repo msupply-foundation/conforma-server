@@ -13,13 +13,12 @@ const queries = [
           code: "TestRego"
           name: "Test -- General Registration"
           isLinear: false
-          startTitle: "This is the general registration for feature showcase"
-          startMessage: 
-            """Proof of identity (Passport, Drivers license)\n
-            Proof of your medical certification\n
-            Drug ingredient list\n
-            Product images\n
-            Packging images\n"""
+          startMessage: "## This is the general registration for feature showcase
+          - Proof of identity (Passport, Drivers license)
+          - Proof of your medical certification
+          - Drug ingredient list
+          - Product images
+          - Packging images"
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -625,11 +624,10 @@ const queries = [
           name: "Company Registration"
           isLinear: false
           status: AVAILABLE
-          startTitle: "you will need the following documents ready for upload"
-          startMessage: 
-            """Proof of Company name\n
-            Proof of company address\n
-            Bank account statement\n"""
+          startMessage: "## You will need the following documents ready for upload
+            - Proof of Company name
+            - Proof of company address
+            - Bank account statement"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
