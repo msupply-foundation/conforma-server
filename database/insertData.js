@@ -16,8 +16,12 @@ const queries = [
           startMessage: {
             operator: "CONCAT"
             children: [
-              "# Hi User\\n"
-              "## This is the general registration for feature showcase\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
+              "## This is the general registration for feature showcase\\nHi, "
+              {
+                operator: "objectProperties"
+                children: [{ value: { property: "firstName" } }]
+              }
+              ". You will need to provide:\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
             ]
           }
           status: AVAILABLE
