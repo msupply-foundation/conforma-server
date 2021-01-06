@@ -609,8 +609,7 @@ const queries = [
         }
       }
     }
-  }
-  `,
+ }`,
   // Template B - Company Registration
   `mutation {
     createTemplate(
