@@ -13,7 +13,13 @@ const queries = [
           code: "TestRego"
           name: "Test -- General Registration"
           isLinear: false
-          startMessage: "## This is the general registration for feature showcase\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
+          startMessage: {
+            operator: "CONCAT"
+            children: [
+              "# Hi User"
+              "## This is the general registration for feature showcase\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
+            ]
+          }
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -609,7 +615,7 @@ const queries = [
         }
       }
     }
- }`,
+  }`,
   // Template B - Company Registration
   `mutation {
     createTemplate(
