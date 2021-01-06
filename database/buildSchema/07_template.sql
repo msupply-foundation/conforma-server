@@ -7,9 +7,8 @@ CREATE TABLE public.template (
     name varchar,
     code varchar NOT NULL,
     is_linear boolean DEFAULT true,
-    start_title varchar,
-    start_message varchar,
+    start_message jsonb,
     status public.template_status,
-    submission_message varchar DEFAULT 'Thank you! Your application has been submitted.',
+    submission_message jsonb DEFAULT '{"value": "Thank you! Your application has been submitted."}'::jsonb,
     version_timestamp timestamptz
 );

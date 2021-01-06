@@ -13,13 +13,7 @@ const queries = [
           code: "TestRego"
           name: "Test -- General Registration"
           isLinear: false
-          startTitle: "This is the general registration for feature showcase"
-          startMessage: 
-            """Proof of identity (Passport, Drivers license)\n
-            Proof of your medical certification\n
-            Drug ingredient list\n
-            Product images\n
-            Packging images\n"""
+          startMessage: "## This is the general registration for feature showcase\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -623,7 +617,7 @@ const queries = [
         }
       }
     }
-  }`,
+ }`,
   // Template B - Company Registration
   `mutation {
     createTemplate(
@@ -633,11 +627,7 @@ const queries = [
           name: "Company Registration"
           isLinear: false
           status: AVAILABLE
-          startTitle: "you will need the following documents ready for upload"
-          startMessage: 
-            """Proof of Company name\n
-            Proof of company address\n
-            Bank account statement\n"""
+          startMessage: "## You will need the following documents ready for upload\\n- Proof of Company name\\n- Proof of company address\\n- Bank account statement"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -749,9 +739,7 @@ const queries = [
                       title: "Intro Section 2 - Page 1/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: {
-                        title: "Company location"
-                      }
+                      parameters: { title: "Company location" }
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -889,9 +877,7 @@ const queries = [
                       title: "Intro Section 1 - Page 1/1"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { 
-                        title: "Company staff details"
-                      }
+                      parameters: { title: "Company staff details" }
                     }
                     {
                       code: "S3Q1"

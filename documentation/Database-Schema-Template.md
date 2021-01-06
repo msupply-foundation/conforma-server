@@ -20,9 +20,11 @@ The `name` is what users of the system will see as the "Application Type" -- e.g
 
 The `is_linear` is used to define the applications flow. If linear it is require each page to be complete before allowing the user to move to the next one. If not the user can go to any page, and only when trying to go to the summary page would be required that all required fields have been completed.
 
-The `start_title` and `start_message` are optional and would define if the application should have a start page or not (when both are Null). In case it is defined the start page is showed when the user clicks on the application in the list or when the user wants to start one.
+The `start_message`, optional JSON field **\***. When is defined the application shows a start page otherwise not. In case it is defined the start page is showed when the user clicks on the application in the list or when the user wants to start a new one.
 
-The `submission_message` has a default general message set, that will always be displayed after the application has been submitted, a specific submission message can be defined per template.
+The `submission_message`, optional JSON field **\***. It has a default general message set that will always be displayed after the application has been submitted, but a specific submission message can be defined per template.
+
+**\*** The `JSON field` is an evaluator expression that returns a markdown string. (Query evaluation not yet implemented)
 
 **To be considered: Should we check if no applications are associated with an existing template and just add changes to the current version instead?**
 
