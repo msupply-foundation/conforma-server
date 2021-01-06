@@ -16,7 +16,7 @@ const queries = [
           startMessage: {
             operator: "CONCAT"
             children: [
-              "# Hi User"
+              "# Hi User\\n"
               "## This is the general registration for feature showcase\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
             ]
           }
