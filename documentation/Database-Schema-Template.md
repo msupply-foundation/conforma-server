@@ -12,11 +12,19 @@ The sections and questions required in each stage of an application is defined i
 
 Representation of the application template. All nested elements are accessible via joined tables and can be created or queried in the same call using the GraphQL engine.
 
-Whenever a template is modified, the new version is saved as a new template record with a new `version_timestamp`. Different versions of the same base template are connected with the same `code`. The `status` field is used to indicate which version is the current active one.
+Whenever a template is modified, the new version is saved as a new template record with a new `version_timestamp`. Different versions of the same base template are connected with the same `code`. The `status` field is used to indicate which version is the current available one.
+
+The `status` can be `'Draft'`, `'Available'` or `'Disabled'`. The version currently active in the system is the one (and only one) marked `'Available'`.
 
 The `name` is what users of the system will see as the "Application Type" -- e.g. "Drug Registration".
 
-The `status` can be `'Draft'`, `'Available'` or `'Disabled'`. The version currently active in the system is the one (and only one) marked `'Available'`.
+The `is_linear` is used to define the applications flow. If linear it is require each page to be complete before allowing the user to move to the next one. If not the user can go to any page, and only when trying to go to the summary page would be required that all required fields have been completed.
+
+The `start_message`, optional JSON field **\***. When is defined the application shows a start page otherwise not. In case it is defined the start page is showed when the user clicks on the application in the list or when the user wants to start a new one.
+
+The `submission_message`, optional JSON field **\***. It has a default general message set that will always be displayed after the application has been submitted, but a specific submission message can be defined per template.
+
+**\*** The `JSON field` is an evaluator expression that returns a markdown string. (Query evaluation not yet implemented)
 
 **To be considered: Should we check if no applications are associated with an existing template and just add changes to the current version instead?**
 
