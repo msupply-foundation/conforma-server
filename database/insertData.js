@@ -19,7 +19,7 @@ const queries = [
               "## This is the general registration for feature showcase\\nHi, "
               {
                 operator: "objectProperties"
-                children: [{ value: { property: "firstName" } }]
+                children: ["currentUser.firstName"]
               }
               ". You will need to provide:\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
             ]
@@ -461,14 +461,14 @@ const queries = [
               }
             ]
           }
-          templateStagesUsingId: { 
+          templateStagesUsingId: {
             create: [
-              { 
+              {
                 number: 1
-                title: "Automatic" 
+                title: "Automatic"
                 description: "Please check your email to confirm your account."
               }
-            ] 
+            ]
           }
           templateActionsUsingId: {
             create: [
