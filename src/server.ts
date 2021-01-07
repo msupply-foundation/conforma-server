@@ -13,7 +13,7 @@ import {
 } from './components/fileHandler'
 import { getAppRootDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
-// import PostgresDB from './components/postgresConnect'
+import config from './config.json'
 
 // Bare-bones Fastify server
 
@@ -98,7 +98,7 @@ const startServer = async () => {
     }
   })
 
-  server.listen(8080, (err, address) => {
+  server.listen(config.RESTport, (err, address) => {
     if (err) {
       console.error(err)
       process.exit(1)

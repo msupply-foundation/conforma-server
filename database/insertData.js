@@ -2163,4 +2163,15 @@ const loopQueries = async () => {
   }
 }
 
-loopQueries()
+const insertData = async () => {
+  await loopQueries()
+  await fetch(`http://localhost:${config.RESTport}/updateRowPolicies`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  })
+}
+
+insertData()

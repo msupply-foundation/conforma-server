@@ -1,8 +1,9 @@
 // Test suite for Fastify server endpoints
 const fetch = require('node-fetch')
+const config = require('config.json')
 
 // Config
-const baseURL = 'http://localhost:8080/'
+const baseURL = `http://localhost:${config.RESTport}/`
 
 const getRequest = async (url: string) => {
   const response = await fetch(url)
