@@ -472,7 +472,15 @@ const queries = [
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: { 
+            create: [
+              { 
+                number: 1
+                title: "Automatic" 
+                description: "Please check your email to confirm your account."
+              }
+            ] 
+          }
           templateActionsUsingId: {
             create: [
               {
@@ -900,8 +908,16 @@ const queries = [
           }
           templateStagesUsingId: {
             create: [
-              { number: 1, title: "Screening" }
-              { number: 2, title: "Assessment" }
+              { 
+                number: 1
+                title: "Screening"
+                description: "This application will go through the Screening stage before it can be accessed."
+              }
+              { 
+                number: 2
+                title: "Assessment"
+                description: "This phase is where your documents will be revised before the application can get the final approval."
+              }
             ]
           }
           templateActionsUsingId: {
@@ -968,7 +984,7 @@ const queries = [
         template: {
           code: "UserRegistration"
           name: "User Registration"
-          submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm"
+          submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm."
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -1090,7 +1106,14 @@ const queries = [
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: { 
+            create: [
+              { 
+                number: 1
+                title: "Automatic"
+              }
+            ] 
+          }
           templateActionsUsingId: {
             create: [
               {
@@ -1377,8 +1400,16 @@ const queries = [
           }
           templateStagesUsingId: {
             create: [
-              { number: 1, title: "Screening" }
-              { number: 2, title: "Assessment" }
+              { 
+                number: 1
+                title: "Screening"
+                description: "This application will go through the Screening stage before it can be accessed."
+              }
+              { 
+                number: 2
+                title: "Assessment"
+                description: "This phase is where your documents will be revised before the application can get the final approval."
+              }
             ]
           }
           templateActionsUsingId: {
