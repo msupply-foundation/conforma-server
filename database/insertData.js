@@ -13,6 +13,7 @@ const queries = [
           code: "TestRego"
           name: "Test -- General Registration"
           isLinear: false
+          startMessage: "## This is the general registration for feature showcase\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -56,7 +57,7 @@ const queries = [
                             children: [
                               {
                                 operator: "objectProperties"
-                                children: [{ value: { property: "Q1.text" } }]
+                                children: ["responses.Q1.text"]
                               }
                               { value: null }
                             ]
@@ -66,7 +67,7 @@ const queries = [
                             children: [
                               {
                                 operator: "objectProperties"
-                                children: [{ value: { property: "Q1.text" } }]
+                                children: ["responses.Q1.text"]
                               }
                               { value: "" }
                             ]
@@ -80,7 +81,7 @@ const queries = [
                           children: [
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q1.text" } }]
+                              children: ["responses.Q1.text"]
                             }
                             ", what is your last name?"
                           ]
@@ -100,20 +101,12 @@ const queries = [
                             "Current User: "
                             {
                               operator: "objectProperties"
-                              children: [
-                                {
-                                  value: { objectIndex: 1, property: "firstName" }
-                                }
-                              ]
+                              children: ["currentUser.firstName"]
                             }
                             " "
                             {
                               operator: "objectProperties"
-                              children: [
-                                {
-                                  value: { objectIndex: 1, property: "lastName" }
-                                }
-                              ]
+                              children: ["currentUser.lastName"]
                             }
                           ]
                         }
@@ -123,12 +116,12 @@ const queries = [
                             "The new user's name is: "
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q1.text" } }]
+                              children: ["responses.Q1.text"]
                             }
                             " "
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q2.text" } }]
+                              children: ["responses.Q2.text"]
                             }
                           ]
                         }
@@ -145,7 +138,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q1.text" } }]
+                            children: ["responses.Q1.text"]
                           }
                           { value: "" }
                         ]
@@ -158,7 +151,7 @@ const queries = [
                           { value: "username" }
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: "unique" }
                         ]
@@ -177,7 +170,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           {
                             value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
@@ -198,7 +191,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: "^[\\\\S]{8,}$" }
                         ]
@@ -224,22 +217,21 @@ const queries = [
                           operator: "CONCAT"
                           type: "array"
                           children: [
-                            []
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q1.text" } }]
+                              children: ["responses.Q1.text"]
                             }
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q2.text" } }]
+                              children: ["responses.Q2.text"]
                             }
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q3.text" } }]
+                              children: ["responses.Q3.text"]
                             }
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q4.text" } }]
+                              children: ["responses.Q4.text"]
                             }
                           ]
                         }
@@ -279,7 +271,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q6.text" } }]
+                            children: ["responses.Q6.text"]
                           }
                           { value: "Manufacturer" }
                         ]
@@ -306,7 +298,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q6.text" } }]
+                            children: ["responses.Q6.text"]
                           }
                           { value: "Distributor" }
                         ]
@@ -334,7 +326,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q6.text" } }]
+                            children: ["responses.Q6.text"]
                           }
                           { value: "Importer" }
                         ]
@@ -388,7 +380,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q11.text" } }]
+                            children: ["responses.Q11.text"]
                           }
                           { value: "magicword" }
                         ]
@@ -401,14 +393,12 @@ const queries = [
                             "You chose "
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "Q10.text" } }]
+                              children: ["responses.Q10.text"]
                             }
                             " (index number "
                             {
                               operator: "objectProperties"
-                              children: [
-                                { value: { property: "Q10.optionIndex" } }
-                              ]
+                              children: ["responses.Q10.optionIndex"]
                             }
                             ") in the API lookup"
                           ]
@@ -447,7 +437,7 @@ const queries = [
                           "Other"
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q12.text" } }]
+                            children: ["responses.Q12.text"]
                           }
                         ]
                       }
@@ -461,7 +451,15 @@ const queries = [
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: { 
+            create: [
+              { 
+                number: 1
+                title: "Automatic" 
+                description: "Please check your email to confirm your account."
+              }
+            ] 
+          }
           templateActionsUsingId: {
             create: [
               {
@@ -470,7 +468,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                 }
               }
@@ -491,23 +489,23 @@ const queries = [
                 parameterQueries: {
                   first_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q1.text" } }]
+                    children: ["applicationData.responses.Q1.text"]
                   }
                   last_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q2.text" } }]
+                    children: ["applicationData.responses.Q2.text"]
                   }
                   username: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q3.text" } }]
+                    children: ["applicationData.responses.Q3.text"]
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q5.text" } }]
+                    children: ["applicationData.responses.Q5.text"]
                   }
                   email: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q4.text" } }]
+                    children: ["applicationData.responses.Q4.text"]
                   }
                 }
               }
@@ -518,7 +516,7 @@ const queries = [
                 parameterQueries: {
                   username: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q3.text" } }]
+                    children: ["applicationData.responses.Q3.text"]
                   }
                   permissionNames: { value: ["applyCompanyRego"] }
                 }
@@ -530,7 +528,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newStatus: { value: "Completed" }
                 }
@@ -542,7 +540,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newOutcome: { value: "Approved" }
                 }
@@ -558,16 +556,12 @@ const queries = [
                       { value: "Output concatenation: The user " }
                       {
                         operator: "objectProperties"
-                        children: [
-                          { value: { objectIndex: 1, property: "username" } }
-                        ]
+                        children: ["output.username"]
                       }
                       { value: "'s registration has been " }
                       {
                         operator: "objectProperties"
-                        children: [
-                          { value: { objectIndex: 1, property: "newOutcome" } }
-                        ]
+                        children: ["output.newOutcome"]
                       }
                     ]
                   }
@@ -608,7 +602,7 @@ const queries = [
         }
       }
     }
-  }`,
+ }`,
   // Template B - Company Registration
   `mutation {
     createTemplate(
@@ -618,6 +612,7 @@ const queries = [
           name: "Company Registration"
           isLinear: false
           status: AVAILABLE
+          startMessage: "## You will need the following documents ready for upload\\n- Proof of Company name\\n- Proof of company address\\n- Bank account statement"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -649,7 +644,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: ".+" }
                         ]
@@ -706,7 +701,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: ["responses.S1Q3.text"]
                           }
                           { value: "International" }
                         ]
@@ -729,13 +724,13 @@ const queries = [
                       title: "Intro Section 2 - Page 1/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { label: "Company location" }
+                      parameters: { title: "Company location" }
                       visibilityCondition: {
                         operator: "="
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: ["responses.S1Q3.text"]
                           }
                           { value: "National" }
                         ]
@@ -752,7 +747,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: ".+" }
                         ]
@@ -764,7 +759,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: ["responses.S1Q3.text"]
                           }
                           { value: "National" }
                         ]
@@ -781,7 +776,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: ".+" }
                         ]
@@ -793,7 +788,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: ["responses.S1Q3.text"]
                           }
                           { value: "National" }
                         ]
@@ -825,7 +820,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: ".+" }
                         ]
@@ -844,7 +839,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: ".+" }
                         ]
@@ -888,8 +883,16 @@ const queries = [
           }
           templateStagesUsingId: {
             create: [
-              { number: 1, title: "Screening" }
-              { number: 2, title: "Assessment" }
+              { 
+                number: 1
+                title: "Screening"
+                description: "This application will go through the Screening stage before it can be accessed."
+              }
+              { 
+                number: 2
+                title: "Assessment"
+                description: "This phase is where your documents will be revised before the application can get the final approval."
+              }
             ]
           }
           templateActionsUsingId: {
@@ -900,7 +903,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: ["applicationData.record_id"]
                   }
                 }
               }
@@ -917,7 +920,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: ["applicationData.record_id"]
                   }
                   newStatus: { value: "Submitted" }
                 }
@@ -956,6 +959,7 @@ const queries = [
         template: {
           code: "UserRegistration"
           name: "User Registration"
+          submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm."
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -988,7 +992,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: ".+" }
                         ]
@@ -1018,7 +1022,7 @@ const queries = [
                           { value: "username" }
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: "unique" }
                         ]
@@ -1037,7 +1041,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           {
                             value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
@@ -1058,7 +1062,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: "^[\\\\S]{8,}$" }
                         ]
@@ -1077,7 +1081,14 @@ const queries = [
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: { 
+            create: [
+              { 
+                number: 1
+                title: "Automatic"
+              }
+            ] 
+          }
           templateActionsUsingId: {
             create: [
               {
@@ -1086,7 +1097,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                 }
               }
@@ -1097,23 +1108,23 @@ const queries = [
                 parameterQueries: {
                   first_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q1.text" } }]
+                    children: ["applicationData.responses.Q1.text"]
                   }
                   last_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q2.text" } }]
+                    children: ["applicationData.responses.Q2.text"]
                   }
                   username: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q3.text" } }]
+                    children: ["applicationData.responses.Q3.text"]
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q5.text" } }]
+                    children: ["applicationData.responses.Q5.text"]
                   }
                   email: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q4.text" } }]
+                    children: ["applicationData.responses.Q4.text"]
                   }
                 }
               }
@@ -1124,7 +1135,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newStatus: { value: "Completed" }
                 }
@@ -1136,7 +1147,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newOutcome: { value: "Approved" }
                 }
@@ -1221,7 +1232,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           {
                             value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
@@ -1250,7 +1261,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: "^[0-9]+$" }
                         ]
@@ -1337,7 +1348,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "thisResponse" } }]
+                            children: ["responses.thisResponse"]
                           }
                           { value: "^[0-9]+$" }
                         ]
@@ -1364,8 +1375,16 @@ const queries = [
           }
           templateStagesUsingId: {
             create: [
-              { number: 1, title: "Screening" }
-              { number: 2, title: "Assessment" }
+              { 
+                number: 1
+                title: "Screening"
+                description: "This application will go through the Screening stage before it can be accessed."
+              }
+              { 
+                number: 2
+                title: "Assessment"
+                description: "This phase is where your documents will be revised before the application can get the final approval."
+              }
             ]
           }
           templateActionsUsingId: {
@@ -1376,7 +1395,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                 }
               }
@@ -1387,7 +1406,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newStatus: { value: "Submitted" }
                 }
@@ -1404,7 +1423,7 @@ const queries = [
                 parameterQueries: {
                   reviewId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: ["applicationData.record_id"]
                   }
                   newStatus: { value: "Draft" }
                 }
@@ -1499,7 +1518,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "reviewer1@sussol.net", passwordHash: "1234", username: "testReviewer1",
+        user: { email: "reviewer1@sussol.net", passwordHash: "123456", username: "testReviewer1",
         firstName: "Mr", lastName: "Reviewer 1" }
       }
     ) {
@@ -1509,7 +1528,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "reviewer2@sussol.net", passwordHash: "1234", username: "testReviewer2",
+        user: { email: "reviewer2@sussol.net", passwordHash: "123456", username: "testReviewer2",
         firstName: "Mrs", lastName: "Reviewer 2" }
       }
     ) {
@@ -1519,7 +1538,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "assigner@sussol.net", passwordHash: "1234", username: "testAssigner",
+        user: { email: "assigner@sussol.net", passwordHash: "123456", username: "testAssigner",
         firstName: "Ms", lastName: "Assigner" }
       }
     ) {
@@ -1616,7 +1635,7 @@ const queries = [
                 templateElementToTemplateElementId: { connectById: { id: 5 } }
               }
               {
-                value: { text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220" }
+                value: { text: "123456" }
                 templateElementToTemplateElementId: { connectById: { id: 6 } }
               }
               {
@@ -1716,7 +1735,7 @@ const queries = [
                   templateElementToTemplateElementId: { connectById: { id: 5 } }
                 }
                 {
-                  value: { text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220" }
+                  value: { text: "123456" }
                   templateElementToTemplateElementId: { connectById: { id: 6 } }
                 }
                 {
