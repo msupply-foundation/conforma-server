@@ -901,7 +901,7 @@ const queries = [
               { 
                 number: 1
                 title: "Screening"
-                description: "This application will go trhought the screening stage before can be accessed."
+                description: "This application will go through the Screening stage before it can be accessed."
               }
               { 
                 number: 2
@@ -1393,7 +1393,7 @@ const queries = [
               { 
                 number: 1
                 title: "Screening"
-                description: "This application will go trhought the screening stage before can be accessed."
+                description: "This application will go through the Screening stage before it can be accessed."
               }
               { 
                 number: 2
