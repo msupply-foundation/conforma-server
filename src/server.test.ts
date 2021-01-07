@@ -1,6 +1,6 @@
 // Test suite for Fastify server endpoints
 const fetch = require('node-fetch')
-const config = require('config.json')
+const config = require('./config.json')
 
 // Config
 const baseURL = `http://localhost:${config.RESTport}/`

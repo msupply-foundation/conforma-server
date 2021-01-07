@@ -40,12 +40,13 @@ const remapObjectKeysWithPrefix = (prefix: string, object: Object) => {
     templatePermissionId: 4,
   }]
   out {
+    aud: 'postgraphile',
     userId: 1,
-    pp2pp3: true,
-    pp2pp3tp4: true,
-    pp2pp3tp4_templateId: 1,
-    pp2pp3tp4_restrictOne: 1,
-    pp2pp3tp4_restrictTwo: 2
+    pp2pn3: true,
+    pp2pn3tp4: true,
+    pp2pn3tp4_templateId: "1",
+    pp2pn3tp4_restrictOne: "1",
+    pp2pn3tp4_restrictTwo: "2"
   }
 */
 const compileJWT = (userInfo: UserInfo, templatePermissionRows: Array<PermissionRow>) => {
@@ -84,7 +85,6 @@ const updateRowPolicies = async () => {
   const existingPolicies = await databaseConnect.getAllGeneratedRowPolicies()
   // returns an array of 'CREATE POLICY' strings
   const newPolicies = generateRowLevelPolicies(permissionRows)
-  console.log({ newPolicies, permissionRows })
 
   // Deleting existing policies
 
@@ -257,7 +257,7 @@ const compileRowLevelPolicy = (
   const ruleSettings = ruleTypes[ruleType]
 
   if (!ruleSettings) {
-    console.log(`rule ${ruleType} does not exist, ignoring`)
+    console.warn(`rule ${ruleType} does not exist, ignoring`)
     return ''
   }
 
@@ -324,4 +324,4 @@ const replacePlaceholders = (sql: string, permissionAbbreviation: string) => {
   return resultSql
 }
 
-export { compileJWT, updateRowPolicies }
+export { compileJWT, updateRowPolicies, generateRowLevelPolicies }
