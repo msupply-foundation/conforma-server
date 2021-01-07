@@ -378,7 +378,8 @@ class PostgresDB {
 
   public getUserDataByUsername = async (username: string) => {
     const text = `
-      SELECT first_name as "firstName",
+      SELECT id,
+      first_name as "firstName",
       last_name as "lastName",
       username, date_of_birth as "dateOfBirth",
       email

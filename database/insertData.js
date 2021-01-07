@@ -13,6 +13,7 @@ const queries = [
           code: "TestRego"
           name: "Test -- General Registration"
           isLinear: false
+          startMessage: "## This is the general registration for feature showcase\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -450,7 +451,15 @@ const queries = [
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: { 
+            create: [
+              { 
+                number: 1
+                title: "Automatic" 
+                description: "Please check your email to confirm your account."
+              }
+            ] 
+          }
           templateActionsUsingId: {
             create: [
               {
@@ -593,7 +602,7 @@ const queries = [
         }
       }
     }
-  }`,
+ }`,
   // Template B - Company Registration
   `mutation {
     createTemplate(
@@ -603,6 +612,7 @@ const queries = [
           name: "Company Registration"
           isLinear: false
           status: AVAILABLE
+          startMessage: "## You will need the following documents ready for upload\\n- Proof of Company name\\n- Proof of company address\\n- Bank account statement"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -714,7 +724,7 @@ const queries = [
                       title: "Intro Section 2 - Page 1/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { label: "Company location" }
+                      parameters: { title: "Company location" }
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -873,8 +883,16 @@ const queries = [
           }
           templateStagesUsingId: {
             create: [
-              { number: 1, title: "Screening" }
-              { number: 2, title: "Assessment" }
+              { 
+                number: 1
+                title: "Screening"
+                description: "This application will go through the Screening stage before it can be accessed."
+              }
+              { 
+                number: 2
+                title: "Assessment"
+                description: "This phase is where your documents will be revised before the application can get the final approval."
+              }
             ]
           }
           templateActionsUsingId: {
@@ -941,6 +959,7 @@ const queries = [
         template: {
           code: "UserRegistration"
           name: "User Registration"
+          submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm."
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -1062,7 +1081,14 @@ const queries = [
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: { 
+            create: [
+              { 
+                number: 1
+                title: "Automatic"
+              }
+            ] 
+          }
           templateActionsUsingId: {
             create: [
               {
@@ -1349,8 +1375,16 @@ const queries = [
           }
           templateStagesUsingId: {
             create: [
-              { number: 1, title: "Screening" }
-              { number: 2, title: "Assessment" }
+              { 
+                number: 1
+                title: "Screening"
+                description: "This application will go through the Screening stage before it can be accessed."
+              }
+              { 
+                number: 2
+                title: "Assessment"
+                description: "This phase is where your documents will be revised before the application can get the final approval."
+              }
             ]
           }
           templateActionsUsingId: {
@@ -1484,7 +1518,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "reviewer1@sussol.net", passwordHash: "1234", username: "testReviewer1",
+        user: { email: "reviewer1@sussol.net", passwordHash: "123456", username: "testReviewer1",
         firstName: "Mr", lastName: "Reviewer 1" }
       }
     ) {
@@ -1494,7 +1528,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "reviewer2@sussol.net", passwordHash: "1234", username: "testReviewer2",
+        user: { email: "reviewer2@sussol.net", passwordHash: "123456", username: "testReviewer2",
         firstName: "Mrs", lastName: "Reviewer 2" }
       }
     ) {
@@ -1504,7 +1538,7 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "assigner@sussol.net", passwordHash: "1234", username: "testAssigner",
+        user: { email: "assigner@sussol.net", passwordHash: "123456", username: "testAssigner",
         firstName: "Ms", lastName: "Assigner" }
       }
     ) {
@@ -1601,7 +1635,7 @@ const queries = [
                 templateElementToTemplateElementId: { connectById: { id: 5 } }
               }
               {
-                value: { text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220" }
+                value: { text: "123456" }
                 templateElementToTemplateElementId: { connectById: { id: 6 } }
               }
               {
@@ -1701,7 +1735,7 @@ const queries = [
                   templateElementToTemplateElementId: { connectById: { id: 5 } }
                 }
                 {
-                  value: { text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220" }
+                  value: { text: "123456" }
                   templateElementToTemplateElementId: { connectById: { id: 6 } }
                 }
                 {
