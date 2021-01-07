@@ -1,44 +1,25 @@
 SET check_function_bodies = false;
 
 --
--- Name: jwt_check_policy(text); Type: FUNCTION; Schema: public; Owner: -
+-- Name: jwt_check_text(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.jwt_check_policy(policy_name text) RETURNS boolean
-    LANGUAGE sql STABLE
-    AS $_$
-  select COALESCE(jwt_get_key('policy_' || $1)::bool, false);
-$_$;
-
+create function jwt_get_text(jwt_key text) returns text as $$
+  select COALESCE(current_setting('jwt.claims.' || $1, true)::text, '')
+$$ language sql stable;
 
 --
--- Name: jwt_get_key(text); Type: FUNCTION; Schema: public; Owner: -
+-- Name: jwt_check_boolean(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.jwt_get_key(jwt_key text) RETURNS text
-    LANGUAGE sql STABLE
-    AS $_$
-  select current_setting('jwt.claims.' || $1, true)
-$_$;
-
+create function jwt_get_boolean(jwt_key text) returns boolean as $$
+  select COALESCE(current_setting('jwt.claims.' || $1, true)::bool, false)
+$$ language sql stable;
 
 --
--- Name: jwt_get_policy_links_as_setof_text(text); Type: FUNCTION; Schema: public; Owner: -
+-- Name: jwt_check_bigint(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
-CREATE FUNCTION public.jwt_get_policy_links_as_setof_text(policy_name text) RETURNS SETOF text
-    LANGUAGE sql STABLE
-    AS $_$
-	select jsonb_array_elements_text(jwt_get_policy_links_as_text($1)::jsonb);
-$_$;
-
-
---
--- Name: jwt_get_policy_links_as_text(text); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION public.jwt_get_policy_links_as_text(policy_name text) RETURNS text
-    LANGUAGE sql STABLE
-    AS $_$
-  select COALESCE(nullif(jwt_get_key('policy_links_' || $1), ''), '[]')
-$_$;
+create function jwt_get_bigint(jwt_key text) returns bigint as $$
+  select COALESCE(current_setting('jwt.claims.' || $1, true)::bigint, 0)
+$$ language sql stable;
