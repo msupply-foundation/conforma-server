@@ -17,6 +17,8 @@ export type Scalars = {
   Datetime: any;
   /** The day, does not include a time. */
   Date: any;
+  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
+  BigInt: any;
 };
 
 export type ActionPlugin = Node & {
@@ -2930,6 +2932,7 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
+
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
@@ -6021,26 +6024,6 @@ export type JsonFilter = {
   containedBy?: Maybe<Scalars['JSON']>;
 };
 
-/** A connection to a list of `String` values. */
-export type JwtGetPolicyLinksAsSetofTextConnection = {
-  __typename?: 'JwtGetPolicyLinksAsSetofTextConnection';
-  /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
-  /** A list of edges which contains the `String` and cursor to aid in pagination. */
-  edges: Array<JwtGetPolicyLinksAsSetofTextEdge>;
-  /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `String` edge in the connection. */
-export type JwtGetPolicyLinksAsSetofTextEdge = {
-  __typename?: 'JwtGetPolicyLinksAsSetofTextEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
-};
-
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -8864,10 +8847,9 @@ export type Query = Node & {
   user?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
-  jwtCheckPolicy?: Maybe<Scalars['Boolean']>;
-  jwtGetKey?: Maybe<Scalars['String']>;
-  jwtGetPolicyLinksAsSetofText?: Maybe<JwtGetPolicyLinksAsSetofTextConnection>;
-  jwtGetPolicyLinksAsText?: Maybe<Scalars['String']>;
+  jwtGetBigint?: Maybe<Scalars['BigInt']>;
+  jwtGetBoolean?: Maybe<Scalars['Boolean']>;
+  jwtGetText?: Maybe<Scalars['String']>;
   reviewApplicationId?: Maybe<Scalars['Int']>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
@@ -9506,32 +9488,20 @@ export type QueryApplicationStatusHistoryApplicationIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryJwtCheckPolicyArgs = {
-  policyName?: Maybe<Scalars['String']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryJwtGetKeyArgs = {
+export type QueryJwtGetBigintArgs = {
   jwtKey?: Maybe<Scalars['String']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryJwtGetPolicyLinksAsSetofTextArgs = {
-  policyName?: Maybe<Scalars['String']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  filter?: Maybe<StringFilter>;
+export type QueryJwtGetBooleanArgs = {
+  jwtKey?: Maybe<Scalars['String']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryJwtGetPolicyLinksAsTextArgs = {
-  policyName?: Maybe<Scalars['String']>;
+export type QueryJwtGetTextArgs = {
+  jwtKey?: Maybe<Scalars['String']>;
 };
 
 
@@ -18235,8 +18205,7 @@ export type ResolversTypes = {
   UserCondition: UserCondition;
   UsersConnection: ResolverTypeWrapper<UsersConnection>;
   UsersEdge: ResolverTypeWrapper<UsersEdge>;
-  JwtGetPolicyLinksAsSetofTextConnection: ResolverTypeWrapper<JwtGetPolicyLinksAsSetofTextConnection>;
-  JwtGetPolicyLinksAsSetofTextEdge: ResolverTypeWrapper<JwtGetPolicyLinksAsSetofTextEdge>;
+  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   Mutation: ResolverTypeWrapper<{}>;
   CreateActionPluginInput: CreateActionPluginInput;
   ActionPluginInput: ActionPluginInput;
@@ -19300,8 +19269,7 @@ export type ResolversParentTypes = {
   UserCondition: UserCondition;
   UsersConnection: UsersConnection;
   UsersEdge: UsersEdge;
-  JwtGetPolicyLinksAsSetofTextConnection: JwtGetPolicyLinksAsSetofTextConnection;
-  JwtGetPolicyLinksAsSetofTextEdge: JwtGetPolicyLinksAsSetofTextEdge;
+  BigInt: Scalars['BigInt'];
   Mutation: {};
   CreateActionPluginInput: CreateActionPluginInput;
   ActionPluginInput: ActionPluginInput;
@@ -20406,6 +20374,10 @@ export type ApplicationTriggerStatesEdgeResolvers<ContextType = any, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
+  name: 'BigInt';
+}
+
 export type CreateActionPluginPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateActionPluginPayload'] = ResolversParentTypes['CreateActionPluginPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType>;
@@ -21043,19 +21015,6 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
-export type JwtGetPolicyLinksAsSetofTextConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['JwtGetPolicyLinksAsSetofTextConnection'] = ResolversParentTypes['JwtGetPolicyLinksAsSetofTextConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['JwtGetPolicyLinksAsSetofTextEdge']>, ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type JwtGetPolicyLinksAsSetofTextEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['JwtGetPolicyLinksAsSetofTextEdge'] = ResolversParentTypes['JwtGetPolicyLinksAsSetofTextEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createActionPlugin?: Resolver<Maybe<ResolversTypes['CreateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateActionPluginArgs, 'input'>>;
   createActionQueue?: Resolver<Maybe<ResolversTypes['CreateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateActionQueueArgs, 'input'>>;
@@ -21410,10 +21369,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationArgs, 'id'>>;
   applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
-  jwtCheckPolicy?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryJwtCheckPolicyArgs, never>>;
-  jwtGetKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetKeyArgs, never>>;
-  jwtGetPolicyLinksAsSetofText?: Resolver<Maybe<ResolversTypes['JwtGetPolicyLinksAsSetofTextConnection']>, ParentType, ContextType, RequireFields<QueryJwtGetPolicyLinksAsSetofTextArgs, never>>;
-  jwtGetPolicyLinksAsText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetPolicyLinksAsTextArgs, never>>;
+  jwtGetBigint?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryJwtGetBigintArgs, never>>;
+  jwtGetBoolean?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryJwtGetBooleanArgs, never>>;
+  jwtGetText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetTextArgs, never>>;
   reviewApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewApplicationIdArgs, never>>;
   reviewReviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewReviewerIdArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
@@ -22144,6 +22102,7 @@ export type Resolvers<ContextType = any> = {
   ApplicationTriggerState?: ApplicationTriggerStateResolvers<ContextType>;
   ApplicationTriggerStatesConnection?: ApplicationTriggerStatesConnectionResolvers<ContextType>;
   ApplicationTriggerStatesEdge?: ApplicationTriggerStatesEdgeResolvers<ContextType>;
+  BigInt?: GraphQLScalarType;
   CreateActionPluginPayload?: CreateActionPluginPayloadResolvers<ContextType>;
   CreateActionQueuePayload?: CreateActionQueuePayloadResolvers<ContextType>;
   CreateApplicationPayload?: CreateApplicationPayloadResolvers<ContextType>;
@@ -22210,8 +22169,6 @@ export type Resolvers<ContextType = any> = {
   FilesConnection?: FilesConnectionResolvers<ContextType>;
   FilesEdge?: FilesEdgeResolvers<ContextType>;
   JSON?: GraphQLScalarType;
-  JwtGetPolicyLinksAsSetofTextConnection?: JwtGetPolicyLinksAsSetofTextConnectionResolvers<ContextType>;
-  JwtGetPolicyLinksAsSetofTextEdge?: JwtGetPolicyLinksAsSetofTextEdgeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
   Notification?: NotificationResolvers<ContextType>;
