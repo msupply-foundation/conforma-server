@@ -4,7 +4,7 @@ import fastifyMultipart from 'fastify-multipart'
 import fastifyCors from 'fastify-cors'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
-import { routeUserPermissions, routeLogin } from './components/permissions'
+import { routeUserPermissions, routeLogin, createHash } from './components/permissions'
 import {
   saveFiles,
   getFilename,
@@ -40,7 +40,10 @@ const startServer = async () => {
   })
 
   server.get('/userInfo', routeUserPermissions)
+
   server.post('/login', routeLogin)
+
+  server.post('/createHash', createHash)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {

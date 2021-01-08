@@ -97,8 +97,6 @@ class DBConnect {
 
   public getUserTemplatePermissions = PostgresDB.getUserTemplatePermissions
 
-  public verifyUser = PostgresDB.verifyUser
-
   public getUserPermissionNames = PostgresDB.getUserPermissionNames
 
   public joinPermissionNameToUser = PostgresDB.joinPermissionNameToUser

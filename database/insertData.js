@@ -1117,14 +1117,14 @@ const queries = [
                   username: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3.text"]
+                  }                  
+                  email: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q4.text"]
                   }
                   password_hash: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q5.text"]
-                  }
-                  email: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q4.text"]
                   }
                 }
               }
@@ -1455,51 +1455,20 @@ const queries = [
     }
   }`,
   //   Add some users
+  //   -- All passwords are "123456"
+  //   -- Hashes generated with https://www.browserling.com/tools/bcrypt
   `mutation {
-        createUser(
-          input: {
-            user: { email: "nicole@sussol.net", passwordHash: "123456", username: "nmadruga",
-            firstName: "Nicole" }
-          }
-        ) {
-          user {
-            email
-            passwordHash
-            username
-          }
+    createUser(
+      input: {
+        user: {
+          email: "nicole@sussol.net"
+          passwordHash: "$2a$10$dSDSYzTuuwJvEDp/tRsKXOV7LQc9Ue0gR8bctN4V7TcMRIfcCKhme"
+          username: "nmadruga"
+          firstName: "Nicole"
         }
-      }`,
-  `mutation {
-    createUser(
-      input: {
-        user: { email: "carl@sussol.net", passwordHash: "123456", username: "carl",
-        firstName: "Carl", lastName: "Smith"
-        dateOfBirth: "1976-12-23" }
-      }
-    ) {
-      clientMutationId
-    }
-  }`,
-  `mutation {
-    createUser(
-      input: {
-        user: { email: "andrei@sussol.net", passwordHash: "123456", username: "andrei",
-        firstName: "Andrei" }
-      }
-    ) {
-      clientMutationId
-    }
-  }`,
-  `mutation {
-    createUser(
-      input: {
-        user: { email: "valerio@nra.org", passwordHash: "123456", username: "valerio",
-        firstName: "Valerio" }
       }
     ) {
       user {
-        email
-        passwordHash
         username
       }
     }
@@ -1507,42 +1476,102 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "js@nowhere.com", passwordHash: "123456", username: "js",
-        firstName: "John", lastName: "Smith"
+        user: {
+          email: "carl@sussol.net"
+          passwordHash: "$2a$10$3Z1cXVI.GzE9F2QYePzbMOg5CGtf6VnNKRiaiRGkzlBXJ0aiMN4JG"
+          username: "carl"
+          firstName: "Carl", lastName: "Smith"
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "andrei@sussol.net"
+          passwordHash: "$2a$10$3Ufr.//hLoxp6BEEbFIq4u.zh435BNxNNLFEmJN74Ka/U5SMp0A2e"
+          username: "andrei",
+          firstName: "Andrei" }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "valerio@nra.org"
+          passwordHash: "$2a$10$ne2WcPISMw/Do3JzlwThYeO2GcodrumjI3FwGu1ZUoKgRQyAgNS3e"
+          username: "valerio",
+          firstName: "Valerio" }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "js@nowhere.com"
+          passwordHash: "$2a$10$WQ5VMHB6bOVwjyE8Vhh64.TLQKcUOeJpfU6ZUSqYq3tlts3vCN2mG"
+          username: "js",
+          firstName: "John", lastName: "Smith"
        }
       }
     ) {
-      clientMutationId
+      user {
+        username
+      }
     }
   }`,
   `mutation {
     createUser(
       input: {
-        user: { email: "reviewer1@sussol.net", passwordHash: "123456", username: "testReviewer1",
-        firstName: "Mr", lastName: "Reviewer 1" }
+        user: { email: "reviewer1@sussol.net"
+          passwordHash: "$2a$10$r8XTfUWIzrSaDfn0rxbIlei0kFHitJMI4W3g59w/94/9VopxNB4w."
+          username: "testReviewer1",
+          firstName: "Mr", lastName: "Reviewer 1" }
       }
     ) {
-      clientMutationId
+      user {
+        username
+      }
     }
   }`,
   `mutation {
     createUser(
       input: {
-        user: { email: "reviewer2@sussol.net", passwordHash: "123456", username: "testReviewer2",
-        firstName: "Mrs", lastName: "Reviewer 2" }
+        user: { email: "reviewer2@sussol.net"
+          passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
+          username: "testReviewer2",
+          firstName: "Mrs", lastName: "Reviewer 2" }
       }
     ) {
-      clientMutationId
+      user {
+        username
+      }
     }
   }`,
   `mutation {
     createUser(
       input: {
-        user: { email: "assigner@sussol.net", passwordHash: "123456", username: "testAssigner",
-        firstName: "Ms", lastName: "Assigner" }
+        user: { email: "assigner@sussol.net"
+          passwordHash: "$2a$10$Kk4m2yhfFC5GqX2mJsXTtO.GLq6zNbezYnI8ix09h/MfNNy6AW7Ne"
+          username: "testAssigner",
+          firstName: "Ms", lastName: "Assigner" }
       }
     ) {
-      clientMutationId
+      user {
+        username
+      }
     }
   }`,
   //   Add some organisations
