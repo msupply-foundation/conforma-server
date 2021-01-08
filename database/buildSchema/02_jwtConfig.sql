@@ -1,7 +1,7 @@
 SET check_function_bodies = false;
 
 --
--- Name: jwt_check_text(text); Type: FUNCTION; Schema: public; Owner: -
+-- Name: jwt_get_text(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
 create function jwt_get_text(jwt_key text) returns text as $$
@@ -9,7 +9,7 @@ create function jwt_get_text(jwt_key text) returns text as $$
 $$ language sql stable;
 
 --
--- Name: jwt_check_boolean(text); Type: FUNCTION; Schema: public; Owner: -
+-- Name: jwt_get_boolean(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
 create function jwt_get_boolean(jwt_key text) returns boolean as $$
@@ -17,7 +17,7 @@ create function jwt_get_boolean(jwt_key text) returns boolean as $$
 $$ language sql stable;
 
 --
--- Name: jwt_check_bigint(text); Type: FUNCTION; Schema: public; Owner: -
+-- Name: jwt_get_bigint(text); Type: FUNCTION; Schema: public; Owner: -
 --
 
 create function jwt_get_bigint(jwt_key text) returns bigint as $$
