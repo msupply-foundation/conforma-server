@@ -90,7 +90,7 @@ Implements logical OR on the returned values of its child nodes.
 
 Concatenates the values of the child nodes, which can be either strings or arrays.
 
-- Input: 1 or more **string** or **array** nodes (must all be the same)
+- Input: 1 or more **string** or **array** nodes
 - Output: Either **string** or **array**, depending on the `type` specified (defaults to “**string**” if unspecified)
 
 ## = (Equals)
@@ -129,22 +129,18 @@ For extracting values from local state objects (e.g. `user`, `organisation` or `
 
 The `evaluateExpression` function expects each expression to be passed along with _all_ objects that are required for evaluation in any descendant nodes. See **Usage** below for detailed overview of arguments.
 
-- Input: A single child node whose `value` is an object with the following properties:
-  - `objectIndex` (optional) -- the index of the `objects` array that contains the object this node is interested in. If this property is not defined, it defaults to `0`, so you'd usually only include it if you were supplying more than one object to the whole expression.  
-    _Note: Each node can only return **one** object property_
-  - `property` -- the name of the field whose value is to be extracted. Can be a nested property, written in dot notation (e.g. `questions.q2`) (but cannot yet get specific elements from arrays.)
+- Input: A single child node whose `value` is the name of the field whose value is to be extracted. Can be a nested property, written in dot notation (e.g. `questions.q2`) (but cannot yet get specific elements from arrays.)
 - Output: the value specified in `property` of any type.
 
 **Example**:
 
 ```
 evaluateExpression(
-    { operator: 'objectProperties',
-      children: [
-         { value: { property: 'questions.q1' } }
-              ]
-     },
-     { objects: [application] } )
+    {
+      operator: 'objectProperties',
+      children: [ { value: 'application.questions.q1' } ]
+    },
+    { objects: { application } } )
 ```
 
 where `application` is the local state object:
@@ -159,9 +155,32 @@ application = {
 }
 ```
 
-- Input: Exactly 1 node whose value contains an object with the following:  
-  `value: {object: <name of object>, property: <object property>}`
-- Output: whatever the property format is
+## stringSubstitution
+
+_(Not yet implemented)_
+
+Replaces placeholder parameters (`$1`, `$2`, etc) in strings with values supplied during evaluation.
+
+- Input:
+
+  - 1st child node returns a **string** containing a parameterized query (e.g.`"Hello %1, welcome to our application!"` )  
+    Parameters can be written in either percent (`%1, %2`) or dollar-sign (`$1, $2`) notation
+  - 2nd...N nodes provide the replacement **strings** for the parameters in the first string.
+
+  **Example**:
+
+```
+  {
+    operator: "stringSubstitution",
+    children: [
+      "Dear %1, congratulations on your approval for registration of your product: %2",
+      "John",
+      "Paracetamol"
+    ]
+  }
+```
+
+Obviously the substitutions are likely to be dynamically generated values from `objectProperties` or `API`/`Database` queries.
 
 ## pgSQL
 
@@ -271,7 +290,7 @@ The query evaluator is implemented in the `evaluateExpression` function:
 
 `parameters` is an (optional) object with the following (optional) properties available:
 
-- `objects : [local objects]` -- **array** of local state objects required for the query (see **objectProperties** above)
+- `objects : {local objects}` -- **object** containing nested local state objects required for the query (see **objectProperties** above)
 - `pgConnection: <postGresConnect object>` (or any valid PostGres connection object, e.g. `Client` from `node-postgres`)
 - `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>}` -- connection information for a local GraphQL endpoint. Only required if expression contains **graphQL** operator.
 - `APIfetch: <fetch object>` -- required if the API operator is being used. (Note: the reason this must be passed in rather than having the module use `fetch` directly is so it can work in both front- and back-end. The browser provides a native `fetch` method, but this isn't available in Node, which requires the `node-fetch` package. So in order to work in both, the module expects the appropriate variant of the fetch object to be passed in.)

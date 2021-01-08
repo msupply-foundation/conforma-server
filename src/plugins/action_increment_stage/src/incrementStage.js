@@ -68,7 +68,7 @@ module.exports['incrementStage'] = function (parameters, DBConnect) {
                         return [2 /*return*/, returnObject];
                     }
                     if (!currentStageHistory) return [3 /*break*/, 6];
-                    return [4 /*yield*/, DBConnect.addNewStatusHistory(currentStageHistoryId, 'Completed')];
+                    return [4 /*yield*/, DBConnect.addNewApplicationStatusHistory(currentStageHistoryId, 'Completed')];
                 case 5:
                     result = _a.sent();
                     if (!result) {
@@ -82,7 +82,7 @@ module.exports['incrementStage'] = function (parameters, DBConnect) {
                 ];
                 case 7:
                     newStageHistoryId = _a.sent();
-                    return [4 /*yield*/, DBConnect.addNewStatusHistory(newStageHistoryId, currentStatus ? currentStatus : 'Draft')];
+                    return [4 /*yield*/, DBConnect.addNewApplicationStatusHistory(newStageHistoryId, currentStatus ? currentStatus : 'Draft')];
                 case 8:
                     newStatusHistory = _a.sent();
                     if (!newStageHistoryId || !newStatusHistory) {

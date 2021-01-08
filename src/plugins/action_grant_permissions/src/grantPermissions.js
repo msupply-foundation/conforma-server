@@ -44,6 +44,7 @@ module.exports['grantPermissions'] = function (_a, DBConnect) {
                 case 0:
                     _b.trys.push([0, 6, , 7]);
                     console.log('\nGranting permission/s:');
+                    console.log({ username: username, permissionNames: permissionNames });
                     return [4 /*yield*/, DBConnect.getUserPermissionNames(username)];
                 case 1:
                     currentUserPermisionsNames = (_b.sent()).map(function (_a) {

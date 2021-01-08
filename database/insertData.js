@@ -5,13 +5,15 @@ const config = require('../src/config.json')
 const graphQLendpoint = config.graphQLendpoint
 
 const queries = [
-  // Template A -- Test - General Registration
+  // Template A -- Test - General Registration (Feature showcase)
   `mutation {
     createTemplate(
       input: {
         template: {
           code: "TestRego"
           name: "Test -- General Registration"
+          isLinear: false
+          startMessage: "## This is the general registration for feature showcase\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -47,39 +49,87 @@ const queries = [
                       title: "Last Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      validation: {
+                        operator: "AND"
+                        children: [
+                          {
+                            operator: "!="
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: ["responses.Q1.text"]
+                              }
+                              { value: null }
+                            ]
+                          }
+                          {
+                            operator: "!="
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: ["responses.Q1.text"]
+                              }
+                              { value: "" }
+                            ]
+                          }
+                        ]
+                      }
+                      validationMessage: "You need a first name."
                       parameters: {
-                        label: "Last Name"
-                        validation: {
-                          operator: "AND"
+                        label: {
+                          operator: "CONCAT"
                           children: [
                             {
-                              operator: "!="
-                              children: [
-                                {
-                                  operator: "objectProperties"
-                                  children: [{ value: { property: "Q1.text" } }]
-                                }
-                                { value: null }
-                              ]
+                              operator: "objectProperties"
+                              children: ["responses.Q1.text"]
                             }
+                            ", what is your last name?"
+                          ]
+                        }
+                      }
+                    }
+                    {
+                      code: "Text2"
+                      index: 3
+                      title: "User Info"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: {
+                          operator: "CONCAT"
+                          children: [
+                            "Current User: "
                             {
-                              operator: "!="
-                              children: [
-                                {
-                                  operator: "objectProperties"
-                                  children: [{ value: { property: "Q1.text" } }]
-                                }
-                                { value: "" }
-                              ]
+                              operator: "objectProperties"
+                              children: ["currentUser.firstName"]
+                            }
+                            " "
+                            {
+                              operator: "objectProperties"
+                              children: ["currentUser.lastName"]
                             }
                           ]
                         }
-                        validationMessage: "You need a first name."
+                        text: {
+                          operator: "CONCAT"
+                          children: [
+                            "The new user's name is: "
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q1.text"]
+                            }
+                            " "
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q2.text"]
+                            }
+                          ]
+                        }
                       }
                     }
                     {
                       code: "Q3"
-                      index: 3
+                      index: 4
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -88,86 +138,116 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q1.text" } }]
+                            children: ["responses.Q1.text"]
                           }
                           { value: "" }
                         ]
                       }
-                      parameters: {
-                        label: "Select a username"
-                        validation: {
-                          operator: "API"
-                          children: [
-                            { value: "http://localhost:8080/check-unique" }
-                            { value: ["type", "value"] }
-                            { value: "username" }
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: "unique" }
-                          ]
-                        }
-                        validationMessage: "Username must be unique"
+                      validation: {
+                        operator: "API"
+                        children: [
+                          { value: "http://localhost:8080/check-unique" }
+                          { value: ["type", "value"] }
+                          { value: "username" }
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "unique" }
+                        ]
                       }
+                      validationMessage: "Username must be unique"
+                      parameters: { label: "Select a username" }
                     }
                     {
                       code: "Q4"
-                      index: 4
+                      index: 5
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "Email"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            {
-                              value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
-                            }
-                          ]
-                        }
-                        validationMessage: "Not a valid email address"
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          {
+                            value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                          }
+                        ]
                       }
+                      validationMessage: "Not a valid email address"
+                      parameters: { label: "Email" }
                     }
                     {
                       code: "Q5"
-                      index: 5
+                      index: 6
                       title: "Password"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "^[\\\\S]{8,}$" }
+                        ]
+                      }
+                      validationMessage: "Password must be at least 8 characters"
+                      # Validation:Currently just checks 8 chars, needs more complexity
                       parameters: {
                         label: "Password"
                         maskedInput: true
                         placeholder: "Password must be at least 8 chars long"
-                        validation: {
-                          operator: "REGEX"
+                      }
+                    }
+                    {
+                      code: "Q5B"
+                      index: 7
+                      title: "Dynamic Options demo"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Which is your favourite response?"
+                        placeholder: "Select"
+                        options: {
+                          operator: "CONCAT"
+                          type: "array"
                           children: [
                             {
                               operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
+                              children: ["responses.Q1.text"]
                             }
-                            { value: "^[\\\\S]{8,}$" }
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q2.text"]
+                            }
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q3.text"]
+                            }
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q4.text"]
+                            }
                           ]
                         }
-                        validationMessage: "Password must be at least 8 characters"
                       }
-                      # Validation:Currently just checks 8 chars, needs more complexity
+                      isRequired: false
                     }
                     {
                       code: "PB1"
-                      index: 6
+                      index: 8
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
                       code: "Q6"
-                      index: 7
+                      index: 9
                       title: "Organisation Category"
                       elementTypePluginCode: "dropdownChoice"
                       # Change this to "radioChoice" once we've made the plugin
@@ -183,7 +263,7 @@ const queries = [
                     }
                     {
                       code: "Q7"
-                      index: 8
+                      index: 10
                       title: "Select Manufacturer"
                       elementTypePluginCode: "dropdownChoice"
                       visibilityCondition: {
@@ -191,7 +271,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q6.text" } }]
+                            children: ["responses.Q6.text"]
                           }
                           { value: "Manufacturer" }
                         ]
@@ -205,12 +285,11 @@ const queries = [
                           "Manufacturer B"
                           "Manufacturer C"
                         ]
-                        validation: { value: true }
                       }
                     }
                     {
                       code: "Q8"
-                      index: 9
+                      index: 11
                       title: "Select Distributor"
                       elementTypePluginCode: "dropdownChoice"
                       # Remember to pass Responses object into visibilityCondition
@@ -219,7 +298,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q6.text" } }]
+                            children: ["responses.Q6.text"]
                           }
                           { value: "Distributor" }
                         ]
@@ -233,13 +312,12 @@ const queries = [
                           "Distributor B"
                           "Distributor C"
                         ]
-                        validation: { value: true }
                       }
                       isRequired: false
                     }
                     {
                       code: "Q9"
-                      index: 10
+                      index: 12
                       title: "Select Importer"
                       elementTypePluginCode: "dropdownChoice"
                       # Remember to pass Responses object into visibilityCondition
@@ -248,7 +326,7 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "Q6.text" } }]
+                            children: ["responses.Q6.text"]
                           }
                           { value: "Importer" }
                         ]
@@ -258,16 +336,130 @@ const queries = [
                         label: "Select Importer"
                         placeholder: "Select"
                         options: ["Importer A", "Importer B", "Importer C"]
-                        validation: { value: true }
                       }
                       isRequired: false
+                    }
+                    {
+                      code: "Q10"
+                      index: 13
+                      title: "API Selection demo"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "API Lookup: Choose a name from this list"
+                        placeholder: "Select"
+                        options: {
+                          operator: "API"
+                          children: [
+                            {
+                              value: "https://jsonplaceholder.typicode.com/users"
+                            }
+                            { value: [] }
+                            { value: "name" }
+                          ]
+                        }
+                      }
+                      isRequired: false
+                    }
+                    {
+                      code: "Q11"
+                      index: 14
+                      title: "Test Visibility"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Enter 'magicword' to see text box" }
+                    }
+                    {
+                      code: "TextTest"
+                      index: 15
+                      title: "Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q11.text"]
+                          }
+                          { value: "magicword" }
+                        ]
+                      }
+                      parameters: {
+                        title: "This has appeared because you typed 'magicword' above."
+                        text: {
+                          operator: "CONCAT"
+                          children: [
+                            "You chose "
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q10.text"]
+                            }
+                            " (index number "
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q10.optionIndex"]
+                            }
+                            ") in the API lookup"
+                          ]
+                        }
+                      }
+                    }
+                    {
+                      code: "PB3"
+                      index: 15
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "Q12"
+                      index: 16
+                      title: "Role"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "What is your role?"
+                        options: ["Owner", "Supplier", "Other"]
+                        placeholder: "Select one"
+                      }
+                      isRequired: false
+                    }
+                    {
+                      code: "Q13"
+                      index: 17
+                      title: "Other description"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      isEditable: {
+                        operator: "="
+                        children: [
+                          "Other"
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q12.text"]
+                          }
+                        ]
+                      }
+                      parameters: {
+                        label: "If Other, please describe"
+                        placeholder: "Describe your role"
+                      }
                     }
                   ]
                 }
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: { 
+            create: [
+              { 
+                number: 1
+                title: "Automatic" 
+                description: "Please check your email to confirm your account."
+              }
+            ] 
+          }
           templateActionsUsingId: {
             create: [
               {
@@ -276,7 +468,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                 }
               }
@@ -297,23 +489,23 @@ const queries = [
                 parameterQueries: {
                   first_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q1.text" } }]
+                    children: ["applicationData.responses.Q1.text"]
                   }
                   last_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q2.text" } }]
+                    children: ["applicationData.responses.Q2.text"]
                   }
                   username: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q3.text" } }]
+                    children: ["applicationData.responses.Q3.text"]
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q5.text" } }]
+                    children: ["applicationData.responses.Q5.text"]
                   }
                   email: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q4.text" } }]
+                    children: ["applicationData.responses.Q4.text"]
                   }
                 }
               }
@@ -324,11 +516,9 @@ const queries = [
                 parameterQueries: {
                   username: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q3.text" } }]
+                    children: ["applicationData.responses.Q3.text"]
                   }
-                  permissionNames: {
-                    value: ["applyCompanyRego"]
-                  }
+                  permissionNames: { value: ["applyCompanyRego"] }
                 }
               }
               {
@@ -338,7 +528,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newStatus: { value: "Completed" }
                 }
@@ -350,7 +540,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newOutcome: { value: "Approved" }
                 }
@@ -366,16 +556,12 @@ const queries = [
                       { value: "Output concatenation: The user " }
                       {
                         operator: "objectProperties"
-                        children: [
-                          { value: { objectIndex: 1, property: "username" } }
-                        ]
+                        children: ["output.username"]
                       }
                       { value: "'s registration has been " }
                       {
                         operator: "objectProperties"
-                        children: [
-                          { value: { objectIndex: 1, property: "newOutcome" } }
-                        ]
+                        children: ["output.newOutcome"]
                       }
                     ]
                   }
@@ -416,7 +602,7 @@ const queries = [
         }
       }
     }
-  }`,
+ }`,
   // Template B - Company Registration
   `mutation {
     createTemplate(
@@ -426,6 +612,7 @@ const queries = [
           name: "Company Registration"
           isLinear: false
           status: AVAILABLE
+          startMessage: "## You will need the following documents ready for upload\\n- Proof of Company name\\n- Proof of company address\\n- Bank account statement"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -445,51 +632,27 @@ const queries = [
                         title: "Company details"
                         text: "The details entered should match with your registered company documents attached."
                       }
-                    },
+                    }
                     {
                       code: "S1Q1"
                       index: 1
                       title: "Organisation Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Unique Name for Company",
-                        validation: {
-                          operator:"AND",
-                          children: [
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value:null }
-                              ]
-                            },
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: ".+" }
+                        ]
                       }
                       # Validation TO-DO: must be unique in system
-                    },
+                      validationMessage: "Cannot be blank"
+                      parameters: { label: "Unique Name for Company" }
+                    }
                     {
                       code: "S1Q2"
                       index: 2
@@ -498,20 +661,16 @@ const queries = [
                       category: QUESTION
                       parameters: {
                         label: "Select type of activity"
-                        options: [
-                          "Manufacturer",
-                          "Importer",
-                          "Producer"
-                        ]
+                        options: ["Manufacturer", "Importer", "Producer"]
                       }
-                    },
+                    }
                     {
                       code: "S1PB1"
                       index: 3
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
-                    },
+                    }
                     {
                       code: "S1T2"
                       index: 4
@@ -519,7 +678,7 @@ const queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: { title: "Company nationality" }
-                    },
+                    }
                     {
                       code: "S1Q3"
                       index: 5
@@ -528,12 +687,9 @@ const queries = [
                       category: QUESTION
                       parameters: {
                         label: "Select the nationality of this company:"
-                        options: [
-                          "National",
-                          "International"
-                        ]
+                        options: ["National", "International"]
                       }
-                    },
+                    }
                     {
                       code: "S1Q4"
                       index: 6
@@ -545,20 +701,18 @@ const queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: ["responses.S1Q3.text"]
                           }
                           { value: "International" }
                         ]
                       }
-                      parameters: {
-                        label: "Upload your valid import permit"
-                      }
+                      parameters: { label: "Upload your valid import permit" }
                       isRequired: false
                     }
                   ]
                 }
               }
-              { 
+              {
                 code: "S2"
                 title: "Section 2"
                 index: 1
@@ -570,241 +724,133 @@ const queries = [
                       title: "Intro Section 2 - Page 1/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { label: "Company location" }
+                      parameters: { title: "Company location" }
                       visibilityCondition: {
                         operator: "="
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: ["responses.S1Q3.text"]
                           }
                           { value: "National" }
                         ]
                       }
-                    },
+                    }
                     {
                       code: "S2Q1"
                       index: 1
                       title: "Organisation Street"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Enter the company street",
-                        validation: {
-                          operator:"AND",
-                          children: [
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value:null }
-                              ]
-                            },
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: ".+" }
+                        ]
                       }
+                      validationMessage: "Cannot be blank"
+                      parameters: { label: "Enter the company street" }
                       visibilityCondition: {
                         operator: "="
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: ["responses.S1Q3.text"]
                           }
                           { value: "National" }
                         ]
                       }
-                    },
+                    }
                     {
                       code: "S2Q2"
                       index: 2
                       title: "Organisation region"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Enter the company region",
-                        validation: {
-                          operator:"AND",
-                          children: [
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value:null }
-                              ]
-                            },
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: ".+" }
+                        ]
                       }
+                      validationMessage: "Cannot be blank"
+                      parameters: { label: "Enter the company region" }
                       visibilityCondition: {
                         operator: "="
                         children: [
                           {
                             operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
+                            children: ["responses.S1Q3.text"]
                           }
                           { value: "National" }
                         ]
                       }
-                    },
+                    }
                     {
                       code: "S2PB1"
                       index: 3
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
-                      visibilityCondition: {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: [{ value: { property: "S1Q3.text" } }]
-                          }
-                          { value: "National" }
-                        ]
-                      }
-                    },
+                    }
                     {
                       code: "S2T2"
                       index: 4
                       title: "Intro Section 2 - Page 2/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: {
-                        title: "Company bank account"
-                      }
-                    },
+                      parameters: { title: "Company bank account" }
+                    }
                     {
                       code: "S2Q3"
                       index: 5
                       title: "Billing account"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Enter the company billing account",
-                        validation: {
-                          operator:"AND",
-                          children: [
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value:null }
-                              ]
-                            },
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: ".+" }
+                        ]
                       }
-                    },
+                      validationMessage: "Cannot be blank"
+                      parameters: { label: "Enter the company billing account" }
+                    }
                     {
                       code: "S2Q4"
                       index: 4
                       title: "Name of account"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Enter the company acount name",
-                        validation: {
-                          operator:"AND",
-                          children: [
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value:null }
-                              ]
-                            },
-                            {
-                              operator:"!=",
-                              children: [
-                                {
-                                  operator:"objectProperties",
-                                  children: [
-                                    {
-                                      value: { property:"thisResponse" }
-                                    }
-                                  ]
-                                },
-                                { value: "" }
-                              ]
-                            }
-                          ]
-                        }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: ".+" }
+                        ]
                       }
+                      validationMessage: "Cannot be blank"
+                      parameters: { label: "Enter the company acount name" }
                     }
                   ]
                 }
-              },
-              { 
+              }
+              {
                 code: "S3"
                 title: "Section 3"
                 index: 2
@@ -816,23 +862,17 @@ const queries = [
                       title: "Intro Section 1 - Page 1/1"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: {
-                        title: "Company staff details"
-                      }
-                    },
+                      parameters: { title: "Company staff details" }
+                    }
                     {
                       code: "S3Q1"
                       index: 0
                       title: "Organisation Size"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
-                      parameters: { 
+                      parameters: {
                         label: "What is the size of the organization"
-                        options: [
-                          "Small",
-                          "Medium",
-                          "Large"
-                        ]
+                        options: ["Small", "Medium", "Large"]
                       }
                       isRequired: false
                     }
@@ -843,8 +883,16 @@ const queries = [
           }
           templateStagesUsingId: {
             create: [
-              { number: 1, title: "Screening" }
-              { number: 2, title: "Assessment" }
+              { 
+                number: 1
+                title: "Screening"
+                description: "This application will go through the Screening stage before it can be accessed."
+              }
+              { 
+                number: 2
+                title: "Assessment"
+                description: "This phase is where your documents will be revised before the application can get the final approval."
+              }
             ]
           }
           templateActionsUsingId: {
@@ -855,7 +903,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
+                    children: ["applicationData.record_id"]
                   }
                 }
               }
@@ -872,42 +920,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "record_id" } }]
-                  }
-                  newStatus: { value: "Submitted" }
-                }
-              }
-              {
-                actionCode: "incrementStage"
-                trigger: ON_REVIEW_SAVE
-                sequence: 1
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
-                  }
-                }
-              }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_REVIEW_SAVE
-                condition: {
-                  operator: "="
-                  children: [
-                    {
-                      operator: "objectProperties"
-                      children: [{ value: { property: "status" } }]
-                    }
-                    { value: "Re-submitted" }
-                  ]
-                }
-                sequence: 2
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: [
-                      { value: { property: "applicationId" } }
-                    ]
+                    children: ["applicationData.record_id"]
                   }
                   newStatus: { value: "Submitted" }
                 }
@@ -946,6 +959,7 @@ const queries = [
         template: {
           code: "UserRegistration"
           name: "User Registration"
+          submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm."
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -973,20 +987,18 @@ const queries = [
                       title: "First Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "First Name"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: ".+" }
-                          ]
-                        }
-                        validationMessage: "First name must not be blank"
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: ".+" }
+                        ]
                       }
+                      validationMessage: "First name must not be blank"
+                      parameters: { label: "First Name" }
                     }
                     {
                       code: "Q2"
@@ -1002,23 +1014,21 @@ const queries = [
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "Select a username"
-                        validation: {
-                          operator: "API"
-                          children: [
-                            { value: "http://localhost:8080/check-unique" }
-                            { value: ["type", "value"] }
-                            { value: "username" }
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: "unique" }
-                          ]
-                        }
-                        validationMessage: "Username must be unique"
+                      validation: {
+                        operator: "API"
+                        children: [
+                          { value: "http://localhost:8080/check-unique" }
+                          { value: ["type", "value"] }
+                          { value: "username" }
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "unique" }
+                        ]
                       }
+                      validationMessage: "Username must be unique"
+                      parameters: { label: "Select a username" }
                     }
                     {
                       code: "Q4"
@@ -1026,22 +1036,20 @@ const queries = [
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "Email"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            {
-                              value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
-                            }
-                          ]
-                        }
-                        validationMessage: "Not a valid email address"
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          {
+                            value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                          }
+                        ]
                       }
+                      validationMessage: "Not a valid email address"
+                      parameters: { label: "Email" }
                     }
                     {
                       code: "Q5"
@@ -1049,23 +1057,23 @@ const queries = [
                       title: "Password"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "^[\\\\S]{8,}$" }
+                        ]
+                      }
+                      validationMessage: "Password must be at least 8 characters"
+                      # Validation:Currently just checks 8 chars, needs more complexity
                       parameters: {
                         label: "Password"
                         maskedInput: true
                         placeholder: "Password must be at least 8 chars long"
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: [{ value: { property: "thisResponse" } }]
-                            }
-                            { value: "^[\\\\S]{8,}$" }
-                          ]
-                        }
-                        validationMessage: "Password must be at least 8 characters"
                       }
-                      # Validation:Currently just checks 8 chars, needs more complexity
                     }
                     # TO-DO: Add Date of birth question once we have DatePicker element type
                   ]
@@ -1073,7 +1081,14 @@ const queries = [
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: { 
+            create: [
+              { 
+                number: 1
+                title: "Automatic"
+              }
+            ] 
+          }
           templateActionsUsingId: {
             create: [
               {
@@ -1082,7 +1097,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                 }
               }
@@ -1093,23 +1108,23 @@ const queries = [
                 parameterQueries: {
                   first_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q1.text" } }]
+                    children: ["applicationData.responses.Q1.text"]
                   }
                   last_name: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q2.text" } }]
+                    children: ["applicationData.responses.Q2.text"]
                   }
                   username: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q3.text" } }]
+                    children: ["applicationData.responses.Q3.text"]
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q5.text" } }]
+                    children: ["applicationData.responses.Q5.text"]
                   }
                   email: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "responses.Q4.text" } }]
+                    children: ["applicationData.responses.Q4.text"]
                   }
                 }
               }
@@ -1120,7 +1135,7 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newStatus: { value: "Completed" }
                 }
@@ -1132,9 +1147,285 @@ const queries = [
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
-                    children: [{ value: { property: "applicationId" } }]
+                    children: ["applicationData.applicationId"]
                   }
                   newOutcome: { value: "Approved" }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      template {
+        code
+        name
+        templateSections {
+          nodes {
+            code
+            title
+            templateElementsBySectionId {
+              nodes {
+                code
+                visibilityCondition
+                parameters
+                title
+                category
+              }
+            }
+          }
+        }
+      }
+    }
+  }`,
+  // Simple template for testing Review process
+  `mutation {
+    createTemplate(
+      input: {
+        template: {
+          code: "ReviewTest"
+          name: "Test -- Review Process"
+          status: AVAILABLE
+          versionTimestamp: "NOW()"
+          templateSectionsUsingId: {
+            create: [
+              {
+                code: "S1"
+                title: "Personal Info"
+                index: 0
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "Text1"
+                      index: 0
+                      title: "Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "In this section, we require your **personal information**"
+                      }
+                    }
+                    {
+                      code: "Q1"
+                      index: 1
+                      title: "First Name"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "First Name" }
+                    }
+                    {
+                      code: "Q2"
+                      index: 2
+                      title: "Last Name"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Last Name" }
+                    }
+                    {
+                      code: "Q3"
+                      index: 3
+                      title: "Email"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          {
+                            value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                          }
+                        ]
+                      }
+                      validationMessage: "Not a valid email address"
+                      parameters: { label: "Email" }
+                    }
+                    {
+                      code: "PB1"
+                      index: 4
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "Q4"
+                      index: 5
+                      title: "Age"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      isRequired: false
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "^[0-9]+$" }
+                        ]
+                      }
+                      validationMessage: "Response must be a number"
+                      parameters: { label: "Age" }
+                    }
+                    {
+                      code: "Q5"
+                      index: 6
+                      title: "Nationality"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Nationality"
+                        placeholder: "Enter a country"
+                      }
+                    }
+                  ]
+                }
+              }
+              {
+                code: "S2"
+                title: "Product Info"
+                index: 1
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "Text2"
+                      index: 0
+                      title: "Product Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "In this section, we require your **PRODUCT information**"
+                      }
+                    }
+                    {
+                      code: "Q20"
+                      index: 1
+                      title: "Product Name"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Name of Product" }
+                    }
+                    {
+                      code: "Q21"
+                      index: 2
+                      title: "Product Type"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "What type of product are you registering?"
+                        placeholder: "Select"
+                        options: ["Medicine", "Natural Product"]
+                      }
+                    }
+                    {
+                      code: "PB2"
+                      index: 3
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "Q22"
+                      index: 4
+                      title: "Dose Size"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Size of single dose"
+                        placeholder: "Metric units please"
+                      }
+                    }
+                    {
+                      code: "Q23"
+                      index: 5
+                      title: "Packet Size"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "^[0-9]+$" }
+                        ]
+                      }
+                      validationMessage: "Must be a number"
+                      parameters: {
+                        label: "How many doses per packet?"
+                        placeholder: "Whole number"
+                      }
+                    }
+                    {
+                      code: "Q24"
+                      index: 6
+                      title: "Side Effects"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: { label: "Please list any side effects" }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+          templateStagesUsingId: {
+            create: [
+              { 
+                number: 1
+                title: "Screening"
+                description: "This application will go through the Screening stage before it can be accessed."
+              }
+              { 
+                number: 2
+                title: "Assessment"
+                description: "This phase is where your documents will be revised before the application can get the final approval."
+              }
+            ]
+          }
+          templateActionsUsingId: {
+            create: [
+              {
+                actionCode: "incrementStage"
+                trigger: ON_APPLICATION_CREATE
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 1
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
+                  newStatus: { value: "Submitted" }
+                }
+              }
+              {
+                actionCode: "cLog"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 2
+                parameterQueries: { message: "Application Submitted" }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_CREATE
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  newStatus: { value: "Draft" }
                 }
               }
             ]
@@ -1167,7 +1458,8 @@ const queries = [
   `mutation {
         createUser(
           input: {
-            user: { email: "nicole@sussol.net", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "nmadruga" }
+            user: { email: "nicole@sussol.net", passwordHash: "123456", username: "nmadruga",
+            firstName: "Nicole" }
           }
         ) {
           user {
@@ -1180,22 +1472,29 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "carl@sussol.net", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "carl",
+        user: { email: "carl@sussol.net", passwordHash: "123456", username: "carl",
         firstName: "Carl", lastName: "Smith"
         dateOfBirth: "1976-12-23" }
       }
     ) {
-      user {
-        email
-        passwordHash
-        username
-      }
+      clientMutationId
     }
   }`,
   `mutation {
     createUser(
       input: {
-        user: { email: "andrei@sussol.net", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "andrei" }
+        user: { email: "andrei@sussol.net", passwordHash: "123456", username: "andrei",
+        firstName: "Andrei" }
+      }
+    ) {
+      clientMutationId
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "valerio@nra.org", passwordHash: "123456", username: "valerio",
+        firstName: "Valerio" }
       }
     ) {
       user {
@@ -1208,14 +1507,42 @@ const queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "valerio@nra.org", passwordHash: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220", username: "valerio" }
+        user: { email: "js@nowhere.com", passwordHash: "123456", username: "js",
+        firstName: "John", lastName: "Smith"
+       }
       }
     ) {
-      user {
-        email
-        passwordHash
-        username
+      clientMutationId
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "reviewer1@sussol.net", passwordHash: "123456", username: "testReviewer1",
+        firstName: "Mr", lastName: "Reviewer 1" }
       }
+    ) {
+      clientMutationId
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "reviewer2@sussol.net", passwordHash: "123456", username: "testReviewer2",
+        firstName: "Mrs", lastName: "Reviewer 2" }
+      }
+    ) {
+      clientMutationId
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "assigner@sussol.net", passwordHash: "123456", username: "testAssigner",
+        firstName: "Ms", lastName: "Assigner" }
+      }
+    ) {
+      clientMutationId
     }
   }`,
   //   Add some organisations
@@ -1292,37 +1619,30 @@ const queries = [
           applicationResponsesUsingId: {
             create: [
               {
-                timeCreated: "NOW()"
                 value: { text: "Craig" }
                 templateElementToTemplateElementId: { connectById: { id: 2 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { text: "Drown" }
                 templateElementToTemplateElementId: { connectById: { id: 3 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { text: "c_drown" }
                 templateElementToTemplateElementId: { connectById: { id: 4 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { text: "craig@sussol.net" }
                 templateElementToTemplateElementId: { connectById: { id: 5 } }
               }
               {
-                timeCreated: "NOW()"
-                value: { text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220" }
+                value: { text: "123456" }
                 templateElementToTemplateElementId: { connectById: { id: 6 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { optionIndex: 0, text: "Manufacturer" }
                 templateElementToTemplateElementId: { connectById: { id: 8 } }
               }
               {
-                timeCreated: "NOW()"
                 value: { optionIndex: 1, text: "Manufacturer B" }
                 templateElementToTemplateElementId: { connectById: { id: 9 } }
               }
@@ -1399,37 +1719,30 @@ const queries = [
           applicationResponsesUsingId: {
             create: [
               {
-                  timeCreated: "NOW()"
                   value: { text: "Carl" }
                   templateElementToTemplateElementId: { connectById: { id: 2 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { text: "Smith" }
                   templateElementToTemplateElementId: { connectById: { id: 3 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { text: "cjsmith" }
                   templateElementToTemplateElementId: { connectById: { id: 4 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { text: "carl@sussol.net" }
                   templateElementToTemplateElementId: { connectById: { id: 5 } }
                 }
                 {
-                  timeCreated: "NOW()"
-                  value: { text: "7110EDA4D09E062AA5E4A390B0A572AC0D2C0220" }
+                  value: { text: "123456" }
                   templateElementToTemplateElementId: { connectById: { id: 6 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { optionIndex: 0, text: "Importer" }
                   templateElementToTemplateElementId: { connectById: { id: 8 } }
                 }
                 {
-                  timeCreated: "NOW()"
                   value: { optionIndex: 1, text: "Importer A" }
                   templateElementToTemplateElementId: { connectById: { id: 9 } }
                 }
@@ -1513,12 +1826,10 @@ const queries = [
           applicationResponsesUsingId: {
             create: [
               {
-                timeCreated: "NOW()"
                 value: {text: "Company C"}
                 templateElementToTemplateElementId: { connectById: { id: 12 } }
               }
               {
-                timeCreated: "NOW()"
                 value: {option: 2}
                 templateElementToTemplateElementId: { connectById: { id: 13 } }
               }
@@ -1552,6 +1863,120 @@ const queries = [
           username
         }
       }
+    }
+  }`,
+  // Application for Review Testing
+  `mutation ReviewTestApplication {
+    createApplication(
+      input: {
+        application: {
+          serial: "12345"
+          applicationSectionsUsingId: {
+            create: [{ templateSectionId: 6 }, { templateSectionId: 7 }]
+          }
+          name: "Test Review -- Vitamin C"
+          outcome: PENDING
+          isActive: true
+          templateId: 4
+          userId: 5
+          applicationStageHistoriesUsingId: {
+            create: {
+              isCurrent: true
+              templateStageToStageId: { connectById: { id: 5 } }
+              applicationStatusHistoriesUsingId: {
+                create: { isCurrent: true, status: SUBMITTED }
+              }
+            }
+          }
+          applicationResponsesUsingId: {
+            create: [
+              { isValid: true, templateElementId: 43, value: { text: "John" } }
+              { isValid: true, templateElementId: 44, value: { text: "Smith" } }
+              {
+                isValid: true
+                templateElementId: 45
+                value: { text: "js@nowhere.com" }
+              }
+              { isValid: true, templateElementId: 47, value: { text: "39" } }
+              {
+                isValid: true
+                templateElementId: 48
+                value: { text: "New Zealand" }
+              }
+              {
+                isValid: true
+                templateElementId: 50
+                value: { text: "Vitamin C" }
+              }
+              {
+                isValid: true
+                templateElementId: 51
+                value: { text: "Natural Product", optionIndex: 1 }
+              }
+              { isValid: true, templateElementId: 53, value: { text: "50mg" } }
+              { isValid: true, templateElementId: 54, value: { text: "100" } }
+              {
+                isValid: true
+                templateElementId: 55
+                value: { text: "Turning orange" }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      application {
+        name
+      }
+    }
+  }`,
+  // Assign test review application to Mr. Reviewer 1 (Section 1)
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          applicationId: 4
+          assignerId: 8
+          reviewerId: 6
+          stageId: 5
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              { templateElementId: 43 }
+              { templateElementId: 44 }
+              { templateElementId: 45 }
+              { templateElementId: 47 }
+              { templateElementId: 48 }
+              { templateElementId: 49 }
+            ]
+          }
+        }
+      }
+    ) {
+      clientMutationId
+    }
+  }`,
+  // Assign test review application to Mrs. Reviewer 2 (Section 2)
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          applicationId: 4
+          assignerId: 8
+          reviewerId: 7
+          stageId: 5
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              { templateElementId: 50 }
+              { templateElementId: 51 }
+              { templateElementId: 53 }
+              { templateElementId: 54 }
+              { templateElementId: 55 }
+            ]
+          }
+        }
+      }
+    ) {
+      clientMutationId
     }
   }`,
   // Non Registered User Permissions

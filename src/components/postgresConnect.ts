@@ -254,7 +254,7 @@ class PostgresDB {
     FROM application_response JOIN template_element
     ON template_element.id = application_response.template_element_id
     WHERE application_id = $1
-    ORDER BY code, time_created DESC
+    ORDER BY code, timestamp DESC
     `
     const result = await this.query({ text, values: [applicationId] })
     const responses = result.rows
@@ -269,6 +269,9 @@ class PostgresDB {
       case 'review':
         // NB: Check the rest of these queries properly once we have data in the tables
         text = 'SELECT application_id FROM review WHERE id = $1'
+        break
+      case 'review_assignment':
+        text = 'SELECT application_id FROM review_assignment WHERE id = $1'
         break
       // To-Do: queries for other trigger tables
       default:
@@ -373,6 +376,25 @@ class PostgresDB {
     }
   }
 
+  public getUserDataByUsername = async (username: string) => {
+    const text = `
+      SELECT id,
+      first_name as "firstName",
+      last_name as "lastName",
+      username, date_of_birth as "dateOfBirth",
+      email
+      FROM "user"
+      WHERE username = $1
+    `
+    try {
+      const result = await this.query({ text, values: [username] })
+      const userData = result.rows[0]
+      return userData
+    } catch (err) {
+      throw err
+    }
+  }
+
   public isUnique = async (table: string, field: string, value: string): Promise<boolean> => {
     const text = `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
     try {
@@ -450,7 +472,7 @@ class PostgresDB {
     }
   }
 
-  public getCurrentStatusHistory = async (applicationId: number) => {
+  public getApplicationCurrentStatusHistory = async (applicationId: number) => {
     const text = `SELECT id, status, application_stage_history_id FROM
       application_status_history WHERE
       application_id = $1 and is_current = true;`
@@ -463,12 +485,38 @@ class PostgresDB {
     }
   }
 
-  public addNewStatusHistory = async (stageHistoryId: number, status = 'Draft') => {
+  public addNewApplicationStatusHistory = async (stageHistoryId: number, status = 'Draft') => {
     // Note: switching is_current of previous status_histories to False is done automatically by a Postgres trigger function
     const text =
       'INSERT into application_status_history (application_stage_history_id, status, time_created) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id, status'
     try {
       const result = await this.query({ text, values: [stageHistoryId, status] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getReviewCurrentStatusHistory = async (reviewId: number) => {
+    const text = `SELECT id, status FROM
+      review_status_history WHERE
+      review_id = $1 and is_current = true;`
+    try {
+      const result = await this.query({ text, values: [reviewId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public addNewReviewStatusHistory = async (reviewId: number, status = 'Draft') => {
+    // Note: switching is_current of previous status_histories to False is done automatically by a Postgres trigger function
+    const text =
+      'INSERT into review_status_history (review_id, status) VALUES ($1, $2) RETURNING id, status'
+    try {
+      const result = await this.query({ text, values: [reviewId, status] })
       return result.rows[0]
     } catch (err) {
       console.log(err.message)

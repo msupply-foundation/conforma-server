@@ -49,67 +49,132 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 module.exports['changeStatus'] = function (parameters, DBConnect) {
     return __awaiter(this, void 0, void 0, function () {
-        var applicationId, newStatus, returnObject, currentStatus, currentStageHistoryId, result_1, result, err_1;
+        var applicationId, reviewId, newStatus;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    applicationId = parameters.applicationId, newStatus = parameters.newStatus;
-                    returnObject = { status: null, error_log: '' };
-                    console.log("Changing the Status of Application " + applicationId + "...");
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 7, , 8]);
-                    return [4 /*yield*/, DBConnect.getCurrentStatusHistory(applicationId)];
+                    applicationId = parameters.applicationId, reviewId = parameters.reviewId, newStatus = parameters.newStatus;
+                    if (!applicationId) return [3 /*break*/, 2];
+                    return [4 /*yield*/, changeApplicationStatus(applicationId, newStatus, DBConnect)];
+                case 1: return [2 /*return*/, _a.sent()];
                 case 2:
-                    currentStatus = _a.sent();
-                    if ((currentStatus === null || currentStatus === void 0 ? void 0 : currentStatus.status) === newStatus) {
-                        // Do nothing
-                        console.log("WARNING: Application " + applicationId + " already has status: " + newStatus + ". No changes were made.");
-                        returnObject.status = 'Success';
-                        returnObject.error_log = 'Status not changed';
-                        returnObject.output = { status: newStatus, statusId: currentStatus.id };
-                        return [2 /*return*/, returnObject];
-                    }
-                    currentStageHistoryId = void 0;
-                    if (!!(currentStatus === null || currentStatus === void 0 ? void 0 : currentStatus.status)) return [3 /*break*/, 4];
-                    return [4 /*yield*/, DBConnect.getCurrentStageHistory(applicationId)];
-                case 3:
-                    result_1 = _a.sent();
-                    if (!result_1) {
-                        returnObject.status = 'Fail';
-                        returnObject.error_log =
-                            "No stage defined for this Application. Can't create a status_history record.";
-                        return [2 /*return*/, returnObject];
-                    }
-                    else
-                        currentStageHistoryId = result_1.id;
-                    return [3 /*break*/, 5];
-                case 4:
-                    currentStageHistoryId = currentStatus.application_stage_history_id;
-                    _a.label = 5;
-                case 5: return [4 /*yield*/, DBConnect.addNewStatusHistory(currentStageHistoryId, newStatus)];
-                case 6:
-                    result = _a.sent();
-                    if (result.id) {
-                        returnObject.status = 'Success';
-                        returnObject.output = { status: newStatus, statusId: result.id };
-                        console.log("New status_history created: " + newStatus);
-                    }
-                    else {
-                        returnObject.status = 'Fail';
-                        returnObject.error_log = "Couldn't create new application_status_history";
-                        return [2 /*return*/, returnObject];
-                    }
-                    // Create output object and return
-                    returnObject.output = __assign(__assign({}, returnObject.output), { applicationId: applicationId });
-                    return [2 /*return*/, returnObject];
-                case 7:
-                    err_1 = _a.sent();
-                    returnObject.status = 'Fail';
-                    returnObject.error_log = 'Unable to change Status';
-                    return [2 /*return*/, returnObject];
-                case 8: return [2 /*return*/];
+                    if (!reviewId) return [3 /*break*/, 4];
+                    return [4 /*yield*/, changeReviewStatus(reviewId, newStatus, DBConnect)];
+                case 3: return [2 /*return*/, _a.sent()];
+                case 4: return [2 /*return*/, {
+                        status: 'Fail',
+                        error_log: "Neither applicationId or reviewId is provided, cannot run action",
+                    }];
             }
         });
     });
 };
+var changeApplicationStatus = function (applicationId, newStatus, DBConnect) { return __awaiter(void 0, void 0, void 0, function () {
+    var returnObject, currentStatus, currentStageHistoryId, result_1, result, err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                returnObject = { status: null, error_log: '' };
+                console.log("Changing the Status of Application " + applicationId + "...");
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 7, , 8]);
+                return [4 /*yield*/, DBConnect.getApplicationCurrentStatusHistory(applicationId)];
+            case 2:
+                currentStatus = _a.sent();
+                if ((currentStatus === null || currentStatus === void 0 ? void 0 : currentStatus.status) === newStatus) {
+                    // Do nothing
+                    console.log("WARNING: Application " + applicationId + " already has status: " + newStatus + ". No changes were made.");
+                    returnObject.status = 'Success';
+                    returnObject.error_log = 'Status not changed';
+                    returnObject.output = { status: newStatus, statusId: currentStatus.id };
+                    return [2 /*return*/, returnObject];
+                }
+                currentStageHistoryId = void 0;
+                if (!!(currentStatus === null || currentStatus === void 0 ? void 0 : currentStatus.status)) return [3 /*break*/, 4];
+                return [4 /*yield*/, DBConnect.getCurrentStageHistory(applicationId)];
+            case 3:
+                result_1 = _a.sent();
+                if (!result_1) {
+                    returnObject.status = 'Fail';
+                    returnObject.error_log =
+                        "No stage defined for this Application. Can't create a status_history record.";
+                    return [2 /*return*/, returnObject];
+                }
+                else
+                    currentStageHistoryId = result_1.id;
+                return [3 /*break*/, 5];
+            case 4:
+                currentStageHistoryId = currentStatus.application_stage_history_id;
+                _a.label = 5;
+            case 5: return [4 /*yield*/, DBConnect.addNewApplicationStatusHistory(currentStageHistoryId, newStatus)];
+            case 6:
+                result = _a.sent();
+                if (result.id) {
+                    returnObject.status = 'Success';
+                    returnObject.output = { status: newStatus, statusId: result.id };
+                    console.log("New status_history created: " + newStatus);
+                }
+                else {
+                    returnObject.status = 'Fail';
+                    returnObject.error_log = "Couldn't create new application_status_history";
+                    return [2 /*return*/, returnObject];
+                }
+                // Create output object and return
+                returnObject.output = __assign(__assign({}, returnObject.output), { applicationId: applicationId });
+                return [2 /*return*/, returnObject];
+            case 7:
+                err_1 = _a.sent();
+                returnObject.status = 'Fail';
+                returnObject.error_log = 'Unable to change Status';
+                return [2 /*return*/, returnObject];
+            case 8: return [2 /*return*/];
+        }
+    });
+}); };
+var changeReviewStatus = function (reviewId, newStatus, DBConnect) { return __awaiter(void 0, void 0, void 0, function () {
+    var returnObject, currentStatus, result, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                returnObject = { status: null, error_log: '' };
+                console.log("Changing the Status of Review " + reviewId + "...");
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, DBConnect.getReviewCurrentStatusHistory(reviewId)];
+            case 2:
+                currentStatus = _a.sent();
+                if ((currentStatus === null || currentStatus === void 0 ? void 0 : currentStatus.status) === newStatus) {
+                    // Do nothing
+                    console.log("WARNING: Review " + reviewId + " already has status: " + newStatus + ". No changes were made.");
+                    returnObject.status = 'Success';
+                    returnObject.error_log = 'Status not changed';
+                    returnObject.output = { status: newStatus, statusId: currentStatus.id };
+                    return [2 /*return*/, returnObject];
+                }
+                return [4 /*yield*/, DBConnect.addNewReviewStatusHistory(reviewId, newStatus)];
+            case 3:
+                result = _a.sent();
+                if (result.id) {
+                    returnObject.status = 'Success';
+                    returnObject.output = { status: newStatus, statusId: result.id };
+                    console.log("New review_status_history created: " + newStatus);
+                }
+                else {
+                    returnObject.status = 'Fail';
+                    returnObject.error_log = "Couldn't create new review_status_history";
+                    return [2 /*return*/, returnObject];
+                }
+                // Create output object and return
+                returnObject.output = __assign(__assign({}, returnObject.output), { reviewId: reviewId });
+                return [2 /*return*/, returnObject];
+            case 4:
+                err_2 = _a.sent();
+                returnObject.status = 'Fail';
+                returnObject.error_log = 'Unable to change Status';
+                return [2 /*return*/, returnObject];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
