@@ -546,7 +546,13 @@ testData.stringSubstitutionMultiple = {
 
 testData.stringSubstitutionNonStringReplacements = {
   operator: 'stringSubstitution',
-  children: ['We have %1 people listed: %2', 2, { value: ['Boba', 'Mando'] }],
+  children: [
+    'We have %1 %2 listed with an average value of %3: %4',
+    2,
+    'people',
+    4.53,
+    { value: ['Boba', 'Mando'] },
+  ],
 }
 
 testData.stringSubstitutionTooManyReplacements = {

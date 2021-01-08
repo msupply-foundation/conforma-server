@@ -291,7 +291,7 @@ test('Simple string substitution - multiple replacements', () => {
 test('String substitution - non-string replacements', () => {
   return evaluateExpression(testData.stringSubstitutionNonStringReplacements).then(
     (result: any) => {
-      expect(result).toBe('We have 2 people listed: Boba,Mando')
+      expect(result).toBe('We have 2 people listed with an average value of 4.53: Boba,Mando')
     }
   )
 })
