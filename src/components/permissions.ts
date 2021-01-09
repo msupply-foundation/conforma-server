@@ -24,13 +24,12 @@ const saltRounds = 10 // For bcrypt salted hash
 const routeUserPermissions = async (request: any, reply: any) => {
   const token = (request?.headers?.authorization || '').replace('Bearer ', '')
   const username = await getUsername(token)
-  return reply.send(await getPermissions(username))
+  return reply.send(await getUserInfo(username))
 }
 
 const routeLogin = async (request: any, reply: any) => {
   const { username, password } = request.body || { username: '', password: '' }
-  const { id, firstName, lastName, dateOfBirth, email, passwordHash } =
-    (await databaseConnect.getUserDataByUsername(username)) || {}
+  const { passwordHash } = (await databaseConnect.getUserDataByUsername(username)) || {}
 
   if (!passwordHash) return reply.send({ success: false })
 
@@ -39,9 +38,8 @@ const routeLogin = async (request: any, reply: any) => {
   // Login successful
   reply.send({
     success: true,
-    username,
-    ...(await getPermissions(username)),
-    user: { id, firstName, lastName, username, dateOfBirth, email },
+    ...(await getUserInfo(username)),
+    // user: { id, firstName, lastName, username, dateOfBirth, email },
   })
 }
 
@@ -66,12 +64,21 @@ const getUsername = async (jwtToken: string) => {
   return username
 }
 
-const getPermissions = async (username: string) => {
+const getUserInfo = async (username: string) => {
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
+  const {
+    id,
+    firstName,
+    lastName,
+    dateOfBirth,
+    email,
+  } = await databaseConnect.getUserDataByUsername(username)
 
   return {
+    username,
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getJWT(username, templatePermissionRows),
+    user: { id, firstName, lastName, username, dateOfBirth, email },
   }
 }
 
