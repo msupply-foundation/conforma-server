@@ -2009,12 +2009,13 @@ const queries = [
     }
   }`,
   // Non Registered User Permissions
+  // Password is blank
   `mutation {
     createUser(
       input: {
         user: {
           email: ""
-          passwordHash: ""
+          passwordHash: "$2a$10$UIfa3GTUbOS92Ygy/UpqheTngGo3O54Q5UOnJ5CBlra9LYCcr4IGq"
           username: "nonRegistered"
           permissionJoinsUsingId: {
             create: [
@@ -2107,14 +2108,14 @@ const queries = [
       }
     }
   }
-`, // Extra user with multiple permissions (apply company rego, review company rego and apply user rego)
+`, // Extra user with multiple permissions (apply company rego, review company rego and apply user rego) -- password is "123456"
   `
 mutation MyMutation {
   createUser(
     input: {
       user: {
         username: "userWithMultiplePermissions"
-        passwordHash: "somehashofpassword"
+        passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
         permissionJoinsUsingId: {
           create: [
             { permissionNameId: 1 }
