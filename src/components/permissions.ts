@@ -19,7 +19,7 @@ interface TemplatePermissions {
 const verifyPromise: any = promisify(verify)
 const signPromise: any = promisify(sign)
 
-const saltRounds = 10 // For bcrypt salted hash
+const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
 const routeUserPermissions = async (request: any, reply: any) => {
   const token = (request?.headers?.authorization || '').replace('Bearer ', '')
@@ -39,7 +39,6 @@ const routeLogin = async (request: any, reply: any) => {
   reply.send({
     success: true,
     ...(await getUserInfo(username)),
-    // user: { id, firstName, lastName, username, dateOfBirth, email },
   })
 }
 
@@ -60,7 +59,6 @@ const getUsername = async (jwtToken: string) => {
       console.log('cannot verify JWT in authorisation header')
     }
   }
-
   return username
 }
 
