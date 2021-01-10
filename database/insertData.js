@@ -184,7 +184,7 @@ const queries = [
                       code: "Q5"
                       index: 6
                       title: "Password"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "password"
                       category: QUESTION
                       validation: {
                         operator: "REGEX"
@@ -200,7 +200,6 @@ const queries = [
                       # Validation:Currently just checks 8 chars, needs more complexity
                       parameters: {
                         label: "Password"
-                        maskedInput: true
                         placeholder: "Password must be at least 8 chars long"
                       }
                     }
@@ -451,14 +450,14 @@ const queries = [
               }
             ]
           }
-          templateStagesUsingId: { 
+          templateStagesUsingId: {
             create: [
-              { 
+              {
                 number: 1
-                title: "Automatic" 
+                title: "Automatic"
                 description: "Please check your email to confirm your account."
               }
-            ] 
+            ]
           }
           templateActionsUsingId: {
             create: [
@@ -602,7 +601,7 @@ const queries = [
         }
       }
     }
- }`,
+  }`,
   // Template B - Company Registration
   `mutation {
     createTemplate(
