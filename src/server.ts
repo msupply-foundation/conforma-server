@@ -43,7 +43,7 @@ const startServer = async () => {
 
   server.post('/login', routeLogin)
 
-  server.post('/createHash', createHash)
+  server.post('/create-hash', createHash)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {

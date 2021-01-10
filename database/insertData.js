@@ -500,7 +500,7 @@ const queries = [
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.text"]
+                    children: ["applicationData.responses.Q5.hash"]
                   }
                   email: {
                     operator: "objectProperties"
@@ -1054,7 +1054,7 @@ const queries = [
                       code: "Q5"
                       index: 5
                       title: "Password"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "password"
                       category: QUESTION
                       validation: {
                         operator: "REGEX"
@@ -1123,7 +1123,7 @@ const queries = [
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.text"]
+                    children: ["applicationData.responses.Q5.hash"]
                   }
                 }
               }
