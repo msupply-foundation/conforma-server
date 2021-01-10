@@ -6,9 +6,13 @@ Install dependencies:
 Note: In order to install the [expression-evaluator](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax) package, you'll need to authenticate with the Github package registry. See instructions for this [here](https://github.com/openmsupply/application-manager-server/wiki/Query-Syntax#installation)
 
 Initialise database:  
-`yarn database_init`  
-(Needs `psql` command-line tool to be installed, and a super-user named `postgres` -- [here](https://gist.github.com/ibraheem4/ce5ccd3e4d7a65589ce84f2a3b7c23a3) for instructions.  
-Creates a database named `tmf_app_manager` and populates it with minimal data.)
+`yarn database_init`
+
+Needs:
+
+- `psql` command-line tool to be installed, and a super-user named `postgres` -- [here](https://gist.github.com/ibraheem4/ce5ccd3e4d7a65589ce84f2a3b7c23a3) for instructions.  
+  Creates a database named `tmf_app_manager` and populates it with minimal data.)
+- need to have both `graphile` (with postgres user) and `server` running (easiest way is to do `yarn dev_pg`, see below)
 
 To run in dev mode:  
 `yarn dev`

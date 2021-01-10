@@ -89,7 +89,7 @@ Basic login endpoint that will also return (on success):
 
 ```JSON
 {
-    "username": "${username}"
+    "username": "${username}",
     "passwordHash": "${passwordHash"
 }
 ```
