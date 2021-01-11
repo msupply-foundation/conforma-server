@@ -1079,16 +1079,6 @@ const queries = [
                       title: "Password"
                       elementTypePluginCode: "password"
                       category: QUESTION
-                      validation: {
-                        operator: "!="
-                        children: [
-                          ""
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse.hash"]
-                          }
-                        ]
-                      }
                       parameters: {
                         label: "Password"
                         maskedInput: true
