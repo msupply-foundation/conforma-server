@@ -13,7 +13,28 @@ const queries = [
           code: "TestRego"
           name: "Test -- General Registration"
           isLinear: false
-          startMessage: "## This is the general registration for feature showcase\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
+          startMessage: {
+            operator: "CONCAT"
+            children: [
+              "## This is the general registration for feature showcase\\nHi, "
+              {
+                operator: "objectProperties"
+                children: ["currentUser.firstName"]
+              }
+              ". You will need to provide:\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
+            ]
+          }
+          submissionMessage: {
+            operator: "CONCAT"
+            children: [
+              "### Application Submitted!\\nThanks, "
+              {
+                operator: "objectProperties"
+                children: ["currentUser.firstName"]
+              }
+              ". "
+            ]
+          }
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
@@ -440,6 +461,7 @@ const queries = [
                           }
                         ]
                       }
+                      isRequired: false
                       parameters: {
                         label: "If Other, please describe"
                         placeholder: "Describe your role"
