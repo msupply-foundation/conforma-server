@@ -521,13 +521,13 @@ const queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3.text"]
                   }
-                  password_hash: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.hash"]
-                  }
                   email: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q4.text"]
+                  }
+                  password_hash: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q5.hash"]
                   }
                 }
               }
