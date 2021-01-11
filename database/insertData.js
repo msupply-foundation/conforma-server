@@ -207,21 +207,22 @@ const queries = [
                       title: "Password"
                       elementTypePluginCode: "password"
                       category: QUESTION
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: "^[\\\\S]{8,}$" }
-                        ]
-                      }
-                      validationMessage: "Password must be at least 8 characters"
-                      # Validation:Currently just checks 8 chars, needs more complexity
                       parameters: {
                         label: "Password"
                         placeholder: "Password must be at least 8 chars long"
+                        confirmPlaceholder: "Enter password again"
+                        maskedInput: false
+                        validationInternal: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.thisResponse"]
+                            }
+                            { value: "^[\\\\S]{8,}$" }
+                          ]
+                        }
+                        validationMessageInternal: "Password must be at least 8 characters"
                       }
                     }
                     {
