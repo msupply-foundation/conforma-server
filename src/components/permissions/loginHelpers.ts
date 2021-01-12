@@ -23,11 +23,19 @@ const getUsername = async (jwtToken: string) => {
 const getUserInfo = async (username: string) => {
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
   const userInfo = await databaseConnect.getUserDataByUsername(username)
+  const {
+    id,
+    firstName,
+    lastName,
+    dateOfBirth,
+    email,
+  } = await databaseConnect.getUserDataByUsername(username)
 
   return {
+    username,
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getSignedJWT(userInfo, templatePermissionRows),
-    user: userInfo,
+    user: { id, firstName, lastName, username, dateOfBirth, email },
   }
 }
 

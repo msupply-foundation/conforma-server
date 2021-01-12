@@ -8,7 +8,7 @@ import {
   routeUserPermissions,
   routeLogin,
   routeUpdateRowPolicies,
-  createHash,
+  routeCreateHash,
 } from './components/permissions'
 import {
   saveFiles,
@@ -49,7 +49,7 @@ const startServer = async () => {
   server.post('/login', routeLogin)
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
 
-  server.post('/create-hash', createHash)
+  server.post('/create-hash', routeCreateHash)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {
