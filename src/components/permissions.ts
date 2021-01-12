@@ -3,6 +3,7 @@ import config from '../config.json'
 import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
 import { PermissionPolicyType } from '../generated/graphql'
+import bcrypt from 'bcrypt'
 
 type PermissionTypes = keyof typeof PermissionPolicyType
 
@@ -18,6 +19,8 @@ interface TemplatePermissions {
 const verifyPromise: any = promisify(verify)
 const signPromise: any = promisify(sign)
 
+const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
+
 const routeUserPermissions = async (request: any, reply: any) => {
   const token = (request?.headers?.authorization || '').replace('Bearer ', '')
   const username = await getUsername(token)
@@ -25,14 +28,25 @@ const routeUserPermissions = async (request: any, reply: any) => {
 }
 
 const routeLogin = async (request: any, reply: any) => {
-  const { username, passwordHash } = request.body || { username: '', passwordHash: '' }
+  const { username, password } = request.body || { username: '', password: '' }
+  const { passwordHash } = (await databaseConnect.getUserDataByUsername(username)) || {}
 
-  if (!(await databaseConnect.verifyUser(username, passwordHash)))
-    return reply.send({ success: false })
+  if (!passwordHash) return reply.send({ success: false })
 
-  return reply.send({
+  if (!(await bcrypt.compare(password, passwordHash))) return reply.send({ success: false })
+
+  // Login successful
+  reply.send({
     success: true,
     ...(await getUserInfo(username)),
+  })
+}
+
+const createHash = async (request: any, reply: any) => {
+  const { password } = request.body
+  const hash = await bcrypt.hash(password, saltRounds)
+  return reply.send({
+    hash,
   })
 }
 
@@ -45,19 +59,24 @@ const getUsername = async (jwtToken: string) => {
       console.log('cannot verify JWT in authorisation header')
     }
   }
-
   return username
 }
 
 const getUserInfo = async (username: string) => {
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
-  const userInfo = await databaseConnect.getUserDataByUsername(username)
+  const {
+    id,
+    firstName,
+    lastName,
+    dateOfBirth,
+    email,
+  } = await databaseConnect.getUserDataByUsername(username)
 
   return {
     username,
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getJWT(username, templatePermissionRows),
-    user: userInfo,
+    user: { id, firstName, lastName, username, dateOfBirth, email },
   }
 }
 
@@ -76,4 +95,4 @@ const getJWT = async (username: string, templatePermissionRows: Array<Permission
   return await signPromise({ username }, config.jwtSecret) // TODO gaphile/pg row lvl, and token
 }
 
-export { routeUserPermissions, routeLogin }
+export { routeUserPermissions, routeLogin, createHash }
