@@ -26,6 +26,9 @@ To launch Postgraphile server as graphile_user (in a new Terminal process), this
 To launch in dev mode _with_ Postgraphile server:  
 `yarn dev_pg`
 
+To launch in dev mode _with_ Postgraphile server and graphile_user:  
+`yarn dev_pg_permissions`
+
 To build (compiles all .ts files to .js in `build` folder):  
 `yarn build`
 
