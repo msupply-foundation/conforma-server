@@ -12,7 +12,7 @@ const getUsername = async (jwtToken: string) => {
   let username = 'nonRegistered'
   if (jwtToken) {
     try {
-      username = (await verifyPromise(jwtToken, config.jwtSecret)).user.username
+      username = (await verifyPromise(jwtToken, config.jwtSecret)).username
     } catch (e) {
       console.log('cannot verify JWT in authorisation header')
     }
