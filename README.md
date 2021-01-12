@@ -16,6 +16,9 @@ To run in dev mode:
 To launch Postgraphile server (in a new Terminal process):  
 `yarn pg`
 
+To launch Postgraphile server as graphile_user (in a new Terminal process), this will enforce row level permissions:  
+`yarn pg_permissions`
+
 To launch in dev mode _with_ Postgraphile server:  
 `yarn dev_pg`
 
