@@ -1628,6 +1628,119 @@ const queries = [
       }
     }
   }`,
+  // Associate users with organisations
+  `mutation {
+    createUserOrganisation(
+      input: {
+        userOrganisation: { userId: 1, organistionId: 1, userRole: "Owner" }
+      }
+    ) {
+      user {
+        username
+      }
+      organistion {
+        name
+      }
+    }
+  }`,
+  `mutation {
+    createUserOrganisation(
+      input: {
+        userOrganisation: { userId: 1, organistionId: 2 }
+      }
+    ) {
+      user {
+        username
+      }
+      organistion {
+        name
+      }
+    }
+  }`,
+  `mutation {
+    createUserOrganisation(
+      input: {
+        userOrganisation: { userId: 1, organistionId: 3 }
+      }
+    ) {
+      user {
+        username
+      }
+      organistion {
+        name
+      }
+    }
+  }`,
+  `mutation {
+    createUserOrganisation(
+      input: {
+        userOrganisation: { userId: 2, organistionId: 2, userRole: "Owner" }
+      }
+    ) {
+      user {
+        username
+      }
+      organistion {
+        name
+      }
+    }
+  }`,
+  `mutation {
+    createUserOrganisation(
+      input: {
+        userOrganisation: { userId: 2, organistionId: 3 }
+      }
+    ) {
+      user {
+        username
+      }
+      organistion {
+        name
+      }
+    }
+  }`,
+  `mutation {
+    createUserOrganisation(
+      input: {
+        userOrganisation: { userId: 2, organistionId: 4 }
+      }
+    ) {
+      user {
+        username
+      }
+      organistion {
+        name
+      }
+    }
+  }`,
+  `mutation {
+    createUserOrganisation(
+      input: {
+        userOrganisation: { userId: 3, organistionId: 3, userRole: "Owner" }
+      }
+    ) {
+      user {
+        username
+      }
+      organistion {
+        name
+      }
+    }
+  }`,
+  `mutation {
+    createUserOrganisation(
+      input: {
+        userOrganisation: { userId: 3, organistionId: 4 }
+      }
+    ) {
+      user {
+        username
+      }
+      organistion {
+        name
+      }
+    }
+  }`,
   //   User registration application 1
   `mutation {
     createApplication(
