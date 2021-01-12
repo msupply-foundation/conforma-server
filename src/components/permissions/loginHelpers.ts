@@ -32,7 +32,7 @@ const getUserInfo = async (username: string) => {
 }
 
 const buildTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) => {
-  const templatePermissions: TemplatePermissions = {} // TODO add type
+  const templatePermissions: TemplatePermissions = {}
 
   templatePermissionRows.forEach(({ permissionType, templateCode }: PermissionRow) => {
     if (!templateCode || !permissionType) return
