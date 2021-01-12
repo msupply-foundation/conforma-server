@@ -12,5 +12,6 @@
   "graphQLendpoint": "http://localhost:5000/graphql",
   "filesFolderName": "files",
   "jwtSecret": "devsecret",
-  "pluginsFolder": "plugins"
+  "pluginsFolder": "plugins",
+  "RESTport": 8080
 }

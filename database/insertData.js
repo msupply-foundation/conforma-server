@@ -2160,7 +2160,13 @@ const queries = [
                     name: "applyUserRegistration"
                     templatePermissionsUsingId: { create: [{ templateId: 1 }] }
                     permissionPolicyToPermissionPolicyId: {
-                      create: { type: APPLY, name: "oneTimeApply" }
+                      create: { type: APPLY, name: "oneTimeApply", rules: {
+                        application: {
+                          view: {
+                            template_id: "jwtPermission_bigint_templateId"
+                          }
+                        }
+                      } }
                     }
                   }
                 }
@@ -2216,7 +2222,15 @@ const queries = [
               }
             }
           }
-          type: APPLY
+          type: APPLY,
+          rules: {
+            application: {
+              view: {
+                template_id: "jwtPermission_bigint_templateId",
+                user_id: "jwtUserDetails_bigint_userId"
+              }
+            }
+          }
         }
       }
     ) {
@@ -2245,52 +2259,65 @@ const queries = [
   }
 `, // Extra user with multiple permissions (apply company rego, review company rego and apply user rego) -- password is "123456"
   `
-mutation MyMutation {
-  createUser(
-    input: {
-      user: {
-        username: "userWithMultiplePermissions"
-        passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
-        permissionJoinsUsingId: {
-          create: [
-            { permissionNameId: 1 }
-            { permissionNameId: 2 }
-            {
-              permissionNameToPermissionNameId: {
-                create: {
-                  name: "reviewCompanyRego"
-                  templatePermissionsUsingId: { create: [{ templateId: 2 }] }
-                  permissionPolicyToPermissionPolicyId: {
-                    create: { type: REVIEW, name: "basicReview" }
+  mutation MyMutation {
+    createUser(
+      input: {
+        user: {
+          username: "userWithMultiplePermissions"
+          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          permissionJoinsUsingId: {
+            create: [
+              { permissionNameId: 1 }
+              { permissionNameId: 2 }
+              {
+                permissionNameToPermissionNameId: {
+                  create: {
+                    name: "reviewCompanyRego"
+                    templatePermissionsUsingId: {
+                      create: [{ templateId: 2, restrictions: { stage: 1 } }]
+                    }
+                    permissionPolicyToPermissionPolicyId: {
+                      create: {
+                        type: REVIEW
+                        name: "basicReview"
+                        rules: {
+                          application: {
+                            view: {
+                              template_id: "jwtPermission_bigint_templateId"
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
-            }
-          ]
+            ]
+          }
         }
       }
-    }
-  ) {
-    user {
-      username
-      id
-      permissionJoins {
-        nodes {
-          id
-          permissionName {
+    ) {
+      user {
+        username
+        id
+        permissionJoins {
+          nodes {
             id
-            name
-            permissionPolicy {
-              name
-              type
+            permissionName {
               id
-            }
-            templatePermissions {
-              nodes {
+              name
+              permissionPolicy {
+                name
+                type
                 id
-                template {
-                  name
+              }
+              templatePermissions {
+                nodes {
                   id
+                  template {
+                    name
+                    id
+                  }
                 }
               }
             }
@@ -2299,7 +2326,7 @@ mutation MyMutation {
       }
     }
   }
-}
+  
 `,
 ]
 
@@ -2320,4 +2347,15 @@ const loopQueries = async () => {
   }
 }
 
-loopQueries()
+const insertData = async () => {
+  await loopQueries()
+  await fetch(`http://localhost:${config.RESTport}/updateRowPolicies`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  })
+}
+
+insertData()
