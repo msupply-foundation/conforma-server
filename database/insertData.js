@@ -1756,20 +1756,6 @@ const queries = [
       }
     }
   }`,
-  `mutation {
-    createUserOrganisation(
-      input: {
-        userOrganisation: { userId: 3, organisationId: 4 }
-      }
-    ) {
-      user {
-        username
-      }
-      organisation {
-        name
-      }
-    }
-  }`,
   //   User registration application 1
   `mutation {
     createApplication(
