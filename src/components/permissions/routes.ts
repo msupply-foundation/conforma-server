@@ -49,7 +49,7 @@ const routeLoginOrg = async (request: any, reply: any) => {
   if (!(await databaseConnect.verifyUserInOrganisation(userId, orgId)))
     return reply.send({ success: false, message: 'User does not belong to organisation' })
 
-  reply.send(await getUserInfo(username, orgId))
+  reply.send({ success: true, ...(await getUserInfo(username, orgId)) })
 }
 
 const routeCreateHash = async (request: any, reply: any) => {
