@@ -89,7 +89,7 @@ Basic login endpoint that will also return (on success):
 
 ```JSON
 {
-    "username": "${username}"
+    "username": "${username}",
     "passwordHash": "${passwordHash"
 }
 ```
@@ -150,6 +150,8 @@ Should be called anytime these change:
 - permission_name
 - permission_policy
 
+see [Permission Docs](Database-Schema-Permission.md) for more details
+
 ##### RESPONSE Body:
 
 A json array of new policies:
@@ -168,5 +170,3 @@ A json array of new policies:
 **To-do**: authorisation of some sort (use JWT, and some way to define ADMIN user, maybe boolean on permission_policy)
 
 **To-do**: fine grained change vs dropping all and reinstating them
-
-**To-do**: add link to permission wiki
