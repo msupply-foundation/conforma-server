@@ -60,8 +60,8 @@ const compileJWT = (
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
     const { templatePermissionRestrictions, templateId, templatePermissionId } = permissionRow
 
-    let permissionAbbreviation = getPermissionNameAbbreviation(permissionRow)
-
+    const permissionAbbreviation = getPermissionNameAbbreviation(permissionRow)
+    // Add just the basic permission_policy -> permission_name key
     JWT = {
       [permissionAbbreviation]: true,
       ...JWT,
@@ -69,10 +69,11 @@ const compileJWT = (
     // It's possible to have permission name given to user without any templatePermissionIds
     if (!templatePermissionId) return // 'continue' syntax for for each
 
-    permissionAbbreviation = getTemplatePermissionAbbreviation(permissionRow)
+    // Add permission_policy -> permission->name -> template_permission properties
+    const templatePermissionAbbreviation = getTemplatePermissionAbbreviation(permissionRow)
     JWT = {
-      [permissionAbbreviation]: true,
-      ...remapObjectKeysWithPrefix(permissionAbbreviation, {
+      [templatePermissionAbbreviation]: true,
+      ...remapObjectKeysWithPrefix(templatePermissionAbbreviation, {
         ...templatePermissionRestrictions,
         templateId,
       }),
