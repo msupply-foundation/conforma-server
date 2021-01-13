@@ -49,8 +49,13 @@ const remapObjectKeysWithPrefix = (prefix: string, object: Object) => {
     pp2pn3tp4_restrictTwo: "2"
   }
 */
-const compileJWT = (userInfo: UserInfo, templatePermissionRows: Array<PermissionRow>) => {
-  let JWT = { userId: userInfo.userId, username: userInfo.username, aud: 'postgraphile' }
+const compileJWT = (
+  username: string,
+  userId: number,
+  templatePermissionRows: Array<PermissionRow>,
+  orgId: number | undefined = undefined
+) => {
+  let JWT = { username, userId, orgId, aud: 'postgraphile' }
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
     const { templatePermissionRestrictions, templateId, templatePermissionId } = permissionRow

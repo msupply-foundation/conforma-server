@@ -7,6 +7,7 @@ import { loadActionPlugins } from './components/pluginsConnect'
 import {
   routeUserPermissions,
   routeLogin,
+  routeLoginOrg,
   routeUpdateRowPolicies,
   routeCreateHash,
 } from './components/permissions'
@@ -47,6 +48,7 @@ const startServer = async () => {
   server.get('/userInfo', routeUserPermissions)
 
   server.post('/login', routeLogin)
+  server.post('/login-org', routeLoginOrg)
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
 
   server.post('/create-hash', routeCreateHash)

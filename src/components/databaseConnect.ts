@@ -93,6 +93,12 @@ class DBConnect {
 
   public getUserDataByUsername = PostgresDB.getUserDataByUsername
 
+  public getUserOrgs = PostgresDB.getUserOrgs
+
+  public getOrgById = PostgresDB.getOrgById
+
+  public verifyUserInOrganisation = PostgresDB.verifyUserInOrganisation
+
   public getApplicationResponses = PostgresDB.getApplicationResponses
 
   public getUserTemplatePermissions = PostgresDB.getUserTemplatePermissions

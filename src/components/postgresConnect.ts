@@ -378,10 +378,9 @@ class PostgresDB {
 
   public getUserDataByUsername = async (username: string) => {
     const text = `
-      SELECT id,
+      SELECT id as "userId",
       first_name as "firstName",
-      last_name as "lastName",
-      id as "userId",
+      last_name as "lastName", 
       username, date_of_birth as "dateOfBirth",
       email,
       password_hash as "passwordHash"
@@ -392,6 +391,52 @@ class PostgresDB {
       const result = await this.query({ text, values: [username] })
       const userData = result.rows[0]
       return userData
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public getUserOrgs = async (userId: number) => {
+    const text = `
+    SELECT organisation.id AS "orgId",
+    user_role as "orgRole",
+    name as "orgName"
+    FROM user_organisation JOIN organisation
+    ON organisation_id = organisation.id
+    WHERE user_id = $1`
+    try {
+      const result = await this.query({ text, values: [userId] })
+      const orgData = result.rows
+      return orgData
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public getOrgById = async (orgId: number) => {
+    const text = `
+    SELECT id,
+    name,
+    licence_number as "licenceNumber",
+    address
+    FROM organisation
+    WHERE id = $1`
+    try {
+      const result = await this.query({ text, values: [orgId] })
+      return result.rows[0]
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public verifyUserInOrganisation = async (userId: number, orgId: number) => {
+    const text = `
+    SELECT COUNT(*) from user_organisation
+    WHERE user_id = $1
+    AND organisation_id = $2`
+    try {
+      const result = await this.query({ text, values: [userId, orgId] })
+      return Boolean(Number(result.rows[0].count))
     } catch (err) {
       throw err
     }

@@ -1,3 +1,9 @@
-import { routeUserPermissions, routeLogin, routeUpdateRowPolicies, routeCreateHash } from './routes'
+import {
+  routeUserPermissions,
+  routeLogin,
+  routeLoginOrg,
+  routeUpdateRowPolicies,
+  routeCreateHash,
+} from './routes'
 
-export { routeCreateHash, routeUserPermissions, routeLogin, routeUpdateRowPolicies }
+export { routeCreateHash, routeUserPermissions, routeLogin, routeLoginOrg, routeUpdateRowPolicies }

@@ -4,10 +4,12 @@ import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
 import { PermissionRow, TemplatePermissions, UserInfo } from './types'
 import { compileJWT } from './rowLevelPolicyHelpers'
+import { Organisation } from '../../generated/graphql'
 
 const verifyPromise: any = promisify(verify)
 const signPromise: any = promisify(sign)
 
+// REMOVE THIS
 const getUsername = async (jwtToken: string) => {
   let username = 'nonRegistered'
   if (jwtToken) {
@@ -20,22 +22,32 @@ const getUsername = async (jwtToken: string) => {
   return username
 }
 
-const getUserInfo = async (username: string) => {
+const getTokenData = async (jwtToken: string) => {
+  try {
+    const data = await verifyPromise(jwtToken, config.jwtSecret)
+    return data
+  } catch (err) {
+    console.log('Cannot parse JWT')
+    throw err
+  }
+}
+
+const getUserInfo = async (username: string, orgId: number | undefined = undefined) => {
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
-  const userInfo = await databaseConnect.getUserDataByUsername(username)
   const {
-    id,
+    userId,
     firstName,
     lastName,
     dateOfBirth,
     email,
   } = await databaseConnect.getUserDataByUsername(username)
+  const organisation = orgId ? await databaseConnect.getOrgById(orgId) : undefined
 
   return {
     username,
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
-    JWT: await getSignedJWT(userInfo, templatePermissionRows),
-    user: { id, firstName, lastName, username, dateOfBirth, email },
+    JWT: await getSignedJWT(username, userId, templatePermissionRows, orgId),
+    user: { userId, firstName, lastName, username, dateOfBirth, email, organisation },
   }
 }
 
@@ -51,8 +63,16 @@ const buildTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) 
   return templatePermissions
 }
 
-const getSignedJWT = async (userInfo: UserInfo, templatePermissionRows: Array<PermissionRow>) => {
-  return await signPromise(compileJWT(userInfo, templatePermissionRows), config.jwtSecret)
+const getSignedJWT = async (
+  username: string,
+  userId: number,
+  templatePermissionRows: Array<PermissionRow>,
+  orgId: number | undefined = undefined
+) => {
+  return await signPromise(
+    compileJWT(username, userId, templatePermissionRows, orgId),
+    config.jwtSecret
+  )
 }
 
-export { getUsername, getUserInfo }
+export { getUsername, getUserInfo, getTokenData }

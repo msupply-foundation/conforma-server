@@ -1661,13 +1661,13 @@ const queries = [
   `mutation {
     createUserOrganisation(
       input: {
-        userOrganisation: { userId: 1, organistionId: 1, userRole: "Owner" }
+        userOrganisation: { userId: 1, organisationId: 1, userRole: "Owner" }
       }
     ) {
       user {
         username
       }
-      organistion {
+      organisation {
         name
       }
     }
@@ -1675,13 +1675,13 @@ const queries = [
   `mutation {
     createUserOrganisation(
       input: {
-        userOrganisation: { userId: 1, organistionId: 2 }
+        userOrganisation: { userId: 1, organisationId: 2 }
       }
     ) {
       user {
         username
       }
-      organistion {
+      organisation {
         name
       }
     }
@@ -1689,13 +1689,13 @@ const queries = [
   `mutation {
     createUserOrganisation(
       input: {
-        userOrganisation: { userId: 1, organistionId: 3 }
+        userOrganisation: { userId: 1, organisationId: 3 }
       }
     ) {
       user {
         username
       }
-      organistion {
+      organisation {
         name
       }
     }
@@ -1703,13 +1703,13 @@ const queries = [
   `mutation {
     createUserOrganisation(
       input: {
-        userOrganisation: { userId: 2, organistionId: 2, userRole: "Owner" }
+        userOrganisation: { userId: 2, organisationId: 2, userRole: "Owner" }
       }
     ) {
       user {
         username
       }
-      organistion {
+      organisation {
         name
       }
     }
@@ -1717,13 +1717,13 @@ const queries = [
   `mutation {
     createUserOrganisation(
       input: {
-        userOrganisation: { userId: 2, organistionId: 3 }
+        userOrganisation: { userId: 2, organisationId: 3 }
       }
     ) {
       user {
         username
       }
-      organistion {
+      organisation {
         name
       }
     }
@@ -1731,13 +1731,13 @@ const queries = [
   `mutation {
     createUserOrganisation(
       input: {
-        userOrganisation: { userId: 2, organistionId: 4 }
+        userOrganisation: { userId: 2, organisationId: 4 }
       }
     ) {
       user {
         username
       }
-      organistion {
+      organisation {
         name
       }
     }
@@ -1745,13 +1745,13 @@ const queries = [
   `mutation {
     createUserOrganisation(
       input: {
-        userOrganisation: { userId: 3, organistionId: 3, userRole: "Owner" }
+        userOrganisation: { userId: 3, organisationId: 3, userRole: "Owner" }
       }
     ) {
       user {
         username
       }
-      organistion {
+      organisation {
         name
       }
     }
@@ -1759,13 +1759,13 @@ const queries = [
   `mutation {
     createUserOrganisation(
       input: {
-        userOrganisation: { userId: 3, organistionId: 4 }
+        userOrganisation: { userId: 3, organisationId: 4 }
       }
     ) {
       user {
         username
       }
-      organistion {
+      organisation {
         name
       }
     }

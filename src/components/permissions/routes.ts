@@ -1,7 +1,8 @@
 import databaseConnect from '../databaseConnect'
-import { getUsername, getUserInfo } from './loginHelpers'
+import { getUsername, getUserInfo, getTokenData } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
+import { userInfo } from 'os'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
@@ -11,6 +12,11 @@ const routeUserPermissions = async (request: any, reply: any) => {
   return reply.send(await getUserInfo(username))
 }
 
+// Authenticates login and returns:
+// - userInfo
+// - list of organisations belonging to user
+// - template permissions
+// - JWT
 const routeLogin = async (request: any, reply: any) => {
   const { username, password } = request.body || { username: '', password: '' }
   const { passwordHash } = (await databaseConnect.getUserDataByUsername(username)) || {}
@@ -20,10 +26,29 @@ const routeLogin = async (request: any, reply: any) => {
   if (!(await bcrypt.compare(password, passwordHash))) return reply.send({ success: false })
 
   // Login successful
+  const userInfo = await getUserInfo(username)
+  const orgList = await databaseConnect.getUserOrgs(userInfo.user.userId)
   reply.send({
     success: true,
-    ...(await getUserInfo(username)),
+    ...userInfo,
+    orgList,
   })
+}
+
+// Authenticates user and checks they belong to requested org (id). Returns:
+// - userInfo (including orgId and orgName)
+// - template permissions
+// - JWT (with orgId included)
+const routeLoginOrg = async (request: any, reply: any) => {
+  const { userId, orgId } = request.body || { userId: '', orgId: '' }
+  const token = (request?.headers?.authorization || '').replace('Bearer ', '')
+  const { userId: tokenUserId, username } = await getTokenData(token)
+
+  if (userId !== tokenUserId) return reply.send({ success: false, message: 'Unauthorized request' })
+  if (!(await databaseConnect.verifyUserInOrganisation(userId, orgId)))
+    return reply.send({ success: false, message: 'User does not belong to organisation' })
+
+  reply.send(await getUserInfo(username, orgId))
 }
 
 const routeCreateHash = async (request: any, reply: any) => {
@@ -46,4 +71,4 @@ const routeUpdateRowPolicies = async (request: any, reply: any) => {
   return reply.send(await updateRowPolicies())
 }
 
-export { routeUserPermissions, routeLogin, routeUpdateRowPolicies, routeCreateHash }
+export { routeUserPermissions, routeLogin, routeLoginOrg, routeUpdateRowPolicies, routeCreateHash }
