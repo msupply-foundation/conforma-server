@@ -1,15 +1,16 @@
 import databaseConnect from '../databaseConnect'
-import { getUsername, getUserInfo, getTokenData } from './loginHelpers'
+import { getUserInfo, getTokenData } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
-import { userInfo } from 'os'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
-const routeUserPermissions = async (request: any, reply: any) => {
+// Authenticates user using JWT header and returns latest user/org info,
+// template permissions and new JWT token
+const routeUserInfo = async (request: any, reply: any) => {
   const token = (request?.headers?.authorization || '').replace('Bearer ', '')
-  const username = await getUsername(token)
-  return reply.send(await getUserInfo(username))
+  const { username, orgId } = await getTokenData(token)
+  return reply.send(await getUserInfo(username, orgId))
 }
 
 // Authenticates login and returns:
@@ -71,4 +72,4 @@ const routeUpdateRowPolicies = async (request: any, reply: any) => {
   return reply.send(await updateRowPolicies())
 }
 
-export { routeUserPermissions, routeLogin, routeLoginOrg, routeUpdateRowPolicies, routeCreateHash }
+export { routeUserInfo, routeLogin, routeLoginOrg, routeUpdateRowPolicies, routeCreateHash }

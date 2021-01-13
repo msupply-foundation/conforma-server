@@ -9,19 +9,6 @@ import { Organisation } from '../../generated/graphql'
 const verifyPromise: any = promisify(verify)
 const signPromise: any = promisify(sign)
 
-// REMOVE THIS
-const getUsername = async (jwtToken: string) => {
-  let username = 'nonRegistered'
-  if (jwtToken) {
-    try {
-      username = (await verifyPromise(jwtToken, config.jwtSecret)).username
-    } catch (e) {
-      console.log('cannot verify JWT in authorisation header')
-    }
-  }
-  return username
-}
-
 const getTokenData = async (jwtToken: string) => {
   try {
     const data = await verifyPromise(jwtToken, config.jwtSecret)
@@ -75,4 +62,4 @@ const getSignedJWT = async (
   )
 }
 
-export { getUsername, getUserInfo, getTokenData }
+export { getUserInfo, getTokenData }
