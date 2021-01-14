@@ -90,7 +90,7 @@ Basic login endpoint that will also return (on success):
 ```JSON
 {
     "username": "${username}",
-    "passwordHash": "${passwordHash"
+    "password": "${password}"
 }
 ```
 
@@ -120,6 +120,18 @@ Basic login endpoint that will also return (on success):
     }
 }
 ```
+
+#### Login Organisation
+
+POST: `/login-org`
+
+Basic login endpoint for organisation. Intended for use after `/login` -- client supplies `userId`, `orgId` and the JWT from `/login` return
+
+Returns (on success):
+
+- User Info (now including selected org info)
+- User Permissions (now including `orgId`)
+- JWT token
 
 #### User Info
 

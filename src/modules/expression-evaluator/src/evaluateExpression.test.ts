@@ -272,6 +272,76 @@ test('Test returning single application property, depth 2, no object index', () 
   })
 })
 
+// String substitution
+
+test('Simple string substitution', () => {
+  return evaluateExpression(testData.stringSubstitutionSingle).then((result: any) => {
+    expect(result).toEqual('Hello, friend, welcome to our site.')
+  })
+})
+
+test('Simple string substitution - multiple replacements', () => {
+  return evaluateExpression(testData.stringSubstitutionMultiple).then((result: any) => {
+    expect(result).toBe(
+      "There are 10 kinds of people in the world:\nthose who understand binary and those who don't"
+    )
+  })
+})
+
+test('String substitution - non-string replacements', () => {
+  return evaluateExpression(testData.stringSubstitutionNonStringReplacements).then(
+    (result: any) => {
+      expect(result).toBe('We have 2 people listed with an average value of 4.53: Boba,Mando')
+    }
+  )
+})
+
+test('String substitution - too many replacements', () => {
+  return evaluateExpression(testData.stringSubstitutionTooManyReplacements).then((result: any) => {
+    expect(result).toBe('The price of milk is $2.30 per liter')
+  })
+})
+
+test('String substitution - too few replacements', () => {
+  return evaluateExpression(testData.stringSubstitutionTooFewReplacements).then((result: any) => {
+    expect(result).toBe("The applicant's name is Carl Smith .")
+  })
+})
+
+test('String substitution - parameters not ordered', () => {
+  return evaluateExpression(testData.stringSubstitutionParametersNonOrdered).then((result: any) => {
+    expect(result).toBe('Two out of every 3 people are stupid')
+  })
+})
+
+test('String substitution - parameters not ordered and too few', () => {
+  return evaluateExpression(testData.stringSubstitutionParametersNonOrderedAndTooFew).then(
+    (result: any) => {
+      expect(result).toBe('Two out of every  people are stupid')
+    }
+  )
+})
+
+test('String substitution - parameters not sequential', () => {
+  return evaluateExpression(testData.stringSubstitutionParametersNotSequential).then(
+    (result: any) => {
+      expect(result).toBe(`It shouldn't matter if there are big gaps between parameter numbers`)
+    }
+  )
+})
+
+test('String substitution - no parameters', () => {
+  return evaluateExpression(testData.stringSubstitutionNoParameters).then((result: any) => {
+    expect(result).toBe('This sentence has no replacements.')
+  })
+})
+
+test('String substitution - no replacements supplied', () => {
+  return evaluateExpression(testData.stringSubstitutionNoReplacements).then((result: any) => {
+    expect(result).toBe('Your name is   but we have nothing to replace them with')
+  })
+})
+
 // API operator
 test('API: Check username is unique', () => {
   return evaluateExpression(testData.APIisUnique, {
