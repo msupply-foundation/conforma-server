@@ -21,22 +21,31 @@ const getTokenData = async (jwtToken: string) => {
   }
 }
 
-const getUserInfo = async (username: string, orgId: number | undefined = undefined) => {
-  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
-  const {
-    userId,
-    firstName,
-    lastName,
-    dateOfBirth,
-    email,
-  } = await databaseConnect.getUserDataByUsername(username)
-  const organisation = orgId ? await databaseConnect.getOrgById(orgId) : undefined
+type UserOrgParameters = {
+  username?: string
+  userId?: number
+  orgId?: number
+}
+
+const getUserInfo = async (userProperties: any) => {
+  const { username, userId, orgId } = userProperties
+
+  const user =
+    Object.keys(userProperties).length > 3
+      ? { ...userProperties }
+      : username
+      ? await databaseConnect.getUserDataByUsername(username)
+      : userId && (await databaseConnect.getUserData(userId))
+  delete user?.passwordHash
+
+  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(
+    userProperties.username
+  )
 
   return {
-    username,
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
-    JWT: await getSignedJWT(username, userId, templatePermissionRows, orgId),
-    user: { userId, firstName, lastName, username, dateOfBirth, email, organisation },
+    JWT: await getSignedJWT({ userId: userProperties.userId, templatePermissionRows, orgId }),
+    userNew: user,
   }
 }
 
@@ -52,16 +61,8 @@ const buildTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) 
   return templatePermissions
 }
 
-const getSignedJWT = async (
-  username: string,
-  userId: number,
-  templatePermissionRows: Array<PermissionRow>,
-  orgId: number | undefined = undefined
-) => {
-  return await signPromise(
-    compileJWT(username, userId, templatePermissionRows, orgId),
-    config.jwtSecret
-  )
+const getSignedJWT = async (JWTelements: object) => {
+  return await signPromise(compileJWT(JWTelements), config.jwtSecret)
 }
 
 export { extractJWTFromHeader, getUserInfo, getTokenData }

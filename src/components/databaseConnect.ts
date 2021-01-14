@@ -95,9 +95,9 @@ class DBConnect {
 
   public getUserOrgs = PostgresDB.getUserOrgs
 
-  public getOrgById = PostgresDB.getOrgById
+  // public getOrgById = PostgresDB.getOrgById
 
-  public verifyUserInOrganisation = PostgresDB.verifyUserInOrganisation
+  // public verifyUserInOrganisation = PostgresDB.verifyUserInOrganisation
 
   public getApplicationResponses = PostgresDB.getApplicationResponses
 

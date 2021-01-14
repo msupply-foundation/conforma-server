@@ -358,39 +358,31 @@ class PostgresDB {
     }
   }
 
-  public getUserData = async (userId: number) => {
-    const text = `
-      SELECT first_name as "firstName",
+  private getUserQuery = `
+      SELECT id as "userId",
+      first_name as "firstName",
       last_name as "lastName",
-      username, date_of_birth as "dateOfBirth",
-      email
-      FROM "user"
-      WHERE id = $1
-    `
+      username,
+      date_of_birth as "dateOfBirth",
+      email,
+      password_hash as "passwordHash"
+      FROM "user"`
+
+  public getUserData = async (userId: number) => {
+    const text = `${this.getUserQuery} WHERE id = $1`
     try {
       const result = await this.query({ text, values: [userId] })
-      const userData = result.rows[0]
-      return userData
+      return result.rows[0]
     } catch (err) {
       throw err
     }
   }
 
   public getUserDataByUsername = async (username: string) => {
-    const text = `
-      SELECT id as "userId",
-      first_name as "firstName",
-      last_name as "lastName", 
-      username, date_of_birth as "dateOfBirth",
-      email,
-      password_hash as "passwordHash"
-      FROM "user"
-      WHERE username = $1
-    `
+    const text = `${this.getUserQuery} WHERE username = $1`
     try {
       const result = await this.query({ text, values: [username] })
-      const userData = result.rows[0]
-      return userData
+      return result.rows[0]
     } catch (err) {
       throw err
     }
@@ -400,43 +392,15 @@ class PostgresDB {
     const text = `
     SELECT organisation.id AS "orgId",
     user_role as "orgRole",
-    name as "orgName"
+    name as "orgName",
+    licence_number as "licenceNumber",
+    address
     FROM user_organisation JOIN organisation
     ON organisation_id = organisation.id
     WHERE user_id = $1`
     try {
       const result = await this.query({ text, values: [userId] })
-      const orgData = result.rows
-      return orgData
-    } catch (err) {
-      throw err
-    }
-  }
-
-  public getOrgById = async (orgId: number) => {
-    const text = `
-    SELECT id,
-    name,
-    licence_number as "licenceNumber",
-    address
-    FROM organisation
-    WHERE id = $1`
-    try {
-      const result = await this.query({ text, values: [orgId] })
-      return result.rows[0]
-    } catch (err) {
-      throw err
-    }
-  }
-
-  public verifyUserInOrganisation = async (userId: number, orgId: number) => {
-    const text = `
-    SELECT COUNT(*) from user_organisation
-    WHERE user_id = $1
-    AND organisation_id = $2`
-    try {
-      const result = await this.query({ text, values: [userId, orgId] })
-      return Boolean(Number(result.rows[0].count))
+      return result.rows
     } catch (err) {
       throw err
     }

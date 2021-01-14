@@ -10,7 +10,7 @@ const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 const routeUserInfo = async (request: any, reply: any) => {
   const token = extractJWTFromHeader(request)
   const { username, orgId } = await getTokenData(token)
-  return reply.send(await getUserInfo(username, orgId))
+  return reply.send(await getUserInfo({ username, orgId }))
 }
 
 // Authenticates login and returns:
@@ -20,15 +20,16 @@ const routeUserInfo = async (request: any, reply: any) => {
 // - JWT
 const routeLogin = async (request: any, reply: any) => {
   const { username, password } = request.body || { username: '', password: '' }
-  const { passwordHash } = (await databaseConnect.getUserDataByUsername(username)) || {}
+  const user = (await databaseConnect.getUserDataByUsername(username)) || {}
 
-  if (!passwordHash) return reply.send({ success: false })
+  if (!user.passwordHash) return reply.send({ success: false })
 
-  if (!(await bcrypt.compare(password, passwordHash))) return reply.send({ success: false })
+  if (!(await bcrypt.compare(password, user.passwordHash))) return reply.send({ success: false })
 
   // Login successful
-  const userInfo = await getUserInfo(username)
-  const orgList = await databaseConnect.getUserOrgs(userInfo.user.userId)
+  const userInfo = await getUserInfo(user)
+  const orgList = await databaseConnect.getUserOrgs(user.userId)
+
   reply.send({
     success: true,
     ...userInfo,
@@ -46,10 +47,11 @@ const routeLoginOrg = async (request: any, reply: any) => {
   const { userId: tokenUserId, username } = await getTokenData(token)
 
   if (userId !== tokenUserId) return reply.send({ success: false, message: 'Unauthorized request' })
-  if (!(await databaseConnect.verifyUserInOrganisation(userId, orgId)))
+  const orgList = await databaseConnect.getUserOrgs(userId)
+  if (orgList.filter((org) => org.orgId === orgId).length === 0)
     return reply.send({ success: false, message: 'User does not belong to organisation' })
 
-  reply.send({ success: true, ...(await getUserInfo(username, orgId)) })
+  reply.send({ success: true, ...(await getUserInfo({ username, orgId })) })
 }
 
 const routeCreateHash = async (request: any, reply: any) => {
