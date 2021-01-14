@@ -42,6 +42,7 @@ const remapObjectKeysWithPrefix = (prefix: string, object: Object) => {
   out {
     aud: 'postgraphile',
     userId: 1,
+    orgId: 2, (if supplied)
     pp2pn3: true,
     pp2pn3tp4: true,
     pp2pn3tp4_templateId: "1",
@@ -50,11 +51,9 @@ const remapObjectKeysWithPrefix = (prefix: string, object: Object) => {
   }
 */
 const compileJWT = (JWTelements: any) => {
-  let JWT = { ...JWTelements, aud: 'postgraphile' }
+  const { userId, orgId, templatePermissionRows } = JWTelements
 
-  console.log(JWT)
-
-  const { templatePermissionRows } = JWT
+  let JWT = { userId, orgId, aud: 'postgraphile' }
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
     const { templatePermissionRestrictions, templateId, templatePermissionId } = permissionRow
@@ -79,7 +78,6 @@ const compileJWT = (JWTelements: any) => {
       ...JWT,
     }
   })
-  console.log(JWT)
   return JWT
 }
 

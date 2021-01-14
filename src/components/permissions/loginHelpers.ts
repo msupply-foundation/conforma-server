@@ -31,6 +31,7 @@ const getUserInfo = async (userProperties: any) => {
   const { username, userId, orgId } = userProperties
 
   const user =
+    // Don't look up user in DB if we already have it
     Object.keys(userProperties).length > 3
       ? { ...userProperties }
       : username
@@ -38,9 +39,7 @@ const getUserInfo = async (userProperties: any) => {
       : userId && (await databaseConnect.getUserData(userId))
   delete user?.passwordHash
 
-  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(
-    userProperties.username
-  )
+  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(user.username)
 
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),

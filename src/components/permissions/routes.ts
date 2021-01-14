@@ -9,8 +9,15 @@ const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 // template permissions and new JWT token
 const routeUserInfo = async (request: any, reply: any) => {
   const token = extractJWTFromHeader(request)
-  const { username, orgId } = await getTokenData(token)
-  return reply.send(await getUserInfo({ username, orgId }))
+  const { userId, orgId } = await getTokenData(token)
+
+  const orgList = await databaseConnect.getUserOrgs(userId)
+  const selectedOrg = orgList.filter((org) => org.orgId === orgId)?.[0]
+
+  const userInfo = await getUserInfo({ userId, orgId: selectedOrg ? orgId : undefined })
+  userInfo.user.organisation = selectedOrg
+
+  return reply.send(userInfo)
 }
 
 // Authenticates login and returns:
@@ -42,16 +49,20 @@ const routeLogin = async (request: any, reply: any) => {
 // - template permissions
 // - JWT (with orgId included)
 const routeLoginOrg = async (request: any, reply: any) => {
-  const { userId, orgId } = request.body || { userId: '', orgId: '' }
+  const { orgId } = request.body
   const token = extractJWTFromHeader(request)
-  const { userId: tokenUserId, username } = await getTokenData(token)
+  const { userId } = await getTokenData(token)
 
-  if (userId !== tokenUserId) return reply.send({ success: false, message: 'Unauthorized request' })
+  // if (userId !== tokenUserId) return reply.send({ success: false, message: 'Unauthorized request' })
   const orgList = await databaseConnect.getUserOrgs(userId)
-  if (orgList.filter((org) => org.orgId === orgId).length === 0)
+  const selectedOrg = orgList.filter((org) => org.orgId === orgId)?.[0]
+  if (!selectedOrg)
     return reply.send({ success: false, message: 'User does not belong to organisation' })
 
-  reply.send({ success: true, ...(await getUserInfo({ username, orgId })) })
+  const userInfo = await getUserInfo({ userId, orgId })
+  userInfo.user.organisation = selectedOrg
+
+  reply.send({ success: true, ...userInfo })
 }
 
 const routeCreateHash = async (request: any, reply: any) => {
