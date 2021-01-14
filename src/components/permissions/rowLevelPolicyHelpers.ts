@@ -82,7 +82,7 @@ const compileJWT = (
   return JWT
 }
 
-// Removes previously generated row level policies and resintates them based on current permission settings
+// Removes previously generated row level policies and reinstates them based on current permission settings
 // out: [ 'CREATE POLICY "view_pp3pn3" ON "application" FOR SELECT USING (jwt_get_boolean('pp3pn3') = true and user_id = jwt_get_text('currentUser') AND template_id = jwt_get_bigint('pp3pn3_templateId')' ]
 const updateRowPolicies = async () => {
   const permissionRows = await databaseConnect.getAllPermissions()
