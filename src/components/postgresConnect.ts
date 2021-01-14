@@ -391,9 +391,9 @@ class PostgresDB {
   public getUserOrgs = async (userId: number) => {
     const text = `
     SELECT organisation.id AS "orgId",
-    user_role as "orgRole",
-    name as "orgName",
-    licence_number as "licenceNumber",
+    user_role as "userRole",
+    name,
+    licence_number,
     address
     FROM user_organisation JOIN organisation
     ON organisation_id = organisation.id
