@@ -1,9 +1,10 @@
 import databaseConnect from '../databaseConnect'
-import { UserInfo, PermissionRow, RuleTypes } from './types'
+import { UserInfo, PermissionRow } from './types'
 import {
   getPermissionNameAbbreviation,
   getTemplatePermissionAbbreviation,
   remapObjectKeysWithPrefix,
+  compileRowLevelPolicyRuleTypes,
 } from './helpersUtils'
 
 const SQLBuilder = require('json-sql-builder2')
@@ -190,31 +191,6 @@ const compileRowLevelPolicies = (permissionAbbreviation: string, permissionPolic
   return policies
 }
 
-// Constants for compileRowLevelPolicy
-// https://www.postgresql.org/docs/current/sql-createpolicy.html
-const ruleTypes: RuleTypes = {
-  view: {
-    for: 'SELECT',
-    using: true,
-    withCheck: false,
-  },
-  update: {
-    for: 'UPDATE',
-    using: true,
-    withCheck: true,
-  },
-  create: {
-    for: 'CREATE',
-    using: false,
-    withCheck: true,
-  },
-  delete: {
-    for: 'DELETE',
-    using: true,
-    withCheck: false,
-  },
-}
-
 /* Compiles single row level permission
   in "application", "pp2pn2tp2", "view", "true", 
       "user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2tp2_templateId')" 
@@ -241,7 +217,7 @@ const compileRowLevelPolicy = (
     return `USING ${addBracketsAndPermissionCheck(conditionToUse)}`
   }
 
-  const ruleSettings = ruleTypes[ruleType]
+  const ruleSettings = compileRowLevelPolicyRuleTypes[ruleType] // { for: 'CREATE'|'DELETE'|'UPDATE'|'SELECT', using: true|false, withCheck: true|false }
 
   if (!ruleSettings) {
     console.warn(`rule ${ruleType} does not exist, ignoring`)
