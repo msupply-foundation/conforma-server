@@ -1,5 +1,5 @@
 import databaseConnect from '../databaseConnect'
-import { getUserInfo, getTokenData } from './loginHelpers'
+import { getUserInfo, getTokenData, extractJWTFromHeader } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 
@@ -8,7 +8,7 @@ const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 // Authenticates user using JWT header and returns latest user/org info,
 // template permissions and new JWT token
 const routeUserInfo = async (request: any, reply: any) => {
-  const token = (request?.headers?.authorization || '').replace('Bearer ', '')
+  const token = extractJWTFromHeader(request)
   const { username, orgId } = await getTokenData(token)
   return reply.send(await getUserInfo(username, orgId))
 }
@@ -42,7 +42,7 @@ const routeLogin = async (request: any, reply: any) => {
 // - JWT (with orgId included)
 const routeLoginOrg = async (request: any, reply: any) => {
   const { userId, orgId } = request.body || { userId: '', orgId: '' }
-  const token = (request?.headers?.authorization || '').replace('Bearer ', '')
+  const token = extractJWTFromHeader(request)
   const { userId: tokenUserId, username } = await getTokenData(token)
 
   if (userId !== tokenUserId) return reply.send({ success: false, message: 'Unauthorized request' })
@@ -61,7 +61,7 @@ const routeCreateHash = async (request: any, reply: any) => {
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
-  // const token = (request?.headers?.authorization || '').replace('Bearer ', '')
+  // const token = extractJWTFromHeader(request)
   // const username = await getUsername(token)
   // return reply.send(await getUserInfo(username))
 

@@ -4,10 +4,12 @@ import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
 import { PermissionRow, TemplatePermissions, UserInfo } from './types'
 import { compileJWT } from './rowLevelPolicyHelpers'
-import { Organisation } from '../../generated/graphql'
 
 const verifyPromise: any = promisify(verify)
 const signPromise: any = promisify(sign)
+
+const extractJWTFromHeader = (request: any) =>
+  (request?.headers?.authorization || '').replace('Bearer ', '')
 
 const getTokenData = async (jwtToken: string) => {
   try {
@@ -62,4 +64,4 @@ const getSignedJWT = async (
   )
 }
 
-export { getUserInfo, getTokenData }
+export { extractJWTFromHeader, getUserInfo, getTokenData }
