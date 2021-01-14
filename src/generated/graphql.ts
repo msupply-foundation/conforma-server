@@ -2998,13 +2998,19 @@ export type ApplicationUserIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -5399,6 +5405,16 @@ export type DeleteUserByNodeIdInput = {
   nodeId: Scalars['ID'];
 };
 
+/** All input for the `deleteUserByUsername` mutation. */
+export type DeleteUserByUsernameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  username: Scalars['String'];
+};
+
 /** All input for the `deleteUser` mutation. */
 export type DeleteUserInput = {
   /**
@@ -6032,13 +6048,19 @@ export type FileUserIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<FileOnFileForFileUserIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -6316,6 +6338,8 @@ export type Mutation = {
   updateUserByNodeId?: Maybe<UpdateUserPayload>;
   /** Updates a single `User` using a unique key and a patch. */
   updateUser?: Maybe<UpdateUserPayload>;
+  /** Updates a single `User` using a unique key and a patch. */
+  updateUserByUsername?: Maybe<UpdateUserPayload>;
   /** Updates a single `UserOrganisation` using its globally unique id and a patch. */
   updateUserOrganisationByNodeId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `UserOrganisation` using a unique key and a patch. */
@@ -6430,6 +6454,8 @@ export type Mutation = {
   deleteUserByNodeId?: Maybe<DeleteUserPayload>;
   /** Deletes a single `User` using a unique key. */
   deleteUser?: Maybe<DeleteUserPayload>;
+  /** Deletes a single `User` using a unique key. */
+  deleteUserByUsername?: Maybe<DeleteUserPayload>;
   /** Deletes a single `UserOrganisation` using its globally unique id. */
   deleteUserOrganisationByNodeId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `UserOrganisation` using a unique key. */
@@ -6936,6 +6962,12 @@ export type MutationUpdateUserArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateUserByUsernameArgs = {
+  input: UpdateUserByUsernameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserOrganisationByNodeIdArgs = {
   input: UpdateUserOrganisationByNodeIdInput;
 };
@@ -7274,6 +7306,12 @@ export type MutationDeleteUserByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserArgs = {
   input: DeleteUserInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteUserByUsernameArgs = {
+  input: DeleteUserByUsernameInput;
 };
 
 
@@ -7761,13 +7799,19 @@ export type NotificationUserIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -8254,13 +8298,19 @@ export type PermissionJoinUserIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -8970,6 +9020,7 @@ export type Query = Node & {
   templateStage?: Maybe<TemplateStage>;
   triggerQueue?: Maybe<TriggerQueue>;
   user?: Maybe<User>;
+  userByUsername?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   jwtGetBigint?: Maybe<Scalars['BigInt']>;
@@ -9614,6 +9665,12 @@ export type QueryUserArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryUserByUsernameArgs = {
+  username: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryUserOrganisationArgs = {
   id: Scalars['Int'];
 };
@@ -10094,13 +10151,19 @@ export type ReviewAssignmentAssignerIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -10375,13 +10438,19 @@ export type ReviewAssignmentReviewerIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -11600,13 +11669,19 @@ export type ReviewReviewerIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -16963,6 +17038,18 @@ export type UpdateUserByNodeIdInput = {
   patch: UserPatch;
 };
 
+/** All input for the `updateUserByUsername` mutation. */
+export type UpdateUserByUsernameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `User` being updated. */
+  patch: UserPatch;
+  username: Scalars['String'];
+};
+
 /** All input for the `updateUser` mutation. */
 export type UpdateUserInput = {
   /**
@@ -17476,6 +17563,13 @@ export type UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate = {
   id: Scalars['Int'];
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnApplicationForApplicationUserIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type UserOnFileForFileUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `file` to be connected. */
@@ -17489,6 +17583,13 @@ export type UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate = {
   /** An object where the defined keys will be set on the `user` being updated. */
   patch: UpdateUserOnFileForFileUserIdFkeyPatch;
   id: Scalars['Int'];
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnFileForFileUserIdFkeyPatch;
+  username: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -17506,6 +17607,13 @@ export type UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate = {
   id: Scalars['Int'];
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `permissionJoin` to be connected. */
@@ -17519,6 +17627,13 @@ export type UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserPkeyUpdate =
   /** An object where the defined keys will be set on the `user` being updated. */
   patch: UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch;
   id: Scalars['Int'];
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch;
+  username: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -17536,6 +17651,13 @@ export type UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkey
   id: Scalars['Int'];
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `reviewAssignment` to be connected. */
@@ -17549,6 +17671,13 @@ export type UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkey
   /** An object where the defined keys will be set on the `user` being updated. */
   patch: UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
   id: Scalars['Int'];
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  username: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -17566,6 +17695,13 @@ export type UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate = {
   id: Scalars['Int'];
 };
 
+/** The fields on `user` to look up the row to update. */
+export type UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
+  username: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `userOrganisation` to be connected. */
@@ -17579,6 +17715,13 @@ export type UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserPkeyUpda
   /** An object where the defined keys will be set on the `user` being updated. */
   patch: UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
   id: Scalars['Int'];
+};
+
+/** The fields on `user` to look up the row to update. */
+export type UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate = {
+  /** An object where the defined keys will be set on the `user` being updated. */
+  patch: UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch;
+  username: Scalars['String'];
 };
 
 export type UserOrganisation = Node & {
@@ -17842,13 +17985,19 @@ export type UserOrganisationUserIdFkeyInput = {
   /** The primary key(s) for `user` for the far side of the relationship. */
   connectById?: Maybe<UserUserPkeyConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  connectByUsername?: Maybe<UserUserUsernameKeyConnect>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   connectByNodeId?: Maybe<UserNodeIdConnect>;
   /** The primary key(s) for `user` for the far side of the relationship. */
   deleteById?: Maybe<UserUserPkeyDelete>;
   /** The primary key(s) for `user` for the far side of the relationship. */
+  deleteByUsername?: Maybe<UserUserUsernameKeyDelete>;
+  /** The primary key(s) for `user` for the far side of the relationship. */
   deleteByNodeId?: Maybe<UserNodeIdDelete>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateById?: Maybe<UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserPkeyUpdate>;
+  /** The primary key(s) and patch data for `user` for the far side of the relationship. */
+  updateByUsername?: Maybe<UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate>;
   /** The primary key(s) and patch data for `user` for the far side of the relationship. */
   updateByNodeId?: Maybe<UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate>;
   /** A `UserInput` object that will be created and connected to this object. */
@@ -18054,6 +18203,16 @@ export type UserUserPkeyConnect = {
 /** The fields on `user` to look up the row to delete. */
 export type UserUserPkeyDelete = {
   id: Scalars['Int'];
+};
+
+/** The fields on `user` to look up the row to connect. */
+export type UserUserUsernameKeyConnect = {
+  username: Scalars['String'];
+};
+
+/** The fields on `user` to look up the row to delete. */
+export type UserUserUsernameKeyDelete = {
+  username: Scalars['String'];
 };
 
 
@@ -18482,8 +18641,10 @@ export type ResolversTypes = {
   updatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch;
   PermissionJoinUserIdFkeyInput: PermissionJoinUserIdFkeyInput;
   UserUserPkeyConnect: UserUserPkeyConnect;
+  UserUserUsernameKeyConnect: UserUserUsernameKeyConnect;
   UserNodeIdConnect: UserNodeIdConnect;
   UserUserPkeyDelete: UserUserPkeyDelete;
+  UserUserUsernameKeyDelete: UserUserUsernameKeyDelete;
   UserNodeIdDelete: UserNodeIdDelete;
   UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserPkeyUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch: UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch;
@@ -18824,6 +18985,7 @@ export type ResolversTypes = {
   NotificationReviewIdFkeyReviewCreateInput: NotificationReviewIdFkeyReviewCreateInput;
   UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
   NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
+  UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
   NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
   UserPatch: UserPatch;
   NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
@@ -18834,10 +18996,12 @@ export type ResolversTypes = {
   FileApplicationIdFkeyApplicationCreateInput: FileApplicationIdFkeyApplicationCreateInput;
   UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
+  UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate;
   ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
   ReviewReviewerIdFkeyUserCreateInput: ReviewReviewerIdFkeyUserCreateInput;
   UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
   ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
+  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
   FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
   ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate;
@@ -18881,10 +19045,12 @@ export type ResolversTypes = {
   ReviewAssignmentStageIdFkeyTemplateStageCreateInput: ReviewAssignmentStageIdFkeyTemplateStageCreateInput;
   UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
   ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
   ReviewAssignmentReviewerIdFkeyUserCreateInput: ReviewAssignmentReviewerIdFkeyUserCreateInput;
   UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
   ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
   ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
   ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
@@ -18932,6 +19098,7 @@ export type ResolversTypes = {
   ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate;
   UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate: UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyApplicationCreateInput: ApplicationUserIdFkeyApplicationCreateInput;
+  UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate;
   ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyUserCreateInput: ApplicationUserIdFkeyUserCreateInput;
   ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate;
@@ -18957,10 +19124,12 @@ export type ResolversTypes = {
   PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput: PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput;
   UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate;
   PermissionJoinUserIdFkeyPermissionJoinCreateInput: PermissionJoinUserIdFkeyPermissionJoinCreateInput;
+  UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate;
   UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
   UserOrganisationUserIdFkeyUserCreateInput: UserOrganisationUserIdFkeyUserCreateInput;
   UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
   UserOrganisationUserIdFkeyUserOrganisationCreateInput: UserOrganisationUserIdFkeyUserOrganisationCreateInput;
+  UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate;
   PermissionJoinUserIdFkeyUserCreateInput: PermissionJoinUserIdFkeyUserCreateInput;
   PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
@@ -19152,6 +19321,7 @@ export type ResolversTypes = {
   UpdateUserByNodeIdInput: UpdateUserByNodeIdInput;
   UpdateUserPayload: ResolverTypeWrapper<UpdateUserPayload>;
   UpdateUserInput: UpdateUserInput;
+  UpdateUserByUsernameInput: UpdateUserByUsernameInput;
   UpdateUserOrganisationByNodeIdInput: UpdateUserOrganisationByNodeIdInput;
   UpdateUserOrganisationPayload: ResolverTypeWrapper<UpdateUserOrganisationPayload>;
   UpdateUserOrganisationInput: UpdateUserOrganisationInput;
@@ -19237,6 +19407,7 @@ export type ResolversTypes = {
   DeleteUserByNodeIdInput: DeleteUserByNodeIdInput;
   DeleteUserPayload: ResolverTypeWrapper<DeleteUserPayload>;
   DeleteUserInput: DeleteUserInput;
+  DeleteUserByUsernameInput: DeleteUserByUsernameInput;
   DeleteUserOrganisationByNodeIdInput: DeleteUserOrganisationByNodeIdInput;
   DeleteUserOrganisationPayload: ResolverTypeWrapper<DeleteUserOrganisationPayload>;
   DeleteUserOrganisationInput: DeleteUserOrganisationInput;
@@ -19551,8 +19722,10 @@ export type ResolversParentTypes = {
   updatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch;
   PermissionJoinUserIdFkeyInput: PermissionJoinUserIdFkeyInput;
   UserUserPkeyConnect: UserUserPkeyConnect;
+  UserUserUsernameKeyConnect: UserUserUsernameKeyConnect;
   UserNodeIdConnect: UserNodeIdConnect;
   UserUserPkeyDelete: UserUserPkeyDelete;
+  UserUserUsernameKeyDelete: UserUserUsernameKeyDelete;
   UserNodeIdDelete: UserNodeIdDelete;
   UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserPkeyUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch: UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch;
@@ -19893,6 +20066,7 @@ export type ResolversParentTypes = {
   NotificationReviewIdFkeyReviewCreateInput: NotificationReviewIdFkeyReviewCreateInput;
   UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
   NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
+  UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
   NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
   UserPatch: UserPatch;
   NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
@@ -19903,10 +20077,12 @@ export type ResolversParentTypes = {
   FileApplicationIdFkeyApplicationCreateInput: FileApplicationIdFkeyApplicationCreateInput;
   UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
+  UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate;
   ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
   ReviewReviewerIdFkeyUserCreateInput: ReviewReviewerIdFkeyUserCreateInput;
   UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
   ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
+  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
   FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
   ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate;
@@ -19950,10 +20126,12 @@ export type ResolversParentTypes = {
   ReviewAssignmentStageIdFkeyTemplateStageCreateInput: ReviewAssignmentStageIdFkeyTemplateStageCreateInput;
   UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
   ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
   ReviewAssignmentReviewerIdFkeyUserCreateInput: ReviewAssignmentReviewerIdFkeyUserCreateInput;
   UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
   ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
   ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
   ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
@@ -20001,6 +20179,7 @@ export type ResolversParentTypes = {
   ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate;
   UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate: UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyApplicationCreateInput: ApplicationUserIdFkeyApplicationCreateInput;
+  UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate;
   ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyUserCreateInput: ApplicationUserIdFkeyUserCreateInput;
   ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate;
@@ -20026,10 +20205,12 @@ export type ResolversParentTypes = {
   PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput: PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput;
   UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate;
   PermissionJoinUserIdFkeyPermissionJoinCreateInput: PermissionJoinUserIdFkeyPermissionJoinCreateInput;
+  UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate;
   UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
   UserOrganisationUserIdFkeyUserCreateInput: UserOrganisationUserIdFkeyUserCreateInput;
   UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyNodeIdUpdate;
   UserOrganisationUserIdFkeyUserOrganisationCreateInput: UserOrganisationUserIdFkeyUserOrganisationCreateInput;
+  UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate;
   PermissionJoinUserIdFkeyUserCreateInput: PermissionJoinUserIdFkeyUserCreateInput;
   PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
@@ -20221,6 +20402,7 @@ export type ResolversParentTypes = {
   UpdateUserByNodeIdInput: UpdateUserByNodeIdInput;
   UpdateUserPayload: UpdateUserPayload;
   UpdateUserInput: UpdateUserInput;
+  UpdateUserByUsernameInput: UpdateUserByUsernameInput;
   UpdateUserOrganisationByNodeIdInput: UpdateUserOrganisationByNodeIdInput;
   UpdateUserOrganisationPayload: UpdateUserOrganisationPayload;
   UpdateUserOrganisationInput: UpdateUserOrganisationInput;
@@ -20306,6 +20488,7 @@ export type ResolversParentTypes = {
   DeleteUserByNodeIdInput: DeleteUserByNodeIdInput;
   DeleteUserPayload: DeleteUserPayload;
   DeleteUserInput: DeleteUserInput;
+  DeleteUserByUsernameInput: DeleteUserByUsernameInput;
   DeleteUserOrganisationByNodeIdInput: DeleteUserOrganisationByNodeIdInput;
   DeleteUserOrganisationPayload: DeleteUserOrganisationPayload;
   DeleteUserOrganisationInput: DeleteUserOrganisationInput;
@@ -21328,6 +21511,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateTriggerQueue?: Resolver<Maybe<ResolversTypes['UpdateTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTriggerQueueArgs, 'input'>>;
   updateUserByNodeId?: Resolver<Maybe<ResolversTypes['UpdateUserPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserByNodeIdArgs, 'input'>>;
   updateUser?: Resolver<Maybe<ResolversTypes['UpdateUserPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'input'>>;
+  updateUserByUsername?: Resolver<Maybe<ResolversTypes['UpdateUserPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserByUsernameArgs, 'input'>>;
   updateUserOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserOrganisationByNodeIdArgs, 'input'>>;
   updateUserOrganisation?: Resolver<Maybe<ResolversTypes['UpdateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserOrganisationArgs, 'input'>>;
   deleteActionPluginByNodeId?: Resolver<Maybe<ResolversTypes['DeleteActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionPluginByNodeIdArgs, 'input'>>;
@@ -21385,6 +21569,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTriggerQueue?: Resolver<Maybe<ResolversTypes['DeleteTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTriggerQueueArgs, 'input'>>;
   deleteUserByNodeId?: Resolver<Maybe<ResolversTypes['DeleteUserPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserByNodeIdArgs, 'input'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['DeleteUserPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'input'>>;
+  deleteUserByUsername?: Resolver<Maybe<ResolversTypes['DeleteUserPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserByUsernameArgs, 'input'>>;
   deleteUserOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserOrganisationByNodeIdArgs, 'input'>>;
   deleteUserOrganisation?: Resolver<Maybe<ResolversTypes['DeleteUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserOrganisationArgs, 'input'>>;
 };
@@ -21597,6 +21782,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateStage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType, RequireFields<QueryTemplateStageArgs, 'id'>>;
   triggerQueue?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType, RequireFields<QueryTriggerQueueArgs, 'id'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
+  userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByUsernameArgs, 'username'>>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationArgs, 'id'>>;
   applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
   jwtGetBigint?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryJwtGetBigintArgs, never>>;

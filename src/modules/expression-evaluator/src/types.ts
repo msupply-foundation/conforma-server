@@ -43,5 +43,7 @@ type Operator =
   | '+'
   | 'REGEX'
   | 'objectProperties'
+  | 'stringSubstitution'
+  | 'API'
   | 'pgSQL'
   | 'graphQL'
