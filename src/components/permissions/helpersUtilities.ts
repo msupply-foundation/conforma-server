@@ -1,33 +1,8 @@
-import { PermissionRow, RuleTypes } from './types'
+import { PermissionRow } from './types'
 
 // Need to use require as there are no types for json-sql-builder2, can attempt to add them in the future
 const SQLBuilder = require('json-sql-builder2')
 const jsonToSql = new SQLBuilder('PostgreSQL')
-
-// Constants for compileRowLevelPolicy
-// https://www.postgresql.org/docs/current/sql-createpolicy.html
-const compileRowLevelPolicyRuleTypes: RuleTypes = {
-  view: {
-    for: 'SELECT',
-    using: true,
-    withCheck: false,
-  },
-  update: {
-    for: 'UPDATE',
-    using: true,
-    withCheck: true,
-  },
-  create: {
-    for: 'CREATE',
-    using: false,
-    withCheck: true,
-  },
-  delete: {
-    for: 'DELETE',
-    using: true,
-    withCheck: false,
-  },
-}
 
 // in { permissionPolicyId: 1, permissionNameId:2 }
 // out "pp1pn2"
@@ -77,6 +52,5 @@ export {
   getPermissionNameAbbreviation,
   getTemplatePermissionAbbreviation,
   remapObjectKeysWithPrefix,
-  compileRowLevelPolicyRuleTypes,
   getSqlConditionFromJSON,
 }

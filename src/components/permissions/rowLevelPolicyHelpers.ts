@@ -4,9 +4,10 @@ import {
   getPermissionNameAbbreviation,
   getTemplatePermissionAbbreviation,
   remapObjectKeysWithPrefix,
-  compileRowLevelPolicyRuleTypes,
   getSqlConditionFromJSON,
-} from './helpersUtils'
+} from './helpersUtilities'
+
+import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
 
 /* Compiles JWT from userInfo and PerissionRows
   in { userId: 1, ... }, [
