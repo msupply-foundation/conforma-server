@@ -45,7 +45,7 @@ const getUserInfo = async (userProperties: any) => {
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getSignedJWT({ userId: userProperties.userId, templatePermissionRows, orgId }),
-    userNew: user,
+    user,
   }
 }
 
