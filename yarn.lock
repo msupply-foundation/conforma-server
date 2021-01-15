@@ -2368,11 +2368,6 @@ configstore@^5.0.1:
     write-file-atomic "^3.0.0"
     xdg-basedir "^4.0.0"
 
-consola@^2.4.1:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/consola/-/consola-2.15.0.tgz#40fc4eefa4d2f8ef2e2806147f056ea207fcc0e9"
-  integrity sha512-vlcSGgdYS26mPf7qNi+dCisbhiyDnrN1zaRbw3CSuc2wGOMEGGPsp46PdRG5gqXwgtJfjxDkxRNAgRPr1B77vQ==
-
 console-control-strings@^1.0.0, console-control-strings@~1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/console-control-strings/-/console-control-strings-1.1.0.tgz#3d7cf4464db6446ea644bf4b39507f9851008e8e"
@@ -5909,14 +5904,6 @@ postgraphile-core@4.9.0:
     graphile-build "4.9.0"
     graphile-build-pg "4.9.0"
     tslib "^2.0.1"
-
-postgraphile-log-consola@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/postgraphile-log-consola/-/postgraphile-log-consola-1.0.1.tgz#b3f4d5c1e66dcd98a31fb8e442f90f3a969abf22"
-  integrity sha512-EBItLJW1hzJMVYbRVl+uTU44pb1F9hkALFUy4MXKNo/lkg2LMoBXIgMsKp4l1yHtyYHbdFSH7HmBAx9Nfx1Y8w==
-  dependencies:
-    chalk "^2.4.2"
-    consola "^2.4.1"
 
 postgraphile-plugin-connection-filter@^2.0.0:
   version "2.0.0"
