@@ -71,7 +71,7 @@ Documented in the `Query-Syntax.md` in the documentation folder.
 
 Code is in the `modules` folder.
 
-To test (using Jest):  
+To test (using Jest), must be running graphile as postgres user (i.e. `yarn pg` not `yarn pg_permmissions`) :  
 `yarn test`
 
 ## Documentation
