@@ -1,3 +1,6 @@
+-- Connect to database first:
+\c tmf_app_manager
+
 DROP SCHEMA IF EXISTS public CASCADE;
 
 CREATE SCHEMA public;
