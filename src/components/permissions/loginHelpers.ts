@@ -4,6 +4,7 @@ import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
 import { PermissionRow, TemplatePermissions, UserInfo } from './types'
 import { compileJWT } from './rowLevelPolicyHelpers'
+import { Organisation, User, UserOrg } from '../../types'
 
 const verifyPromise: any = promisify(verify)
 const signPromise: any = promisify(sign)
@@ -21,26 +22,32 @@ const getTokenData = async (jwtToken: string) => {
   }
 }
 
-// type UserOrgParameters = {
-//   username?: string
-//   userId?: number
-//   orgId?: number
-// }
+type UserOrgParameters = {
+  user?: User
+  userId?: number
+  orgList?: Organisation[]
+  orgId?: number
+}
 
-const getUserInfo = async (userOrgParameters: any) => {
+const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
   const { user, userId, orgList, orgId } = userOrgParameters
 
-  const userOrgData: any =
+  const userOrgData: UserOrg[] | undefined =
     // Only refetch from database if user & orgList not supplied
-    user && orgList ? {} : await databaseConnect.getUserOrgData({ userId: userId || user?.id })
+    user && orgList
+      ? undefined
+      : await databaseConnect.getUserOrgData({ userId: userId || user?.userId })
 
-  const { username, firstName, lastName, email, dateOfBirth } = user ? user : userOrgData?.[0]
+  const { username, firstName, lastName, email, dateOfBirth } = user
+    ? user
+    : (userOrgData?.[0] as UserOrg)
 
-  const newOrgList = orgList
+  const newOrgList: Organisation[] | undefined = orgList
     ? orgList
-    : userOrgData
-        .filter((item: any) => item.orgId)
-        .map((org: any) => {
+    : userOrgData &&
+      userOrgData
+        .filter((item) => item.orgId)
+        .map((org) => {
           const { orgId, orgName, userRole, licenceNumber, address } = org
           return {
             orgId,
@@ -53,17 +60,19 @@ const getUserInfo = async (userOrgParameters: any) => {
 
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
 
-  const selectedOrg = orgId ? newOrgList.filter((org: any) => org.orgId === orgId) : undefined
+  const selectedOrg = orgId
+    ? newOrgList && newOrgList.filter((org) => org.orgId === orgId)
+    : undefined
 
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getSignedJWT({
-      userId: userId ? userId : user.userId,
+      userId: userId ? userId : user?.userId,
       orgId,
       templatePermissionRows,
     }),
     user: {
-      userId: userId ? userId : user.userId,
+      userId: userId ? userId : user?.userId,
       username,
       firstName,
       lastName,

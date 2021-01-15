@@ -2,6 +2,7 @@ import databaseConnect from '../databaseConnect'
 import { getUserInfo, getTokenData, extractJWTFromHeader } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
+import { Organisation, User, UserOrg } from '../../types'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
@@ -24,16 +25,18 @@ const routeLogin = async (request: any, reply: any) => {
   const { username, password } = request.body
   if (password === undefined) return reply.send({ success: false })
 
-  const userOrgInfo = (await databaseConnect.getUserOrgData({ username })) || {}
+  const userOrgInfo: UserOrg[] = (await databaseConnect.getUserOrgData({ username })) || {}
 
   const { userId, firstName, lastName, email, dateOfBirth, passwordHash } = userOrgInfo[0]
 
-  if (!(await bcrypt.compare(password, passwordHash))) return reply.send({ success: false })
+  if (!(await bcrypt.compare(password, passwordHash as string)))
+    return reply.send({ success: false })
 
   // Login successful:
-  const orgList = userOrgInfo
+  const orgList: Organisation[] = userOrgInfo
     .filter((item) => item.orgId)
     .map((org) => {
+      // Destructuring extracts only the relevant fields
       const { orgId, orgName, userRole, licenceNumber, address } = org
       return {
         orgId,
