@@ -5,14 +5,14 @@ const config = require('../src/config.json')
 
 const graphQLendpoint = config.graphQLendpoint
 
-const filesToProcess = fs.readdirSync('./database/insertData').filter((file) => !file.match(/^\./))
+const filesToProcess = fs.readdirSync('./database/insertData').filter((file) => !file.match(/^\./)) // Ignore hidden files
 
 processQueries(filesToProcess)
 
 async function processQueries(filesToProcess) {
   for (const file of filesToProcess) {
     const { queries } = require(`./insertData/${file}`)
-    console.log(`Inserting ${file} into database...`)
+    console.log(`  -- Inserting ${file} into database...`)
     for (const query of queries) {
       await executeGraphQLQuery(query)
     }
