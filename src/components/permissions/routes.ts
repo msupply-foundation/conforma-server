@@ -57,25 +57,16 @@ const routeLoginOrg = async (request: any, reply: any) => {
   const token = extractJWTFromHeader(request)
   const { userId } = await getTokenData(token)
 
-  // const orgList = await databaseConnect.getUserOrgs(userId)
-  // const selectedOrg = orgList.filter((org) => org.orgId === orgId)?.[0]
-  // if (!selectedOrg)
-  //   return reply.send({ success: false, message: 'User does not belong to organisation' })
-  // const userInfo = await getUserInfo({ userId, orgId })
-  // userInfo.user.organisation = selectedOrg
   reply.send({ success: true, ...(await getUserInfo({ userId, orgId })) })
 }
 
 // Authenticates user using JWT header and returns latest user/org info,
 // template permissions and new JWT token
 const routeUserInfo = async (request: any, reply: any) => {
-  //   const token = extractJWTFromHeader(request)
-  //   const { userId, orgId } = await getTokenData(token)
-  //   const orgList = await databaseConnect.getUserOrgs(userId)
-  //   const selectedOrg = orgList.filter((org) => org.orgId === orgId)?.[0]
-  //   const userInfo = await getUserInfo({ userId, orgId: selectedOrg ? orgId : undefined })
-  //   userInfo.user.organisation = selectedOrg
-  //   return reply.send(userInfo)
+  const token = extractJWTFromHeader(request)
+  const { userId, orgId } = await getTokenData(token)
+
+  return reply.send(await getUserInfo({ userId, orgId }))
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {

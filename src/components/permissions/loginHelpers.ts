@@ -52,8 +52,6 @@ const getUserInfo = async (userOrgParameters: any) => {
 
   const selectedOrg = orgId ? newOrgList.filter((org: any) => org.orgId === orgId) : undefined
 
-  if (selectedOrg) user.organisation = selectedOrg
-
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getSignedJWT({
