@@ -358,6 +358,7 @@ class PostgresDB {
     }
   }
 
+  // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number) => {
     const text = `
       SELECT first_name as "firstName",
@@ -366,7 +367,7 @@ class PostgresDB {
       email
       FROM "user"
       WHERE id = $1
-    `
+      `
     try {
       const result = await this.query({ text, values: [userId] })
       const userData = result.rows[0]
@@ -376,22 +377,25 @@ class PostgresDB {
     }
   }
 
-  public getUserDataByUsername = async (username: string) => {
-    const text = `
-      SELECT id,
-      first_name as "firstName",
-      last_name as "lastName",
-      id as "userId",
-      username, date_of_birth as "dateOfBirth",
-      email,
-      password_hash as "passwordHash"
-      FROM "user"
-      WHERE username = $1
-    `
+  public getUserOrgData = async ({ username, userId }: any) => {
+    const queryText = `
+      SELECT user_id as "userId",
+        first_name as "firstName",
+        last_name as "lastName",
+        username,
+        date_of_birth as "dateOfBirth",
+        email,
+        password_hash as "passwordHash",
+        org_id as "orgId",
+        org_name as "orgName",
+        user_role as "userRole",
+        licence_number as "licenceNumber",
+        address
+        FROM user_org_join`
+    const text = userId ? `${queryText} WHERE user_id = $1` : `${queryText} WHERE username = $1`
     try {
-      const result = await this.query({ text, values: [username] })
-      const userData = result.rows[0]
-      return userData
+      const result = await this.query({ text, values: [userId ? userId : username] })
+      return result.rows
     } catch (err) {
       throw err
     }
