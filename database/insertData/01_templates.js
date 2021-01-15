@@ -1,4 +1,4 @@
-exports.graphQLQueries = [
+exports.queries = [
   // Template A -- Test - General Registration (Feature showcase)
   `mutation {
     createTemplate(

@@ -1,4 +1,4 @@
-exports.graphQLQueries = [
+exports.queries = [
   //   Add some users
   `mutation {
     createUser(

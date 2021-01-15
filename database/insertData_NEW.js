@@ -1,5 +1,4 @@
 const fs = require('fs')
-const path = require('path')
 const fetch = require('node-fetch')
 
 const config = require('../src/config.json')
@@ -7,32 +6,20 @@ const config = require('../src/config.json')
 const graphQLendpoint = config.graphQLendpoint
 
 const filesToProcess = fs.readdirSync('./database/insertData').filter((file) => !file.match(/^\./))
-console.log(filesToProcess)
 
-filesToProcess.forEach((file) => {
-  const queries = require(`./insertData/${file}`)
-})
+processQueries(filesToProcess)
 
-const loopQueries = async () => {
-  for (let i = 0; i < queries.length; i++) {
-    const res = await fetch(graphQLendpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({
-        query: queries[i],
-      }),
-    })
-    const data = await res.json()
-    console.log('Added to database:', JSON.stringify(data))
+async function processQueries(filesToProcess) {
+  for (const file of filesToProcess) {
+    const { queries } = require(`./insertData/${file}`)
+    console.log(`Inserting ${file} into database...`)
+    for (const query of queries) {
+      await executeGraphQLQuery(query)
+    }
   }
 }
 
-loopQueries()
-
-const runQuery = async (query) => {
+async function executeGraphQLQuery(query) {
   const res = await fetch(graphQLendpoint, {
     method: 'POST',
     headers: {
