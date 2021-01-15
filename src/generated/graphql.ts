@@ -8990,6 +8990,8 @@ export type Query = Node & {
   triggerQueues?: Maybe<TriggerQueuesConnection>;
   /** Reads and enables pagination through a set of `User`. */
   users?: Maybe<UsersConnection>;
+  /** Reads and enables pagination through a set of `UserOrgJoin`. */
+  userOrgJoins?: Maybe<UserOrgJoinsConnection>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations?: Maybe<UserOrganisationsConnection>;
   actionPlugin?: Maybe<ActionPlugin>;
@@ -9480,6 +9482,19 @@ export type QueryUsersArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
   condition?: Maybe<UserCondition>;
   filter?: Maybe<UserFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserOrgJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<UserOrgJoinsOrderBy>>;
+  condition?: Maybe<UserOrgJoinCondition>;
+  filter?: Maybe<UserOrgJoinFilter>;
 };
 
 
@@ -18063,6 +18078,138 @@ export type UserOrganisationUserOrganisationPkeyDelete = {
   id: Scalars['Int'];
 };
 
+export type UserOrgJoin = {
+  __typename?: 'UserOrgJoin';
+  userId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  orgId?: Maybe<Scalars['Int']>;
+  orgName?: Maybe<Scalars['String']>;
+  userRole?: Maybe<Scalars['String']>;
+  licenceNumber?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+};
+
+/**
+ * A condition to be used against `UserOrgJoin` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type UserOrgJoinCondition = {
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `username` field. */
+  username?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `firstName` field. */
+  firstName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `lastName` field. */
+  lastName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `email` field. */
+  email?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dateOfBirth` field. */
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `passwordHash` field. */
+  passwordHash?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `orgId` field. */
+  orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `orgName` field. */
+  orgName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `userRole` field. */
+  userRole?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `licenceNumber` field. */
+  licenceNumber?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `address` field. */
+  address?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `UserOrgJoin` object types. All fields are combined with a logical ‘and.’ */
+export type UserOrgJoinFilter = {
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `username` field. */
+  username?: Maybe<StringFilter>;
+  /** Filter by the object’s `firstName` field. */
+  firstName?: Maybe<StringFilter>;
+  /** Filter by the object’s `lastName` field. */
+  lastName?: Maybe<StringFilter>;
+  /** Filter by the object’s `email` field. */
+  email?: Maybe<StringFilter>;
+  /** Filter by the object’s `dateOfBirth` field. */
+  dateOfBirth?: Maybe<DateFilter>;
+  /** Filter by the object’s `passwordHash` field. */
+  passwordHash?: Maybe<StringFilter>;
+  /** Filter by the object’s `orgId` field. */
+  orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `orgName` field. */
+  orgName?: Maybe<StringFilter>;
+  /** Filter by the object’s `userRole` field. */
+  userRole?: Maybe<StringFilter>;
+  /** Filter by the object’s `licenceNumber` field. */
+  licenceNumber?: Maybe<StringFilter>;
+  /** Filter by the object’s `address` field. */
+  address?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<UserOrgJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<UserOrgJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<UserOrgJoinFilter>;
+};
+
+/** A connection to a list of `UserOrgJoin` values. */
+export type UserOrgJoinsConnection = {
+  __typename?: 'UserOrgJoinsConnection';
+  /** A list of `UserOrgJoin` objects. */
+  nodes: Array<Maybe<UserOrgJoin>>;
+  /** A list of edges which contains the `UserOrgJoin` and cursor to aid in pagination. */
+  edges: Array<UserOrgJoinsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `UserOrgJoin` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `UserOrgJoin` edge in the connection. */
+export type UserOrgJoinsEdge = {
+  __typename?: 'UserOrgJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `UserOrgJoin` at the end of the edge. */
+  node?: Maybe<UserOrgJoin>;
+};
+
+/** Methods to use when ordering `UserOrgJoin`. */
+export enum UserOrgJoinsOrderBy {
+  Natural = 'NATURAL',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  UsernameAsc = 'USERNAME_ASC',
+  UsernameDesc = 'USERNAME_DESC',
+  FirstNameAsc = 'FIRST_NAME_ASC',
+  FirstNameDesc = 'FIRST_NAME_DESC',
+  LastNameAsc = 'LAST_NAME_ASC',
+  LastNameDesc = 'LAST_NAME_DESC',
+  EmailAsc = 'EMAIL_ASC',
+  EmailDesc = 'EMAIL_DESC',
+  DateOfBirthAsc = 'DATE_OF_BIRTH_ASC',
+  DateOfBirthDesc = 'DATE_OF_BIRTH_DESC',
+  PasswordHashAsc = 'PASSWORD_HASH_ASC',
+  PasswordHashDesc = 'PASSWORD_HASH_DESC',
+  OrgIdAsc = 'ORG_ID_ASC',
+  OrgIdDesc = 'ORG_ID_DESC',
+  OrgNameAsc = 'ORG_NAME_ASC',
+  OrgNameDesc = 'ORG_NAME_DESC',
+  UserRoleAsc = 'USER_ROLE_ASC',
+  UserRoleDesc = 'USER_ROLE_DESC',
+  LicenceNumberAsc = 'LICENCE_NUMBER_ASC',
+  LicenceNumberDesc = 'LICENCE_NUMBER_DESC',
+  AddressAsc = 'ADDRESS_ASC',
+  AddressDesc = 'ADDRESS_DESC'
+}
+
 /** Represents an update to a `User`. Fields that are set will be updated. */
 export type UserPatch = {
   id?: Maybe<Scalars['Int']>;
@@ -18560,6 +18707,12 @@ export type ResolversTypes = {
   UserCondition: UserCondition;
   UsersConnection: ResolverTypeWrapper<UsersConnection>;
   UsersEdge: ResolverTypeWrapper<UsersEdge>;
+  UserOrgJoinsOrderBy: UserOrgJoinsOrderBy;
+  UserOrgJoinCondition: UserOrgJoinCondition;
+  UserOrgJoinFilter: UserOrgJoinFilter;
+  UserOrgJoinsConnection: ResolverTypeWrapper<UserOrgJoinsConnection>;
+  UserOrgJoin: ResolverTypeWrapper<UserOrgJoin>;
+  UserOrgJoinsEdge: ResolverTypeWrapper<UserOrgJoinsEdge>;
   BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   Mutation: ResolverTypeWrapper<{}>;
   CreateActionPluginInput: CreateActionPluginInput;
@@ -19641,6 +19794,11 @@ export type ResolversParentTypes = {
   UserCondition: UserCondition;
   UsersConnection: UsersConnection;
   UsersEdge: UsersEdge;
+  UserOrgJoinCondition: UserOrgJoinCondition;
+  UserOrgJoinFilter: UserOrgJoinFilter;
+  UserOrgJoinsConnection: UserOrgJoinsConnection;
+  UserOrgJoin: UserOrgJoin;
+  UserOrgJoinsEdge: UserOrgJoinsEdge;
   BigInt: Scalars['BigInt'];
   Mutation: {};
   CreateActionPluginInput: CreateActionPluginInput;
@@ -21753,6 +21911,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateStages?: Resolver<Maybe<ResolversTypes['TemplateStagesConnection']>, ParentType, ContextType, RequireFields<QueryTemplateStagesArgs, 'orderBy'>>;
   triggerQueues?: Resolver<Maybe<ResolversTypes['TriggerQueuesConnection']>, ParentType, ContextType, RequireFields<QueryTriggerQueuesArgs, 'orderBy'>>;
   users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'orderBy'>>;
+  userOrgJoins?: Resolver<Maybe<ResolversTypes['UserOrgJoinsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrgJoinsArgs, 'orderBy'>>;
   userOrganisations?: Resolver<Maybe<ResolversTypes['UserOrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrganisationsArgs, 'orderBy'>>;
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginArgs, 'code'>>;
   actionQueue?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueArgs, 'id'>>;
@@ -22479,6 +22638,36 @@ export type UserOrganisationsEdgeResolvers<ContextType = any, ParentType extends
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UserOrgJoinResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserOrgJoin'] = ResolversParentTypes['UserOrgJoin']> = {
+  userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dateOfBirth?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  passwordHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  orgName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userRole?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  licenceNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserOrgJoinsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserOrgJoinsConnection'] = ResolversParentTypes['UserOrgJoinsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['UserOrgJoin']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['UserOrgJoinsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserOrgJoinsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserOrgJoinsEdge'] = ResolversParentTypes['UserOrgJoinsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['UserOrgJoin']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UsersConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UsersConnection'] = ResolversParentTypes['UsersConnection']> = {
   nodes?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType>;
   edges?: Resolver<Array<ResolversTypes['UsersEdge']>, ParentType, ContextType>;
@@ -22678,6 +22867,9 @@ export type Resolvers<ContextType = any> = {
   UserOrganisation?: UserOrganisationResolvers<ContextType>;
   UserOrganisationsConnection?: UserOrganisationsConnectionResolvers<ContextType>;
   UserOrganisationsEdge?: UserOrganisationsEdgeResolvers<ContextType>;
+  UserOrgJoin?: UserOrgJoinResolvers<ContextType>;
+  UserOrgJoinsConnection?: UserOrgJoinsConnectionResolvers<ContextType>;
+  UserOrgJoinsEdge?: UserOrgJoinsEdgeResolvers<ContextType>;
   UsersConnection?: UsersConnectionResolvers<ContextType>;
   UsersEdge?: UsersEdgeResolvers<ContextType>;
 };

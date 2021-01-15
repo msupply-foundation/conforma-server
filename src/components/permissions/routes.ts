@@ -5,19 +5,12 @@ import bcrypt from 'bcrypt'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
-// Authenticates user using JWT header and returns latest user/org info,
-// template permissions and new JWT token
-const routeUserInfo = async (request: any, reply: any) => {
-  const token = extractJWTFromHeader(request)
-  const { userId, orgId } = await getTokenData(token)
-
-  const orgList = await databaseConnect.getUserOrgs(userId)
-  const selectedOrg = orgList.filter((org) => org.orgId === orgId)?.[0]
-
-  const userInfo = await getUserInfo({ userId, orgId: selectedOrg ? orgId : undefined })
-  userInfo.user.organisation = selectedOrg
-
-  return reply.send(userInfo)
+const routeCreateHash = async (request: any, reply: any) => {
+  const { password } = request.body
+  const hash = await bcrypt.hash(password, saltRounds)
+  return reply.send({
+    hash,
+  })
 }
 
 // Authenticates login and returns:
@@ -27,20 +20,31 @@ const routeUserInfo = async (request: any, reply: any) => {
 // - JWT
 const routeLogin = async (request: any, reply: any) => {
   const { username, password } = request.body || { username: '', password: '' }
-  const user = (await databaseConnect.getUserDataByUsername(username)) || {}
+  if (!password) return reply.send({ success: false })
 
-  if (!user.passwordHash) return reply.send({ success: false })
+  const userOrgInfo = (await databaseConnect.getUserOrgData({ username })) || {}
 
-  if (!(await bcrypt.compare(password, user.passwordHash))) return reply.send({ success: false })
+  const { userId, firstName, lastName, email, dateOfBirth, passwordHash } = userOrgInfo[0]
 
-  // Login successful
-  const userInfo = await getUserInfo(user)
-  const orgList = await databaseConnect.getUserOrgs(user.userId)
+  if (!(await bcrypt.compare(password, passwordHash))) return reply.send({ success: false })
+
+  // Login successful:
+  const orgList = userOrgInfo
+    .filter((item) => item.orgId)
+    .map((org) => {
+      return {
+        orgId: org.orgId,
+        orgName: org.orgName,
+        userRole: org.userRole,
+      }
+    })
 
   reply.send({
     success: true,
-    ...userInfo,
-    orgList,
+    ...(await getUserInfo({
+      user: { userId, username, firstName, lastName, email, dateOfBirth },
+      orgList,
+    })),
   })
 }
 
@@ -53,24 +57,25 @@ const routeLoginOrg = async (request: any, reply: any) => {
   const token = extractJWTFromHeader(request)
   const { userId } = await getTokenData(token)
 
-  // if (userId !== tokenUserId) return reply.send({ success: false, message: 'Unauthorized request' })
-  const orgList = await databaseConnect.getUserOrgs(userId)
-  const selectedOrg = orgList.filter((org) => org.orgId === orgId)?.[0]
-  if (!selectedOrg)
-    return reply.send({ success: false, message: 'User does not belong to organisation' })
-
-  const userInfo = await getUserInfo({ userId, orgId })
-  userInfo.user.organisation = selectedOrg
-
-  reply.send({ success: true, ...userInfo })
+  // const orgList = await databaseConnect.getUserOrgs(userId)
+  // const selectedOrg = orgList.filter((org) => org.orgId === orgId)?.[0]
+  // if (!selectedOrg)
+  //   return reply.send({ success: false, message: 'User does not belong to organisation' })
+  // const userInfo = await getUserInfo({ userId, orgId })
+  // userInfo.user.organisation = selectedOrg
+  reply.send({ success: true, ...(await getUserInfo({ userId, orgId })) })
 }
 
-const routeCreateHash = async (request: any, reply: any) => {
-  const { password } = request.body
-  const hash = await bcrypt.hash(password, saltRounds)
-  return reply.send({
-    hash,
-  })
+// Authenticates user using JWT header and returns latest user/org info,
+// template permissions and new JWT token
+const routeUserInfo = async (request: any, reply: any) => {
+  //   const token = extractJWTFromHeader(request)
+  //   const { userId, orgId } = await getTokenData(token)
+  //   const orgList = await databaseConnect.getUserOrgs(userId)
+  //   const selectedOrg = orgList.filter((org) => org.orgId === orgId)?.[0]
+  //   const userInfo = await getUserInfo({ userId, orgId: selectedOrg ? orgId : undefined })
+  //   userInfo.user.organisation = selectedOrg
+  //   return reply.send(userInfo)
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {

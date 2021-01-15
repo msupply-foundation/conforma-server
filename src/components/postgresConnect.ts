@@ -358,31 +358,44 @@ class PostgresDB {
     }
   }
 
-  private getUserQuery = `
-      SELECT id as "userId",
-      first_name as "firstName",
-      last_name as "lastName",
-      username,
-      date_of_birth as "dateOfBirth",
-      email,
-      password_hash as "passwordHash"
-      FROM "user"`
-
+  // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number) => {
-    const text = `${this.getUserQuery} WHERE id = $1`
+    const text = `
+      SELECT first_name as "firstName",
+      last_name as "lastName",
+      username, date_of_birth as "dateOfBirth",
+      email
+      FROM "user"
+      WHERE id = $1
+      `
     try {
       const result = await this.query({ text, values: [userId] })
-      return result.rows[0]
+      const userData = result.rows[0]
+      return userData
     } catch (err) {
       throw err
     }
   }
 
-  public getUserDataByUsername = async (username: string) => {
-    const text = `${this.getUserQuery} WHERE username = $1`
+  public getUserOrgData = async ({ username, userId }: any) => {
+    const queryText = `
+      SELECT user_id as "userId",
+        first_name as "firstName",
+        last_name as "lastName",
+        username,
+        date_of_birth as "dateOfBirth",
+        email,
+        password_hash as "passwordHash",
+        org_id as "orgId",
+        org_name as "orgName",
+        user_role as "userRole",
+        licence_number,
+        address
+        FROM user_org_join`
+    const text = userId ? `${queryText} WHERE user_id = $1` : `${queryText} WHERE username = $1`
     try {
-      const result = await this.query({ text, values: [username] })
-      return result.rows[0]
+      const result = await this.query({ text, values: [userId ? userId : username] })
+      return result.rows
     } catch (err) {
       throw err
     }

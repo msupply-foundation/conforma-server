@@ -21,30 +21,56 @@ const getTokenData = async (jwtToken: string) => {
   }
 }
 
-type UserOrgParameters = {
-  username?: string
-  userId?: number
-  orgId?: number
-}
+// type UserOrgParameters = {
+//   username?: string
+//   userId?: number
+//   orgId?: number
+// }
 
-const getUserInfo = async (userProperties: any) => {
-  const { username, userId, orgId } = userProperties
+const getUserInfo = async (userOrgParameters: any) => {
+  const { user, userId, orgList, orgId } = userOrgParameters
 
-  const user =
-    // Don't look up user in DB if we already have it
-    Object.keys(userProperties).length > 3
-      ? { ...userProperties }
-      : username
-      ? await databaseConnect.getUserDataByUsername(username)
-      : userId && (await databaseConnect.getUserData(userId))
-  delete user?.passwordHash
+  const userOrgData: any =
+    // Only refetch from database if user & orgList not supplied
+    user && orgList ? {} : await databaseConnect.getUserOrgData({ userId: userId || user?.id })
 
-  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(user.username)
+  const { username, firstName, lastName, email, dateOfBirth } = user ? user : userOrgData?.[0]
+
+  const newOrgList = orgList
+    ? orgList
+    : userOrgData
+        .filter((item: any) => item.orgId)
+        .map((org: any) => {
+          return {
+            orgId: org.orgId,
+            orgName: org.orgName,
+            userRole: org.userRole,
+          }
+        })
+
+  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username)
+
+  const selectedOrg = orgId ? newOrgList.filter((org: any) => org.orgId === orgId) : undefined
+
+  if (selectedOrg) user.organisation = selectedOrg
 
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
-    JWT: await getSignedJWT({ userId: userProperties.userId, templatePermissionRows, orgId }),
-    user,
+    JWT: await getSignedJWT({
+      userId: userId ? userId : user.userId,
+      orgId,
+      templatePermissionRows,
+    }),
+    user: {
+      userId: userId ? userId : user.userId,
+      username,
+      firstName,
+      lastName,
+      email,
+      dateOfBirth,
+      organisation: selectedOrg,
+    },
+    orgList: newOrgList,
   }
 }
 

@@ -91,7 +91,9 @@ class DBConnect {
 
   public getUserData = PostgresDB.getUserData
 
-  public getUserDataByUsername = PostgresDB.getUserDataByUsername
+  public getUserOrgData = PostgresDB.getUserOrgData
+
+  // public getUserDataByUsername = PostgresDB.getUserDataByUsername
 
   public getUserOrgs = PostgresDB.getUserOrgs
 
