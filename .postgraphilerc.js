@@ -9,6 +9,7 @@ module.exports = {
     enhanceGraphiql: true,
     cors: true,
     dynamicJson: true,
+    jwtSecret: 'devsecret',
     graphileBuildOptions: {
       connectionFilterRelations: true,
     },
