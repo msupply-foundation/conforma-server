@@ -1,31 +1,13 @@
 import databaseConnect from '../databaseConnect'
-import { UserInfo, PermissionRow, RuleTypes } from './types'
+import { UserInfo, PermissionRow } from './types'
+import {
+  getPermissionNameAbbreviation,
+  getTemplatePermissionAbbreviation,
+  remapObjectKeysWithPrefix,
+  getSqlConditionFromJSON,
+} from './helpersUtilities'
 
-const SQLBuilder = require('json-sql-builder2')
-const jsonToSql = new SQLBuilder('PostgreSQL')
-
-// in { permissionPolicyId: 1, permissionNameId:2 }
-// out "pp1pn2"
-const getPermissionNameAbbreviation = ({ permissionPolicyId, permissionNameId }: PermissionRow) =>
-  `pp${permissionPolicyId}pn${permissionNameId}`
-
-// in { permissionPolicyId: 1, permissionNameId:2, templatePermissionId: 3 }
-// out "pp1pn2tp3"
-const getTemplatePermissionAbbreviation = (permissionRow: PermissionRow) =>
-  `${getPermissionNameAbbreviation(permissionRow)}tp${permissionRow.templatePermissionId}`
-
-// Returns new version of object with each key prefixed with prefix (and value converter to string)
-// in "prefixMe", { one: 1, two: 2}
-// out { prefixMe_one: "1", prefixMe_two: "2" }
-const remapObjectKeysWithPrefix = (prefix: string, object: Object) => {
-  const remappedObject: { [index: string]: string } = {}
-
-  Object.entries(object).forEach(([key, value]) => {
-    remappedObject[`${prefix}_${key}`] = String(value)
-  })
-
-  return remappedObject
-}
+import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
 
 /* Compiles JWT from userInfo and PerissionRows
   in { userId: 1, ... }, [
@@ -81,7 +63,7 @@ const compileJWT = (JWTelements: any) => {
   return JWT
 }
 
-// Removes previously generated row level policies and resintates them based on current permission settings
+// Removes previously generated row level policies and reinstates them based on current permission settings
 // out: [ 'CREATE POLICY "view_pp3pn3" ON "application" FOR SELECT USING (jwt_get_boolean('pp3pn3') = true and user_id = jwt_get_text('currentUser') AND template_id = jwt_get_bigint('pp3pn3_templateId')' ]
 const updateRowPolicies = async () => {
   const permissionRows = await databaseConnect.getAllPermissions()
@@ -207,31 +189,6 @@ const compileRowLevelPolicies = (permissionAbbreviation: string, permissionPolic
   return policies
 }
 
-// Constants for compileRowLevelPolicy
-// https://www.postgresql.org/docs/current/sql-createpolicy.html
-const ruleTypes: RuleTypes = {
-  view: {
-    for: 'SELECT',
-    using: true,
-    withCheck: false,
-  },
-  update: {
-    for: 'UPDATE',
-    using: true,
-    withCheck: true,
-  },
-  create: {
-    for: 'CREATE',
-    using: false,
-    withCheck: true,
-  },
-  delete: {
-    for: 'DELETE',
-    using: true,
-    withCheck: false,
-  },
-}
-
 /* Compiles single row level permission
   in "application", "pp2pn2tp2", "view", "true", 
       "user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2tp2_templateId')" 
@@ -258,7 +215,7 @@ const compileRowLevelPolicy = (
     return `USING ${addBracketsAndPermissionCheck(conditionToUse)}`
   }
 
-  const ruleSettings = ruleTypes[ruleType]
+  const ruleSettings = compileRowLevelPolicyRuleTypes[ruleType] // { for: 'CREATE'|'DELETE'|'UPDATE'|'SELECT', using: true|false, withCheck: true|false }
 
   if (!ruleSettings) {
     console.warn(`rule ${ruleType} does not exist, ignoring`)
@@ -274,27 +231,6 @@ const compileRowLevelPolicy = (
 
   // Combine them all
   return `${create} ${onFor} ${getUsingClause()} ${withCheck}`
-}
-
-// Creates SQL from JSON, as per https://github.com/planetarydev/json-sql-builder2, but only for WHERE clause content
-// in { job_title: { $in: ['Sales Manager', 'Account Manager'] }, country_code: 'RU' }
-// out `job_title IN ('Sales Manager', 'Account Manager') AND country_code = 'RU'`
-const getSqlConditionFromJSON = (jsonSQLcondition: any) => {
-  // with no select field specified will default to SELECT *
-  const { sql, values } = jsonToSql.$select({
-    $where: {
-      ...jsonSQLcondition,
-    },
-  })
-
-  let query = sql
-  // $select return key values, which need to be replaced
-  // count backwards in case ${x} above 9 exists
-  for (let i = values.length - 1; i >= 0; i--) {
-    query = query.replace(`$${i + 1}`, values[i])
-  }
-  // Finally return only the WHERE part
-  return query.replace('SELECT * WHERE ', '')
 }
 
 // Replaces 'placeholder' templated values in a string

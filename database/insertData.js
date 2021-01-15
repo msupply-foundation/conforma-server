@@ -14,25 +14,23 @@ const queries = [
           name: "Test -- General Registration"
           isLinear: false
           startMessage: {
-            operator: "CONCAT"
+            operator: "stringSubstitution"
             children: [
-              "## This is the general registration for feature showcase\\nHi, "
+              "## This is the general registration for feature showcase\\nHi, %1. You will need to provide:\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
               {
                 operator: "objectProperties"
                 children: ["currentUser.firstName"]
               }
-              ". You will need to provide:\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
             ]
           }
           submissionMessage: {
-            operator: "CONCAT"
+            operator: "stringSubstitution"
             children: [
-              "### Application Submitted!\\nThanks, "
+              "### Application Submitted!\\nThanks, %1."
               {
                 operator: "objectProperties"
                 children: ["currentUser.firstName"]
               }
-              ". "
             ]
           }
           status: AVAILABLE
@@ -98,13 +96,13 @@ const queries = [
                       validationMessage: "You need a first name."
                       parameters: {
                         label: {
-                          operator: "CONCAT"
+                          operator: "stringSubstitution"
                           children: [
+                            "%1, what is your last name?"
                             {
                               operator: "objectProperties"
                               children: ["responses.Q1.text"]
                             }
-                            ", what is your last name?"
                           ]
                         }
                       }
@@ -117,14 +115,13 @@ const queries = [
                       category: INFORMATION
                       parameters: {
                         title: {
-                          operator: "CONCAT"
+                          operator: "stringSubstitution"
                           children: [
-                            "Current User: "
+                            "Current User: %1 %2"
                             {
                               operator: "objectProperties"
                               children: ["currentUser.firstName"]
                             }
-                            " "
                             {
                               operator: "objectProperties"
                               children: ["currentUser.lastName"]
@@ -132,14 +129,13 @@ const queries = [
                           ]
                         }
                         text: {
-                          operator: "CONCAT"
+                          operator: "stringSubstitution"
                           children: [
-                            "The new user's name is: "
+                            "The new user's name is: %1 %2"
                             {
                               operator: "objectProperties"
                               children: ["responses.Q1.text"]
                             }
-                            " "
                             {
                               operator: "objectProperties"
                               children: ["responses.Q2.text"]
@@ -409,19 +405,17 @@ const queries = [
                       parameters: {
                         title: "This has appeared because you typed 'magicword' above."
                         text: {
-                          operator: "CONCAT"
+                          operator: "stringSubstitution"
                           children: [
-                            "You chose "
+                            "You chose %1 (index number %2) in the API lookup"
                             {
                               operator: "objectProperties"
                               children: ["responses.Q10.text"]
                             }
-                            " (index number "
                             {
                               operator: "objectProperties"
                               children: ["responses.Q10.optionIndex"]
                             }
-                            ") in the API lookup"
                           ]
                         }
                       }
@@ -573,14 +567,13 @@ const queries = [
                 sequence: 6
                 parameterQueries: {
                   message: {
-                    operator: "CONCAT"
+                    operator: "stringSubstitution"
                     children: [
-                      { value: "Output concatenation: The user " }
+                      "Output concatenation: The user %1's registration has been %2"
                       {
                         operator: "objectProperties"
                         children: ["output.username"]
                       }
-                      { value: "'s registration has been " }
                       {
                         operator: "objectProperties"
                         children: ["output.newOutcome"]

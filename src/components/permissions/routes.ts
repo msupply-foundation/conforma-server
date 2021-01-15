@@ -8,6 +8,9 @@ const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
 const routeCreateHash = async (request: any, reply: any) => {
   const { password } = request.body
+
+  // bcrypt hash output includes salt and other metadata in string
+  // See https://github.com/kelektiv/node.bcrypt.js#hash-info
   const hash = await bcrypt.hash(password, saltRounds)
   return reply.send({
     hash,
