@@ -401,24 +401,6 @@ class PostgresDB {
     }
   }
 
-  public getUserOrgs = async (userId: number) => {
-    const text = `
-    SELECT organisation.id AS "orgId",
-    user_role as "userRole",
-    name,
-    licence_number,
-    address
-    FROM user_organisation JOIN organisation
-    ON organisation_id = organisation.id
-    WHERE user_id = $1`
-    try {
-      const result = await this.query({ text, values: [userId] })
-      return result.rows
-    } catch (err) {
-      throw err
-    }
-  }
-
   public isUnique = async (table: string, field: string, value: string): Promise<boolean> => {
     const text = `SELECT COUNT(*) FROM "${table}" WHERE LOWER(${field}) = LOWER($1)`
     try {

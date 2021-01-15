@@ -66,7 +66,7 @@ const getUserInfo = async (userOrgParameters: any) => {
       lastName,
       email,
       dateOfBirth,
-      organisation: selectedOrg,
+      organisation: selectedOrg?.[0],
     },
     orgList: newOrgList,
   }
