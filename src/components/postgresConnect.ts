@@ -383,7 +383,8 @@ class PostgresDB {
       last_name as "lastName",
       id as "userId",
       username, date_of_birth as "dateOfBirth",
-      email
+      email,
+      password_hash as "passwordHash"
       FROM "user"
       WHERE username = $1
     `
@@ -559,17 +560,6 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [] })
       return result.rows
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  public verifyUser = async (username: string, passwordHash: string) => {
-    const text = `select count(*) from "user" where username = $1 and password_hash = $2`
-    try {
-      const result = await this.query({ text, values: [username, passwordHash] })
-      return result.rows[0].count != 0
     } catch (err) {
       console.log(err.message)
       throw err

@@ -31,12 +31,8 @@ import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
     pp2pn3tp4_restrictTwo: "2"
   }
 */
-const compileJWT = (
-  { userId, username }: UserInfo,
-  templatePermissionRows: Array<PermissionRow>
-) => {
-  // Starting JWT token, forEach below will add each permission to this token
-  let JWT = { userId, username, aud: 'postgraphile' }
+const compileJWT = (userInfo: UserInfo, templatePermissionRows: Array<PermissionRow>) => {
+  let JWT = { userId: userInfo.userId, username: userInfo.username, aud: 'postgraphile' }
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
     const { templatePermissionRestrictions, templateId, templatePermissionId } = permissionRow
