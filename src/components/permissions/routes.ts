@@ -21,8 +21,8 @@ Authenticates login and returns:
   - JWT containing permissions and userId
 */
 const routeLogin = async (request: any, reply: any) => {
-  const { username, password } = request.body || { username: '', password: '' }
-  if (!password) return reply.send({ success: false })
+  const { username, password } = request.body
+  if (password === undefined) return reply.send({ success: false })
 
   const userOrgInfo = (await databaseConnect.getUserOrgData({ username })) || {}
 
@@ -34,10 +34,13 @@ const routeLogin = async (request: any, reply: any) => {
   const orgList = userOrgInfo
     .filter((item) => item.orgId)
     .map((org) => {
+      const { orgId, orgName, userRole, licenceNumber, address } = org
       return {
-        orgId: org.orgId,
-        orgName: org.orgName,
-        userRole: org.userRole,
+        orgId,
+        orgName,
+        userRole,
+        licenceNumber,
+        address,
       }
     })
 

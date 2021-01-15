@@ -41,10 +41,13 @@ const getUserInfo = async (userOrgParameters: any) => {
     : userOrgData
         .filter((item: any) => item.orgId)
         .map((org: any) => {
+          const { orgId, orgName, userRole, licenceNumber, address } = org
           return {
-            orgId: org.orgId,
-            orgName: org.orgName,
-            userRole: org.userRole,
+            orgId,
+            orgName,
+            userRole,
+            licenceNumber,
+            address,
           }
         })
 
