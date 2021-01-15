@@ -12,7 +12,7 @@ processQueries(filesToProcess)
 async function processQueries(filesToProcess) {
   for (const file of filesToProcess) {
     const { queries } = require(`./insertData/${file}`)
-    console.log(`  -- Inserting ${file} into database...`)
+    console.log(`  -- ${file}`)
     for (const query of queries) {
       await executeGraphQLQuery(query)
     }

@@ -5,9 +5,11 @@ psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'tmf_app_manager
 
 echo "\nBuilding schema..."
 
+psql -U postgres -q -b -d tmf_app_manager -f "./database/create_schema.sql" >&/dev/null #suppress output for this command
+
 for file in ./database/buildSchema/*; do
     echo "  -- ${file##*/}"
-    psql -U postgres -q -b --output="temp.txt" -d tmf_app_manager -f $file
+    psql -U postgres -q -b -d tmf_app_manager -f $file
 done
 
 sleep 1
