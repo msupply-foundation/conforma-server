@@ -17,6 +17,8 @@ export type Scalars = {
   Datetime: any;
   /** The day, does not include a time. */
   Date: any;
+  /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
+  BigInt: any;
 };
 
 export type ActionPlugin = Node & {
@@ -573,6 +575,124 @@ export type ActionQueueTriggerEventFkeyTriggerQueueCreateInput = {
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
 };
+
+export type AllPermission = {
+  __typename?: 'AllPermission';
+  permissionType?: Maybe<PermissionPolicyType>;
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  permissionPolicyRules?: Maybe<Scalars['JSON']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templatePermissionId?: Maybe<Scalars['Int']>;
+  templatePermissionRestrictions?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateCode?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+};
+
+/**
+ * A condition to be used against `AllPermission` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type AllPermissionCondition = {
+  /** Checks for equality with the object’s `permissionType` field. */
+  permissionType?: Maybe<PermissionPolicyType>;
+  /** Checks for equality with the object’s `permissionPolicyId` field. */
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `permissionPolicyRules` field. */
+  permissionPolicyRules?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templatePermissionId` field. */
+  templatePermissionId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templatePermissionRestrictions` field. */
+  templatePermissionRestrictions?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateCode` field. */
+  templateCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `username` field. */
+  username?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `AllPermission` object types. All fields are combined with a logical ‘and.’ */
+export type AllPermissionFilter = {
+  /** Filter by the object’s `permissionType` field. */
+  permissionType?: Maybe<PermissionPolicyTypeFilter>;
+  /** Filter by the object’s `permissionPolicyId` field. */
+  permissionPolicyId?: Maybe<IntFilter>;
+  /** Filter by the object’s `permissionPolicyRules` field. */
+  permissionPolicyRules?: Maybe<JsonFilter>;
+  /** Filter by the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templatePermissionId` field. */
+  templatePermissionId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templatePermissionRestrictions` field. */
+  templatePermissionRestrictions?: Maybe<JsonFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateCode` field. */
+  templateCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `username` field. */
+  username?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<AllPermissionFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<AllPermissionFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<AllPermissionFilter>;
+};
+
+/** A connection to a list of `AllPermission` values. */
+export type AllPermissionsConnection = {
+  __typename?: 'AllPermissionsConnection';
+  /** A list of `AllPermission` objects. */
+  nodes: Array<Maybe<AllPermission>>;
+  /** A list of edges which contains the `AllPermission` and cursor to aid in pagination. */
+  edges: Array<AllPermissionsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `AllPermission` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `AllPermission` edge in the connection. */
+export type AllPermissionsEdge = {
+  __typename?: 'AllPermissionsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `AllPermission` at the end of the edge. */
+  node?: Maybe<AllPermission>;
+};
+
+/** Methods to use when ordering `AllPermission`. */
+export enum AllPermissionsOrderBy {
+  Natural = 'NATURAL',
+  PermissionTypeAsc = 'PERMISSION_TYPE_ASC',
+  PermissionTypeDesc = 'PERMISSION_TYPE_DESC',
+  PermissionPolicyIdAsc = 'PERMISSION_POLICY_ID_ASC',
+  PermissionPolicyIdDesc = 'PERMISSION_POLICY_ID_DESC',
+  PermissionPolicyRulesAsc = 'PERMISSION_POLICY_RULES_ASC',
+  PermissionPolicyRulesDesc = 'PERMISSION_POLICY_RULES_DESC',
+  PermissionNameIdAsc = 'PERMISSION_NAME_ID_ASC',
+  PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
+  TemplatePermissionIdAsc = 'TEMPLATE_PERMISSION_ID_ASC',
+  TemplatePermissionIdDesc = 'TEMPLATE_PERMISSION_ID_DESC',
+  TemplatePermissionRestrictionsAsc = 'TEMPLATE_PERMISSION_RESTRICTIONS_ASC',
+  TemplatePermissionRestrictionsDesc = 'TEMPLATE_PERMISSION_RESTRICTIONS_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
+  TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  UsernameAsc = 'USERNAME_ASC',
+  UsernameDesc = 'USERNAME_DESC'
+}
 
 export type Application = Node & {
   __typename?: 'Application';
@@ -2929,9 +3049,9 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -2941,6 +3061,7 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   filesUsingId?: Maybe<FileUserIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
+
 
 /** A filter to be used against Boolean fields. All fields are combined with a logical ‘and.’ */
 export type BooleanFilter = {
@@ -5972,9 +6093,9 @@ export type FileUserIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -6046,26 +6167,6 @@ export type JsonFilter = {
   containsAnyKeys?: Maybe<Array<Scalars['String']>>;
   /** Contained by the specified JSON. */
   containedBy?: Maybe<Scalars['JSON']>;
-};
-
-/** A connection to a list of `String` values. */
-export type JwtGetPolicyLinksAsSetofTextConnection = {
-  __typename?: 'JwtGetPolicyLinksAsSetofTextConnection';
-  /** A list of `String` objects. */
-  nodes: Array<Maybe<Scalars['String']>>;
-  /** A list of edges which contains the `String` and cursor to aid in pagination. */
-  edges: Array<JwtGetPolicyLinksAsSetofTextEdge>;
-  /** The count of *all* `String` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `String` edge in the connection. */
-export type JwtGetPolicyLinksAsSetofTextEdge = {
-  __typename?: 'JwtGetPolicyLinksAsSetofTextEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `String` at the end of the edge. */
-  node?: Maybe<Scalars['String']>;
 };
 
 /** The root mutation type which contains root level fields which mutate data. */
@@ -7758,9 +7859,9 @@ export type NotificationUserIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -8252,9 +8353,9 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -8833,6 +8934,8 @@ export type Query = Node & {
   actionPlugins?: Maybe<ActionPluginsConnection>;
   /** Reads and enables pagination through a set of `ActionQueue`. */
   actionQueues?: Maybe<ActionQueuesConnection>;
+  /** Reads and enables pagination through a set of `AllPermission`. */
+  allPermissions?: Maybe<AllPermissionsConnection>;
   /** Reads and enables pagination through a set of `Application`. */
   applications?: Maybe<ApplicationsConnection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
@@ -8920,10 +9023,9 @@ export type Query = Node & {
   userByUsername?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
-  jwtCheckPolicy?: Maybe<Scalars['Boolean']>;
-  jwtGetKey?: Maybe<Scalars['String']>;
-  jwtGetPolicyLinksAsSetofText?: Maybe<JwtGetPolicyLinksAsSetofTextConnection>;
-  jwtGetPolicyLinksAsText?: Maybe<Scalars['String']>;
+  jwtGetBigint?: Maybe<Scalars['BigInt']>;
+  jwtGetBoolean?: Maybe<Scalars['Boolean']>;
+  jwtGetText?: Maybe<Scalars['String']>;
   reviewApplicationId?: Maybe<Scalars['Int']>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
@@ -9014,6 +9116,19 @@ export type QueryActionQueuesArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
   condition?: Maybe<ActionQueueCondition>;
   filter?: Maybe<ActionQueueFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryAllPermissionsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<AllPermissionsOrderBy>>;
+  condition?: Maybe<AllPermissionCondition>;
+  filter?: Maybe<AllPermissionFilter>;
 };
 
 
@@ -9568,32 +9683,20 @@ export type QueryApplicationStatusHistoryApplicationIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryJwtCheckPolicyArgs = {
-  policyName?: Maybe<Scalars['String']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryJwtGetKeyArgs = {
+export type QueryJwtGetBigintArgs = {
   jwtKey?: Maybe<Scalars['String']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryJwtGetPolicyLinksAsSetofTextArgs = {
-  policyName?: Maybe<Scalars['String']>;
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  filter?: Maybe<StringFilter>;
+export type QueryJwtGetBooleanArgs = {
+  jwtKey?: Maybe<Scalars['String']>;
 };
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryJwtGetPolicyLinksAsTextArgs = {
-  policyName?: Maybe<Scalars['String']>;
+export type QueryJwtGetTextArgs = {
+  jwtKey?: Maybe<Scalars['String']>;
 };
 
 
@@ -10108,9 +10211,9 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -10395,9 +10498,9 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -11625,9 +11728,9 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -16965,9 +17068,9 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -16984,9 +17087,9 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17003,9 +17106,9 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17022,9 +17125,9 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17041,9 +17144,9 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17060,9 +17163,9 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17079,9 +17182,9 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17098,9 +17201,9 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17223,9 +17326,9 @@ export type User = Node & {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
@@ -17350,12 +17453,12 @@ export type UserCondition = {
   lastName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `username` field. */
   username?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `email` field. */
+  email?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `dateOfBirth` field. */
   dateOfBirth?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `passwordHash` field. */
   passwordHash?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `email` field. */
-  email?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `User` object types. All fields are combined with a logical ‘and.’ */
@@ -17368,12 +17471,12 @@ export type UserFilter = {
   lastName?: Maybe<StringFilter>;
   /** Filter by the object’s `username` field. */
   username?: Maybe<StringFilter>;
+  /** Filter by the object’s `email` field. */
+  email?: Maybe<StringFilter>;
   /** Filter by the object’s `dateOfBirth` field. */
   dateOfBirth?: Maybe<DateFilter>;
   /** Filter by the object’s `passwordHash` field. */
   passwordHash?: Maybe<StringFilter>;
-  /** Filter by the object’s `email` field. */
-  email?: Maybe<StringFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
   userOrganisations?: Maybe<UserToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
@@ -17420,9 +17523,9 @@ export type UserInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17927,9 +18030,9 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -17966,9 +18069,9 @@ export type UserPatch = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
   dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationUserIdFkeyInverseInput>;
@@ -18012,12 +18115,12 @@ export enum UsersOrderBy {
   LastNameDesc = 'LAST_NAME_DESC',
   UsernameAsc = 'USERNAME_ASC',
   UsernameDesc = 'USERNAME_DESC',
+  EmailAsc = 'EMAIL_ASC',
+  EmailDesc = 'EMAIL_DESC',
   DateOfBirthAsc = 'DATE_OF_BIRTH_ASC',
   DateOfBirthDesc = 'DATE_OF_BIRTH_DESC',
   PasswordHashAsc = 'PASSWORD_HASH_ASC',
   PasswordHashDesc = 'PASSWORD_HASH_DESC',
-  EmailAsc = 'EMAIL_ASC',
-  EmailDesc = 'EMAIL_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -18413,6 +18516,12 @@ export type ResolversTypes = {
   TemplateAction: ResolverTypeWrapper<TemplateAction>;
   TemplateActionsEdge: ResolverTypeWrapper<TemplateActionsEdge>;
   ActionQueuesEdge: ResolverTypeWrapper<ActionQueuesEdge>;
+  AllPermissionsOrderBy: AllPermissionsOrderBy;
+  AllPermissionCondition: AllPermissionCondition;
+  AllPermissionFilter: AllPermissionFilter;
+  AllPermissionsConnection: ResolverTypeWrapper<AllPermissionsConnection>;
+  AllPermission: ResolverTypeWrapper<AllPermission>;
+  AllPermissionsEdge: ResolverTypeWrapper<AllPermissionsEdge>;
   ApplicationStageStatusAllsOrderBy: ApplicationStageStatusAllsOrderBy;
   ApplicationStageStatusAllCondition: ApplicationStageStatusAllCondition;
   ApplicationStageStatusAllFilter: ApplicationStageStatusAllFilter;
@@ -18451,8 +18560,7 @@ export type ResolversTypes = {
   UserCondition: UserCondition;
   UsersConnection: ResolverTypeWrapper<UsersConnection>;
   UsersEdge: ResolverTypeWrapper<UsersEdge>;
-  JwtGetPolicyLinksAsSetofTextConnection: ResolverTypeWrapper<JwtGetPolicyLinksAsSetofTextConnection>;
-  JwtGetPolicyLinksAsSetofTextEdge: ResolverTypeWrapper<JwtGetPolicyLinksAsSetofTextEdge>;
+  BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   Mutation: ResolverTypeWrapper<{}>;
   CreateActionPluginInput: CreateActionPluginInput;
   ActionPluginInput: ActionPluginInput;
@@ -19498,6 +19606,11 @@ export type ResolversParentTypes = {
   TemplateAction: TemplateAction;
   TemplateActionsEdge: TemplateActionsEdge;
   ActionQueuesEdge: ActionQueuesEdge;
+  AllPermissionCondition: AllPermissionCondition;
+  AllPermissionFilter: AllPermissionFilter;
+  AllPermissionsConnection: AllPermissionsConnection;
+  AllPermission: AllPermission;
+  AllPermissionsEdge: AllPermissionsEdge;
   ApplicationStageStatusAllCondition: ApplicationStageStatusAllCondition;
   ApplicationStageStatusAllFilter: ApplicationStageStatusAllFilter;
   ApplicationStageStatusAllsConnection: ApplicationStageStatusAllsConnection;
@@ -19528,8 +19641,7 @@ export type ResolversParentTypes = {
   UserCondition: UserCondition;
   UsersConnection: UsersConnection;
   UsersEdge: UsersEdge;
-  JwtGetPolicyLinksAsSetofTextConnection: JwtGetPolicyLinksAsSetofTextConnection;
-  JwtGetPolicyLinksAsSetofTextEdge: JwtGetPolicyLinksAsSetofTextEdge;
+  BigInt: Scalars['BigInt'];
   Mutation: {};
   CreateActionPluginInput: CreateActionPluginInput;
   ActionPluginInput: ActionPluginInput;
@@ -20443,6 +20555,34 @@ export type ActionQueuesEdgeResolvers<ContextType = any, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type AllPermissionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AllPermission'] = ResolversParentTypes['AllPermission']> = {
+  permissionType?: Resolver<Maybe<ResolversTypes['PermissionPolicyType']>, ParentType, ContextType>;
+  permissionPolicyId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  permissionPolicyRules?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templatePermissionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templatePermissionRestrictions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AllPermissionsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AllPermissionsConnection'] = ResolversParentTypes['AllPermissionsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['AllPermission']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['AllPermissionsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type AllPermissionsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AllPermissionsEdge'] = ResolversParentTypes['AllPermissionsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['AllPermission']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ApplicationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Application'] = ResolversParentTypes['Application']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -20645,6 +20785,10 @@ export type ApplicationTriggerStatesEdgeResolvers<ContextType = any, ParentType 
   node?: Resolver<Maybe<ResolversTypes['ApplicationTriggerState']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
+
+export interface BigIntScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['BigInt'], any> {
+  name: 'BigInt';
+}
 
 export type CreateActionPluginPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateActionPluginPayload'] = ResolversParentTypes['CreateActionPluginPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -21283,19 +21427,6 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
-export type JwtGetPolicyLinksAsSetofTextConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['JwtGetPolicyLinksAsSetofTextConnection'] = ResolversParentTypes['JwtGetPolicyLinksAsSetofTextConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['JwtGetPolicyLinksAsSetofTextEdge']>, ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type JwtGetPolicyLinksAsSetofTextEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['JwtGetPolicyLinksAsSetofTextEdge'] = ResolversParentTypes['JwtGetPolicyLinksAsSetofTextEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createActionPlugin?: Resolver<Maybe<ResolversTypes['CreateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateActionPluginArgs, 'input'>>;
   createActionQueue?: Resolver<Maybe<ResolversTypes['CreateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateActionQueueArgs, 'input'>>;
@@ -21594,6 +21725,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   node?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<QueryNodeArgs, 'nodeId'>>;
   actionPlugins?: Resolver<Maybe<ResolversTypes['ActionPluginsConnection']>, ParentType, ContextType, RequireFields<QueryActionPluginsArgs, 'orderBy'>>;
   actionQueues?: Resolver<Maybe<ResolversTypes['ActionQueuesConnection']>, ParentType, ContextType, RequireFields<QueryActionQueuesArgs, 'orderBy'>>;
+  allPermissions?: Resolver<Maybe<ResolversTypes['AllPermissionsConnection']>, ParentType, ContextType, RequireFields<QueryAllPermissionsArgs, 'orderBy'>>;
   applications?: Resolver<Maybe<ResolversTypes['ApplicationsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationsArgs, 'orderBy'>>;
   applicationResponses?: Resolver<Maybe<ResolversTypes['ApplicationResponsesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationResponsesArgs, 'orderBy'>>;
   applicationSections?: Resolver<Maybe<ResolversTypes['ApplicationSectionsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationSectionsArgs, 'orderBy'>>;
@@ -21653,10 +21785,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByUsernameArgs, 'username'>>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationArgs, 'id'>>;
   applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
-  jwtCheckPolicy?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryJwtCheckPolicyArgs, never>>;
-  jwtGetKey?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetKeyArgs, never>>;
-  jwtGetPolicyLinksAsSetofText?: Resolver<Maybe<ResolversTypes['JwtGetPolicyLinksAsSetofTextConnection']>, ParentType, ContextType, RequireFields<QueryJwtGetPolicyLinksAsSetofTextArgs, never>>;
-  jwtGetPolicyLinksAsText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetPolicyLinksAsTextArgs, never>>;
+  jwtGetBigint?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryJwtGetBigintArgs, never>>;
+  jwtGetBoolean?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryJwtGetBooleanArgs, never>>;
+  jwtGetText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetTextArgs, never>>;
   reviewApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewApplicationIdArgs, never>>;
   reviewReviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewReviewerIdArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
@@ -22308,9 +22439,9 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   dateOfBirth?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   passwordHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<UserUserOrganisationsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<UserPermissionJoinsArgs, 'orderBy'>>;
   applications?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<UserApplicationsArgs, 'orderBy'>>;
@@ -22369,6 +22500,9 @@ export type Resolvers<ContextType = any> = {
   ActionQueue?: ActionQueueResolvers<ContextType>;
   ActionQueuesConnection?: ActionQueuesConnectionResolvers<ContextType>;
   ActionQueuesEdge?: ActionQueuesEdgeResolvers<ContextType>;
+  AllPermission?: AllPermissionResolvers<ContextType>;
+  AllPermissionsConnection?: AllPermissionsConnectionResolvers<ContextType>;
+  AllPermissionsEdge?: AllPermissionsEdgeResolvers<ContextType>;
   Application?: ApplicationResolvers<ContextType>;
   ApplicationResponse?: ApplicationResponseResolvers<ContextType>;
   ApplicationResponsesConnection?: ApplicationResponsesConnectionResolvers<ContextType>;
@@ -22390,6 +22524,7 @@ export type Resolvers<ContextType = any> = {
   ApplicationTriggerState?: ApplicationTriggerStateResolvers<ContextType>;
   ApplicationTriggerStatesConnection?: ApplicationTriggerStatesConnectionResolvers<ContextType>;
   ApplicationTriggerStatesEdge?: ApplicationTriggerStatesEdgeResolvers<ContextType>;
+  BigInt?: GraphQLScalarType;
   CreateActionPluginPayload?: CreateActionPluginPayloadResolvers<ContextType>;
   CreateActionQueuePayload?: CreateActionQueuePayloadResolvers<ContextType>;
   CreateApplicationPayload?: CreateApplicationPayloadResolvers<ContextType>;
@@ -22456,8 +22591,6 @@ export type Resolvers<ContextType = any> = {
   FilesConnection?: FilesConnectionResolvers<ContextType>;
   FilesEdge?: FilesEdgeResolvers<ContextType>;
   JSON?: GraphQLScalarType;
-  JwtGetPolicyLinksAsSetofTextConnection?: JwtGetPolicyLinksAsSetofTextConnectionResolvers<ContextType>;
-  JwtGetPolicyLinksAsSetofTextEdge?: JwtGetPolicyLinksAsSetofTextEdgeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
   Notification?: NotificationResolvers<ContextType>;
