@@ -17,6 +17,8 @@ async function processQueries(filesToProcess) {
       await executeGraphQLQuery(query)
     }
   }
+  console.log('\nUpdating Row Policies...')
+  await updateRowPolicies()
 }
 
 async function executeGraphQLQuery(query) {
@@ -31,4 +33,14 @@ async function executeGraphQLQuery(query) {
     }),
   })
   const data = await res.json()
+}
+
+async function updateRowPolicies() {
+  await fetch(`http://localhost:${config.RESTport}/updateRowPolicies`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  })
 }
