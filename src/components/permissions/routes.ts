@@ -35,27 +35,10 @@ const routeLogin = async (request: any, reply: any) => {
   if (!(await bcrypt.compare(password, passwordHash as string)))
     return reply.send({ success: false })
 
-  // Login successful:
-  const orgList: Organisation[] = userOrgInfo
-    .filter((item) => item.orgId)
-    .map((org) => {
-      // Destructuring extracts only the relevant fields
-      const { orgId, orgName, userRole, licenceNumber, address } = org
-      return {
-        orgId,
-        orgName,
-        userRole,
-        licenceNumber,
-        address,
-      }
-    })
-
+  // Login successful
   reply.send({
     success: true,
-    ...(await getUserInfo({
-      user: { userId, username, firstName, lastName, email, dateOfBirth },
-      orgList,
-    })),
+    ...(await getUserInfo({ userId })),
   })
 }
 
