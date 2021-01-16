@@ -1,7 +1,7 @@
 /*
 TEMPLATE A - General Registration (Feature showcase)
-  - used to demonstrate features such as new plugins, actions,
-  dynamic visibility, complex dynamic expressions, etc.
+    - used to demonstrate and test features such as new plugins, actions,
+      dynamic visibility, complex dynamic expressions, etc.
 */
 
 exports.queries = [
