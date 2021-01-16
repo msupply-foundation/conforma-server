@@ -169,14 +169,14 @@ exports.queries = [
                   username: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3.text"]
+                  }                  
+                  email: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q4.text"]
                   }
                   password_hash: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q5.text"]
-                  }
-                  email: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q4.text"]
                   }
                 }
               }
