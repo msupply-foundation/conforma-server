@@ -1,5 +1,5 @@
 import databaseConnect from '../databaseConnect'
-import { getUserInfo, getTokenData, extractJWTFromHeader } from './loginHelpers'
+import { getUserInfo, getTokenData, extractJWTfromHeader } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { Organisation, User, UserOrg } from '../../types'
@@ -35,27 +35,10 @@ const routeLogin = async (request: any, reply: any) => {
   if (!(await bcrypt.compare(password, passwordHash as string)))
     return reply.send({ success: false })
 
-  // Login successful:
-  const orgList: Organisation[] = userOrgInfo
-    .filter((item) => item.orgId)
-    .map((org) => {
-      // Destructuring extracts only the relevant fields
-      const { orgId, orgName, userRole, licenceNumber, address } = org
-      return {
-        orgId,
-        orgName,
-        userRole,
-        licenceNumber,
-        address,
-      }
-    })
-
+  // Login successful
   reply.send({
     success: true,
-    ...(await getUserInfo({
-      user: { userId, username, firstName, lastName, email, dateOfBirth },
-      orgList,
-    })),
+    ...(await getUserInfo({ userId })),
   })
 }
 
@@ -67,8 +50,9 @@ Authenticates user and checks they belong to requested org (id). Returns:
 */
 const routeLoginOrg = async (request: any, reply: any) => {
   const { orgId } = request.body
-  const token = extractJWTFromHeader(request)
-  const { userId } = await getTokenData(token)
+  const token = extractJWTfromHeader(request)
+  const { userId, error } = await getTokenData(token)
+  if (error) return reply.send({ success: false, message: error })
 
   const userInfo = await getUserInfo({ userId, orgId })
 
@@ -83,14 +67,15 @@ Authenticates user using JWT header and returns latest user/org info,
 template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
-  const token = extractJWTFromHeader(request)
-  const { userId, orgId } = await getTokenData(token)
+  const token = extractJWTfromHeader(request)
+  const { userId, orgId, error } = await getTokenData(token)
+  if (error) return reply.send({ success: false, message: error })
 
   return reply.send(await getUserInfo({ userId, orgId }))
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
-  // const token = extractJWTFromHeader(request)
+  // const token = extractJWTfromHeader(request)
   // const username = await getUsername(token)
   // return reply.send(await getUserInfo(username))
 
