@@ -1,4 +1,4 @@
-echo "\nCreating database..."
+echo "\nCreating database: tmf_app_manager..."
 
 # This checks if database exists and creates it if not
 psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'tmf_app_manager'" | grep -q 1 || psql -U postgres -c "CREATE DATABASE tmf_app_manager"
@@ -16,7 +16,7 @@ sleep 1
 
 echo "\nInserting data..."
 
-exec node ./database/insertData_NEW.js &
+exec node ./database/insertData.js &
 
 # Makes script wait until async node script has completed
 PID=$!
