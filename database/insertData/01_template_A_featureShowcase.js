@@ -3,7 +3,6 @@ TEMPLATE A - General Registration (Feature showcase)
     - used to demonstrate and test features such as new plugins, actions,
       dynamic visibility, complex dynamic expressions, etc.
 */
-
 exports.queries = [
   `mutation {
     createTemplate(

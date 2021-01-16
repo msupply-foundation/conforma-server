@@ -3,7 +3,6 @@ TEMPLATE C -- User Registration
   - the form filled in by an unregistered user to create an 
     account in the system
 */
-
 exports.queries = [
   `mutation {
     createTemplate(
