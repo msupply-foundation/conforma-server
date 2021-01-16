@@ -75,7 +75,7 @@ const routeUserInfo = async (request: any, reply: any) => {
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
-  // const token = extractJWTFromHeader(request)
+  // const token = extractJWTfromHeader(request)
   // const username = await getUsername(token)
   // return reply.send(await getUserInfo(username))
 
