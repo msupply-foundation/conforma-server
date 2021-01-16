@@ -1,5 +1,5 @@
 import databaseConnect from '../databaseConnect'
-import { getUserInfo, getTokenData, extractJWTFromHeader } from './loginHelpers'
+import { getUserInfo, getTokenData, extractJWTfromHeader } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { Organisation, User, UserOrg } from '../../types'
@@ -50,7 +50,7 @@ Authenticates user and checks they belong to requested org (id). Returns:
 */
 const routeLoginOrg = async (request: any, reply: any) => {
   const { orgId } = request.body
-  const token = extractJWTFromHeader(request)
+  const token = extractJWTfromHeader(request)
   const { userId } = await getTokenData(token)
 
   const userInfo = await getUserInfo({ userId, orgId })
@@ -66,7 +66,7 @@ Authenticates user using JWT header and returns latest user/org info,
 template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
-  const token = extractJWTFromHeader(request)
+  const token = extractJWTfromHeader(request)
   const { userId, orgId } = await getTokenData(token)
 
   return reply.send(await getUserInfo({ userId, orgId }))

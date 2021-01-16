@@ -9,7 +9,7 @@ import { Organisation, UserOrg } from '../../types'
 const verifyPromise: any = promisify(verify)
 const signPromise: any = promisify(sign)
 
-const extractJWTFromHeader = (request: any) =>
+const extractJWTfromHeader = (request: any) =>
   (request?.headers?.authorization || '').replace('Bearer ', '')
 
 const getTokenData = async (jwtToken: string) => {
@@ -47,16 +47,9 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const orgList: Organisation[] = userOrgData
     .filter((item) => item.orgId)
-    .map((org) => {
+    .map(({ orgId, orgName, userRole, licenceNumber, address }) => {
       // Destructuring extracts only the relevant fields
-      const { orgId, orgName, userRole, licenceNumber, address } = org
-      return {
-        orgId,
-        orgName,
-        userRole,
-        licenceNumber,
-        address,
-      }
+      return { orgId, orgName, userRole, licenceNumber, address }
     })
 
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(newUsername)
@@ -99,4 +92,4 @@ const getSignedJWT = async (JWTelements: object) => {
   return await signPromise(compileJWT(JWTelements), config.jwtSecret)
 }
 
-export { extractJWTFromHeader, getUserInfo, getTokenData }
+export { extractJWTfromHeader, getUserInfo, getTokenData }
