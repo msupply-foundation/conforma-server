@@ -51,7 +51,8 @@ Authenticates user and checks they belong to requested org (id). Returns:
 const routeLoginOrg = async (request: any, reply: any) => {
   const { orgId } = request.body
   const token = extractJWTfromHeader(request)
-  const { userId } = await getTokenData(token)
+  const { userId, error } = await getTokenData(token)
+  if (error) return reply.send({ success: false, message: error })
 
   const userInfo = await getUserInfo({ userId, orgId })
 
@@ -67,7 +68,8 @@ template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
   const token = extractJWTfromHeader(request)
-  const { userId, orgId } = await getTokenData(token)
+  const { userId, orgId, error } = await getTokenData(token)
+  if (error) return reply.send({ success: false, message: error })
 
   return reply.send(await getUserInfo({ userId, orgId }))
 }

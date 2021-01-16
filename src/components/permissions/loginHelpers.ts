@@ -18,7 +18,7 @@ const getTokenData = async (jwtToken: string) => {
     return data
   } catch (err) {
     console.log('Cannot parse JWT')
-    throw err
+    return { error: err.message }
   }
 }
 
