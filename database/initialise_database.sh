@@ -1,7 +1,5 @@
-echo "\nCreating database: tmf_app_manager..."
-
 # This checks if database exists and creates it if not
-psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'tmf_app_manager'" | grep -q 1 || psql -U postgres -c "CREATE DATABASE tmf_app_manager"
+psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'tmf_app_manager'" | grep -q 1 || (psql -U postgres -c "CREATE DATABASE tmf_app_manager" && echo "\nCreating database: tmf_app_manager...")
 
 echo "\nBuilding schema..."
 

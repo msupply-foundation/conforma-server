@@ -283,12 +283,12 @@ exports.queries = [
           }
           templateStagesUsingId: {
             create: [
-              { 
+              {
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
               }
-              { 
+              {
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
@@ -334,21 +334,6 @@ exports.queries = [
       template {
         code
         name
-        templateSections {
-          nodes {
-            code
-            title
-            templateElementsBySectionId {
-              nodes {
-                code
-                visibilityCondition
-                parameters
-                title
-                category
-              }
-            }
-          }
-        }
       }
     }
   }`,

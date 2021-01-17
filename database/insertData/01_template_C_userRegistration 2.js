@@ -132,14 +132,7 @@ exports.queries = [
               }
             ]
           }
-          templateStagesUsingId: { 
-            create: [
-              { 
-                number: 1
-                title: "Automatic"
-              }
-            ] 
-          }
+          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
           templateActionsUsingId: {
             create: [
               {
@@ -168,7 +161,7 @@ exports.queries = [
                   username: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3.text"]
-                  }                  
+                  }
                   email: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q4.text"]
@@ -215,15 +208,6 @@ exports.queries = [
           nodes {
             code
             title
-            templateElementsBySectionId {
-              nodes {
-                code
-                visibilityCondition
-                parameters
-                title
-                category
-              }
-            }
           }
         }
       }

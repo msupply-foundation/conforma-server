@@ -122,7 +122,7 @@ exports.queries = [
     }
   }`,
   //
-  // Non Registered User Permissions
+  // Non Registered User with Permissions
   // Password is blank
   `mutation {
     createUser(
@@ -156,31 +156,11 @@ exports.queries = [
       }
     ) {
       user {
-        id
-        permissionJoins {
-          nodes {
-            id
-            permissionName {
-              name
-              id
-              permissionPolicy {
-                type
-                id
-              }
-              templatePermissions {
-                nodes {
-                  template {
-                    name
-                  }
-                }
-              }
-            }
-          }
-        }
+        username
       }
     }
-  }
-`, // Registered User Permissions
+  }`,
+  // Registered User Permissions
   `mutation {
     createPermissionPolicy(
       input: {
@@ -200,11 +180,11 @@ exports.queries = [
               }
             }
           }
-          type: APPLY,
+          type: APPLY
           rules: {
             application: {
               view: {
-                template_id: "jwtPermission_bigint_templateId",
+                template_id: "jwtPermission_bigint_templateId"
                 user_id: "jwtUserDetails_bigint_userId"
               }
             }
@@ -212,26 +192,9 @@ exports.queries = [
         }
       }
     ) {
-      clientMutationId
       permissionPolicy {
         name
         type
-        permissionNames {
-          nodes {
-            name
-            id
-            permissionJoins {
-              nodes {
-                id
-                user {
-                  username
-                  id
-                }
-              }
-            }
-          }
-        }
-        id
       }
     }
   }`,
@@ -276,30 +239,6 @@ exports.queries = [
     ) {
       user {
         username
-        id
-        permissionJoins {
-          nodes {
-            id
-            permissionName {
-              id
-              name
-              permissionPolicy {
-                name
-                type
-                id
-              }
-              templatePermissions {
-                nodes {
-                  id
-                  template {
-                    name
-                    id
-                  }
-                }
-              }
-            }
-          }
-        }
       }
     }
   }`,

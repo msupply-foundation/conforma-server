@@ -598,21 +598,6 @@ exports.queries = [
       template {
         code
         name
-        templateSections {
-          nodes {
-            code
-            title
-            templateElementsBySectionId {
-              nodes {
-                code
-                visibilityCondition
-                parameters
-                title
-                category
-              }
-            }
-          }
-        }
       }
     }
   }`,

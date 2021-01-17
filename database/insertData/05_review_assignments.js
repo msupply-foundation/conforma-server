@@ -24,7 +24,14 @@ exports.queries = [
         }
       }
     ) {
-      clientMutationId
+      reviewer {
+        username
+      }
+      reviewAssignment {
+        application {
+          name
+        }
+      }
     }
   }`,
   // Assign test review application to Mrs. Reviewer 2 (Section 2)
@@ -48,7 +55,14 @@ exports.queries = [
         }
       }
     ) {
-      clientMutationId
+      reviewer {
+        username
+      }
+      reviewAssignment {
+        application {
+          name
+        }
+      }
     }
   }`,
 ]

@@ -64,6 +64,9 @@ exports.queries = [
     ) {
       application {
         name
+        template {
+          name
+        }
       }
     }
   }`,

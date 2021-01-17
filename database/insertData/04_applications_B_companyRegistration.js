@@ -22,11 +22,11 @@ exports.queries = [
           applicationResponsesUsingId: {
             create: [
               {
-                value: {text: "Company C"}
+                value: { text: "Company C" }
                 templateElementToTemplateElementId: { connectById: { id: 12 } }
               }
               {
-                value: {option: 2}
+                value: { option: 2 }
                 templateElementToTemplateElementId: { connectById: { id: 13 } }
               }
             ]
@@ -39,24 +39,6 @@ exports.queries = [
         name
         template {
           name
-        }
-        applicationResponses {
-          nodes {
-            value
-            templateElement {
-              title
-            }
-          }
-        }
-        applicationSections {
-          nodes {
-            templateSection {
-              title
-            }
-          }
-        }
-        user {
-          username
         }
       }
     }
