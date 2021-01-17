@@ -25,7 +25,6 @@ const compileJWTdata = [
     result: {
       aud: 'postgraphile',
       userId: 1,
-      username: 'Check',
       pp2pn3: true,
       pp2pn3tp4: true,
       pp2pn3tp4_templateId: '1',
@@ -96,7 +95,6 @@ const compileJWTdata = [
       pp1pn1: true,
       userId: 10,
       aud: 'postgraphile',
-      username: 'userWithMultiplePermissions',
     },
   },
 ]

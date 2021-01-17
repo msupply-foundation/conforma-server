@@ -2,7 +2,7 @@ import databaseConnect from '../databaseConnect'
 import { getUserInfo, getTokenData, extractJWTfromHeader } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
-import { Organisation, User, UserOrg } from '../../types'
+import { UserOrg } from '../../types'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
@@ -30,7 +30,7 @@ const routeLogin = async (request: any, reply: any) => {
 
   const userOrgInfo: UserOrg[] = (await databaseConnect.getUserOrgData({ username })) || {}
 
-  const { userId, firstName, lastName, email, dateOfBirth, passwordHash } = userOrgInfo[0]
+  const { userId, passwordHash } = userOrgInfo[0]
 
   if (!(await bcrypt.compare(password, passwordHash as string)))
     return reply.send({ success: false })
