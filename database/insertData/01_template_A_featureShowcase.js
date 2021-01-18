@@ -264,8 +264,7 @@ exports.queries = [
                       code: "Q6"
                       index: 9
                       title: "Organisation Category"
-                      elementTypePluginCode: "dropdownChoice"
-                      # Change this to "radioChoice" once we've made the plugin
+                      elementTypePluginCode: "radioChoice"
                       category: QUESTION
                       parameters: {
                         label: "Organisation Type"
