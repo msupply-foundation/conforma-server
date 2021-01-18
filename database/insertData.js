@@ -201,24 +201,24 @@ const queries = [
                       code: "Q5"
                       index: 6
                       title: "Password"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "password"
                       category: QUESTION
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: "^[\\\\S]{8,}$" }
-                        ]
-                      }
-                      validationMessage: "Password must be at least 8 characters"
-                      # Validation:Currently just checks 8 chars, needs more complexity
                       parameters: {
                         label: "Password"
-                        maskedInput: true
                         placeholder: "Password must be at least 8 chars long"
+                        confirmPlaceholder: "Enter password again"
+                        maskedInput: false
+                        validationInternal: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.thisResponse"]
+                            }
+                            { value: "^[\\\\S]{8,}$" }
+                          ]
+                        }
+                        validationMessageInternal: "Password must be at least 8 characters"
                       }
                     }
                     {
@@ -515,13 +515,13 @@ const queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3.text"]
                   }
-                  password_hash: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.text"]
-                  }
                   email: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q4.text"]
+                  }
+                  password_hash: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q5.hash"]
                   }
                 }
               }
@@ -1070,24 +1070,24 @@ const queries = [
                       code: "Q5"
                       index: 5
                       title: "Password"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "password"
                       category: QUESTION
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: "^[\\\\S]{8,}$" }
-                        ]
-                      }
-                      validationMessage: "Password must be at least 8 characters"
-                      # Validation:Currently just checks 8 chars, needs more complexity
                       parameters: {
                         label: "Password"
                         maskedInput: true
                         placeholder: "Password must be at least 8 chars long"
+                        validationInternal: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.thisResponse"]
+                            }
+                            { value: "^[\\\\S]{8,}$" }
+                          ]
+                        }
+                        # Validation:Currently just checks 8 chars, needs more complexity
+                        validationMessageInternal: "Password must be at least 8 characters"
                       }
                     }
                     # TO-DO: Add Date of birth question once we have DatePicker element type
@@ -1096,14 +1096,7 @@ const queries = [
               }
             ]
           }
-          templateStagesUsingId: { 
-            create: [
-              { 
-                number: 1
-                title: "Automatic"
-              }
-            ] 
-          }
+          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
           templateActionsUsingId: {
             create: [
               {
@@ -1132,14 +1125,14 @@ const queries = [
                   username: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3.text"]
-                  }                  
+                  }
                   email: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q4.text"]
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.text"]
+                    children: ["applicationData.responses.Q5.hash"]
                   }
                 }
               }
