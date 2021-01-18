@@ -1,6 +1,6 @@
 {
   "name": "@openmsupply/expression-evaluator",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Module to evaluate dynamic expressions for the openMsupply Application Manager project",
   "main": "lib/evaluateExpression.js",
   "types": "lib/evaluateExpression.d.ts",

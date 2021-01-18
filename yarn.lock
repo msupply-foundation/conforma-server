@@ -1171,10 +1171,10 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@openmsupply/expression-evaluator@^1.3.0":
-  version "1.3.0"
-  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.3.0/5cfbd4ecc2a4cf98c9eb8e55077533b2faa63fc4ed214f4adeb313b93f1180f8#e81aa987a9dc9947811ab27f60457aec71e4c58d"
-  integrity sha512-WTbe3yRFGi4w1eWjoPsNHgfoo0v+dCyfdxGutj8Z+uhmoPQSqKS8tVm+tWjP4/GSab7VPWijNM3782ML/CziOQ==
+"@openmsupply/expression-evaluator@^1.4.0":
+  version "1.4.0"
+  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.4.0/1c06ed60b0254f5c3c6f8e03bd76e7d94f1668c5032b3595873970a1cb7c77b5#1da30d7a74208b2fcba2de472e751256d0b886a7"
+  integrity sha512-frktwDBpewYNpCaSk3qTsUnFrEnUztzw4ppKr1q1x3MmK5JD/U4B6Z43EqZUgedbDAco6w2/Ygd32qxUFn+lwQ==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
@@ -4728,6 +4728,13 @@ json-schema@0.2.3:
   resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.2.3.tgz#b480c892e59a2f05954ce727bd3f2a4e882f9e13"
   integrity sha1-tIDIkuWaLwWVTOcnvT8qTogvnhM=
 
+json-sql-builder2@^1.0.24:
+  version "1.0.24"
+  resolved "https://registry.yarnpkg.com/json-sql-builder2/-/json-sql-builder2-1.0.24.tgz#956da6059582fe1126c1f3c4b2e56694cb5b96ba"
+  integrity sha512-08bCzvt3nlz78LZhnF0lsQx9KgqOFd/VgIMCWTqYGVCumrai0O6iWHYF/KyGaTyAtdl5jV1MZ2AoWmFWQe3XSQ==
+  dependencies:
+    lodash "^4.17.14"
+
 json-stable-stringify@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/json-stable-stringify/-/json-stable-stringify-1.0.1.tgz#9a759d39c5f2ff503fd5300646ed445f88c4f9af"
@@ -4988,7 +4995,7 @@ lodash.sortby@^4.7.0:
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
   integrity sha1-7dFMgk4sycHgsKG0K7UhBRakJDg=
 
-"lodash@>=4 <5", lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@~4.17.20:
+"lodash@>=4 <5", lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@~4.17.20:
   version "4.17.20"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==

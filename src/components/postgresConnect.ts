@@ -381,6 +381,7 @@ class PostgresDB {
       SELECT id,
       first_name as "firstName",
       last_name as "lastName",
+      id as "userId",
       username, date_of_birth as "dateOfBirth",
       email,
       password_hash as "passwordHash"
@@ -526,21 +527,38 @@ class PostgresDB {
   }
 
   public getUserTemplatePermissions = async (username: string) => {
-    const text = `
-      select 
-        permission_policy.type as "permissionType", 
-        "template".code as "templateCode"
-      from 
-        "user"
-      join permission_join on "user".id = permission_join.user_id
-      join permission_name on permission_name.id = permission_join.permission_name_id
-      join template_permission on template_permission.permission_name_id = permission_name.id
-      join permission_policy on permission_policy.id = permission_name.permission_policy_id
-      join "template" on "template".id = template_permission.template_id
-      where "user".username = $1
-    `
+    const text = 'select * from all_permissions where username = $1'
     try {
       const result = await this.query({ text, values: [username] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getAllPermissions = async () => {
+    const text = 'select * from all_permissions'
+    try {
+      const result = await this.query({ text, values: [] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getAllGeneratedRowPolicies = async () => {
+    const text = `
+      SELECT policyname, tablename 
+      FROM pg_policies 
+      WHERE policyname LIKE 'view\_%'
+      OR policyname LIKE 'update\_%'
+      OR policyname LIKE 'create\_%'
+      OR policyname LIKE 'delete\_%'
+    `
+    try {
+      const result = await this.query({ text, values: [] })
       return result.rows
     } catch (err) {
       console.log(err.message)

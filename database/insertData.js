@@ -14,25 +14,23 @@ const queries = [
           name: "Test -- General Registration"
           isLinear: false
           startMessage: {
-            operator: "CONCAT"
+            operator: "stringSubstitution"
             children: [
-              "## This is the general registration for feature showcase\\nHi, "
+              "## This is the general registration for feature showcase\\nHi, %1. You will need to provide:\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
               {
                 operator: "objectProperties"
                 children: ["currentUser.firstName"]
               }
-              ". You will need to provide:\\n- Proof of identity (Passport, Drivers license)\\n- Proof of your medical certification\\n- Drug ingredient list\\n- Product images\\n- Packging images"
             ]
           }
           submissionMessage: {
-            operator: "CONCAT"
+            operator: "stringSubstitution"
             children: [
-              "### Application Submitted!\\nThanks, "
+              "### Application Submitted!\\nThanks, %1."
               {
                 operator: "objectProperties"
                 children: ["currentUser.firstName"]
               }
-              ". "
             ]
           }
           status: AVAILABLE
@@ -98,13 +96,13 @@ const queries = [
                       validationMessage: "You need a first name."
                       parameters: {
                         label: {
-                          operator: "CONCAT"
+                          operator: "stringSubstitution"
                           children: [
+                            "%1, what is your last name?"
                             {
                               operator: "objectProperties"
                               children: ["responses.Q1.text"]
                             }
-                            ", what is your last name?"
                           ]
                         }
                       }
@@ -117,14 +115,13 @@ const queries = [
                       category: INFORMATION
                       parameters: {
                         title: {
-                          operator: "CONCAT"
+                          operator: "stringSubstitution"
                           children: [
-                            "Current User: "
+                            "Current User: %1 %2"
                             {
                               operator: "objectProperties"
                               children: ["currentUser.firstName"]
                             }
-                            " "
                             {
                               operator: "objectProperties"
                               children: ["currentUser.lastName"]
@@ -132,14 +129,13 @@ const queries = [
                           ]
                         }
                         text: {
-                          operator: "CONCAT"
+                          operator: "stringSubstitution"
                           children: [
-                            "The new user's name is: "
+                            "The new user's name is: %1 %2"
                             {
                               operator: "objectProperties"
                               children: ["responses.Q1.text"]
                             }
-                            " "
                             {
                               operator: "objectProperties"
                               children: ["responses.Q2.text"]
@@ -409,19 +405,17 @@ const queries = [
                       parameters: {
                         title: "This has appeared because you typed 'magicword' above."
                         text: {
-                          operator: "CONCAT"
+                          operator: "stringSubstitution"
                           children: [
-                            "You chose "
+                            "You chose %1 (index number %2) in the API lookup"
                             {
                               operator: "objectProperties"
                               children: ["responses.Q10.text"]
                             }
-                            " (index number "
                             {
                               operator: "objectProperties"
                               children: ["responses.Q10.optionIndex"]
                             }
-                            ") in the API lookup"
                           ]
                         }
                       }
@@ -573,14 +567,13 @@ const queries = [
                 sequence: 6
                 parameterQueries: {
                   message: {
-                    operator: "CONCAT"
+                    operator: "stringSubstitution"
                     children: [
-                      { value: "Output concatenation: The user " }
+                      "Output concatenation: The user %1's registration has been %2"
                       {
                         operator: "objectProperties"
                         children: ["output.username"]
                       }
-                      { value: "'s registration has been " }
                       {
                         operator: "objectProperties"
                         children: ["output.newOutcome"]
@@ -2040,7 +2033,13 @@ const queries = [
                     name: "applyUserRegistration"
                     templatePermissionsUsingId: { create: [{ templateId: 1 }] }
                     permissionPolicyToPermissionPolicyId: {
-                      create: { type: APPLY, name: "oneTimeApply" }
+                      create: { type: APPLY, name: "oneTimeApply", rules: {
+                        application: {
+                          view: {
+                            template_id: "jwtPermission_bigint_templateId"
+                          }
+                        }
+                      } }
                     }
                   }
                 }
@@ -2096,7 +2095,15 @@ const queries = [
               }
             }
           }
-          type: APPLY
+          type: APPLY,
+          rules: {
+            application: {
+              view: {
+                template_id: "jwtPermission_bigint_templateId",
+                user_id: "jwtUserDetails_bigint_userId"
+              }
+            }
+          }
         }
       }
     ) {
@@ -2125,52 +2132,65 @@ const queries = [
   }
 `, // Extra user with multiple permissions (apply company rego, review company rego and apply user rego) -- password is "123456"
   `
-mutation MyMutation {
-  createUser(
-    input: {
-      user: {
-        username: "userWithMultiplePermissions"
-        passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
-        permissionJoinsUsingId: {
-          create: [
-            { permissionNameId: 1 }
-            { permissionNameId: 2 }
-            {
-              permissionNameToPermissionNameId: {
-                create: {
-                  name: "reviewCompanyRego"
-                  templatePermissionsUsingId: { create: [{ templateId: 2 }] }
-                  permissionPolicyToPermissionPolicyId: {
-                    create: { type: REVIEW, name: "basicReview" }
+  mutation MyMutation {
+    createUser(
+      input: {
+        user: {
+          username: "userWithMultiplePermissions"
+          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          permissionJoinsUsingId: {
+            create: [
+              { permissionNameId: 1 }
+              { permissionNameId: 2 }
+              {
+                permissionNameToPermissionNameId: {
+                  create: {
+                    name: "reviewCompanyRego"
+                    templatePermissionsUsingId: {
+                      create: [{ templateId: 2, restrictions: { stage: 1 } }]
+                    }
+                    permissionPolicyToPermissionPolicyId: {
+                      create: {
+                        type: REVIEW
+                        name: "basicReview"
+                        rules: {
+                          application: {
+                            view: {
+                              template_id: "jwtPermission_bigint_templateId"
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
-            }
-          ]
+            ]
+          }
         }
       }
-    }
-  ) {
-    user {
-      username
-      id
-      permissionJoins {
-        nodes {
-          id
-          permissionName {
+    ) {
+      user {
+        username
+        id
+        permissionJoins {
+          nodes {
             id
-            name
-            permissionPolicy {
-              name
-              type
+            permissionName {
               id
-            }
-            templatePermissions {
-              nodes {
+              name
+              permissionPolicy {
+                name
+                type
                 id
-                template {
-                  name
+              }
+              templatePermissions {
+                nodes {
                   id
+                  template {
+                    name
+                    id
+                  }
                 }
               }
             }
@@ -2179,7 +2199,7 @@ mutation MyMutation {
       }
     }
   }
-}
+  
 `,
 ]
 
@@ -2200,4 +2220,15 @@ const loopQueries = async () => {
   }
 }
 
-loopQueries()
+const insertData = async () => {
+  await loopQueries()
+  await fetch(`http://localhost:${config.RESTport}/updateRowPolicies`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+  })
+}
+
+insertData()

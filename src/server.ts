@@ -4,7 +4,12 @@ import fastifyMultipart from 'fastify-multipart'
 import fastifyCors from 'fastify-cors'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
-import { routeUserPermissions, routeLogin, createHash } from './components/permissions'
+import {
+  routeUserPermissions,
+  routeLogin,
+  routeUpdateRowPolicies,
+  routeCreateHash,
+} from './components/permissions'
 import {
   saveFiles,
   getFilename,
@@ -13,7 +18,7 @@ import {
 } from './components/fileHandler'
 import { getAppRootDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
-// import PostgresDB from './components/postgresConnect'
+import config from './config.json'
 
 // Bare-bones Fastify server
 
@@ -42,8 +47,9 @@ const startServer = async () => {
   server.get('/userInfo', routeUserPermissions)
 
   server.post('/login', routeLogin)
+  server.get('/updateRowPolicies', routeUpdateRowPolicies)
 
-  server.post('/create-hash', createHash)
+  server.post('/create-hash', routeCreateHash)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {
@@ -100,7 +106,7 @@ const startServer = async () => {
     }
   })
 
-  server.listen(8080, (err, address) => {
+  server.listen(config.RESTport, (err, address) => {
     if (err) {
       console.error(err)
       process.exit(1)

@@ -527,6 +527,75 @@ testData.singleApplicationProperty_depth2 = {
   children: ['application.questions.q2'],
 }
 
+// String substitution
+
+testData.stringSubstitutionSingle = {
+  operator: 'stringSubstitution',
+  children: ['Hello, %1, welcome to our site.', 'friend'],
+}
+
+testData.stringSubstitutionMultiple = {
+  operator: 'stringSubstitution',
+  children: [
+    'There are %1 kinds of people in the world:\nthose who understand %2 and those who %3',
+    '10',
+    { value: 'binary' },
+    "don't",
+  ],
+}
+
+testData.stringSubstitutionNonStringReplacements = {
+  operator: 'stringSubstitution',
+  children: [
+    'We have %1 %2 listed with an average value of %3: %4',
+    2,
+    'people',
+    4.53,
+    { value: ['Boba', 'Mando'] },
+  ],
+}
+
+testData.stringSubstitutionTooManyReplacements = {
+  operator: 'stringSubstitution',
+  children: ['The price of milk is %1 per %2', '$2.30', 'liter', 'gallon', '$5.00'],
+}
+
+testData.stringSubstitutionTooFewReplacements = {
+  operator: 'stringSubstitution',
+  children: ["The applicant's name is %1 %2 %3.", 'Carl', 'Smith'],
+}
+
+testData.stringSubstitutionParametersNonOrdered = {
+  operator: 'stringSubstitution',
+  children: ['%2 out of every %3 people are %1', 'stupid', 'Two', 3],
+}
+
+testData.stringSubstitutionParametersNonOrderedAndTooFew = {
+  operator: 'stringSubstitution',
+  children: ['%2 out of every %3 people are %1', 'stupid', 'Two'],
+}
+
+testData.stringSubstitutionParametersNotSequential = {
+  operator: 'stringSubstitution',
+  children: [
+    `It shouldn't matter if %10 are big %100 between %101 %200`,
+    'there',
+    'gaps',
+    'parameter',
+    'numbers',
+  ],
+}
+
+testData.stringSubstitutionNoParameters = {
+  operator: 'stringSubstitution',
+  children: ['This sentence has no replacements.', 'nothing', 'will', 'happen'],
+}
+
+testData.stringSubstitutionNoReplacements = {
+  operator: 'stringSubstitution',
+  children: ['Your name is %2 %1 but we have nothing to replace them with'],
+}
+
 // API operator
 
 testData.APIisUnique = {
