@@ -2,7 +2,7 @@ import databaseConnect from '../databaseConnect'
 import config from '../../config.json'
 import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
-import { PermissionRow, TemplatePermissions, UserInfo } from './types'
+import { PermissionRow, TemplatePermissions } from './types'
 import { compileJWT } from './rowLevelPolicyHelpers'
 import { Organisation, UserOrg } from '../../types'
 

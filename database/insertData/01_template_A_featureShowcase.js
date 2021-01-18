@@ -419,14 +419,14 @@ exports.queries = [
                     }
                     {
                       code: "PB3"
-                      index: 15
+                      index: 16
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
-                      code: "Qradio2"
-                      index: 16
+                      code: "Qradio"
+                      index: 17
                       title: "Testing Radio buttons"
                       elementTypePluginCode: "radioChoice"
                       category: QUESTION
@@ -439,7 +439,7 @@ exports.queries = [
                     }
                     {
                       code: "Q12"
-                      index: 17
+                      index: 18
                       title: "Role"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
@@ -453,7 +453,7 @@ exports.queries = [
                     }
                     {
                       code: "Q13"
-                      index: 18
+                      index: 19
                       title: "Other description"
                       elementTypePluginCode: "shortText"
                       category: QUESTION

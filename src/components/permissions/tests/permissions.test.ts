@@ -4,7 +4,7 @@ import { compileJWTdata, generateRowLevelPoliciesData } from './testdata'
 // Test JWT generation
 compileJWTdata.forEach(({ userInfo, templatePermissionRows, result }: any, index) => {
   test(`Test JWT generation: ${index + 1}`, () => {
-    return expect(compileJWT(userInfo, templatePermissionRows)).toEqual(result)
+    return expect(compileJWT({ userId: userInfo.userId, templatePermissionRows })).toEqual(result)
   })
 })
 
