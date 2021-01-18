@@ -420,14 +420,14 @@ exports.queries = [
                     }
                     {
                       code: "PB3"
-                      index: 15
+                      index: 16
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
                       code: "Q12"
-                      index: 16
+                      index: 17
                       title: "Role"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
@@ -440,7 +440,7 @@ exports.queries = [
                     }
                     {
                       code: "Q13"
-                      index: 17
+                      index: 18
                       title: "Other description"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -458,6 +458,90 @@ exports.queries = [
                       parameters: {
                         label: "If Other, please describe"
                         placeholder: "Describe your role"
+                      }
+                    }
+                    {
+                      code: "PB4"
+                      index: 19
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "CheckboxShowcase"
+                      index: 20
+                      title: "Checkbox demonstration"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "Checkbox demonstration"
+                        text: "Different types and settings for Checkbox plugin"
+                      }
+                    }
+                    {
+                      code: "CB1"
+                      index: 21
+                      title: "Single checkbox"
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "This is a single checkbox"
+                        options: ["Tick me"]
+                      }
+                    }
+                    {
+                      code: "CB2"
+                      index: 22
+                      title: "Three checkboxes"
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "Three checkboxes, one pre-selected"
+                        options: ["Option 1", "Options 2", "Option 3"]
+                        selected: [1]
+                      }
+                    }
+                    {
+                      code: "CB3"
+                      index: 23
+                      title: "Toggle switch"
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "Behold! a **toggle** switch:"
+                        options: ["ON"]
+                        type: "toggle"
+                      }
+                    }
+                    {
+                      code: "TXTON"
+                      index: 24
+                      title: "Checkbox ON"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "The switch is toggled %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.CB3.text"]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                    {
+                      code: "CB4"
+                      index: 25
+                      title: "Slider switch"
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "And a couple of sliders"
+                        options: ["I like ice-cream", "I like cake"]
+                        type: "slider"
                       }
                     }
                   ]
