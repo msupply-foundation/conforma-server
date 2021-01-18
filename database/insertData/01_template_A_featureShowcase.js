@@ -268,10 +268,10 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Organisation Type"
-                        description: "Select which type of organisation you belong to."
+                        description: "_Select which type of organisation you belong to._"
                         options: ["Manufacturer", "Distributor", "Importer"]
                         validation: { value: true }
-                        default: 0
+                        default: 1
                       }
                       isRequired: false
                     }
@@ -425,8 +425,21 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      code: "Q12"
+                      code: "Qradio2"
                       index: 16
+                      title: "Testing Radio buttons"
+                      elementTypePluginCode: "radioChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "This Radio button group has no default"
+                        options: ["Option A", "Option B", "Option C"]
+                        # Testing no default
+                      }
+                      isRequired: true
+                    }
+                    {
+                      code: "Q12"
+                      index: 17
                       title: "Role"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
@@ -434,12 +447,13 @@ exports.queries = [
                         label: "What is your role?"
                         options: ["Owner", "Supplier", "Other"]
                         placeholder: "Select one"
+                        default: 1
                       }
                       isRequired: false
                     }
                     {
                       code: "Q13"
-                      index: 17
+                      index: 18
                       title: "Other description"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
