@@ -3,6 +3,10 @@
 
 DROP SCHEMA IF EXISTS public CASCADE;
 
+DROP OWNED BY graphile_user;
+
+DROP USER IF EXISTS graphile_user;
+
 CREATE SCHEMA public;
 
 SET statement_timeout = 0;

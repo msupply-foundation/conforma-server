@@ -3,8 +3,8 @@ ALTER TABLE public.application ENABLE ROW LEVEL SECURITY;
 DO $$
 BEGIN
   CREATE ROLE graphile_user WITH NOLOGIN;
-  EXCEPTION WHEN DUPLICATE_OBJECT THEN
-  RAISE NOTICE 'not creating role my_role -- it already exists';
+  EXCEPTION WHEN DUPLICATE_OBJECT
+  THEN RAISE NOTICE 'not creating role graphile_user -- it already exists';
 END
 $$;
 
