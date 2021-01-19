@@ -24,6 +24,7 @@ import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
   out {
     aud: 'postgraphile',
     userId: 1,
+    orgId: 2, (if supplied)
     pp2pn3: true,
     pp2pn3tp4: true,
     pp2pn3tp4_templateId: "1",
@@ -31,8 +32,10 @@ import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
     pp2pn3tp4_restrictTwo: "2"
   }
 */
-const compileJWT = (userInfo: UserInfo, templatePermissionRows: Array<PermissionRow>) => {
-  let JWT = { userId: userInfo.userId, username: userInfo.username, aud: 'postgraphile' }
+const compileJWT = (JWTelements: any) => {
+  const { userId, orgId, templatePermissionRows } = JWTelements
+
+  let JWT = { userId, orgId, aud: 'postgraphile' }
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
     const { templatePermissionRestrictions, templateId, templatePermissionId } = permissionRow

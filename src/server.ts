@@ -5,8 +5,9 @@ import fastifyCors from 'fastify-cors'
 import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
 import {
-  routeUserPermissions,
+  routeUserInfo,
   routeLogin,
+  routeLoginOrg,
   routeUpdateRowPolicies,
   routeCreateHash,
 } from './components/permissions'
@@ -44,11 +45,10 @@ const startServer = async () => {
     return reply.sendFile(filename)
   })
 
-  server.get('/userInfo', routeUserPermissions)
-
+  server.get('/user-info', routeUserInfo)
   server.post('/login', routeLogin)
+  server.post('/login-org', routeLoginOrg)
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
-
   server.post('/create-hash', routeCreateHash)
 
   // File upload endpoint

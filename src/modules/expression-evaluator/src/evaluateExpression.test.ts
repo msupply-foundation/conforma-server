@@ -559,7 +559,7 @@ test('Test visibility condition -- Answer to Q1 is Drug Registration and user be
     objects: { form: testData.form, user: testData.user },
     pgConnection: pgConnect,
   }).then((result: any) => {
-    expect(result).toBe(false)
+    expect(result).toBe(true)
   })
 })
 

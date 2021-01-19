@@ -4068,7 +4068,7 @@ export type CreateUserOrganisationPayload = {
   /** Reads a single `User` that is related to this `UserOrganisation`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `UserOrganisation`. */
-  organistion?: Maybe<Organisation>;
+  organisation?: Maybe<Organisation>;
   /** An edge for our `UserOrganisation`. May be used by Relay 1. */
   userOrganisationEdge?: Maybe<UserOrganisationsEdge>;
 };
@@ -5462,7 +5462,7 @@ export type DeleteUserOrganisationPayload = {
   /** Reads a single `User` that is related to this `UserOrganisation`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `UserOrganisation`. */
-  organistion?: Maybe<Organisation>;
+  organisation?: Maybe<Organisation>;
   /** An edge for our `UserOrganisation`. May be used by Relay 1. */
   userOrganisationEdge?: Maybe<UserOrganisationsEdge>;
 };
@@ -7881,11 +7881,11 @@ export type Organisation = Node & {
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
-  userOrganisationsByOrganistionId: UserOrganisationsConnection;
+  userOrganisations: UserOrganisationsConnection;
 };
 
 
-export type OrganisationUserOrganisationsByOrganistionIdArgs = {
+export type OrganisationUserOrganisationsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -7921,10 +7921,10 @@ export type OrganisationFilter = {
   licenceNumber?: Maybe<StringFilter>;
   /** Filter by the object’s `address` field. */
   address?: Maybe<StringFilter>;
-  /** Filter by the object’s `userOrganisationsByOrganistionId` relation. */
-  userOrganisationsByOrganistionId?: Maybe<OrganisationToManyUserOrganisationFilter>;
-  /** Some related `userOrganisationsByOrganistionId` exist. */
-  userOrganisationsByOrganistionIdExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `userOrganisations` relation. */
+  userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
+  /** Some related `userOrganisations` exist. */
+  userOrganisationsExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<OrganisationFilter>>;
   /** Checks for any expressions in this list. */
@@ -7939,7 +7939,7 @@ export type OrganisationInput = {
   name?: Maybe<Scalars['String']>;
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganistionIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -7955,7 +7955,7 @@ export type OrganisationNodeIdDelete = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate = {
+export type OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `userOrganisation` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `userOrganisation` being updated. */
@@ -7963,9 +7963,9 @@ export type OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNo
 };
 
 /** The fields on `organisation` to look up the row to update. */
-export type OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingOrganisationPkeyUpdate = {
+export type OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate = {
   /** An object where the defined keys will be set on the `organisation` being updated. */
-  patch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch;
+  patch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -7985,7 +7985,7 @@ export type OrganisationPatch = {
   name?: Maybe<Scalars['String']>;
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganistionIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `Organisation` values. */
@@ -8418,10 +8418,10 @@ export type PermissionJoinUserOrganisationIdFkeyPermissionJoinCreateInput = {
 export type PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -8990,6 +8990,8 @@ export type Query = Node & {
   triggerQueues?: Maybe<TriggerQueuesConnection>;
   /** Reads and enables pagination through a set of `User`. */
   users?: Maybe<UsersConnection>;
+  /** Reads and enables pagination through a set of `UserOrgJoin`. */
+  userOrgJoins?: Maybe<UserOrgJoinsConnection>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations?: Maybe<UserOrganisationsConnection>;
   actionPlugin?: Maybe<ActionPlugin>;
@@ -9480,6 +9482,19 @@ export type QueryUsersArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
   condition?: Maybe<UserCondition>;
   filter?: Maybe<UserFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryUserOrgJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<UserOrgJoinsOrderBy>>;
+  condition?: Maybe<UserOrgJoinCondition>;
+  filter?: Maybe<UserOrgJoinFilter>;
 };
 
 
@@ -15608,12 +15623,12 @@ export type UpdateOrganisationInput = {
 };
 
 /** An object where the defined keys will be set on the `organisation` being updated. */
-export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch = {
+export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganistionIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
 };
 
 /** The output of our update `Organisation` mutation. */
@@ -17243,30 +17258,30 @@ export type UpdateUserOrganisationInput = {
 export type UpdateUserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `userOrganisation` being updated. */
-export type UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch = {
+export type UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `userOrganisation` being updated. */
 export type UpdateUserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -17285,7 +17300,7 @@ export type UpdateUserOrganisationPayload = {
   /** Reads a single `User` that is related to this `UserOrganisation`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `UserOrganisation`. */
-  organistion?: Maybe<Organisation>;
+  organisation?: Maybe<Organisation>;
   /** An edge for our `UserOrganisation`. May be used by Relay 1. */
   userOrganisationEdge?: Maybe<UserOrganisationsEdge>;
 };
@@ -17730,12 +17745,12 @@ export type UserOrganisation = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `UserOrganisation`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `UserOrganisation`. */
-  organistion?: Maybe<Organisation>;
+  organisation?: Maybe<Organisation>;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
   permissionJoins: PermissionJoinsConnection;
 };
@@ -17761,8 +17776,8 @@ export type UserOrganisationCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `organistionId` field. */
-  organistionId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `organisationId` field. */
+  organisationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `userRole` field. */
   userRole?: Maybe<Scalars['String']>;
 };
@@ -17773,8 +17788,8 @@ export type UserOrganisationFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `organistionId` field. */
-  organistionId?: Maybe<IntFilter>;
+  /** Filter by the object’s `organisationId` field. */
+  organisationId?: Maybe<IntFilter>;
   /** Filter by the object’s `userRole` field. */
   userRole?: Maybe<StringFilter>;
   /** Filter by the object’s `permissionJoins` relation. */
@@ -17785,10 +17800,10 @@ export type UserOrganisationFilter = {
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
   userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `organistion` relation. */
-  organistion?: Maybe<OrganisationFilter>;
-  /** A related `organistion` exists. */
-  organistionExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `organisation` relation. */
+  organisation?: Maybe<OrganisationFilter>;
+  /** A related `organisation` exists. */
+  organisationExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserOrganisationFilter>>;
   /** Checks for any expressions in this list. */
@@ -17801,10 +17816,10 @@ export type UserOrganisationFilter = {
 export type UserOrganisationInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -17836,7 +17851,7 @@ export type UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdF
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate = {
+export type UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `organisation` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `organisation` being updated. */
@@ -17844,9 +17859,9 @@ export type UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFk
 };
 
 /** The fields on `userOrganisation` to look up the row to update. */
-export type UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingUserOrganisationPkeyUpdate = {
+export type UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate = {
   /** An object where the defined keys will be set on the `userOrganisation` being updated. */
-  patch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch;
+  patch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -17866,7 +17881,7 @@ export type UserOrganisationOnUserOrganisationForUserOrganisationUserIdFkeyUsing
 };
 
 /** Input for the nested mutation of `organisation` in the `UserOrganisationInput` mutation. */
-export type UserOrganisationOrganistionIdFkeyInput = {
+export type UserOrganisationOrganisationIdFkeyInput = {
   /** The primary key(s) for `organisation` for the far side of the relationship. */
   connectById?: Maybe<OrganisationOrganisationPkeyConnect>;
   /** The primary key(s) for `organisation` for the far side of the relationship. */
@@ -17876,15 +17891,15 @@ export type UserOrganisationOrganistionIdFkeyInput = {
   /** The primary key(s) for `organisation` for the far side of the relationship. */
   deleteByNodeId?: Maybe<OrganisationNodeIdDelete>;
   /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
-  updateById?: Maybe<OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingOrganisationPkeyUpdate>;
+  updateById?: Maybe<OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate>;
   /** The primary key(s) and patch data for `organisation` for the far side of the relationship. */
-  updateByNodeId?: Maybe<UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate>;
+  updateByNodeId?: Maybe<UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate>;
   /** A `OrganisationInput` object that will be created and connected to this object. */
-  create?: Maybe<UserOrganisationOrganistionIdFkeyOrganisationCreateInput>;
+  create?: Maybe<UserOrganisationOrganisationIdFkeyOrganisationCreateInput>;
 };
 
 /** Input for the nested mutation of `userOrganisation` in the `OrganisationInput` mutation. */
-export type UserOrganisationOrganistionIdFkeyInverseInput = {
+export type UserOrganisationOrganisationIdFkeyInverseInput = {
   /** Flag indicating whether all other `userOrganisation` records that match this relationship should be removed. */
   deleteOthers?: Maybe<Scalars['Boolean']>;
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
@@ -17896,29 +17911,29 @@ export type UserOrganisationOrganistionIdFkeyInverseInput = {
   /** The primary key(s) for `userOrganisation` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<UserOrganisationNodeIdDelete>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
-  updateById?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingUserOrganisationPkeyUpdate>>;
+  updateById?: Maybe<Array<UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate>>;
   /** The primary key(s) and patch data for `userOrganisation` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate>>;
+  updateByNodeId?: Maybe<Array<OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate>>;
   /** A `UserOrganisationInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<UserOrganisationOrganistionIdFkeyUserOrganisationCreateInput>>;
+  create?: Maybe<Array<UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput>>;
 };
 
 /** The `organisation` to be created by this mutation. */
-export type UserOrganisationOrganistionIdFkeyOrganisationCreateInput = {
+export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   licenceNumber?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
-  userOrganisationsUsingId?: Maybe<UserOrganisationOrganistionIdFkeyInverseInput>;
+  userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
 };
 
 /** The `userOrganisation` to be created by this mutation. */
-export type UserOrganisationOrganistionIdFkeyUserOrganisationCreateInput = {
+export type UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -17926,10 +17941,10 @@ export type UserOrganisationOrganistionIdFkeyUserOrganisationCreateInput = {
 export type UserOrganisationPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -17962,8 +17977,8 @@ export enum UserOrganisationsOrderBy {
   IdDesc = 'ID_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
-  OrganistionIdAsc = 'ORGANISTION_ID_ASC',
-  OrganistionIdDesc = 'ORGANISTION_ID_DESC',
+  OrganisationIdAsc = 'ORGANISATION_ID_ASC',
+  OrganisationIdDesc = 'ORGANISATION_ID_DESC',
   UserRoleAsc = 'USER_ROLE_ASC',
   UserRoleDesc = 'USER_ROLE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -18046,10 +18061,10 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
 /** The `userOrganisation` to be created by this mutation. */
 export type UserOrganisationUserIdFkeyUserOrganisationCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  organistionId?: Maybe<Scalars['Int']>;
+  organisationId?: Maybe<Scalars['Int']>;
   userRole?: Maybe<Scalars['String']>;
   userToUserId?: Maybe<UserOrganisationUserIdFkeyInput>;
-  organisationToOrganistionId?: Maybe<UserOrganisationOrganistionIdFkeyInput>;
+  organisationToOrganisationId?: Maybe<UserOrganisationOrganisationIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserOrganisationIdFkeyInverseInput>;
 };
 
@@ -18062,6 +18077,138 @@ export type UserOrganisationUserOrganisationPkeyConnect = {
 export type UserOrganisationUserOrganisationPkeyDelete = {
   id: Scalars['Int'];
 };
+
+export type UserOrgJoin = {
+  __typename?: 'UserOrgJoin';
+  userId?: Maybe<Scalars['Int']>;
+  username?: Maybe<Scalars['String']>;
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  passwordHash?: Maybe<Scalars['String']>;
+  orgId?: Maybe<Scalars['Int']>;
+  orgName?: Maybe<Scalars['String']>;
+  userRole?: Maybe<Scalars['String']>;
+  licenceNumber?: Maybe<Scalars['String']>;
+  address?: Maybe<Scalars['String']>;
+};
+
+/**
+ * A condition to be used against `UserOrgJoin` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type UserOrgJoinCondition = {
+  /** Checks for equality with the object’s `userId` field. */
+  userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `username` field. */
+  username?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `firstName` field. */
+  firstName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `lastName` field. */
+  lastName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `email` field. */
+  email?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `dateOfBirth` field. */
+  dateOfBirth?: Maybe<Scalars['Date']>;
+  /** Checks for equality with the object’s `passwordHash` field. */
+  passwordHash?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `orgId` field. */
+  orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `orgName` field. */
+  orgName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `userRole` field. */
+  userRole?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `licenceNumber` field. */
+  licenceNumber?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `address` field. */
+  address?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `UserOrgJoin` object types. All fields are combined with a logical ‘and.’ */
+export type UserOrgJoinFilter = {
+  /** Filter by the object’s `userId` field. */
+  userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `username` field. */
+  username?: Maybe<StringFilter>;
+  /** Filter by the object’s `firstName` field. */
+  firstName?: Maybe<StringFilter>;
+  /** Filter by the object’s `lastName` field. */
+  lastName?: Maybe<StringFilter>;
+  /** Filter by the object’s `email` field. */
+  email?: Maybe<StringFilter>;
+  /** Filter by the object’s `dateOfBirth` field. */
+  dateOfBirth?: Maybe<DateFilter>;
+  /** Filter by the object’s `passwordHash` field. */
+  passwordHash?: Maybe<StringFilter>;
+  /** Filter by the object’s `orgId` field. */
+  orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `orgName` field. */
+  orgName?: Maybe<StringFilter>;
+  /** Filter by the object’s `userRole` field. */
+  userRole?: Maybe<StringFilter>;
+  /** Filter by the object’s `licenceNumber` field. */
+  licenceNumber?: Maybe<StringFilter>;
+  /** Filter by the object’s `address` field. */
+  address?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<UserOrgJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<UserOrgJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<UserOrgJoinFilter>;
+};
+
+/** A connection to a list of `UserOrgJoin` values. */
+export type UserOrgJoinsConnection = {
+  __typename?: 'UserOrgJoinsConnection';
+  /** A list of `UserOrgJoin` objects. */
+  nodes: Array<Maybe<UserOrgJoin>>;
+  /** A list of edges which contains the `UserOrgJoin` and cursor to aid in pagination. */
+  edges: Array<UserOrgJoinsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `UserOrgJoin` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `UserOrgJoin` edge in the connection. */
+export type UserOrgJoinsEdge = {
+  __typename?: 'UserOrgJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `UserOrgJoin` at the end of the edge. */
+  node?: Maybe<UserOrgJoin>;
+};
+
+/** Methods to use when ordering `UserOrgJoin`. */
+export enum UserOrgJoinsOrderBy {
+  Natural = 'NATURAL',
+  UserIdAsc = 'USER_ID_ASC',
+  UserIdDesc = 'USER_ID_DESC',
+  UsernameAsc = 'USERNAME_ASC',
+  UsernameDesc = 'USERNAME_DESC',
+  FirstNameAsc = 'FIRST_NAME_ASC',
+  FirstNameDesc = 'FIRST_NAME_DESC',
+  LastNameAsc = 'LAST_NAME_ASC',
+  LastNameDesc = 'LAST_NAME_DESC',
+  EmailAsc = 'EMAIL_ASC',
+  EmailDesc = 'EMAIL_DESC',
+  DateOfBirthAsc = 'DATE_OF_BIRTH_ASC',
+  DateOfBirthDesc = 'DATE_OF_BIRTH_DESC',
+  PasswordHashAsc = 'PASSWORD_HASH_ASC',
+  PasswordHashDesc = 'PASSWORD_HASH_DESC',
+  OrgIdAsc = 'ORG_ID_ASC',
+  OrgIdDesc = 'ORG_ID_DESC',
+  OrgNameAsc = 'ORG_NAME_ASC',
+  OrgNameDesc = 'ORG_NAME_DESC',
+  UserRoleAsc = 'USER_ROLE_ASC',
+  UserRoleDesc = 'USER_ROLE_DESC',
+  LicenceNumberAsc = 'LICENCE_NUMBER_ASC',
+  LicenceNumberDesc = 'LICENCE_NUMBER_DESC',
+  AddressAsc = 'ADDRESS_ASC',
+  AddressDesc = 'ADDRESS_DESC'
+}
 
 /** Represents an update to a `User`. Fields that are set will be updated. */
 export type UserPatch = {
@@ -18560,6 +18707,12 @@ export type ResolversTypes = {
   UserCondition: UserCondition;
   UsersConnection: ResolverTypeWrapper<UsersConnection>;
   UsersEdge: ResolverTypeWrapper<UsersEdge>;
+  UserOrgJoinsOrderBy: UserOrgJoinsOrderBy;
+  UserOrgJoinCondition: UserOrgJoinCondition;
+  UserOrgJoinFilter: UserOrgJoinFilter;
+  UserOrgJoinsConnection: ResolverTypeWrapper<UserOrgJoinsConnection>;
+  UserOrgJoin: ResolverTypeWrapper<UserOrgJoin>;
+  UserOrgJoinsEdge: ResolverTypeWrapper<UserOrgJoinsEdge>;
   BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   Mutation: ResolverTypeWrapper<{}>;
   CreateActionPluginInput: CreateActionPluginInput;
@@ -18664,16 +18817,16 @@ export type ResolversTypes = {
   PermissionJoinUserOrganisationIdFkeyInput: PermissionJoinUserOrganisationIdFkeyInput;
   UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingUserOrganisationPkeyUpdate: UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingUserOrganisationPkeyUpdate;
   updateUserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch: UpdateUserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch;
-  UserOrganisationOrganistionIdFkeyInput: UserOrganisationOrganistionIdFkeyInput;
+  UserOrganisationOrganisationIdFkeyInput: UserOrganisationOrganisationIdFkeyInput;
   OrganisationOrganisationPkeyConnect: OrganisationOrganisationPkeyConnect;
   OrganisationNodeIdConnect: OrganisationNodeIdConnect;
   OrganisationOrganisationPkeyDelete: OrganisationOrganisationPkeyDelete;
   OrganisationNodeIdDelete: OrganisationNodeIdDelete;
-  OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingOrganisationPkeyUpdate;
-  updateOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch;
-  UserOrganisationOrganistionIdFkeyInverseInput: UserOrganisationOrganistionIdFkeyInverseInput;
-  UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingUserOrganisationPkeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingUserOrganisationPkeyUpdate;
-  updateUserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch;
+  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate;
+  updateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  UserOrganisationOrganisationIdFkeyInverseInput: UserOrganisationOrganisationIdFkeyInverseInput;
+  UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate;
+  updateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
   PermissionJoinUserOrganisationIdFkeyInverseInput: PermissionJoinUserOrganisationIdFkeyInverseInput;
   PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingPermissionJoinPkeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingPermissionJoinPkeyUpdate;
   updatePermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch;
@@ -19114,12 +19267,12 @@ export type ResolversTypes = {
   UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate: UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinPatch: PermissionJoinPatch;
   PermissionJoinUserOrganisationIdFkeyPermissionJoinCreateInput: PermissionJoinUserOrganisationIdFkeyPermissionJoinCreateInput;
-  OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate;
+  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
   UserOrganisationPatch: UserOrganisationPatch;
-  UserOrganisationOrganistionIdFkeyUserOrganisationCreateInput: UserOrganisationOrganistionIdFkeyUserOrganisationCreateInput;
-  UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate;
+  UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput: UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput;
+  UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
   OrganisationPatch: OrganisationPatch;
-  UserOrganisationOrganistionIdFkeyOrganisationCreateInput: UserOrganisationOrganistionIdFkeyOrganisationCreateInput;
+  UserOrganisationOrganisationIdFkeyOrganisationCreateInput: UserOrganisationOrganisationIdFkeyOrganisationCreateInput;
   PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput: PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput;
   UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate;
@@ -19641,6 +19794,11 @@ export type ResolversParentTypes = {
   UserCondition: UserCondition;
   UsersConnection: UsersConnection;
   UsersEdge: UsersEdge;
+  UserOrgJoinCondition: UserOrgJoinCondition;
+  UserOrgJoinFilter: UserOrgJoinFilter;
+  UserOrgJoinsConnection: UserOrgJoinsConnection;
+  UserOrgJoin: UserOrgJoin;
+  UserOrgJoinsEdge: UserOrgJoinsEdge;
   BigInt: Scalars['BigInt'];
   Mutation: {};
   CreateActionPluginInput: CreateActionPluginInput;
@@ -19745,16 +19903,16 @@ export type ResolversParentTypes = {
   PermissionJoinUserOrganisationIdFkeyInput: PermissionJoinUserOrganisationIdFkeyInput;
   UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingUserOrganisationPkeyUpdate: UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingUserOrganisationPkeyUpdate;
   updateUserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch: UpdateUserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch;
-  UserOrganisationOrganistionIdFkeyInput: UserOrganisationOrganistionIdFkeyInput;
+  UserOrganisationOrganisationIdFkeyInput: UserOrganisationOrganisationIdFkeyInput;
   OrganisationOrganisationPkeyConnect: OrganisationOrganisationPkeyConnect;
   OrganisationNodeIdConnect: OrganisationNodeIdConnect;
   OrganisationOrganisationPkeyDelete: OrganisationOrganisationPkeyDelete;
   OrganisationNodeIdDelete: OrganisationNodeIdDelete;
-  OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingOrganisationPkeyUpdate;
-  updateOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch;
-  UserOrganisationOrganistionIdFkeyInverseInput: UserOrganisationOrganistionIdFkeyInverseInput;
-  UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingUserOrganisationPkeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyUsingUserOrganisationPkeyUpdate;
-  updateUserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyPatch;
+  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingOrganisationPkeyUpdate;
+  updateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch: UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
+  UserOrganisationOrganisationIdFkeyInverseInput: UserOrganisationOrganisationIdFkeyInverseInput;
+  UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyUsingUserOrganisationPkeyUpdate;
+  updateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch: UpdateUserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyPatch;
   PermissionJoinUserOrganisationIdFkeyInverseInput: PermissionJoinUserOrganisationIdFkeyInverseInput;
   PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingPermissionJoinPkeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyUsingPermissionJoinPkeyUpdate;
   updatePermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyPatch;
@@ -20195,12 +20353,12 @@ export type ResolversParentTypes = {
   UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate: UserOrganisationOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinPatch: PermissionJoinPatch;
   PermissionJoinUserOrganisationIdFkeyPermissionJoinCreateInput: PermissionJoinUserOrganisationIdFkeyPermissionJoinCreateInput;
-  OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate;
+  OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: OrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
   UserOrganisationPatch: UserOrganisationPatch;
-  UserOrganisationOrganistionIdFkeyUserOrganisationCreateInput: UserOrganisationOrganistionIdFkeyUserOrganisationCreateInput;
-  UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganistionIdFkeyNodeIdUpdate;
+  UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput: UserOrganisationOrganisationIdFkeyUserOrganisationCreateInput;
+  UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate: UserOrganisationOnUserOrganisationForUserOrganisationOrganisationIdFkeyNodeIdUpdate;
   OrganisationPatch: OrganisationPatch;
-  UserOrganisationOrganistionIdFkeyOrganisationCreateInput: UserOrganisationOrganistionIdFkeyOrganisationCreateInput;
+  UserOrganisationOrganisationIdFkeyOrganisationCreateInput: UserOrganisationOrganisationIdFkeyOrganisationCreateInput;
   PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput: PermissionJoinUserOrganisationIdFkeyUserOrganisationCreateInput;
   UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate;
@@ -21045,7 +21203,7 @@ export type CreateUserOrganisationPayloadResolvers<ContextType = any, ParentType
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  organistion?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
+  organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
   userOrganisationEdge?: Resolver<Maybe<ResolversTypes['UserOrganisationsEdge']>, ParentType, ContextType, RequireFields<CreateUserOrganisationPayloadUserOrganisationEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -21352,7 +21510,7 @@ export type DeleteUserOrganisationPayloadResolvers<ContextType = any, ParentType
   deletedUserOrganisationNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  organistion?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
+  organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
   userOrganisationEdge?: Resolver<Maybe<ResolversTypes['UserOrganisationsEdge']>, ParentType, ContextType, RequireFields<DeleteUserOrganisationPayloadUserOrganisationEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -21616,7 +21774,7 @@ export type OrganisationResolvers<ContextType = any, ParentType extends Resolver
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   licenceNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  userOrganisationsByOrganistionId?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<OrganisationUserOrganisationsByOrganistionIdArgs, 'orderBy'>>;
+  userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<OrganisationUserOrganisationsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -21753,6 +21911,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateStages?: Resolver<Maybe<ResolversTypes['TemplateStagesConnection']>, ParentType, ContextType, RequireFields<QueryTemplateStagesArgs, 'orderBy'>>;
   triggerQueues?: Resolver<Maybe<ResolversTypes['TriggerQueuesConnection']>, ParentType, ContextType, RequireFields<QueryTriggerQueuesArgs, 'orderBy'>>;
   users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'orderBy'>>;
+  userOrgJoins?: Resolver<Maybe<ResolversTypes['UserOrgJoinsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrgJoinsArgs, 'orderBy'>>;
   userOrganisations?: Resolver<Maybe<ResolversTypes['UserOrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrganisationsArgs, 'orderBy'>>;
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginArgs, 'code'>>;
   actionQueue?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueArgs, 'id'>>;
@@ -22420,7 +22579,7 @@ export type UpdateUserOrganisationPayloadResolvers<ContextType = any, ParentType
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  organistion?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
+  organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
   userOrganisationEdge?: Resolver<Maybe<ResolversTypes['UserOrganisationsEdge']>, ParentType, ContextType, RequireFields<UpdateUserOrganisationPayloadUserOrganisationEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -22457,10 +22616,10 @@ export type UserOrganisationResolvers<ContextType = any, ParentType extends Reso
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  organistionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  organisationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   userRole?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  organistion?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
+  organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<UserOrganisationPermissionJoinsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -22476,6 +22635,36 @@ export type UserOrganisationsConnectionResolvers<ContextType = any, ParentType e
 export type UserOrganisationsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserOrganisationsEdge'] = ResolversParentTypes['UserOrganisationsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserOrgJoinResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserOrgJoin'] = ResolversParentTypes['UserOrgJoin']> = {
+  userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dateOfBirth?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  passwordHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  orgName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userRole?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  licenceNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserOrgJoinsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserOrgJoinsConnection'] = ResolversParentTypes['UserOrgJoinsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['UserOrgJoin']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['UserOrgJoinsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UserOrgJoinsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserOrgJoinsEdge'] = ResolversParentTypes['UserOrgJoinsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['UserOrgJoin']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -22678,6 +22867,9 @@ export type Resolvers<ContextType = any> = {
   UserOrganisation?: UserOrganisationResolvers<ContextType>;
   UserOrganisationsConnection?: UserOrganisationsConnectionResolvers<ContextType>;
   UserOrganisationsEdge?: UserOrganisationsEdgeResolvers<ContextType>;
+  UserOrgJoin?: UserOrgJoinResolvers<ContextType>;
+  UserOrgJoinsConnection?: UserOrgJoinsConnectionResolvers<ContextType>;
+  UserOrgJoinsEdge?: UserOrgJoinsEdgeResolvers<ContextType>;
   UsersConnection?: UsersConnectionResolvers<ContextType>;
   UsersEdge?: UsersEdgeResolvers<ContextType>;
 };

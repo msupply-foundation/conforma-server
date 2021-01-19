@@ -146,3 +146,24 @@ export interface TriggerQueueUpdatePayload {
   id: number
   status: TriggerStatus
 }
+
+export interface User {
+  userId: number
+  firstName: string
+  lastName?: string | null
+  username: string
+  email: string
+  dateOfBirth?: Date | null
+  organisation?: Organisation
+  passwordHash?: string
+}
+
+export interface Organisation {
+  orgId: number
+  userRole?: string | null
+  orgName: string
+  licenceNumber?: string
+  address?: string
+}
+
+export interface UserOrg extends User, Organisation {}
