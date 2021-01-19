@@ -1,4 +1,11 @@
+-- Connect to database first:
+\c tmf_app_manager
+
 DROP SCHEMA IF EXISTS public CASCADE;
+
+DROP OWNED BY graphile_user;
+
+DROP USER IF EXISTS graphile_user;
 
 CREATE SCHEMA public;
 

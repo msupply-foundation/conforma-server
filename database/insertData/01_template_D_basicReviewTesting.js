@@ -1,0 +1,267 @@
+/*
+TEMPLATE D - Review (testing)
+  - a simple template with multiple pages in multiple sections to be used
+    for testing the application review process
+*/
+exports.queries = [
+  `mutation {
+    createTemplate(
+      input: {
+        template: {
+          code: "ReviewTest"
+          name: "Test -- Review Process"
+          status: AVAILABLE
+          versionTimestamp: "NOW()"
+          templateSectionsUsingId: {
+            create: [
+              {
+                code: "S1"
+                title: "Personal Info"
+                index: 0
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "Text1"
+                      index: 0
+                      title: "Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "In this section, we require your **personal information**"
+                      }
+                    }
+                    {
+                      code: "Q1"
+                      index: 1
+                      title: "First Name"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "First Name" }
+                    }
+                    {
+                      code: "Q2"
+                      index: 2
+                      title: "Last Name"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Last Name" }
+                    }
+                    {
+                      code: "Q3"
+                      index: 3
+                      title: "Email"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          {
+                            value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                          }
+                        ]
+                      }
+                      validationMessage: "Not a valid email address"
+                      parameters: { label: "Email" }
+                    }
+                    {
+                      code: "PB1"
+                      index: 4
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "Q4"
+                      index: 5
+                      title: "Age"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      isRequired: false
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "^[0-9]+$" }
+                        ]
+                      }
+                      validationMessage: "Response must be a number"
+                      parameters: { label: "Age" }
+                    }
+                    {
+                      code: "Q5"
+                      index: 6
+                      title: "Nationality"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Nationality"
+                        placeholder: "Enter a country"
+                      }
+                    }
+                  ]
+                }
+              }
+              {
+                code: "S2"
+                title: "Product Info"
+                index: 1
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "Text2"
+                      index: 0
+                      title: "Product Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "In this section, we require your **PRODUCT information**"
+                      }
+                    }
+                    {
+                      code: "Q20"
+                      index: 1
+                      title: "Product Name"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Name of Product" }
+                    }
+                    {
+                      code: "Q21"
+                      index: 2
+                      title: "Product Type"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "What type of product are you registering?"
+                        placeholder: "Select"
+                        options: ["Medicine", "Natural Product"]
+                      }
+                    }
+                    {
+                      code: "PB2"
+                      index: 3
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "Q22"
+                      index: 4
+                      title: "Dose Size"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Size of single dose"
+                        placeholder: "Metric units please"
+                      }
+                    }
+                    {
+                      code: "Q23"
+                      index: 5
+                      title: "Packet Size"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "^[0-9]+$" }
+                        ]
+                      }
+                      validationMessage: "Must be a number"
+                      parameters: {
+                        label: "How many doses per packet?"
+                        placeholder: "Whole number"
+                      }
+                    }
+                    {
+                      code: "Q24"
+                      index: 6
+                      title: "Side Effects"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: { label: "Please list any side effects" }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+          templateStagesUsingId: {
+            create: [
+              {
+                number: 1
+                title: "Screening"
+                description: "This application will go through the Screening stage before it can be accessed."
+              }
+              {
+                number: 2
+                title: "Assessment"
+                description: "This phase is where your documents will be revised before the application can get the final approval."
+              }
+            ]
+          }
+          templateActionsUsingId: {
+            create: [
+              {
+                actionCode: "incrementStage"
+                trigger: ON_APPLICATION_CREATE
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 1
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
+                  newStatus: { value: "Submitted" }
+                }
+              }
+              {
+                actionCode: "cLog"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 2
+                parameterQueries: { message: "Application Submitted" }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_CREATE
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  newStatus: { value: "Draft" }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      template {
+        code
+        name
+      }
+    }
+  }`,
+]

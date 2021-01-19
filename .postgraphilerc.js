@@ -10,6 +10,7 @@ module.exports = {
     cors: true,
     dynamicJson: true,
     jwtSecret: 'devsecret',
+    // disableQueryLog: true,
     graphileBuildOptions: {
       connectionFilterRelations: true,
     },
