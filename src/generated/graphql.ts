@@ -958,6 +958,124 @@ export type ApplicationInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
+export type ApplicationList = {
+  __typename?: 'ApplicationList';
+  id?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  applicantUsername?: Maybe<Scalars['String']>;
+  applicant?: Maybe<Scalars['String']>;
+  orgName?: Maybe<Scalars['String']>;
+  stage?: Maybe<Scalars['String']>;
+  status?: Maybe<ApplicationStatus>;
+  outcome?: Maybe<ApplicationOutcome>;
+  lastActiveDate?: Maybe<Scalars['Datetime']>;
+};
+
+/**
+ * A condition to be used against `ApplicationList` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type ApplicationListCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `serial` field. */
+  serial?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicantUsername` field. */
+  applicantUsername?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicant` field. */
+  applicant?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `orgName` field. */
+  orgName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stage` field. */
+  stage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `status` field. */
+  status?: Maybe<ApplicationStatus>;
+  /** Checks for equality with the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcome>;
+  /** Checks for equality with the object’s `lastActiveDate` field. */
+  lastActiveDate?: Maybe<Scalars['Datetime']>;
+};
+
+/** A filter to be used against `ApplicationList` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationListFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `serial` field. */
+  serial?: Maybe<StringFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicantUsername` field. */
+  applicantUsername?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicant` field. */
+  applicant?: Maybe<StringFilter>;
+  /** Filter by the object’s `orgName` field. */
+  orgName?: Maybe<StringFilter>;
+  /** Filter by the object’s `stage` field. */
+  stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `status` field. */
+  status?: Maybe<ApplicationStatusFilter>;
+  /** Filter by the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcomeFilter>;
+  /** Filter by the object’s `lastActiveDate` field. */
+  lastActiveDate?: Maybe<DatetimeFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ApplicationListFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ApplicationListFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ApplicationListFilter>;
+};
+
+/** A connection to a list of `ApplicationList` values. */
+export type ApplicationListsConnection = {
+  __typename?: 'ApplicationListsConnection';
+  /** A list of `ApplicationList` objects. */
+  nodes: Array<Maybe<ApplicationList>>;
+  /** A list of edges which contains the `ApplicationList` and cursor to aid in pagination. */
+  edges: Array<ApplicationListsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ApplicationList` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ApplicationList` edge in the connection. */
+export type ApplicationListsEdge = {
+  __typename?: 'ApplicationListsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ApplicationList` at the end of the edge. */
+  node?: Maybe<ApplicationList>;
+};
+
+/** Methods to use when ordering `ApplicationList`. */
+export enum ApplicationListsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  SerialAsc = 'SERIAL_ASC',
+  SerialDesc = 'SERIAL_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  ApplicantUsernameAsc = 'APPLICANT_USERNAME_ASC',
+  ApplicantUsernameDesc = 'APPLICANT_USERNAME_DESC',
+  ApplicantAsc = 'APPLICANT_ASC',
+  ApplicantDesc = 'APPLICANT_DESC',
+  OrgNameAsc = 'ORG_NAME_ASC',
+  OrgNameDesc = 'ORG_NAME_DESC',
+  StageAsc = 'STAGE_ASC',
+  StageDesc = 'STAGE_DESC',
+  StatusAsc = 'STATUS_ASC',
+  StatusDesc = 'STATUS_DESC',
+  OutcomeAsc = 'OUTCOME_ASC',
+  OutcomeDesc = 'OUTCOME_DESC',
+  LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
+  LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC'
+}
+
 /** The globally unique `ID` look up for the row to connect. */
 export type ApplicationNodeIdConnect = {
   /** The globally unique `ID` which identifies a single `application` to be connected. */
@@ -9116,6 +9234,8 @@ export type Query = Node & {
   allPermissions?: Maybe<AllPermissionsConnection>;
   /** Reads and enables pagination through a set of `Application`. */
   applications?: Maybe<ApplicationsConnection>;
+  /** Reads and enables pagination through a set of `ApplicationList`. */
+  applicationLists?: Maybe<ApplicationListsConnection>;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
   applicationResponses?: Maybe<ApplicationResponsesConnection>;
   /** Reads and enables pagination through a set of `ApplicationSection`. */
@@ -9322,6 +9442,19 @@ export type QueryApplicationsArgs = {
   orderBy?: Maybe<Array<ApplicationsOrderBy>>;
   condition?: Maybe<ApplicationCondition>;
   filter?: Maybe<ApplicationFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationListsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ApplicationListsOrderBy>>;
+  condition?: Maybe<ApplicationListCondition>;
+  filter?: Maybe<ApplicationListFilter>;
 };
 
 
@@ -18906,6 +19039,12 @@ export type ResolversTypes = {
   AllPermissionsConnection: ResolverTypeWrapper<AllPermissionsConnection>;
   AllPermission: ResolverTypeWrapper<AllPermission>;
   AllPermissionsEdge: ResolverTypeWrapper<AllPermissionsEdge>;
+  ApplicationListsOrderBy: ApplicationListsOrderBy;
+  ApplicationListCondition: ApplicationListCondition;
+  ApplicationListFilter: ApplicationListFilter;
+  ApplicationListsConnection: ResolverTypeWrapper<ApplicationListsConnection>;
+  ApplicationList: ResolverTypeWrapper<ApplicationList>;
+  ApplicationListsEdge: ResolverTypeWrapper<ApplicationListsEdge>;
   ApplicationStageStatusAllsOrderBy: ApplicationStageStatusAllsOrderBy;
   ApplicationStageStatusAllCondition: ApplicationStageStatusAllCondition;
   ApplicationStageStatusAllFilter: ApplicationStageStatusAllFilter;
@@ -20013,6 +20152,11 @@ export type ResolversParentTypes = {
   AllPermissionsConnection: AllPermissionsConnection;
   AllPermission: AllPermission;
   AllPermissionsEdge: AllPermissionsEdge;
+  ApplicationListCondition: ApplicationListCondition;
+  ApplicationListFilter: ApplicationListFilter;
+  ApplicationListsConnection: ApplicationListsConnection;
+  ApplicationList: ApplicationList;
+  ApplicationListsEdge: ApplicationListsEdge;
   ApplicationStageStatusAllCondition: ApplicationStageStatusAllCondition;
   ApplicationStageStatusAllFilter: ApplicationStageStatusAllFilter;
   ApplicationStageStatusAllsConnection: ApplicationStageStatusAllsConnection;
@@ -21025,6 +21169,34 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationList'] = ResolversParentTypes['ApplicationList']> = {
+  id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  applicantUsername?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  applicant?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  orgName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
+  outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
+  lastActiveDate?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListsConnection'] = ResolversParentTypes['ApplicationListsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['ApplicationList']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ApplicationListsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListsEdge'] = ResolversParentTypes['ApplicationListsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ApplicationList']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -22150,6 +22322,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   actionQueues?: Resolver<Maybe<ResolversTypes['ActionQueuesConnection']>, ParentType, ContextType, RequireFields<QueryActionQueuesArgs, 'orderBy'>>;
   allPermissions?: Resolver<Maybe<ResolversTypes['AllPermissionsConnection']>, ParentType, ContextType, RequireFields<QueryAllPermissionsArgs, 'orderBy'>>;
   applications?: Resolver<Maybe<ResolversTypes['ApplicationsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationsArgs, 'orderBy'>>;
+  applicationLists?: Resolver<Maybe<ResolversTypes['ApplicationListsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListsArgs, 'orderBy'>>;
   applicationResponses?: Resolver<Maybe<ResolversTypes['ApplicationResponsesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationResponsesArgs, 'orderBy'>>;
   applicationSections?: Resolver<Maybe<ResolversTypes['ApplicationSectionsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationSectionsArgs, 'orderBy'>>;
   applicationStageHistories?: Resolver<Maybe<ResolversTypes['ApplicationStageHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageHistoriesArgs, 'orderBy'>>;
@@ -22959,6 +23132,9 @@ export type Resolvers<ContextType = any> = {
   AllPermissionsConnection?: AllPermissionsConnectionResolvers<ContextType>;
   AllPermissionsEdge?: AllPermissionsEdgeResolvers<ContextType>;
   Application?: ApplicationResolvers<ContextType>;
+  ApplicationList?: ApplicationListResolvers<ContextType>;
+  ApplicationListsConnection?: ApplicationListsConnectionResolvers<ContextType>;
+  ApplicationListsEdge?: ApplicationListsEdgeResolvers<ContextType>;
   ApplicationResponse?: ApplicationResponseResolvers<ContextType>;
   ApplicationResponsesConnection?: ApplicationResponsesConnectionResolvers<ContextType>;
   ApplicationResponsesEdge?: ApplicationResponsesEdgeResolvers<ContextType>;
