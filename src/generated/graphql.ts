@@ -963,7 +963,11 @@ export type ApplicationList = {
   id?: Maybe<Scalars['Int']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
+  templateCode?: Maybe<Scalars['String']>;
+  templateName?: Maybe<Scalars['String']>;
   applicantUsername?: Maybe<Scalars['String']>;
+  applicantFirstName?: Maybe<Scalars['String']>;
+  applicantLastName?: Maybe<Scalars['String']>;
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
@@ -983,8 +987,16 @@ export type ApplicationListCondition = {
   serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `templateCode` field. */
+  templateCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `templateName` field. */
+  templateName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicantUsername` field. */
   applicantUsername?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicantFirstName` field. */
+  applicantFirstName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicantLastName` field. */
+  applicantLastName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicant` field. */
   applicant?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `orgName` field. */
@@ -1007,8 +1019,16 @@ export type ApplicationListFilter = {
   serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
   name?: Maybe<StringFilter>;
+  /** Filter by the object’s `templateCode` field. */
+  templateCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `templateName` field. */
+  templateName?: Maybe<StringFilter>;
   /** Filter by the object’s `applicantUsername` field. */
   applicantUsername?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicantFirstName` field. */
+  applicantFirstName?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicantLastName` field. */
+  applicantLastName?: Maybe<StringFilter>;
   /** Filter by the object’s `applicant` field. */
   applicant?: Maybe<StringFilter>;
   /** Filter by the object’s `orgName` field. */
@@ -1060,8 +1080,16 @@ export enum ApplicationListsOrderBy {
   SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
+  TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
+  TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
+  TemplateNameAsc = 'TEMPLATE_NAME_ASC',
+  TemplateNameDesc = 'TEMPLATE_NAME_DESC',
   ApplicantUsernameAsc = 'APPLICANT_USERNAME_ASC',
   ApplicantUsernameDesc = 'APPLICANT_USERNAME_DESC',
+  ApplicantFirstNameAsc = 'APPLICANT_FIRST_NAME_ASC',
+  ApplicantFirstNameDesc = 'APPLICANT_FIRST_NAME_DESC',
+  ApplicantLastNameAsc = 'APPLICANT_LAST_NAME_ASC',
+  ApplicantLastNameDesc = 'APPLICANT_LAST_NAME_DESC',
   ApplicantAsc = 'APPLICANT_ASC',
   ApplicantDesc = 'APPLICANT_DESC',
   OrgNameAsc = 'ORG_NAME_ASC',
@@ -21176,7 +21204,11 @@ export type ApplicationListResolvers<ContextType = any, ParentType extends Resol
   id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicantUsername?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  applicantFirstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  applicantLastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicant?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   orgName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
