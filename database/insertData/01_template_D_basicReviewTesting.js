@@ -8,6 +8,7 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
+          id: 400
           code: "ReviewTest"
           name: "Test -- Review Process"
           status: AVAILABLE
@@ -15,12 +16,14 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
+                id: 400
                 code: "S1"
                 title: "Personal Info"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
+                      id: 400
                       code: "Text1"
                       index: 0
                       title: "Intro"
@@ -31,6 +34,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 401
                       code: "Q1"
                       index: 1
                       title: "First Name"
@@ -39,6 +43,7 @@ exports.queries = [
                       parameters: { label: "First Name" }
                     }
                     {
+                      id: 402
                       code: "Q2"
                       index: 2
                       title: "Last Name"
@@ -47,6 +52,7 @@ exports.queries = [
                       parameters: { label: "Last Name" }
                     }
                     {
+                      id: 403
                       code: "Q3"
                       index: 3
                       title: "Email"
@@ -68,6 +74,7 @@ exports.queries = [
                       parameters: { label: "Email" }
                     }
                     {
+                      id: 404
                       code: "PB1"
                       index: 4
                       title: "Page Break"
@@ -75,6 +82,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
+                      id: 405
                       code: "Q4"
                       index: 5
                       title: "Age"
@@ -95,6 +103,7 @@ exports.queries = [
                       parameters: { label: "Age" }
                     }
                     {
+                      id: 406
                       code: "Q5"
                       index: 6
                       title: "Nationality"
@@ -109,12 +118,14 @@ exports.queries = [
                 }
               }
               {
+                id: 402
                 code: "S2"
                 title: "Product Info"
                 index: 1
                 templateElementsUsingId: {
                   create: [
                     {
+                      id: 407
                       code: "Text2"
                       index: 0
                       title: "Product Intro"
@@ -125,6 +136,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 408
                       code: "Q20"
                       index: 1
                       title: "Product Name"
@@ -133,6 +145,7 @@ exports.queries = [
                       parameters: { label: "Name of Product" }
                     }
                     {
+                      id: 409
                       code: "Q21"
                       index: 2
                       title: "Product Type"
@@ -145,6 +158,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 409
                       code: "PB2"
                       index: 3
                       title: "Page Break"
@@ -152,6 +166,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
+                      id: 410
                       code: "Q22"
                       index: 4
                       title: "Dose Size"
@@ -163,6 +178,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 411
                       code: "Q23"
                       index: 5
                       title: "Packet Size"
@@ -185,6 +201,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 412
                       code: "Q24"
                       index: 6
                       title: "Side Effects"
@@ -201,11 +218,13 @@ exports.queries = [
           templateStagesUsingId: {
             create: [
               {
+                id: 400
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
               }
               {
+                id: 401
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
@@ -215,6 +234,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               {
+                id: 400
                 actionCode: "incrementStage"
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
@@ -225,6 +245,7 @@ exports.queries = [
                 }
               }
               {
+                id: 401
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
@@ -237,12 +258,14 @@ exports.queries = [
                 }
               }
               {
+                id: 402
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: { message: "Application Submitted" }
               }
               {
+                id: 403
                 actionCode: "changeStatus"
                 trigger: ON_REVIEW_CREATE
                 parameterQueries: {

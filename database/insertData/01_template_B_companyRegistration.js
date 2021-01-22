@@ -8,6 +8,7 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
+          id: 200
           code: "OrgRego1"
           name: "Organisation Registration"
           isLinear: false
@@ -17,13 +18,14 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
+                id: 200
                 code: "S1"
                 title: "Section 1 - Organisation Details"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 2
+                      id: 200
                       code: "S1T1"
                       index: 0
                       title: "Intro Section 1"
@@ -35,6 +37,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 201
                       code: "S1Q1"
                       index: 1
                       title: "Organisation Name"
@@ -57,6 +60,7 @@ exports.queries = [
                       parameters: { label: "What is your company name?" }
                     }
                     {
+                      id: 202
                       code: "S1Q2"
                       index: 2
                       title: "Organisation Activity"
@@ -68,6 +72,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 203
                       code: "S1Q3"
                       index: 5
                       title: "Organisation national or international"
@@ -80,6 +85,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 204
                       code: "S1Q4"
                       index: 6
                       title: "Import permit upload"
@@ -102,12 +108,14 @@ exports.queries = [
                 }
               }
               {
+                id: 201
                 code: "S2"
                 title: "Section 2"
                 index: 1
                 templateElementsUsingId: {
                   create: [
                     {
+                      id: 205
                       code: "S2T1"
                       index: 0
                       title: "Intro Section 2 - Page 1/2"
@@ -126,6 +134,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 206
                       code: "S2Q1"
                       index: 1
                       title: "Address"
@@ -146,6 +155,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 207
                       code: "S2Q2"
                       index: 2
                       title: "Organisation region"
@@ -164,6 +174,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 208
                       code: "S2T2"
                       index: 4
                       title: "Intro Section 2 - Page 2/2"
@@ -172,6 +183,7 @@ exports.queries = [
                       parameters: { title: "Bank Details" }
                     }
                     {
+                      id: 209
                       code: "S2Q3"
                       index: 5
                       title: "Billing account"
@@ -180,6 +192,7 @@ exports.queries = [
                       parameters: { label: "Enter the company billing account" }
                     }
                     {
+                      id: 210
                       code: "S2Q4"
                       index: 4
                       title: "Name of account"
@@ -191,12 +204,14 @@ exports.queries = [
                 }
               }
               {
+                id: 202
                 code: "S3"
                 title: "Section 3"
                 index: 2
                 templateElementsUsingId: {
                   create: [
                     {
+                      id: 211
                       code: "S3T1"
                       index: 0
                       title: "Intro Section 1 - Page 1/1"
@@ -205,6 +220,7 @@ exports.queries = [
                       parameters: { title: "Company staff details" }
                     }
                     {
+                      id: 212
                       code: "S3Q1"
                       index: 1
                       title: "Organisation Size"
@@ -224,11 +240,13 @@ exports.queries = [
           templateStagesUsingId: {
             create: [
               {
+                id: 200
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
               }
               {
+                id: 201
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
@@ -238,6 +256,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               {
+                id: 200
                 actionCode: "incrementStage"
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
@@ -248,6 +267,7 @@ exports.queries = [
                 }
               }
               {
+                id: 201
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
@@ -255,6 +275,7 @@ exports.queries = [
                 }
               }
               {
+                id: 202
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {

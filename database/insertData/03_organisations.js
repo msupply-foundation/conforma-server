@@ -7,6 +7,7 @@ exports.queries = [
         createOrganisation(
           input: {
             organisation: {
+              id: 1
               address: "123 Nowhere St\\nAuckland"
               licenceNumber: "XYZ1234"
               name: "Drugs-R-Us"
@@ -22,6 +23,7 @@ exports.queries = [
         createOrganisation(
           input: {
             organisation: {
+              id: 2
               address: "Queen St\\nAuckland"
               licenceNumber: "ABC1982"
               name: "Medicinal Importers, Ltd."
@@ -37,6 +39,7 @@ exports.queries = [
         createOrganisation(
           input: {
             organisation: {
+              id: 3
               address: "West Auckland"
               licenceNumber: "XXX8798"
               name: "Drug Dealers West"
@@ -52,6 +55,7 @@ exports.queries = [
         createOrganisation(
           input: {
             organisation: {
+              id: 4
               address: "1 Downtown Drive\\nAuckland"
               licenceNumber: "QRS9999"
               name: "Lab Facilities Inc."
@@ -67,7 +71,7 @@ exports.queries = [
   `mutation {
         createUserOrganisation(
           input: {
-            userOrganisation: { userId: 1, organisationId: 1, userRole: "Owner" }
+            userOrganisation: { id: 1, userId: 1, organisationId: 1, userRole: "Owner" }
           }
         ) {
           user {
@@ -81,7 +85,7 @@ exports.queries = [
   `mutation {
         createUserOrganisation(
           input: {
-            userOrganisation: { userId: 1, organisationId: 2 }
+            userOrganisation: { id: 2, userId: 1, organisationId: 2 }
           }
         ) {
           user {
@@ -95,7 +99,7 @@ exports.queries = [
   `mutation {
         createUserOrganisation(
           input: {
-            userOrganisation: { userId: 1, organisationId: 3 }
+            userOrganisation: { id: 3, userId: 1, organisationId: 3 }
           }
         ) {
           user {
@@ -109,7 +113,7 @@ exports.queries = [
   `mutation {
         createUserOrganisation(
           input: {
-            userOrganisation: { userId: 2, organisationId: 2, userRole: "Owner" }
+            userOrganisation: { id: 4, userId: 2, organisationId: 2, userRole: "Owner" }
           }
         ) {
           user {
@@ -123,7 +127,7 @@ exports.queries = [
   `mutation {
         createUserOrganisation(
           input: {
-            userOrganisation: { userId: 2, organisationId: 3 }
+            userOrganisation: {id: 5, userId: 2, organisationId: 3 }
           }
         ) {
           user {
@@ -137,7 +141,7 @@ exports.queries = [
   `mutation {
         createUserOrganisation(
           input: {
-            userOrganisation: { userId: 2, organisationId: 4 }
+            userOrganisation: {id: 6, userId: 2, organisationId: 4 }
           }
         ) {
           user {
@@ -151,7 +155,7 @@ exports.queries = [
   `mutation {
         createUserOrganisation(
           input: {
-            userOrganisation: { userId: 3, organisationId: 3, userRole: "Owner" }
+            userOrganisation: {id: 7, userId: 3, organisationId: 3, userRole: "Owner" }
           }
         ) {
           user {
