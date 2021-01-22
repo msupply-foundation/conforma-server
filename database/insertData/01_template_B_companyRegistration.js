@@ -8,24 +8,24 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          code: "CompRego1"
-          name: "Company Registration"
+          code: "OrgRego1"
+          name: "Organisation Registration"
           isLinear: false
           status: AVAILABLE
-          startMessage: "## You will need the following documents ready for upload\\n- Proof of Company name\\n- Proof of company address\\n- Bank account statement"
+          startMessage: "## You will need the following documents ready for upload:\\n- Proof of Company name\\n- Proof of company address\\n- Bank account statement"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
               {
                 code: "S1"
-                title: "Section 1"
+                title: "Section 1 - Organisation Details"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
                       code: "S1T1"
                       index: 0
-                      title: "Intro Section 1 - Page 1/2"
+                      title: "Intro Section 1"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
@@ -40,18 +40,20 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       validation: {
-                        operator: "REGEX"
+                        operator: "API"
                         children: [
+                          "http://localhost:8080/check-unique"
+                          ["type", "value"]
+                          "organisation"
                           {
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
                           }
-                          { value: ".+" }
+                          "unique"
                         ]
                       }
-                      # Validation TO-DO: must be unique in system
-                      validationMessage: "Cannot be blank"
-                      parameters: { label: "Unique Name for Company" }
+                      validationMessage: "An organisation with that name already exists"
+                      parameters: { label: "What is your company name?" }
                     }
                     {
                       code: "S1Q2"
@@ -65,28 +67,14 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "S1PB1"
-                      index: 3
-                      title: "Page Break"
-                      elementTypePluginCode: "pageBreak"
-                      category: INFORMATION
-                    }
-                    {
-                      code: "S1T2"
-                      index: 4
-                      title: "Intro Section 1 - Page 2/2"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
-                      parameters: { title: "Company nationality" }
-                    }
-                    {
                       code: "S1Q3"
                       index: 5
                       title: "Organisation national or international"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
-                        label: "Select the nationality of this company:"
+                        label: "Organisation Nationality"
+                        description: "Select the nationality of this company:"
                         options: ["National", "International"]
                       }
                     }
@@ -103,7 +91,7 @@ exports.queries = [
                             operator: "objectProperties"
                             children: ["responses.S1Q3.text"]
                           }
-                          { value: "International" }
+                          "International"
                         ]
                       }
                       parameters: { label: "Upload your valid import permit" }
@@ -132,28 +120,19 @@ exports.queries = [
                             operator: "objectProperties"
                             children: ["responses.S1Q3.text"]
                           }
-                          { value: "National" }
+                          "National"
                         ]
                       }
                     }
                     {
                       code: "S2Q1"
                       index: 1
-                      title: "Organisation Street"
+                      title: "Address"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: ".+" }
-                        ]
+                      parameters: {
+                        label: "Enter the organisation street address"
                       }
-                      validationMessage: "Cannot be blank"
-                      parameters: { label: "Enter the company street" }
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -161,7 +140,7 @@ exports.queries = [
                             operator: "objectProperties"
                             children: ["responses.S1Q3.text"]
                           }
-                          { value: "National" }
+                          "National"
                         ]
                       }
                     }
@@ -171,17 +150,6 @@ exports.queries = [
                       title: "Organisation region"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: ".+" }
-                        ]
-                      }
-                      validationMessage: "Cannot be blank"
                       parameters: { label: "Enter the company region" }
                       visibilityCondition: {
                         operator: "="
@@ -190,16 +158,9 @@ exports.queries = [
                             operator: "objectProperties"
                             children: ["responses.S1Q3.text"]
                           }
-                          { value: "National" }
+                          "National"
                         ]
                       }
-                    }
-                    {
-                      code: "S2PB1"
-                      index: 3
-                      title: "Page Break"
-                      elementTypePluginCode: "pageBreak"
-                      category: INFORMATION
                     }
                     {
                       code: "S2T2"
@@ -207,7 +168,7 @@ exports.queries = [
                       title: "Intro Section 2 - Page 2/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "Company bank account" }
+                      parameters: { title: "Bank Details" }
                     }
                     {
                       code: "S2Q3"
@@ -215,17 +176,6 @@ exports.queries = [
                       title: "Billing account"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: ".+" }
-                        ]
-                      }
-                      validationMessage: "Cannot be blank"
                       parameters: { label: "Enter the company billing account" }
                     }
                     {
@@ -234,17 +184,6 @@ exports.queries = [
                       title: "Name of account"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: ".+" }
-                        ]
-                      }
-                      validationMessage: "Cannot be blank"
                       parameters: { label: "Enter the company acount name" }
                     }
                   ]
@@ -266,7 +205,7 @@ exports.queries = [
                     }
                     {
                       code: "S3Q1"
-                      index: 0
+                      index: 1
                       title: "Organisation Size"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION

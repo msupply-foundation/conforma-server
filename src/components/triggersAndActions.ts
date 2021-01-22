@@ -203,6 +203,8 @@ export async function executeAction(
     // Evaluate parameters
     const parametersEvaluated = await evaluateParameters(payload.parameter_queries, evaluatorParams)
 
+    console.log('parametersEvaluated', parametersEvaluated)
+
     // TO-DO: If Scheduled, create a Job instead
     const actionResult = await actionLibrary[payload.code](parametersEvaluated, DBConnect)
 
