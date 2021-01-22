@@ -23,6 +23,7 @@ exports.queries = [
                 templateElementsUsingId: {
                   create: [
                     {
+                      id: 2
                       code: "S1T1"
                       index: 0
                       title: "Intro Section 1"
