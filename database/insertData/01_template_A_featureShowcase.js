@@ -8,7 +8,7 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          id: 100
+          id: 1
           code: "TestRego"
           name: "Test -- General Registration"
           isLinear: false
@@ -37,7 +37,7 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 100
+                id: 1
                 code: "S1"
                 title: "Section 1"
                 index: 0
@@ -489,7 +489,7 @@ exports.queries = [
           templateStagesUsingId: {
             create: [
               {
-                id: 100
+                id: 1
                 number: 1
                 title: "Automatic"
                 description: "Please check your email to confirm your account."
@@ -499,7 +499,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               {
-                id: 100
+                id: 1
                 actionCode: "incrementStage"
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
@@ -510,7 +510,7 @@ exports.queries = [
                 }
               }
               {
-                id: 101
+                id: 2
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
@@ -521,7 +521,7 @@ exports.queries = [
                 }
               }
               {
-                id: 102
+                id: 3
                 actionCode: "createUser"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
@@ -549,7 +549,7 @@ exports.queries = [
                 }
               }
               {
-                id: 103
+                id: 4
                 actionCode: "grantPermissions"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
@@ -562,7 +562,7 @@ exports.queries = [
                 }
               }
               {
-                id: 104
+                id: 5
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 4
@@ -575,7 +575,7 @@ exports.queries = [
                 }
               }
               {
-                id: 105
+                id: 6
                 actionCode: "changeOutcome"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 5
@@ -588,7 +588,7 @@ exports.queries = [
                 }
               }
               {
-                id: 106
+                id: 7
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 6
@@ -610,7 +610,7 @@ exports.queries = [
                 }
               }
               {
-                id: 107
+                id: 8
                 actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT

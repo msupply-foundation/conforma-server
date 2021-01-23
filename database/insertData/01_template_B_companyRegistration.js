@@ -8,7 +8,7 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          id: 200
+          id: 2
           code: "OrgRego1"
           name: "Organisation Registration"
           isLinear: false
@@ -18,7 +18,7 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 200
+                id: 2
                 code: "S1"
                 title: "Section 1 - Organisation Details"
                 index: 0
@@ -108,7 +108,7 @@ exports.queries = [
                 }
               }
               {
-                id: 201
+                id: 3
                 code: "S2"
                 title: "Section 2"
                 index: 1
@@ -204,7 +204,7 @@ exports.queries = [
                 }
               }
               {
-                id: 202
+                id: 4
                 code: "S3"
                 title: "Section 3"
                 index: 2
@@ -240,13 +240,13 @@ exports.queries = [
           templateStagesUsingId: {
             create: [
               {
-                id: 200
+                id: 2
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
               }
               {
-                id: 201
+                id: 3
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
@@ -256,7 +256,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               {
-                id: 200
+                id: 9
                 actionCode: "incrementStage"
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
@@ -267,7 +267,7 @@ exports.queries = [
                 }
               }
               {
-                id: 201
+                id: 10
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
@@ -275,7 +275,7 @@ exports.queries = [
                 }
               }
               {
-                id: 202
+                id: 11
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {

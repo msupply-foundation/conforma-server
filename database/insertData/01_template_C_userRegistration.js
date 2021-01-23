@@ -8,7 +8,7 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          id: 300
+          id: 3
           code: "UserRegistration"
           name: "User Registration"
           submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm."
@@ -17,7 +17,7 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 300
+                id: 5
                 code: "S1"
                 title: "User information"
                 index: 0
@@ -141,12 +141,12 @@ exports.queries = [
             ]
           }
           templateStagesUsingId: {
-            create: [{ id: 300, number: 1, title: "Automatic" }]
+            create: [{ id: 4, number: 1, title: "Automatic" }]
           }
           templateActionsUsingId: {
             create: [
               {
-                id: 300
+                id: 12
                 actionCode: "incrementStage"
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
@@ -157,7 +157,7 @@ exports.queries = [
                 }
               }
               {
-                id: 301
+                id: 13
                 actionCode: "createUser"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
@@ -185,7 +185,7 @@ exports.queries = [
                 }
               }
               {
-                id: 302
+                id: 14
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
@@ -198,7 +198,7 @@ exports.queries = [
                 }
               }
               {
-                id: 303
+                id: 15
                 actionCode: "changeOutcome"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3

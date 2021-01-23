@@ -8,7 +8,7 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          id: 400
+          id: 4
           code: "ReviewTest"
           name: "Test -- Review Process"
           status: AVAILABLE
@@ -16,7 +16,7 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 400
+                id: 6
                 code: "S1"
                 title: "Personal Info"
                 index: 0
@@ -118,7 +118,7 @@ exports.queries = [
                 }
               }
               {
-                id: 402
+                id: 7
                 code: "S2"
                 title: "Product Info"
                 index: 1
@@ -218,13 +218,13 @@ exports.queries = [
           templateStagesUsingId: {
             create: [
               {
-                id: 400
+                id: 5
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
               }
               {
-                id: 401
+                id: 6
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
@@ -234,7 +234,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               {
-                id: 400
+                id: 16
                 actionCode: "incrementStage"
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
@@ -245,7 +245,7 @@ exports.queries = [
                 }
               }
               {
-                id: 401
+                id: 17
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
@@ -258,14 +258,14 @@ exports.queries = [
                 }
               }
               {
-                id: 402
+                id: 18
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: { message: "Application Submitted" }
               }
               {
-                id: 403
+                id: 19
                 actionCode: "changeStatus"
                 trigger: ON_REVIEW_CREATE
                 parameterQueries: {
