@@ -149,14 +149,14 @@ exports.queries = [
           permissionJoinsUsingId: {
             create: [
               {
-                id: 300
+                id: 1
                 permissionNameToPermissionNameId: {
                   create: {
-                    id: 300
+                    id: 1
                     name: "applyUserRegistration"
-                    templatePermissionsUsingId: { create: [{id: 300, templateId: 300 }] }
+                    templatePermissionsUsingId: { create: [{id: 1, templateId: 300 }] }
                     permissionPolicyToPermissionPolicyId: {
-                      create: { id: 300, type: APPLY, name: "oneTimeApply", rules: {
+                      create: { id: 1, type: APPLY, name: "oneTimeApply", rules: {
                         application: {
                           view: {
                             template_id: "jwtPermission_bigint_templateId"
@@ -182,19 +182,19 @@ exports.queries = [
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          id: 200
+          id: 2
           name: "basicApply"
           permissionNamesUsingId: {
             create: {
-              id: 200
+              id: 2
               name: "applyCompanyRego"
-              templatePermissionsUsingId: { create: {id: 200, templateId: 200 } }
+              templatePermissionsUsingId: { create: {id: 2, templateId: 200 } }
               permissionJoinsUsingId: {
                 create: [
-                  { id: 10, userId: 1 }
-                  { id: 11, userId: 2 }
-                  { id: 12, userId: 3 }
-                  { id: 13, userId: 4 }
+                  { id: 2, userId: 1 }
+                  { id: 3, userId: 2 }
+                  { id: 4, userId: 3 }
+                  { id: 5, userId: 4 }
                 ]
               }
             }
@@ -218,48 +218,50 @@ exports.queries = [
     }
   }`,
   // Extra user with multiple permissions (apply company rego, review company rego and apply user rego) -- password is "123456"
-  `mutation MyMutation {
-    createUser(
-      input: {
-        user: {
-          id: 10
-          username: "userWithMultiplePermissions"
-          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
-          permissionJoinsUsingId: {
-            create: [
-              { id: 400, permissionNameId: 1 }
-              { id: 401, permissionNameId: 2 }
-              {
-                permissionNameToPermissionNameId: {
-                  create: {
-                    name: "reviewCompanyRego"
-                    templatePermissionsUsingId: {
-                      create: [{ templateId: 2, restrictions: { stage: 1 } }]
-                    }
-                    permissionPolicyToPermissionPolicyId: {
-                      create: {
-                        type: REVIEW
-                        name: "basicReview"
-                        rules: {
-                          application: {
-                            view: {
-                              template_id: "jwtPermission_bigint_templateId"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            ]
-          }
-        }
-      }
-    ) {
-      user {
-        username
-      }
-    }
-  }`,
+  // `mutation MyMutation {
+  //   createUser(
+  //     input: {
+  //       user: {
+  //         id: 10
+  //         username: "userWithMultiplePermissions"
+  //         passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+  //         permissionJoinsUsingId: {
+  //           create: [
+  //             { id: 60,permissionNameId: 1 }
+  //             { id: 70, permissionNameId: 2 }
+  //             {
+  //               permissionNameToPermissionNameId: {
+  //                 create: {
+  //                   #id: 30
+  //                   name: "reviewCompanyRego"
+  //                   templatePermissionsUsingId: {
+  //                     create: [{ templateId: 200, restrictions: { stage: 1 } }]
+  //                   }
+  //                   permissionPolicyToPermissionPolicyId: {
+  //                     create: {
+  //                       #id: 30
+  //                       type: REVIEW
+  //                       name: "basicReview"
+  //                       rules: {
+  //                         application: {
+  //                           view: {
+  //                             template_id: "jwtPermission_bigint_templateId"
+  //                           }
+  //                         }
+  //                       }
+  //                     }
+  //                   }
+  //                 }
+  //               }
+  //             }
+  //           ]
+  //         }
+  //       }
+  //     }
+  //   ) {
+  //     user {
+  //       username
+  //     }
+  //   }
+  // }`,
 ]
