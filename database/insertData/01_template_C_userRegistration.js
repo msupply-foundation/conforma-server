@@ -106,24 +106,24 @@ exports.queries = [
                       code: "Q5"
                       index: 5
                       title: "Password"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "password"
                       category: QUESTION
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: "^[\\\\S]{8,}$" }
-                        ]
-                      }
-                      validationMessage: "Password must be at least 8 characters"
-                      # Validation:Currently just checks 8 chars, needs more complexity
                       parameters: {
                         label: "Password"
                         maskedInput: true
                         placeholder: "Password must be at least 8 chars long"
+                        validationInternal: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.thisResponse"]
+                            }
+                            { value: "^[\\\\S]{8,}$" }
+                          ]
+                        }
+                        # Validation:Currently just checks 8 chars, needs more complexity
+                        validationMessageInternal: "Password must be at least 8 characters"
                       }
                     }
                     # TO-DO: Add Date of birth question once we have DatePicker element type
