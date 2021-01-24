@@ -7,7 +7,7 @@ exports.queries = [
     createApplication(
       input: {
         application: {
-          id: 101
+          id: 100
           name: "User Registration: Craig Drown"
           serial: "100"
           isActive: true
@@ -79,7 +79,7 @@ exports.queries = [
     createApplication(
       input: {
         application: {
-          id: 102
+          id: 101
           name: "User Registration: Carl Smith"
           serial: "101"
           isActive: true
