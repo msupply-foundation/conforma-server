@@ -17,6 +17,7 @@ exports.queries = [
           isActive: true
           templateId: 4
           userId: 5
+          orgId: 3
           applicationStageHistoriesUsingId: {
             create: {
               isCurrent: true

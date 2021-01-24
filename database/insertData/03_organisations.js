@@ -166,4 +166,18 @@ exports.queries = [
           }
         }
       }`,
+  `mutation {
+        createUserOrganisation(
+          input: {
+            userOrganisation: { userId: 5, organisationId: 3, userRole: "Owner" }
+          }
+        ) {
+          user {
+            username
+          }
+          organisation {
+            name
+          }
+        }
+      }`,
 ]
