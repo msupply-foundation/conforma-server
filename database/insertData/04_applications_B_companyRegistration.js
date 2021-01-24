@@ -11,7 +11,8 @@ exports.queries = [
           serial: "102"
           isActive: true
           outcome: PENDING
-          userToUserId: { connectById: { id: 2 } }
+          userId: 2
+          orgId: 2
           applicationSectionsUsingId: {
             create: [
               { templateSectionId: 2 }

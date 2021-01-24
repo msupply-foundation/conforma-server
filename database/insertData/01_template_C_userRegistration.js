@@ -168,7 +168,7 @@ exports.queries = [
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.text"]
+                    children: ["applicationData.responses.Q5.hash"]
                   }
                 }
               }
