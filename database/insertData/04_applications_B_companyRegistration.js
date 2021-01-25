@@ -7,7 +7,7 @@ exports.queries = [
     createApplication(
       input: {
         application: {
-          id: 300
+          id: 2000
           name: "Company Registration: Company C"
           serial: "102"
           isActive: true
@@ -16,22 +16,22 @@ exports.queries = [
           orgId: 2
           applicationSectionsUsingId: {
             create: [
-              { templateSectionId: 2 }
-              { templateSectionId: 3 }
-              { templateSectionId: 4 }
+              { templateSectionId: 1001 }
+              { templateSectionId: 1002 }
+              { templateSectionId: 1003 }
             ]
           }
           applicationResponsesUsingId: {
             create: [
               {
-                id: 300
+                id: 2000
                 value: { text: "Company C" }
-                templateElementToTemplateElementId: { connectById: { id: 201 } }
+                templateElementToTemplateElementId: { connectById: { id: 2001 } }
               }
               {
-                id: 301
+                id: 2001
                 value: { option: 2 }
-                templateElementToTemplateElementId: { connectById: { id: 202 } }
+                templateElementToTemplateElementId: { connectById: { id: 2002 } }
               }
             ]
           }

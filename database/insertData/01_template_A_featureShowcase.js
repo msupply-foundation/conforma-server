@@ -8,7 +8,6 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          id: 1
           code: "TestRego"
           name: "Test -- General Registration"
           isLinear: false
@@ -37,14 +36,14 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 1
+                id: 1000
                 code: "S1"
                 title: "Section 1"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 100
+                      id: 1000
                       code: "Text1"
                       index: 0
                       title: "Intro"
@@ -56,7 +55,7 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 101
+                      id: 1001
                       code: "Q1"
                       index: 1
                       title: "First Name"
@@ -65,7 +64,7 @@ exports.queries = [
                       parameters: { label: "First Name" }
                     }
                     {
-                      id: 102
+                      id: 1002
                       code: "Q2"
                       index: 2
                       title: "Last Name"
@@ -111,7 +110,7 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 103
+                      id: 1003
                       code: "Text2"
                       index: 3
                       title: "User Info"
@@ -149,7 +148,7 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 104
+                      id: 1004
                       code: "Q3"
                       index: 4
                       title: "Username"
@@ -182,7 +181,7 @@ exports.queries = [
                       parameters: { label: "Select a username" }
                     }
                     {
-                      id: 105
+                      id: 1005
                       code: "Q4"
                       index: 5
                       title: "Email"
@@ -204,7 +203,7 @@ exports.queries = [
                       parameters: { label: "Email" }
                     }
                     {
-                      id: 106
+                      id: 1006
                       code: "Q5"
                       index: 6
                       title: "Password"
@@ -229,7 +228,7 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 107
+                      id: 1007
                       code: "Q5B"
                       index: 7
                       title: "Dynamic Options demo"
@@ -264,7 +263,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 108
+                      id: 1008
                       code: "PB1"
                       index: 8
                       title: "Page Break"
@@ -272,7 +271,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 109
+                      id: 1009
                       code: "Q6"
                       index: 9
                       title: "Organisation Category"
@@ -288,7 +287,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 110
+                      id: 1010
                       code: "Q7"
                       index: 10
                       title: "Select Manufacturer"
@@ -315,7 +314,7 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 111
+                      id: 1011
                       code: "Q8"
                       index: 11
                       title: "Select Distributor"
@@ -344,7 +343,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 112
+                      id: 1012
                       code: "Q9"
                       index: 12
                       title: "Select Importer"
@@ -369,7 +368,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 113
+                      id: 1013
                       code: "Q10"
                       index: 13
                       title: "API Selection demo"
@@ -392,7 +391,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 114
+                      id: 1014
                       code: "Q11"
                       index: 14
                       title: "Test Visibility"
@@ -401,7 +400,7 @@ exports.queries = [
                       parameters: { label: "Enter 'magicword' to see text box" }
                     }
                     {
-                      id: 115
+                      id: 1015
                       code: "TextTest"
                       index: 15
                       title: "Intro"
@@ -436,7 +435,7 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 116
+                      id: 1016
                       code: "PB3"
                       index: 16
                       title: "Page Break"
@@ -444,7 +443,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 117
+                      id: 1017
                       code: "Qradio"
                       index: 17
                       title: "Testing Radio buttons"
@@ -458,7 +457,7 @@ exports.queries = [
                       isRequired: true
                     }
                     {
-                      id:118
+                      id:10018
                       code: "Q12"
                       index: 18
                       title: "Role"
@@ -473,7 +472,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 119
+                      id: 1019
                       code: "Q13"
                       index: 19
                       title: "Other description"
@@ -503,7 +502,6 @@ exports.queries = [
           templateStagesUsingId: {
             create: [
               {
-                id: 1
                 number: 1
                 title: "Automatic"
                 description: "Please check your email to confirm your account."
@@ -513,7 +511,6 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               {
-                id: 1
                 actionCode: "incrementStage"
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
@@ -524,7 +521,6 @@ exports.queries = [
                 }
               }
               {
-                id: 2
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
@@ -535,7 +531,6 @@ exports.queries = [
                 }
               }
               {
-                id: 3
                 actionCode: "createUser"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
@@ -563,7 +558,6 @@ exports.queries = [
                 }
               }
               {
-                id: 4
                 actionCode: "grantPermissions"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
@@ -576,7 +570,6 @@ exports.queries = [
                 }
               }
               {
-                id: 5
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 4
@@ -589,7 +582,6 @@ exports.queries = [
                 }
               }
               {
-                id: 6
                 actionCode: "changeOutcome"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 5
@@ -602,7 +594,6 @@ exports.queries = [
                 }
               }
               {
-                id: 7
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 6
@@ -624,7 +615,6 @@ exports.queries = [
                 }
               }
               {
-                id: 8
                 actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT

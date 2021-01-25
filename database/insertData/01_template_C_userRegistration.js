@@ -8,7 +8,6 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          id: 3
           code: "UserRegistration"
           name: "User Registration"
           submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm."
@@ -17,14 +16,14 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 5
+                id: 1004
                 code: "S1"
                 title: "User information"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 300
+                      id: 3000
                       code: "Text1"
                       index: 0
                       title: "Intro"
@@ -36,7 +35,7 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 301
+                      id: 3001
                       code: "Q1"
                       index: 1
                       title: "First Name"
@@ -56,7 +55,7 @@ exports.queries = [
                       parameters: { label: "First Name" }
                     }
                     {
-                      id: 302
+                      id: 3002
                       code: "Q2"
                       index: 2
                       title: "Last Name"
@@ -65,7 +64,7 @@ exports.queries = [
                       parameters: { label: "Last Name" }
                     }
                     {
-                      id: 303
+                      id: 3003
                       code: "Q3"
                       index: 3
                       title: "Username"
@@ -88,7 +87,7 @@ exports.queries = [
                       parameters: { label: "Select a username" }
                     }
                     {
-                      id: 304
+                      id: 3004
                       code: "Q4"
                       index: 4
                       title: "Email"
@@ -110,7 +109,7 @@ exports.queries = [
                       parameters: { label: "Email" }
                     }
                     {
-                      id: 305
+                      id: 3005
                       code: "Q5"
                       index: 5
                       title: "Password"
@@ -141,12 +140,11 @@ exports.queries = [
             ]
           }
           templateStagesUsingId: {
-            create: [{ id: 4, number: 1, title: "Automatic" }]
+            create: [{ number: 1, title: "Automatic" }]
           }
           templateActionsUsingId: {
             create: [
               {
-                id: 12
                 actionCode: "incrementStage"
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
@@ -157,7 +155,6 @@ exports.queries = [
                 }
               }
               {
-                id: 13
                 actionCode: "createUser"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
@@ -185,7 +182,6 @@ exports.queries = [
                 }
               }
               {
-                id: 14
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
@@ -198,7 +194,6 @@ exports.queries = [
                 }
               }
               {
-                id: 15
                 actionCode: "changeOutcome"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3

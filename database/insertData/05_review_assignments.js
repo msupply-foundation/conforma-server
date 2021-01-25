@@ -7,18 +7,18 @@ exports.queries = [
     createReviewAssignment(
       input: {
         reviewAssignment: {
-          applicationId: 400
+          applicationId: 4000
           assignerId: 8
           reviewerId: 6
           stageId: 5
           reviewQuestionAssignmentsUsingId: {
             create: [
-              { templateElementId: 401 }
-              { templateElementId: 402 }
-              { templateElementId: 403 }
-              { templateElementId: 405 }
-              { templateElementId: 406 }
-              { templateElementId: 407 }
+              { templateElementId: 4001 }
+              { templateElementId: 4002 }
+              { templateElementId: 4003 }
+              { templateElementId: 4005 }
+              { templateElementId: 4006 }
+              { templateElementId: 4007 }
             ]
           }
         }
@@ -39,17 +39,17 @@ exports.queries = [
     createReviewAssignment(
       input: {
         reviewAssignment: {
-          applicationId: 400
+          applicationId: 4000
           assignerId: 8
           reviewerId: 7
           stageId: 5
           reviewQuestionAssignmentsUsingId: {
             create: [
-              { templateElementId: 408 }
-              { templateElementId: 409 }
-              { templateElementId: 411 }
-              { templateElementId: 412 }
-              { templateElementId: 413 }
+              { templateElementId: 4008 }
+              { templateElementId: 4009 }
+              { templateElementId: 4011 }
+              { templateElementId: 4012 }
+              { templateElementId: 4013 }
             ]
           }
         }
