@@ -550,10 +550,10 @@ exports.queries = [
                     {
                       code: "TXTOFF"
                       index: 25
-                      title: "Checkbox ON"
+                      title: "Checkbox OFF"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "The switch is toggled ON" }
+                      parameters: { title: "The switch is toggled OFF" }
                       visibilityCondition: {
                         operator: "!="
                         children: [
