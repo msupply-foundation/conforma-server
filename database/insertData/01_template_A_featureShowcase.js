@@ -605,6 +605,29 @@ exports.queries = [
                         }
                       }
                     }
+                    {
+                      code: "CB5"
+                      index: 28
+                      title: "Many checkboxes"
+                      isRequired: false
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "Lotsa boxes"
+                        description: "If you have a lot of checkboxes, you may wish to use \`layout: \\"inline\\"\`.  \\n_This selection is dynamically created from an online API._"
+                        layout: "inline"
+                        checkboxes: {
+                          operator: "API"
+                          children: [
+                            {
+                              value: "https://jsonplaceholder.typicode.com/users"
+                            }
+                            { value: [] }
+                            { value: "name" }
+                          ]
+                        }
+                      }
+                    }
                   ]
                 }
               }
