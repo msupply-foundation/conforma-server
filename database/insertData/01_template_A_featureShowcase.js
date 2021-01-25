@@ -205,7 +205,6 @@ exports.queries = [
                         label: "Password"
                         placeholder: "Password must be at least 8 chars long"
                         confirmPlaceholder: "Enter password again"
-                        maskedInput: false
                         validationInternal: {
                           operator: "REGEX"
                           children: [
@@ -495,6 +494,7 @@ exports.queries = [
                       code: "CB1"
                       index: 21
                       title: "Single checkbox"
+                      isRequired: false
                       elementTypePluginCode: "checkbox"
                       category: QUESTION
                       parameters: {
@@ -506,6 +506,7 @@ exports.queries = [
                       code: "CB2"
                       index: 22
                       title: "Three checkboxes"
+                      isRequired: false
                       elementTypePluginCode: "checkbox"
                       category: QUESTION
                       parameters: {
@@ -521,6 +522,7 @@ exports.queries = [
                       code: "CB3"
                       index: 23
                       title: "Toggle switch"
+                      isRequired: false
                       elementTypePluginCode: "checkbox"
                       category: QUESTION
                       parameters: {
@@ -582,6 +584,25 @@ exports.queries = [
                           { label: "I like cake", text: "Cake", key: "Opt2" }
                         ]
                         type: "slider"
+                      }
+                    }
+                    {
+                      code: "TXT_LIKE"
+                      index: 27
+                      title: "Display Likes"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "You like %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.CB4.text"]
+                            }
+                          ]
+                        }
                       }
                     }
                   ]
