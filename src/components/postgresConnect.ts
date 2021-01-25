@@ -359,7 +359,7 @@ class PostgresDB {
   }
 
   public createOrg = async (org: Organisation): Promise<object> => {
-    const text = `INSERT INTO "user" (${Object.keys(org)}) 
+    const text = `INSERT INTO organisation (${Object.keys(org)}) 
       VALUES (${this.getValuesPlaceholders(org)})
       RETURNING id`
     try {

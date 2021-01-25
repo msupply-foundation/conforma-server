@@ -2,47 +2,55 @@
 
 import DBConnect from '../../../components/databaseConnect'
 
-const Action = require('./createUser')
+const Action = require('./createOrg')
 
-const testUser = {
-  first_name: 'Carl',
-  last_name: 'Smith',
-  username: 'ceejay',
-  date_of_birth: '1999-12-23',
-  password_hash: 'XYZ1234',
-  email: 'test@sussol.net',
+const testOrg = {
+  name: 'PharmaFarm',
+  licence_number: 'AVC123',
+  address: '123 Uptown Drive\nAuckland',
 }
 
-const invalidUser = {
-  first_name: 'Carl',
-  last_name: 'Smith',
-  user_name: 'ceejay',
-  dateOfBirth: '1999-12-23',
-  password_hash: 'XYZ1234',
-  email: 'test@sussol.net',
+const testOrg2 = {
+  name: 'Import This!',
 }
 
-test('Test: add User to database', () => {
-  return Action.createUser(testUser, DBConnect).then((result: any) => {
+const invalidOrg = {
+  name: 'PharmaFarm',
+  licenceNumber: 'AVC123',
+  address: '123 Uptown Drive\nAuckland',
+}
+
+test('Test: add Org to database', () => {
+  return Action.createOrg(testOrg, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
       output: {
-        email: 'test@sussol.net',
-        firstName: 'Carl',
-        lastName: 'Smith',
-        userId: 11,
-        username: 'ceejay',
+        orgId: 5,
+        orgName: 'PharmaFarm',
+      },
+    })
+  })
+})
+
+test('Test: add Org2 -- not all parameters provided', () => {
+  return Action.createOrg(testOrg2, DBConnect).then((result: any) => {
+    expect(result).toEqual({
+      status: 'Success',
+      error_log: '',
+      output: {
+        orgId: 5,
+        orgName: 'Import This!',
       },
     })
   })
 })
 
 test('Test: Invalid user (date_of_birth and username fields mis-named) -- should fail', () => {
-  return Action.createUser(invalidUser, DBConnect).then((result: any) => {
+  return Action.createUser(invalidOrg, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Fail',
-      error_log: 'There was a problem creating new user.',
+      error_log: 'There was a problem creating new organisation.',
     })
   })
 })
