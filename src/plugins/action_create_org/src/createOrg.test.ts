@@ -39,7 +39,7 @@ test('Test: add Org2 -- not all parameters provided', () => {
       status: 'Success',
       error_log: '',
       output: {
-        orgId: 5,
+        orgId: 6,
         orgName: 'Import This!',
       },
     })
@@ -47,7 +47,7 @@ test('Test: add Org2 -- not all parameters provided', () => {
 })
 
 test('Test: Invalid user (date_of_birth and username fields mis-named) -- should fail', () => {
-  return Action.createUser(invalidOrg, DBConnect).then((result: any) => {
+  return Action.createOrg(invalidOrg, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Fail',
       error_log: 'There was a problem creating new organisation.',

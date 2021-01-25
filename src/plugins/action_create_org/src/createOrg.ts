@@ -7,7 +7,7 @@ module.exports['createOrg'] = async function (org: any, DBConnect: any) {
         status: 'Success',
         error_log: '',
         output: {
-          userId: result.userId,
+          orgId: result.orgId,
           orgName: org.name,
         },
       }
