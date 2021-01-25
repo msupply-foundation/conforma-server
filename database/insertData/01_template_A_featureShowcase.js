@@ -574,7 +574,7 @@ exports.queries = [
                       elementTypePluginCode: "checkbox"
                       category: QUESTION
                       parameters: {
-                        label: "And a couple of sliders"
+                        label: "And a couple of **sliders**:"
                         checkboxes: [
                           {
                             label: "I like ice-cream"
@@ -596,7 +596,7 @@ exports.queries = [
                         text: {
                           operator: "stringSubstitution"
                           children: [
-                            "You like %1"
+                            "You like: %1"
                             {
                               operator: "objectProperties"
                               children: ["responses.CB4.text"]
