@@ -473,6 +473,117 @@ exports.queries = [
                         placeholder: "Describe your role"
                       }
                     }
+                    {
+                      code: "PB4"
+                      index: 19
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "CheckboxShowcase"
+                      index: 20
+                      title: "Checkbox demonstration"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "Checkbox demonstration"
+                        text: "Different types and settings for Checkbox plugin"
+                      }
+                    }
+                    {
+                      code: "CB1"
+                      index: 21
+                      title: "Single checkbox"
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "This is a single checkbox"
+                        checkboxes: ["Tick me"]
+                      }
+                    }
+                    {
+                      code: "CB2"
+                      index: 22
+                      title: "Three checkboxes"
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "Three checkboxes, one pre-selected"
+                        checkboxes: [
+                          { label: "Option 1", key: 1, selected: true }
+                          "Option 2"
+                          "Option 3"
+                        ]
+                      }
+                    }
+                    {
+                      code: "CB3"
+                      index: 23
+                      title: "Toggle switch"
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "Behold! a **toggle** switch:"
+                        options: ["ON"]
+                        type: "toggle"
+                      }
+                    }
+                    {
+                      code: "TXTON"
+                      index: 24
+                      title: "Checkbox ON"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: { title: "The switch is toggled ON" }
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.CB3.text"]
+                          }
+                          "ON"
+                        ]
+                      }
+                    }
+                    {
+                      code: "TXTOFF"
+                      index: 25
+                      title: "Checkbox ON"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: { title: "The switch is toggled ON" }
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.CB3.text"]
+                          }
+                          "ON"
+                        ]
+                      }
+                    }
+                    {
+                      code: "CB4"
+                      index: 26
+                      title: "Slider switch"
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "And a couple of sliders"
+                        options: [
+                          {
+                            label: "I like ice-cream"
+                            text: "Ice-cream"
+                            key: "Opt1"
+                          }
+                          { label: "I like cake", text: "Cake", key: "Opt2" }
+                        ]
+                        type: "slider"
+                      }
+                    }
                   ]
                 }
               }
