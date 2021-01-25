@@ -511,7 +511,7 @@ exports.queries = [
                       parameters: {
                         label: "Three checkboxes, one pre-selected"
                         checkboxes: [
-                          { label: "Option 1", key: 1, selected: true }
+                          { label: "Option 1", key: 0, selected: true }
                           "Option 2"
                           "Option 3"
                         ]
