@@ -525,7 +525,7 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Behold! a **toggle** switch:"
-                        options: ["ON"]
+                        checkboxes: ["ON"]
                         type: "toggle"
                       }
                     }
@@ -573,7 +573,7 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "And a couple of sliders"
-                        options: [
+                        checkboxes: [
                           {
                             label: "I like ice-cream"
                             text: "Ice-cream"
