@@ -116,6 +116,20 @@ Adds any number of number nodes together
 - Input: 1 or more nodes of **number** type.
 - Output: **number**
 
+## ? (Conditional)
+
+Returns a different value depending on whether an expression is `true` or `false`.
+
+- Input:
+
+  - 1st child node returns `true` or `false`
+  - 2nd node returns value if `true`
+  - 3rd node returns value if `false`
+
+- Output: the result of either child 1 or child 2
+
+Functionally equivalent to javascript ternary (`?`) operator
+
 ## REGEX
 
 Compares an input string with a regular expression string and returns whether it matches.
