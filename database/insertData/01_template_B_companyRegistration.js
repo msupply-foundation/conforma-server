@@ -275,7 +275,32 @@ exports.queries = [
                   newStatus: { value: "Submitted" }
                 }
               }
-              # TO-DO: Create actions to add Org, etc.
+              {
+                actionCode: "changeOutcome"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 1
+                # condition: TO-DO
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  newOutcome: { value: "Approved" }
+                }
+              }
+              {
+                actionCode: "createOrg"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 2
+                # condition: TO-DO
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  name: { value: "TESTING" }
+                }
+              }
             ]
           }
         }
