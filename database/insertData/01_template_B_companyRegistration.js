@@ -12,7 +12,7 @@ exports.queries = [
           name: "Organisation Registration"
           isLinear: false
           status: AVAILABLE
-          startMessage: "## You will need the following documents ready for upload:\\n- Proof of Company name\\n- Proof of company address\\n- Bank account statement"
+          startMessage: "## You will need the following documents ready for upload:\\n- Proof of Company name\\n- Proof of company address\\n- Organisation licence document"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -179,25 +179,27 @@ exports.queries = [
                       title: "Intro Section 2 - Page 2/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "Bank Details" }
+                      parameters: { title: "Licence Details" }
                     }
                     {
                       id: 2009
                       code: "S2Q3"
                       index: 5
-                      title: "Billing account"
+                      title: "Licence"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Enter the company billing account" }
+                      parameters: { label: "What is your licence no.?" }
                     }
                     {
                       id: 2010
                       code: "S2Q4"
-                      index: 4
-                      title: "Name of account"
+                      index: 6
+                      title: "Registration document"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Enter the company acount name" }
+                      isRequired: false
+                      isEditable: false
+                      parameters: { label: "TO-DO: upload licence" }
                     }
                   ]
                 }
@@ -279,7 +281,8 @@ exports.queries = [
                 actionCode: "changeOutcome"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 1
-                # condition: TO-DO
+                # condition: TO-DO -- need to check if
+                # Decision is Approved
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
@@ -292,13 +295,31 @@ exports.queries = [
                 actionCode: "createOrg"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 2
-                # condition: TO-DO
+                # condition: TO-DO -- need to check if
+                # Decision is Approved
                 parameterQueries: {
-                  applicationId: {
+                  name: {
                     operator: "objectProperties"
-                    children: ["applicationData.record_id"]
+                    children: ["applicationData.responses.S1Q1.text"]
                   }
-                  name: { value: "TESTING" }
+                  licence_number: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.S2Q3.text"]
+                  }
+                  address: {
+                    operator: "stringSubstitution"
+                    children: [
+                      "%1\\n%2"
+                      {
+                        operator: "objectProperties"
+                        children: ["applicationData.responses.S2Q1.text"]
+                      }
+                      {
+                        operator: "objectProperties"
+                        children: ["applicationData.responses.S2Q2.text"]
+                      }
+                    ]
+                  }
                 }
               }
             ]
