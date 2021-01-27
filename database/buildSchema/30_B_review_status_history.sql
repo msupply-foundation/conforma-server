@@ -1,7 +1,7 @@
 -- review section join
 
 
-CREATE TYPE public.review_status as ENUM ('Draft', 'Submitted', 'Changes Required', 'Review Pending');
+CREATE TYPE public.review_status as ENUM ('Draft', 'Submitted', 'Changes Requested', 'Pending', 'Locked');
 
 CREATE TABLE public.review_status_history (
 	id serial primary key,
