@@ -278,6 +278,17 @@ exports.queries = [
                 }
               }
               {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_CREATE
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  newStatus: { value: "Draft" }
+                }
+              }
+              {
                 actionCode: "changeOutcome"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 1

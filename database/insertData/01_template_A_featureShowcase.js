@@ -457,7 +457,7 @@ exports.queries = [
                       isRequired: true
                     }
                     {
-                      id:10018
+                      id: 10018
                       code: "Q12"
                       index: 18
                       title: "Role"
@@ -622,6 +622,17 @@ exports.queries = [
                   message: {
                     value: "Testing parallel actions -- This message is Asynchronous. \\nEven though it is last in the Actions list, it'll probably appear first."
                   }
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_CREATE
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  newStatus: { value: "Draft" }
                 }
               }
             ]
