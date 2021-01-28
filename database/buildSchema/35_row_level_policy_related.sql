@@ -1,3 +1,5 @@
+-- Row level policy
+
 ALTER TABLE public.application ENABLE ROW LEVEL SECURITY;
 
 CREATE ROLE graphile_user WITH NOLOGIN;
