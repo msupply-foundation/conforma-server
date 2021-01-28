@@ -7,11 +7,11 @@ CREATE TABLE public.review_assignment (
 	assigner_id integer references public.user(id),
 	reviewer_id integer references public.user(id),
 	stage_id integer references public.template_stage(id),
-	"status" public.review_assignment_status,
+	status public.review_assignment_status,
 	application_id integer references public.application(id),
 	available_sections_ids integer [],
 	trigger public.trigger,
-	"timestamp" timestamp with time zone default current_timestamp,
+	time_created timestamptz default current_timestamp,
 	level integer,
 	can_make_overall_decision boolean
 );

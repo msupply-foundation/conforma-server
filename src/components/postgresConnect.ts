@@ -255,7 +255,7 @@ class PostgresDB {
     FROM application_response JOIN template_element
     ON template_element.id = application_response.template_element_id
     WHERE application_id = $1
-    ORDER BY code, timestamp DESC
+    ORDER BY code, time_created DESC
     `
     const result = await this.query({ text, values: [applicationId] })
     const responses = result.rows

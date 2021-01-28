@@ -7,5 +7,5 @@ CREATE TABLE public.review_decision (
 	review_id integer references public.review(id),
 	decision public.decision,
 	comment varchar,
-    "timestamp" timestamp with time zone default current_timestamp
+    time_created timestamptz default current_timestamp,
 );
