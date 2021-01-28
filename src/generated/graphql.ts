@@ -10441,7 +10441,7 @@ export type ReviewAssignment = Node & {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -10558,7 +10558,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -10622,7 +10622,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -10671,8 +10671,8 @@ export type ReviewAssignmentCondition = {
   status?: Maybe<ReviewAssignmentStatus>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `availableSectionsIds` field. */
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Checks for equality with the object’s `availableTemplateSectionIds` field. */
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `timeCreated` field. */
@@ -10697,8 +10697,8 @@ export type ReviewAssignmentFilter = {
   status?: Maybe<ReviewAssignmentStatusFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `availableSectionsIds` field. */
-  availableSectionsIds?: Maybe<IntListFilter>;
+  /** Filter by the object’s `availableTemplateSectionIds` field. */
+  availableTemplateSectionIds?: Maybe<IntListFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `timeCreated` field. */
@@ -10747,7 +10747,7 @@ export type ReviewAssignmentInput = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -10870,7 +10870,7 @@ export type ReviewAssignmentPatch = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -10944,7 +10944,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11013,8 +11013,8 @@ export enum ReviewAssignmentsOrderBy {
   StatusDesc = 'STATUS_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  AvailableSectionsIdsAsc = 'AVAILABLE_SECTIONS_IDS_ASC',
-  AvailableSectionsIdsDesc = 'AVAILABLE_SECTIONS_IDS_DESC',
+  AvailableTemplateSectionIdsAsc = 'AVAILABLE_TEMPLATE_SECTION_IDS_ASC',
+  AvailableTemplateSectionIdsDesc = 'AVAILABLE_TEMPLATE_SECTION_IDS_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
@@ -11072,7 +11072,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11545,7 +11545,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11695,7 +11695,7 @@ export type ReviewResponse = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
@@ -11782,7 +11782,7 @@ export type ReviewResponseApplicationResponseIdFkeyInverseInput = {
 export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -11803,8 +11803,8 @@ export type ReviewResponseCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `comment` field. */
   comment?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `reviewResponseDecision` field. */
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  /** Checks for equality with the object’s `decision` field. */
+  decision?: Maybe<ReviewResponseDecision>;
   /** Checks for equality with the object’s `reviewQuestionAssignmentId` field. */
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationResponseId` field. */
@@ -11856,8 +11856,8 @@ export type ReviewResponseFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `comment` field. */
   comment?: Maybe<StringFilter>;
-  /** Filter by the object’s `reviewResponseDecision` field. */
-  reviewResponseDecision?: Maybe<ReviewResponseDecisionFilter>;
+  /** Filter by the object’s `decision` field. */
+  decision?: Maybe<ReviewResponseDecisionFilter>;
   /** Filter by the object’s `reviewQuestionAssignmentId` field. */
   reviewQuestionAssignmentId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationResponseId` field. */
@@ -11902,7 +11902,7 @@ export type ReviewResponseFilter = {
 export type ReviewResponseInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
@@ -11991,7 +11991,7 @@ export type ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdF
 export type ReviewResponsePatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
@@ -12063,7 +12063,7 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
 export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
@@ -12127,7 +12127,7 @@ export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignment
 export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -12161,7 +12161,7 @@ export type ReviewResponseReviewResponseLinkIdFkeyInput = {
 export type ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -12212,8 +12212,8 @@ export enum ReviewResponsesOrderBy {
   IdDesc = 'ID_DESC',
   CommentAsc = 'COMMENT_ASC',
   CommentDesc = 'COMMENT_DESC',
-  ReviewResponseDecisionAsc = 'REVIEW_RESPONSE_DECISION_ASC',
-  ReviewResponseDecisionDesc = 'REVIEW_RESPONSE_DECISION_DESC',
+  DecisionAsc = 'DECISION_ASC',
+  DecisionDesc = 'DECISION_DESC',
   ReviewQuestionAssignmentIdAsc = 'REVIEW_QUESTION_ASSIGNMENT_ID_ASC',
   ReviewQuestionAssignmentIdDesc = 'REVIEW_QUESTION_ASSIGNMENT_ID_DESC',
   ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
@@ -12317,7 +12317,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -16633,7 +16633,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -16653,7 +16653,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -16673,7 +16673,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -16693,7 +16693,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   reviewerId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -16714,7 +16714,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -16735,7 +16735,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  availableTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -17038,7 +17038,7 @@ export type UpdateReviewResponseInput = {
 export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -17054,7 +17054,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResp
 export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
@@ -17070,7 +17070,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPat
 export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -17086,7 +17086,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionA
 export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
-  reviewResponseDecision?: Maybe<ReviewResponseDecision>;
+  decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
@@ -22901,7 +22901,7 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ReviewAssignmentStatus']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  availableSectionsIds?: Resolver<Maybe<Array<Maybe<ResolversTypes['Int']>>>, ParentType, ContextType>;
+  availableTemplateSectionIds?: Resolver<Maybe<Array<Maybe<ResolversTypes['Int']>>>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -22958,7 +22958,7 @@ export type ReviewResponseResolvers<ContextType = any, ParentType extends Resolv
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  reviewResponseDecision?: Resolver<Maybe<ResolversTypes['ReviewResponseDecision']>, ParentType, ContextType>;
+  decision?: Resolver<Maybe<ResolversTypes['ReviewResponseDecision']>, ParentType, ContextType>;
   reviewQuestionAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   applicationResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewResponseLinkId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
