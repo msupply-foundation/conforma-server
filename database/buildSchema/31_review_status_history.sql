@@ -1,4 +1,4 @@
--- review section join
+-- review status history
 
 
 CREATE TYPE public.review_status as ENUM ('Draft', 'Submitted', 'Changes Requested', 'Pending', 'Locked');
