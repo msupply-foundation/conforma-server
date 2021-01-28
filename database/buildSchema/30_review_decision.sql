@@ -1,6 +1,6 @@
 -- review decision
 
-CREATE TYPE public.decision as ENUM ('LOQ', 'Conform', 'No conform', 'Changes Requested');
+CREATE TYPE public.decision as ENUM ('List of Questions', 'Conform', 'Non-conform', 'Changes Requested');
 
 CREATE TABLE public.review_decision (
 	id serial primary key,
