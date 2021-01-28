@@ -613,12 +613,17 @@ class PostgresDB {
     }
   }
 
-  public joinPermissionNameToUser = async (username: string, permissionName: string) => {
+  public joinPermissionNameToUserAndOrg = async (
+    username: string,
+    userOrgId: number,
+    permissionName: string
+  ) => {
     const text = `
-    insert into permission_join (user_id, permission_name_id) 
+    insert into permission_join (user_id, user_organisation_id, permission_name_id) 
     values (
-        (select id from "user" where username = $1), 
-        (select id from permission_name where name = $2))
+        (select id from "user" where username = $1),
+        $2, 
+        (select id from permission_name where name = $3))
     `
     try {
       const result = await this.query({ text, values: [username, permissionName] })

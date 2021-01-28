@@ -1,5 +1,5 @@
 module.exports['grantPermissions'] = async function (
-  { username, permissionNames }: any,
+  { username, userOrgId, permissionNames }: any,
   DBConnect: any
 ) {
   try {
