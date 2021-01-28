@@ -8225,6 +8225,8 @@ export type NotificationReviewIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -10478,6 +10480,8 @@ export type Review = Node & {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   /** Reads a single `ReviewAssignment` that is related to this `Review`. */
   reviewAssignment?: Maybe<ReviewAssignment>;
   /** Reads a single `Application` that is related to this `Review`. */
@@ -10616,6 +10620,8 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -10638,6 +10644,8 @@ export type ReviewAssignment = Node & {
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
   assigner?: Maybe<User>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
@@ -10753,6 +10761,8 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10815,6 +10825,8 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10865,6 +10877,10 @@ export type ReviewAssignmentCondition = {
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `level` field. */
+  level?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `canMakeOverallDecision` field. */
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
@@ -10887,6 +10903,10 @@ export type ReviewAssignmentFilter = {
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `level` field. */
+  level?: Maybe<IntFilter>;
+  /** Filter by the object’s `canMakeOverallDecision` field. */
+  canMakeOverallDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `reviews` relation. */
   reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
   /** Some related `reviews` exist. */
@@ -10930,6 +10950,8 @@ export type ReviewAssignmentInput = {
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11051,6 +11073,8 @@ export type ReviewAssignmentPatch = {
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11123,6 +11147,8 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11193,6 +11219,10 @@ export enum ReviewAssignmentsOrderBy {
   TriggerDesc = 'TRIGGER_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
+  LevelAsc = 'LEVEL_ASC',
+  LevelDesc = 'LEVEL_DESC',
+  CanMakeOverallDecisionAsc = 'CAN_MAKE_OVERALL_DECISION_ASC',
+  CanMakeOverallDecisionDesc = 'CAN_MAKE_OVERALL_DECISION_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -11245,6 +11275,8 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11330,6 +11362,10 @@ export type ReviewCondition = {
   applicationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewerId` field. */
   reviewerId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `level` field. */
+  level?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `canMakeOverallDecision` field. */
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
 };
 
 export type ReviewDecision = Node & {
@@ -11488,6 +11524,8 @@ export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -11557,6 +11595,10 @@ export type ReviewFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewerId` field. */
   reviewerId?: Maybe<IntFilter>;
+  /** Filter by the object’s `level` field. */
+  level?: Maybe<IntFilter>;
+  /** Filter by the object’s `canMakeOverallDecision` field. */
+  canMakeOverallDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<StringFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
@@ -11602,6 +11644,8 @@ export type ReviewInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -11735,6 +11779,8 @@ export type ReviewPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -11938,6 +11984,8 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12437,6 +12485,8 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12707,6 +12757,8 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12721,6 +12773,8 @@ export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12780,6 +12834,8 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12853,6 +12909,10 @@ export enum ReviewsOrderBy {
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
   ReviewerIdAsc = 'REVIEWER_ID_ASC',
   ReviewerIdDesc = 'REVIEWER_ID_DESC',
+  LevelAsc = 'LEVEL_ASC',
+  LevelDesc = 'LEVEL_DESC',
+  CanMakeOverallDecisionAsc = 'CAN_MAKE_OVERALL_DECISION_ASC',
+  CanMakeOverallDecisionDesc = 'CAN_MAKE_OVERALL_DECISION_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -13076,6 +13136,8 @@ export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17024,6 +17086,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17042,6 +17106,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17060,6 +17126,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17078,6 +17146,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17097,6 +17167,8 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17116,6 +17188,8 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17244,6 +17318,8 @@ export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17260,6 +17336,8 @@ export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17275,6 +17353,8 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17290,6 +17370,8 @@ export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17305,6 +17387,8 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17321,6 +17405,8 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17337,6 +17423,8 @@ export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyP
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -23416,6 +23504,8 @@ export type ReviewResolvers<ContextType = any, ParentType extends ResolversParen
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  canMakeOverallDecision?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
@@ -23438,6 +23528,8 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   availableSectionsIds?: Resolver<Maybe<Array<Maybe<ResolversTypes['Int']>>>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  canMakeOverallDecision?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;

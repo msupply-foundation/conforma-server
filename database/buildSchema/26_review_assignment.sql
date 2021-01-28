@@ -11,7 +11,9 @@ CREATE TABLE public.review_assignment (
 	application_id integer references public.application(id),
 	available_sections_ids integer [],
 	trigger public.trigger,
-	"timestamp" timestamp with time zone default current_timestamp
+	"timestamp" timestamp with time zone default current_timestamp,
+	level integer,
+	can_make_overall_decision boolean
 );
 
 -- TRIGGER (Listener) on review_assignment table
