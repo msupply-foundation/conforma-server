@@ -10,11 +10,8 @@ CREATE TABLE public.review_response (
 	review_response_decision public.review_response_decision,
 	review_question_assignment_id integer references public.review_question_assignment(id),
 	application_response_id integer references public.application_response(id),
-	review_response_id integer references public.review_response(id),
+	review_response_link_id integer references public.review_response(id),
 	review_id integer references public.review(id),
     "timestamp" timestamp with time zone default current_timestamp,
 	"status" public.review_response_status
 );
-
-COMMENT ON CONSTRAINT "review_response_review_response_id_fkey" ON "public"."review_response" IS
- E'@fieldName review_reponse_link_id\nDocumentation here.';
