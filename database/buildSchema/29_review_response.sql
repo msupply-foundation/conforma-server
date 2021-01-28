@@ -15,3 +15,6 @@ CREATE TABLE public.review_response (
     "timestamp" timestamp with time zone default current_timestamp,
 	"status" public.review_response_status
 );
+
+COMMENT ON CONSTRAINT "review_response_review_response_id_fkey" ON "public"."review_response" IS
+ E'@fieldName review_reponse_link_id\nDocumentation here.';
