@@ -86,7 +86,6 @@ exports.queries = [
     createUserOrganisation(
       input: {
         userOrganisation: {
-          #id: 2
           userId: 1
           organisationId: 2
         }
