@@ -10,6 +10,8 @@ CREATE TABLE public.review_assignment (
 	"status" public.review_assignment_status,
 	application_id integer references public.application(id),
 	available_sections_ids integer [],
+	level int,
+	level_name varchar,
 	trigger public.trigger,
 	"timestamp" timestamp with time zone default current_timestamp
 );

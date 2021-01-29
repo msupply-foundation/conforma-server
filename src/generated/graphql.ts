@@ -10636,6 +10636,8 @@ export type ReviewAssignment = Node & {
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
@@ -10751,6 +10753,8 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -10813,6 +10817,8 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -10861,6 +10867,10 @@ export type ReviewAssignmentCondition = {
   applicationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `availableSectionsIds` field. */
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Checks for equality with the object’s `level` field. */
+  level?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `levelName` field. */
+  levelName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `timestamp` field. */
@@ -10883,6 +10893,10 @@ export type ReviewAssignmentFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `availableSectionsIds` field. */
   availableSectionsIds?: Maybe<IntListFilter>;
+  /** Filter by the object’s `level` field. */
+  level?: Maybe<IntFilter>;
+  /** Filter by the object’s `levelName` field. */
+  levelName?: Maybe<StringFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `timestamp` field. */
@@ -10928,6 +10942,8 @@ export type ReviewAssignmentInput = {
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -11049,6 +11065,8 @@ export type ReviewAssignmentPatch = {
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -11121,6 +11139,8 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -11189,6 +11209,10 @@ export enum ReviewAssignmentsOrderBy {
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
   AvailableSectionsIdsAsc = 'AVAILABLE_SECTIONS_IDS_ASC',
   AvailableSectionsIdsDesc = 'AVAILABLE_SECTIONS_IDS_DESC',
+  LevelAsc = 'LEVEL_ASC',
+  LevelDesc = 'LEVEL_DESC',
+  LevelNameAsc = 'LEVEL_NAME_ASC',
+  LevelNameDesc = 'LEVEL_NAME_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
@@ -11243,6 +11267,8 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -11936,6 +11962,8 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -12705,6 +12733,8 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -17022,6 +17052,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   stageId?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -17040,6 +17072,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -17058,6 +17092,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -17076,6 +17112,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -17095,6 +17133,8 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -17114,6 +17154,8 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
   availableSectionsIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  level?: Maybe<Scalars['Int']>;
+  levelName?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -23436,6 +23478,8 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   status?: Resolver<Maybe<ResolversTypes['ReviewAssignmentStatus']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   availableSectionsIds?: Resolver<Maybe<Array<Maybe<ResolversTypes['Int']>>>, ParentType, ContextType>;
+  level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  levelName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
