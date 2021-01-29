@@ -564,7 +564,7 @@ From within the expression-evaluator module's folder:
 - Build the package:  
   `yarn build` (outputs to `/lib` folder)
 - Bump the version:  
-  `yarn version patch | minor | major` (updates `package.json` following [semantic versioning](https://www.geeksforgeeks.org/introduction-semantic-versioning/))
+  `yarn version patch | minor | major --new-version [version]` (updates `package.json` following [semantic versioning](https://www.geeksforgeeks.org/introduction-semantic-versioning/))
 - Publish to Github packages:  
   `yarn publish`
 
