@@ -508,7 +508,7 @@ testData.form2 = {
 }
 
 testData.application = {
-  id: 3,
+  id: 2000,
   name: 'Company Registration',
   status: 'Submitted',
   stage: 1,
@@ -714,7 +714,7 @@ testData.simpleGraphQL = {
       }`,
     },
     { value: ['appId'] },
-    { value: 1 },
+    { value: 1000 },
     { value: 'application.name' },
   ],
 }
