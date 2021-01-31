@@ -532,39 +532,35 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "TXTON"
+                      code: "TXTON-OFF"
                       index: 24
                       title: "Checkbox ON"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "The switch is toggled ON" }
-                      visibilityCondition: {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.CB3.text"]
-                          }
-                          "ON"
-                        ]
-                      }
-                    }
-                    {
-                      code: "TXTOFF"
-                      index: 25
-                      title: "Checkbox OFF"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
-                      parameters: { title: "The switch is toggled OFF" }
-                      visibilityCondition: {
-                        operator: "!="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.CB3.text"]
-                          }
-                          "ON"
-                        ]
+                      parameters: {
+                        title: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "The switch is toggled %1"
+                            {
+                              operator: "?"
+                              children: [
+                                {
+                                  operator: "="
+                                  children: [
+                                    {
+                                      operator: "objectProperties"
+                                      children: ["responses.CB3.text"]
+                                    }
+                                    "ON"
+                                  ]
+                                }
+                                "ON"
+                                "OFF"
+                              ]
+                            }
+                          ]
+                        }
                       }
                     }
                     {
@@ -596,10 +592,28 @@ exports.queries = [
                         text: {
                           operator: "stringSubstitution"
                           children: [
-                            "You like: %1"
+                            "You like: %1%2"
                             {
-                              operator: "objectProperties"
-                              children: ["responses.CB4.text"]
+                              operator: "?"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.CB4.values.Opt1.selected"]
+                                }
+                                "\\n- Ice Cream"
+                                ""
+                              ]
+                            }
+                            {
+                              operator: "?"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.CB4.values.Opt2.selected"]
+                                }
+                                "\\n- Cake"
+                                ""
+                              ]
                             }
                           ]
                         }
