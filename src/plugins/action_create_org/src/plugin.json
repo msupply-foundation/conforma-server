@@ -1,0 +1,25 @@
+{
+  "type": "action_plugin",
+  "code": "createOrg",
+  "name": "Create Organisation",
+  "file": "createOrg",
+  "function_name": "createOrg",
+  "description": "Inserts a new organisation in the database",
+  "required_parameters": ["name", "licence_number", "address"],
+  "output_properties": ["orgId", "orgName"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-01-22"
+  }
+}

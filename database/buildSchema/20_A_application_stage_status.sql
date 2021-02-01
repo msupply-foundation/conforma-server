@@ -5,6 +5,7 @@ CREATE OR REPLACE VIEW public.application_stage_status_all AS
 	serial,
 	name,
 	user_id,
+	org_id,
 	stage_id,
 	number as stage_number,
 	title as stage,

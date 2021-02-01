@@ -7,9 +7,10 @@ exports.queries = [
     createApplication(
       input: {
         application: {
+          id: 4000
           serial: "12345"
           applicationSectionsUsingId: {
-            create: [{ templateSectionId: 6 }, { templateSectionId: 7 }]
+            create: [{ templateSectionId: 1005 }, { templateSectionId: 1006 }]
           }
           name: "Test Review -- Vitamin C"
           outcome: PENDING
@@ -28,34 +29,64 @@ exports.queries = [
           }
           applicationResponsesUsingId: {
             create: [
-              { isValid: true, templateElementId: 43, value: { text: "John" } }
-              { isValid: true, templateElementId: 44, value: { text: "Smith" } }
               {
+                id: 4000
                 isValid: true
-                templateElementId: 45
+                templateElementId: 4001
+                value: { text: "John" }
+              }
+              {
+                id: 4001
+                isValid: true
+                templateElementId: 4002
+                value: { text: "Smith" }
+              }
+              {
+                id: 4002
+                isValid: true
+                templateElementId: 4003
                 value: { text: "js@nowhere.com" }
               }
-              { isValid: true, templateElementId: 47, value: { text: "39" } }
               {
+                id: 4003
                 isValid: true
-                templateElementId: 48
+                templateElementId: 4005
+                value: { text: "39" }
+              }
+              {
+                id: 4004
+                isValid: true
+                templateElementId: 4006
                 value: { text: "New Zealand" }
               }
               {
+                id: 4005
                 isValid: true
-                templateElementId: 50
+                templateElementId: 4008
                 value: { text: "Vitamin C" }
               }
               {
+                id: 4006
                 isValid: true
-                templateElementId: 51
+                templateElementId: 4009
                 value: { text: "Natural Product", optionIndex: 1 }
               }
-              { isValid: true, templateElementId: 53, value: { text: "50mg" } }
-              { isValid: true, templateElementId: 54, value: { text: "100" } }
               {
+                id: 4007
                 isValid: true
-                templateElementId: 55
+                templateElementId: 4011
+                value: { text: "50mg" }
+              }
+              {
+                id: 4008
+                isValid: true
+                templateElementId: 4012
+                value: { text: "100" }
+              }
+              {
+                id: 4009
+                isValid: true
+                templateElementId: 4013
                 value: { text: "Turning orange" }
               }
             ]

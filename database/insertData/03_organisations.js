@@ -65,115 +65,143 @@ exports.queries = [
       }`,
   // Associate users with organisations
   `mutation {
-        createUserOrganisation(
-          input: {
-            userOrganisation: { userId: 1, organisationId: 1, userRole: "Owner" }
-          }
-        ) {
-          user {
-            username
-          }
-          organisation {
-            name
-          }
+    createUserOrganisation(
+      input: {
+        userOrganisation: {
+          userId: 1
+          organisationId: 1
+          userRole: "Owner"
         }
-      }`,
+      }
+    ) {
+      user {
+        username
+      }
+      organisation {
+        name
+      }
+    }
+  }`,
   `mutation {
-        createUserOrganisation(
-          input: {
-            userOrganisation: { userId: 1, organisationId: 2 }
-          }
-        ) {
-          user {
-            username
-          }
-          organisation {
-            name
-          }
+    createUserOrganisation(
+      input: {
+        userOrganisation: {
+          userId: 1
+          organisationId: 2
         }
-      }`,
+      }
+    ) {
+      user {
+        username
+      }
+      organisation {
+        name
+      }
+    }
+  }`,
   `mutation {
-        createUserOrganisation(
-          input: {
-            userOrganisation: { userId: 1, organisationId: 3 }
-          }
-        ) {
-          user {
-            username
-          }
-          organisation {
-            name
-          }
+    createUserOrganisation(
+      input: {
+        userOrganisation: {
+          userId: 1
+          organisationId: 3
         }
-      }`,
+      }
+    ) {
+      user {
+        username
+      }
+      organisation {
+        name
+      }
+    }
+  }`,
   `mutation {
-        createUserOrganisation(
-          input: {
-            userOrganisation: { userId: 2, organisationId: 2, userRole: "Owner" }
-          }
-        ) {
-          user {
-            username
-          }
-          organisation {
-            name
-          }
+    createUserOrganisation(
+      input: {
+        userOrganisation: {
+          userId: 2
+          organisationId: 2
+          userRole: "Owner"
         }
-      }`,
+      }
+    ) {
+      user {
+        username
+      }
+      organisation {
+        name
+      }
+    }
+  }`,
   `mutation {
-        createUserOrganisation(
-          input: {
-            userOrganisation: { userId: 2, organisationId: 3 }
-          }
-        ) {
-          user {
-            username
-          }
-          organisation {
-            name
-          }
+    createUserOrganisation(
+      input: {
+        userOrganisation: {
+          userId: 2
+          organisationId: 3
         }
-      }`,
+      }
+    ) {
+      user {
+        username
+      }
+      organisation {
+        name
+      }
+    }
+  }`,
   `mutation {
-        createUserOrganisation(
-          input: {
-            userOrganisation: { userId: 2, organisationId: 4 }
-          }
-        ) {
-          user {
-            username
-          }
-          organisation {
-            name
-          }
+    createUserOrganisation(
+      input: {
+        userOrganisation: {
+          userId: 2
+          organisationId: 4
         }
-      }`,
+      }
+    ) {
+      user {
+        username
+      }
+      organisation {
+        name
+      }
+    }
+  }`,
   `mutation {
-        createUserOrganisation(
-          input: {
-            userOrganisation: { userId: 3, organisationId: 3, userRole: "Owner" }
-          }
-        ) {
-          user {
-            username
-          }
-          organisation {
-            name
-          }
+    createUserOrganisation(
+      input: {
+        userOrganisation: {
+          userId: 3
+          organisationId: 3
+          userRole: "Owner"
         }
-      }`,
+      }
+    ) {
+      user {
+        username
+      }
+      organisation {
+        name
+      }
+    }
+  }`,
   `mutation {
-        createUserOrganisation(
-          input: {
-            userOrganisation: { userId: 5, organisationId: 3, userRole: "Owner" }
-          }
-        ) {
-          user {
-            username
-          }
-          organisation {
-            name
-          }
+    createUserOrganisation(
+      input: {
+        userOrganisation: {
+          userId: 5
+          organisationId: 3
+          userRole: "Owner"
         }
-      }`,
+      }
+    ) {
+      user {
+        username
+      }
+      organisation {
+        name
+      }
+    }
+  }`,
 ]

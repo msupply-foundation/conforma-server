@@ -15,12 +15,14 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
+                id: 1005
                 code: "S1"
                 title: "Personal Info"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
+                      id: 4000
                       code: "Text1"
                       index: 0
                       title: "Intro"
@@ -31,6 +33,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 4001
                       code: "Q1"
                       index: 1
                       title: "First Name"
@@ -39,6 +42,7 @@ exports.queries = [
                       parameters: { label: "First Name" }
                     }
                     {
+                      id: 4002
                       code: "Q2"
                       index: 2
                       title: "Last Name"
@@ -47,6 +51,7 @@ exports.queries = [
                       parameters: { label: "Last Name" }
                     }
                     {
+                      id: 4003
                       code: "Q3"
                       index: 3
                       title: "Email"
@@ -68,6 +73,7 @@ exports.queries = [
                       parameters: { label: "Email" }
                     }
                     {
+                      id: 4004
                       code: "PB1"
                       index: 4
                       title: "Page Break"
@@ -75,6 +81,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
+                      id: 4005
                       code: "Q4"
                       index: 5
                       title: "Age"
@@ -95,6 +102,7 @@ exports.queries = [
                       parameters: { label: "Age" }
                     }
                     {
+                      id: 4006
                       code: "Q5"
                       index: 6
                       title: "Nationality"
@@ -109,12 +117,14 @@ exports.queries = [
                 }
               }
               {
+                id: 1006
                 code: "S2"
                 title: "Product Info"
                 index: 1
                 templateElementsUsingId: {
                   create: [
                     {
+                      id: 4007
                       code: "Text2"
                       index: 0
                       title: "Product Intro"
@@ -125,6 +135,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 4008
                       code: "Q20"
                       index: 1
                       title: "Product Name"
@@ -133,6 +144,7 @@ exports.queries = [
                       parameters: { label: "Name of Product" }
                     }
                     {
+                      id: 4009
                       code: "Q21"
                       index: 2
                       title: "Product Type"
@@ -145,6 +157,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 4010
                       code: "PB2"
                       index: 3
                       title: "Page Break"
@@ -152,6 +165,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
+                      id: 4011
                       code: "Q22"
                       index: 4
                       title: "Dose Size"
@@ -163,6 +177,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 4012
                       code: "Q23"
                       index: 5
                       title: "Packet Size"
@@ -185,6 +200,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 4013
                       code: "Q24"
                       index: 6
                       title: "Side Effects"
@@ -201,11 +217,13 @@ exports.queries = [
           templateStagesUsingId: {
             create: [
               {
+                id: 5
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
               }
               {
+                id: 6
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."

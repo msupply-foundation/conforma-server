@@ -17,7 +17,7 @@ import {
   ActionSequential,
   TriggerPayload,
 } from '../types'
-import { ApplicationOutcome, Trigger, User } from '../generated/graphql'
+import { ApplicationOutcome, Organisation, Trigger, User } from '../generated/graphql'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -237,7 +237,8 @@ class PostgresDB {
       stage_history_id as "stageHistoryId",
       stage_history_time_created as "stageHistoryTimeCreated",
       status_history_id as "statusHistoryId", status, status_history_time_created as "statusHistoryTimeCreated",
-      user_id as "userId"
+      user_id as "userId",
+      org_id as "orgId"
       FROM application_stage_status_all
       WHERE application_id = $1
       AND stage_is_current = true
@@ -353,6 +354,18 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: Object.values(user) })
       return { userId: result.rows[0].id, success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public createOrg = async (org: Organisation): Promise<object> => {
+    const text = `INSERT INTO organisation (${Object.keys(org)}) 
+      VALUES (${this.getValuesPlaceholders(org)})
+      RETURNING id`
+    try {
+      const result = await this.query({ text, values: Object.values(org) })
+      return { orgId: result.rows[0].id, success: true }
     } catch (err) {
       throw err
     }
