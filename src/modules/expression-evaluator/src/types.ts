@@ -41,6 +41,7 @@ type Operator =
   | '='
   | '!= '
   | '+'
+  | '?'
   | 'REGEX'
   | 'objectProperties'
   | 'stringSubstitution'
