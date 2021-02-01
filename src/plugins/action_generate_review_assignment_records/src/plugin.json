@@ -1,0 +1,25 @@
+{
+  "type": "action_plugin",
+  "code": "generateReviewAssignments",
+  "name": "Generate Review Assignment Records",
+  "file": "generateReviewAssignments",
+  "function_name": "generateReviewAssignments",
+  "description": "Generates review_assignment records for current application",
+  "required_parameters": ["appId", "userId"],
+  "output_properties": [],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-02-02"
+  }
+}
