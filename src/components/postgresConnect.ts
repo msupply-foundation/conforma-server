@@ -613,20 +613,28 @@ class PostgresDB {
     }
   }
 
-  public joinPermissionNameToUserAndOrg = async (
-    username: string,
-    userOrgId: number,
-    permissionName: string
-  ) => {
+  public joinPermissionNameToUser = async (username: string, permissionName: string) => {
+    const userId = (
+      await this.query({
+        text: `SELECT id FROM "user" WHERE username = $1`,
+        values: [username],
+      })
+    ).rows?.[0]?.id
+    const permissionNameId = (
+      await this.query({
+        text: `SELECT id FROM permission_name WHERE name = $1`,
+        values: [permissionName],
+      })
+    ).rows?.[0]?.id
     const text = `
-    insert into permission_join (user_id, user_organisation_id, permission_name_id) 
-    values (
-        (select id from "user" where username = $1),
-        $2, 
-        (select id from permission_name where name = $3))
+    insert into permission_join (user_id, permission_name_id) 
+    values ($1, $2)
+    ON CONFLICT (user_id, permission_name_id) DO NOTHING
+    returning id
     `
     try {
-      const result = await this.query({ text, values: [username, permissionName] })
+      const result = await this.query({ text, values: [userId, permissionNameId] })
+      return { userId: result.rows[0].id, success: true }
     } catch (err) {
       console.log(err.message)
       throw err

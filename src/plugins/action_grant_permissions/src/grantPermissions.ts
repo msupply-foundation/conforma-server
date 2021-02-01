@@ -1,23 +1,26 @@
 module.exports['grantPermissions'] = async function (
-  { username, userOrgId, permissionNames }: any,
+  { username, permissionNames }: any,
   DBConnect: any
 ) {
   try {
     console.log('\nGranting permission/s:')
     console.log({ username, permissionNames })
 
-    const currentUserPermisionsNames = (await DBConnect.getUserPermissionNames(username)).map(
-      ({ name }: any) => name
-    )
+    const permissionJoinIds = []
+    const outputNames = []
 
     for (const permissionName of permissionNames) {
-      if (currentUserPermisionsNames.includes(permissionName)) continue
-      await DBConnect.joinPermissionNameToUser(username, permissionName)
-      currentUserPermisionsNames.push(permissionName)
+      const permissionJoinId = await DBConnect.joinPermissionNameToUser(username, permissionName)
+      permissionJoinIds.push(permissionJoinId)
+      if (permissionJoinId) outputNames.push(permissionName)
     }
     return {
       status: 'Success',
       error_log: '',
+      output: {
+        permissionJoinIds,
+        permissionNames: outputNames,
+      },
     }
   } catch (error) {
     console.log(error)

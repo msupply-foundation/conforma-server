@@ -107,7 +107,7 @@ class DBConnect {
 
   public getUserPermissionNames = PostgresDB.getUserPermissionNames
 
-  public joinPermissionNameToUserAndOrg = PostgresDB.joinPermissionNameToUserAndOrg
+  public joinPermissionNameToUser = PostgresDB.joinPermissionNameToUser
 
   // GraphQL
 
