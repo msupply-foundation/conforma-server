@@ -240,6 +240,32 @@ test('Testing Adding 4 numbers', () => {
   })
 })
 
+// Conditional (?) operator
+
+test('Basic conditional', () => {
+  return evaluateExpression(testData.CONDITIONAL_basic).then((result: any) => {
+    expect(result).toEqual('A')
+  })
+})
+
+test('Conditional with Addition', () => {
+  return evaluateExpression(testData.CONDITIONAL_with_addition).then((result: any) => {
+    expect(result).toEqual('Correct')
+  })
+})
+
+test('Conditional with Logical expression', () => {
+  return evaluateExpression(testData.CONDITIONAL_logical_expression).then((result: any) => {
+    expect(result).toEqual('Expression is True')
+  })
+})
+
+test('Conditional with False Logical expression', () => {
+  return evaluateExpression(testData.CONDITIONAL_logical_expression_false).then((result: any) => {
+    expect(result).toEqual('Expression is False')
+  })
+})
+
 // REGEX operator
 
 test('Testing Regex - Email validation', () => {
@@ -595,7 +621,7 @@ test('Input is an array', () => {
   })
 })
 
-test('Input is an string', () => {
+test('Input is a string', () => {
   return evaluateExpression('Friday drinks?').then((result: any) => {
     expect(result).toEqual('Friday drinks?')
   })
