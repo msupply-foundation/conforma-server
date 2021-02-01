@@ -19,7 +19,7 @@ CREATE OR REPLACE VIEW application_list AS
 		(SELECT * FROM application_stage_status_all WHERE
 		stage_is_current = true AND status_is_current = true)
 	AS stage_status on app.id = stage_status.application_id
-	LEFT JOIN organisation org ON org_id = org.id
+	LEFT JOIN organisation org ON app.org_id = org.id
 -- TO-DO:
 	-- Expiry Date
 	-- Consolidator name

@@ -16,12 +16,14 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
+                id: 1004
                 code: "S1"
                 title: "User information"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
+                      id: 3000
                       code: "Text1"
                       index: 0
                       title: "Intro"
@@ -33,6 +35,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 3001
                       code: "Q1"
                       index: 1
                       title: "First Name"
@@ -52,6 +55,7 @@ exports.queries = [
                       parameters: { label: "First Name" }
                     }
                     {
+                      id: 3002
                       code: "Q2"
                       index: 2
                       title: "Last Name"
@@ -60,6 +64,7 @@ exports.queries = [
                       parameters: { label: "Last Name" }
                     }
                     {
+                      id: 3003
                       code: "Q3"
                       index: 3
                       title: "Username"
@@ -82,6 +87,7 @@ exports.queries = [
                       parameters: { label: "Select a username" }
                     }
                     {
+                      id: 3004
                       code: "Q4"
                       index: 4
                       title: "Email"
@@ -103,6 +109,7 @@ exports.queries = [
                       parameters: { label: "Email" }
                     }
                     {
+                      id: 3005
                       code: "Q5"
                       index: 5
                       title: "Password"
@@ -132,7 +139,9 @@ exports.queries = [
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: {
+            create: [{ number: 1, title: "Automatic" }]
+          }
           templateActionsUsingId: {
             create: [
               {

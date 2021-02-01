@@ -36,12 +36,14 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
+                id: 1000
                 code: "S1"
                 title: "Section 1"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
+                      id: 1000
                       code: "Text1"
                       index: 0
                       title: "Intro"
@@ -53,6 +55,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1001
                       code: "Q1"
                       index: 1
                       title: "First Name"
@@ -61,6 +64,7 @@ exports.queries = [
                       parameters: { label: "First Name" }
                     }
                     {
+                      id: 1002
                       code: "Q2"
                       index: 2
                       title: "Last Name"
@@ -106,6 +110,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1003
                       code: "Text2"
                       index: 3
                       title: "User Info"
@@ -143,6 +148,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1004
                       code: "Q3"
                       index: 4
                       title: "Username"
@@ -175,6 +181,7 @@ exports.queries = [
                       parameters: { label: "Select a username" }
                     }
                     {
+                      id: 1005
                       code: "Q4"
                       index: 5
                       title: "Email"
@@ -196,6 +203,7 @@ exports.queries = [
                       parameters: { label: "Email" }
                     }
                     {
+                      id: 1006
                       code: "Q5"
                       index: 6
                       title: "Password"
@@ -220,6 +228,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1007
                       code: "Q5B"
                       index: 7
                       title: "Dynamic Options demo"
@@ -254,6 +263,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
+                      id: 1008
                       code: "PB1"
                       index: 8
                       title: "Page Break"
@@ -261,6 +271,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
+                      id: 1009
                       code: "Q6"
                       index: 9
                       title: "Organisation Category"
@@ -276,6 +287,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
+                      id: 1010
                       code: "Q7"
                       index: 10
                       title: "Select Manufacturer"
@@ -302,6 +314,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1011
                       code: "Q8"
                       index: 11
                       title: "Select Distributor"
@@ -330,6 +343,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
+                      id: 1012
                       code: "Q9"
                       index: 12
                       title: "Select Importer"
@@ -354,6 +368,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
+                      id: 1013
                       code: "Q10"
                       index: 13
                       title: "API Selection demo"
@@ -376,6 +391,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
+                      id: 1014
                       code: "Q11"
                       index: 14
                       title: "Test Visibility"
@@ -384,6 +400,7 @@ exports.queries = [
                       parameters: { label: "Enter 'magicword' to see text box" }
                     }
                     {
+                      id: 1015
                       code: "TextTest"
                       index: 15
                       title: "Intro"
@@ -418,6 +435,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1016
                       code: "PB3"
                       index: 16
                       title: "Page Break"
@@ -425,6 +443,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
+                      id: 1017
                       code: "Qradio"
                       index: 17
                       title: "Testing Radio buttons"
@@ -438,6 +457,7 @@ exports.queries = [
                       isRequired: true
                     }
                     {
+                      id: 10018
                       code: "Q12"
                       index: 18
                       title: "Role"
@@ -452,6 +472,7 @@ exports.queries = [
                       isRequired: false
                     }
                     {
+                      id: 1019
                       code: "Q13"
                       index: 19
                       title: "Other description"
@@ -601,6 +622,17 @@ exports.queries = [
                   message: {
                     value: "Testing parallel actions -- This message is Asynchronous. \\nEven though it is last in the Actions list, it'll probably appear first."
                   }
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_CREATE
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  newStatus: { value: "Draft" }
                 }
               }
             ]
