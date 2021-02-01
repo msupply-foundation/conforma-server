@@ -456,7 +456,7 @@ exports.queries = [
                       isRequired: true
                     }
                     {
-                      id: 10018
+                      id: 1018
                       code: "Q12"
                       index: 18
                       title: "Role"
@@ -494,6 +494,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1020
                       code: "PB4"
                       index: 19
                       title: "Page Break"
@@ -501,6 +502,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
+                      id: 1021
                       code: "CheckboxShowcase"
                       index: 20
                       title: "Checkbox demonstration"
@@ -512,6 +514,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1022
                       code: "CB1"
                       index: 21
                       title: "Single checkbox"
@@ -524,6 +527,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1023
                       code: "CB2"
                       index: 22
                       title: "Three checkboxes"
@@ -540,6 +544,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1024
                       code: "CB3"
                       index: 23
                       title: "Toggle switch"
@@ -553,6 +558,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1025
                       code: "TXTON-OFF"
                       index: 24
                       title: "Checkbox ON"
@@ -585,6 +591,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1026
                       code: "CB4"
                       index: 26
                       title: "Slider switch"
@@ -604,6 +611,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1027
                       code: "TXT_LIKE"
                       index: 27
                       title: "Display Likes"
@@ -641,6 +649,7 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1028
                       code: "CB5"
                       index: 28
                       title: "Many checkboxes"
