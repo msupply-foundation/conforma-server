@@ -19,7 +19,7 @@ CREATE TABLE public.review (
 	application_id integer GENERATED ALWAYS AS (public.review_application_id(review_assignment_id)) STORED references public.application(id),
 	reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id(review_assignment_id)) STORED references public.user(id),
 	level integer,
-	is_last_levels boolean
+	is_last_level boolean
 );
 
 -- TRIGGER (Listener) on review table
