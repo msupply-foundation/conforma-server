@@ -1,5 +1,5 @@
 exports.queries = [
-    `mutation reviewJoinCompanyPermission {
+  `mutation reviewJoinCompanyPermission {
         __typename
         createPermissionName(
           input: {
@@ -8,4 +8,5 @@ exports.queries = [
         ) {
           clientMutationId
         }
-      }`
+      }`,
+]
