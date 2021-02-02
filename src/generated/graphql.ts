@@ -14373,6 +14373,7 @@ export type TemplatePermission = Node & {
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   /** Reads a single `PermissionName` that is related to this `TemplatePermission`. */
   permissionName?: Maybe<PermissionName>;
@@ -14393,6 +14394,8 @@ export type TemplatePermissionCondition = {
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `level` field. */
+  level?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `restrictions` field. */
   restrictions?: Maybe<Scalars['JSON']>;
 };
@@ -14407,6 +14410,8 @@ export type TemplatePermissionFilter = {
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `level` field. */
+  level?: Maybe<IntFilter>;
   /** Filter by the object’s `restrictions` field. */
   restrictions?: Maybe<JsonFilter>;
   /** Filter by the object’s `permissionName` relation. */
@@ -14431,6 +14436,7 @@ export type TemplatePermissionInput = {
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -14484,6 +14490,7 @@ export type TemplatePermissionPatch = {
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -14548,6 +14555,7 @@ export type TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput 
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -14586,6 +14594,8 @@ export enum TemplatePermissionsOrderBy {
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
+  LevelAsc = 'LEVEL_ASC',
+  LevelDesc = 'LEVEL_DESC',
   RestrictionsAsc = 'RESTRICTIONS_ASC',
   RestrictionsDesc = 'RESTRICTIONS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -14653,6 +14663,7 @@ export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -18026,6 +18037,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionPer
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -18036,6 +18048,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTem
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -23679,6 +23692,7 @@ export type TemplatePermissionResolvers<ContextType = any, ParentType extends Re
   permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   restrictions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
