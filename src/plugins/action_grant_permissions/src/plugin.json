@@ -5,7 +5,7 @@
   "file": "grantPermissions",
   "function_name": "grantPermissions",
   "description": "Grants permission to user/org, creates permission join from user/org to permission name",
-  "required_parameters": ["username", "org_id", "permissionNames"],
+  "required_parameters": ["username", "orgName", "permissionNames"],
   "output_properties": ["permissionJoinIds", "permissionNames"],
   "info": {
     "author": {

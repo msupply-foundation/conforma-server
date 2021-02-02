@@ -331,6 +331,24 @@ exports.queries = [
                   user_role: "Owner"
                 }
               }
+              {
+                actionCode: "grantPermissions"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 4
+                # condition: TO-DO -- need to check if
+                # Decision is Approved
+                parameterQueries: {
+                  username: {
+                    operator: "objectProperties"
+                    children: ["applicationData.username"]
+                  }
+                  orgName: {
+                    operator: "objectProperties"
+                    children: ["cumulativeOutput.orgName"]
+                  }
+                  permissionNames: ["reviewJoinCompany"]
+                }
+              }
             ]
           }
         }
