@@ -2,8 +2,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
   try {
     const { appId, userId, templateId } = input
 
-    if 
-
+    const code = DBConnect.getReviewStructure(templateId)
     // console.log(`\nAdding new user: ${user.username}`)
     // const result = await DBConnect.createUser(user)
     // if (result.success)
