@@ -974,6 +974,7 @@ export type ApplicationList = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  isFullyAssigned?: Maybe<Scalars['Boolean']>;
 };
 
 /**
@@ -1009,6 +1010,8 @@ export type ApplicationListCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `isFullyAssigned` field. */
+  isFullyAssigned?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `ApplicationList` object types. All fields are combined with a logical ‘and.’ */
@@ -1041,6 +1044,8 @@ export type ApplicationListFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isFullyAssigned` field. */
+  isFullyAssigned?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListFilter>>;
   /** Checks for any expressions in this list. */
@@ -1101,7 +1106,9 @@ export enum ApplicationListsOrderBy {
   OutcomeAsc = 'OUTCOME_ASC',
   OutcomeDesc = 'OUTCOME_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
-  LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC'
+  LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
+  IsFullyAssignedAsc = 'IS_FULLY_ASSIGNED_ASC',
+  IsFullyAssignedDesc = 'IS_FULLY_ASSIGNED_DESC'
 }
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -22162,6 +22169,7 @@ export type ApplicationListResolvers<ContextType = any, ParentType extends Resol
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
   lastActiveDate?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  isFullyAssigned?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
