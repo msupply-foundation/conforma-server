@@ -4996,29 +4996,6 @@ export type DeletePermissionJoinByNodeIdInput = {
   nodeId: Scalars['ID'];
 };
 
-/** All input for the `deletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameId` mutation. */
-export type DeletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  userId: Scalars['Int'];
-  organisationId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
-/** All input for the `deletePermissionJoinByUserIdAndPermissionNameId` mutation. */
-export type DeletePermissionJoinByUserIdAndPermissionNameIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  userId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
 /** All input for the `deletePermissionJoin` mutation. */
 export type DeletePermissionJoinInput = {
   /**
@@ -6604,10 +6581,6 @@ export type Mutation = {
   updatePermissionJoinByNodeId?: Maybe<UpdatePermissionJoinPayload>;
   /** Updates a single `PermissionJoin` using a unique key and a patch. */
   updatePermissionJoin?: Maybe<UpdatePermissionJoinPayload>;
-  /** Updates a single `PermissionJoin` using a unique key and a patch. */
-  updatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<UpdatePermissionJoinPayload>;
-  /** Updates a single `PermissionJoin` using a unique key and a patch. */
-  updatePermissionJoinByUserIdAndPermissionNameId?: Maybe<UpdatePermissionJoinPayload>;
   /** Updates a single `PermissionName` using its globally unique id and a patch. */
   updatePermissionNameByNodeId?: Maybe<UpdatePermissionNamePayload>;
   /** Updates a single `PermissionName` using a unique key and a patch. */
@@ -6726,10 +6699,6 @@ export type Mutation = {
   deletePermissionJoinByNodeId?: Maybe<DeletePermissionJoinPayload>;
   /** Deletes a single `PermissionJoin` using a unique key. */
   deletePermissionJoin?: Maybe<DeletePermissionJoinPayload>;
-  /** Deletes a single `PermissionJoin` using a unique key. */
-  deletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<DeletePermissionJoinPayload>;
-  /** Deletes a single `PermissionJoin` using a unique key. */
-  deletePermissionJoinByUserIdAndPermissionNameId?: Maybe<DeletePermissionJoinPayload>;
   /** Deletes a single `PermissionName` using its globally unique id. */
   deletePermissionNameByNodeId?: Maybe<DeletePermissionNamePayload>;
   /** Deletes a single `PermissionName` using a unique key. */
@@ -7124,18 +7093,6 @@ export type MutationUpdatePermissionJoinArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdArgs = {
-  input: UpdatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdatePermissionJoinByUserIdAndPermissionNameIdArgs = {
-  input: UpdatePermissionJoinByUserIdAndPermissionNameIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdatePermissionNameByNodeIdArgs = {
   input: UpdatePermissionNameByNodeIdInput;
 };
@@ -7486,18 +7443,6 @@ export type MutationDeletePermissionJoinByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePermissionJoinArgs = {
   input: DeletePermissionJoinInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdArgs = {
-  input: DeletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeletePermissionJoinByUserIdAndPermissionNameIdArgs = {
-  input: DeletePermissionJoinByUserIdAndPermissionNameIdInput;
 };
 
 
@@ -8642,23 +8587,6 @@ export type PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsi
   id: Scalars['Int'];
 };
 
-/** The fields on `permissionJoin` to look up the row to update. */
-export type PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `permissionJoin` being updated. */
-  patch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyPatch;
-  userId: Scalars['Int'];
-  organisationId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
-/** The fields on `permissionJoin` to look up the row to update. */
-export type PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `permissionJoin` being updated. */
-  patch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyPatch;
-  userId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
 /** The globally unique `ID` look up for the row to update. */
 export type PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `permissionName` to be connected. */
@@ -8674,23 +8602,6 @@ export type PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyU
   id: Scalars['Int'];
 };
 
-/** The fields on `permissionJoin` to look up the row to update. */
-export type PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `permissionJoin` being updated. */
-  patch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch;
-  userId: Scalars['Int'];
-  organisationId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
-/** The fields on `permissionJoin` to look up the row to update. */
-export type PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `permissionJoin` being updated. */
-  patch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch;
-  userId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
 /** The globally unique `ID` look up for the row to update. */
 export type PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
@@ -8704,23 +8615,6 @@ export type PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermis
   /** An object where the defined keys will be set on the `permissionJoin` being updated. */
   patch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyPatch;
   id: Scalars['Int'];
-};
-
-/** The fields on `permissionJoin` to look up the row to update. */
-export type PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `permissionJoin` being updated. */
-  patch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyPatch;
-  userId: Scalars['Int'];
-  organisationId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
-/** The fields on `permissionJoin` to look up the row to update. */
-export type PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `permissionJoin` being updated. */
-  patch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyPatch;
-  userId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
 };
 
 /** Input for the nested mutation of `organisation` in the `PermissionJoinInput` mutation. */
@@ -8754,25 +8648,13 @@ export type PermissionJoinOrganisationIdFkeyInverseInput = {
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   connectById?: Maybe<Array<PermissionJoinPermissionJoinPkeyConnect>>;
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  connectByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyConnect>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  connectByUserIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdPermissionNameIdKeyConnect>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<PermissionJoinNodeIdConnect>>;
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   deleteById?: Maybe<Array<PermissionJoinPermissionJoinPkeyDelete>>;
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  deleteByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyDelete>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  deleteByUserIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdPermissionNameIdKeyDelete>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<PermissionJoinNodeIdDelete>>;
   /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
   updateById?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
-  updateByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate>>;
-  /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
-  updateByUserIdAndPermissionNameId?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate>>;
   /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate>>;
   /** A `PermissionJoinInput` object that will be created and connected to this object. */
@@ -8821,32 +8703,6 @@ export type PermissionJoinPermissionJoinPkeyDelete = {
   id: Scalars['Int'];
 };
 
-/** The fields on `permissionJoin` to look up the row to connect. */
-export type PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyConnect = {
-  userId: Scalars['Int'];
-  organisationId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
-/** The fields on `permissionJoin` to look up the row to delete. */
-export type PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyDelete = {
-  userId: Scalars['Int'];
-  organisationId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
-/** The fields on `permissionJoin` to look up the row to connect. */
-export type PermissionJoinPermissionJoinUserIdPermissionNameIdKeyConnect = {
-  userId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
-/** The fields on `permissionJoin` to look up the row to delete. */
-export type PermissionJoinPermissionJoinUserIdPermissionNameIdKeyDelete = {
-  userId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
 /** Input for the nested mutation of `permissionName` in the `PermissionJoinInput` mutation. */
 export type PermissionJoinPermissionNameIdFkeyInput = {
   /** The primary key(s) for `permissionName` for the far side of the relationship. */
@@ -8872,25 +8728,13 @@ export type PermissionJoinPermissionNameIdFkeyInverseInput = {
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   connectById?: Maybe<Array<PermissionJoinPermissionJoinPkeyConnect>>;
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  connectByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyConnect>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  connectByUserIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdPermissionNameIdKeyConnect>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<PermissionJoinNodeIdConnect>>;
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   deleteById?: Maybe<Array<PermissionJoinPermissionJoinPkeyDelete>>;
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  deleteByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyDelete>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  deleteByUserIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdPermissionNameIdKeyDelete>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<PermissionJoinNodeIdDelete>>;
   /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
   updateById?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
-  updateByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate>>;
-  /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
-  updateByUserIdAndPermissionNameId?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate>>;
   /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate>>;
   /** A `PermissionJoinInput` object that will be created and connected to this object. */
@@ -8985,25 +8829,13 @@ export type PermissionJoinUserIdFkeyInverseInput = {
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   connectById?: Maybe<Array<PermissionJoinPermissionJoinPkeyConnect>>;
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  connectByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyConnect>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  connectByUserIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdPermissionNameIdKeyConnect>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<PermissionJoinNodeIdConnect>>;
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   deleteById?: Maybe<Array<PermissionJoinPermissionJoinPkeyDelete>>;
   /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  deleteByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyDelete>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
-  deleteByUserIdAndPermissionNameId?: Maybe<Array<PermissionJoinPermissionJoinUserIdPermissionNameIdKeyDelete>>;
-  /** The primary key(s) for `permissionJoin` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<PermissionJoinNodeIdDelete>>;
   /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
   updateById?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinPkeyUpdate>>;
-  /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
-  updateByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate>>;
-  /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
-  updateByUserIdAndPermissionNameId?: Maybe<Array<PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate>>;
   /** The primary key(s) and patch data for `permissionJoin` for the far side of the relationship. */
   updateByNodeId?: Maybe<Array<UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate>>;
   /** A `PermissionJoinInput` object that will be created and connected to this object. */
@@ -9624,8 +9456,6 @@ export type Query = Node & {
   organisation?: Maybe<Organisation>;
   organisationByName?: Maybe<Organisation>;
   permissionJoin?: Maybe<PermissionJoin>;
-  permissionJoinByUserIdAndOrganisationIdAndPermissionNameId?: Maybe<PermissionJoin>;
-  permissionJoinByUserIdAndPermissionNameId?: Maybe<PermissionJoin>;
   permissionName?: Maybe<PermissionName>;
   permissionPolicy?: Maybe<PermissionPolicy>;
   review?: Maybe<Review>;
@@ -10224,21 +10054,6 @@ export type QueryOrganisationByNameArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryPermissionJoinArgs = {
   id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdArgs = {
-  userId: Scalars['Int'];
-  organisationId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryPermissionJoinByUserIdAndPermissionNameIdArgs = {
-  userId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
 };
 
 
@@ -16401,33 +16216,6 @@ export type UpdatePermissionJoinByNodeIdInput = {
   patch: PermissionJoinPatch;
 };
 
-/** All input for the `updatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameId` mutation. */
-export type UpdatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `PermissionJoin` being updated. */
-  patch: PermissionJoinPatch;
-  userId: Scalars['Int'];
-  organisationId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
-/** All input for the `updatePermissionJoinByUserIdAndPermissionNameId` mutation. */
-export type UpdatePermissionJoinByUserIdAndPermissionNameIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `PermissionJoin` being updated. */
-  patch: PermissionJoinPatch;
-  userId: Scalars['Int'];
-  permissionNameId: Scalars['Int'];
-};
-
 /** All input for the `updatePermissionJoin` mutation. */
 export type UpdatePermissionJoinInput = {
   /**
@@ -19504,12 +19292,8 @@ export type ResolversTypes = {
   updatePermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch: UpdatePermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch;
   PermissionJoinPermissionNameIdFkeyInverseInput: PermissionJoinPermissionNameIdFkeyInverseInput;
   PermissionJoinPermissionJoinPkeyConnect: PermissionJoinPermissionJoinPkeyConnect;
-  PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyConnect: PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyConnect;
-  PermissionJoinPermissionJoinUserIdPermissionNameIdKeyConnect: PermissionJoinPermissionJoinUserIdPermissionNameIdKeyConnect;
   PermissionJoinNodeIdConnect: PermissionJoinNodeIdConnect;
   PermissionJoinPermissionJoinPkeyDelete: PermissionJoinPermissionJoinPkeyDelete;
-  PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyDelete: PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyDelete;
-  PermissionJoinPermissionJoinUserIdPermissionNameIdKeyDelete: PermissionJoinPermissionJoinUserIdPermissionNameIdKeyDelete;
   PermissionJoinNodeIdDelete: PermissionJoinNodeIdDelete;
   PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinPkeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinPkeyUpdate;
   updatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch;
@@ -20000,8 +19784,6 @@ export type ResolversTypes = {
   PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
   PermissionNamePatch: PermissionNamePatch;
   PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput: PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput;
-  PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate;
-  PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate;
   OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate: OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinPatch: PermissionJoinPatch;
   PermissionJoinOrganisationIdFkeyPermissionJoinCreateInput: PermissionJoinOrganisationIdFkeyPermissionJoinCreateInput;
@@ -20014,8 +19796,6 @@ export type ResolversTypes = {
   OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinOrganisationIdFkeyOrganisationCreateInput: PermissionJoinOrganisationIdFkeyOrganisationCreateInput;
-  PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate;
-  PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate;
   UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate;
   PermissionJoinUserIdFkeyPermissionJoinCreateInput: PermissionJoinUserIdFkeyPermissionJoinCreateInput;
   UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate;
@@ -20026,8 +19806,6 @@ export type ResolversTypes = {
   UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate;
   PermissionJoinUserIdFkeyUserCreateInput: PermissionJoinUserIdFkeyUserCreateInput;
-  PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate;
-  PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate;
   PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
   PermissionJoinPermissionNameIdFkeyPermissionJoinCreateInput: PermissionJoinPermissionNameIdFkeyPermissionJoinCreateInput;
   PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate: PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate;
@@ -20173,8 +19951,6 @@ export type ResolversTypes = {
   UpdatePermissionJoinByNodeIdInput: UpdatePermissionJoinByNodeIdInput;
   UpdatePermissionJoinPayload: ResolverTypeWrapper<UpdatePermissionJoinPayload>;
   UpdatePermissionJoinInput: UpdatePermissionJoinInput;
-  UpdatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput: UpdatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput;
-  UpdatePermissionJoinByUserIdAndPermissionNameIdInput: UpdatePermissionJoinByUserIdAndPermissionNameIdInput;
   UpdatePermissionNameByNodeIdInput: UpdatePermissionNameByNodeIdInput;
   UpdatePermissionNamePayload: ResolverTypeWrapper<UpdatePermissionNamePayload>;
   UpdatePermissionNameInput: UpdatePermissionNameInput;
@@ -20262,8 +20038,6 @@ export type ResolversTypes = {
   DeletePermissionJoinByNodeIdInput: DeletePermissionJoinByNodeIdInput;
   DeletePermissionJoinPayload: ResolverTypeWrapper<DeletePermissionJoinPayload>;
   DeletePermissionJoinInput: DeletePermissionJoinInput;
-  DeletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput: DeletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput;
-  DeletePermissionJoinByUserIdAndPermissionNameIdInput: DeletePermissionJoinByUserIdAndPermissionNameIdInput;
   DeletePermissionNameByNodeIdInput: DeletePermissionNameByNodeIdInput;
   DeletePermissionNamePayload: ResolverTypeWrapper<DeletePermissionNamePayload>;
   DeletePermissionNameInput: DeletePermissionNameInput;
@@ -20628,12 +20402,8 @@ export type ResolversParentTypes = {
   updatePermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch: UpdatePermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch;
   PermissionJoinPermissionNameIdFkeyInverseInput: PermissionJoinPermissionNameIdFkeyInverseInput;
   PermissionJoinPermissionJoinPkeyConnect: PermissionJoinPermissionJoinPkeyConnect;
-  PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyConnect: PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyConnect;
-  PermissionJoinPermissionJoinUserIdPermissionNameIdKeyConnect: PermissionJoinPermissionJoinUserIdPermissionNameIdKeyConnect;
   PermissionJoinNodeIdConnect: PermissionJoinNodeIdConnect;
   PermissionJoinPermissionJoinPkeyDelete: PermissionJoinPermissionJoinPkeyDelete;
-  PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyDelete: PermissionJoinPermissionJoinUserIdOrganisationIdPermissionNameIdKeyDelete;
-  PermissionJoinPermissionJoinUserIdPermissionNameIdKeyDelete: PermissionJoinPermissionJoinUserIdPermissionNameIdKeyDelete;
   PermissionJoinNodeIdDelete: PermissionJoinNodeIdDelete;
   PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinPkeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinPkeyUpdate;
   updatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch: UpdatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch;
@@ -21124,8 +20894,6 @@ export type ResolversParentTypes = {
   PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
   PermissionNamePatch: PermissionNamePatch;
   PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput: PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput;
-  PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate;
-  PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate;
   OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate: OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinPatch: PermissionJoinPatch;
   PermissionJoinOrganisationIdFkeyPermissionJoinCreateInput: PermissionJoinOrganisationIdFkeyPermissionJoinCreateInput;
@@ -21138,8 +20906,6 @@ export type ResolversParentTypes = {
   OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinOrganisationIdFkeyOrganisationCreateInput: PermissionJoinOrganisationIdFkeyOrganisationCreateInput;
-  PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate;
-  PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate;
   UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate;
   PermissionJoinUserIdFkeyPermissionJoinCreateInput: PermissionJoinUserIdFkeyPermissionJoinCreateInput;
   UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserOrganisationForUserOrganisationUserIdFkeyUsingUserUsernameKeyUpdate;
@@ -21150,8 +20916,6 @@ export type ResolversParentTypes = {
   UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnPermissionJoinForPermissionJoinUserIdFkeyUsingUserUsernameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyNodeIdUpdate;
   PermissionJoinUserIdFkeyUserCreateInput: PermissionJoinUserIdFkeyUserCreateInput;
-  PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdOrganisationIdPermissionNameIdKeyUpdate;
-  PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionJoinUserIdPermissionNameIdKeyUpdate;
   PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
   PermissionJoinPermissionNameIdFkeyPermissionJoinCreateInput: PermissionJoinPermissionNameIdFkeyPermissionJoinCreateInput;
   PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate: PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate;
@@ -21297,8 +21061,6 @@ export type ResolversParentTypes = {
   UpdatePermissionJoinByNodeIdInput: UpdatePermissionJoinByNodeIdInput;
   UpdatePermissionJoinPayload: UpdatePermissionJoinPayload;
   UpdatePermissionJoinInput: UpdatePermissionJoinInput;
-  UpdatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput: UpdatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput;
-  UpdatePermissionJoinByUserIdAndPermissionNameIdInput: UpdatePermissionJoinByUserIdAndPermissionNameIdInput;
   UpdatePermissionNameByNodeIdInput: UpdatePermissionNameByNodeIdInput;
   UpdatePermissionNamePayload: UpdatePermissionNamePayload;
   UpdatePermissionNameInput: UpdatePermissionNameInput;
@@ -21386,8 +21148,6 @@ export type ResolversParentTypes = {
   DeletePermissionJoinByNodeIdInput: DeletePermissionJoinByNodeIdInput;
   DeletePermissionJoinPayload: DeletePermissionJoinPayload;
   DeletePermissionJoinInput: DeletePermissionJoinInput;
-  DeletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput: DeletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdInput;
-  DeletePermissionJoinByUserIdAndPermissionNameIdInput: DeletePermissionJoinByUserIdAndPermissionNameIdInput;
   DeletePermissionNameByNodeIdInput: DeletePermissionNameByNodeIdInput;
   DeletePermissionNamePayload: DeletePermissionNamePayload;
   DeletePermissionNameInput: DeletePermissionNameInput;
@@ -22464,8 +22224,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateOrganisationByName?: Resolver<Maybe<ResolversTypes['UpdateOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateOrganisationByNameArgs, 'input'>>;
   updatePermissionJoinByNodeId?: Resolver<Maybe<ResolversTypes['UpdatePermissionJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionJoinByNodeIdArgs, 'input'>>;
   updatePermissionJoin?: Resolver<Maybe<ResolversTypes['UpdatePermissionJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionJoinArgs, 'input'>>;
-  updatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameId?: Resolver<Maybe<ResolversTypes['UpdatePermissionJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdArgs, 'input'>>;
-  updatePermissionJoinByUserIdAndPermissionNameId?: Resolver<Maybe<ResolversTypes['UpdatePermissionJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionJoinByUserIdAndPermissionNameIdArgs, 'input'>>;
   updatePermissionNameByNodeId?: Resolver<Maybe<ResolversTypes['UpdatePermissionNamePayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionNameByNodeIdArgs, 'input'>>;
   updatePermissionName?: Resolver<Maybe<ResolversTypes['UpdatePermissionNamePayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionNameArgs, 'input'>>;
   updatePermissionPolicyByNodeId?: Resolver<Maybe<ResolversTypes['UpdatePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionPolicyByNodeIdArgs, 'input'>>;
@@ -22525,8 +22283,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteOrganisationByName?: Resolver<Maybe<ResolversTypes['DeleteOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteOrganisationByNameArgs, 'input'>>;
   deletePermissionJoinByNodeId?: Resolver<Maybe<ResolversTypes['DeletePermissionJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionJoinByNodeIdArgs, 'input'>>;
   deletePermissionJoin?: Resolver<Maybe<ResolversTypes['DeletePermissionJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionJoinArgs, 'input'>>;
-  deletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameId?: Resolver<Maybe<ResolversTypes['DeletePermissionJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdArgs, 'input'>>;
-  deletePermissionJoinByUserIdAndPermissionNameId?: Resolver<Maybe<ResolversTypes['DeletePermissionJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionJoinByUserIdAndPermissionNameIdArgs, 'input'>>;
   deletePermissionNameByNodeId?: Resolver<Maybe<ResolversTypes['DeletePermissionNamePayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionNameByNodeIdArgs, 'input'>>;
   deletePermissionName?: Resolver<Maybe<ResolversTypes['DeletePermissionNamePayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionNameArgs, 'input'>>;
   deletePermissionPolicyByNodeId?: Resolver<Maybe<ResolversTypes['DeletePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionPolicyByNodeIdArgs, 'input'>>;
@@ -22760,8 +22516,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationArgs, 'id'>>;
   organisationByName?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationByNameArgs, 'name'>>;
   permissionJoin?: Resolver<Maybe<ResolversTypes['PermissionJoin']>, ParentType, ContextType, RequireFields<QueryPermissionJoinArgs, 'id'>>;
-  permissionJoinByUserIdAndOrganisationIdAndPermissionNameId?: Resolver<Maybe<ResolversTypes['PermissionJoin']>, ParentType, ContextType, RequireFields<QueryPermissionJoinByUserIdAndOrganisationIdAndPermissionNameIdArgs, 'userId' | 'organisationId' | 'permissionNameId'>>;
-  permissionJoinByUserIdAndPermissionNameId?: Resolver<Maybe<ResolversTypes['PermissionJoin']>, ParentType, ContextType, RequireFields<QueryPermissionJoinByUserIdAndPermissionNameIdArgs, 'userId' | 'permissionNameId'>>;
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType, RequireFields<QueryPermissionNameArgs, 'id'>>;
   permissionPolicy?: Resolver<Maybe<ResolversTypes['PermissionPolicy']>, ParentType, ContextType, RequireFields<QueryPermissionPolicyArgs, 'id'>>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<QueryReviewArgs, 'id'>>;

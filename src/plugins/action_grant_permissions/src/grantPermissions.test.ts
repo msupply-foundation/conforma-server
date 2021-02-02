@@ -49,7 +49,21 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
     expect(result).toEqual({
       status: 'Success',
       output: {
-        permissionJoinIds: [10],
+        permissionJoinIds: [11],
+        permissionNames: ['reviewCompanyRego'],
+      },
+      error_log: '',
+    })
+  })
+})
+
+// Repeat insert, as above
+test('Test: Add permission to Carl and Medicinal Importers, Ltd., already exists', () => {
+  return Action.grantPermissions(testParams2, PostgresDB).then((result: any) => {
+    expect(result).toEqual({
+      status: 'Success',
+      output: {
+        permissionJoinIds: [11],
         permissionNames: ['reviewCompanyRego'],
       },
       error_log: '',
