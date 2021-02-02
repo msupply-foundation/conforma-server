@@ -13,7 +13,7 @@ CREATE TABLE public.review_assignment (
 	trigger public.trigger,
 	time_created timestamptz default current_timestamp,
 	level integer,
-	can_make_overall_decision boolean
+	is_last_level boolean
 );
 
 -- TRIGGER (Listener) on review_assignment table

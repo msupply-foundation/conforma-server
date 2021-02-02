@@ -213,7 +213,6 @@ exports.queries = [
                         label: "Password"
                         placeholder: "Password must be at least 8 chars long"
                         confirmPlaceholder: "Enter password again"
-                        maskedInput: false
                         validationInternal: {
                           operator: "REGEX"
                           children: [
@@ -457,7 +456,7 @@ exports.queries = [
                       isRequired: true
                     }
                     {
-                      id: 10018
+                      id: 1018
                       code: "Q12"
                       index: 18
                       title: "Role"
@@ -492,6 +491,185 @@ exports.queries = [
                       parameters: {
                         label: "If Other, please describe"
                         placeholder: "Describe your role"
+                      }
+                    }
+                    {
+                      id: 1020
+                      code: "PB4"
+                      index: 19
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      id: 1021
+                      code: "CheckboxShowcase"
+                      index: 20
+                      title: "Checkbox demonstration"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "Checkbox demonstration"
+                        text: "Different types and settings for Checkbox plugin"
+                      }
+                    }
+                    {
+                      id: 1022
+                      code: "CB1"
+                      index: 21
+                      title: "Single checkbox"
+                      isRequired: false
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "This is a single checkbox"
+                        checkboxes: ["Tick me"]
+                      }
+                    }
+                    {
+                      id: 1023
+                      code: "CB2"
+                      index: 22
+                      title: "Three checkboxes"
+                      isRequired: false
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "Three checkboxes, one pre-selected"
+                        checkboxes: [
+                          { label: "Option 1", key: 0, selected: true }
+                          "Option 2"
+                          "Option 3"
+                        ]
+                      }
+                    }
+                    {
+                      id: 1024
+                      code: "CB3"
+                      index: 23
+                      title: "Toggle switch"
+                      isRequired: false
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "Behold! a **toggle** switch:"
+                        checkboxes: ["ON"]
+                        type: "toggle"
+                      }
+                    }
+                    {
+                      id: 1025
+                      code: "TXTON-OFF"
+                      index: 24
+                      title: "Checkbox ON"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "The switch is toggled %1"
+                            {
+                              operator: "?"
+                              children: [
+                                {
+                                  operator: "="
+                                  children: [
+                                    {
+                                      operator: "objectProperties"
+                                      children: ["responses.CB3.text"]
+                                    }
+                                    "ON"
+                                  ]
+                                }
+                                "ON"
+                                "OFF"
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                    {
+                      id: 1026
+                      code: "CB4"
+                      index: 26
+                      title: "Slider switch"
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "And a couple of **sliders**:"
+                        checkboxes: [
+                          {
+                            label: "I like ice-cream"
+                            text: "Ice-cream"
+                            key: "Opt1"
+                          }
+                          { label: "I like cake", text: "Cake", key: "Opt2" }
+                        ]
+                        type: "slider"
+                      }
+                    }
+                    {
+                      id: 1027
+                      code: "TXT_LIKE"
+                      index: 27
+                      title: "Display Likes"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "You like: %1%2"
+                            {
+                              operator: "?"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.CB4.values.Opt1.selected"]
+                                }
+                                "\\n- Ice Cream"
+                                ""
+                              ]
+                            }
+                            {
+                              operator: "?"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.CB4.values.Opt2.selected"]
+                                }
+                                "\\n- Cake"
+                                ""
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                    {
+                      id: 1028
+                      code: "CB5"
+                      index: 28
+                      title: "Many checkboxes"
+                      isRequired: false
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "Lotsa boxes"
+                        description: "If you have a lot of checkboxes, you may wish to use \`layout: \\"inline\\"\`.  \\n_This selection is dynamically created from an online API._"
+                        layout: "inline"
+                        checkboxes: {
+                          operator: "API"
+                          children: [
+                            {
+                              value: "https://jsonplaceholder.typicode.com/users"
+                            }
+                            { value: [] }
+                            { value: "name" }
+                          ]
+                        }
                       }
                     }
                   ]
