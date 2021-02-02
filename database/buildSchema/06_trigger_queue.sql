@@ -1,5 +1,7 @@
 -- trigger queue
 
+CREATE TYPE public.trigger as ENUM ('onApplicationCreate', 'onApplicationSubmit', 'onApplicationSave', 'onApplicationWithdraw', 'onReviewCreate', 'onReviewSubmit', 'onReviewStart', 'onReviewAssign', 'onApprovalSubmit', 'onScheduleTime', 'Processing', 'Error');
+
 CREATE TYPE public.trigger_queue_status as ENUM ('Triggered', 'Actions Dispatched', 'Error');
 
 CREATE TABLE public.trigger_queue (

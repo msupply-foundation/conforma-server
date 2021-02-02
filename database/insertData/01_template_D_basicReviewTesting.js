@@ -11,6 +11,7 @@ exports.queries = [
           code: "ReviewTest"
           name: "Test -- Review Process"
           status: AVAILABLE
+          startMessage: "## You will need the following documents ready for upload:\\n- Proof of your identity\\n- Pictures of product\\n- Product licence document"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [

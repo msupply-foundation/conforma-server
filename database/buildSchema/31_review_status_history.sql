@@ -1,13 +1,13 @@
--- review section join
+-- review status history
 
 
-CREATE TYPE public.review_status as ENUM ('Draft', 'Submitted', 'Changes Required', 'Review Pending');
+CREATE TYPE public.review_status as ENUM ('Draft', 'Submitted', 'Changes Requested', 'Pending', 'Locked');
 
 CREATE TABLE public.review_status_history (
 	id serial primary key,
 	review_id integer references public.review(id),
-	"status" public.review_status,
-	"timestamp" timestamp with time zone default current_timestamp,
+	status public.review_status,
+	time_created timestamptz default current_timestamp,
 	is_current boolean DEFAULT true
 );
 
