@@ -371,6 +371,19 @@ class PostgresDB {
     }
   }
 
+  // Join a user to an org in user_organisation table
+  public addUserOrg = async (userOrg: any): Promise<object> => {
+    const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 
+      VALUES (${this.getValuesPlaceholders(userOrg)})
+      RETURNING id`
+    try {
+      const result = await this.query({ text, values: Object.values(userOrg) })
+      return { userOrgId: result.rows[0].id, success: true }
+    } catch (err) {
+      throw err
+    }
+  }
+
   // Used by triggers/actions -- please don't modify
   public getUserData = async (userId: number) => {
     const text = `
