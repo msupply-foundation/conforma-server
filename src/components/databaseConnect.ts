@@ -46,6 +46,8 @@ class DBConnect {
 
   public createOrg = PostgresDB.createOrg
 
+  public addUserOrg = PostgresDB.addUserOrg
+
   public isUnique = PostgresDB.isUnique
 
   public setApplicationOutcome = PostgresDB.setApplicationOutcome
