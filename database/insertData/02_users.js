@@ -221,7 +221,7 @@ exports.queries = [
                   create: {
                     name: "reviewCompanyRego"
                     templatePermissionsUsingId: {
-                      create: [{ templateId: 2, restrictions: { stage: 1 } }]
+                      create: [{ templateId: 2, stageNumber: 1 }]
                     }
                     permissionPolicyToPermissionPolicyId: {
                       create: {
