@@ -2,9 +2,6 @@
 
 CREATE TYPE public.application_outcome AS ENUM ('Pending', 'Approved', 'Rejected');
 
-
-CREATE TYPE public.trigger as ENUM ('onApplicationCreate', 'onApplicationSubmit', 'onApplicationSave', 'onApplicationWithdrawn', 'onReviewCreate', 'onReviewSubmit', 'onReviewStart', 'onReviewAssign', 'onApprovalSubmit', 'onScheduleTime', 'Processing', 'Error');
-
 CREATE TABLE public.application (
     id serial primary key,
     template_id integer references public.template(id),

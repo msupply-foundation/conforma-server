@@ -167,18 +167,25 @@ exports.queries = [
         permissionPolicy: {
           name: "basicApply"
           permissionNamesUsingId: {
-            create: {
-              name: "applyCompanyRego"
-              templatePermissionsUsingId: { create: { templateId: 2 } }
-              permissionJoinsUsingId: {
-                create: [
-                  { userId: 1 }
-                  { userId: 2 }
-                  { userId: 3 }
-                  { userId: 4 }
-                ]
+            create: [
+              {
+                name: "applyCompanyRego"
+                templatePermissionsUsingId: { create: { templateId: 2 } }
+                permissionJoinsUsingId: {
+                  create: [
+                    { userId: 1 }
+                    { userId: 2 }
+                    { userId: 3 }
+                    { userId: 4 }
+                  ]
+                }
               }
-            }
+              {
+                name: "applyReviewTest"
+                templatePermissionsUsingId: { create: { templateId: 4 } }
+                permissionJoinsUsingId: { create: [{ userId: 1 }, { userId: 2 }] }
+              }
+            ]
           }
           type: APPLY
           rules: {
@@ -214,7 +221,7 @@ exports.queries = [
                   create: {
                     name: "reviewCompanyRego"
                     templatePermissionsUsingId: {
-                      create: [{ templateId: 2, restrictions: { stage: 1 } }]
+                      create: [{ templateId: 2, stageNumber: 1 }]
                     }
                     permissionPolicyToPermissionPolicyId: {
                       create: {
