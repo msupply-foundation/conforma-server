@@ -240,6 +240,32 @@ test('Testing Adding 4 numbers', () => {
   })
 })
 
+// Conditional (?) operator
+
+test('Basic conditional', () => {
+  return evaluateExpression(testData.CONDITIONAL_basic).then((result: any) => {
+    expect(result).toEqual('A')
+  })
+})
+
+test('Conditional with Addition', () => {
+  return evaluateExpression(testData.CONDITIONAL_with_addition).then((result: any) => {
+    expect(result).toEqual('Correct')
+  })
+})
+
+test('Conditional with Logical expression', () => {
+  return evaluateExpression(testData.CONDITIONAL_logical_expression).then((result: any) => {
+    expect(result).toEqual('Expression is True')
+  })
+})
+
+test('Conditional with False Logical expression', () => {
+  return evaluateExpression(testData.CONDITIONAL_logical_expression_false).then((result: any) => {
+    expect(result).toEqual('Expression is False')
+  })
+})
+
 // REGEX operator
 
 test('Testing Regex - Email validation', () => {
@@ -390,7 +416,7 @@ test('Test Postgres get array of template names', () => {
     (result: any) => {
       expect(result).toEqual([
         'Test -- General Registration',
-        'Company Registration',
+        'Organisation Registration',
         'User Registration',
         'Test -- Review Process',
       ])
@@ -411,7 +437,7 @@ test('Test Postgres get template names -- no type', () => {
     (result: any) => {
       expect(result).toEqual([
         { name: 'Test -- General Registration' },
-        { name: 'Company Registration' },
+        { name: 'Organisation Registration' },
         { name: 'User Registration' },
         { name: 'Test -- Review Process' },
       ])
@@ -424,10 +450,10 @@ test('Test Postgres get application list with IDs', () => {
     pgConnection: pgConnect,
   }).then((result: any) => {
     expect(result).toEqual([
-      { id: 1, name: 'User Registration: Craig Drown' },
-      { id: 2, name: 'User Registration: Carl Smith' },
-      { id: 3, name: 'Company Registration: Company C' },
-      { id: 4, name: 'Test Review -- Vitamin C' },
+      { id: 1000, name: 'User Registration: Craig Drown' },
+      { id: 1001, name: 'User Registration: Carl Smith' },
+      { id: 2000, name: 'Company Registration: Company C' },
+      { id: 4000, name: 'Test Review -- Vitamin C' },
     ])
   })
 })
@@ -471,19 +497,19 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
     expect(result).toEqual([
       {
         name: 'User Registration: Craig Drown',
-        id: 1,
+        id: 1000,
       },
       {
         name: 'User Registration: Carl Smith',
-        id: 2,
+        id: 1001,
       },
       {
         name: 'Company Registration: Company C',
-        id: 3,
+        id: 2000,
       },
       {
         name: 'Test Review -- Vitamin C',
-        id: 4,
+        id: 4000,
       },
     ])
   })
@@ -500,7 +526,7 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
       templates: {
         edges: [
           { node: { name: 'Test -- General Registration' } },
-          { node: { name: 'Company Registration' } },
+          { node: { name: 'Organisation Registration' } },
           { node: { name: 'User Registration' } },
           { node: { name: 'Test -- Review Process' } },
         ],
@@ -595,7 +621,7 @@ test('Input is an array', () => {
   })
 })
 
-test('Input is an string', () => {
+test('Input is a string', () => {
   return evaluateExpression('Friday drinks?').then((result: any) => {
     expect(result).toEqual('Friday drinks?')
   })
