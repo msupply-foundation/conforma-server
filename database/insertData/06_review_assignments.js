@@ -8,9 +8,14 @@ exports.queries = [
       input: {
         reviewAssignment: {
           applicationId: 4000
-          assignerId: 8
-          reviewerId: 6
           stageId: 5
+          userToReviewerId: {
+            connectByUsername: {
+              username: "testReviewer1"
+            }
+          }
+          status: AVAILABLE_FOR_SELF_ASSIGNMENT
+          availableTemplateSectionIds: [1005]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { templateElementId: 4001 }
@@ -40,9 +45,14 @@ exports.queries = [
       input: {
         reviewAssignment: {
           applicationId: 4000
-          assignerId: 8
-          reviewerId: 7
           stageId: 5
+          userToReviewerId: {
+            connectByUsername: {
+              username: "testReviewer2"
+            }
+          }
+          status: AVAILABLE_FOR_SELF_ASSIGNMENT
+          availableTemplateSectionIds: [1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { templateElementId: 4008 }
