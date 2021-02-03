@@ -216,7 +216,7 @@ exports.queries = [
     createApplication(
       input: {
         application: {
-          id: 4000
+          id: 4002
           serial: "34567"
           applicationSectionsUsingId: {
             create: [{ templateSectionId: 1005 }, { templateSectionId: 1006 }]
