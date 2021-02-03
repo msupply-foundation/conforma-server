@@ -141,54 +141,32 @@ exports.queries = [
     }
   }`,
   // Registered User Permissions
-  `mutation userToPermissionNameJoin {
-    createPermissionJoin(
-      input: { permissionJoin: { permissionNameId: 2000, userId: 1 } }
+`mutation joinUsersToPermissionName {
+    updatePermissionName(
+      input: {
+        patch: {
+          permissionJoinsUsingId: {
+            create: [{ userId: 1 }, { userId: 2 }, { userId: 3 }, { userId: 4 }]
+          }
+        }
+        id: 2000
+      }
     ) {
       permissionName {
         name
       }
     }
   }`,
-  `mutation userToPermissionNameJoin {
-    createPermissionJoin(
-      input: { permissionJoin: { permissionNameId: 2000, userId: 2 } }
-    ) {
-      permissionName {
-        name
+  `mutation joinUsersToPermissionName {
+    updatePermissionName(
+      input: {
+        patch: {
+          permissionJoinsUsingId: {
+            create: [{ userId: 1 }, { userId: 2 }]
+          }
+        }
+        id: 3000
       }
-    }
-  }`,
-  `mutation userToPermissionNameJoin {
-    createPermissionJoin(
-      input: { permissionJoin: { permissionNameId: 2000, userId: 3 } }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  `mutation userToPermissionNameJoin {
-    createPermissionJoin(
-      input: { permissionJoin: { permissionNameId: 2000, userId: 4 } }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  `mutation userToPermissionNameJoin {
-    createPermissionJoin(
-      input: { permissionJoin: { permissionNameId: 3000, userId: 1 } }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  `mutation userToPermissionNameJoin {
-    createPermissionJoin(
-      input: { permissionJoin: { permissionNameId: 3000, userId: 2 } }
     ) {
       permissionName {
         name
