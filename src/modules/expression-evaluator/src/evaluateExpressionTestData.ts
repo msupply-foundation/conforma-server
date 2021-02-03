@@ -644,6 +644,11 @@ testData.stringSubstitutionNoReplacements = {
   children: ['Your name is %2 %1 but we have nothing to replace them with'],
 }
 
+testData.stringSubstitutionEmptyStringInReplacements = {
+  operator: 'stringSubstitution',
+  children: ['You like: %1%2%3', '', '\\n-Cake', '\\n-Candy'],
+}
+
 // API operator
 
 testData.APIisUnique = {
