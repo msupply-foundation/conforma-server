@@ -368,6 +368,14 @@ test('String substitution - no replacements supplied', () => {
   })
 })
 
+test('String substitution - some parameters empty strings', () => {
+  return evaluateExpression(testData.stringSubstitutionEmptyStringInReplacements).then(
+    (result: any) => {
+      expect(result).toBe('You like: \\n-Cake\\n-Candy')
+    }
+  )
+})
+
 // API operator
 test('API: Check username is unique', () => {
   return evaluateExpression(testData.APIisUnique, {

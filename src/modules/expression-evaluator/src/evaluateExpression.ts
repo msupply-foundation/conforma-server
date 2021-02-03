@@ -100,7 +100,7 @@ export default async function evaluateExpression(
         )
         let i = 0
         return parameters.reduce((outputString, param) => {
-          return outputString.replace(param, replacements[i] ? replacements[i++] : '')
+          return outputString.replace(param, replacements[i] !== undefined ? replacements[i++] : '')
         }, origString)
 
       case 'API':
