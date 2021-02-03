@@ -85,7 +85,7 @@ exports.queries = [
         user: { email: "reviewer1@sussol.net"
           passwordHash: "$2a$10$r8XTfUWIzrSaDfn0rxbIlei0kFHitJMI4W3g59w/94/9VopxNB4w."
           username: "testReviewer1",
-          firstName: "Mr", lastName: "Reviewer 1" }
+          firstName: "Reviewer", lastName: "1" }
       }
     ) {
       user {
@@ -99,7 +99,7 @@ exports.queries = [
         user: { email: "reviewer2@sussol.net"
           passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
           username: "testReviewer2",
-          firstName: "Mrs", lastName: "Reviewer 2" }
+          firstName: "Reviewer", lastName: "2" }
       }
     ) {
       user {
@@ -110,10 +110,24 @@ exports.queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "consolidator@sussol.net"
+        user: { email: "consolidator1@sussol.net"
           passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
-          username: "testConsolidator",
-          firstName: "Consolidator", lastName: "TestReview" }
+          username: "testConsolidator1",
+          firstName: "Consolidator", lastName: "1" }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`, 
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "consolidator2@sussol.net"
+          passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
+          username: "testConsolidator2",
+          firstName: "Consolidator", lastName: "2" }
       }
     ) {
       user {
@@ -126,8 +140,8 @@ exports.queries = [
       input: {
         user: { email: "assigner@sussol.net"
           passwordHash: "$2a$10$Kk4m2yhfFC5GqX2mJsXTtO.GLq6zNbezYnI8ix09h/MfNNy6AW7Ne"
-          username: "testAssigner",
-          firstName: "Ms", lastName: "Assigner" }
+          username: "testAssigner1",
+          firstName: "Assigner", lastName: "1" }
       }
     ) {
       user {
@@ -154,7 +168,7 @@ exports.queries = [
       }
     }
   }`,
-  // Registered User Permissions
+  // Registered User Permissions - Apply for applications
 `mutation joinUsersToPermissionName {
     updatePermissionName(
       input: {
@@ -187,6 +201,7 @@ exports.queries = [
       }
     }
   }`,
+  // Registered User Permissions - Review applications
   `mutation joinUsersToPermissionName {
     updatePermissionName(
       input: {
@@ -195,14 +210,48 @@ exports.queries = [
             create: [{ userId: 6 }, { userId: 7 }]
           }
         }
-        id: 4000
+        id: 5000
       }
     ) {
       permissionName {
         name
       }
     }
-  }`
+  }`,
+  // Registered User Permissions - Consolidation of applications
+  `mutation joinUsersToPermissionName {
+    updatePermissionName(
+      input: {
+        patch: {
+          permissionJoinsUsingId: {
+            create: [{ userId: 8, userId: 9 }]
+          }
+        }
+        id: 6000
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // Registered User Permissions - Final decision of applications
+  `mutation joinUsersToPermissionName {
+    updatePermissionName(
+      input: {
+        patch: {
+          permissionJoinsUsingId: {
+            create: [{ userId: 8 }]
+          }
+        }
+        id: 7000
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
   // Extra user with multiple permissions (apply company rego, review company rego and apply user rego) -- password is "123456"
   `mutation MyMutation {
     createUser(
