@@ -22,7 +22,7 @@ CREATE OR REPLACE VIEW "public".application_list AS
 				
 			EXCEPT
 					
-			(SELECT DISTINCT unnest(available_template_section_ids) AS sections
+			(SELECT DISTINCT unnest(allowed_template_section_ids) AS sections
 			FROM review_assignment
 			WHERE application_id = app.id
 			AND level=(

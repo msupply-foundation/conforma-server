@@ -15,7 +15,7 @@ exports.queries = [
             }
           }
           status: AVAILABLE_FOR_SELF_ASSIGNMENT
-          availableTemplateSectionIds: [1005]
+          allowedTemplateSectionIds: [1005]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { templateElementId: 4001 }
@@ -52,7 +52,7 @@ exports.queries = [
             }
           }
           status: AVAILABLE_FOR_SELF_ASSIGNMENT
-          availableTemplateSectionIds: [1006]
+          allowedTemplateSectionIds: [1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { templateElementId: 4008 }
