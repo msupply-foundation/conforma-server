@@ -17,11 +17,12 @@ RETURNS bigint AS $$
 	WHERE
 		ra.status = 'Assigned'
 		AND ra.stage_id = curr_ra.stage_id
-		AND ra.level = curr_ra.level
+		AND ra.level = 1 -- currently restrict partial assignment to level 1
 		AND ra.application_id = curr_ra.application_id
 		AND template_element.category = 'Question'
 $$ LANGUAGE sql STABLE;
 
+-- Function to return count of template questions for a given application/template
 CREATE FUNCTION public.template_question_count(application_id int)
 RETURNS bigint AS $$
 	SELECT COUNT(*)

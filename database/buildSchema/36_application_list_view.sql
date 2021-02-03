@@ -21,8 +21,13 @@ template ON app.template_id = template.id LEFT JOIN
 	(SELECT * FROM application_stage_status_latest)
 AS stage_status on app.id = stage_status.application_id
 LEFT JOIN organisation org ON app.org_id = org.id
--- THIS IS NOT RIGHT YET
-LEFT JOIN (SELECT application_id, assigned_questions_count(review_assignment) as assigned_question_count FROM review_assignment) ra
+LEFT JOIN (
+	SELECT DISTINCT(review_assignment.application_id), assigned_questions_count(review_assignment) as assigned_question_count
+	FROM review_assignment JOIN
+	application_stage_status_latest assl
+	ON review_assignment.application_id = assl.application_id
+	AND review_assignment.stage_id = assl.stage_id
+	) ra
 ON app.id = ra.application_id;
 -- TO-DO:
 	-- Expiry Date
