@@ -2,7 +2,7 @@
     Review testing applications
 */
 exports.queries = [
-  // Application for Review Testing
+  // Application 1 for Review Testing - on Stage 2 of 3
   `mutation ReviewTestApplication {
     createApplication(
       input: {
@@ -19,13 +19,22 @@ exports.queries = [
           userId: 5
           orgId: 3
           applicationStageHistoriesUsingId: {
-            create: {
-              isCurrent: true
-              templateStageToStageId: { connectById: { id: 5 } }
-              applicationStatusHistoriesUsingId: {
-                create: { isCurrent: true, status: SUBMITTED }
+            create: [
+              {
+                isCurrent: false
+                templateStageToStageId: { connectById: { id: 5 } }
+                applicationStatusHistoriesUsingId: {
+                  create: { isCurrent: false, status: COMPLETED }
+                }
               }
-            }
+              {
+                isCurrent: true
+                templateStageToStageId: { connectById: { id: 6 } }
+                applicationStatusHistoriesUsingId: {
+                  create: { isCurrent: true, status: SUBMITTED }
+                }
+              }
+            ]
           }
           applicationResponsesUsingId: {
             create: [
@@ -88,6 +97,206 @@ exports.queries = [
                 isValid: true
                 templateElementId: 4013
                 value: { text: "Turning orange" }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      application {
+        name
+        template {
+          name
+        }
+      }
+    }
+  }`,
+  // Application 2 for Review Testing - on Stage 2 of 3
+  `mutation ReviewTestApplication {
+    createApplication(
+      input: {
+        application: {
+          id: 4001
+          serial: "23456"
+          applicationSectionsUsingId: {
+            create: [{ templateSectionId: 1005 }, { templateSectionId: 1006 }]
+          }
+          name: "Test Review -- Vitamin B"
+          outcome: PENDING
+          isActive: true
+          templateId: 4
+          userId: 4
+          orgId: 3
+          applicationStageHistoriesUsingId: {
+            create: {
+              isCurrent: true
+              templateStageToStageId: { connectById: { id: 5 } }
+              applicationStatusHistoriesUsingId: {
+                create: { isCurrent: true, status: SUBMITTED }
+              }
+            }
+          }
+          applicationResponsesUsingId: {
+            create: [
+              {
+                id: 4010
+                isValid: true
+                templateElementId: 4001
+                value: { text: "Valerio" }
+              }
+              {
+                id: 4011
+                isValid: true
+                templateElementId: 4002
+                value: { text: "Moon" }
+              }
+              {
+                id: 4012
+                isValid: true
+                templateElementId: 4003
+                value: { text: "jj@nowhere.com" }
+              }
+              {
+                id: 4013
+                isValid: true
+                templateElementId: 4005
+                value: { text: "42" }
+              }
+              {
+                id: 4014
+                isValid: true
+                templateElementId: 4006
+                value: { text: "Tonga" }
+              }
+              {
+                id: 4015
+                isValid: true
+                templateElementId: 4008
+                value: { text: "Vitamin B" }
+              }
+              {
+                id: 4016
+                isValid: true
+                templateElementId: 4009
+                value: { text: "Natural Product", optionIndex: 1 }
+              }
+              {
+                id: 4017
+                isValid: true
+                templateElementId: 4011
+                value: { text: "100mg" }
+              }
+              {
+                id: 4018
+                isValid: true
+                templateElementId: 4012
+                value: { text: "200" }
+              }
+              {
+                id: 4019
+                isValid: true
+                templateElementId: 4013
+                value: { text: "No side effects" }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      application {
+        name
+        template {
+          name
+        }
+      }
+    }
+  }`,
+  // Application 3 for Review Testing - on Stage 3 of 3
+  `mutation ReviewTestApplication {
+    createApplication(
+      input: {
+        application: {
+          id: 4000
+          serial: "34567"
+          applicationSectionsUsingId: {
+            create: [{ templateSectionId: 1005 }, { templateSectionId: 1006 }]
+          }
+          name: "Test Review -- Amoxicillin"
+          outcome: PENDING
+          isActive: true
+          templateId: 4
+          userId: 3
+          orgId: 3
+          applicationStageHistoriesUsingId: {
+            create: {
+              isCurrent: true
+              templateStageToStageId: { connectById: { id: 5 } }
+              applicationStatusHistoriesUsingId: {
+                create: { isCurrent: true, status: SUBMITTED }
+              }
+            }
+          }
+          applicationResponsesUsingId: {
+            create: [
+              {
+                id: 4020
+                isValid: true
+                templateElementId: 4001
+                value: { text: "Andrei" }
+              }
+              {
+                id: 4021
+                isValid: true
+                templateElementId: 4002
+                value: { text: "Star" }
+              }
+              {
+                id: 4022
+                isValid: true
+                templateElementId: 4003
+                value: { text: "jw@nowhere.com" }
+              }
+              {
+                id: 4023
+                isValid: true
+                templateElementId: 4005
+                value: { text: "22" }
+              }
+              {
+                id: 4024
+                isValid: true
+                templateElementId: 4006
+                value: { text: "China" }
+              }
+              {
+                id: 4025
+                isValid: true
+                templateElementId: 4008
+                value: { text: "Amoxicillin" }
+              }
+              {
+                id: 4026
+                isValid: true
+                templateElementId: 4009
+                value: { text: "Natural Product", optionIndex: 1 }
+              }
+              {
+                id: 4027
+                isValid: true
+                templateElementId: 4011
+                value: { text: "250mg" }
+              }
+              {
+                id: 4028
+                isValid: true
+                templateElementId: 4012
+                value: { text: "1000" }
+              }
+              {
+                id: 4029
+                isValid: true
+                templateElementId: 4013
+                value: { text: "nausea\nvomiting\ndiarrhea\nstomach pain\nswollen, black, or "hairy" tongue." }
               }
             ]
           }
