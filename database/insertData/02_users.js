@@ -122,7 +122,7 @@ exports.queries = [
     }
   }`,
   //
-  // Non Registered User with Permissions
+  // Non Registered User with Permissions for UserRegistration only
   // Password is blank
   `mutation {
     createUser(
@@ -131,27 +131,7 @@ exports.queries = [
           email: ""
           passwordHash: "$2a$10$UIfa3GTUbOS92Ygy/UpqheTngGo3O54Q5UOnJ5CBlra9LYCcr4IGq"
           username: "nonRegistered"
-          permissionJoinsUsingId: {
-            create: [
-              {
-                permissionNameToPermissionNameId: {
-                  create: {
-                    name: "applyUserRegistration"
-                    templatePermissionsUsingId: { create: [{ templateId: 1 }] }
-                    permissionPolicyToPermissionPolicyId: {
-                      create: { type: APPLY, name: "oneTimeApply", rules: {
-                        application: {
-                          view: {
-                            template_id: "jwtPermission_bigint_templateId"
-                          }
-                        }
-                      } }
-                    }
-                  }
-                }
-              }
-            ]
-          }
+          permissionJoinsUsingId: { create: { permissionNameId: 1000 } }
         }
       }
     ) {
@@ -161,47 +141,57 @@ exports.queries = [
     }
   }`,
   // Registered User Permissions
-  `mutation {
-    createPermissionPolicy(
-      input: {
-        permissionPolicy: {
-          name: "basicApply"
-          permissionNamesUsingId: {
-            create: [
-              {
-                name: "applyCompanyRego"
-                templatePermissionsUsingId: { create: { templateId: 2 } }
-                permissionJoinsUsingId: {
-                  create: [
-                    { userId: 1 }
-                    { userId: 2 }
-                    { userId: 3 }
-                    { userId: 4 }
-                  ]
-                }
-              }
-              {
-                name: "applyReviewTest"
-                templatePermissionsUsingId: { create: { templateId: 4 } }
-                permissionJoinsUsingId: { create: [{ userId: 1 }, { userId: 2 }] }
-              }
-            ]
-          }
-          type: APPLY
-          rules: {
-            application: {
-              view: {
-                template_id: "jwtPermission_bigint_templateId"
-                user_id: "jwtUserDetails_bigint_userId"
-              }
-            }
-          }
-        }
-      }
+  `mutation userToPermissionNameJoin {
+    createPermissionJoin(
+      input: { permissionJoin: { permissionNameId: 2000, userId: 1 } }
     ) {
-      permissionPolicy {
+      permissionName {
         name
-        type
+      }
+    }
+  }`,
+  `mutation userToPermissionNameJoin {
+    createPermissionJoin(
+      input: { permissionJoin: { permissionNameId: 2000, userId: 2 } }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation userToPermissionNameJoin {
+    createPermissionJoin(
+      input: { permissionJoin: { permissionNameId: 2000, userId: 3 } }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation userToPermissionNameJoin {
+    createPermissionJoin(
+      input: { permissionJoin: { permissionNameId: 2000, userId: 4 } }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation userToPermissionNameJoin {
+    createPermissionJoin(
+      input: { permissionJoin: { permissionNameId: 3000, userId: 1 } }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation userToPermissionNameJoin {
+    createPermissionJoin(
+      input: { permissionJoin: { permissionNameId: 3000, userId: 2 } }
+    ) {
+      permissionName {
+        name
       }
     }
   }`,
@@ -214,31 +204,9 @@ exports.queries = [
           passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
           permissionJoinsUsingId: {
             create: [
-              { permissionNameId: 1 }
-              { permissionNameId: 2 }
-              {
-                permissionNameToPermissionNameId: {
-                  create: {
-                    name: "reviewCompanyRego"
-                    templatePermissionsUsingId: {
-                      create: [{ templateId: 2, stageNumber: 1 }]
-                    }
-                    permissionPolicyToPermissionPolicyId: {
-                      create: {
-                        type: REVIEW
-                        name: "basicReview"
-                        rules: {
-                          application: {
-                            view: {
-                              template_id: "jwtPermission_bigint_templateId"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              { permissionNameId: 1000 }
+              { permissionNameId: 2000 }
+              { permissionNameId: 4000 }
             ]
           }
         }

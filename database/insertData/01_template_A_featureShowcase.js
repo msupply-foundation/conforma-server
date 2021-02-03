@@ -815,6 +815,13 @@ exports.queries = [
               }
             ]
           }
+          templatePermissionsUsingId: {
+            create: [
+              {
+                id: 1000, permissionNameId: 1000
+              }
+            ]
+          }
         }
       }
     ) {
