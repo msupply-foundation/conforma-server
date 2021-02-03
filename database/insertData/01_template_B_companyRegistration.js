@@ -351,6 +351,12 @@ exports.queries = [
               }
             ]
           }
+          templatePermissionsUsingId: {
+            create: [
+              { id: 2000, permissionNameId: 2000 }
+              { id: 2001, permissionNameId: 4000, stageNumber: 1 }
+            ]
+          }
         }
       }
     ) {
