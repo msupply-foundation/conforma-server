@@ -11,6 +11,7 @@ exports.queries = [
           code: "ReviewTest"
           name: "Test -- Review Process"
           status: AVAILABLE
+          startMessage: "## You will need the following documents ready for upload:\\n- Proof of your identity\\n- Pictures of product\\n- Product licence document"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -271,6 +272,14 @@ exports.queries = [
                   newStatus: { value: "Draft" }
                 }
               }
+            ]
+          }
+          templatePermissionsUsingId: {
+            create: [
+              { id: 4000, permissionNameId: 2000 }
+              { id: 4001, permissionNameId: 5000, stageNumber: 1, level: 1 }
+              { id: 4002, permissionNameId: 5000, stageNumber: 2, level: 1 }
+              { id: 4003, permissionNameId: 5000, stageNumber: 2, level: 2 }
             ]
           }
         }

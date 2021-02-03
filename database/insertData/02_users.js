@@ -122,7 +122,7 @@ exports.queries = [
     }
   }`,
   //
-  // Non Registered User with Permissions
+  // Non Registered User with Permissions for UserRegistration only
   // Password is blank
   `mutation {
     createUser(
@@ -131,27 +131,7 @@ exports.queries = [
           email: ""
           passwordHash: "$2a$10$UIfa3GTUbOS92Ygy/UpqheTngGo3O54Q5UOnJ5CBlra9LYCcr4IGq"
           username: "nonRegistered"
-          permissionJoinsUsingId: {
-            create: [
-              {
-                permissionNameToPermissionNameId: {
-                  create: {
-                    name: "applyUserRegistration"
-                    templatePermissionsUsingId: { create: [{ templateId: 1 }] }
-                    permissionPolicyToPermissionPolicyId: {
-                      create: { type: APPLY, name: "oneTimeApply", rules: {
-                        application: {
-                          view: {
-                            template_id: "jwtPermission_bigint_templateId"
-                          }
-                        }
-                      } }
-                    }
-                  }
-                }
-              }
-            ]
-          }
+          permissionJoinsUsingId: { create: { permissionNameId: 1000 } }
         }
       }
     ) {
@@ -161,40 +141,35 @@ exports.queries = [
     }
   }`,
   // Registered User Permissions
-  `mutation {
-    createPermissionPolicy(
+`mutation joinUsersToPermissionName {
+    updatePermissionName(
       input: {
-        permissionPolicy: {
-          name: "basicApply"
-          permissionNamesUsingId: {
-            create: {
-              name: "applyCompanyRego"
-              templatePermissionsUsingId: { create: { templateId: 2 } }
-              permissionJoinsUsingId: {
-                create: [
-                  { userId: 1 }
-                  { userId: 2 }
-                  { userId: 3 }
-                  { userId: 4 }
-                ]
-              }
-            }
-          }
-          type: APPLY
-          rules: {
-            application: {
-              view: {
-                template_id: "jwtPermission_bigint_templateId"
-                user_id: "jwtUserDetails_bigint_userId"
-              }
-            }
+        patch: {
+          permissionJoinsUsingId: {
+            create: [{ userId: 1 }, { userId: 2 }, { userId: 3 }, { userId: 4 }]
           }
         }
+        id: 2000
       }
     ) {
-      permissionPolicy {
+      permissionName {
         name
-        type
+      }
+    }
+  }`,
+  `mutation joinUsersToPermissionName {
+    updatePermissionName(
+      input: {
+        patch: {
+          permissionJoinsUsingId: {
+            create: [{ userId: 1 }, { userId: 2 }]
+          }
+        }
+        id: 3000
+      }
+    ) {
+      permissionName {
+        name
       }
     }
   }`,
@@ -207,31 +182,9 @@ exports.queries = [
           passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
           permissionJoinsUsingId: {
             create: [
-              { permissionNameId: 1 }
-              { permissionNameId: 2 }
-              {
-                permissionNameToPermissionNameId: {
-                  create: {
-                    name: "reviewCompanyRego"
-                    templatePermissionsUsingId: {
-                      create: [{ templateId: 2, restrictions: { stage: 1 } }]
-                    }
-                    permissionPolicyToPermissionPolicyId: {
-                      create: {
-                        type: REVIEW
-                        name: "basicReview"
-                        rules: {
-                          application: {
-                            view: {
-                              template_id: "jwtPermission_bigint_templateId"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
+              { permissionNameId: 1000 }
+              { permissionNameId: 2000 }
+              { permissionNameId: 4000 }
             ]
           }
         }

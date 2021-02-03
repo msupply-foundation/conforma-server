@@ -100,7 +100,7 @@ exports.queries = [
                           "International"
                         ]
                       }
-                      parameters: { label: "Upload your valid import permit" }
+                      parameters: { text: "Upload your valid import permit" }
                       isRequired: false
                     }
                   ]
@@ -142,16 +142,6 @@ exports.queries = [
                       parameters: {
                         label: "Enter the organisation street address"
                       }
-                      visibilityCondition: {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.S1Q3.text"]
-                          }
-                          "National"
-                        ]
-                      }
                     }
                     {
                       id: 2007
@@ -161,16 +151,6 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: { label: "Enter the company region" }
-                      visibilityCondition: {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.S1Q3.text"]
-                          }
-                          "National"
-                        ]
-                      }
                     }
                     {
                       id: 2008
@@ -333,6 +313,30 @@ exports.queries = [
                   }
                 }
               }
+              {
+                actionCode: "joinUserOrg"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 3
+                # condition: TO-DO -- need to check if
+                # Decision is Approved
+                parameterQueries: {
+                  user_id: {
+                    operator: "objectProperties"
+                    children: ["applicationData.userId"]
+                  }
+                  organisation_id: {
+                    operator: "objectProperties"
+                    children: ["cumulativeOutput.orgId"]
+                  }
+                  user_role: "Owner"
+                }
+              }
+            ]
+          }
+          templatePermissionsUsingId: {
+            create: [
+              { id: 2000, permissionNameId: 2000 }
+              { id: 2001, permissionNameId: 4000, stageNumber: 1 }
             ]
           }
         }

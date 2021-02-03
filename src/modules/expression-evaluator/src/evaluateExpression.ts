@@ -77,6 +77,9 @@ export default async function evaluateExpression(
           return acc + child
         }, 0)
 
+      case '?':
+        return childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
+
       case 'objectProperties':
         if (Object.entries(params).length === 0)
           return 'No parameters received for objectProperties node'
@@ -97,7 +100,7 @@ export default async function evaluateExpression(
         )
         let i = 0
         return parameters.reduce((outputString, param) => {
-          return outputString.replace(param, replacements[i] ? replacements[i++] : '')
+          return outputString.replace(param, replacements[i] !== undefined ? replacements[i++] : '')
         }, origString)
 
       case 'API':

@@ -454,6 +454,54 @@ testData.PLUS_4Nums = {
   ],
 }
 
+// CONDITIONAL
+
+testData.CONDITIONAL_basic = { operator: '?', children: [true, 'A', 'B'] }
+
+testData.CONDITIONAL_equality_child_node = {
+  operator: '?',
+  children: [{ operator: '=', children: [1, 2] }, 'Correct', 'Wrong'],
+}
+
+testData.CONDITIONAL_with_addition = {
+  operator: '?',
+  children: [
+    { operator: '=', children: [{ operator: '+', children: [7.5, 19] }, 26.5] },
+    'Correct',
+    'Wrong',
+  ],
+}
+
+testData.CONDITIONAL_logical_expression = {
+  operator: '?',
+  children: [
+    {
+      operator: 'AND',
+      children: [
+        { operator: '=', children: [{ operator: '+', children: [7.5, 19] }, 26.5] },
+        { operator: '!=', children: ['five', 'four'] },
+      ],
+    },
+    'Expression is True',
+    'Expression is False',
+  ],
+}
+
+testData.CONDITIONAL_logical_expression_false = {
+  operator: '?',
+  children: [
+    {
+      operator: 'OR',
+      children: [
+        { operator: '=', children: [{ operator: '+', children: [7, 19] }, 26.5] },
+        { operator: '!=', children: ['five', 'five'] },
+      ],
+    },
+    'Expression is True',
+    'Expression is False',
+  ],
+}
+
 // REGEX
 
 testData.REGEX_check_email = {
@@ -508,7 +556,7 @@ testData.form2 = {
 }
 
 testData.application = {
-  id: 3,
+  id: 2000,
   name: 'Company Registration',
   status: 'Submitted',
   stage: 1,
@@ -594,6 +642,11 @@ testData.stringSubstitutionNoParameters = {
 testData.stringSubstitutionNoReplacements = {
   operator: 'stringSubstitution',
   children: ['Your name is %2 %1 but we have nothing to replace them with'],
+}
+
+testData.stringSubstitutionEmptyStringInReplacements = {
+  operator: 'stringSubstitution',
+  children: ['You like: %1%2%3', '', '\\n-Cake', '\\n-Candy'],
 }
 
 // API operator
@@ -714,7 +767,7 @@ testData.simpleGraphQL = {
       }`,
     },
     { value: ['appId'] },
-    { value: 1 },
+    { value: 1000 },
     { value: 'application.name' },
   ],
 }

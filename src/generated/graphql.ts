@@ -2194,7 +2194,6 @@ export type ApplicationSectionTemplateSectionIdFkeyTemplateSectionCreateInput = 
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -4240,8 +4239,6 @@ export type CreateTemplatePermissionPayload = {
   permissionName?: Maybe<PermissionName>;
   /** Reads a single `Template` that is related to this `TemplatePermission`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateSection` that is related to this `TemplatePermission`. */
-  templateSection?: Maybe<TemplateSection>;
   /** An edge for our `TemplatePermission`. May be used by Relay 1. */
   templatePermissionEdge?: Maybe<TemplatePermissionsEdge>;
 };
@@ -5663,8 +5660,6 @@ export type DeleteTemplatePermissionPayload = {
   permissionName?: Maybe<PermissionName>;
   /** Reads a single `Template` that is related to this `TemplatePermission`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateSection` that is related to this `TemplatePermission`. */
-  templateSection?: Maybe<TemplateSection>;
   /** An edge for our `TemplatePermission`. May be used by Relay 1. */
   templatePermissionEdge?: Maybe<TemplatePermissionsEdge>;
 };
@@ -8259,7 +8254,7 @@ export type NotificationReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -10564,7 +10559,7 @@ export type Review = Node & {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   /** Reads a single `ReviewAssignment` that is related to this `Review`. */
   reviewAssignment?: Maybe<ReviewAssignment>;
   /** Reads a single `Application` that is related to this `Review`. */
@@ -10704,7 +10699,7 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -10728,7 +10723,7 @@ export type ReviewAssignment = Node & {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
   assigner?: Maybe<User>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
@@ -10845,7 +10840,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10909,7 +10904,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -10962,8 +10957,8 @@ export type ReviewAssignmentCondition = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `level` field. */
   level?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `canMakeOverallDecision` field. */
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
@@ -10988,8 +10983,8 @@ export type ReviewAssignmentFilter = {
   timeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `level` field. */
   level?: Maybe<IntFilter>;
-  /** Filter by the object’s `canMakeOverallDecision` field. */
-  canMakeOverallDecision?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<BooleanFilter>;
   /** Filter by the object’s `reviews` relation. */
   reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
   /** Some related `reviews` exist. */
@@ -11034,7 +11029,7 @@ export type ReviewAssignmentInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11157,7 +11152,7 @@ export type ReviewAssignmentPatch = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11231,7 +11226,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11304,8 +11299,8 @@ export enum ReviewAssignmentsOrderBy {
   TimeCreatedDesc = 'TIME_CREATED_DESC',
   LevelAsc = 'LEVEL_ASC',
   LevelDesc = 'LEVEL_DESC',
-  CanMakeOverallDecisionAsc = 'CAN_MAKE_OVERALL_DECISION_ASC',
-  CanMakeOverallDecisionDesc = 'CAN_MAKE_OVERALL_DECISION_DESC',
+  IsLastLevelAsc = 'IS_LAST_LEVEL_ASC',
+  IsLastLevelDesc = 'IS_LAST_LEVEL_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -11359,7 +11354,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -11447,8 +11442,8 @@ export type ReviewCondition = {
   reviewerId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `level` field. */
   level?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `canMakeOverallDecision` field. */
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<Scalars['Boolean']>;
 };
 
 export type ReviewDecision = Node & {
@@ -11608,7 +11603,7 @@ export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -11680,8 +11675,8 @@ export type ReviewFilter = {
   reviewerId?: Maybe<IntFilter>;
   /** Filter by the object’s `level` field. */
   level?: Maybe<IntFilter>;
-  /** Filter by the object’s `canMakeOverallDecision` field. */
-  canMakeOverallDecision?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isLastLevel` field. */
+  isLastLevel?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<StringFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
@@ -11728,7 +11723,7 @@ export type ReviewInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -11863,7 +11858,7 @@ export type ReviewPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12068,7 +12063,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12569,7 +12564,7 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12841,7 +12836,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -12857,7 +12852,7 @@ export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12918,7 +12913,7 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -12994,8 +12989,8 @@ export enum ReviewsOrderBy {
   ReviewerIdDesc = 'REVIEWER_ID_DESC',
   LevelAsc = 'LEVEL_ASC',
   LevelDesc = 'LEVEL_DESC',
-  CanMakeOverallDecisionAsc = 'CAN_MAKE_OVERALL_DECISION_ASC',
-  CanMakeOverallDecisionDesc = 'CAN_MAKE_OVERALL_DECISION_DESC',
+  IsLastLevelAsc = 'IS_LAST_LEVEL_ASC',
+  IsLastLevelDesc = 'IS_LAST_LEVEL_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -13220,7 +13215,7 @@ export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -14113,7 +14108,6 @@ export type TemplateElementSectionIdFkeyTemplateSectionCreateInput = {
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -14385,14 +14379,13 @@ export type TemplatePermission = Node & {
   id: Scalars['Int'];
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   /** Reads a single `PermissionName` that is related to this `TemplatePermission`. */
   permissionName?: Maybe<PermissionName>;
   /** Reads a single `Template` that is related to this `TemplatePermission`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateSection` that is related to this `TemplatePermission`. */
-  templateSection?: Maybe<TemplateSection>;
 };
 
 /**
@@ -14406,8 +14399,10 @@ export type TemplatePermissionCondition = {
   permissionNameId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateSectionId` field. */
-  templateSectionId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `level` field. */
+  level?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `restrictions` field. */
   restrictions?: Maybe<Scalars['JSON']>;
 };
@@ -14420,8 +14415,10 @@ export type TemplatePermissionFilter = {
   permissionNameId?: Maybe<IntFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateSectionId` field. */
-  templateSectionId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `level` field. */
+  level?: Maybe<IntFilter>;
   /** Filter by the object’s `restrictions` field. */
   restrictions?: Maybe<JsonFilter>;
   /** Filter by the object’s `permissionName` relation. */
@@ -14432,10 +14429,6 @@ export type TemplatePermissionFilter = {
   template?: Maybe<TemplateFilter>;
   /** A related `template` exists. */
   templateExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `templateSection` relation. */
-  templateSection?: Maybe<TemplateSectionFilter>;
-  /** A related `templateSection` exists. */
-  templateSectionExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplatePermissionFilter>>;
   /** Checks for any expressions in this list. */
@@ -14449,11 +14442,11 @@ export type TemplatePermissionInput = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -14498,31 +14491,16 @@ export type TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateI
   id: Scalars['Int'];
 };
 
-/** The globally unique `ID` look up for the row to update. */
-export type TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `templateSection` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `templateSection` being updated. */
-  patch: TemplateSectionPatch;
-};
-
-/** The fields on `templatePermission` to look up the row to update. */
-export type TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplatePermissionPkeyUpdate = {
-  /** An object where the defined keys will be set on the `templatePermission` being updated. */
-  patch: UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
 /** Represents an update to a `TemplatePermission`. Fields that are set will be updated. */
 export type TemplatePermissionPatch = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** Input for the nested mutation of `permissionName` in the `TemplatePermissionInput` mutation. */
@@ -14583,11 +14561,11 @@ export type TemplatePermissionPermissionNameIdFkeyPermissionNameCreateInput = {
 export type TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** A connection to a list of `TemplatePermission` values. */
@@ -14621,8 +14599,10 @@ export enum TemplatePermissionsOrderBy {
   PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
-  TemplateSectionIdAsc = 'TEMPLATE_SECTION_ID_ASC',
-  TemplateSectionIdDesc = 'TEMPLATE_SECTION_ID_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
+  LevelAsc = 'LEVEL_ASC',
+  LevelDesc = 'LEVEL_DESC',
   RestrictionsAsc = 'RESTRICTIONS_ASC',
   RestrictionsDesc = 'RESTRICTIONS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -14689,11 +14669,11 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
 export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** The fields on `templatePermission` to look up the row to connect. */
@@ -14704,68 +14684,6 @@ export type TemplatePermissionTemplatePermissionPkeyConnect = {
 /** The fields on `templatePermission` to look up the row to delete. */
 export type TemplatePermissionTemplatePermissionPkeyDelete = {
   id: Scalars['Int'];
-};
-
-/** Input for the nested mutation of `templateSection` in the `TemplatePermissionInput` mutation. */
-export type TemplatePermissionTemplateSectionIdFkeyInput = {
-  /** The primary key(s) for `templateSection` for the far side of the relationship. */
-  connectById?: Maybe<TemplateSectionTemplateSectionPkeyConnect>;
-  /** The primary key(s) for `templateSection` for the far side of the relationship. */
-  connectByNodeId?: Maybe<TemplateSectionNodeIdConnect>;
-  /** The primary key(s) for `templateSection` for the far side of the relationship. */
-  deleteById?: Maybe<TemplateSectionTemplateSectionPkeyDelete>;
-  /** The primary key(s) for `templateSection` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<TemplateSectionNodeIdDelete>;
-  /** The primary key(s) and patch data for `templateSection` for the far side of the relationship. */
-  updateById?: Maybe<TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate>;
-  /** The primary key(s) and patch data for `templateSection` for the far side of the relationship. */
-  updateByNodeId?: Maybe<TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate>;
-  /** A `TemplateSectionInput` object that will be created and connected to this object. */
-  create?: Maybe<TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput>;
-};
-
-/** Input for the nested mutation of `templatePermission` in the `TemplateSectionInput` mutation. */
-export type TemplatePermissionTemplateSectionIdFkeyInverseInput = {
-  /** Flag indicating whether all other `templatePermission` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `templatePermission` for the far side of the relationship. */
-  connectById?: Maybe<Array<TemplatePermissionTemplatePermissionPkeyConnect>>;
-  /** The primary key(s) for `templatePermission` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<TemplatePermissionNodeIdConnect>>;
-  /** The primary key(s) for `templatePermission` for the far side of the relationship. */
-  deleteById?: Maybe<Array<TemplatePermissionTemplatePermissionPkeyDelete>>;
-  /** The primary key(s) for `templatePermission` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<TemplatePermissionNodeIdDelete>>;
-  /** The primary key(s) and patch data for `templatePermission` for the far side of the relationship. */
-  updateById?: Maybe<Array<TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplatePermissionPkeyUpdate>>;
-  /** The primary key(s) and patch data for `templatePermission` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate>>;
-  /** A `TemplatePermissionInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<TemplatePermissionTemplateSectionIdFkeyTemplatePermissionCreateInput>>;
-};
-
-/** The `templatePermission` to be created by this mutation. */
-export type TemplatePermissionTemplateSectionIdFkeyTemplatePermissionCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  permissionNameId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  restrictions?: Maybe<Scalars['JSON']>;
-  permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
-  templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
-};
-
-/** The `templateSection` to be created by this mutation. */
-export type TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  index?: Maybe<Scalars['Int']>;
-  templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
-  templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
-  applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `Template` values. */
@@ -14792,24 +14710,10 @@ export type TemplateSection = Node & {
   index?: Maybe<Scalars['Int']>;
   /** Reads a single `Template` that is related to this `TemplateSection`. */
   template?: Maybe<Template>;
-  /** Reads and enables pagination through a set of `TemplatePermission`. */
-  templatePermissions: TemplatePermissionsConnection;
   /** Reads and enables pagination through a set of `TemplateElement`. */
   templateElementsBySectionId: TemplateElementsConnection;
   /** Reads and enables pagination through a set of `ApplicationSection`. */
   applicationSections: ApplicationSectionsConnection;
-};
-
-
-export type TemplateSectionTemplatePermissionsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<TemplatePermissionsOrderBy>>;
-  condition?: Maybe<TemplatePermissionCondition>;
-  filter?: Maybe<TemplatePermissionFilter>;
 };
 
 
@@ -14865,10 +14769,6 @@ export type TemplateSectionFilter = {
   code?: Maybe<StringFilter>;
   /** Filter by the object’s `index` field. */
   index?: Maybe<IntFilter>;
-  /** Filter by the object’s `templatePermissions` relation. */
-  templatePermissions?: Maybe<TemplateSectionToManyTemplatePermissionFilter>;
-  /** Some related `templatePermissions` exist. */
-  templatePermissionsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateElementsBySectionId` relation. */
   templateElementsBySectionId?: Maybe<TemplateSectionToManyTemplateElementFilter>;
   /** Some related `templateElementsBySectionId` exist. */
@@ -14897,7 +14797,6 @@ export type TemplateSectionInput = {
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -14945,21 +14844,6 @@ export type TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyUsing
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `templatePermission` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `templatePermission` being updated. */
-  patch: TemplatePermissionPatch;
-};
-
-/** The fields on `templateSection` to look up the row to update. */
-export type TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate = {
-  /** An object where the defined keys will be set on the `templateSection` being updated. */
-  patch: UpdateTemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
 export type TemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `template` to be connected. */
   nodeId: Scalars['ID'];
@@ -14982,7 +14866,6 @@ export type TemplateSectionPatch = {
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -15089,7 +14972,6 @@ export type TemplateSectionTemplateIdFkeyTemplateSectionCreateInput = {
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -15122,16 +15004,6 @@ export type TemplateSectionToManyTemplateElementFilter = {
   some?: Maybe<TemplateElementFilter>;
   /** No related `TemplateElement` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<TemplateElementFilter>;
-};
-
-/** A filter to be used against many `TemplatePermission` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateSectionToManyTemplatePermissionFilter = {
-  /** Every related `TemplatePermission` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<TemplatePermissionFilter>;
-  /** Some related `TemplatePermission` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<TemplatePermissionFilter>;
-  /** No related `TemplatePermission` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<TemplatePermissionFilter>;
 };
 
 /** A `Template` edge in the connection. */
@@ -17188,7 +17060,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17208,7 +17080,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17228,7 +17100,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17248,7 +17120,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17269,7 +17141,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17290,7 +17162,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewAssignmentReviewerIdFkeyInput>;
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
@@ -17420,7 +17292,7 @@ export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17438,7 +17310,7 @@ export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17455,7 +17327,7 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17472,7 +17344,7 @@ export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17489,7 +17361,7 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17507,7 +17379,7 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -17525,7 +17397,7 @@ export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyP
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   level?: Maybe<Scalars['Int']>;
-  canMakeOverallDecision?: Maybe<Scalars['Boolean']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
   userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
@@ -18171,33 +18043,22 @@ export type UpdateTemplatePermissionInput = {
 export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `templatePermission` being updated. */
 export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
-};
-
-/** An object where the defined keys will be set on the `templatePermission` being updated. */
-export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  permissionNameId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  restrictions?: Maybe<Scalars['JSON']>;
-  permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
-  templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
-  templateSectionToTemplateSectionId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInput>;
 };
 
 /** The output of our update `TemplatePermission` mutation. */
@@ -18216,8 +18077,6 @@ export type UpdateTemplatePermissionPayload = {
   permissionName?: Maybe<PermissionName>;
   /** Reads a single `Template` that is related to this `TemplatePermission`. */
   template?: Maybe<Template>;
-  /** Reads a single `TemplateSection` that is related to this `TemplatePermission`. */
-  templateSection?: Maybe<TemplateSection>;
   /** An edge for our `TemplatePermission`. May be used by Relay 1. */
   templatePermissionEdge?: Maybe<TemplatePermissionsEdge>;
 };
@@ -18261,7 +18120,6 @@ export type UpdateTemplateSectionOnApplicationSectionForApplicationSectionTempla
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -18274,20 +18132,6 @@ export type UpdateTemplateSectionOnTemplateElementForTemplateElementSectionIdFke
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
-  templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
-  applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `templateSection` being updated. */
-export type UpdateTemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  index?: Maybe<Scalars['Int']>;
-  templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -18299,7 +18143,6 @@ export type UpdateTemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFk
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateSectionTemplateIdFkeyInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateSectionIdFkeyInverseInput>;
   templateElementsUsingId?: Maybe<TemplateElementSectionIdFkeyInverseInput>;
   applicationSectionsUsingId?: Maybe<ApplicationSectionTemplateSectionIdFkeyInverseInput>;
 };
@@ -19873,7 +19716,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationSection'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['ApplicationSection'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['File'] | ResolversTypes['Notification'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -19922,30 +19765,13 @@ export type ResolversTypes = {
   ApplicationToManyApplicationSectionFilter: ApplicationToManyApplicationSectionFilter;
   ApplicationSectionFilter: ApplicationSectionFilter;
   TemplateSectionFilter: TemplateSectionFilter;
-  TemplateSectionToManyTemplatePermissionFilter: TemplateSectionToManyTemplatePermissionFilter;
-  TemplatePermissionFilter: TemplatePermissionFilter;
-  PermissionNameFilter: PermissionNameFilter;
-  PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
-  PermissionJoinFilter: PermissionJoinFilter;
-  UserFilter: UserFilter;
-  DateFilter: DateFilter;
-  Date: ResolverTypeWrapper<Scalars['Date']>;
-  UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
-  UserOrganisationFilter: UserOrganisationFilter;
-  UserOrganisationToManyPermissionJoinFilter: UserOrganisationToManyPermissionJoinFilter;
-  OrganisationFilter: OrganisationFilter;
-  OrganisationToManyUserOrganisationFilter: OrganisationToManyUserOrganisationFilter;
-  OrganisationToManyApplicationFilter: OrganisationToManyApplicationFilter;
-  UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
-  UserToManyApplicationFilter: UserToManyApplicationFilter;
-  UserToManyReviewAssignmentFilter: UserToManyReviewAssignmentFilter;
-  ReviewAssignmentFilter: ReviewAssignmentFilter;
-  ReviewAssignmentStatusFilter: ReviewAssignmentStatusFilter;
-  ReviewAssignmentStatus: ReviewAssignmentStatus;
-  IntListFilter: IntListFilter;
-  ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
-  ReviewFilter: ReviewFilter;
-  ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
+  TemplateSectionToManyTemplateElementFilter: TemplateSectionToManyTemplateElementFilter;
+  TemplateElementFilter: TemplateElementFilter;
+  TemplateElementCategoryFilter: TemplateElementCategoryFilter;
+  TemplateElementCategory: TemplateElementCategory;
+  TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
+  ApplicationResponseFilter: ApplicationResponseFilter;
+  ApplicationResponseToManyReviewResponseFilter: ApplicationResponseToManyReviewResponseFilter;
   ReviewResponseFilter: ReviewResponseFilter;
   ReviewResponseDecisionFilter: ReviewResponseDecisionFilter;
   ReviewResponseDecision: ReviewResponseDecision;
@@ -19954,17 +19780,13 @@ export type ResolversTypes = {
   ReviewResponseToManyReviewResponseFilter: ReviewResponseToManyReviewResponseFilter;
   ReviewQuestionAssignmentFilter: ReviewQuestionAssignmentFilter;
   ReviewQuestionAssignmentToManyReviewResponseFilter: ReviewQuestionAssignmentToManyReviewResponseFilter;
-  TemplateElementFilter: TemplateElementFilter;
-  TemplateElementCategoryFilter: TemplateElementCategoryFilter;
-  TemplateElementCategory: TemplateElementCategory;
-  TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
-  ApplicationResponseFilter: ApplicationResponseFilter;
-  ApplicationResponseToManyReviewResponseFilter: ApplicationResponseToManyReviewResponseFilter;
-  ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
-  FileFilter: FileFilter;
-  FileToManyNotificationFilter: FileToManyNotificationFilter;
-  NotificationFilter: NotificationFilter;
-  TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
+  ReviewAssignmentFilter: ReviewAssignmentFilter;
+  ReviewAssignmentStatusFilter: ReviewAssignmentStatusFilter;
+  ReviewAssignmentStatus: ReviewAssignmentStatus;
+  IntListFilter: IntListFilter;
+  ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
+  ReviewFilter: ReviewFilter;
+  ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
   ReviewToManyReviewDecisionFilter: ReviewToManyReviewDecisionFilter;
   ReviewDecisionFilter: ReviewDecisionFilter;
   DecisionFilter: DecisionFilter;
@@ -19974,16 +19796,36 @@ export type ResolversTypes = {
   ReviewStatusFilter: ReviewStatusFilter;
   ReviewStatus: ReviewStatus;
   ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
-  ReviewAssignmentToManyReviewQuestionAssignmentFilter: ReviewAssignmentToManyReviewQuestionAssignmentFilter;
-  UserToManyReviewFilter: UserToManyReviewFilter;
-  UserToManyFileFilter: UserToManyFileFilter;
-  UserToManyNotificationFilter: UserToManyNotificationFilter;
+  NotificationFilter: NotificationFilter;
+  UserFilter: UserFilter;
+  DateFilter: DateFilter;
+  Date: ResolverTypeWrapper<Scalars['Date']>;
+  UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
+  UserOrganisationFilter: UserOrganisationFilter;
+  UserOrganisationToManyPermissionJoinFilter: UserOrganisationToManyPermissionJoinFilter;
+  PermissionJoinFilter: PermissionJoinFilter;
+  PermissionNameFilter: PermissionNameFilter;
+  PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
   PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
+  TemplatePermissionFilter: TemplatePermissionFilter;
   PermissionPolicyFilter: PermissionPolicyFilter;
   PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
   PermissionPolicyType: PermissionPolicyType;
   PermissionPolicyToManyPermissionNameFilter: PermissionPolicyToManyPermissionNameFilter;
-  TemplateSectionToManyTemplateElementFilter: TemplateSectionToManyTemplateElementFilter;
+  OrganisationFilter: OrganisationFilter;
+  OrganisationToManyUserOrganisationFilter: OrganisationToManyUserOrganisationFilter;
+  OrganisationToManyApplicationFilter: OrganisationToManyApplicationFilter;
+  UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
+  UserToManyApplicationFilter: UserToManyApplicationFilter;
+  UserToManyReviewAssignmentFilter: UserToManyReviewAssignmentFilter;
+  UserToManyReviewFilter: UserToManyReviewFilter;
+  UserToManyFileFilter: UserToManyFileFilter;
+  FileFilter: FileFilter;
+  FileToManyNotificationFilter: FileToManyNotificationFilter;
+  UserToManyNotificationFilter: UserToManyNotificationFilter;
+  ReviewAssignmentToManyReviewQuestionAssignmentFilter: ReviewAssignmentToManyReviewQuestionAssignmentFilter;
+  ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
+  TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
   TemplateSectionToManyApplicationSectionFilter: TemplateSectionToManyApplicationSectionFilter;
   ApplicationToManyApplicationStageHistoryFilter: ApplicationToManyApplicationStageHistoryFilter;
   ApplicationToManyApplicationResponseFilter: ApplicationToManyApplicationResponseFilter;
@@ -20035,25 +19877,53 @@ export type ResolversTypes = {
   TemplatePermissionCondition: TemplatePermissionCondition;
   TemplatePermissionsConnection: ResolverTypeWrapper<TemplatePermissionsConnection>;
   TemplatePermission: ResolverTypeWrapper<TemplatePermission>;
-  TemplateSection: ResolverTypeWrapper<TemplateSection>;
-  TemplateElementsOrderBy: TemplateElementsOrderBy;
-  TemplateElementCondition: TemplateElementCondition;
-  TemplateElementsConnection: ResolverTypeWrapper<TemplateElementsConnection>;
-  TemplateElement: ResolverTypeWrapper<TemplateElement>;
-  ApplicationResponsesOrderBy: ApplicationResponsesOrderBy;
-  ApplicationResponseCondition: ApplicationResponseCondition;
-  ApplicationResponsesConnection: ResolverTypeWrapper<ApplicationResponsesConnection>;
-  ApplicationResponse: ResolverTypeWrapper<ApplicationResponse>;
-  ReviewResponsesOrderBy: ReviewResponsesOrderBy;
-  ReviewResponseCondition: ReviewResponseCondition;
-  ReviewResponsesConnection: ResolverTypeWrapper<ReviewResponsesConnection>;
-  ReviewResponse: ResolverTypeWrapper<ReviewResponse>;
-  ReviewQuestionAssignment: ResolverTypeWrapper<ReviewQuestionAssignment>;
+  TemplatePermissionsEdge: ResolverTypeWrapper<TemplatePermissionsEdge>;
+  PermissionJoinsEdge: ResolverTypeWrapper<PermissionJoinsEdge>;
+  UserOrganisationsEdge: ResolverTypeWrapper<UserOrganisationsEdge>;
+  ReviewAssignmentsOrderBy: ReviewAssignmentsOrderBy;
+  ReviewAssignmentCondition: ReviewAssignmentCondition;
+  ReviewAssignmentsConnection: ResolverTypeWrapper<ReviewAssignmentsConnection>;
   ReviewAssignment: ResolverTypeWrapper<ReviewAssignment>;
   ReviewsOrderBy: ReviewsOrderBy;
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ResolverTypeWrapper<ReviewsConnection>;
   Review: ResolverTypeWrapper<Review>;
+  ReviewResponsesOrderBy: ReviewResponsesOrderBy;
+  ReviewResponseCondition: ReviewResponseCondition;
+  ReviewResponsesConnection: ResolverTypeWrapper<ReviewResponsesConnection>;
+  ReviewResponse: ResolverTypeWrapper<ReviewResponse>;
+  ReviewQuestionAssignment: ResolverTypeWrapper<ReviewQuestionAssignment>;
+  TemplateElement: ResolverTypeWrapper<TemplateElement>;
+  TemplateSection: ResolverTypeWrapper<TemplateSection>;
+  TemplateElementsOrderBy: TemplateElementsOrderBy;
+  TemplateElementCondition: TemplateElementCondition;
+  TemplateElementsConnection: ResolverTypeWrapper<TemplateElementsConnection>;
+  TemplateElementsEdge: ResolverTypeWrapper<TemplateElementsEdge>;
+  ApplicationSectionsOrderBy: ApplicationSectionsOrderBy;
+  ApplicationSectionCondition: ApplicationSectionCondition;
+  ApplicationSectionsConnection: ResolverTypeWrapper<ApplicationSectionsConnection>;
+  ApplicationSection: ResolverTypeWrapper<ApplicationSection>;
+  ApplicationSectionsEdge: ResolverTypeWrapper<ApplicationSectionsEdge>;
+  ApplicationResponsesOrderBy: ApplicationResponsesOrderBy;
+  ApplicationResponseCondition: ApplicationResponseCondition;
+  ApplicationResponsesConnection: ResolverTypeWrapper<ApplicationResponsesConnection>;
+  ApplicationResponse: ResolverTypeWrapper<ApplicationResponse>;
+  FilesOrderBy: FilesOrderBy;
+  FileCondition: FileCondition;
+  FilesConnection: ResolverTypeWrapper<FilesConnection>;
+  File: ResolverTypeWrapper<File>;
+  NotificationsOrderBy: NotificationsOrderBy;
+  NotificationCondition: NotificationCondition;
+  NotificationsConnection: ResolverTypeWrapper<NotificationsConnection>;
+  Notification: ResolverTypeWrapper<Notification>;
+  NotificationsEdge: ResolverTypeWrapper<NotificationsEdge>;
+  FilesEdge: ResolverTypeWrapper<FilesEdge>;
+  ApplicationResponsesEdge: ResolverTypeWrapper<ApplicationResponsesEdge>;
+  ReviewQuestionAssignmentsOrderBy: ReviewQuestionAssignmentsOrderBy;
+  ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
+  ReviewQuestionAssignmentsConnection: ResolverTypeWrapper<ReviewQuestionAssignmentsConnection>;
+  ReviewQuestionAssignmentsEdge: ResolverTypeWrapper<ReviewQuestionAssignmentsEdge>;
+  ReviewResponsesEdge: ResolverTypeWrapper<ReviewResponsesEdge>;
   ReviewDecisionsOrderBy: ReviewDecisionsOrderBy;
   ReviewDecisionCondition: ReviewDecisionCondition;
   ReviewDecisionsConnection: ResolverTypeWrapper<ReviewDecisionsConnection>;
@@ -20064,35 +19934,7 @@ export type ResolversTypes = {
   ReviewStatusHistoriesConnection: ResolverTypeWrapper<ReviewStatusHistoriesConnection>;
   ReviewStatusHistory: ResolverTypeWrapper<ReviewStatusHistory>;
   ReviewStatusHistoriesEdge: ResolverTypeWrapper<ReviewStatusHistoriesEdge>;
-  NotificationsOrderBy: NotificationsOrderBy;
-  NotificationCondition: NotificationCondition;
-  NotificationsConnection: ResolverTypeWrapper<NotificationsConnection>;
-  Notification: ResolverTypeWrapper<Notification>;
-  File: ResolverTypeWrapper<File>;
-  NotificationsEdge: ResolverTypeWrapper<NotificationsEdge>;
   ReviewsEdge: ResolverTypeWrapper<ReviewsEdge>;
-  ReviewQuestionAssignmentsOrderBy: ReviewQuestionAssignmentsOrderBy;
-  ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
-  ReviewQuestionAssignmentsConnection: ResolverTypeWrapper<ReviewQuestionAssignmentsConnection>;
-  ReviewQuestionAssignmentsEdge: ResolverTypeWrapper<ReviewQuestionAssignmentsEdge>;
-  ReviewResponsesEdge: ResolverTypeWrapper<ReviewResponsesEdge>;
-  FilesOrderBy: FilesOrderBy;
-  FileCondition: FileCondition;
-  FilesConnection: ResolverTypeWrapper<FilesConnection>;
-  FilesEdge: ResolverTypeWrapper<FilesEdge>;
-  ApplicationResponsesEdge: ResolverTypeWrapper<ApplicationResponsesEdge>;
-  TemplateElementsEdge: ResolverTypeWrapper<TemplateElementsEdge>;
-  ApplicationSectionsOrderBy: ApplicationSectionsOrderBy;
-  ApplicationSectionCondition: ApplicationSectionCondition;
-  ApplicationSectionsConnection: ResolverTypeWrapper<ApplicationSectionsConnection>;
-  ApplicationSection: ResolverTypeWrapper<ApplicationSection>;
-  ApplicationSectionsEdge: ResolverTypeWrapper<ApplicationSectionsEdge>;
-  TemplatePermissionsEdge: ResolverTypeWrapper<TemplatePermissionsEdge>;
-  PermissionJoinsEdge: ResolverTypeWrapper<PermissionJoinsEdge>;
-  UserOrganisationsEdge: ResolverTypeWrapper<UserOrganisationsEdge>;
-  ReviewAssignmentsOrderBy: ReviewAssignmentsOrderBy;
-  ReviewAssignmentCondition: ReviewAssignmentCondition;
-  ReviewAssignmentsConnection: ResolverTypeWrapper<ReviewAssignmentsConnection>;
   ReviewAssignmentsEdge: ResolverTypeWrapper<ReviewAssignmentsEdge>;
   ApplicationStatusHistoriesOrderBy: ApplicationStatusHistoriesOrderBy;
   ApplicationStatusHistoryCondition: ApplicationStatusHistoryCondition;
@@ -20380,12 +20222,6 @@ export type ResolversTypes = {
   TemplateElementSectionIdFkeyInput: TemplateElementSectionIdFkeyInput;
   TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateSectionPkeyUpdate: TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateSectionPkeyUpdate;
   updateTemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyPatch: UpdateTemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyPatch;
-  TemplatePermissionTemplateSectionIdFkeyInverseInput: TemplatePermissionTemplateSectionIdFkeyInverseInput;
-  TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplatePermissionPkeyUpdate: TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplatePermissionPkeyUpdate;
-  updateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch: UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch;
-  TemplatePermissionTemplateSectionIdFkeyInput: TemplatePermissionTemplateSectionIdFkeyInput;
-  TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate: TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate;
-  updateTemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch: UpdateTemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch;
   TemplateElementSectionIdFkeyInverseInput: TemplateElementSectionIdFkeyInverseInput;
   TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementPkeyUpdate;
   updateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch: UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch;
@@ -20709,11 +20545,6 @@ export type ResolversTypes = {
   TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate: TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate;
   ApplicationSectionPatch: ApplicationSectionPatch;
   ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput: ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput;
-  TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate: TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate;
-  TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput: TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput;
-  TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate: TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate;
-  TemplatePermissionPatch: TemplatePermissionPatch;
-  TemplatePermissionTemplateSectionIdFkeyTemplatePermissionCreateInput: TemplatePermissionTemplateSectionIdFkeyTemplatePermissionCreateInput;
   TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate: TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate;
   TemplateElementSectionIdFkeyTemplateSectionCreateInput: TemplateElementSectionIdFkeyTemplateSectionCreateInput;
   ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate;
@@ -20748,6 +20579,7 @@ export type ResolversTypes = {
   TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate: TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate;
   TemplatePermissionTemplateIdFkeyTemplateCreateInput: TemplatePermissionTemplateIdFkeyTemplateCreateInput;
   PermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyNodeIdUpdate;
+  TemplatePermissionPatch: TemplatePermissionPatch;
   TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput: TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput;
   PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
@@ -21070,7 +20902,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['File'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -21111,45 +20943,24 @@ export type ResolversParentTypes = {
   ApplicationToManyApplicationSectionFilter: ApplicationToManyApplicationSectionFilter;
   ApplicationSectionFilter: ApplicationSectionFilter;
   TemplateSectionFilter: TemplateSectionFilter;
-  TemplateSectionToManyTemplatePermissionFilter: TemplateSectionToManyTemplatePermissionFilter;
-  TemplatePermissionFilter: TemplatePermissionFilter;
-  PermissionNameFilter: PermissionNameFilter;
-  PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
-  PermissionJoinFilter: PermissionJoinFilter;
-  UserFilter: UserFilter;
-  DateFilter: DateFilter;
-  Date: Scalars['Date'];
-  UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
-  UserOrganisationFilter: UserOrganisationFilter;
-  UserOrganisationToManyPermissionJoinFilter: UserOrganisationToManyPermissionJoinFilter;
-  OrganisationFilter: OrganisationFilter;
-  OrganisationToManyUserOrganisationFilter: OrganisationToManyUserOrganisationFilter;
-  OrganisationToManyApplicationFilter: OrganisationToManyApplicationFilter;
-  UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
-  UserToManyApplicationFilter: UserToManyApplicationFilter;
-  UserToManyReviewAssignmentFilter: UserToManyReviewAssignmentFilter;
-  ReviewAssignmentFilter: ReviewAssignmentFilter;
-  ReviewAssignmentStatusFilter: ReviewAssignmentStatusFilter;
-  IntListFilter: IntListFilter;
-  ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
-  ReviewFilter: ReviewFilter;
-  ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
+  TemplateSectionToManyTemplateElementFilter: TemplateSectionToManyTemplateElementFilter;
+  TemplateElementFilter: TemplateElementFilter;
+  TemplateElementCategoryFilter: TemplateElementCategoryFilter;
+  TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
+  ApplicationResponseFilter: ApplicationResponseFilter;
+  ApplicationResponseToManyReviewResponseFilter: ApplicationResponseToManyReviewResponseFilter;
   ReviewResponseFilter: ReviewResponseFilter;
   ReviewResponseDecisionFilter: ReviewResponseDecisionFilter;
   ReviewResponseStatusFilter: ReviewResponseStatusFilter;
   ReviewResponseToManyReviewResponseFilter: ReviewResponseToManyReviewResponseFilter;
   ReviewQuestionAssignmentFilter: ReviewQuestionAssignmentFilter;
   ReviewQuestionAssignmentToManyReviewResponseFilter: ReviewQuestionAssignmentToManyReviewResponseFilter;
-  TemplateElementFilter: TemplateElementFilter;
-  TemplateElementCategoryFilter: TemplateElementCategoryFilter;
-  TemplateElementToManyApplicationResponseFilter: TemplateElementToManyApplicationResponseFilter;
-  ApplicationResponseFilter: ApplicationResponseFilter;
-  ApplicationResponseToManyReviewResponseFilter: ApplicationResponseToManyReviewResponseFilter;
-  ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
-  FileFilter: FileFilter;
-  FileToManyNotificationFilter: FileToManyNotificationFilter;
-  NotificationFilter: NotificationFilter;
-  TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
+  ReviewAssignmentFilter: ReviewAssignmentFilter;
+  ReviewAssignmentStatusFilter: ReviewAssignmentStatusFilter;
+  IntListFilter: IntListFilter;
+  ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
+  ReviewFilter: ReviewFilter;
+  ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
   ReviewToManyReviewDecisionFilter: ReviewToManyReviewDecisionFilter;
   ReviewDecisionFilter: ReviewDecisionFilter;
   DecisionFilter: DecisionFilter;
@@ -21157,15 +20968,35 @@ export type ResolversParentTypes = {
   ReviewStatusHistoryFilter: ReviewStatusHistoryFilter;
   ReviewStatusFilter: ReviewStatusFilter;
   ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
-  ReviewAssignmentToManyReviewQuestionAssignmentFilter: ReviewAssignmentToManyReviewQuestionAssignmentFilter;
-  UserToManyReviewFilter: UserToManyReviewFilter;
-  UserToManyFileFilter: UserToManyFileFilter;
-  UserToManyNotificationFilter: UserToManyNotificationFilter;
+  NotificationFilter: NotificationFilter;
+  UserFilter: UserFilter;
+  DateFilter: DateFilter;
+  Date: Scalars['Date'];
+  UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
+  UserOrganisationFilter: UserOrganisationFilter;
+  UserOrganisationToManyPermissionJoinFilter: UserOrganisationToManyPermissionJoinFilter;
+  PermissionJoinFilter: PermissionJoinFilter;
+  PermissionNameFilter: PermissionNameFilter;
+  PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
   PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
+  TemplatePermissionFilter: TemplatePermissionFilter;
   PermissionPolicyFilter: PermissionPolicyFilter;
   PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
   PermissionPolicyToManyPermissionNameFilter: PermissionPolicyToManyPermissionNameFilter;
-  TemplateSectionToManyTemplateElementFilter: TemplateSectionToManyTemplateElementFilter;
+  OrganisationFilter: OrganisationFilter;
+  OrganisationToManyUserOrganisationFilter: OrganisationToManyUserOrganisationFilter;
+  OrganisationToManyApplicationFilter: OrganisationToManyApplicationFilter;
+  UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
+  UserToManyApplicationFilter: UserToManyApplicationFilter;
+  UserToManyReviewAssignmentFilter: UserToManyReviewAssignmentFilter;
+  UserToManyReviewFilter: UserToManyReviewFilter;
+  UserToManyFileFilter: UserToManyFileFilter;
+  FileFilter: FileFilter;
+  FileToManyNotificationFilter: FileToManyNotificationFilter;
+  UserToManyNotificationFilter: UserToManyNotificationFilter;
+  ReviewAssignmentToManyReviewQuestionAssignmentFilter: ReviewAssignmentToManyReviewQuestionAssignmentFilter;
+  ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
+  TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
   TemplateSectionToManyApplicationSectionFilter: TemplateSectionToManyApplicationSectionFilter;
   ApplicationToManyApplicationStageHistoryFilter: ApplicationToManyApplicationStageHistoryFilter;
   ApplicationToManyApplicationResponseFilter: ApplicationToManyApplicationResponseFilter;
@@ -21210,21 +21041,44 @@ export type ResolversParentTypes = {
   TemplatePermissionCondition: TemplatePermissionCondition;
   TemplatePermissionsConnection: TemplatePermissionsConnection;
   TemplatePermission: TemplatePermission;
-  TemplateSection: TemplateSection;
-  TemplateElementCondition: TemplateElementCondition;
-  TemplateElementsConnection: TemplateElementsConnection;
-  TemplateElement: TemplateElement;
-  ApplicationResponseCondition: ApplicationResponseCondition;
-  ApplicationResponsesConnection: ApplicationResponsesConnection;
-  ApplicationResponse: ApplicationResponse;
-  ReviewResponseCondition: ReviewResponseCondition;
-  ReviewResponsesConnection: ReviewResponsesConnection;
-  ReviewResponse: ReviewResponse;
-  ReviewQuestionAssignment: ReviewQuestionAssignment;
+  TemplatePermissionsEdge: TemplatePermissionsEdge;
+  PermissionJoinsEdge: PermissionJoinsEdge;
+  UserOrganisationsEdge: UserOrganisationsEdge;
+  ReviewAssignmentCondition: ReviewAssignmentCondition;
+  ReviewAssignmentsConnection: ReviewAssignmentsConnection;
   ReviewAssignment: ReviewAssignment;
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ReviewsConnection;
   Review: Review;
+  ReviewResponseCondition: ReviewResponseCondition;
+  ReviewResponsesConnection: ReviewResponsesConnection;
+  ReviewResponse: ReviewResponse;
+  ReviewQuestionAssignment: ReviewQuestionAssignment;
+  TemplateElement: TemplateElement;
+  TemplateSection: TemplateSection;
+  TemplateElementCondition: TemplateElementCondition;
+  TemplateElementsConnection: TemplateElementsConnection;
+  TemplateElementsEdge: TemplateElementsEdge;
+  ApplicationSectionCondition: ApplicationSectionCondition;
+  ApplicationSectionsConnection: ApplicationSectionsConnection;
+  ApplicationSection: ApplicationSection;
+  ApplicationSectionsEdge: ApplicationSectionsEdge;
+  ApplicationResponseCondition: ApplicationResponseCondition;
+  ApplicationResponsesConnection: ApplicationResponsesConnection;
+  ApplicationResponse: ApplicationResponse;
+  FileCondition: FileCondition;
+  FilesConnection: FilesConnection;
+  File: File;
+  NotificationCondition: NotificationCondition;
+  NotificationsConnection: NotificationsConnection;
+  Notification: Notification;
+  NotificationsEdge: NotificationsEdge;
+  FilesEdge: FilesEdge;
+  ApplicationResponsesEdge: ApplicationResponsesEdge;
+  ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
+  ReviewQuestionAssignmentsConnection: ReviewQuestionAssignmentsConnection;
+  ReviewQuestionAssignmentsEdge: ReviewQuestionAssignmentsEdge;
+  ReviewResponsesEdge: ReviewResponsesEdge;
   ReviewDecisionCondition: ReviewDecisionCondition;
   ReviewDecisionsConnection: ReviewDecisionsConnection;
   ReviewDecision: ReviewDecision;
@@ -21233,30 +21087,7 @@ export type ResolversParentTypes = {
   ReviewStatusHistoriesConnection: ReviewStatusHistoriesConnection;
   ReviewStatusHistory: ReviewStatusHistory;
   ReviewStatusHistoriesEdge: ReviewStatusHistoriesEdge;
-  NotificationCondition: NotificationCondition;
-  NotificationsConnection: NotificationsConnection;
-  Notification: Notification;
-  File: File;
-  NotificationsEdge: NotificationsEdge;
   ReviewsEdge: ReviewsEdge;
-  ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
-  ReviewQuestionAssignmentsConnection: ReviewQuestionAssignmentsConnection;
-  ReviewQuestionAssignmentsEdge: ReviewQuestionAssignmentsEdge;
-  ReviewResponsesEdge: ReviewResponsesEdge;
-  FileCondition: FileCondition;
-  FilesConnection: FilesConnection;
-  FilesEdge: FilesEdge;
-  ApplicationResponsesEdge: ApplicationResponsesEdge;
-  TemplateElementsEdge: TemplateElementsEdge;
-  ApplicationSectionCondition: ApplicationSectionCondition;
-  ApplicationSectionsConnection: ApplicationSectionsConnection;
-  ApplicationSection: ApplicationSection;
-  ApplicationSectionsEdge: ApplicationSectionsEdge;
-  TemplatePermissionsEdge: TemplatePermissionsEdge;
-  PermissionJoinsEdge: PermissionJoinsEdge;
-  UserOrganisationsEdge: UserOrganisationsEdge;
-  ReviewAssignmentCondition: ReviewAssignmentCondition;
-  ReviewAssignmentsConnection: ReviewAssignmentsConnection;
   ReviewAssignmentsEdge: ReviewAssignmentsEdge;
   ApplicationStatusHistoryCondition: ApplicationStatusHistoryCondition;
   ApplicationStatusHistoriesConnection: ApplicationStatusHistoriesConnection;
@@ -21530,12 +21361,6 @@ export type ResolversParentTypes = {
   TemplateElementSectionIdFkeyInput: TemplateElementSectionIdFkeyInput;
   TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateSectionPkeyUpdate: TemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateSectionPkeyUpdate;
   updateTemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyPatch: UpdateTemplateSectionOnTemplateElementForTemplateElementSectionIdFkeyPatch;
-  TemplatePermissionTemplateSectionIdFkeyInverseInput: TemplatePermissionTemplateSectionIdFkeyInverseInput;
-  TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplatePermissionPkeyUpdate: TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplatePermissionPkeyUpdate;
-  updateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch: UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch;
-  TemplatePermissionTemplateSectionIdFkeyInput: TemplatePermissionTemplateSectionIdFkeyInput;
-  TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate: TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyUsingTemplateSectionPkeyUpdate;
-  updateTemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch: UpdateTemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyPatch;
   TemplateElementSectionIdFkeyInverseInput: TemplateElementSectionIdFkeyInverseInput;
   TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyUsingTemplateElementPkeyUpdate;
   updateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch: UpdateTemplateElementOnTemplateElementForTemplateElementSectionIdFkeyPatch;
@@ -21859,11 +21684,6 @@ export type ResolversParentTypes = {
   TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate: TemplateSectionOnApplicationSectionForApplicationSectionTemplateSectionIdFkeyNodeIdUpdate;
   ApplicationSectionPatch: ApplicationSectionPatch;
   ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput: ApplicationSectionTemplateSectionIdFkeyApplicationSectionCreateInput;
-  TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate: TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate;
-  TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput: TemplatePermissionTemplateSectionIdFkeyTemplateSectionCreateInput;
-  TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate: TemplateSectionOnTemplatePermissionForTemplatePermissionTemplateSectionIdFkeyNodeIdUpdate;
-  TemplatePermissionPatch: TemplatePermissionPatch;
-  TemplatePermissionTemplateSectionIdFkeyTemplatePermissionCreateInput: TemplatePermissionTemplateSectionIdFkeyTemplatePermissionCreateInput;
   TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate: TemplateElementOnTemplateElementForTemplateElementSectionIdFkeyNodeIdUpdate;
   TemplateElementSectionIdFkeyTemplateSectionCreateInput: TemplateElementSectionIdFkeyTemplateSectionCreateInput;
   ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseTemplateElementIdFkeyNodeIdUpdate;
@@ -21898,6 +21718,7 @@ export type ResolversParentTypes = {
   TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate: TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate;
   TemplatePermissionTemplateIdFkeyTemplateCreateInput: TemplatePermissionTemplateIdFkeyTemplateCreateInput;
   PermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyNodeIdUpdate;
+  TemplatePermissionPatch: TemplatePermissionPatch;
   TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput: TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput;
   PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
@@ -22779,7 +22600,6 @@ export type CreateTemplatePermissionPayloadResolvers<ContextType = any, ParentTy
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  templateSection?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   templatePermissionEdge?: Resolver<Maybe<ResolversTypes['TemplatePermissionsEdge']>, ParentType, ContextType, RequireFields<CreateTemplatePermissionPayloadTemplatePermissionEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -23094,7 +22914,6 @@ export type DeleteTemplatePermissionPayloadResolvers<ContextType = any, ParentTy
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  templateSection?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   templatePermissionEdge?: Resolver<Maybe<ResolversTypes['TemplatePermissionsEdge']>, ParentType, ContextType, RequireFields<DeleteTemplatePermissionPayloadTemplatePermissionEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -23364,7 +23183,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'ApplicationStageHistory' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'ReviewAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationSection' | 'ApplicationStatusHistory' | 'TemplateAction' | 'ElementTypePlugin', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'ApplicationStageHistory' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ReviewAssignment' | 'Review' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'TemplateElement' | 'TemplateSection' | 'ApplicationSection' | 'ApplicationResponse' | 'File' | 'Notification' | 'ReviewDecision' | 'ReviewStatusHistory' | 'ApplicationStatusHistory' | 'TemplateAction' | 'ElementTypePlugin', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -23624,7 +23443,7 @@ export type ReviewResolvers<ContextType = any, ParentType extends ResolversParen
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  canMakeOverallDecision?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isLastLevel?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
@@ -23648,7 +23467,7 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  canMakeOverallDecision?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isLastLevel?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   reviewer?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
@@ -23880,11 +23699,11 @@ export type TemplatePermissionResolvers<ContextType = any, ParentType extends Re
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  templateSectionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   restrictions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  templateSection?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -23918,7 +23737,6 @@ export type TemplateSectionResolvers<ContextType = any, ParentType extends Resol
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   index?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  templatePermissions?: Resolver<ResolversTypes['TemplatePermissionsConnection'], ParentType, ContextType, RequireFields<TemplateSectionTemplatePermissionsArgs, 'orderBy'>>;
   templateElementsBySectionId?: Resolver<ResolversTypes['TemplateElementsConnection'], ParentType, ContextType, RequireFields<TemplateSectionTemplateElementsBySectionIdArgs, 'orderBy'>>;
   applicationSections?: Resolver<ResolversTypes['ApplicationSectionsConnection'], ParentType, ContextType, RequireFields<TemplateSectionApplicationSectionsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -24228,7 +24046,6 @@ export type UpdateTemplatePermissionPayloadResolvers<ContextType = any, ParentTy
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  templateSection?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   templatePermissionEdge?: Resolver<Maybe<ResolversTypes['TemplatePermissionsEdge']>, ParentType, ContextType, RequireFields<UpdateTemplatePermissionPayloadTemplatePermissionEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

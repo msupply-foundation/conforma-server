@@ -139,9 +139,7 @@ exports.queries = [
               }
             ]
           }
-          templateStagesUsingId: {
-            create: [{ number: 1, title: "Automatic" }]
-          }
+          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
           templateActionsUsingId: {
             create: [
               {
@@ -206,6 +204,9 @@ exports.queries = [
                 }
               }
             ]
+          }
+          templatePermissionsUsingId: {
+            create: [{ id: 3000, permissionNameId: 1000 }]
           }
         }
       }
