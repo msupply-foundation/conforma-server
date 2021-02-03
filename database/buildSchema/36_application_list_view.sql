@@ -12,45 +12,18 @@ CREATE OR REPLACE VIEW "public".application_list AS
 	org.name as org_name,
 	stage_status.stage, stage_status.status, outcome,
 	status_history_time_created as last_active_date,
-	(
-	WITH count_unassigned_sections AS (
-		WITH unassigned_sections AS (
-			(SELECT ts.id AS sections FROM
-			template_section ts JOIN application a
-			ON ts.template_id = a.template_id
-			WHERE a.id = app.id)
-				
-			EXCEPT
-					
-			(SELECT DISTINCT unnest(allowed_template_section_ids) AS sections
-			FROM review_assignment
-			WHERE application_id = app.id
-			AND level=(
-				SELECT MAX(level) FROM review_assignment
-				WHERE application_id = app.id
-				)
-			AND status = 'Assigned'
-			AND stage_id = (
-					SELECT stage_id FROM application_stage_status_all
-					WHERE application_id = app.id AND stage_is_current = true
-					)
-				) 
-			)
-		SELECT COUNT(*) FROM unassigned_sections
-		)
-	SELECT CASE
-		WHEN count = 0 THEN true
-		ELSE false
-		END AS is_fully_assigned
-	from count_unassigned_sections
-	)
+-- 	template_question_count(app.id),
+-- 	assigned_question_count,
+	assigned_question_count >= template_question_count(app.id) as is_fully_assigned
 FROM application app LEFT JOIN
 template ON app.template_id = template.id LEFT JOIN
 "user" ON user_id = "user".id LEFT JOIN
-	(SELECT * FROM application_stage_status_all WHERE
-	stage_is_current = true AND status_is_current = true)
+	(SELECT * FROM application_stage_status_latest)
 AS stage_status on app.id = stage_status.application_id
-LEFT JOIN organisation org ON app.org_id = org.id;
+LEFT JOIN organisation org ON app.org_id = org.id
+-- THIS IS NOT RIGHT YET
+LEFT JOIN (SELECT application_id, assigned_questions_count(review_assignment) as assigned_question_count FROM review_assignment) ra
+ON app.id = ra.application_id;
 -- TO-DO:
 	-- Expiry Date
 	-- Consolidator name

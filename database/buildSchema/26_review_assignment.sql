@@ -21,19 +21,3 @@ CREATE TRIGGER review_assignment_trigger AFTER INSERT OR UPDATE OF trigger ON pu
 FOR EACH ROW
 WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'Processing' AND NEW.trigger <> 'Error')
 EXECUTE FUNCTION public.add_event_to_trigger_queue();
-
-
--- Function to return count of assigned questions for current stage/level
-CREATE FUNCTION public.assigned_questions_count(curr_ra public.review_assignment)
-RETURNS bigint AS $$
-	SELECT COUNT(DISTINCT(template_element.id)) FROM
-	review_question_assignment rqa JOIN review_assignment ra
-		ON rqa.review_assignment_id = ra.id JOIN
-	template_element ON template_element.id = rqa.template_element_id
-	WHERE
-		ra.status = 'Assigned'
-		AND ra.stage_id = curr_ra.stage_id
-		AND ra.level = curr_ra.level
-		AND ra.application_id = curr_ra.application_id
-		AND template_element.category = 'Question'
-$$ LANGUAGE sql STABLE;
