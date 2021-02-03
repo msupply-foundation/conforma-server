@@ -24,6 +24,12 @@ ON stage.stage_id = ts.id
 JOIN application
 ON stage.application_id = application.id;
 
+-- As above, but only with the CURRENT stage/status
+CREATE OR REPLACE VIEW application_stage_status_latest AS
+	SELECT * FROM application_stage_status_all
+	WHERE stage_is_current = true
+	AND status_is_current = true;
+
 
 -- Function to expose stage_number field on application table in GraphQL
 CREATE FUNCTION public.application_stage_number(app public.application)
