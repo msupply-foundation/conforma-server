@@ -2,7 +2,7 @@
 Assign Review Test applications to Reviewers
 */
 exports.queries = [
-  // Assign test reviews of Application 1 for Review Testing (template)
+  // Assign test reviews of Application 1 of Review Testing (template)
   // -- Review Lvl 1 - Stage 1 APPROVED
   `mutation {
     createReviewAssignment(
@@ -144,7 +144,6 @@ exports.queries = [
               { id: 1013, templateElementId: 4003 }
               { id: 1014, templateElementId: 4005 }
               { id: 1015, templateElementId: 4006 }
-              { id: 1016, templateElementId: 4007 }
             ]
           }
           reviewsUsingId: {
@@ -181,12 +180,6 @@ exports.queries = [
                   {
                     applicationResponseId: 4004
                     reviewQuestionAssignmentId: 1015
-                    status: SUBMITTED
-                    decision: APPROVE
-                  }
-                  {
-                    applicationResponseId: 4005
-                    reviewQuestionAssignmentId: 1016
                     status: SUBMITTED
                     decision: APPROVE
                   }
@@ -310,12 +303,11 @@ exports.queries = [
               { id: 1024, templateElementId: 4003 }
               { id: 1025, templateElementId: 4005 }
               { id: 1026, templateElementId: 4006 }
-              { id: 1027, templateElementId: 4007 }
-              { id: 1028, templateElementId: 4008 }
-              { id: 1029, templateElementId: 4009 }
-              { id: 1030, templateElementId: 4011 }
-              { id: 1031, templateElementId: 4012 }
-              { id: 1032, templateElementId: 4013 }
+              { id: 1027, templateElementId: 4008 }
+              { id: 1028, templateElementId: 4009 }
+              { id: 1029, templateElementId: 4011 }
+              { id: 1030, templateElementId: 4012 }
+              { id: 1031, templateElementId: 4013 }
             ]
           }
         }
@@ -351,12 +343,11 @@ exports.queries = [
               { id: 1035, templateElementId: 4003 }
               { id: 1036, templateElementId: 4005 }
               { id: 1037, templateElementId: 4006 }
-              { id: 1038, templateElementId: 4007 }
-              { id: 1039, templateElementId: 4008 }
-              { id: 1040, templateElementId: 4009 }
-              { id: 1041, templateElementId: 4011 }
-              { id: 1042, templateElementId: 4012 }
-              { id: 1043, templateElementId: 4013 }
+              { id: 1038, templateElementId: 4008 }
+              { id: 1039, templateElementId: 4009 }
+              { id: 1040, templateElementId: 4011 }
+              { id: 1041, templateElementId: 4012 }
+              { id: 1042, templateElementId: 4013 }
             ]
           }
         }
