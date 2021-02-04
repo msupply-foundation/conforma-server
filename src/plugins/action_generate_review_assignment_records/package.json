@@ -1,8 +1,8 @@
 {
-  "name": "create_user_action",
+  "name": "generate_review_assignment_records_action",
   "version": "0.1",
-  "description": "Inserts a new user in the database",
-  "main": "createUser.ts",
+  "description": "Generates review_assignment records for current application",
+  "main": "generateReviewAssignments.ts",
   "author": "The mSupplyFoundation",
   "license": "MIT",
   "scripts": {
