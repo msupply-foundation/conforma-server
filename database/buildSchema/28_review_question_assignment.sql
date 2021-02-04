@@ -8,7 +8,7 @@ CREATE TABLE public.review_question_assignment (
 
 
 -- Function to return count of assigned questions for current stage/level
-CREATE FUNCTION public.assigned_questions_count(curr_ra public.review_assignment)
+CREATE FUNCTION public.assigned_questions_count(app application, stage_id int, level int)
 RETURNS bigint AS $$
 	SELECT COUNT(DISTINCT(template_element.id)) FROM
 	review_question_assignment rqa JOIN review_assignment ra
@@ -16,20 +16,19 @@ RETURNS bigint AS $$
 	template_element ON template_element.id = rqa.template_element_id
 	WHERE
 		ra.status = 'Assigned'
-		AND ra.stage_id = curr_ra.stage_id
-		AND ra.level = 1 -- currently restrict partial assignment to level 1
-		AND ra.application_id = curr_ra.application_id
+		AND ra.stage_id = stage_id
+		AND ra.level = level -- currently restrict partial assignment to level 1
+		AND ra.application_id = app.id
 		AND template_element.category = 'Question'
 $$ LANGUAGE sql STABLE;
 
 -- Function to return count of template questions for a given application/template
-CREATE FUNCTION public.template_question_count(application_id int)
+CREATE FUNCTION public.template_questions_count(app application)
 RETURNS bigint AS $$
 	SELECT COUNT(*)
-		FROM application JOIN template ON application.template_id = template.id
-		JOIN template_section ON template_section.template_id = template.id
+		FROM template_section
 		JOIN template_element ON template_element.section_id = template_section.id
 	WHERE
-		application.id = application_id
+		template_section.template_id = app.template_id
 		AND template_element.category = 'Question'
 $$ LANGUAGE sql STABLE;

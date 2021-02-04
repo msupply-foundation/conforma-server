@@ -974,7 +974,7 @@ export type ApplicationList = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
-  isFullyAssigned?: Maybe<Scalars['Boolean']>;
+  isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
 };
 
 /**
@@ -1010,8 +1010,8 @@ export type ApplicationListCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `isFullyAssigned` field. */
-  isFullyAssigned?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isFullyAssignedLevel1` field. */
+  isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `ApplicationList` object types. All fields are combined with a logical ‘and.’ */
@@ -1044,8 +1044,8 @@ export type ApplicationListFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `isFullyAssigned` field. */
-  isFullyAssigned?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isFullyAssignedLevel1` field. */
+  isFullyAssignedLevel1?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListFilter>>;
   /** Checks for any expressions in this list. */
@@ -1107,8 +1107,8 @@ export enum ApplicationListsOrderBy {
   OutcomeDesc = 'OUTCOME_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
   LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
-  IsFullyAssignedAsc = 'IS_FULLY_ASSIGNED_ASC',
-  IsFullyAssignedDesc = 'IS_FULLY_ASSIGNED_DESC'
+  IsFullyAssignedLevel_1Asc = 'IS_FULLY_ASSIGNED_LEVEL_1_ASC',
+  IsFullyAssignedLevel_1Desc = 'IS_FULLY_ASSIGNED_LEVEL_1_DESC'
 }
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -9801,7 +9801,6 @@ export type Query = Node & {
   jwtGetText?: Maybe<Scalars['String']>;
   reviewApplicationId?: Maybe<Scalars['Int']>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
-  templateQuestionCount?: Maybe<Scalars['BigInt']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
@@ -10549,12 +10548,6 @@ export type QueryReviewApplicationIdArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewReviewerIdArgs = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryTemplateQuestionCountArgs = {
-  applicationId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -22362,7 +22355,7 @@ export type ApplicationListResolvers<ContextType = any, ParentType extends Resol
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
   lastActiveDate?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
-  isFullyAssigned?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isFullyAssignedLevel1?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -23632,7 +23625,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   jwtGetText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetTextArgs, never>>;
   reviewApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewApplicationIdArgs, never>>;
   reviewReviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewReviewerIdArgs, never>>;
-  templateQuestionCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryTemplateQuestionCountArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
   actionQueueByNodeId?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueByNodeIdArgs, 'nodeId'>>;
   applicationByNodeId?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationByNodeIdArgs, 'nodeId'>>;
