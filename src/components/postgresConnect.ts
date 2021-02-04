@@ -674,6 +674,17 @@ class PostgresDB {
       throw err
     }
   }
+
+  public getCurrentReviewLevel = async (reviewId: number) => {
+    const text = `SELECT level FROM review WHERE id = $1`
+    try {
+      const result = await this.query({ text, values: [reviewId] })
+      return result.rows[0].level
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
 }
 
 const postgressDBInstance = PostgresDB.Instance

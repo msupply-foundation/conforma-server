@@ -1,10 +1,18 @@
 module.exports['generateReviewAssignments'] = async function (input: any, DBConnect: any) {
   try {
-    const { appId, templateId, stageId, stageNumber } = input
+    const { appId, templateId, stageId, stageNumber, reviewId } = input
+
+    // reviewId comes from record_id on Trigger
 
     const numReviewLevels: number = await DBConnect.getNumReviewLevels(templateId, stageNumber)
 
-    console.log('numReviewLevels', numReviewLevels)
+    const currentReviewLevel: number = reviewId
+      ? await DBConnect.getCurrentReviewLevel(reviewId)
+      : 0
+
+    if (currentReviewLevel === numReviewLevels) return
+
+    const nextReviewLevel = currentReviewLevel + 1
 
     return numReviewLevels
     // console.log(`\nAdding new user: ${user.username}`)

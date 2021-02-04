@@ -6,6 +6,7 @@ CREATE TABLE public.review_assignment (
 	id serial primary key,
 	assigner_id integer references public.user(id),
 	reviewer_id integer references public.user(id),
+	organisation_id integer references public.organisation(id),
 	stage_id integer references public.template_stage(id),
 	status public.review_assignment_status,
 	application_id integer references public.application(id),

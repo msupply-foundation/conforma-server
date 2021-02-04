@@ -113,6 +113,8 @@ class DBConnect {
 
   public getNumReviewLevels = PostgresDB.getNumReviewLevels
 
+  public getCurrentReviewLevel = PostgresDB.getCurrentReviewLevel
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
