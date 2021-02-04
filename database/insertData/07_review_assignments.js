@@ -33,9 +33,8 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              id: 1000
-              isLastLevel: true
               level: 1
+              isLastLevel: true
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -148,9 +147,8 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              id: 1001
-              isLastLevel: false
               level: 1
+              isLastLevel: false
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -227,9 +225,8 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              id: 1002
-              isLastLevel: false
               level: 1
+              isLastLevel: false
               reviewResponsesUsingId: { 
                 create: [
                   { 
@@ -349,6 +346,394 @@ exports.queries = [
               { id: 1041, templateElementId: 4012 }
               { id: 1042, templateElementId: 4013 }
             ]
+          }
+        }
+      }
+    ) {
+      reviewer {
+        username
+      }
+      reviewAssignment {
+        application {
+          name
+        }
+      }
+    }
+  }`,
+  // Assign test reviews of Application 2 of Review Testing (template)
+  // -- Review Lvl 1 - Stage 1 - NOT STARTED
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          id: 1005
+          applicationId: 4001
+          stageId: 5
+          userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
+          status: AVAILABLE
+          availableTemplateSectionIds: [1005, 1006]
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              { id: 2000, templateElementId: 4001 }
+              { id: 2001, templateElementId: 4002 }
+              { id: 2002, templateElementId: 4003 }
+              { id: 2003, templateElementId: 4005 }
+              { id: 2004, templateElementId: 4006 }
+              { id: 2005, templateElementId: 4007 }
+              { id: 2006, templateElementId: 4008 }
+              { id: 2007, templateElementId: 4009 }
+              { id: 2008, templateElementId: 4011 }
+              { id: 2009, templateElementId: 4012 }
+              { id: 2010, templateElementId: 4013 }
+            ]
+          }
+        }
+      }
+    ) {
+      reviewAssignment {
+        application {
+          name
+        }
+        stage {
+          id
+        }
+        reviewer {
+          username
+        }
+      }
+    }
+  }`,
+  // Assign test reviews of Application 3 of Review Testing (template)
+  // -- Review Lvl 1 - Stage 1 APPROVED
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          id: 1006
+          applicationId: 4002
+          stageId: 5
+          userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
+          status: ASSIGNED
+          availableTemplateSectionIds: [1005, 1006]
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              { id: 3000, templateElementId: 4001 }
+              { id: 3001, templateElementId: 4002 }
+              { id: 3002, templateElementId: 4003 }
+              { id: 3003, templateElementId: 4005 }
+              { id: 3004, templateElementId: 4006 }
+              { id: 3005, templateElementId: 4008 }
+              { id: 3006, templateElementId: 4009 }
+              { id: 3007, templateElementId: 4011 }
+              { id: 3008, templateElementId: 4012 }
+              { id: 3009, templateElementId: 4013 }
+            ]
+          }
+          reviewsUsingId: {
+            create: {
+              level: 1
+              isLastLevel: true
+              reviewResponsesUsingId: {
+                create: [
+                  {
+                    applicationResponseId: 4020
+                    reviewQuestionAssignmentId: 3000
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4021
+                    reviewQuestionAssignmentId: 3001
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4022
+                    reviewQuestionAssignmentId: 3002
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4023
+                    reviewQuestionAssignmentId: 3003
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4024
+                    reviewQuestionAssignmentId: 3004
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4025
+                    reviewQuestionAssignmentId: 3005
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4026
+                    reviewQuestionAssignmentId: 3006
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4027
+                    reviewQuestionAssignmentId: 3007
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4028
+                    reviewQuestionAssignmentId: 3008
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4029
+                    reviewQuestionAssignmentId: 3009
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ) {
+      reviewAssignment {
+        application {
+          name
+        }
+        stage {
+          id
+        }
+        reviewer{
+          username
+        }
+      }
+    }
+  }`,
+  // -- Reviewer 1 in Stage 2 (Section 1) - DENIED
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          id: 1007
+          applicationId: 4002
+          stageId: 6
+          userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
+          status: ASSIGNED
+          availableTemplateSectionIds: [1005]
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              { id: 3011, templateElementId: 4001 }
+              { id: 3012, templateElementId: 4002 }
+              { id: 3013, templateElementId: 4003 }
+              { id: 3014, templateElementId: 4005 }
+              { id: 3015, templateElementId: 4006 }
+            ]
+          }
+          reviewsUsingId: {
+            create: {
+              level: 1
+              isLastLevel: false
+              reviewResponsesUsingId: {
+                create: [
+                  {
+                    applicationResponseId: 4020
+                    reviewQuestionAssignmentId: 1011
+                    status: SUBMITTED
+                    decision: DECLINE
+                    comment: "Name not conform with uploaded proof of identity"
+                  }
+                  {
+                    applicationResponseId: 4021
+                    reviewQuestionAssignmentId: 1012
+                    status: SUBMITTED
+                    decision: DECLINE
+                    comment: "Surname not conform with uploaded proof of identity"
+                  }
+                  {
+                    applicationResponseId: 4022
+                    reviewQuestionAssignmentId: 1013
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4023
+                    reviewQuestionAssignmentId: 1014
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4024
+                    reviewQuestionAssignmentId: 1015
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    ) {
+      reviewer {
+        username
+      }
+      stage {
+        title
+      }
+      reviewAssignment {
+        application {
+          name
+        }
+      }
+    }
+  }`,
+  // -- Reviewer 2 in Stage 2 (Section 2) - NOT STARTED
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          id: 1008
+          applicationId: 4002
+          stageId: 6
+          userToReviewerId: {
+            connectByUsername: { username: "testReviewer2" }
+          }
+          status: ASSIGNED
+          availableTemplateSectionIds: [1006]
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              { id: 3017, templateElementId: 4008 }
+              { id: 3018, templateElementId: 4009 }
+              { id: 3019, templateElementId: 4011 }
+              { id: 3020, templateElementId: 4012 }
+              { id: 3021, templateElementId: 4013 }
+            ]
+          }     
+        }
+      }
+    ) {
+      reviewer {
+        username
+      }
+      stage {
+        title
+      }
+      reviewAssignment {
+        application {
+          name
+        }
+      }
+    }
+  }`,
+  // -- Consolidator 1 Lvl 2 - Stage 2 - NOT AVAILABLE (Locked for this consolidator)
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          id: 1009
+          applicationId: 4002
+          stageId: 6
+          userToReviewerId: {
+            connectByUsername: { username: "testConsolidator1" }
+          }
+          status: NOT_AVAILABLE
+          availableTemplateSectionIds: [1005, 1006]
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              { id: 3022, templateElementId: 4001 }
+              { id: 3023, templateElementId: 4002 }
+              { id: 3024, templateElementId: 4003 }
+              { id: 3025, templateElementId: 4005 }
+              { id: 3026, templateElementId: 4006 }
+              { id: 3027, templateElementId: 4008 }
+              { id: 3028, templateElementId: 4009 }
+              { id: 3029, templateElementId: 4011 }
+              { id: 3030, templateElementId: 4012 }
+              { id: 3031, templateElementId: 4013 }
+            ]
+          }
+        }
+      }
+    ) {
+      reviewer {
+        username
+      }
+      reviewAssignment {
+        application {
+          name
+        }
+      }
+    }
+  }`,
+  // -- Consolidator 2 Lvl 2 - Stage 2 - DISAGREED with Reviewer 1
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          id: 1010
+          applicationId: 4002
+          stageId: 6
+          userToReviewerId: {
+            connectByUsername: { username: "testConsolidator2" }
+          }
+          status: ASSIGNED
+          availableTemplateSectionIds: [1005, 1006]
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              { id: 3033, templateElementId: 4001 }
+              { id: 3034, templateElementId: 4002 }
+              { id: 3035, templateElementId: 4003 }
+              { id: 3036, templateElementId: 4005 }
+              { id: 3037, templateElementId: 4006 }
+            ]
+          }
+          reviewsUsingId: {
+            create: {
+              level: 2
+              isLastLevel: true
+              reviewResponsesUsingId: {
+                create: [
+                  {
+                    applicationResponseId: 4020
+                    reviewQuestionAssignmentId: 1000
+                    status: SUBMITTED
+                    decision: DECLINE
+                    comment: "Please check again"
+                  }
+                  {
+                    applicationResponseId: 4021
+                    reviewQuestionAssignmentId: 1001
+                    status: SUBMITTED
+                    decision: DECLINE
+                    comment: "Please check again"
+                  }
+                  {
+                    applicationResponseId: 4022
+                    reviewQuestionAssignmentId: 1002
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4023
+                    reviewQuestionAssignmentId: 1003
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4024
+                    reviewQuestionAssignmentId: 1004
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                ]
+              }
+            }
           }
         }
       }

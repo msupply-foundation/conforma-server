@@ -111,7 +111,7 @@ exports.queries = [
       }
     }
   }`,
-  // Application 2 for Review Testing - on Stage 2 of 3
+  // Application 2 for Review Testing - on Stage 1 of 3
   `mutation ReviewTestApplication {
     createApplication(
       input: {
@@ -148,7 +148,7 @@ exports.queries = [
                 id: 4011
                 isValid: true
                 templateElementId: 4002
-                value: { text: "Moon" }
+                value: { text: "Red" }
               }
               {
                 id: 4012
@@ -211,7 +211,7 @@ exports.queries = [
       }
     }
   }`,
-  // Application 3 for Review Testing - on Stage 3 of 3
+  // Application 3 for Review Testing
   `mutation ReviewTestApplication {
     createApplication(
       input: {
@@ -228,13 +228,22 @@ exports.queries = [
           userId: 3
           orgId: 3
           applicationStageHistoriesUsingId: {
-            create: {
-              isCurrent: true
-              templateStageToStageId: { connectById: { id: 5 } }
-              applicationStatusHistoriesUsingId: {
-                create: { isCurrent: true, status: SUBMITTED }
+            create: [
+              {
+                isCurrent: false
+                templateStageToStageId: { connectById: { id: 5 } }
+                applicationStatusHistoriesUsingId: {
+                  create: { isCurrent: false, status: COMPLETED }
+                }
               }
-            }
+              {
+                isCurrent: true
+                templateStageToStageId: { connectById: { id: 6 } }
+                applicationStatusHistoriesUsingId: {
+                  create: { isCurrent: true, status: SUBMITTED }
+                }
+              }
+            ]
           }
           applicationResponsesUsingId: {
             create: [
@@ -248,7 +257,7 @@ exports.queries = [
                 id: 4021
                 isValid: true
                 templateElementId: 4002
-                value: { text: "Star" }
+                value: { text: "Blue" }
               }
               {
                 id: 4022
@@ -296,7 +305,7 @@ exports.queries = [
                 id: 4029
                 isValid: true
                 templateElementId: 4013
-                value: { text: "nausea\nvomiting\ndiarrhea\nstomach pain\nswollen, black, or "hairy" tongue." }
+                value: { text: "nausea\nvomiting\ndiarrhea\nstomach pain\nswollen, black, or \"hairy\" tongue." }
               }
             ]
           }
