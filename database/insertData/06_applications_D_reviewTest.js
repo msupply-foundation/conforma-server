@@ -3,7 +3,7 @@
 */
 exports.queries = [
   // Application 1 for Review Testing - on Stage 2 of 3
-  `mutation ReviewTestApplication {
+  `mutation ReviewTestApplication1 {
     createApplication(
       input: {
         application: {
@@ -112,7 +112,7 @@ exports.queries = [
     }
   }`,
   // Application 2 for Review Testing - on Stage 1 of 3
-  `mutation ReviewTestApplication {
+  `mutation ReviewTestApplication2 {
     createApplication(
       input: {
         application: {
@@ -212,7 +212,7 @@ exports.queries = [
     }
   }`,
   // Application 3 for Review Testing
-  `mutation ReviewTestApplication {
+  `mutation ReviewTestApplication3 {
     createApplication(
       input: {
         application: {
@@ -305,7 +305,7 @@ exports.queries = [
                 id: 4029
                 isValid: true
                 templateElementId: 4013
-                value: { text: "nausea\nvomiting\ndiarrhea\nstomach pain\nswollen, black, or \"hairy\" tongue." }
+                value: { text: "nausea\\nvomiting\\ndiarrhea\\nstomach pain\\nswollen, black, or \\"hairy\\" tongue." }
               }
             ]
           }

@@ -107,11 +107,11 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "31-01-2021" }
+                  { status: DRAFT, isCurrent: false, timeCreated: "2021-01-31T00:00:00Z" }
                   {
                     status: SUBMITTED
                     isCurrent: true
-                    timeCreated: "01-02-2021"
+                    timeCreated: "2021-02-01T00:00:00Z"
                   }
                 ]
               }
@@ -195,11 +195,11 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "01-02-2021" }
+                  { status: DRAFT, isCurrent: false, timeCreated: "2021-02-01T00:00:00Z" }
                   {
                     status: SUBMITTED
                     isCurrent: true
-                    timeCreated: "02-02-2021"
+                    timeCreated: "2021-02-02T00:00:00Z"
                   }
                 ]
               }
@@ -284,11 +284,11 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "01-02-2021" }
+                  { status: DRAFT, isCurrent: false, timeCreated: "2021-02-01T00:00:00Z" }
                   {
                     status: SUBMITTED
                     isCurrent: true
-                    timeCreated: "02-02-2021"
+                    timeCreated: "2021-02-02T00:00:00Z"
                   }
                 ]
               }
@@ -529,11 +529,11 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "02-02-2021" }
+                  { status: DRAFT, isCurrent: false, timeCreated: "2021-02-02T00:00:00Z" }
                   {
                     status: SUBMITTED
                     isCurrent: true
-                    timeCreated: "03-02-2021"
+                    timeCreated: "2021-02-03T00:00:00Z"
                   }
                 ]
               }
@@ -617,11 +617,11 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "03-02-2021" }
+                  { status: DRAFT, isCurrent: false, timeCreated: "2021-02-03T00:00:00Z" }
                   {
                     status: SUBMITTED
                     isCurrent: true
-                    timeCreated: "04-02-2021"
+                    timeCreated: "2021-02-04T00:00:00Z"
                   }
                 ]
               }
@@ -787,7 +787,7 @@ exports.queries = [
                 create: {
                   status: DRAFT
                   isCurrent: true
-                  timeCreated: "04-02-2021"
+                  timeCreated: "2021-02-04T00:00:00Z"
                 }
               }
             }
