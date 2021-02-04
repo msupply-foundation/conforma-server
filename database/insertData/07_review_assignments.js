@@ -199,7 +199,7 @@ exports.queries = [
                   {
                     status: SUBMITTED
                     isCurrent: true
-                    timeCreated: "2021-02-02T00:00:00Z"
+                    timeCreated: "2021-02-02T10:00:00Z"
                   }
                 ]
               }
@@ -289,6 +289,11 @@ exports.queries = [
                     status: SUBMITTED
                     isCurrent: true
                     timeCreated: "2021-02-02T00:00:00Z"
+                  }
+                  {
+                    status: CHANGES_REQUESTED
+                    isCurrent: true
+                    timeCreated: "2021-02-02T10:00:00Z"
                   }
                 ]
               }
