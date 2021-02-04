@@ -64,7 +64,47 @@ exports.queries = [
       input: {
         permissionName: { 
           id: 5000
-          name: "reviewReviewTest", permissionPolicyId: 3000 }
+          name: "reviewReviewTest Lvl1 (Stage 1, Stage 2)", permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 6000
+          name: "reviewReviewTest Lvl2 (Stage 2)", permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 7000
+          name: "reviewReviewTest Lvl1 (Stage 3)", permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // reviewJoinCompany
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 8000
+          name: "reviewJoinCompany", permissionPolicyId: 3000 }
       }
     ) {
       permissionName {

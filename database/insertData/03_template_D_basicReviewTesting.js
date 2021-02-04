@@ -229,6 +229,12 @@ exports.queries = [
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
               }
+              {
+                id: 7
+                number: 3
+                title: "Final Decision"
+                description: "This is the final step and will change the outcome of this applications."
+              }
             ]
           }
           templateActionsUsingId: {
@@ -279,7 +285,8 @@ exports.queries = [
               { id: 4000, permissionNameId: 2000 }
               { id: 4001, permissionNameId: 5000, stageNumber: 1, level: 1 }
               { id: 4002, permissionNameId: 5000, stageNumber: 2, level: 1 }
-              { id: 4003, permissionNameId: 5000, stageNumber: 2, level: 2 }
+              { id: 4003, permissionNameId: 6000, stageNumber: 2, level: 2 }
+              { id: 4004, permissionNameId: 7000, stageNumber: 3, level: 1 }
             ]
           }
         }
