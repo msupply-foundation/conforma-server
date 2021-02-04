@@ -12,6 +12,7 @@ exports.queries = [
           applicationId: 4000
           stageId: 5
           level: 1
+          isLastLevel: true
           userToReviewerId: { 
             connectByUsername: { username: "testReviewer1" } 
           }
@@ -34,7 +35,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: true
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -142,6 +142,7 @@ exports.queries = [
           applicationId: 4000
           stageId: 6
           level: 1
+          isLastLevel: false
           userToReviewerId: { 
             connectByUsername: { username: "testReviewer1" } 
           }
@@ -158,7 +159,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: false
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -230,6 +230,7 @@ exports.queries = [
           applicationId: 4000
           stageId: 6
           level: 1
+          isLastLevel: false
           userToReviewerId: {
             connectByUsername: { username: "testReviewer2" }
           }
@@ -246,7 +247,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: false
               reviewResponsesUsingId: { 
                 create: [
                   { 
@@ -319,6 +319,7 @@ exports.queries = [
           applicationId: 4000
           stageId: 6
           level: 2
+          isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
           }
@@ -360,6 +361,7 @@ exports.queries = [
           applicationId: 4000
           stageId: 6
           level: 2
+          isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
           }
@@ -402,6 +404,7 @@ exports.queries = [
           applicationId: 4001
           stageId: 5
           level: 1
+          isLastLevel: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
           availableTemplateSectionIds: [1005, 1006]
@@ -446,6 +449,7 @@ exports.queries = [
           applicationId: 4002
           stageId: 5
           level: 1
+          isLastLevel: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
           availableTemplateSectionIds: [1005, 1006]
@@ -465,7 +469,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: true
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -567,6 +570,7 @@ exports.queries = [
           applicationId: 4002
           stageId: 6
           level: 1
+          isLastLevel: false
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
           availableTemplateSectionIds: [1005]
@@ -581,7 +585,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: false
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -660,6 +663,7 @@ exports.queries = [
           applicationId: 4002
           stageId: 6
           level: 1
+          isLastLevel: false
           userToReviewerId: {
             connectByUsername: { username: "testReviewer2" }
           }
@@ -699,6 +703,7 @@ exports.queries = [
           applicationId: 4002
           stageId: 6
           level: 2
+          isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
           }
@@ -740,6 +745,7 @@ exports.queries = [
           applicationId: 4002
           stageId: 6
           level: 2
+          isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
           }
@@ -756,7 +762,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: true
               reviewResponsesUsingId: {
                 create: [
                   {
