@@ -98,4 +98,18 @@ exports.queries = [
       }
     }
   }`,
+  // reviewJoinCompany
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 8000
+          name: "reviewJoinCompany", permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
 ]
