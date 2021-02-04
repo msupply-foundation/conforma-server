@@ -30,8 +30,8 @@ CREATE TABLE public.review (
 	trigger public.trigger,
 	application_id integer GENERATED ALWAYS AS (public.review_application_id(review_assignment_id)) STORED references public.application(id),
 	reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id(review_assignment_id)) STORED references public.user(id),
-	review_level(id) AS level,
-	review_is_last_level(id) AS is_last_level
+	level integer GENERATED ALWAYS AS (public.review_level(review_assignment_id)) STORED,
+	is_last_level boolean GENERATED ALWAYS AS (public.review_is_last_level(review_assignment_id)) STORED
 );
 
 -- TRIGGER (Listener) on review table
