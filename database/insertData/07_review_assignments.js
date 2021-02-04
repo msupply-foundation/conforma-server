@@ -400,7 +400,7 @@ exports.queries = [
           applicationId: 4001
           stageId: 5
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
-          status: AVAILABLE
+          status: ASSIGNED
           availableTemplateSectionIds: [1005, 1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
