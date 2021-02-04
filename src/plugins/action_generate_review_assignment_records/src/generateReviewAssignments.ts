@@ -1,6 +1,6 @@
 module.exports['generateReviewAssignments'] = async function (input: any, DBConnect: any) {
   try {
-    const { appId, templateId, stageId, stageNumber, reviewId } = input
+    const { applicationId, reviewId, templateId, stageId, stageNumber } = input
 
     // reviewId comes from record_id on Trigger
 
@@ -31,6 +31,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       orgId: null, // TO-DO
       stageId,
       status: nextReviewLevel === 1 ? 'Available' : 'Available for self-assignment',
+      applicationId,
       allowedSectionIds: getAllowedSectionIds(),
       level: nextReviewLevel,
       isLastLevel: nextReviewLevel === numReviewLevels,
@@ -38,30 +39,20 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
 
     console.log('reviewAssignments', reviewAssignments)
 
-    const databaseUpdateResult = await DBConnect.addReviewAssignments(reviewAssignments)
+    const reviewAssignmentIds = await DBConnect.addReviewAssignments(reviewAssignments)
 
-    console.log('databaseUpdateResult', databaseUpdateResult)
+    console.log('databaseUpdateResult', reviewAssignmentIds)
 
-    return numReviewLevels
-    // console.log(`\nAdding new user: ${user.username}`)
-    // const result = await DBConnect.createUser(user)
-    // if (result.success)
-    //   return {
-    //     status: 'Success',
-    //     error_log: '',
-    //     output: {
-    //       userId: result.userId,
-    //       username: user.username,
-    //       firstName: user?.first_name,
-    //       lastName: user?.last_name,
-    //       email: user.email,
-    //     },
-    //   }
-    // else
-    //   return {
-    //     status: 'Fail',
-    //     error_log: 'Problem creating review_assignment records.',
-    //   }
+    return {
+      status: 'Success',
+      error_log: '',
+      output: {
+        reviewAssignments,
+        reviewAssignmentIds: reviewAssignmentIds,
+        currentReviewLevel,
+        nextReviewLevel,
+      },
+    }
   } catch (error) {
     console.log(error.message)
     return {

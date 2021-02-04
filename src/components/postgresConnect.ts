@@ -713,7 +713,7 @@ class PostgresDB {
 
   public addReviewAssignments = async (reviewAssignments: any) => {
     const reviewAssignmentIds = []
-    for (const ra of reviewAssignments) {
+    for (const reviewAssignment of reviewAssignments) {
       const {
         reviewerId,
         orgId,
@@ -723,8 +723,9 @@ class PostgresDB {
         allowedSectionIds,
         level,
         isLastLevel,
-      } = ra
-
+      } = reviewAssignment
+      // Needs a slightly different query with different CONFLICT restrictions
+      // depending on whether orgId exists or not.
       const text = `
         INSERT INTO review_assignment (
           reviewer_id,${orgId ? ' organisation_id,' : ''}
@@ -739,8 +740,6 @@ class PostgresDB {
         DO
           UPDATE SET allowed_template_section_ids = ${orgId ? '$6' : '$5'}
         RETURNING id`
-
-      console.log('text', text)
 
       try {
         const result = await this.query({
@@ -757,13 +756,13 @@ class PostgresDB {
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
-        return reviewAssignmentIds
       } catch (err) {
         console.log(err.message)
         reviewAssignmentIds.push(err.message)
         throw err
       }
     }
+    return reviewAssignmentIds
   }
 }
 
