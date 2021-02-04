@@ -9,13 +9,14 @@ exports.queries = [
         reviewAssignment: {
           applicationId: 4000
           stageId: 5
+          level: 1
           userToReviewerId: {
             connectByUsername: {
               username: "testReviewer1"
             }
           }
           status: AVAILABLE_FOR_SELF_ASSIGNMENT
-          availableTemplateSectionIds: [1005]
+          allowedTemplateSectionIds: [1005]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { templateElementId: 4001 }
@@ -46,13 +47,14 @@ exports.queries = [
         reviewAssignment: {
           applicationId: 4000
           stageId: 5
+          level: 1
           userToReviewerId: {
             connectByUsername: {
               username: "testReviewer2"
             }
           }
           status: AVAILABLE_FOR_SELF_ASSIGNMENT
-          availableTemplateSectionIds: [1006]
+          allowedTemplateSectionIds: [1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { templateElementId: 4008 }
