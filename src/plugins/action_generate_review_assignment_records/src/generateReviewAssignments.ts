@@ -27,7 +27,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     console.log('reviewers', nextLevelReviewers)
 
     const reviewAssignments = nextLevelReviewers.map((reviewer: any) => ({
-      reviewerId: reviewer.user__id,
+      reviewerId: reviewer.user_id,
       orgId: null, // TO-DO
       stageId,
       status: nextReviewLevel === 1 ? 'Available' : 'Available for self-assignment',
