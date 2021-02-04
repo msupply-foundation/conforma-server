@@ -27,7 +27,7 @@ They can be queried to:
 
 - Determine who can be assigned to an application stage and level <- front end task
 - Determine if an application stage and level is fully assigned (using review_question_assignment link) <- through application list view
-- Determine if review can be started/created <- front end can check if review can be created (including self assignment) (link to diagram of URL flow)
+- Determine if review can be started/created <- front end can check if review can be created (including self assignment) See `Review and Consolidation URL flow` diagram below
 
 #### Review Assignment Status
 
@@ -52,7 +52,7 @@ These records are created upon assignment, and should only be created for level 
 ## Review Response
 
 Either a review of applications questions (base review, level 1) or review of review (consolidation, level > 1). See diagram (responses flow). Always created by front end, but duplicates are trimmed on back end.
-Can be used to agree or desagree on overall review_decision.
+Can be used to agree or disagree on overall review_decision.
 
 A few trick bits:
 
@@ -109,12 +109,14 @@ AND
 
 Whenever user starts a review (either first time or subsequent times that they can edit it after submissions), we would create all responses, or duplicate them from existing responses. Trimming is done for unchanged responses after submission via an action (above rules should take into account duplicates). Slight difference for consolidation is we only duplicate review_response that are not 'draft' and for reviews that are submitted
 
-### Other material
+### Diagram
 
-Few more diagrams:
-
-![Review Life Cycle](images/response-flow.png)
+![Review Life Cycle](images/review-life-cycle.png)
 ![Response Flow](images/response-flow.png)
+![Review and Consolidation URL flow](images/consolidation-and-review-URL-flow)
+
+Below diagrams are somewhat outdated, but give an idea of consolidation and review process as examples
+
 ![Review Diagram](images/review-diagram.png)
 ![Review Schema Flow with Consolidation](images/consolidation-flow-with-schema-example.png)
 ![Complex Review Schema Flow with Consolidation](images/consolidation-flow-with-schema-example-complex.png)
