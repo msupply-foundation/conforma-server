@@ -22,6 +22,52 @@ Only available on level > 1 reviewer or when `is_last_level` in `review_assignme
 
 ## Review Assignment
 
+These records are created by back end when review level is reached (either through application submission or review submission, see Review Life Cycle diagram below). `Template Permission` records, alongside `permission name`, `permission name join` and `permission policy` are used to created relevant `review assignments`
+They can be queried to:
+
+- Determine who can be assigned to an application stage and level <- front end task
+- Determine if an application stage and level is fully assigned (using review_question_assignment link) <- through application list view
+- Determine if review can be started/created <- front end can check if review can be created (including self assignment) (link to diagram of URL flow)
+
+#### Review Assignment Status
+
+`Available` -> can be assigned by assigner
+`Not Available` -> cannot be assigned by assigner, in case of `available for self assignment`, when reviewer self assigns a review, all other `review assignments` for current `stage` and `level` are changed to this status
+`Assigned` -> review is assigned to a user and can be started (in case of self assignment when review is self assigned, review assignment will changes status to assigned)
+`Available for self assignment` -> review can be started and self assigned
+
+`Assignment NOTE` -> For MVP, only level 1 reviewer can be assigned questions (vs self assignment of review), level > 1 will be self assigned (level 1 can also be configured to self assigned, in this case they will need to be configured to review all sections)
+
+##### Other fields (that are not straight away self explanatory)
+
+`assigner_id` -> null until assigned, assigner id when assigned be assigner, otherwise reviewer_id when self assigned
+`is_last_level` -> last level for current stage (determine if review_decision is present in UI)
+`allowable_section_ids` -> an array of section IDs that reviewer has permission to review (would typically have all sections), assigner can only assign questions from sections that are in this list
+
+## Review Question Assignment
+
+Identifies which questions, from the application can be reviewed by the reviewer.
+These records are created upon assignment, and should only be created for level 1 reviewer ? (to confirm)
+
+## Review Response
+
+Either a review of applications questions (base review, level 1) or review of review (consolidation, level > 1). See diagram (responses flow). Always created by front end, but duplicates are trimmed on back end.
+Can be used to agree or desagree on overall review_decision.
+
+A few trick bits:
+
+##### Review Responses Are Always Duplicated i
+
+During re-review, or in reply to changes requested, all existing review responses are duplicated (so that any changes are recorded in a new record). They are trimmed by an action on back end.
+
+##### Review Submitted When Consolidation is in Progress
+
+Similar to the above, but we don't duplicate `draft` review responses
+
+#### Review Response Decision
+
+Pretty self explanatory but one thing to note, during consolidation, it's best to think of these as `Agree and Disagree`
+
 ## Review Statuses
 
 `Draft` -> Newly created or being edited as part of re-review or changes required from consolidator, can be edited
@@ -34,15 +80,16 @@ Only available on level > 1 reviewer or when `is_last_level` in `review_assignme
 
 `Locked` -> Used for level one reviewer. Can edit review but cannot submit. This is needed when LOQ or Non Conformity is submitted by consolidator but some of the reviews are still in draft or pending stage. They will become locked, indicating that review should be stopped for the time being
 
-### General Description
+## General Description
 
-Review flow is as follows:
+Review flow is as follows (see review flow diagrams below):
 
-- Questions are assigned to reviewer
-- `review` is created
-- `review_response` is created for each assigned question (`application_response`)
-- Decision is made (suggested) of either conformity or non-conformity along with a comment
-- Multiple `review_response` can be made for the same `application_respones`, and timestamps determines the current `review_response` (this allows for consolidator to ask for changes from reviewer)
+- On application submission or on review submission, `review assignments` are created with an action
+- Questions are assigned to reviewer or self assignment (using `review assignments`)
+- `review` is created on front end
+- `review_response` is created for each assigned question (`application_response`), or for each review_response if consolidation
+- Decision is made (suggested) of either conformity or non-conformity along with a comment (for consolidation these are agree or disagree)
+- Multiple `review_response` can be made for the same `application_respones` or `review_response` (consolidation), and timestamps determines the current `review_response` (this allows for consolidator to ask for changes from reviewer or reviewer to see what needs to be re-reviewed based on applicant re-submission triggered by LOQ)
 
 ### Submission Rules
 
@@ -54,18 +101,20 @@ OR
 
 - When all of the **latest** `application_responses` for `template_elements` that are assigned to a reviewer in current stage of an application instance are `approved`
 
-AND (see consolidation schema TODO)
+AND
 
 - In case of changes requested by cosolidator in review, no `review_responses` have linking `consolidation_response` with disagreements (i.e. a new `review_response` exists, that's different from review response it was duplicated from, see below)
 
 ### Creating and editing review
 
-Whenever user starts a review (either first time or subsequent times that they can edit it after submissions), we would create all responses, or duplicate them from existing responses. Trimming is done for unchanged responses after submission via an action (above rules should take into account duplicates)
+Whenever user starts a review (either first time or subsequent times that they can edit it after submissions), we would create all responses, or duplicate them from existing responses. Trimming is done for unchanged responses after submission via an action (above rules should take into account duplicates). Slight difference for consolidation is we only duplicate review_response that are not 'draft' and for reviews that are submitted
 
 ### Other material
 
 Few more diagrams:
 
+![Review Life Cycle](images/response-flow.png)
+![Response Flow](images/response-flow.png)
 ![Review Diagram](images/review-diagram.png)
 ![Review Schema Flow with Consolidation](images/consolidation-flow-with-schema-example.png)
 ![Complex Review Schema Flow with Consolidation](images/consolidation-flow-with-schema-example-complex.png)
