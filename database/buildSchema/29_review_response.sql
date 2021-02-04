@@ -13,5 +13,5 @@ CREATE TABLE public.review_response (
 	review_response_link_id integer references public.review_response(id),
 	review_id integer references public.review(id),
     time_created timestamptz default current_timestamp,
-	status public.review_response_status
+	status public.review_response_status default 'Draft'
 );
