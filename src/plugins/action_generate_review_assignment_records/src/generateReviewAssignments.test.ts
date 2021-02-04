@@ -5,17 +5,19 @@ import DBConnect from '../../../components/databaseConnect'
 const Action = require('./generateReviewAssignments')
 
 test('Test: getMaxLevels, stage 1', () => {
-  return Action.generateReviewAssignments({ templateId: 2, stageNumber: 1 }, DBConnect).then(
-    (result: any) => {
-      expect(result).toEqual(null)
-    }
-  )
+  return Action.generateReviewAssignments(
+    { templateId: 2, stageNumber: 1, reviewId: 5, stageId: 5 },
+    DBConnect
+  ).then((result: any) => {
+    expect(result).toEqual(null)
+  })
 })
 
 test('Test: getMaxLevels, stage 2', () => {
-  return Action.generateReviewAssignments({ templateId: 4, stageNumber: 2 }, DBConnect).then(
-    (result: any) => {
-      expect(result).toEqual(2)
-    }
-  )
+  return Action.generateReviewAssignments(
+    { templateId: 4, stageNumber: 2, reviewId: 5, stageId: 6 },
+    DBConnect
+  ).then((result: any) => {
+    expect(result).toEqual(2)
+  })
 })

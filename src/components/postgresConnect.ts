@@ -685,6 +685,82 @@ class PostgresDB {
       throw err
     }
   }
+
+  public getReviewersForApplicationStageLevel = async (
+    templateId: number,
+    stageNumber: number,
+    currentReviewLevel: number
+  ) => {
+    const text = `
+    SELECT user_id, organisation_id FROM 
+    permission_join pj JOIN template_permission tp
+    ON pj.permission_name_id = tp.permission_name_id
+    WHERE template_id = $1
+    AND stage_number = $2
+    AND level = $3
+    `
+    try {
+      const result = await this.query({
+        text,
+        values: [templateId, stageNumber, currentReviewLevel],
+      })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public addReviewAssignments = async (reviewAssignments: any) => {
+    const reviewAssignmentIds = []
+    for (const ra in reviewAssignments) {
+      const {
+        reviewerId,
+        orgId,
+        stageId,
+        status,
+        allowedSectionIds,
+        level,
+        isLastLevel,
+      } = reviewAssignments
+
+      const text = `
+        INSERT INTO review_assignment (
+          reviewer_id,${orgId ? ' organisation_id,' : ''}
+          stage_id, status, application_id,
+          allowed_template_section_ids, level, is_last_level
+          )
+        VALUES ($1, $2, $3, $4, $5, $6, $7${orgId ? ', $8' : ''})
+        ON CONFLICT (reviewer_id,${
+          orgId ? ' organisation_id,' : ''
+        } stage_id, application_id, level)
+          WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
+        DO
+          UPDATE SET allowed_template_section_ids = ${orgId ? '$6' : '$5'}
+        RETURNING id`
+
+      try {
+        const result = await this.query({
+          text,
+          values: [
+            reviewerId,
+            ...(orgId ? orgId : []),
+            stageId,
+            status,
+            allowedSectionIds,
+            level,
+            isLastLevel,
+          ],
+        })
+        reviewAssignmentIds.push(result.rows[0].id)
+        return reviewAssignmentIds
+      } catch (err) {
+        console.log(err.message)
+        reviewAssignmentIds.push(err.message)
+        throw err
+      }
+    }
+  }
 }
 
 const postgressDBInstance = PostgresDB.Instance
