@@ -33,7 +33,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: true
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -156,7 +155,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: false
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -243,7 +241,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: false
               reviewResponsesUsingId: { 
                 create: [
                   { 
@@ -458,7 +455,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: true
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -573,7 +569,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: false
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -745,7 +740,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              isLastLevel: true
               reviewResponsesUsingId: {
                 create: [
                   {
