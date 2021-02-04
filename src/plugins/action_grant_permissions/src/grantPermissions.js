@@ -36,48 +36,56 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 module.exports['grantPermissions'] = function (_a, DBConnect) {
-    var username = _a.username, permissionNames = _a.permissionNames;
+    var username = _a.username, orgName = _a.orgName, permissionNames = _a.permissionNames;
     return __awaiter(this, void 0, void 0, function () {
-        var currentUserPermisionsNames, _i, permissionNames_1, permissionName, error_1;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+        var permissionJoinIds, outputNames, _i, permissionNames_1, permissionName, permissionJoinId, _b, error_1;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _b.trys.push([0, 6, , 7]);
+                    _c.trys.push([0, 8, , 9]);
                     console.log('\nGranting permission/s:');
-                    console.log({ username: username, permissionNames: permissionNames });
-                    return [4 /*yield*/, DBConnect.getUserPermissionNames(username)];
-                case 1:
-                    currentUserPermisionsNames = (_b.sent()).map(function (_a) {
-                        var name = _a.name;
-                        return name;
-                    });
+                    console.log({ username: username, orgName: orgName, permissionNames: permissionNames });
+                    permissionJoinIds = [];
+                    outputNames = [];
                     _i = 0, permissionNames_1 = permissionNames;
-                    _b.label = 2;
-                case 2:
-                    if (!(_i < permissionNames_1.length)) return [3 /*break*/, 5];
+                    _c.label = 1;
+                case 1:
+                    if (!(_i < permissionNames_1.length)) return [3 /*break*/, 7];
                     permissionName = permissionNames_1[_i];
-                    if (currentUserPermisionsNames.includes(permissionName))
-                        return [3 /*break*/, 4];
-                    return [4 /*yield*/, DBConnect.joinPermissionNameToUser(username, permissionName)];
-                case 3:
-                    _b.sent();
-                    currentUserPermisionsNames.push(permissionName);
-                    _b.label = 4;
+                    if (!orgName) return [3 /*break*/, 3];
+                    return [4 /*yield*/, DBConnect.joinPermissionNameToUserOrg(username, orgName, permissionName)];
+                case 2:
+                    _b = _c.sent();
+                    return [3 /*break*/, 5];
+                case 3: return [4 /*yield*/, DBConnect.joinPermissionNameToUser(username, permissionName)];
                 case 4:
+                    _b = _c.sent();
+                    _c.label = 5;
+                case 5:
+                    permissionJoinId = _b;
+                    permissionJoinIds.push(permissionJoinId);
+                    if (permissionJoinId)
+                        outputNames.push(permissionName);
+                    _c.label = 6;
+                case 6:
                     _i++;
-                    return [3 /*break*/, 2];
-                case 5: return [2 /*return*/, {
+                    return [3 /*break*/, 1];
+                case 7: return [2 /*return*/, {
                         status: 'Success',
                         error_log: '',
+                        output: {
+                            permissionJoinIds: permissionJoinIds,
+                            permissionNames: outputNames,
+                        },
                     }];
-                case 6:
-                    error_1 = _b.sent();
+                case 8:
+                    error_1 = _c.sent();
                     console.log(error_1);
                     return [2 /*return*/, {
                             status: 'Fail',
                             error_log: 'There was a problem in grantPermissions Plugin',
                         }];
-                case 7: return [2 /*return*/];
+                case 9: return [2 /*return*/];
             }
         });
     });

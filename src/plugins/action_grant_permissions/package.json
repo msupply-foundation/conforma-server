@@ -1,7 +1,7 @@
 {
   "name": "action_grant_permissions",
   "version": "0.1",
-  "description": "Grants permission to user, creates permission join from user to permission name",
+  "description": "Grants permission to user/org, creates permission join from user/org to permission name",
   "main": "grantPermissions.ts",
   "author": "The mSupplyFoundation",
   "license": "MIT",
