@@ -105,6 +105,16 @@ exports.queries = [
                   }
                 ]
               }
+              reviewStatusHistoriesUsingId: {
+                create: [
+                  { status: DRAFT, isCurrent: false, timeCreated: "31-01-2021" }
+                  {
+                    status: SUBMITTED
+                    isCurrent: true
+                    timeCreated: "01-02-2021"
+                  }
+                ]
+              }
             }
           }
         }
@@ -180,6 +190,16 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1015
                     status: SUBMITTED
                     decision: APPROVE
+                  }
+                ]
+              }
+              reviewStatusHistoriesUsingId: {
+                create: [
+                  { status: DRAFT, isCurrent: false, timeCreated: "01-02-2021" }
+                  {
+                    status: SUBMITTED
+                    isCurrent: true
+                    timeCreated: "02-02-2021"
                   }
                 ]
               }
@@ -259,6 +279,16 @@ exports.queries = [
                     status: SUBMITTED
                     decision: DECLINE
                     comment: "Not descriptive side effects"
+                  }
+                ]
+              }
+              reviewStatusHistoriesUsingId: {
+                create: [
+                  { status: DRAFT, isCurrent: false, timeCreated: "01-02-2021" }
+                  {
+                    status: SUBMITTED
+                    isCurrent: true
+                    timeCreated: "02-02-2021"
                   }
                 ]
               }
@@ -497,6 +527,16 @@ exports.queries = [
                   }
                 ]
               }
+              reviewStatusHistoriesUsingId: {
+                create: [
+                  { status: DRAFT, isCurrent: false, timeCreated: "02-02-2021" }
+                  {
+                    status: SUBMITTED
+                    isCurrent: true
+                    timeCreated: "03-02-2021"
+                  }
+                ]
+              }
             }
           }
         }
@@ -572,6 +612,16 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1015
                     status: SUBMITTED
                     decision: APPROVE
+                  }
+                ]
+              }
+              reviewStatusHistoriesUsingId: {
+                create: [
+                  { status: DRAFT, isCurrent: false, timeCreated: "03-02-2021" }
+                  {
+                    status: SUBMITTED
+                    isCurrent: true
+                    timeCreated: "04-02-2021"
                   }
                 ]
               }
@@ -671,7 +721,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 2 Lvl 2 - Stage 2 - DISAGREED with Reviewer 1
+  // -- Consolidator 2 Lvl 2 - Stage 2 - DRAFT (DISAGREED with Reviewer 1)
   `mutation {
     createReviewAssignment(
       input: {
@@ -702,36 +752,43 @@ exports.queries = [
                   {
                     applicationResponseId: 4020
                     reviewQuestionAssignmentId: 1000
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: DECLINE
                     comment: "Please check again"
                   }
                   {
                     applicationResponseId: 4021
                     reviewQuestionAssignmentId: 1001
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: DECLINE
                     comment: "Please check again"
                   }
                   {
                     applicationResponseId: 4022
                     reviewQuestionAssignmentId: 1002
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: APPROVE
                   }
                   {
                     applicationResponseId: 4023
                     reviewQuestionAssignmentId: 1003
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: APPROVE
                   }
                   {
                     applicationResponseId: 4024
                     reviewQuestionAssignmentId: 1004
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: APPROVE
                   }
                 ]
+              }
+              reviewStatusHistoriesUsingId: {
+                create: {
+                  status: DRAFT
+                  isCurrent: true
+                  timeCreated: "04-02-2021"
+                }
               }
             }
           }
