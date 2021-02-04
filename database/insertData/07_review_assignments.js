@@ -290,11 +290,6 @@ exports.queries = [
                     isCurrent: true
                     timeCreated: "2021-02-02T00:00:00Z"
                   }
-                  {
-                    status: CHANGES_REQUESTED
-                    isCurrent: true
-                    timeCreated: "2021-02-02T10:00:00Z"
-                  }
                 ]
               }
             }
@@ -625,8 +620,13 @@ exports.queries = [
                   { status: DRAFT, isCurrent: false, timeCreated: "2021-02-03T00:00:00Z" }
                   {
                     status: SUBMITTED
-                    isCurrent: true
+                    isCurrent: false
                     timeCreated: "2021-02-04T00:00:00Z"
+                  }
+                  {
+                    status: CHANGES_REQUESTED
+                    isCurrent: true
+                    timeCreated: "2021-02-04T10:00:00Z"
                   }
                 ]
               }
@@ -789,11 +789,18 @@ exports.queries = [
                 ]
               }
               reviewStatusHistoriesUsingId: {
-                create: {
-                  status: DRAFT
-                  isCurrent: true
-                  timeCreated: "2021-02-04T00:00:00Z"
-                }
+                create: [
+                  {
+                    status: DRAFT
+                    isCurrent: false
+                    timeCreated: "2021-02-04T00:00:00Z"
+                  }
+                  {
+                    status: SUBMITTED
+                    isCurrent: true
+                    timeCreated: "2021-02-04T10:00:00Z"
+                  }
+                ]
               }
             }
           }
