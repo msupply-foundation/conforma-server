@@ -689,10 +689,10 @@ class PostgresDB {
   public getReviewersForApplicationStageLevel = async (
     templateId: number,
     stageNumber: number,
-    currentReviewLevel: number
+    reviewLevel: number
   ) => {
     const text = `
-    SELECT user_id, organisation_id FROM 
+    SELECT user_id, organisation_id, restrictions FROM 
     permission_join pj JOIN template_permission tp
     ON pj.permission_name_id = tp.permission_name_id
     WHERE template_id = $1
@@ -702,7 +702,7 @@ class PostgresDB {
     try {
       const result = await this.query({
         text,
-        values: [templateId, stageNumber, currentReviewLevel],
+        values: [templateId, stageNumber, reviewLevel],
       })
       return result.rows
     } catch (err) {

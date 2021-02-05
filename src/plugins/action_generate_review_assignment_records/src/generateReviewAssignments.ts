@@ -30,7 +30,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       reviewerId: reviewer.user_id,
       orgId: null, // TO-DO
       stageId,
-      status: nextReviewLevel === 1 ? 'Available' : 'Available for self-assignment',
+      status: nextReviewLevel === 1 ? 'Available' : 'Available for self-assignment', // TO-DO: allow this to be configurable
       applicationId,
       allowedSectionIds: getAllowedSectionIds(),
       level: nextReviewLevel,
