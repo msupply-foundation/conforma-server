@@ -65,7 +65,7 @@ A few trick bits:
 
 During re-review, or in reply to changes requested, all existing review responses are duplicated (so that any changes are recorded in a new record). They are trimmed by an action on back end.
 
-##### Review Submitted When Consolidation is in Progress
+#### Review Submitted When Consolidation is in Progress
 
 Similar to the above, but we don't duplicate `draft` review responses
 
