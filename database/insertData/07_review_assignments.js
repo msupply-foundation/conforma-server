@@ -17,7 +17,7 @@ exports.queries = [
             connectByUsername: { username: "testReviewer1" } 
           }
           status: ASSIGNED
-          availableTemplateSectionIds: [1005, 1006]
+          allowedTemplateSectionIds: [1005, 1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1000, templateElementId: 4001 }
@@ -147,7 +147,7 @@ exports.queries = [
             connectByUsername: { username: "testReviewer1" } 
           }
           status: ASSIGNED
-          availableTemplateSectionIds: [1005]
+          allowedTemplateSectionIds: [1005]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1011, templateElementId: 4001 }
@@ -235,7 +235,7 @@ exports.queries = [
             connectByUsername: { username: "testReviewer2" }
           }
           status: ASSIGNED
-          availableTemplateSectionIds: [1006]
+          allowedTemplateSectionIds: [1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1017, templateElementId: 4008 }
@@ -324,7 +324,7 @@ exports.queries = [
             connectByUsername: { username: "testConsolidator1" }
           }
           status: AVAILABLE_FOR_SELF_ASSIGNMENT
-          availableTemplateSectionIds: [1005, 1006]
+          allowedTemplateSectionIds: [1005, 1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1022, templateElementId: 4001 }
@@ -366,7 +366,7 @@ exports.queries = [
             connectByUsername: { username: "testConsolidator2" }
           }
           status: AVAILABLE_FOR_SELF_ASSIGNMENT
-          availableTemplateSectionIds: [1005, 1006]
+          allowedTemplateSectionIds: [1005, 1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1033, templateElementId: 4001 }
@@ -407,7 +407,7 @@ exports.queries = [
           isLastLevel: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
-          availableTemplateSectionIds: [1005, 1006]
+          allowedTemplateSectionIds: [1005, 1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 2000, templateElementId: 4001 }
@@ -452,7 +452,7 @@ exports.queries = [
           isLastLevel: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
-          availableTemplateSectionIds: [1005, 1006]
+          allowedTemplateSectionIds: [1005, 1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3000, templateElementId: 4001 }
@@ -573,7 +573,7 @@ exports.queries = [
           isLastLevel: false
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
-          availableTemplateSectionIds: [1005]
+          allowedTemplateSectionIds: [1005]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3011, templateElementId: 4001 }
@@ -668,7 +668,7 @@ exports.queries = [
             connectByUsername: { username: "testReviewer2" }
           }
           status: ASSIGNED
-          availableTemplateSectionIds: [1006]
+          allowedTemplateSectionIds: [1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3017, templateElementId: 4008 }
@@ -708,7 +708,7 @@ exports.queries = [
             connectByUsername: { username: "testConsolidator1" }
           }
           status: NOT_AVAILABLE
-          availableTemplateSectionIds: [1005, 1006]
+          allowedTemplateSectionIds: [1005, 1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3022, templateElementId: 4001 }
@@ -750,7 +750,7 @@ exports.queries = [
             connectByUsername: { username: "testConsolidator2" }
           }
           status: ASSIGNED
-          availableTemplateSectionIds: [1005, 1006]
+          allowedTemplateSectionIds: [1005, 1006]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3033, templateElementId: 4001 }
