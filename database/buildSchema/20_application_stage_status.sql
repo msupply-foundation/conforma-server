@@ -24,15 +24,19 @@ ON stage.stage_id = ts.id
 JOIN application
 ON stage.application_id = application.id;
 
+-- As above, but only with the CURRENT stage/status
+CREATE OR REPLACE VIEW application_stage_status_latest AS
+	SELECT * FROM application_stage_status_all
+	WHERE stage_is_current = true
+	AND status_is_current = true;
+
 
 -- Function to expose stage_number field on application table in GraphQL
 CREATE FUNCTION public.application_stage_number(app public.application)
 RETURNS INT AS $$
 	SELECT stage_number FROM
 		( SELECT application_id, stage_number FROM
-			public.application_stage_status_all
-			WHERE stage_is_current = true
-			AND status_is_current = true
+			public.application_stage_status_latest
 		) AS app_stage_num
 	WHERE app_stage_num.application_id = app.id;
 $$ LANGUAGE sql STABLE;
@@ -43,9 +47,7 @@ CREATE FUNCTION public.application_stage(app public.application)
 RETURNS VARCHAR AS $$
 	SELECT stage FROM
 		( SELECT application_id, stage FROM
-			public.application_stage_status_all
-			WHERE stage_is_current = true
-			AND status_is_current = true
+			public.application_stage_status_latest
 		) AS app_stage
 	WHERE app_stage.application_id = app.id;
 $$ LANGUAGE sql STABLE;
@@ -56,9 +58,7 @@ CREATE FUNCTION public.application_status(a public.application)
 RETURNS application_status AS $$
 	SELECT status FROM
 		( SELECT application_id, status FROM
-			public.application_stage_status_all
-			WHERE stage_is_current = true
-			AND status_is_current = true
+			public.application_stage_status_latest
 		) AS app_status
 	WHERE app_status.application_id = a.id;
 $$ LANGUAGE sql STABLE;
