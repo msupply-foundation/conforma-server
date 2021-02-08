@@ -11,6 +11,7 @@ CREATE TABLE public.review_assignment (
 	status public.review_assignment_status,
 	application_id integer references public.application(id),
 	allowed_template_section_ids integer [],
+-- 	allowed_template_section_ids varchar [],
 	trigger public.trigger,
 	time_created timestamptz default current_timestamp,
 	level integer,

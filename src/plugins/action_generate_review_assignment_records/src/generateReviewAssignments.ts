@@ -32,7 +32,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       stageId,
       status: nextReviewLevel === 1 ? 'Available' : 'Available for self-assignment', // TO-DO: allow this to be configurable
       applicationId,
-      allowedSectionIds: getAllowedSectionIds(),
+      allowedSectionIds: reviewer.restrictions?.allowedSectionCodes,
       level: nextReviewLevel,
       isLastLevel: nextReviewLevel === numReviewLevels,
     }))
@@ -40,6 +40,9 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     console.log('reviewAssignments', reviewAssignments)
 
     const reviewAssignmentIds = await DBConnect.addReviewAssignments(reviewAssignments)
+
+    // TO-DO: Delete records that are no longer valid (e.g. Reviewer no
+    // longer has permission, has been removed, etc.)
 
     console.log('databaseUpdateResult', reviewAssignmentIds)
 
@@ -60,8 +63,4 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       error_log: 'Problem creating review_assignment records.',
     }
   }
-}
-
-const getAllowedSectionIds = () => {
-  return [1, 2, 3]
 }

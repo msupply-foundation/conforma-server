@@ -342,7 +342,7 @@ exports.queries = [
               }
               {
                 id: 4002
-                permissionNameId: 5000
+                permissionNameId: 5001
                 stageNumber: 1
                 level: 1
                 restrictions: { allowedSectionCodes: ["S2"] }
