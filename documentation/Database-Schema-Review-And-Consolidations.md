@@ -61,7 +61,7 @@ Can be used to agree or disagree on overall review_decision.
 
 A few trick bits:
 
-##### Review Responses Are Always Duplicated i
+#### Review Responses Are Always Duplicated
 
 During re-review, or in reply to changes requested, all existing review responses are duplicated (so that any changes are recorded in a new record). They are trimmed by an action on back end.
 
