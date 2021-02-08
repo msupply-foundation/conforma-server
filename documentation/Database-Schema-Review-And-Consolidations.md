@@ -94,7 +94,7 @@ Review flow is as follows (see review flow diagrams below):
 - `review` is created on front end
 - `review_response` is created for each assigned question (`application_response`), or for each review_response if consolidation
 - Decision is made (suggested) of either conformity or non-conformity along with a comment (for consolidation these are agree or disagree)
-- Multiple `review_response` can be made for the same `application_respones` or `review_response` (consolidation), and timestamps determines the current `review_response` (this allows for consolidator to ask for changes from reviewer or reviewer to see what needs to be re-reviewed based on applicant re-submission triggered by LOQ)
+- Multiple `review_response` can be made for the same `application_responses` or `review_response` (consolidation), and timestamps determines the current `review_response` (this allows for consolidator to ask for changes from reviewer or reviewer to see what needs to be re-reviewed based on applicant re-submission triggered by LOQ)
 
 ### Submission Rules
 
