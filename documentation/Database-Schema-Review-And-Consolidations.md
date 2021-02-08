@@ -1,6 +1,6 @@
 # Database Schema Review
 
-Original thinking was for review and consolidation to be separate entities, upon looking at intersection in schemas, it was apperant that they should be combined. Consolidation is really the review of a review vs review of application.
+Original thinking was for review and consolidation to be separate entities, upon looking at intersection in schemas, it was apparent that they should be combined. Consolidation is really the review of a review vs review of application.
 
 ![Database Schema](images/database-schema-review.png)
 
