@@ -118,7 +118,7 @@ Whenever user starts a review (either first time or subsequent times that they c
 
 ![Review Life Cycle](images/review-life-cycle.png)
 ![Response Flow](images/response-flow.png)
-![Review and Consolidation URL flow](images/consolidation-and-review-URL-flow)
+![Review and Consolidation URL flow](images/consolidation-and-review-URL-flow.png)
 
 Below diagrams are somewhat outdated, but give an idea of consolidation and review process as examples
 
