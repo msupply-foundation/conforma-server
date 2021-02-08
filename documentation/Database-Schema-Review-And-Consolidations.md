@@ -16,7 +16,7 @@ Only available on level > 1 reviewer or when `is_last_level` in `review_assignme
 
 `LOQ` -> At least one of applicant's responses marked as non conformity (Decline) and consolidator agreed with reviewers decisions. They have an option to select from LOQ or Non-Conformity
 
-`Non-conofrm (Decline` -> At least one of applicant's responses marked as non conformity (Decline) and consolidator agreed with reviewers decisions. They have an option to select from LOQ or Non-Conformity
+`Non-conform (Decline)` -> At least one of applicant's responses marked as non conformity (Decline) and consolidator agreed with reviewers decisions. They have an option to select from LOQ or Non-Conformity
 
 `Changes Requested` -> Applies to consolidation, if at least one disagreement with reviewer below consolidator's level, this is the only option available
 
