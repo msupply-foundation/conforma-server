@@ -32,8 +32,11 @@ They can be queried to:
 #### Review Assignment Status
 
 `Available` -> can be assigned by assigner
+
 `Not Available` -> cannot be assigned by assigner, in case of `available for self assignment`, when reviewer self assigns a review, all other `review assignments` for current `stage` and `level` are changed to this status
+
 `Assigned` -> review is assigned to a user and can be started (in case of self assignment when review is self assigned, review assignment will changes status to assigned)
+
 `Available for self assignment` -> review can be started and self assigned
 
 `Assignment NOTE` -> For MVP, only level 1 reviewer can be assigned questions (vs self assignment of review), level > 1 will be self assigned (level 1 can also be configured to self assigned, in this case they will need to be configured to review all sections)
@@ -41,7 +44,9 @@ They can be queried to:
 ##### Other fields (that are not straight away self explanatory)
 
 `assigner_id` -> null until assigned, assigner id when assigned be assigner, otherwise reviewer_id when self assigned
+
 `is_last_level` -> last level for current stage (determine if review_decision is present in UI)
+
 `allowable_section_ids` -> an array of section IDs that reviewer has permission to review (would typically have all sections), assigner can only assign questions from sections that are in this list
 
 ## Review Question Assignment
