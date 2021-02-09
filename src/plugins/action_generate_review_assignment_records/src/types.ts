@@ -12,7 +12,7 @@ interface Restrictions {
 export interface Reviewer {
   user_id: number
   organisation_id: number | null
-  restrictions: Restrictions
+  restrictions: Restrictions | null
 }
 
 interface ReviewAssignment {

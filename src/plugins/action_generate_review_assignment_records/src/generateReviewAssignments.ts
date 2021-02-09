@@ -1,6 +1,7 @@
 import { Reviewer, ReviewAssignmentObject, AssignmentStatus } from './types'
 
 module.exports['generateReviewAssignments'] = async function (input: any, DBConnect: any) {
+  console.log('Generating review assignment records...')
   try {
     const { applicationId, reviewId, templateId, stageId, stageNumber } = input
     // NB: reviewId comes from record_id on TriggerPayload
@@ -25,11 +26,11 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     // Build reviewers into object map so we can combine duplicate user_orgs
     // and merge their section code restrictions
     nextLevelReviewers.forEach((reviewer: Reviewer) => {
-      const {
-        user_id: userId,
-        organisation_id: orgId,
-        restrictions: { templateSectionRestrictions },
-      } = reviewer
+      const { user_id: userId, organisation_id: orgId, restrictions } = reviewer
+
+      const templateSectionRestrictions = restrictions
+        ? restrictions.templateSectionRestrictions
+        : null
 
       const userOrgKey = `${userId}_${orgId ? orgId : 0}`
       if (reviewAssignments[userOrgKey])
@@ -56,8 +57,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       Object.values(reviewAssignments)
     )
 
-    // TO-DO: Delete records that are no longer valid (e.g. Reviewer no
-    // longer has permission, has been removed, etc.)
+    console.log('Review Assignment IDs:', reviewAssignmentIds)
 
     return {
       status: 'Success',

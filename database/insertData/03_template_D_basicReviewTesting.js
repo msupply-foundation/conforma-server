@@ -304,7 +304,7 @@ exports.queries = [
               {
                 actionCode: "generateReviewAssignments"
                 trigger: ON_REVIEW_SUBMIT
-                # sequence: 3
+                # sequence: 1
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"

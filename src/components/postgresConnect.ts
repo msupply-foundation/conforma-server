@@ -759,8 +759,8 @@ class PostgresDB {
         })
         reviewAssignmentIds.push(result.rows[0].id)
 
-        // TO-DO: Delete records that are no longer valid (e.g. Reviewer no
-        // longer has permission, has been removed, etc.)
+        // TO-DO: What to do with existing records that don't match the
+        // generated ones? Delete them? Set their status = "Not Available"?
       } catch (err) {
         console.log(err.message)
         reviewAssignmentIds.push(err.message)
