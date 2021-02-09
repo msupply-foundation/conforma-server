@@ -1,3 +1,5 @@
+import { Reviewer, ReviewAssignmentObject } from './types'
+
 module.exports['generateReviewAssignments'] = async function (input: any, DBConnect: any) {
   try {
     const { applicationId, reviewId, templateId, stageId, stageNumber } = input
@@ -26,23 +28,23 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
 
     console.log('reviewers', nextLevelReviewers)
 
-    const reviewAssignments: any = {}
+    const reviewAssignments: ReviewAssignmentObject = {}
 
     // Build reviewers into object map so we can combine duplicate user_orgs
     // and merge their section code restrictions
-    nextLevelReviewers.forEach((reviewer: any) => {
+    nextLevelReviewers.forEach((reviewer: Reviewer) => {
       const userOrgKey = `${reviewer.user_id}_${
         reviewer.organisation_id ? reviewer.organisation_id : 0
       }`
       if (reviewAssignments[userOrgKey])
         reviewAssignments[userOrgKey].templateSectionRestrictions = mergeSectionRestrictions(
-          reviewAssignments[userOrgKey].templateSectionRestrictions,
+          reviewAssignments[userOrgKey]?.templateSectionRestrictions,
           reviewer.restrictions?.templateSectionRestrictions
         )
       else
         reviewAssignments[userOrgKey] = {
           reviewerId: reviewer.user_id,
-          orgId: reviewer.organisation_id || null,
+          orgId: reviewer.organisation_id,
           stageId,
           stageNumber,
           status: nextReviewLevel === 1 ? 'Available' : 'Available for self-assignment', // TO-DO: allow this to be configurable
@@ -83,9 +85,12 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
   }
 }
 
-// Helper method -- concatenates two arrays, but handles case when either
-// or both are null/undefined
-const mergeSectionRestrictions = (prevArray: string[] | null, newArray: string[] | null) => {
+// Helper method -- concatenates two arrays, but handles case
+// when either or both are null/undefined
+const mergeSectionRestrictions = (
+  prevArray: string[] | null | undefined,
+  newArray: string[] | null | undefined
+) => {
   if (!prevArray) return newArray
   else if (!newArray) return prevArray
   else return [...prevArray, ...newArray]
