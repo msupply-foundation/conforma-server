@@ -52,16 +52,12 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
         }
     })
 
-    console.log('reviewAssignments', reviewAssignments)
-
     const reviewAssignmentIds = await DBConnect.addReviewAssignments(
       Object.values(reviewAssignments)
     )
 
     // TO-DO: Delete records that are no longer valid (e.g. Reviewer no
     // longer has permission, has been removed, etc.)
-
-    console.log('databaseUpdateResult', reviewAssignmentIds)
 
     return {
       status: 'Success',
@@ -82,7 +78,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
   }
 }
 
-// Helper method -- concatenates two arrays, but handles case
+// Helper function -- concatenates two arrays, but handles case
 // when either or both are null/undefined
 const mergeSectionRestrictions = (
   prevArray: string[] | null | undefined,
