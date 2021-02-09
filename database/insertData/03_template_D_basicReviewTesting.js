@@ -328,6 +328,17 @@ exports.queries = [
                   }
                 }
               }
+              {
+                actionCode: "updateReviewAssignmentsStatus"
+                trigger: ON_REVIEW_ASSIGN
+                # sequence: 1
+                parameterQueries: {
+                  reviewAssignmentId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                }
+              }
             ]
           }
           templatePermissionsUsingId: {

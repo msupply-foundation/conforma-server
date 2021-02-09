@@ -3,7 +3,7 @@
   "code": "updateReviewAssignmentsStatus",
   "name": "Update Review Assignment statuses",
   "file": "updateReviewAssignmentsStatus",
-  "function_name": "generateReviewAssignments",
+  "function_name": "updateReviewAssignmentsStatus",
   "description": "Update status of Review Assignment records when one is Assigned",
   "required_parameters": [
     "applicationId",

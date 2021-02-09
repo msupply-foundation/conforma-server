@@ -1,95 +1,71 @@
-import { Reviewer, ReviewAssignmentObject, AssignmentStatus } from './types'
+import { AssignmentStatus } from './types'
 
-module.exports['generateReviewAssignments'] = async function (input: any, DBConnect: any) {
+module.exports['updateReviewAssignmentsStatus'] = async function (parameters: any, DBConnect: any) {
   console.log('Generating review assignment records...')
+  console.log('parameters', parameters)
   try {
-    const { applicationId, reviewId, templateId, stageId, stageNumber } = input
-    // NB: reviewId comes from record_id on TriggerPayload when triggered
-    // from review table
+    const { reviewAssignmentId } = parameters
+    // NB: reviewAssignmentId comes from record_id on TriggerPayload when
+    // triggered from review_assignment table
+    const {
+      application_id: applicationId,
+      stage_number: stageNumber,
+      level: reviewLevel,
+    } = await DBConnect.getReviewAssignmentById(reviewAssignmentId)
 
-    const numReviewLevels: number = await DBConnect.getNumReviewLevels(templateId, stageNumber)
-
-    const currentReviewLevel: number = reviewId
-      ? await DBConnect.getCurrentReviewLevel(reviewId)
-      : 0
-    if (currentReviewLevel === numReviewLevels) {
-      console.log(
-        'Final review level reached for current stage, no later review assignments to generate.'
-      )
-      return {}
-    }
-    const nextReviewLevel = currentReviewLevel + 1
-
-    const nextLevelReviewers = await DBConnect.getReviewersForApplicationStageLevel(
-      templateId,
+    const otherReviewAssignments = await DBConnect.getMatchingReviewAssignments(
+      reviewAssignmentId,
+      applicationId,
       stageNumber,
-      nextReviewLevel
+      reviewLevel
     )
 
-    const reviewAssignments: ReviewAssignmentObject = {}
+    console.log('otherReviewAssignments', otherReviewAssignments)
 
-    // Build reviewers into object map so we can combine duplicate user_orgs
-    // and merge their section code restrictions
-    nextLevelReviewers.forEach((reviewer: Reviewer) => {
-      const { user_id: userId, organisation_id: orgId, restrictions } = reviewer
-
-      const templateSectionRestrictions = restrictions
-        ? restrictions.templateSectionRestrictions
-        : null
-
-      const userOrgKey = `${userId}_${orgId ? orgId : 0}`
-      if (reviewAssignments[userOrgKey])
-        reviewAssignments[userOrgKey].templateSectionRestrictions = mergeSectionRestrictions(
-          reviewAssignments[userOrgKey]?.templateSectionRestrictions,
-          templateSectionRestrictions
-        )
-      else
-        reviewAssignments[userOrgKey] = {
-          reviewerId: userId,
-          orgId,
-          stageId,
-          stageNumber,
-          // TO-DO: allow STATUS to be configurable in template
-          status: nextReviewLevel === 1 ? AssignmentStatus.AVAILABLE : AssignmentStatus.SELF_ASSIGN,
-          applicationId,
-          templateSectionRestrictions,
-          level: nextReviewLevel,
-          isLastLevel: nextReviewLevel === numReviewLevels,
+    const reviewAssignmentUpdates = await Promise.all(
+      otherReviewAssignments.map(async (reviewAssignment: any) => {
+        const { id, status, application_id, level } = reviewAssignment
+        return {
+          id,
+          status: await getNewReviewAssignmentStatus(application_id, status, level),
         }
-    })
-
-    const reviewAssignmentIds = await DBConnect.addReviewAssignments(
-      Object.values(reviewAssignments)
+      })
     )
 
-    console.log('Review Assignment IDs:', reviewAssignmentIds)
+    const reviewAssignmentUpdateResults = await DBConnect.updateReviewAssignments(
+      reviewAssignmentUpdates
+    )
+
+    console.log('reviewAssignmentUpdateResults', reviewAssignmentUpdateResults)
 
     return {
       status: 'Success',
       error_log: '',
       output: {
-        reviewAssignments: Object.values(reviewAssignments),
-        reviewAssignmentIds,
-        currentReviewLevel,
-        nextReviewLevel,
+        reviewAssignmentUpdates: reviewAssignmentUpdateResults,
       },
     }
   } catch (error) {
     console.log(error.message)
     return {
       status: 'Fail',
-      error_log: 'Problem creating review_assignment records.',
+      error_log: 'Problem updating review_assignment statuses.',
     }
   }
-}
 
-// Helper function -- concatenates two arrays, but handles case
-// when either or both are null/undefined
-const mergeSectionRestrictions = (
-  prevArray: string[] | null | undefined,
-  newArray: string[] | null | undefined
-) => {
-  if (!prevArray) return newArray
-  else if (!newArray) return prevArray
-  else return [...prevArray, ...newArray]
+  // Logic for determining what the new review status should be:
+  //    For level 2+, "Available" assignments become "Not available"
+  //    For level 1, they become "Not available" only if fully assigned
+  async function getNewReviewAssignmentStatus(
+    application_id: number,
+    status: AssignmentStatus,
+    level: number
+  ) {
+    if (status === AssignmentStatus.ASSIGNED) return status
+    if (level > 1) return AssignmentStatus.NOT_AVAILABLE
+    // Level 1:
+    return (await DBConnect.isFullyAssignedLevel1(application_id))
+      ? AssignmentStatus.NOT_AVAILABLE
+      : AssignmentStatus.AVAILABLE
+  }
 }

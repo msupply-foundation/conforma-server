@@ -9,7 +9,7 @@ CREATE TABLE public.review_assignment (
 	organisation_id integer references public.organisation(id),
 	stage_id integer references public.template_stage(id),
 	stage_number integer,
-	status public.review_assignment_status,
+	status public.review_assignment_status NOT NULL,
 	application_id integer references public.application(id),
 	template_section_restrictions varchar [],
 	trigger public.trigger,
