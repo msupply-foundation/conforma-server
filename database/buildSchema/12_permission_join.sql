@@ -20,4 +20,4 @@ WHERE organisation_id IS NOT NULL;
 
 CREATE UNIQUE INDEX unique_user_permission
 ON permission_join(user_id, permission_name_id)
-WHERE organisation_id IS NULL;
+WHERE organisation_id IS NULL; 
