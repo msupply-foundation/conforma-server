@@ -4,7 +4,8 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
   console.log('Generating review assignment records...')
   try {
     const { applicationId, reviewId, templateId, stageId, stageNumber } = input
-    // NB: reviewId comes from record_id on TriggerPayload
+    // NB: reviewId comes from record_id on TriggerPayload when triggered
+    // from review table
 
     const numReviewLevels: number = await DBConnect.getNumReviewLevels(templateId, stageNumber)
 
