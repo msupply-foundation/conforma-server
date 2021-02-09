@@ -338,14 +338,14 @@ exports.queries = [
                 permissionNameId: 5000
                 stageNumber: 1
                 level: 1
-                restrictions: { allowedSectionCodes: ["S1"] }
+                restrictions: { templateSectionRestrictions: ["S1"] }
               }
               {
                 id: 4002
                 permissionNameId: 5001
                 stageNumber: 1
                 level: 1
-                restrictions: { allowedSectionCodes: ["S2"] }
+                restrictions: { templateSectionRestrictions: ["S2"] }
               }
               { id: 4003, permissionNameId: 6000, stageNumber: 2, level: 1 }
               { id: 4004, permissionNameId: 6001, stageNumber: 2, level: 2 }

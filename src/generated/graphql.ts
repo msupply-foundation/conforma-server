@@ -6728,46 +6728,6 @@ export type IntFilter = {
   greaterThanOrEqualTo?: Maybe<Scalars['Int']>;
 };
 
-/** A filter to be used against Int List fields. All fields are combined with a logical ‘and.’ */
-export type IntListFilter = {
-  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
-  isNull?: Maybe<Scalars['Boolean']>;
-  /** Equal to the specified value. */
-  equalTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Not equal to the specified value. */
-  notEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Not equal to the specified value, treating null like an ordinary value. */
-  distinctFrom?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Equal to the specified value, treating null like an ordinary value. */
-  notDistinctFrom?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Less than the specified value. */
-  lessThan?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Less than or equal to the specified value. */
-  lessThanOrEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Greater than the specified value. */
-  greaterThan?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Greater than or equal to the specified value. */
-  greaterThanOrEqualTo?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Contains the specified list of values. */
-  contains?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Contained by the specified list of values. */
-  containedBy?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Overlaps the specified list of values. */
-  overlaps?: Maybe<Array<Maybe<Scalars['Int']>>>;
-  /** Any array item is equal to the specified value. */
-  anyEqualTo?: Maybe<Scalars['Int']>;
-  /** Any array item is not equal to the specified value. */
-  anyNotEqualTo?: Maybe<Scalars['Int']>;
-  /** Any array item is less than the specified value. */
-  anyLessThan?: Maybe<Scalars['Int']>;
-  /** Any array item is less than or equal to the specified value. */
-  anyLessThanOrEqualTo?: Maybe<Scalars['Int']>;
-  /** Any array item is greater than the specified value. */
-  anyGreaterThan?: Maybe<Scalars['Int']>;
-  /** Any array item is greater than or equal to the specified value. */
-  anyGreaterThanOrEqualTo?: Maybe<Scalars['Int']>;
-};
-
 
 /** A filter to be used against JSON fields. All fields are combined with a logical ‘and.’ */
 export type JsonFilter = {
@@ -11087,9 +11047,10 @@ export type ReviewAssignment = Node & {
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11208,8 +11169,9 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11273,9 +11235,10 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11323,12 +11286,14 @@ export type ReviewAssignmentCondition = {
   organisationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageId` field. */
   stageId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<ReviewAssignmentStatus>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `allowedTemplateSectionIds` field. */
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  /** Checks for equality with the object’s `templateSectionRestrictions` field. */
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `timeCreated` field. */
@@ -11351,12 +11316,14 @@ export type ReviewAssignmentFilter = {
   organisationId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageId` field. */
   stageId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ReviewAssignmentStatusFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `allowedTemplateSectionIds` field. */
-  allowedTemplateSectionIds?: Maybe<IntListFilter>;
+  /** Filter by the object’s `templateSectionRestrictions` field. */
+  templateSectionRestrictions?: Maybe<StringListFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `timeCreated` field. */
@@ -11408,9 +11375,10 @@ export type ReviewAssignmentInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11603,9 +11571,10 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11626,9 +11595,10 @@ export type ReviewAssignmentPatch = {
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11702,9 +11672,10 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   assignerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -11772,12 +11743,14 @@ export enum ReviewAssignmentsOrderBy {
   OrganisationIdDesc = 'ORGANISATION_ID_DESC',
   StageIdAsc = 'STAGE_ID_ASC',
   StageIdDesc = 'STAGE_ID_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  AllowedTemplateSectionIdsAsc = 'ALLOWED_TEMPLATE_SECTION_IDS_ASC',
-  AllowedTemplateSectionIdsDesc = 'ALLOWED_TEMPLATE_SECTION_IDS_DESC',
+  TemplateSectionRestrictionsAsc = 'TEMPLATE_SECTION_RESTRICTIONS_ASC',
+  TemplateSectionRestrictionsDesc = 'TEMPLATE_SECTION_RESTRICTIONS_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
@@ -11834,9 +11807,10 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -12545,9 +12519,10 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -13320,9 +13295,10 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -17587,8 +17563,9 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -17608,9 +17585,10 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -17630,9 +17608,10 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -17652,9 +17631,10 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   assignerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -17674,9 +17654,10 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   assignerId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -17697,9 +17678,10 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -17720,9 +17702,10 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   reviewerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ReviewAssignmentStatus>;
   applicationId?: Maybe<Scalars['Int']>;
-  allowedTemplateSectionIds?: Maybe<Array<Maybe<Scalars['Int']>>>;
+  templateSectionRestrictions?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   level?: Maybe<Scalars['Int']>;
@@ -20298,7 +20281,6 @@ export type ResolversTypes = {
   ReviewAssignmentFilter: ReviewAssignmentFilter;
   ReviewAssignmentStatusFilter: ReviewAssignmentStatusFilter;
   ReviewAssignmentStatus: ReviewAssignmentStatus;
-  IntListFilter: IntListFilter;
   ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
   ReviewFilter: ReviewFilter;
   ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
@@ -21497,7 +21479,6 @@ export type ResolversParentTypes = {
   ReviewQuestionAssignmentToManyReviewResponseFilter: ReviewQuestionAssignmentToManyReviewResponseFilter;
   ReviewAssignmentFilter: ReviewAssignmentFilter;
   ReviewAssignmentStatusFilter: ReviewAssignmentStatusFilter;
-  IntListFilter: IntListFilter;
   ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
   ReviewFilter: ReviewFilter;
   ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
@@ -24070,9 +24051,10 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   reviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   organisationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ReviewAssignmentStatus']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  allowedTemplateSectionIds?: Resolver<Maybe<Array<Maybe<ResolversTypes['Int']>>>, ParentType, ContextType>;
+  templateSectionRestrictions?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;

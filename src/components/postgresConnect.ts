@@ -718,9 +718,10 @@ class PostgresDB {
         reviewerId,
         orgId,
         stageId,
+        stageNumber,
         status,
         applicationId,
-        allowedSectionIds,
+        templateSectionRestrictions,
         level,
         isLastLevel,
       } = reviewAssignment
@@ -729,16 +730,16 @@ class PostgresDB {
       const text = `
         INSERT INTO review_assignment (
           reviewer_id,${orgId ? ' organisation_id,' : ''}
-          stage_id, status, application_id,
-          allowed_template_section_ids, level, is_last_level
+          stage_id, stage_number, status, application_id,
+          template_section_restrictions, level, is_last_level
           )
-        VALUES ($1, $2, $3, $4, $5, $6, $7${orgId ? ', $8' : ''})
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8${orgId ? ', $9' : ''})
         ON CONFLICT (reviewer_id,${
           orgId ? ' organisation_id,' : ''
-        } stage_id, application_id, level)
+        } stage_number, application_id, level)
           WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
         DO
-          UPDATE SET allowed_template_section_ids = ${orgId ? '$6' : '$5'}
+          UPDATE SET template_section_restrictions = ${orgId ? '$7' : '$6'}
         RETURNING id`
 
       try {
@@ -748,14 +749,18 @@ class PostgresDB {
             reviewerId,
             ...(orgId ? orgId : []),
             stageId,
+            stageNumber,
             status,
             applicationId,
-            allowedSectionIds,
+            templateSectionRestrictions,
             level,
             isLastLevel,
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
+
+        // TO-DO: Delete records that are no longer valid (e.g. Reviewer no
+        // longer has permission, has been removed, etc.)
       } catch (err) {
         console.log(err.message)
         reviewAssignmentIds.push(err.message)

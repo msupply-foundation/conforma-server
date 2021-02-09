@@ -8,10 +8,12 @@ CREATE TABLE public.review_assignment (
 	reviewer_id integer references public.user(id),
 	organisation_id integer references public.organisation(id),
 	stage_id integer references public.template_stage(id),
+	stage_number integer,
 	status public.review_assignment_status,
 	application_id integer references public.application(id),
-	allowed_template_section_ids integer [],
--- 	allowed_template_section_ids varchar [],
+-- 	allowed_template_section_ids integer [],
+-- 	allowed_template_section_codes varchar [],
+	template_section_restrictions varchar [],
 	trigger public.trigger,
 	time_created timestamptz default current_timestamp,
 	level integer,
@@ -27,11 +29,11 @@ EXECUTE FUNCTION public.add_event_to_trigger_queue();
 
 
 CREATE UNIQUE INDEX unique_review_assignment_with_org
-ON review_assignment(reviewer_id, organisation_id, stage_id, application_id, level)
+ON review_assignment(reviewer_id, organisation_id, stage_number, application_id, level)
 WHERE organisation_id IS NOT NULL;
 
 CREATE UNIQUE INDEX unique_review_assignment_no_org
-ON review_assignment(reviewer_id, stage_id, application_id, level)
+ON review_assignment(reviewer_id, stage_number, application_id, level)
 WHERE organisation_id IS NULL;
 
 
