@@ -1,13 +1,18 @@
-type AssignmentStatus = 'Available' | 'Not available' | 'Assigned' | 'Available for self-assignment'
+export enum AssignmentStatus {
+  AVAILABLE = 'Available',
+  NOT_AVAILABLE = 'Not available',
+  ASSIGNED = 'Assigned',
+  SELF_ASSIGN = 'Available for self-assignment',
+}
 
 interface Restrictions {
-  templateSectionRestrictions?: string[]
+  templateSectionRestrictions?: string[] | undefined
 }
 
 export interface Reviewer {
   user_id: number
   organisation_id: number | null
-  restrictions: Restrictions | null
+  restrictions: Restrictions
 }
 
 interface ReviewAssignment {

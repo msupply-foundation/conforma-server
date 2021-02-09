@@ -1,24 +1,18 @@
-import { Reviewer, ReviewAssignmentObject } from './types'
+import { Reviewer, ReviewAssignmentObject, AssignmentStatus } from './types'
 
 module.exports['generateReviewAssignments'] = async function (input: any, DBConnect: any) {
   try {
     const { applicationId, reviewId, templateId, stageId, stageNumber } = input
-
-    // reviewId comes from record_id on Trigger
+    // NB: reviewId comes from record_id on TriggerPayload
 
     const numReviewLevels: number = await DBConnect.getNumReviewLevels(templateId, stageNumber)
 
     const currentReviewLevel: number = reviewId
       ? await DBConnect.getCurrentReviewLevel(reviewId)
       : 0
-
-    console.log('currentReviewLevel', currentReviewLevel)
-
     if (currentReviewLevel === numReviewLevels) return {}
 
     const nextReviewLevel = currentReviewLevel + 1
-
-    console.log('nextReviewLevel', nextReviewLevel)
 
     const nextLevelReviewers = await DBConnect.getReviewersForApplicationStageLevel(
       templateId,
@@ -26,30 +20,33 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       nextReviewLevel
     )
 
-    console.log('reviewers', nextLevelReviewers)
-
     const reviewAssignments: ReviewAssignmentObject = {}
 
     // Build reviewers into object map so we can combine duplicate user_orgs
     // and merge their section code restrictions
     nextLevelReviewers.forEach((reviewer: Reviewer) => {
-      const userOrgKey = `${reviewer.user_id}_${
-        reviewer.organisation_id ? reviewer.organisation_id : 0
-      }`
+      const {
+        user_id: userId,
+        organisation_id: orgId,
+        restrictions: { templateSectionRestrictions },
+      } = reviewer
+
+      const userOrgKey = `${userId}_${orgId ? orgId : 0}`
       if (reviewAssignments[userOrgKey])
         reviewAssignments[userOrgKey].templateSectionRestrictions = mergeSectionRestrictions(
           reviewAssignments[userOrgKey]?.templateSectionRestrictions,
-          reviewer.restrictions?.templateSectionRestrictions
+          templateSectionRestrictions
         )
       else
         reviewAssignments[userOrgKey] = {
-          reviewerId: reviewer.user_id,
-          orgId: reviewer.organisation_id,
+          reviewerId: userId,
+          orgId,
           stageId,
           stageNumber,
-          status: nextReviewLevel === 1 ? 'Available' : 'Available for self-assignment', // TO-DO: allow this to be configurable
+          // TO-DO: allow STATUS to be configurable in template
+          status: nextReviewLevel === 1 ? AssignmentStatus.AVAILABLE : AssignmentStatus.SELF_ASSIGN,
           applicationId,
-          templateSectionRestrictions: reviewer.restrictions?.templateSectionRestrictions,
+          templateSectionRestrictions,
           level: nextReviewLevel,
           isLastLevel: nextReviewLevel === numReviewLevels,
         }
