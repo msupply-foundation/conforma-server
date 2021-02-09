@@ -5,7 +5,7 @@
   "file": "generateReviewAssignments",
   "function_name": "generateReviewAssignments",
   "description": "Generates review_assignment records for current application",
-  "required_parameters": ["appId", "userId"],
+  "required_parameters": ["applicationId", "reviewId", "templateId", "stageId", "stageNumber"],
   "output_properties": [],
   "info": {
     "author": {
