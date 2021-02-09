@@ -12,8 +12,12 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     const currentReviewLevel: number = reviewId
       ? await DBConnect.getCurrentReviewLevel(reviewId)
       : 0
-    if (currentReviewLevel === numReviewLevels) return {}
-
+    if (currentReviewLevel === numReviewLevels) {
+      console.log(
+        'Final review level reached for current stage, no later review assignments to generate.'
+      )
+      return {}
+    }
     const nextReviewLevel = currentReviewLevel + 1
 
     const nextLevelReviewers = await DBConnect.getReviewersForApplicationStageLevel(
@@ -64,8 +68,8 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       status: 'Success',
       error_log: '',
       output: {
-        reviewAssignments,
-        reviewAssignmentIds: reviewAssignmentIds,
+        reviewAssignments: Object.values(reviewAssignments),
+        reviewAssignmentIds,
         currentReviewLevel,
         nextReviewLevel,
       },

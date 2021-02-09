@@ -316,11 +316,11 @@ exports.queries = [
                   }
                   reviewId: {
                     operator: "objectProperties"
-                    children: ["applicationData.templateId"]
+                    children: ["applicationData.record_id"]
                   }
                   stageId: {
                     operator: "objectProperties"
-                    children: ["applicationData.record_id"]
+                    children: ["applicationData.stageId"]
                   }
                   stageNumber: {
                     operator: "objectProperties"

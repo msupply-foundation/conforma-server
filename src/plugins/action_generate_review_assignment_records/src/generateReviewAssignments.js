@@ -68,8 +68,10 @@ module.exports['generateReviewAssignments'] = function (input, DBConnect) {
                     _b.label = 5;
                 case 5:
                     currentReviewLevel = _a;
-                    if (currentReviewLevel === numReviewLevels_1)
+                    if (currentReviewLevel === numReviewLevels_1) {
+                        console.log('Final review level reached for current stage, no later review assignments to generate.');
                         return [2 /*return*/, {}];
+                    }
                     nextReviewLevel_1 = currentReviewLevel + 1;
                     return [4 /*yield*/, DBConnect.getReviewersForApplicationStageLevel(templateId, stageNumber_1, nextReviewLevel_1)];
                 case 6:
@@ -108,7 +110,7 @@ module.exports['generateReviewAssignments'] = function (input, DBConnect) {
                             status: 'Success',
                             error_log: '',
                             output: {
-                                reviewAssignments: reviewAssignments_1,
+                                reviewAssignments: Object.values(reviewAssignments_1),
                                 reviewAssignmentIds: reviewAssignmentIds,
                                 currentReviewLevel: currentReviewLevel,
                                 nextReviewLevel: nextReviewLevel_1,
