@@ -16,7 +16,11 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       console.log(
         'Final review level reached for current stage, no later review assignments to generate.'
       )
-      return {}
+      return {
+        status: 'Success',
+        error_log: '',
+        output: {},
+      }
     }
     const nextReviewLevel = currentReviewLevel + 1
 
