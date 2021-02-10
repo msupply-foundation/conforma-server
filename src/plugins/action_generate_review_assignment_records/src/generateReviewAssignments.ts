@@ -38,13 +38,13 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       const { user_id: userId, organisation_id: orgId, restrictions } = reviewer
 
       const templateSectionRestrictions = restrictions
-        ? restrictions.templateSectionRestrictions
+        ? restrictions?.templateSectionRestrictions
         : null
 
       const userOrgKey = `${userId}_${orgId ? orgId : 0}`
       if (reviewAssignments[userOrgKey])
         reviewAssignments[userOrgKey].templateSectionRestrictions = mergeSectionRestrictions(
-          reviewAssignments[userOrgKey]?.templateSectionRestrictions,
+          reviewAssignments[userOrgKey].templateSectionRestrictions,
           templateSectionRestrictions
         )
       else

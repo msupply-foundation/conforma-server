@@ -727,11 +727,14 @@ class PostgresDB {
       } = reviewAssignment
       // Needs a slightly different query with different CONFLICT restrictions
       // depending on whether orgId exists or not.
+      // On conflict, existing records have their Section Restrictions updated,
+      // but assignment status remains unchanged.
       const text = `
         INSERT INTO review_assignment (
-          reviewer_id,${orgId ? ' organisation_id,' : ''}
-          stage_id, stage_number, status, application_id,
+          reviewer_id, stage_id,
+          stage_number, status, application_id,
           template_section_restrictions, level, is_last_level
+          ${orgId ? ', organisation_id' : ''}
           )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8${orgId ? ', $9' : ''})
         ON CONFLICT (reviewer_id,${
@@ -739,7 +742,7 @@ class PostgresDB {
         } stage_number, application_id, level)
           WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
         DO
-          UPDATE SET template_section_restrictions = ${orgId ? '$7' : '$6'}
+          UPDATE SET template_section_restrictions = $6
         RETURNING id`
 
       try {
@@ -747,7 +750,6 @@ class PostgresDB {
           text,
           values: [
             reviewerId,
-            ...(orgId ? orgId : []),
             stageId,
             stageNumber,
             status,
@@ -755,6 +757,7 @@ class PostgresDB {
             templateSectionRestrictions,
             level,
             isLastLevel,
+            ...(orgId ? orgId : []),
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
