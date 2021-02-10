@@ -95,5 +95,5 @@ const mergeSectionRestrictions = (
 ) => {
   if (!prevArray) return newArray
   else if (!newArray) return prevArray
-  else return [...prevArray, ...newArray]
+  else return Array.from(new Set([...prevArray, ...newArray]))
 }
