@@ -29,11 +29,11 @@ module.exports['updateReviewAssignmentsStatus'] = async function (parameters: an
       })
     )
 
-    console.log('reviewAssignmentUpdates', reviewAssignmentUpdates)
-
     const reviewAssignmentUpdateResults = await DBConnect.updateReviewAssignments(
       reviewAssignmentUpdates
     )
+
+    console.log('Review Assignment status updates:', reviewAssignmentUpdateResults)
 
     return {
       status: 'Success',
