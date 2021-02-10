@@ -16,7 +16,11 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       console.log(
         'Final review level reached for current stage, no later review assignments to generate.'
       )
-      return {}
+      return {
+        status: 'Success',
+        error_log: '',
+        output: {},
+      }
     }
     const nextReviewLevel = currentReviewLevel + 1
 
@@ -34,13 +38,13 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       const { user_id: userId, organisation_id: orgId, restrictions } = reviewer
 
       const templateSectionRestrictions = restrictions
-        ? restrictions.templateSectionRestrictions
+        ? restrictions?.templateSectionRestrictions
         : null
 
       const userOrgKey = `${userId}_${orgId ? orgId : 0}`
       if (reviewAssignments[userOrgKey])
         reviewAssignments[userOrgKey].templateSectionRestrictions = mergeSectionRestrictions(
-          reviewAssignments[userOrgKey]?.templateSectionRestrictions,
+          reviewAssignments[userOrgKey].templateSectionRestrictions,
           templateSectionRestrictions
         )
       else
@@ -91,5 +95,5 @@ const mergeSectionRestrictions = (
 ) => {
   if (!prevArray) return newArray
   else if (!newArray) return prevArray
-  else return [...prevArray, ...newArray]
+  else return Array.from(new Set([...prevArray, ...newArray]))
 }
