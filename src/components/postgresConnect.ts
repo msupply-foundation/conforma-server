@@ -822,14 +822,14 @@ class PostgresDB {
       const { id, status } = reviewAssignment
       const text = `
       UPDATE review_assignment
-      SET status = 'Not available'
+      SET status = $2
       WHERE id = $1
       RETURNING id, status
       `
       try {
         const result = await this.query({
           text,
-          values: [id],
+          values: [id, status],
         })
         reviewAssignmentUpdateResults.push(result.rows[0])
       } catch (err) {

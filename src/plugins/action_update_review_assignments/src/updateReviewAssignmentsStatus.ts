@@ -1,8 +1,7 @@
 import { AssignmentStatus } from './types'
 
 module.exports['updateReviewAssignmentsStatus'] = async function (parameters: any, DBConnect: any) {
-  console.log('Generating review assignment records...')
-  console.log('parameters', parameters)
+  console.log('Updating review assignment statuses...')
   try {
     const { reviewAssignmentId } = parameters
     // NB: reviewAssignmentId comes from record_id on TriggerPayload when
@@ -20,8 +19,6 @@ module.exports['updateReviewAssignmentsStatus'] = async function (parameters: an
       reviewLevel
     )
 
-    console.log('otherReviewAssignments', otherReviewAssignments)
-
     const reviewAssignmentUpdates = await Promise.all(
       otherReviewAssignments.map(async (reviewAssignment: any) => {
         const { id, status, application_id, level } = reviewAssignment
@@ -32,11 +29,11 @@ module.exports['updateReviewAssignmentsStatus'] = async function (parameters: an
       })
     )
 
+    console.log('reviewAssignmentUpdates', reviewAssignmentUpdates)
+
     const reviewAssignmentUpdateResults = await DBConnect.updateReviewAssignments(
       reviewAssignmentUpdates
     )
-
-    console.log('reviewAssignmentUpdateResults', reviewAssignmentUpdateResults)
 
     return {
       status: 'Success',
