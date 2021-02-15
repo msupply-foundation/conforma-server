@@ -1,6 +1,6 @@
 {
   "name": "@openmsupply/deep-comparison",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Deep comparison of objects for equality, to arbitrary depth",
   "main": "lib/deepCompare.js",
   "types": "lib/deepCompare.d.ts",
