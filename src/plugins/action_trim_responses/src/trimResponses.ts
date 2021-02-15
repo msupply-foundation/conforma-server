@@ -21,12 +21,10 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
 
   try {
     const { applicationId, reviewId } = input
-    // Get ALL responses associated with application OR review (new method)
+    // Get ALL responses associated with application OR review
     const responses = reviewId
-      ? await db.getAllReviewResponses(1)
-      : // ? await db.getAllReviewResponses(reviewId)
-        await db.getAllApplicationResponses(1000)
-    // : await db.getAllApplicationResponses(applicationId)
+      ? await db.getAllReviewResponses(reviewId)
+      : await db.getAllApplicationResponses(applicationId)
 
     // Create object of responses indexed by code, with response
     // objects added to array for each code
@@ -48,7 +46,7 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
         responsesToDelete.push(latestResponse.id)
     })
 
-    console.log('to delete:', responsesToDelete)
+    console.log('To delete:', responsesToDelete)
 
     // Run delete operation on all in toDelete array (new method)
     const deletedCodes = reviewId

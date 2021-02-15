@@ -35,7 +35,7 @@ const databaseMethods = (DBConnect: any) => ({
     }
   },
   deleteApplicationResponses: async (responsesToDelete: number[]) => {
-    const deletedCodes = []
+    const deletedCodes: any = []
     for (const responseId of responsesToDelete) {
       const text = `DELETE from application_response
       WHERE id = $1
@@ -49,8 +49,8 @@ const databaseMethods = (DBConnect: any) => ({
         deletedCodes.push(err.message)
         throw err
       }
-      return deletedCodes
     }
+    return deletedCodes
   },
   deleteReviewResponses: async (responsesToDelete: number[]) => {
     const deletedCodes = []
@@ -69,8 +69,8 @@ const databaseMethods = (DBConnect: any) => ({
         deletedCodes.push(err.message)
         throw err
       }
-      return deletedCodes
     }
+    return deletedCodes
   },
 })
 
