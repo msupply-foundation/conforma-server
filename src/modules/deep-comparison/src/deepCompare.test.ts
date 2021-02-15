@@ -1,70 +1,70 @@
-import { deepEquality } from './deepCompare'
+import deepCompare from './deepCompare'
 
-test('deepEquality: two numbers match', () => {
-  expect(deepEquality(2, 2)).toBe(true)
+test('deepCompare: two numbers match', () => {
+  expect(deepCompare(2, 2)).toBe(true)
 })
 
-test("deepEquality: two numbers don't match", () => {
-  expect(deepEquality(2, 3)).toBe(false)
+test("deepCompare: two numbers don't match", () => {
+  expect(deepCompare(2, 3)).toBe(false)
 })
 
-test('deepEquality: two different sized arrays', () => {
-  expect(deepEquality([1, 2, 3], [1, 2, 3, 4])).toBe(false)
+test('deepCompare: two different sized arrays', () => {
+  expect(deepCompare([1, 2, 3], [1, 2, 3, 4])).toBe(false)
 })
 
-test('deepEquality: one primitive, one object', () => {
-  expect(deepEquality('a string', { one: 1, two: 2 })).toBe(false)
+test('deepCompare: one primitive, one object', () => {
+  expect(deepCompare('a string', { one: 1, two: 2 })).toBe(false)
 })
 
-test('deepEquality: simple arrays match', () => {
-  expect(deepEquality([1, 2, 3, 4], [1, 2, 3, 4])).toBe(true)
+test('deepCompare: simple arrays match', () => {
+  expect(deepCompare([1, 2, 3, 4], [1, 2, 3, 4])).toBe(true)
 })
 
-test('deepEquality: simple arrays different values', () => {
-  expect(deepEquality([1, 2, 3, 4], [1, 2, 3, 5])).toBe(false)
+test('deepCompare: simple arrays different values', () => {
+  expect(deepCompare([1, 2, 3, 4], [1, 2, 3, 5])).toBe(false)
 })
 
-test('deepEquality: nested arrays match', () => {
-  expect(deepEquality([1, 2, ['A', 'B'], ['C', 'D']], [1, 2, ['A', 'B'], ['C', 'D']])).toBe(true)
+test('deepCompare: nested arrays match', () => {
+  expect(deepCompare([1, 2, ['A', 'B'], ['C', 'D']], [1, 2, ['A', 'B'], ['C', 'D']])).toBe(true)
 })
 
-test("deepEquality: nested arrays don't match", () => {
-  expect(deepEquality([1, 2, ['A', 'X'], ['C', 'D']], [1, 2, ['A', 'B'], ['C', 'D']])).toBe(false)
+test("deepCompare: nested arrays don't match", () => {
+  expect(deepCompare([1, 2, ['A', 'X'], ['C', 'D']], [1, 2, ['A', 'B'], ['C', 'D']])).toBe(false)
 })
 
-test('deepEquality: one array, one object', () => {
+test('deepCompare: one array, one object', () => {
   expect(
-    deepEquality({ first: 'three', second: 'another value' }, [1, 2, ['A', 'B'], ['C', 'D']])
+    deepCompare({ first: 'three', second: 'another value' }, [1, 2, ['A', 'B'], ['C', 'D']])
   ).toBe(false)
 })
 
-test('deepEquality: simple objects match', () => {
+test('deepCompare: simple objects match', () => {
   expect(
-    deepEquality(
+    deepCompare(
       { first: 'three', second: 'another value' },
       { first: 'three', second: 'another value' }
     )
   ).toBe(true)
 })
 
-test("deepEquality: simple objects values don't match", () => {
+test("deepCompare: simple objects values don't match", () => {
   expect(
-    deepEquality({ first: 'three', second: 'another value' }, { first: 'three', second: 'oops' })
+    deepCompare({ first: 'three', second: 'another value' }, { first: 'three', second: 'oops' })
   ).toBe(false)
 })
 
-test("deepEquality: simple objects keys don't match", () => {
+test("deepCompare: simple objects keys don't match", () => {
   expect(
-    deepEquality(
+    deepCompare(
       { first: 'three', second: 'another value' },
       { first: 'three', notSecond: 'another value' }
     )
   ).toBe(false)
 })
 
-test('deepEquality: complex nested objects match', () => {
+test('deepCompare: complex nested objects match', () => {
   expect(
-    deepEquality(
+    deepCompare(
       {
         first: 'three',
         second: 'another value',
@@ -81,9 +81,9 @@ test('deepEquality: complex nested objects match', () => {
   ).toBe(true)
 })
 
-test("deepEquality: complex nested objects don't match", () => {
+test("deepCompare: complex nested objects don't match", () => {
   expect(
-    deepEquality(
+    deepCompare(
       {
         first: 'three',
         second: 'another value',
