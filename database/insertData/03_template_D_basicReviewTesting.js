@@ -278,6 +278,17 @@ exports.queries = [
                   newStatus: { value: "Draft" }
                 }
               }
+              {
+                actionCode: "trimResponses"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 1
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                }
+              }
             ]
           }
           templatePermissionsUsingId: {
