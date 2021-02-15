@@ -17,6 +17,8 @@ interface ResponsesByCode {
 module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
   const db = databaseMethods(DBConnect)
 
+  console.log('Trimming unchanged duplicated responses...')
+
   try {
     const { applicationId, reviewId } = input
     // Get ALL responses associated with application OR review (new method)
@@ -53,20 +55,15 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
       ? await db.deleteReviewResponses(responsesToDelete)
       : await db.deleteApplicationResponses(responsesToDelete)
 
-    const result = { success: true, deletedCodes: [1, 2, 3, 4] }
-    if (result.success)
-      return {
-        status: 'Success',
-        error_log: '',
-        output: {
-          deletedCodes: result.deletedCodes,
-        },
-      }
-    else
-      return {
-        status: 'Fail',
-        error_log: 'There was a problem trimming duplicated responses.',
-      }
+    console.log('Codes of deleted responses: ', deletedCodes)
+
+    return {
+      status: 'Success',
+      error_log: '',
+      output: {
+        deletedCodes,
+      },
+    }
   } catch (error) {
     console.log(error.message)
     return {

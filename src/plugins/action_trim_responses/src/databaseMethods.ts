@@ -35,10 +35,42 @@ const databaseMethods = (DBConnect: any) => ({
     }
   },
   deleteApplicationResponses: async (responsesToDelete: number[]) => {
-    return 'OK'
+    const deletedCodes = []
+    for (const responseId of responsesToDelete) {
+      const text = `DELETE from application_response
+      WHERE id = $1
+      RETURNING (SELECT code FROM
+      template_element WHERE id = template_element_id)
+      `
+      try {
+        const result = await DBConnect.query({ text, values: [responseId] })
+        deletedCodes.push(result.rows[0].code)
+      } catch (err) {
+        deletedCodes.push(err.message)
+        throw err
+      }
+      return deletedCodes
+    }
   },
   deleteReviewResponses: async (responsesToDelete: number[]) => {
-    return 'Fine'
+    const deletedCodes = []
+    for (const responseId of responsesToDelete) {
+      const text = `DELETE from review_response
+      WHERE id = $1
+      RETURNING (SELECT code FROM
+        application_response JOIN template_element
+        ON template_element_id = template_element.id
+        WHERE application_response.id = application_response_id)
+      `
+      try {
+        const result = await DBConnect.query({ text, values: [responseId] })
+        deletedCodes.push(result.rows[0].code)
+      } catch (err) {
+        deletedCodes.push(err.message)
+        throw err
+      }
+      return deletedCodes
+    }
   },
 })
 
