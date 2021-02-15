@@ -1,5 +1,5 @@
 import databaseMethods from './databaseMethods'
-import isEqual from './deepComparison'
+import isEqual from '@openmsupply/deep-comparison'
 
 interface Response {
   id: number
