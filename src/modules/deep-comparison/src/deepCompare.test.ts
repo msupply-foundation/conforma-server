@@ -1,4 +1,4 @@
-import { deepEquality } from './utilityFunctions'
+import { deepEquality } from './deepCompare'
 
 test('deepEquality: two numbers match', () => {
   expect(deepEquality(2, 2)).toBe(true)
