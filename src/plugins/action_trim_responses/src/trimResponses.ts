@@ -46,8 +46,6 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
         responsesToDelete.push(latestResponse.id)
     })
 
-    console.log('To delete:', responsesToDelete)
-
     // Run delete operation on all in toDelete array (new method)
     const deletedCodes = reviewId
       ? await db.deleteReviewResponses(responsesToDelete)

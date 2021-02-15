@@ -817,6 +817,7 @@ exports.queries = [
               {
                 actionCode: "trimResponses"
                 trigger: ON_APPLICATION_SAVE
+                sequence: 1
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
