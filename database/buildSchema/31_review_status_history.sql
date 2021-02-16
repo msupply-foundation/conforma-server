@@ -31,7 +31,7 @@ EXECUTE FUNCTION public.review_status_history_is_current_update();
 
 -- Function to expose status name field on review table in GraphQL
 CREATE FUNCTION public.review_status(app public.review)
-RETURNS VARCHAR AS $$
-	SELECT "status"::VARCHAR FROM review_status_history 
+RETURNS public.review_status AS $$
+	SELECT "status" FROM review_status_history 
 	WHERE review_id = app.id and is_current = true
 $$ LANGUAGE sql STABLE;

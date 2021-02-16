@@ -10885,7 +10885,7 @@ export type Review = Node & {
   reviewStatusHistories: ReviewStatusHistoriesConnection;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
-  status?: Maybe<Scalars['String']>;
+  status?: Maybe<ReviewStatus>;
 };
 
 
@@ -11989,7 +11989,7 @@ export type ReviewFilter = {
   /** Filter by the object’s `isLastLevel` field. */
   isLastLevel?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
-  status?: Maybe<StringFilter>;
+  status?: Maybe<ReviewStatusFilter>;
   /** Filter by the object’s `reviewResponses` relation. */
   reviewResponses?: Maybe<ReviewToManyReviewResponseFilter>;
   /** Some related `reviewResponses` exist. */
@@ -20069,6 +20069,8 @@ export type ResolversTypes = {
   IntListFilter: IntListFilter;
   ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
   ReviewFilter: ReviewFilter;
+  ReviewStatusFilter: ReviewStatusFilter;
+  ReviewStatus: ReviewStatus;
   ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
   ReviewToManyReviewDecisionFilter: ReviewToManyReviewDecisionFilter;
   ReviewDecisionFilter: ReviewDecisionFilter;
@@ -20076,8 +20078,6 @@ export type ResolversTypes = {
   Decision: Decision;
   ReviewToManyReviewStatusHistoryFilter: ReviewToManyReviewStatusHistoryFilter;
   ReviewStatusHistoryFilter: ReviewStatusHistoryFilter;
-  ReviewStatusFilter: ReviewStatusFilter;
-  ReviewStatus: ReviewStatus;
   ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
   NotificationFilter: NotificationFilter;
   UserFilter: UserFilter;
@@ -21256,13 +21256,13 @@ export type ResolversParentTypes = {
   IntListFilter: IntListFilter;
   ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
   ReviewFilter: ReviewFilter;
+  ReviewStatusFilter: ReviewStatusFilter;
   ReviewToManyReviewResponseFilter: ReviewToManyReviewResponseFilter;
   ReviewToManyReviewDecisionFilter: ReviewToManyReviewDecisionFilter;
   ReviewDecisionFilter: ReviewDecisionFilter;
   DecisionFilter: DecisionFilter;
   ReviewToManyReviewStatusHistoryFilter: ReviewToManyReviewStatusHistoryFilter;
   ReviewStatusHistoryFilter: ReviewStatusHistoryFilter;
-  ReviewStatusFilter: ReviewStatusFilter;
   ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
   NotificationFilter: NotificationFilter;
   UserFilter: UserFilter;
@@ -23800,7 +23800,7 @@ export type ReviewResolvers<ContextType = any, ParentType extends ResolversParen
   reviewDecisions?: Resolver<ResolversTypes['ReviewDecisionsConnection'], ParentType, ContextType, RequireFields<ReviewReviewDecisionsArgs, 'orderBy'>>;
   reviewStatusHistories?: Resolver<ResolversTypes['ReviewStatusHistoriesConnection'], ParentType, ContextType, RequireFields<ReviewReviewStatusHistoriesArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ReviewNotificationsArgs, 'orderBy'>>;
-  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['ReviewStatus']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
