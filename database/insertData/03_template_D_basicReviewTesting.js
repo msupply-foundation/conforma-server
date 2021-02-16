@@ -268,6 +268,29 @@ exports.queries = [
                 parameterQueries: { message: "Application Submitted" }
               }
               {
+                actionCode: "generateReviewAssignments"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 3
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
+                  templateId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.templateId"]
+                  }
+                  stageId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.stageId"]
+                  }
+                  stageNumber: {
+                    operator: "objectProperties"
+                    children: ["applicationData.stageNumber"]
+                  }
+                }
+              }
+              {
                 actionCode: "changeStatus"
                 trigger: ON_REVIEW_CREATE
                 parameterQueries: {
@@ -278,15 +301,55 @@ exports.queries = [
                   newStatus: { value: "Draft" }
                 }
               }
+              {
+                actionCode: "generateReviewAssignments"
+                trigger: ON_REVIEW_SUBMIT
+                # sequence: 1
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
+                  templateId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.templateId"]
+                  }
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  stageId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.stageId"]
+                  }
+                  stageNumber: {
+                    operator: "objectProperties"
+                    children: ["applicationData.stageNumber"]
+                  }
+                }
+              }
             ]
           }
           templatePermissionsUsingId: {
             create: [
               { id: 4000, permissionNameId: 2000 }
-              { id: 4001, permissionNameId: 5000, stageNumber: 1, level: 1 }
-              { id: 4002, permissionNameId: 5000, stageNumber: 2, level: 1 }
-              { id: 4003, permissionNameId: 6000, stageNumber: 2, level: 2 }
-              { id: 4004, permissionNameId: 7000, stageNumber: 3, level: 1 }
+              {
+                id: 4001
+                permissionNameId: 5000
+                stageNumber: 1
+                level: 1
+                restrictions: { templateSectionRestrictions: ["S1"] }
+              }
+              {
+                id: 4002
+                permissionNameId: 5001
+                stageNumber: 1
+                level: 1
+                restrictions: { templateSectionRestrictions: ["S2"] }
+              }
+              { id: 4003, permissionNameId: 6000, stageNumber: 2, level: 1 }
+              { id: 4004, permissionNameId: 6001, stageNumber: 2, level: 2 }
+              { id: 4005, permissionNameId: 7000, stageNumber: 3, level: 1 }
             ]
           }
         }
