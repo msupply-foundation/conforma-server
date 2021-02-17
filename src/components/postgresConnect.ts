@@ -91,7 +91,7 @@ class PostgresDB {
   }
 
   public addActionQueue = async (action: ActionQueuePayload): Promise<boolean> => {
-    const text = `INSERT into action_queue (${Object.keys(action)}, time_queued) 
+    const text = `INSERT into action_queue (${Object.keys(action)}, time_queued)
       VALUES (${this.getValuesPlaceholders(action)}, CURRENT_TIMESTAMP)`
 
     try {
@@ -177,7 +177,7 @@ class PostgresDB {
   }
 
   public addFile = async (payload: FilePayload): Promise<number> => {
-    const text = `INSERT INTO file (${Object.keys(payload)}) 
+    const text = `INSERT INTO file (${Object.keys(payload)})
       VALUES (${this.getValuesPlaceholders(payload)}) RETURNING id`
 
     try {
@@ -199,7 +199,7 @@ class PostgresDB {
   }
 
   public addActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
-    const text = `INSERT INTO action_plugin (${Object.keys(plugin)}) 
+    const text = `INSERT INTO action_plugin (${Object.keys(plugin)})
       VALUES (${this.getValuesPlaceholders(plugin)})`
     try {
       await this.query({ text, values: Object.values(plugin) })
@@ -307,10 +307,10 @@ class PostgresDB {
     templateId: number,
     trigger: Trigger
   ): Promise<ActionInTemplate[]> => {
-    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, sequence, condition, parameter_queries 
-    FROM template 
-    JOIN template_action ON template.id = template_action.template_id 
-    JOIN action_plugin ON template_action.action_code = action_plugin.code 
+    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, sequence, condition, parameter_queries
+    FROM template
+    JOIN template_action ON template.id = template_action.template_id
+    JOIN action_plugin ON template_action.action_code = action_plugin.code
     WHERE template_id = $1 AND trigger = $2
     ORDER BY sequence NULLS FIRST`
 
@@ -348,7 +348,7 @@ class PostgresDB {
   }
 
   public createUser = async (user: User): Promise<object> => {
-    const text = `INSERT INTO "user" (${Object.keys(user)}) 
+    const text = `INSERT INTO "user" (${Object.keys(user)})
       VALUES (${this.getValuesPlaceholders(user)})
       RETURNING id`
     try {
@@ -360,7 +360,7 @@ class PostgresDB {
   }
 
   public createOrg = async (org: Organisation): Promise<object> => {
-    const text = `INSERT INTO organisation (${Object.keys(org)}) 
+    const text = `INSERT INTO organisation (${Object.keys(org)})
       VALUES (${this.getValuesPlaceholders(org)})
       RETURNING id`
     try {
@@ -373,7 +373,7 @@ class PostgresDB {
 
   // Join a user to an org in user_organisation table
   public addUserOrg = async (userOrg: any): Promise<object> => {
-    const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 
+    const text = `INSERT INTO user_organisation (${Object.keys(userOrg)})
       VALUES (${this.getValuesPlaceholders(userOrg)})
       RETURNING id`
     try {
@@ -580,8 +580,8 @@ class PostgresDB {
 
   public getAllGeneratedRowPolicies = async () => {
     const text = `
-      SELECT policyname, tablename 
-      FROM pg_policies 
+      SELECT policyname, tablename
+      FROM pg_policies
       WHERE policyname LIKE 'view\_%'
       OR policyname LIKE 'update\_%'
       OR policyname LIKE 'create\_%'
@@ -598,7 +598,7 @@ class PostgresDB {
 
   public getUserPermissionNames = async (username: string) => {
     const text = `
-    select permission_name.id, permission_name.name 
+    select permission_name.id, permission_name.name
     from "user"
     join permission_join on "user".id = permission_join.user_id
     join permission_name on permission_name.id = permission_join.permission_name_id
@@ -615,7 +615,7 @@ class PostgresDB {
 
   public joinPermissionNameToUser = async (username: string, permissionName: string) => {
     const text = `
-    insert into permission_join (user_id, permission_name_id) 
+    insert into permission_join (user_id, permission_name_id)
     values (
         (select id from "user" where username = $1),
         (select id from permission_name where name = $2))
@@ -640,7 +640,7 @@ class PostgresDB {
     permissionName: string
   ) => {
     const text = `
-    insert into permission_join (user_id, organisation_id, permission_name_id) 
+    insert into permission_join (user_id, organisation_id, permission_name_id)
     values (
         (select id from "user" where username = $1),
         (select id from organisation where name = $2),
