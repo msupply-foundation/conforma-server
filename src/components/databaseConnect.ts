@@ -1,6 +1,5 @@
 import PostgresDB from './postgresConnect'
 import GraphQLdb from './graphQLConnect'
-
 class DBConnect {
   private static _instance: DBConnect
 
@@ -49,8 +48,6 @@ class DBConnect {
   public addUserOrg = PostgresDB.addUserOrg
 
   public isUnique = PostgresDB.isUnique
-
-  public setApplicationOutcome = PostgresDB.setApplicationOutcome
 
   public getApplicationData = PostgresDB.getApplicationData
 

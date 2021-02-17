@@ -17,7 +17,7 @@ import {
   ActionSequential,
   TriggerPayload,
 } from '../types'
-import { ApplicationOutcome, Organisation, Trigger, User } from '../generated/graphql'
+import { Organisation, Trigger, User } from '../generated/graphql'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -437,20 +437,7 @@ class PostgresDB {
     }
   }
 
-  public setApplicationOutcome = async (
-    appId: number,
-    outcome: ApplicationOutcome
-  ): Promise<boolean> => {
-    // Note: There is a trigger in Postgres DB that automatically updates the `is_active` field to False when outcome is set to "Approved" or "Rejected"
-    const text = 'UPDATE application SET outcome = $1  WHERE id = $2'
-    try {
-      await this.query({ text, values: [outcome, appId] })
-      return true
-    } catch (err) {
-      console.log(err.stack)
-      return false
-    }
-  }
+
 
   public getTemplateStages = async (templateId: number) => {
     const text = 'SELECT id, number, title FROM template_stage WHERE template_id = $1'

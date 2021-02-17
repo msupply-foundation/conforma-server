@@ -6,6 +6,12 @@ export interface ActionPluginOutput {
   output?: { [key: string]: any }
 }
 
+export enum ApplicationOutcome {
+  Pending = 'PENDING',
+  Approved = 'APPROVED',
+  Rejected = 'REJECTED',
+}
+
 export type Status =
   | 'Draft'
   | 'Withdrawn'
