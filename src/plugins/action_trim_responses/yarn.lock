@@ -465,11 +465,6 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
-"@openmsupply/deep-comparison@^1.0.0":
-  version "1.0.0"
-  resolved "https://npm.pkg.github.com/download/@openmsupply/deep-comparison/1.0.0/324d8d96a3d98975699847ed09c1754aeef9debab3d70f4531986c91f29f8658#081552cf4be5cc644a6fca642814c68c7c70c887"
-  integrity sha512-u6uaI2lXdK0z2KPL4RaEzcUjEsH0oMj+1mqClMDrFtDHRMpGxBSo8khEPpmTa/sjJJ3cyL46U0jt3Zq9+5+zCw==
-
 "@sinonjs/commons@^1.7.0":
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.2.tgz#858f5c4b48d80778fde4b9d541f27edc0d56488b"
