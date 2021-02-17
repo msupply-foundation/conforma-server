@@ -106,7 +106,7 @@ exports.queries = [
         username
       }
     }
-  }`,  
+  }`,
   `mutation {
     createUser(
       input: {
@@ -120,7 +120,7 @@ exports.queries = [
         username
       }
     }
-  }`, 
+  }`,
   `mutation {
     createUser(
       input: {
@@ -169,7 +169,7 @@ exports.queries = [
     }
   }`,
   // Registered User Permissions - Apply for applications
-`mutation joinUsersToPermissionName {
+  `mutation joinUsersToPermissionName {
     updatePermissionName(
       input: {
         patch: {
@@ -218,6 +218,38 @@ exports.queries = [
       }
     }
   }`,
+  `mutation joinUsersToPermissionName {
+    updatePermissionName(
+      input: {
+        patch: {
+          permissionJoinsUsingId: {
+            create: [{ userId: 7 }]
+          }
+        }
+        id: 5001
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation joinUsersToPermissionName {
+    updatePermissionName(
+      input: {
+        patch: {
+          permissionJoinsUsingId: {
+            create: [{ userId: 6 }, { userId: 7 }]
+          }
+        }
+        id: 6000
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
   // Registered User Permissions - Consolidation of applications
   `mutation joinUsersToPermissionName {
     updatePermissionName(
@@ -227,7 +259,7 @@ exports.queries = [
             create: [{ userId: 8}, {userId: 9 }]
           }
         }
-        id: 6000
+        id: 6001
       }
     ) {
       permissionName {

@@ -11,13 +11,14 @@ exports.queries = [
           id: 1000
           applicationId: 4000
           stageId: 5
+          stageNumber: 1
           level: 1
           isLastLevel: true
           userToReviewerId: { 
             connectByUsername: { username: "testReviewer1" } 
           }
           status: ASSIGNED
-          allowedTemplateSectionIds: [1005, 1006]
+          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1000, templateElementId: 4001 }
@@ -141,13 +142,14 @@ exports.queries = [
           id: 1001
           applicationId: 4000
           stageId: 6
+          stageNumber: 2
           level: 1
           isLastLevel: false
           userToReviewerId: { 
             connectByUsername: { username: "testReviewer1" } 
           }
           status: ASSIGNED
-          allowedTemplateSectionIds: [1005]
+          templateSectionRestrictions: ["S1"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1011, templateElementId: 4001 }
@@ -229,13 +231,14 @@ exports.queries = [
           id: 1002
           applicationId: 4000
           stageId: 6
+          stageNumber: 2
           level: 1
           isLastLevel: false
           userToReviewerId: {
             connectByUsername: { username: "testReviewer2" }
           }
           status: ASSIGNED
-          allowedTemplateSectionIds: [1006]
+          templateSectionRestrictions: ["S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1017, templateElementId: 4008 }
@@ -318,13 +321,14 @@ exports.queries = [
           id: 1003
           applicationId: 4000
           stageId: 6
+          stageNumber: 2
           level: 2
           isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
           }
           status: AVAILABLE_FOR_SELF_ASSIGNMENT
-          allowedTemplateSectionIds: [1005, 1006]
+          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1022, templateElementId: 4001 }
@@ -360,13 +364,14 @@ exports.queries = [
           id: 1004
           applicationId: 4000
           stageId: 6
+          stageNumber: 2
           level: 2
           isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
           }
           status: AVAILABLE_FOR_SELF_ASSIGNMENT
-          allowedTemplateSectionIds: [1005, 1006]
+          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1033, templateElementId: 4001 }
@@ -403,11 +408,12 @@ exports.queries = [
           id: 1005
           applicationId: 4001
           stageId: 5
+          stageNumber: 1
           level: 1
           isLastLevel: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
-          allowedTemplateSectionIds: [1005, 1006]
+          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 2000, templateElementId: 4001 }
@@ -448,11 +454,12 @@ exports.queries = [
           id: 1006
           applicationId: 4002
           stageId: 5
+          stageNumber: 1
           level: 1
           isLastLevel: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
-          allowedTemplateSectionIds: [1005, 1006]
+          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3000, templateElementId: 4001 }
@@ -569,11 +576,12 @@ exports.queries = [
           id: 1007
           applicationId: 4002
           stageId: 6
+          stageNumber: 2
           level: 1
           isLastLevel: false
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
-          allowedTemplateSectionIds: [1005]
+          templateSectionRestrictions: ["S1"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3011, templateElementId: 4001 }
@@ -662,13 +670,14 @@ exports.queries = [
           id: 1008
           applicationId: 4002
           stageId: 6
+          stageNumber: 2
           level: 1
           isLastLevel: false
           userToReviewerId: {
             connectByUsername: { username: "testReviewer2" }
           }
           status: ASSIGNED
-          allowedTemplateSectionIds: [1006]
+          templateSectionRestrictions: ["S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3017, templateElementId: 4008 }
@@ -702,13 +711,14 @@ exports.queries = [
           id: 1009
           applicationId: 4002
           stageId: 6
+          stageNumber: 2
           level: 2
           isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
           }
           status: NOT_AVAILABLE
-          allowedTemplateSectionIds: [1005, 1006]
+          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3022, templateElementId: 4001 }
@@ -744,13 +754,14 @@ exports.queries = [
           id: 1010
           applicationId: 4002
           stageId: 6
+          stageNumber: 2
           level: 2
           isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
           }
           status: ASSIGNED
-          allowedTemplateSectionIds: [1005, 1006]
+          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3033, templateElementId: 4001 }

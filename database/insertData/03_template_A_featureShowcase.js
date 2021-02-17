@@ -376,6 +376,7 @@ exports.queries = [
                       parameters: {
                         label: "API Lookup: Choose a name from this list"
                         placeholder: "Select"
+                        search: true
                         options: {
                           operator: "API"
                           children: [

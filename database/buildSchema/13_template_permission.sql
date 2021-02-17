@@ -5,6 +5,7 @@ CREATE TABLE public.template_permission (
     permission_name_id integer references public.permission_name(id),
     template_id integer references public.template(id),
     stage_number integer,
+--     template_section_id integer references public.template_section(id),
     level integer,
     restrictions jsonb
 );
