@@ -37,7 +37,7 @@ test('Test: remove unchanged application_response duplicates', () => {
       status: 'Success',
       error_log: '',
       output: {
-        deletedCodes: ['Q6', 'Q2', 'Q4'],
+        deletedCodes: ['Q6', 'Q4', 'Q2'],
       },
     })
   })
@@ -49,7 +49,7 @@ test('Test: remove unchanged review_response duplicates', () => {
       status: 'Success',
       error_log: '',
       output: {
-        deletedCodes: ['Q5', 'Q3', 'Q4'],
+        deletedCodes: ['Q5', 'Q4', 'Q3'],
       },
     })
   })

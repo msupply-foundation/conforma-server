@@ -35,42 +35,34 @@ const databaseMethods = (DBConnect: any) => ({
     }
   },
   deleteApplicationResponses: async (responsesToDelete: number[]) => {
-    const deletedCodes: any = []
-    for (const responseId of responsesToDelete) {
-      const text = `DELETE from application_response
-      WHERE id = $1
+    const text = `DELETE from application_response
+      WHERE id = ANY ($1)
       RETURNING (SELECT code FROM
       template_element WHERE id = template_element_id)
       `
-      try {
-        const result = await DBConnect.query({ text, values: [responseId] })
-        deletedCodes.push(result.rows[0].code)
-      } catch (err) {
-        deletedCodes.push(err.message)
-        throw err
-      }
+    try {
+      const result = await DBConnect.query({ text, values: [responsesToDelete] })
+      return result.rows.map((row: { code: string }) => row.code)
+    } catch (err) {
+      console.log(err.message)
+      throw err
     }
-    return deletedCodes
   },
   deleteReviewResponses: async (responsesToDelete: number[]) => {
-    const deletedCodes = []
-    for (const responseId of responsesToDelete) {
-      const text = `DELETE from review_response
-      WHERE id = $1
+    const text = `DELETE from review_response
+      WHERE id = ANY ($1)
       RETURNING (SELECT code FROM
         application_response JOIN template_element
         ON template_element_id = template_element.id
         WHERE application_response.id = application_response_id)
       `
-      try {
-        const result = await DBConnect.query({ text, values: [responseId] })
-        deletedCodes.push(result.rows[0].code)
-      } catch (err) {
-        deletedCodes.push(err.message)
-        throw err
-      }
+    try {
+      const result = await DBConnect.query({ text, values: [responsesToDelete] })
+      return result.rows.map((row: { code: string }) => row.code)
+    } catch (err) {
+      console.log(err.message)
+      throw err
     }
-    return deletedCodes
   },
 })
 
