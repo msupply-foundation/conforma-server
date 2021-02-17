@@ -327,15 +327,15 @@ exports.queries = [
                     children: ["applicationData.stageNumber"]
                   }
                 }
-                {
-                  actionCode: "trimResponses"
-                  trigger: ON_REVIEW_SUBMIT
-                  sequence: 3
-                  parameterQueries: {
-                    reviewId: {
-                      operator: "objectProperties"
-                      children: ["applicationData.record_id"]
-                    }
+              }
+              {
+                actionCode: "trimResponses"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 1
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
                   }
                 }
               }
