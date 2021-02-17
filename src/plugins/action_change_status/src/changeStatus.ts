@@ -1,4 +1,5 @@
 import { ActionPluginOutput, Status } from '../../types'
+import databaseMethods from './databaseMethods'
 
 type IParameters = {
   applicationId: number
@@ -29,11 +30,12 @@ const changeApplicationStatus = async (
   newStatus: string,
   DBConnect: any
 ): Promise<ActionPluginOutput> => {
+  const db = databaseMethods(DBConnect)
   const returnObject: ActionPluginOutput = { status: null, error_log: '' }
   console.log(`Changing the Status of Application ${applicationId}...`)
 
   try {
-    const currentStatus = await DBConnect.getApplicationCurrentStatusHistory(applicationId)
+    const currentStatus = await db.getApplicationCurrentStatusHistory(applicationId)
 
     if (currentStatus?.status === newStatus) {
       // Do nothing
@@ -85,11 +87,12 @@ const changeReviewStatus = async (
   newStatus: string,
   DBConnect: any
 ): Promise<ActionPluginOutput> => {
+  const db = databaseMethods(DBConnect)
   const returnObject: ActionPluginOutput = { status: null, error_log: '' }
   console.log(`Changing the Status of Review ${reviewId}...`)
 
   try {
-    const currentStatus = await DBConnect.getReviewCurrentStatusHistory(reviewId)
+    const currentStatus = await db.getReviewCurrentStatusHistory(reviewId)
 
     if (currentStatus?.status === newStatus) {
       // Do nothing
@@ -103,7 +106,7 @@ const changeReviewStatus = async (
     }
 
     // Create a new review_status_history record
-    const result = await DBConnect.addNewReviewStatusHistory(reviewId, newStatus)
+    const result = await db.addNewReviewStatusHistory(reviewId, newStatus)
     if (result.id) {
       returnObject.status = 'Success'
       returnObject.output = { status: newStatus, statusId: result.id }
