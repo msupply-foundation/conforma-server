@@ -42,20 +42,25 @@ var __spreadArrays = (this && this.__spreadArrays) || function () {
             r[k] = a[j];
     return r;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var types_1 = require("./types");
+var databaseMethods_1 = __importDefault(require("./databaseMethods"));
 module.exports['generateReviewAssignments'] = function (input, DBConnect) {
     return __awaiter(this, void 0, void 0, function () {
-        var applicationId_1, reviewId, templateId, stageId_1, stageNumber_1, numReviewLevels_1, currentReviewLevel, _a, nextReviewLevel_1, nextLevelReviewers, reviewAssignments_1, reviewAssignmentIds, error_1;
+        var db, applicationId_1, reviewId, templateId, stageId_1, stageNumber_1, numReviewLevels_1, currentReviewLevel, _a, nextReviewLevel_1, nextLevelReviewers, reviewAssignments_1, reviewAssignmentIds, error_1;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
+                    db = databaseMethods_1.default(DBConnect);
                     console.log('Generating review assignment records...');
                     _b.label = 1;
                 case 1:
                     _b.trys.push([1, 8, , 9]);
                     applicationId_1 = input.applicationId, reviewId = input.reviewId, templateId = input.templateId, stageId_1 = input.stageId, stageNumber_1 = input.stageNumber;
-                    return [4 /*yield*/, DBConnect.getNumReviewLevels(templateId, stageNumber_1)];
+                    return [4 /*yield*/, db.getNumReviewLevels(templateId, stageNumber_1)];
                 case 2:
                     numReviewLevels_1 = _b.sent();
                     if (!reviewId) return [3 /*break*/, 4];
@@ -70,7 +75,11 @@ module.exports['generateReviewAssignments'] = function (input, DBConnect) {
                     currentReviewLevel = _a;
                     if (currentReviewLevel === numReviewLevels_1) {
                         console.log('Final review level reached for current stage, no later review assignments to generate.');
-                        return [2 /*return*/, {}];
+                        return [2 /*return*/, {
+                                status: 'Success',
+                                error_log: '',
+                                output: {},
+                            }];
                     }
                     nextReviewLevel_1 = currentReviewLevel + 1;
                     return [4 /*yield*/, DBConnect.getReviewersForApplicationStageLevel(templateId, stageNumber_1, nextReviewLevel_1)];
@@ -80,14 +89,12 @@ module.exports['generateReviewAssignments'] = function (input, DBConnect) {
                     // Build reviewers into object map so we can combine duplicate user_orgs
                     // and merge their section code restrictions
                     nextLevelReviewers.forEach(function (reviewer) {
-                        var _a;
                         var userId = reviewer.user_id, orgId = reviewer.organisation_id, restrictions = reviewer.restrictions;
                         var templateSectionRestrictions = restrictions
-                            ? restrictions.templateSectionRestrictions
-                            : null;
+                            ? restrictions === null || restrictions === void 0 ? void 0 : restrictions.templateSectionRestrictions : null;
                         var userOrgKey = userId + "_" + (orgId ? orgId : 0);
                         if (reviewAssignments_1[userOrgKey])
-                            reviewAssignments_1[userOrgKey].templateSectionRestrictions = mergeSectionRestrictions((_a = reviewAssignments_1[userOrgKey]) === null || _a === void 0 ? void 0 : _a.templateSectionRestrictions, templateSectionRestrictions);
+                            reviewAssignments_1[userOrgKey].templateSectionRestrictions = mergeSectionRestrictions(reviewAssignments_1[userOrgKey].templateSectionRestrictions, templateSectionRestrictions);
                         else
                             reviewAssignments_1[userOrgKey] = {
                                 reviewerId: userId,
@@ -136,5 +143,5 @@ var mergeSectionRestrictions = function (prevArray, newArray) {
     else if (!newArray)
         return prevArray;
     else
-        return __spreadArrays(prevArray, newArray);
+        return Array.from(new Set(__spreadArrays(prevArray, newArray)));
 };

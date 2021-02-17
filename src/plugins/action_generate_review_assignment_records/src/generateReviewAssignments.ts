@@ -1,13 +1,15 @@
 import { Reviewer, ReviewAssignmentObject, AssignmentStatus } from './types'
+import databaseMethods from './databaseMethods'
 
 module.exports['generateReviewAssignments'] = async function (input: any, DBConnect: any) {
+  const db = databaseMethods(DBConnect)
   console.log('Generating review assignment records...')
   try {
     const { applicationId, reviewId, templateId, stageId, stageNumber } = input
     // NB: reviewId comes from record_id on TriggerPayload when triggered
     // from review table
 
-    const numReviewLevels: number = await DBConnect.getNumReviewLevels(templateId, stageNumber)
+    const numReviewLevels: number = await db.getNumReviewLevels(templateId, stageNumber)
 
     const currentReviewLevel: number = reviewId
       ? await DBConnect.getCurrentReviewLevel(reviewId)

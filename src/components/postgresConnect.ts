@@ -437,8 +437,6 @@ class PostgresDB {
     }
   }
 
-
-
   public getTemplateStages = async (templateId: number) => {
     const text = 'SELECT id, number, title FROM template_stage WHERE template_id = $1'
     try {
@@ -647,21 +645,6 @@ class PostgresDB {
     }
   }
 
-  public getNumReviewLevels = async (templateId: number, stageNumber: number) => {
-    const text = `
-    SELECT MAX(level) FROM template_permission
-    WHERE template_id = $1 
-    AND stage_number = $2
-    `
-    try {
-      const result = await this.query({ text, values: [templateId, stageNumber] })
-      return result.rows[0].max
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
   public getCurrentReviewLevel = async (reviewId: number) => {
     const text = `SELECT level FROM review WHERE id = $1`
     try {
@@ -679,7 +662,7 @@ class PostgresDB {
     reviewLevel: number
   ) => {
     const text = `
-    SELECT user_id, organisation_id, restrictions FROM 
+    SELECT user_id, organisation_id, restrictions FROM
     permission_join pj JOIN template_permission tp
     ON pj.permission_name_id = tp.permission_name_id
     WHERE template_id = $1
