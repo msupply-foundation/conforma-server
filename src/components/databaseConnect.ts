@@ -119,12 +119,6 @@ class DBConnect {
 
   public addReviewAssignments = PostgresDB.addReviewAssignments
 
-  public getReviewAssignmentById = PostgresDB.getReviewAssignmentById
-
-  public getMatchingReviewAssignments = PostgresDB.getMatchingReviewAssignments
-
-  public updateReviewAssignments = PostgresDB.updateReviewAssignments
-
   public isFullyAssignedLevel1 = PostgresDB.isFullyAssignedLevel1
 
   // GraphQL

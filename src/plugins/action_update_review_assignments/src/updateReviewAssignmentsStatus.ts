@@ -1,18 +1,20 @@
 import { AssignmentStatus } from './types'
+import databaseMethods from './databaseMethods'
 
 module.exports['updateReviewAssignmentsStatus'] = async function (parameters: any, DBConnect: any) {
+  const db = databaseMethods(DBConnect)
   console.log('Updating review assignment statuses...')
   try {
-    const { reviewAssignmentId } = parameters
+    const { reviewAssignmentId, trigger } = parameters
     // NB: reviewAssignmentId comes from record_id on TriggerPayload when
     // triggered from review_assignment table
     const {
       application_id: applicationId,
       stage_number: stageNumber,
       level: reviewLevel,
-    } = await DBConnect.getReviewAssignmentById(reviewAssignmentId)
+    } = await db.getReviewAssignmentById(reviewAssignmentId)
 
-    const otherReviewAssignments = await DBConnect.getMatchingReviewAssignments(
+    const otherReviewAssignments = await db.getMatchingReviewAssignments(
       reviewAssignmentId,
       applicationId,
       stageNumber,
@@ -21,17 +23,15 @@ module.exports['updateReviewAssignmentsStatus'] = async function (parameters: an
 
     const reviewAssignmentUpdates = await Promise.all(
       otherReviewAssignments.map(async (reviewAssignment: any) => {
-        const { id, status, application_id, level } = reviewAssignment
+        const { id, status } = reviewAssignment
         return {
           id,
-          status: await getNewReviewAssignmentStatus(application_id, status, level),
+          status: trigger === 'onReviewSelfAssign' ? AssignmentStatus.SELF_ASSIGNED_OTHER : status,
         }
       })
     )
 
-    const reviewAssignmentUpdateResults = await DBConnect.updateReviewAssignments(
-      reviewAssignmentUpdates
-    )
+    const reviewAssignmentUpdateResults = await db.updateReviewAssignments(reviewAssignmentUpdates)
 
     console.log('Review Assignment status updates:', reviewAssignmentUpdateResults)
 
@@ -48,21 +48,5 @@ module.exports['updateReviewAssignmentsStatus'] = async function (parameters: an
       status: 'Fail',
       error_log: 'Problem updating review_assignment statuses.',
     }
-  }
-
-  // Logic for determining what the new review status should be:
-  //    For level 2+, "Available" assignments become "Not available"
-  //    For level 1, they become "Not available" only if fully assigned
-  async function getNewReviewAssignmentStatus(
-    application_id: number,
-    status: AssignmentStatus,
-    level: number
-  ) {
-    if (status === AssignmentStatus.ASSIGNED) return status
-    if (level > 1) return AssignmentStatus.NOT_AVAILABLE
-    // Level 1:
-    return (await DBConnect.isFullyAssignedLevel1(application_id))
-      ? AssignmentStatus.NOT_AVAILABLE
-      : AssignmentStatus.AVAILABLE
   }
 }

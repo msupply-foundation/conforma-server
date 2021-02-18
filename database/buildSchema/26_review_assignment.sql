@@ -1,6 +1,6 @@
 -- review assignment
 
-CREATE TYPE public.review_assignment_status as ENUM ('Available', 'Not available', 'Assigned', 'Available for self-assignment'); 
+CREATE TYPE public.review_assignment_status as ENUM ('Available', 'Self-assigned by another', 'Assigned', 'Available for self-assignment'); 
 
 CREATE TABLE public.review_assignment (
 	id serial primary key,

@@ -11838,7 +11838,7 @@ export type ReviewAssignmentStageIdFkeyTemplateStageCreateInput = {
 
 export enum ReviewAssignmentStatus {
   Available = 'AVAILABLE',
-  NotAvailable = 'NOT_AVAILABLE',
+  SelfAssignedByAnother = 'SELF_ASSIGNED_BY_ANOTHER',
   Assigned = 'ASSIGNED',
   AvailableForSelfAssignment = 'AVAILABLE_FOR_SELF_ASSIGNMENT'
 }
@@ -15923,6 +15923,7 @@ export enum Trigger {
   OnReviewSubmit = 'ON_REVIEW_SUBMIT',
   OnReviewStart = 'ON_REVIEW_START',
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
+  OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
   Processing = 'PROCESSING',
