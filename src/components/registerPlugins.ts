@@ -9,9 +9,8 @@ import * as fs from 'fs'
 import path from 'path'
 import { getAppRootDir } from './utilityFunctions'
 import * as config from '../config.json'
-// import PostgresDB from './postgresConnect'
 import DBConnect from './databaseConnect'
-import { deepEquality } from './utilityFunctions'
+import isEqual from '@openmsupply/deep-comparison'
 import { ActionPlugin } from '../types'
 
 const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder)
@@ -110,7 +109,7 @@ const isPluginUpdated = (dbPlugin: ActionPlugin, scannedPlugin: ActionPlugin) =>
     scannedPlugin.description !== dbPlugin.description ||
     scannedPlugin.path !== dbPlugin.path ||
     scannedPlugin.function_name !== dbPlugin.function_name ||
-    !deepEquality(scannedPlugin.required_parameters, dbPlugin.required_parameters) ||
-    !deepEquality(scannedPlugin.output_properties, dbPlugin.output_properties, true)
+    !isEqual(scannedPlugin.required_parameters, dbPlugin.required_parameters) ||
+    !isEqual(scannedPlugin.output_properties, dbPlugin.output_properties, true)
   )
 }

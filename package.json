@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
+    "@openmsupply/deep-comparison": "^1.0.1",
     "@openmsupply/expression-evaluator": "^1.5.1",
     "@types/jsonwebtoken": "^8.5.0",
     "bcrypt": "^5.0.0",
