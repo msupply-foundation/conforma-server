@@ -1171,6 +1171,11 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
+"@openmsupply/deep-comparison@^1.0.1":
+  version "1.0.1"
+  resolved "https://npm.pkg.github.com/download/@openmsupply/deep-comparison/1.0.1/e2230c86d7c57a929ecced4212c0812c00a98717556a0122ff5f343c3a9dc1df#da636710e93ab0310f3a15967be8eba3aaf3844d"
+  integrity sha512-7YgZ+RDVIfqqmxLMSXmXzNONdqnkXZI2Dspsf6xaFhXD+kGx6yI60rpStjnt6bFoY5KQWykxT+Ccp9I6FfGZag==
+
 "@openmsupply/expression-evaluator@^1.5.1":
   version "1.5.1"
   resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.5.1/f8205000977cd3f2c95a9f1065bf6eb4bb0c785c67927e0b75f8150d82306288#c5c9525375ed70e3edbb588615caeab151f4cdd3"

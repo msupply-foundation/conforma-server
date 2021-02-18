@@ -16,7 +16,7 @@ RETURNS INT AS $$
 select level from review_assignment where id = $1 ;
 $$ LANGUAGE SQL IMMUTABLE;
 
--- FUNCTION to auto-add level to review
+-- FUNCTION to auto-add is_last_level to review
 CREATE or replace FUNCTION public.review_is_last_level(review_assignment_id int)
 RETURNS BOOLEAN AS $$
 select is_last_level from review_assignment where id = $1 ;

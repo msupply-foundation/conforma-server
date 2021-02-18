@@ -376,6 +376,7 @@ exports.queries = [
                       parameters: {
                         label: "API Lookup: Choose a name from this list"
                         placeholder: "Select"
+                        search: true
                         options: {
                           operator: "API"
                           children: [
@@ -811,6 +812,18 @@ exports.queries = [
                     children: ["applicationData.record_id"]
                   }
                   newStatus: { value: "Draft" }
+                }
+              }
+              # This one is just for demonstration/testing
+              {
+                actionCode: "trimResponses"
+                trigger: ON_APPLICATION_SAVE
+                sequence: 1
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
                 }
               }
             ]
