@@ -329,6 +329,36 @@ exports.queries = [
                 }
               }
               {
+                actionCode: "updateReviewAssignmentsStatus"
+                trigger: ON_REVIEW_SELF_ASSIGN
+                # sequence: 1
+                parameterQueries: {
+                  reviewAssignmentId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  trigger: {
+                    operator: "objectProperties"
+                    children: ["applicationData.trigger"]
+                  }
+                }
+              }
+              {
+                actionCode: "updateReviewAssignmentsStatus"
+                trigger: ON_REVIEW_ASSIGN
+                # sequence: 1
+                parameterQueries: {
+                  reviewAssignmentId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  trigger: {
+                    operator: "objectProperties"
+                    children: ["applicationData.trigger"]
+                  }
+                }
+              }
+              {
                 actionCode: "trimResponses"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 1
