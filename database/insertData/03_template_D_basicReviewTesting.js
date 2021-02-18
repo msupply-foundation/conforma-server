@@ -357,7 +357,8 @@ exports.queries = [
                     children: ["applicationData.trigger"]
                   }
                 }
-                {
+              }
+              {
                 actionCode: "trimResponses"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 1
