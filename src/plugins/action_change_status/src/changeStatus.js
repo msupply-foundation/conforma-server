@@ -46,7 +46,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+var databaseMethods_1 = __importDefault(require("./databaseMethods"));
 module.exports['changeStatus'] = function (parameters, DBConnect) {
     return __awaiter(this, void 0, void 0, function () {
         var applicationId, reviewId, newStatus;
@@ -70,16 +74,17 @@ module.exports['changeStatus'] = function (parameters, DBConnect) {
     });
 };
 var changeApplicationStatus = function (applicationId, newStatus, DBConnect) { return __awaiter(void 0, void 0, void 0, function () {
-    var returnObject, currentStatus, currentStageHistoryId, result_1, result, err_1;
+    var db, returnObject, currentStatus, currentStageHistoryId, result_1, result, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                db = databaseMethods_1.default(DBConnect);
                 returnObject = { status: null, error_log: '' };
                 console.log("Changing the Status of Application " + applicationId + "...");
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 7, , 8]);
-                return [4 /*yield*/, DBConnect.getApplicationCurrentStatusHistory(applicationId)];
+                return [4 /*yield*/, db.getApplicationCurrentStatusHistory(applicationId)];
             case 2:
                 currentStatus = _a.sent();
                 if ((currentStatus === null || currentStatus === void 0 ? void 0 : currentStatus.status) === newStatus) {
@@ -133,16 +138,17 @@ var changeApplicationStatus = function (applicationId, newStatus, DBConnect) { r
     });
 }); };
 var changeReviewStatus = function (reviewId, newStatus, DBConnect) { return __awaiter(void 0, void 0, void 0, function () {
-    var returnObject, currentStatus, result, err_2;
+    var db, returnObject, currentStatus, result, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                db = databaseMethods_1.default(DBConnect);
                 returnObject = { status: null, error_log: '' };
                 console.log("Changing the Status of Review " + reviewId + "...");
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 4, , 5]);
-                return [4 /*yield*/, DBConnect.getReviewCurrentStatusHistory(reviewId)];
+                return [4 /*yield*/, db.getReviewCurrentStatusHistory(reviewId)];
             case 2:
                 currentStatus = _a.sent();
                 if ((currentStatus === null || currentStatus === void 0 ? void 0 : currentStatus.status) === newStatus) {
@@ -153,7 +159,7 @@ var changeReviewStatus = function (reviewId, newStatus, DBConnect) { return __aw
                     returnObject.output = { status: newStatus, statusId: currentStatus.id };
                     return [2 /*return*/, returnObject];
                 }
-                return [4 /*yield*/, DBConnect.addNewReviewStatusHistory(reviewId, newStatus)];
+                return [4 /*yield*/, db.addNewReviewStatusHistory(reviewId, newStatus)];
             case 3:
                 result = _a.sent();
                 if (result.id) {
