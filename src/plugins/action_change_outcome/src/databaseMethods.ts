@@ -1,4 +1,4 @@
-import { ApplicationOutcome } from '../../types'
+export type ApplicationOutcome = 'Pending' | 'Approved' | 'Rejected'
 
 const databaseMethods = (DBConnect: any) => ({
   setApplicationOutcome: async (appId: number, outcome: ApplicationOutcome): Promise<boolean> => {
