@@ -1,6 +1,6 @@
 -- review assignment
 
-CREATE TYPE public.review_assignment_status as ENUM ('Available', 'Not available', 'Assigned', 'Available for self-assignment'); 
+CREATE TYPE public.review_assignment_status as ENUM ('Available', 'Self-assigned by another', 'Assigned', 'Available for self-assignment'); 
 
 CREATE TABLE public.review_assignment (
 	id serial primary key,
@@ -9,7 +9,7 @@ CREATE TABLE public.review_assignment (
 	organisation_id integer references public.organisation(id),
 	stage_id integer references public.template_stage(id),
 	stage_number integer,
-	status public.review_assignment_status,
+	status public.review_assignment_status NOT NULL,
 	application_id integer references public.application(id),
 	template_section_restrictions varchar [],
 	trigger public.trigger,

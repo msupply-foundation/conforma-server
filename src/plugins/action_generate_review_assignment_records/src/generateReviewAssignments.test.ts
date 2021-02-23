@@ -180,6 +180,10 @@ test('Test: Submit Review for Application ID#4002, S2 Lvl2 -- no assignments to 
     { templateId: 4, stageNumber: 2, stageId: 6, applicationId: 4002, reviewId: 6 },
     DBConnect
   ).then((result: any) => {
-    expect(result).toEqual({})
+    expect(result).toEqual({
+      status: 'Success',
+      error_log: '',
+      output: {},
+    })
   })
 })

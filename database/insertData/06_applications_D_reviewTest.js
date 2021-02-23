@@ -320,4 +320,105 @@ exports.queries = [
       }
     }
   }`,
+  // Application 4 for Review Testing -- Un-assigned, level 1
+  `mutation ReviewTestApplication4 {
+    createApplication(
+      input: {
+        application: {
+          id: 4003
+          serial: "ABC123"
+          applicationSectionsUsingId: {
+            create: [{ templateSectionId: 1005 }, { templateSectionId: 1006 }]
+          }
+          name: "Test Review -- Paracetamol"
+          outcome: PENDING
+          isActive: true
+          templateId: 4
+          userId: 4
+          applicationStageHistoriesUsingId: {
+            create: [
+              {
+                isCurrent: true
+                templateStageToStageId: { connectById: { id: 5 } }
+                applicationStatusHistoriesUsingId: {
+                  create: { isCurrent: true, status: SUBMITTED }
+                }
+              }
+            ]
+          }
+          applicationResponsesUsingId: {
+            create: [
+              {
+                id: 4100
+                isValid: true
+                templateElementId: 4001
+                value: { text: "Valerio" }
+              }
+              {
+                id: 4101
+                isValid: true
+                templateElementId: 4002
+                value: { text: "Red" }
+              }
+              {
+                id: 4102
+                isValid: true
+                templateElementId: 4003
+                value: { text: "vw@nowhere.com" }
+              }
+              {
+                id: 4103
+                isValid: true
+                templateElementId: 4005
+                value: { text: "63" }
+              }
+              {
+                id: 4104
+                isValid: true
+                templateElementId: 4006
+                value: { text: "Italy" }
+              }
+              {
+                id: 4105
+                isValid: true
+                templateElementId: 4008
+                value: { text: "Paracetamol" }
+              }
+              {
+                id: 4106
+                isValid: true
+                templateElementId: 4009
+                value: { text: "Natural Product", optionIndex: 1 }
+              }
+              {
+                id: 4107
+                isValid: true
+                templateElementId: 4011
+                value: { text: "250mg" }
+              }
+              {
+                id: 4108
+                isValid: true
+                templateElementId: 4012
+                value: { text: "1000" }
+              }
+              {
+                id: 4109
+                isValid: true
+                templateElementId: 4013
+                value: { text: "Nothing too serious" }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      application {
+        name
+        template {
+          name
+        }
+      }
+    }
+  }`,
 ]

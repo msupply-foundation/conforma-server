@@ -108,6 +108,8 @@ class DBConnect {
 
   public addReviewAssignments = PostgresDB.addReviewAssignments
 
+  public isFullyAssignedLevel1 = PostgresDB.isFullyAssignedLevel1
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery

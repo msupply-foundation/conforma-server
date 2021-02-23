@@ -717,7 +717,7 @@ exports.queries = [
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
           }
-          status: NOT_AVAILABLE
+          status: SELF_ASSIGNED_BY_ANOTHER
           templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [

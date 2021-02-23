@@ -296,6 +296,10 @@ class PostgresDB {
         text =
           'SELECT template_id FROM application WHERE id = (SELECT application_id FROM review WHERE id = $1)'
         break
+      case 'review_assignment':
+        text =
+          'SELECT template_id FROM application WHERE id = (SELECT application_id FROM review_assignment WHERE id = $1'
+        break
       default:
         throw new Error('Table name not valid')
     }
@@ -702,6 +706,24 @@ class PostgresDB {
       }
     }
     return reviewAssignmentIds
+  }
+
+  public isFullyAssignedLevel1 = async (applicationId: number) => {
+    const text = `
+    SELECT is_fully_assigned_level_1
+    FROM application_list
+    WHERE id = $1
+    `
+    try {
+      const result = await this.query({
+        text,
+        values: [applicationId],
+      })
+      return result.rows[0].is_fully_assigned_level_1
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
   }
 }
 

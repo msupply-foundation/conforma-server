@@ -223,7 +223,7 @@ exports.queries = [
       input: {
         patch: {
           permissionJoinsUsingId: {
-            create: [{ userId: 7 }]
+            create: [{ userId: 7 }, { userId: 8 }]
           }
         }
         id: 5001
@@ -239,7 +239,7 @@ exports.queries = [
       input: {
         patch: {
           permissionJoinsUsingId: {
-            create: [{ userId: 6 }, { userId: 7 }]
+            create: [{ userId: 6 }, { userId: 7 }, { userId: 8 }, { userId: 9 }]
           }
         }
         id: 6000
