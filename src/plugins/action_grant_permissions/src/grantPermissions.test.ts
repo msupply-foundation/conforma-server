@@ -21,7 +21,7 @@ test('Test: Add permission to Valerio', () => {
     expect(result).toEqual({
       status: 'Success',
       output: {
-        permissionJoinIds: [16],
+        permissionJoinIds: [22],
         permissionNames: ['reviewCompanyRego'],
       },
       error_log: '',
@@ -35,7 +35,7 @@ test('Test: Add permission to Valerio, already exists', () => {
     expect(result).toEqual({
       status: 'Success',
       output: {
-        permissionJoinIds: [16],
+        permissionJoinIds: [22],
         permissionNames: ['reviewCompanyRego'],
       },
       error_log: '',
@@ -49,7 +49,7 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
     expect(result).toEqual({
       status: 'Success',
       output: {
-        permissionJoinIds: [18],
+        permissionJoinIds: [24],
         permissionNames: ['reviewCompanyRego'],
       },
       error_log: '',
@@ -63,7 +63,7 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd., already exists
     expect(result).toEqual({
       status: 'Success',
       output: {
-        permissionJoinIds: [18],
+        permissionJoinIds: [24],
         permissionNames: ['reviewCompanyRego'],
       },
       error_log: '',
