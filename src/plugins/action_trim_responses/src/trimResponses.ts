@@ -7,7 +7,7 @@ interface Response {
   value: { [key: string]: any }
   comment?: string
   decision?: string
-  time_created: any
+  time_updated: any
 }
 
 interface ResponsesByCode {
@@ -37,6 +37,7 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
     })
 
     const responsesToDelete: number[] = []
+    const responsesToUpdate: number[] = []
 
     Object.values(responsesByCode).forEach((responseArray) => {
       if (responseArray.length === 1) return
@@ -44,6 +45,7 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
       const previousResponse = responseArray[responseArray.length - 2]
       if (isEqual(latestResponse.value, previousResponse.value))
         responsesToDelete.push(latestResponse.id)
+      else responsesToUpdate.push(latestResponse.id)
     })
 
     // Run delete operation on all in toDelete array (new method)
@@ -51,13 +53,20 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
       ? await db.deleteReviewResponses(responsesToDelete)
       : await db.deleteApplicationResponses(responsesToDelete)
 
+    // Update timestamp of remaining responses
+    const updatedCodes = reviewId
+      ? await db.updateReviewResponseTimestamps(responsesToUpdate)
+      : await db.updateApplicationResponseTimestamps(responsesToUpdate)
+
     console.log('Codes of deleted responses: ', deletedCodes)
+    console.log('Codes of updated responses: ', updatedCodes)
 
     return {
       status: 'Success',
       error_log: '',
       output: {
         deletedCodes,
+        updatedCodes,
       },
     }
   } catch (error) {
