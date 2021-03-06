@@ -369,6 +369,18 @@ exports.queries = [
                   }
                 }
               }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 2
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  newStatus: { value: "Submitted" }
+                }
+              }
             ]
           }
           templatePermissionsUsingId: {
