@@ -4651,7 +4651,8 @@ export enum Decision {
   ListOfQuestions = 'LIST_OF_QUESTIONS',
   Conform = 'CONFORM',
   NonConform = 'NON_CONFORM',
-  ChangesRequested = 'CHANGES_REQUESTED'
+  ChangesRequested = 'CHANGES_REQUESTED',
+  NoDecision = 'NO_DECISION'
 }
 
 /** A filter to be used against Decision fields. All fields are combined with a logical ‘and.’ */
@@ -11913,7 +11914,7 @@ export type ReviewDecision = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   reviewId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   /** Reads a single `Review` that is related to this `ReviewDecision`. */
@@ -11929,8 +11930,8 @@ export type ReviewDecisionCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewId` field. */
   reviewId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewDecision` field. */
-  reviewDecision?: Maybe<Decision>;
+  /** Checks for equality with the object’s `decision` field. */
+  decision?: Maybe<Decision>;
   /** Checks for equality with the object’s `comment` field. */
   comment?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `timeCreated` field. */
@@ -11943,8 +11944,8 @@ export type ReviewDecisionFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewId` field. */
   reviewId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewDecision` field. */
-  reviewDecision?: Maybe<DecisionFilter>;
+  /** Filter by the object’s `decision` field. */
+  decision?: Maybe<DecisionFilter>;
   /** Filter by the object’s `comment` field. */
   comment?: Maybe<StringFilter>;
   /** Filter by the object’s `timeCreated` field. */
@@ -11965,7 +11966,7 @@ export type ReviewDecisionFilter = {
 export type ReviewDecisionInput = {
   id?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -12002,7 +12003,7 @@ export type ReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyUsingRevi
 export type ReviewDecisionPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -12077,7 +12078,7 @@ export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
 /** The `reviewDecision` to be created by this mutation. */
 export type ReviewDecisionReviewIdFkeyReviewDecisionCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -12112,8 +12113,8 @@ export enum ReviewDecisionsOrderBy {
   IdDesc = 'ID_DESC',
   ReviewIdAsc = 'REVIEW_ID_ASC',
   ReviewIdDesc = 'REVIEW_ID_DESC',
-  ReviewDecisionAsc = 'REVIEW_DECISION_ASC',
-  ReviewDecisionDesc = 'REVIEW_DECISION_DESC',
+  DecisionAsc = 'DECISION_ASC',
+  DecisionDesc = 'DECISION_DESC',
   CommentAsc = 'COMMENT_ASC',
   CommentDesc = 'COMMENT_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
@@ -17793,7 +17794,7 @@ export type UpdateReviewDecisionInput = {
 /** An object where the defined keys will be set on the `reviewDecision` being updated. */
 export type UpdateReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -24088,7 +24089,7 @@ export type ReviewDecisionResolvers<ContextType = any, ParentType extends Resolv
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewDecision?: Resolver<Maybe<ResolversTypes['Decision']>, ParentType, ContextType>;
+  decision?: Resolver<Maybe<ResolversTypes['Decision']>, ParentType, ContextType>;
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
