@@ -1,8 +1,10 @@
 -- review response
 
-CREATE TYPE public.review_response_decision as ENUM ('Approve', 'Decline');
+CREATE TYPE public.review_response_decision as ENUM ('Approve', 'Decline', 'Agree', 'Disagree');
 
 CREATE TYPE public.review_response_status as ENUM ('Draft', 'Submitted');
+
+CREATE TYPE public.review_response_recommended_applicant_visibility as ENUM ('Original Response Visible to Applicant', 'Original Response Not Visible to Applicant');
 
 CREATE TABLE public.review_response (
 	id serial primary key,
@@ -14,6 +16,8 @@ CREATE TABLE public.review_response (
 	original_response_id integer references public.review_response(id),
 	review_id integer references public.review(id),
     time_created timestamptz default current_timestamp,
+	is_visible_to_applicant boolean default false,
+	recommended_applicant_visibility public.review_response_recommended_applicant_visibility default 'Original Response Not Visible to Applicant',
 	status public.review_response_status default 'Draft'
 );
 
@@ -31,7 +35,6 @@ BEGIN
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
-
 
 CREATE TRIGGER set_original_response_trigger BEFORE INSERT ON public.review_response
 FOR EACH ROW

@@ -12684,6 +12684,8 @@ export type ReviewResponse = Node & {
   originalResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   /** Reads a single `ReviewQuestionAssignment` that is related to this `ReviewResponse`. */
   reviewQuestionAssignment?: Maybe<ReviewQuestionAssignment>;
@@ -12787,6 +12789,8 @@ export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   originalResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -12818,13 +12822,19 @@ export type ReviewResponseCondition = {
   reviewId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `timeCreated` field. */
   timeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `isVisibleToApplicant` field. */
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `recommendedApplicantVisibility` field. */
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<ReviewResponseStatus>;
 };
 
 export enum ReviewResponseDecision {
   Approve = 'APPROVE',
-  Decline = 'DECLINE'
+  Decline = 'DECLINE',
+  Agree = 'AGREE',
+  Disagree = 'DISAGREE'
 }
 
 /** A filter to be used against ReviewResponseDecision fields. All fields are combined with a logical ‘and.’ */
@@ -12873,6 +12883,10 @@ export type ReviewResponseFilter = {
   reviewId?: Maybe<IntFilter>;
   /** Filter by the object’s `timeCreated` field. */
   timeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isVisibleToApplicant` field. */
+  isVisibleToApplicant?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `recommendedApplicantVisibility` field. */
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibilityFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ReviewResponseStatusFilter>;
   /** Filter by the object’s `reviewResponsesByReviewResponseLinkId` relation. */
@@ -12922,6 +12936,8 @@ export type ReviewResponseInput = {
   originalResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -13045,6 +13061,8 @@ export type ReviewResponseOriginalResponseIdFkeyReviewResponseCreateInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -13064,12 +13082,48 @@ export type ReviewResponsePatch = {
   originalResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
   reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
+};
+
+export enum ReviewResponseRecommendedApplicantVisibility {
+  OriginalResponseVisibleToApplicant = 'ORIGINAL_RESPONSE_VISIBLE_TO_APPLICANT',
+  OriginalResponseNotVisibleToApplicant = 'ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT'
+}
+
+/**
+ * A filter to be used against ReviewResponseRecommendedApplicantVisibility fields.
+ * All fields are combined with a logical ‘and.’
+ */
+export type ReviewResponseRecommendedApplicantVisibilityFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ReviewResponseRecommendedApplicantVisibility>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ReviewResponseRecommendedApplicantVisibility>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
 };
 
 /** Input for the nested mutation of `review` in the `ReviewResponseInput` mutation. */
@@ -13138,6 +13192,8 @@ export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalResponseId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -13204,6 +13260,8 @@ export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInpu
   originalResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -13240,6 +13298,8 @@ export type ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput = {
   originalResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -13301,6 +13361,10 @@ export enum ReviewResponsesOrderBy {
   ReviewIdDesc = 'REVIEW_ID_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
   TimeCreatedDesc = 'TIME_CREATED_DESC',
+  IsVisibleToApplicantAsc = 'IS_VISIBLE_TO_APPLICANT_ASC',
+  IsVisibleToApplicantDesc = 'IS_VISIBLE_TO_APPLICANT_DESC',
+  RecommendedApplicantVisibilityAsc = 'RECOMMENDED_APPLICANT_VISIBILITY_ASC',
+  RecommendedApplicantVisibilityDesc = 'RECOMMENDED_APPLICANT_VISIBILITY_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -18198,6 +18262,8 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResp
   originalResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -18216,6 +18282,8 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseOriginalRespons
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -18234,6 +18302,8 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPat
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
   originalResponseId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -18252,6 +18322,8 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionA
   originalResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -18270,6 +18342,8 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseL
   originalResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
+  isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
+  recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
@@ -20400,6 +20474,8 @@ export type ResolversTypes = {
   ReviewResponseFilter: ReviewResponseFilter;
   ReviewResponseDecisionFilter: ReviewResponseDecisionFilter;
   ReviewResponseDecision: ReviewResponseDecision;
+  ReviewResponseRecommendedApplicantVisibilityFilter: ReviewResponseRecommendedApplicantVisibilityFilter;
+  ReviewResponseRecommendedApplicantVisibility: ReviewResponseRecommendedApplicantVisibility;
   ReviewResponseStatusFilter: ReviewResponseStatusFilter;
   ReviewResponseStatus: ReviewResponseStatus;
   ReviewResponseToManyReviewResponseFilter: ReviewResponseToManyReviewResponseFilter;
@@ -21605,6 +21681,7 @@ export type ResolversParentTypes = {
   ApplicationResponseToManyReviewResponseFilter: ApplicationResponseToManyReviewResponseFilter;
   ReviewResponseFilter: ReviewResponseFilter;
   ReviewResponseDecisionFilter: ReviewResponseDecisionFilter;
+  ReviewResponseRecommendedApplicantVisibilityFilter: ReviewResponseRecommendedApplicantVisibilityFilter;
   ReviewResponseStatusFilter: ReviewResponseStatusFilter;
   ReviewResponseToManyReviewResponseFilter: ReviewResponseToManyReviewResponseFilter;
   ReviewQuestionAssignmentFilter: ReviewQuestionAssignmentFilter;
@@ -24283,6 +24360,8 @@ export type ReviewResponseResolvers<ContextType = any, ParentType extends Resolv
   originalResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  isVisibleToApplicant?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  recommendedApplicantVisibility?: Resolver<Maybe<ResolversTypes['ReviewResponseRecommendedApplicantVisibility']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ReviewResponseStatus']>, ParentType, ContextType>;
   reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
