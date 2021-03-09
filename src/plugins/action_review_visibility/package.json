@@ -1,8 +1,8 @@
 {
-  "name": "trim_responses_action",
+  "name": "update_review_visibility_action",
   "version": "0.1",
-  "description": "Trims duplicated application or review responses if nothing has changed",
-  "main": "trimResponses.ts",
+  "description": "Updates review records to be visible to Applicant",
+  "main": "updateReviewVisibility.ts",
   "author": "The mSupplyFoundation",
   "license": "MIT",
   "scripts": {
@@ -17,7 +17,5 @@
     "ts-node": "^9.0.0",
     "typescript": "^4.0.2"
   },
-  "dependencies": {
-    "deep-equal": "^2.0.5"
-  }
+  "dependencies": {}
 }
