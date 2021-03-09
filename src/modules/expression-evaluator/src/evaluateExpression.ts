@@ -86,9 +86,10 @@ export default async function evaluateExpression(
         try {
           const inputObject = params?.objects ? params.objects : {}
           const property = childrenResolved[0]
-          return extractProperty(inputObject, property)
+          const fallback = childrenResolved?.[1]
+          return extractProperty(inputObject, property, fallback)
         } catch {
-          throw new Error("Can't resolve object")
+          throw new Error('Problem evaluating object')
         }
 
       case 'stringSubstitution':
@@ -219,17 +220,19 @@ const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
 // Returns a specific property (e.g. application.name) from a nested Object
 const extractProperty = (
   data: BasicObject | BasicObject[],
-  node: string | string[]
+  node: string | string[],
+  fallback: any = "Can't resolve object"
 ): BasicObject | string | number | boolean | BasicObject[] => {
+  console.log('Fallback', fallback)
   const propertyPathArray = Array.isArray(node) ? node : node.split('.')
   // ie. "application.template.name" => ["applcation", "template", "name"]
   if (Array.isArray(data)) {
     // If an array, extract the property from *each item*
-    return data.map((item) => extractProperty(item, propertyPathArray))
+    return data.map((item) => extractProperty(item, propertyPathArray, fallback))
   }
   const currentProperty = propertyPathArray[0]
-  if (propertyPathArray.length === 1) return data[currentProperty]
-  else return extractProperty(data[currentProperty], propertyPathArray.slice(1))
+  if (propertyPathArray.length === 1) return data?.[currentProperty] || fallback
+  else return extractProperty(data[currentProperty], propertyPathArray.slice(1), fallback)
 }
 
 // If Object has only 1 property, return just the value of that property,
