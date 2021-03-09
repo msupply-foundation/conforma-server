@@ -575,6 +575,16 @@ testData.singleApplicationProperty_depth2 = {
   children: ['application.questions.q2'],
 }
 
+testData.objectPropertyUnresolved = {
+  operator: 'objectProperties',
+  children: ['application.questions.q5'],
+}
+
+testData.objectPropertyUnresolvedWithNullFallback = {
+  operator: 'objectProperties',
+  children: ['application.querstions.q2', null],
+}
+
 // String substitution
 
 testData.stringSubstitutionSingle = {
