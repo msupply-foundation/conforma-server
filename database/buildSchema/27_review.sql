@@ -27,6 +27,7 @@ CREATE TABLE public.review (
 	id serial primary key,
 	review_assignment_id integer references public.review_assignment(id),
 	-- status via review_status_history
+	-- time_created viw review_status_history
 	trigger public.trigger,
 	application_id integer GENERATED ALWAYS AS (public.review_application_id(review_assignment_id)) STORED references public.application(id),
 	reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id(review_assignment_id)) STORED references public.user(id),

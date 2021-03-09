@@ -464,6 +464,7 @@ test('Test Postgres get application list with IDs', () => {
       { id: 4000, name: 'Test Review -- Vitamin C' },
       { id: 4001, name: 'Test Review -- Vitamin B' },
       { id: 4002, name: 'Test Review -- Amoxicillin' },
+      { id: 4003, name: 'Test Review -- Paracetamol' },
     ])
   })
 })
@@ -495,6 +496,7 @@ test('Test GraphQL -- List of Application Names', () => {
       'Test Review -- Vitamin C',
       'Test Review -- Vitamin B',
       'Test Review -- Amoxicillin',
+      'Test Review -- Paracetamol',
     ])
   })
 })
@@ -530,6 +532,10 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
       {
         name: 'Test Review -- Amoxicillin',
         id: 4002,
+      },
+      {
+        name: 'Test Review -- Paracetamol',
+        id: 4003,
       },
     ])
   })

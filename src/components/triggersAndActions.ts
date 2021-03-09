@@ -206,6 +206,8 @@ export async function executeAction(
     // TO-DO: If Scheduled, create a Job instead
     const actionResult = await actionLibrary[payload.code](parametersEvaluated, DBConnect)
 
+    // console.log('Output', actionResult.output) //Enable this to check output
+
     return await DBConnect.executedActionStatusUpdate({
       status: actionResult.status,
       error_log: actionResult.error_log,
