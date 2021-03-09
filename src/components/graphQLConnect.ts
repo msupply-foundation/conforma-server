@@ -28,6 +28,27 @@ class GraphQLdb {
     return data.data
   }
 
+  public getReviewData = async (reviewId: number) => {
+    const data = await this.gqlQuery(
+      `
+      query getReviewData($id: Int!) {
+        review(id: $id) {
+          level
+          isLastLevel
+          status
+          trigger
+          latestDecision {
+              decision
+              comment
+          }
+        }
+      }
+      `,
+      { id: reviewId }
+    )
+    return data.review
+  }
+
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
     switch (tableName) {
       default:
