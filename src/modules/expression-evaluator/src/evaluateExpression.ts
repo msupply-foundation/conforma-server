@@ -223,7 +223,6 @@ const extractProperty = (
   node: string | string[],
   fallback: any = "Can't resolve object"
 ): BasicObject | string | number | boolean | BasicObject[] => {
-  console.log('Fallback', fallback)
   const propertyPathArray = Array.isArray(node) ? node : node.split('.')
   // ie. "application.template.name" => ["applcation", "template", "name"]
   if (Array.isArray(data)) {
