@@ -1,17 +1,11 @@
 -- review decision
-CREATE TYPE public.decision AS ENUM (
-    'List Of Questions',
-    'Conform',
-    'Non-conform',
-    'Changes Requested',
-    'No Decision'
-);
+
+CREATE TYPE public.decision as ENUM ('List of questions', 'Conform', 'Non-conform', 'Changes Requested', 'No Decision');
 
 CREATE TABLE public.review_decision (
-    id serial PRIMARY KEY,
-    review_id integer REFERENCES public.review (id),
-    decision public.decision,
-    comment varchar,
-    time_created timestamptz DEFAULT CURRENT_TIMESTAMP
+	id serial primary key,
+	review_id integer references public.review(id),
+	decision public.decision,
+	comment varchar,
+    time_created timestamptz default current_timestamp
 );
-
