@@ -268,9 +268,24 @@ exports.queries = [
                 parameterQueries: { message: "Application Submitted" }
               }
               {
-                actionCode: "generateReviewAssignments"
+                actionCode: "trimResponses"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  timestamp: {
+                    operator: "objectProperties"
+                    children: ["output.applicationStatusHistoryTimestamp"]
+                  }
+                }
+              }
+              {
+                actionCode: "generateReviewAssignments"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 4
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
@@ -359,13 +374,29 @@ exports.queries = [
                 }
               }
               {
-                actionCode: "trimResponses"
+                actionCode: "changeStatus"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 1
                 parameterQueries: {
                   reviewId: {
                     operator: "objectProperties"
                     children: ["applicationData.record_id"]
+                  }
+                  newStatus: "Submitted"
+                }
+              }
+              {
+                actionCode: "trimResponses"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 2
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  timestamp: {
+                    operator: "objectProperties"
+                    children: ["output.reviewStatusHistoryTimestamp"]
                   }
                 }
               }
