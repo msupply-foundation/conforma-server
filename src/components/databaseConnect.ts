@@ -124,6 +124,8 @@ class DBConnect {
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
+
+  public getReviewData = GraphQLdb.getReviewData
 }
 
 const dbConnectInstance = DBConnect.Instance

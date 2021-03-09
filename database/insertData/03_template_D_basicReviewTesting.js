@@ -400,6 +400,38 @@ exports.queries = [
                   }
                 }
               }
+              {
+                actionCode: "updateReviewVisibility"
+                sequence: 2
+                trigger: ON_REVIEW_SUBMIT
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "LIST_OF_QUESTIONS"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
+                parameterQueries: {
+                  reviewId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                }
+              }
             ]
           }
           templatePermissionsUsingId: {
@@ -432,5 +464,6 @@ exports.queries = [
         name
       }
     }
-  }`,
+  }
+  `,
 ]
