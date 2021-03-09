@@ -44,9 +44,9 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
     const responsesToUpdate: number[] = []
 
     Object.values(responsesById).forEach((responseArray) => {
-      if (responseArray.length === 1) return
       const latestResponse = responseArray[responseArray.length - 1]
-      const previousResponse = responseArray[responseArray.length - 2]
+      const previousResponse =
+        responseArray.length > 1 ? responseArray[responseArray.length - 2] : null
       if (
         isEqual(latestResponse.value, previousResponse.value) ||
         latestResponse.value === null || // Application Responses
