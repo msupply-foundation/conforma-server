@@ -62,7 +62,11 @@ const changeApplicationStatus = async (
     const result = await DBConnect.addNewApplicationStatusHistory(currentStageHistoryId, newStatus)
     if (result.id) {
       returnObject.status = 'Success'
-      returnObject.output = { status: newStatus, statusId: result.id }
+      returnObject.output = {
+        status: newStatus,
+        statusId: result.id,
+        applicationStatusHistoryTimestamp: result.time_created,
+      }
       console.log(`New status_history created: ${newStatus}`)
     } else {
       returnObject.status = 'Fail'
@@ -106,7 +110,11 @@ const changeReviewStatus = async (
     const result = await DBConnect.addNewReviewStatusHistory(reviewId, newStatus)
     if (result.id) {
       returnObject.status = 'Success'
-      returnObject.output = { status: newStatus, statusId: result.id }
+      returnObject.output = {
+        status: newStatus,
+        statusId: result.id,
+        reviewStatusHistoryTimestamp: result.time_created,
+      }
       console.log(`New review_status_history created: ${newStatus}`)
     } else {
       returnObject.status = 'Fail'

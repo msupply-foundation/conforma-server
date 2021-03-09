@@ -15,7 +15,7 @@ CREATE TABLE public.review_response (
 	review_response_link_id integer references public.review_response(id),
 	original_review_response_id integer references public.review_response(id),
 	review_id integer references public.review(id),
-    time_created timestamptz default current_timestamp,
+    time_updated timestamptz default current_timestamp,
 	is_visible_to_applicant boolean default false,
 	template_element_id integer references public.template_element,
 	recommended_applicant_visibility public.review_response_recommended_applicant_visibility default 'Original Response Not Visible to Applicant',
