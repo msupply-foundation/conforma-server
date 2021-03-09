@@ -32,7 +32,11 @@ async function executeGraphQLQuery(query) {
       query,
     }),
   })
-  const data = await res.json()
+  const response = await res.json()
+  if (response.errors) {
+    console.log(JSON.stringify(response.errors, null, '  '))
+    process.exit(0)
+  }
 }
 
 async function updateRowPolicies() {
