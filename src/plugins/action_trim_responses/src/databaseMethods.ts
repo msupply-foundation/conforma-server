@@ -66,32 +66,32 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
-  updateApplicationResponseTimestamps: async (responsesToUpdate: number[]) => {
+  updateApplicationResponseTimestamps: async (responsesToUpdate: number[], timestamp: string) => {
     const text = `UPDATE application_response
-      SET time_updated = current_timestamp
-      WHERE id = ANY ($1)
+      SET time_updated = $1
+      WHERE id = ANY ($2)
       RETURNING (SELECT code FROM
         template_element WHERE id = template_element_id)
       `
     try {
-      const result = await DBConnect.query({ text, values: [responsesToUpdate] })
+      const result = await DBConnect.query({ text, values: [timestamp, responsesToUpdate] })
       return result.rows.map((row: { code: string }) => row.code)
     } catch (err) {
       console.log(err.message)
       throw err
     }
   },
-  updateReviewResponseTimestamps: async (responsesToUpdate: number[]) => {
+  updateReviewResponseTimestamps: async (responsesToUpdate: number[], timestamp: string) => {
     const text = `UPDATE review_response
-      SET time_updated = current_timestamp
-      WHERE id = ANY ($1)
+      SET time_updated = $1
+      WHERE id = ANY ($2)
       RETURNING (SELECT code FROM
         application_response JOIN template_element
         ON template_element_id = template_element.id
         WHERE application_response.id = application_response_id)
       `
     try {
-      const result = await DBConnect.query({ text, values: [responsesToUpdate] })
+      const result = await DBConnect.query({ text, values: [timestamp, responsesToUpdate] })
       return result.rows.map((row: { code: string }) => row.code)
     } catch (err) {
       console.log(err.message)

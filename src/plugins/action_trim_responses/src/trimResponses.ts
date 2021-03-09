@@ -58,10 +58,10 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
       : await db.deleteApplicationResponses(responsesToDelete)
 
     // Update timestamp of remaining responses
-    // const timeUpdated = timestamp ? timestamp : new Date().toISOString()
+    const timeUpdated = timestamp ? timestamp : new Date().toISOString()
     const updatedCodes = reviewId
-      ? await db.updateReviewResponseTimestamps(responsesToUpdate)
-      : await db.updateApplicationResponseTimestamps(responsesToUpdate)
+      ? await db.updateReviewResponseTimestamps(responsesToUpdate, timeUpdated)
+      : await db.updateApplicationResponseTimestamps(responsesToUpdate, timeUpdated)
 
     console.log('Codes of deleted responses: ', deletedCodes)
     console.log('Codes of updated responses: ', updatedCodes)

@@ -44,15 +44,17 @@ test('Test: remove unchanged application_response duplicates', () => {
   })
 })
 
-test('Test: remove unchanged review_response duplicates', () => {
-  return Action.trimResponses({ reviewId: 5 }, DBConnect).then((result: any) => {
-    expect(result).toEqual({
-      status: 'Success',
-      error_log: '',
-      output: {
-        deletedCodes: ['Q5', 'Q4', 'Q3'],
-        updatedCodes: ['Q2', 'Q1'],
-      },
-    })
-  })
+test('Test: remove unchanged review_response duplicates, with custom timestamp', () => {
+  return Action.trimResponses({ reviewId: 5, timestamp: '2021-03-09T00:01:00.0Z' }, DBConnect).then(
+    (result: any) => {
+      expect(result).toEqual({
+        status: 'Success',
+        error_log: '',
+        output: {
+          deletedCodes: ['Q5', 'Q4', 'Q3'],
+          updatedCodes: ['Q2', 'Q1'],
+        },
+      })
+    }
+  )
 })
