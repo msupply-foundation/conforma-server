@@ -4234,7 +4234,7 @@ export type CreateReviewResponsePayload = {
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
   reviewResponseLink?: Maybe<ReviewResponse>;
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
-  originalResponse?: Maybe<ReviewResponse>;
+  originalReviewResponse?: Maybe<ReviewResponse>;
   /** Reads a single `Review` that is related to this `ReviewResponse`. */
   review?: Maybe<Review>;
   /** Reads a single `TemplateElement` that is related to this `ReviewResponse`. */
@@ -4656,7 +4656,8 @@ export enum Decision {
   ListOfQuestions = 'LIST_OF_QUESTIONS',
   Conform = 'CONFORM',
   NonConform = 'NON_CONFORM',
-  ChangesRequested = 'CHANGES_REQUESTED'
+  ChangesRequested = 'CHANGES_REQUESTED',
+  NoDecision = 'NO_DECISION'
 }
 
 /** A filter to be used against Decision fields. All fields are combined with a logical ‘and.’ */
@@ -5616,7 +5617,7 @@ export type DeleteReviewResponsePayload = {
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
   reviewResponseLink?: Maybe<ReviewResponse>;
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
-  originalResponse?: Maybe<ReviewResponse>;
+  originalReviewResponse?: Maybe<ReviewResponse>;
   /** Reads a single `Review` that is related to this `ReviewResponse`. */
   review?: Maybe<Review>;
   /** Reads a single `TemplateElement` that is related to this `ReviewResponse`. */
@@ -11922,7 +11923,7 @@ export type ReviewDecision = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   reviewId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   /** Reads a single `Review` that is related to this `ReviewDecision`. */
@@ -11938,8 +11939,8 @@ export type ReviewDecisionCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewId` field. */
   reviewId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewDecision` field. */
-  reviewDecision?: Maybe<Decision>;
+  /** Checks for equality with the object’s `decision` field. */
+  decision?: Maybe<Decision>;
   /** Checks for equality with the object’s `comment` field. */
   comment?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `timeCreated` field. */
@@ -11952,8 +11953,8 @@ export type ReviewDecisionFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewId` field. */
   reviewId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewDecision` field. */
-  reviewDecision?: Maybe<DecisionFilter>;
+  /** Filter by the object’s `decision` field. */
+  decision?: Maybe<DecisionFilter>;
   /** Filter by the object’s `comment` field. */
   comment?: Maybe<StringFilter>;
   /** Filter by the object’s `timeCreated` field. */
@@ -11974,7 +11975,7 @@ export type ReviewDecisionFilter = {
 export type ReviewDecisionInput = {
   id?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -12011,7 +12012,7 @@ export type ReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyUsingRevi
 export type ReviewDecisionPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -12086,7 +12087,7 @@ export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
 /** The `reviewDecision` to be created by this mutation. */
 export type ReviewDecisionReviewIdFkeyReviewDecisionCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -12121,8 +12122,8 @@ export enum ReviewDecisionsOrderBy {
   IdDesc = 'ID_DESC',
   ReviewIdAsc = 'REVIEW_ID_ASC',
   ReviewIdDesc = 'REVIEW_ID_DESC',
-  ReviewDecisionAsc = 'REVIEW_DECISION_ASC',
-  ReviewDecisionDesc = 'REVIEW_DECISION_DESC',
+  DecisionAsc = 'DECISION_ASC',
+  DecisionDesc = 'DECISION_DESC',
   CommentAsc = 'COMMENT_ASC',
   CommentDesc = 'COMMENT_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
@@ -12687,7 +12688,7 @@ export type ReviewResponse = Node & {
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -12701,7 +12702,7 @@ export type ReviewResponse = Node & {
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
   reviewResponseLink?: Maybe<ReviewResponse>;
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
-  originalResponse?: Maybe<ReviewResponse>;
+  originalReviewResponse?: Maybe<ReviewResponse>;
   /** Reads a single `Review` that is related to this `ReviewResponse`. */
   review?: Maybe<Review>;
   /** Reads a single `TemplateElement` that is related to this `ReviewResponse`. */
@@ -12709,7 +12710,7 @@ export type ReviewResponse = Node & {
   /** Reads and enables pagination through a set of `ReviewResponse`. */
   reviewResponsesByReviewResponseLinkId: ReviewResponsesConnection;
   /** Reads and enables pagination through a set of `ReviewResponse`. */
-  reviewResponsesByOriginalResponseId: ReviewResponsesConnection;
+  reviewResponsesByOriginalReviewResponseId: ReviewResponsesConnection;
 };
 
 
@@ -12725,7 +12726,7 @@ export type ReviewResponseReviewResponsesByReviewResponseLinkIdArgs = {
 };
 
 
-export type ReviewResponseReviewResponsesByOriginalResponseIdArgs = {
+export type ReviewResponseReviewResponsesByOriginalReviewResponseIdArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -12795,7 +12796,7 @@ export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -12805,7 +12806,7 @@ export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -12827,8 +12828,8 @@ export type ReviewResponseCondition = {
   applicationResponseId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewResponseLinkId` field. */
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `originalResponseId` field. */
-  originalResponseId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `originalReviewResponseId` field. */
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `reviewId` field. */
   reviewId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `timeCreated` field. */
@@ -12890,8 +12891,8 @@ export type ReviewResponseFilter = {
   applicationResponseId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewResponseLinkId` field. */
   reviewResponseLinkId?: Maybe<IntFilter>;
-  /** Filter by the object’s `originalResponseId` field. */
-  originalResponseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `originalReviewResponseId` field. */
+  originalReviewResponseId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewId` field. */
   reviewId?: Maybe<IntFilter>;
   /** Filter by the object’s `timeCreated` field. */
@@ -12908,10 +12909,10 @@ export type ReviewResponseFilter = {
   reviewResponsesByReviewResponseLinkId?: Maybe<ReviewResponseToManyReviewResponseFilter>;
   /** Some related `reviewResponsesByReviewResponseLinkId` exist. */
   reviewResponsesByReviewResponseLinkIdExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviewResponsesByOriginalResponseId` relation. */
-  reviewResponsesByOriginalResponseId?: Maybe<ReviewResponseToManyReviewResponseFilter>;
-  /** Some related `reviewResponsesByOriginalResponseId` exist. */
-  reviewResponsesByOriginalResponseIdExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviewResponsesByOriginalReviewResponseId` relation. */
+  reviewResponsesByOriginalReviewResponseId?: Maybe<ReviewResponseToManyReviewResponseFilter>;
+  /** Some related `reviewResponsesByOriginalReviewResponseId` exist. */
+  reviewResponsesByOriginalReviewResponseIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewQuestionAssignment` relation. */
   reviewQuestionAssignment?: Maybe<ReviewQuestionAssignmentFilter>;
   /** A related `reviewQuestionAssignment` exists. */
@@ -12924,10 +12925,10 @@ export type ReviewResponseFilter = {
   reviewResponseLink?: Maybe<ReviewResponseFilter>;
   /** A related `reviewResponseLink` exists. */
   reviewResponseLinkExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `originalResponse` relation. */
-  originalResponse?: Maybe<ReviewResponseFilter>;
-  /** A related `originalResponse` exists. */
-  originalResponseExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `originalReviewResponse` relation. */
+  originalReviewResponse?: Maybe<ReviewResponseFilter>;
+  /** A related `originalReviewResponse` exists. */
+  originalReviewResponseExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `review` relation. */
   review?: Maybe<ReviewFilter>;
   /** A related `review` exists. */
@@ -12952,7 +12953,7 @@ export type ReviewResponseInput = {
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -12962,7 +12963,7 @@ export type ReviewResponseInput = {
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -12995,7 +12996,7 @@ export type ReviewResponseOnReviewResponseForReviewResponseApplicationResponseId
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyNodeIdUpdate = {
+export type ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `reviewResponse` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `reviewResponse` being updated. */
@@ -13003,9 +13004,9 @@ export type ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFke
 };
 
 /** The fields on `reviewResponse` to look up the row to update. */
-export type ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyUsingReviewResponsePkeyUpdate = {
+export type ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyUsingReviewResponsePkeyUpdate = {
   /** An object where the defined keys will be set on the `reviewResponse` being updated. */
-  patch: UpdateReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyPatch;
+  patch: UpdateReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -13070,7 +13071,7 @@ export type ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkey
 };
 
 /** Input for the nested mutation of `reviewResponse` in the `ReviewResponseInput` mutation. */
-export type ReviewResponseOriginalResponseIdFkeyInput = {
+export type ReviewResponseOriginalReviewResponseIdFkeyInput = {
   /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
   connectById?: Maybe<ReviewResponseReviewResponsePkeyConnect>;
   /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
@@ -13080,15 +13081,15 @@ export type ReviewResponseOriginalResponseIdFkeyInput = {
   /** The primary key(s) for `reviewResponse` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ReviewResponseNodeIdDelete>;
   /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
-  updateById?: Maybe<ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyUsingReviewResponsePkeyUpdate>;
+  updateById?: Maybe<ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyUsingReviewResponsePkeyUpdate>;
   /** The primary key(s) and patch data for `reviewResponse` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyNodeIdUpdate>;
+  updateByNodeId?: Maybe<ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyNodeIdUpdate>;
   /** A `ReviewResponseInput` object that will be created and connected to this object. */
-  create?: Maybe<ReviewResponseOriginalResponseIdFkeyReviewResponseCreateInput>;
+  create?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput>;
 };
 
 /** The `reviewResponse` to be created by this mutation. */
-export type ReviewResponseOriginalResponseIdFkeyReviewResponseCreateInput = {
+export type ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
@@ -13104,7 +13105,7 @@ export type ReviewResponseOriginalResponseIdFkeyReviewResponseCreateInput = {
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -13117,7 +13118,7 @@ export type ReviewResponsePatch = {
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -13127,7 +13128,7 @@ export type ReviewResponsePatch = {
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -13230,7 +13231,7 @@ export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
@@ -13239,7 +13240,7 @@ export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -13299,7 +13300,7 @@ export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInpu
   decision?: Maybe<ReviewResponseDecision>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -13309,7 +13310,7 @@ export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInpu
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -13339,7 +13340,7 @@ export type ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput = {
   decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -13349,7 +13350,7 @@ export type ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput = {
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -13401,8 +13402,8 @@ export enum ReviewResponsesOrderBy {
   ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
   ReviewResponseLinkIdAsc = 'REVIEW_RESPONSE_LINK_ID_ASC',
   ReviewResponseLinkIdDesc = 'REVIEW_RESPONSE_LINK_ID_DESC',
-  OriginalResponseIdAsc = 'ORIGINAL_RESPONSE_ID_ASC',
-  OriginalResponseIdDesc = 'ORIGINAL_RESPONSE_ID_DESC',
+  OriginalReviewResponseIdAsc = 'ORIGINAL_REVIEW_RESPONSE_ID_ASC',
+  OriginalReviewResponseIdDesc = 'ORIGINAL_REVIEW_RESPONSE_ID_DESC',
   ReviewIdAsc = 'REVIEW_ID_ASC',
   ReviewIdDesc = 'REVIEW_ID_DESC',
   TimeCreatedAsc = 'TIME_CREATED_ASC',
@@ -13496,7 +13497,7 @@ export type ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput = {
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -13505,7 +13506,7 @@ export type ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput = {
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -18130,7 +18131,7 @@ export type UpdateReviewDecisionInput = {
 /** An object where the defined keys will be set on the `reviewDecision` being updated. */
 export type UpdateReviewDecisionOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  reviewDecision?: Maybe<Decision>;
+  decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   reviewToReviewId?: Maybe<ReviewDecisionReviewIdFkeyInput>;
@@ -18434,7 +18435,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResp
   decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -18444,13 +18445,13 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResp
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `reviewResponse` being updated. */
-export type UpdateReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyPatch = {
+export type UpdateReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   comment?: Maybe<Scalars['String']>;
   decision?: Maybe<ReviewResponseDecision>;
@@ -18466,7 +18467,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseOriginalRespons
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -18479,7 +18480,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPat
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
@@ -18488,7 +18489,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPat
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -18500,7 +18501,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionA
   decision?: Maybe<ReviewResponseDecision>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -18510,7 +18511,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionA
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -18522,7 +18523,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseL
   decision?: Maybe<ReviewResponseDecision>;
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -18532,7 +18533,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseL
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -18545,7 +18546,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElement
   reviewQuestionAssignmentId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   reviewResponseLinkId?: Maybe<Scalars['Int']>;
-  originalResponseId?: Maybe<Scalars['Int']>;
+  originalReviewResponseId?: Maybe<Scalars['Int']>;
   reviewId?: Maybe<Scalars['Int']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
@@ -18554,7 +18555,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElement
   reviewQuestionAssignmentToReviewQuestionAssignmentId?: Maybe<ReviewResponseReviewQuestionAssignmentIdFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<ReviewResponseApplicationResponseIdFkeyInput>;
   reviewResponseToReviewResponseLinkId?: Maybe<ReviewResponseReviewResponseLinkIdFkeyInput>;
-  reviewResponseToOriginalResponseId?: Maybe<ReviewResponseOriginalResponseIdFkeyInput>;
+  reviewResponseToOriginalReviewResponseId?: Maybe<ReviewResponseOriginalReviewResponseIdFkeyInput>;
   reviewToReviewId?: Maybe<ReviewResponseReviewIdFkeyInput>;
   templateElementToTemplateElementId?: Maybe<ReviewResponseTemplateElementIdFkeyInput>;
 };
@@ -18578,7 +18579,7 @@ export type UpdateReviewResponsePayload = {
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
   reviewResponseLink?: Maybe<ReviewResponse>;
   /** Reads a single `ReviewResponse` that is related to this `ReviewResponse`. */
-  originalResponse?: Maybe<ReviewResponse>;
+  originalReviewResponse?: Maybe<ReviewResponse>;
   /** Reads a single `Review` that is related to this `ReviewResponse`. */
   review?: Maybe<Review>;
   /** Reads a single `TemplateElement` that is related to this `ReviewResponse`. */
@@ -21313,9 +21314,9 @@ export type ResolversTypes = {
   ReviewResponseReviewResponseLinkIdFkeyInput: ReviewResponseReviewResponseLinkIdFkeyInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyUsingReviewResponsePkeyUpdate;
   updateReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyPatch;
-  ReviewResponseOriginalResponseIdFkeyInput: ReviewResponseOriginalResponseIdFkeyInput;
-  ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyPatch;
+  ReviewResponseOriginalReviewResponseIdFkeyInput: ReviewResponseOriginalReviewResponseIdFkeyInput;
+  ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyPatch;
   ReviewResponseReviewIdFkeyInput: ReviewResponseReviewIdFkeyInput;
   ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch;
@@ -21392,8 +21393,8 @@ export type ResolversTypes = {
   ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
   TemplateElementPatch: TemplateElementPatch;
   ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput: ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput;
-  ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyNodeIdUpdate;
-  ReviewResponseOriginalResponseIdFkeyReviewResponseCreateInput: ReviewResponseOriginalResponseIdFkeyReviewResponseCreateInput;
+  ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyNodeIdUpdate;
+  ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput: ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyNodeIdUpdate;
   ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput: ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput;
   ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
@@ -22492,9 +22493,9 @@ export type ResolversParentTypes = {
   ReviewResponseReviewResponseLinkIdFkeyInput: ReviewResponseReviewResponseLinkIdFkeyInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyUsingReviewResponsePkeyUpdate;
   updateReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyPatch;
-  ReviewResponseOriginalResponseIdFkeyInput: ReviewResponseOriginalResponseIdFkeyInput;
-  ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyPatch;
+  ReviewResponseOriginalReviewResponseIdFkeyInput: ReviewResponseOriginalReviewResponseIdFkeyInput;
+  ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyPatch;
   ReviewResponseReviewIdFkeyInput: ReviewResponseReviewIdFkeyInput;
   ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch;
@@ -22571,8 +22572,8 @@ export type ResolversParentTypes = {
   ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
   TemplateElementPatch: TemplateElementPatch;
   ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput: ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput;
-  ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseOriginalResponseIdFkeyNodeIdUpdate;
-  ReviewResponseOriginalResponseIdFkeyReviewResponseCreateInput: ReviewResponseOriginalResponseIdFkeyReviewResponseCreateInput;
+  ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyNodeIdUpdate;
+  ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput: ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyNodeIdUpdate;
   ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput: ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput;
   ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
@@ -23603,7 +23604,7 @@ export type CreateReviewResponsePayloadResolvers<ContextType = any, ParentType e
   reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   reviewResponseLink?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
-  originalResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
+  originalReviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
   reviewResponseEdge?: Resolver<Maybe<ResolversTypes['ReviewResponsesEdge']>, ParentType, ContextType, RequireFields<CreateReviewResponsePayloadReviewResponseEdgeArgs, 'orderBy'>>;
@@ -23915,7 +23916,7 @@ export type DeleteReviewResponsePayloadResolvers<ContextType = any, ParentType e
   reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   reviewResponseLink?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
-  originalResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
+  originalReviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
   reviewResponseEdge?: Resolver<Maybe<ResolversTypes['ReviewResponsesEdge']>, ParentType, ContextType, RequireFields<DeleteReviewResponsePayloadReviewResponseEdgeArgs, 'orderBy'>>;
@@ -24560,7 +24561,7 @@ export type ReviewDecisionResolvers<ContextType = any, ParentType extends Resolv
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewDecision?: Resolver<Maybe<ResolversTypes['Decision']>, ParentType, ContextType>;
+  decision?: Resolver<Maybe<ResolversTypes['Decision']>, ParentType, ContextType>;
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
@@ -24614,7 +24615,7 @@ export type ReviewResponseResolvers<ContextType = any, ParentType extends Resolv
   reviewQuestionAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   applicationResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewResponseLinkId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  originalResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  originalReviewResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   isVisibleToApplicant?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -24624,11 +24625,11 @@ export type ReviewResponseResolvers<ContextType = any, ParentType extends Resolv
   reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   reviewResponseLink?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
-  originalResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
+  originalReviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
   reviewResponsesByReviewResponseLinkId?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ReviewResponseReviewResponsesByReviewResponseLinkIdArgs, 'orderBy'>>;
-  reviewResponsesByOriginalResponseId?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ReviewResponseReviewResponsesByOriginalResponseIdArgs, 'orderBy'>>;
+  reviewResponsesByOriginalReviewResponseId?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ReviewResponseReviewResponsesByOriginalReviewResponseIdArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -25074,7 +25075,7 @@ export type UpdateReviewResponsePayloadResolvers<ContextType = any, ParentType e
   reviewQuestionAssignment?: Resolver<Maybe<ResolversTypes['ReviewQuestionAssignment']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   reviewResponseLink?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
-  originalResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
+  originalReviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
   reviewResponseEdge?: Resolver<Maybe<ResolversTypes['ReviewResponsesEdge']>, ParentType, ContextType, RequireFields<UpdateReviewResponsePayloadReviewResponseEdgeArgs, 'orderBy'>>;
