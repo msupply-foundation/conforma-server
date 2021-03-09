@@ -1,7 +1,7 @@
 const databaseMethods = (DBConnect: any) => ({
   getAllApplicationResponses: async (applicationId: number) => {
     const text = `
-    SELECT ar.id, code, value, time_updated
+    SELECT ar.id, template_element_id, code, value, time_updated
     FROM application_response ar JOIN template_element te
     ON ar.template_element_id = te.id
     WHERE application_id = $1
@@ -18,10 +18,12 @@ const databaseMethods = (DBConnect: any) => ({
   },
   getAllReviewResponses: async (reviewId: number) => {
     const text = `
-    SELECT rr.id, code, comment, decision, rr.time_updated
+    SELECT rr.id, r.level, code, comment, decision,
+    rr.application_response_id, rr.review_response_link_id, rr.time_updated
     FROM review_response rr JOIN application_response ar
     ON rr.application_response_id = ar.id
     JOIN template_element te ON ar.template_element_id = te.id
+    JOIN review r ON rr.review_id = r.id
     WHERE review_id = $1
     ORDER BY time_updated
     `
