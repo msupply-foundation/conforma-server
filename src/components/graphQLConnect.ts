@@ -36,7 +36,6 @@ class GraphQLdb {
           level
           isLastLevel
           status
-          trigger
           latestDecision {
               decision
               comment
