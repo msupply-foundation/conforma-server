@@ -47,7 +47,11 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
       if (responseArray.length === 1) return
       const latestResponse = responseArray[responseArray.length - 1]
       const previousResponse = responseArray[responseArray.length - 2]
-      if (isEqual(latestResponse.value, previousResponse.value))
+      if (
+        isEqual(latestResponse.value, previousResponse.value) ||
+        latestResponse.value === null || // Application Responses
+        latestResponse.value?.decision === null // Review responses
+      )
         responsesToDelete.push(latestResponse.id)
       else responsesToUpdate.push(latestResponse.id)
     })
