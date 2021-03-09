@@ -121,11 +121,11 @@ class DBConnect {
 
   public isFullyAssignedLevel1 = PostgresDB.isFullyAssignedLevel1
 
-  public getReviewData = GraphQLdb.getReviewData
-
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
+
+  public getReviewData = GraphQLdb.getReviewData
 }
 
 const dbConnectInstance = DBConnect.Instance
