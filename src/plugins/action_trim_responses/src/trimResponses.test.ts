@@ -38,7 +38,7 @@ test('Test: remove unchanged application_response duplicates', () => {
       error_log: '',
       output: {
         deletedCodes: ['Q6', 'Q4', 'Q2'],
-        updatedCodes: ['Q5B', 'Q5', 'Q3'],
+        updatedCodes: ['Q1', 'Q5B', 'Q5', 'Q3'],
       },
     })
   })
