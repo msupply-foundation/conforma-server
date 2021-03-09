@@ -83,9 +83,9 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
   }
 }
 
-type groupField = 'template_element_id' | 'application_response_id' | 'review_response_link_id'
+type GroupField = 'template_element_id' | 'application_response_id' | 'review_response_link_id'
 
-function groupResponses(responses: Response[], groupField: groupField): ResponsesById {
+function groupResponses(responses: Response[], groupField: GroupField): ResponsesById {
   const responsesGrouped: ResponsesById = {}
   for (const response of responses) {
     const id = response[groupField]
