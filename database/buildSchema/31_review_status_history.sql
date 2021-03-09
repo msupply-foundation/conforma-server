@@ -35,3 +35,10 @@ RETURNS public.review_status AS $$
 	SELECT "status" FROM review_status_history 
 	WHERE review_id = app.id and is_current = true
 $$ LANGUAGE sql STABLE;
+
+-- Function to expose time_create field on review table in GraphQL
+CREATE FUNCTION public.review_time_created(app public.review)
+RETURNS timestamptz AS $$
+	SELECT time_created FROM review_status_history 
+	WHERE review_id = app.id and is_current = true
+$$ LANGUAGE sql STABLE;
