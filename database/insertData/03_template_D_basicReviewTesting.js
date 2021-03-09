@@ -268,9 +268,24 @@ exports.queries = [
                 parameterQueries: { message: "Application Submitted" }
               }
               {
-                actionCode: "generateReviewAssignments"
+                actionCode: "trimResponses"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.record_id"]
+                  }
+                  timestamp: {
+                    operator: "objectProperties"
+                    children: ["output.applicationStatusHistoryTimestamp"]
+                  }
+                }
+              }
+              {
+                actionCode: "generateReviewAssignments"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 4
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
