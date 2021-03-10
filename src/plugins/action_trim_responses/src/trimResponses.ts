@@ -25,8 +25,8 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
   try {
     // Get ALL responses associated with application OR review
     const responses = reviewId
-      ? await db.getAllReviewResponses(reviewId)
-      : await db.getAllApplicationResponses(applicationId)
+      ? await DBConnect.getAllReviewResponses(reviewId)
+      : await DBConnect.getAllApplicationResponses(applicationId)
 
     const reviewLevel = responses?.[0]?.level
 
@@ -57,25 +57,25 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
     })
 
     // Run delete operation on all in toDelete array (new method)
-    const deletedCodes = reviewId
+    const deletedIds = reviewId
       ? await db.deleteReviewResponses(responsesToDelete)
       : await db.deleteApplicationResponses(responsesToDelete)
 
     // Update timestamp of remaining responses
     const timeUpdated = timestamp ? timestamp : new Date().toISOString()
-    const updatedCodes = reviewId
+    const updatedIds = reviewId
       ? await db.updateReviewResponseTimestamps(responsesToUpdate, timeUpdated)
       : await db.updateApplicationResponseTimestamps(responsesToUpdate, timeUpdated)
 
-    console.log('Codes of deleted responses: ', deletedCodes)
-    console.log('Codes of updated responses: ', updatedCodes)
+    console.log(`IDs of deleted ${reviewId ? 'review' : 'application'} responses: `, deletedIds)
+    console.log(`IDs of updated ${reviewId ? 'review' : 'application'} responses: `, updatedIds)
 
     return {
       status: 'Success',
       error_log: '',
       output: {
-        deletedCodes,
-        updatedCodes,
+        deletedIds,
+        updatedIds,
       },
     }
   } catch (error) {

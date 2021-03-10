@@ -6,7 +6,7 @@
   "function_name": "trimResponses",
   "description": "Trims duplicated application or review responses if nothing has changed",
   "required_parameters": ["applicationId", "review_id"],
-  "output_properties": ["deletedCodes"],
+  "output_properties": ["deletedIds", "updatedIds"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",
