@@ -230,7 +230,7 @@ const extractProperty = (
   }
   const currentProperty = propertyPathArray[0]
   if (propertyPathArray.length === 1)
-    return data?.[currentProperty] != null ? data?.[currentProperty] : fallback
+    return data?.[currentProperty] != null ? data[currentProperty] : fallback
   else return extractProperty(data[currentProperty], propertyPathArray.slice(1), fallback)
 }
 
