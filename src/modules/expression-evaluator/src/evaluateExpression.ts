@@ -173,7 +173,9 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
     const [query, variableNames, variableValues, returnProperty] = assignChildNodesToQuery(
       queryArray
     )
+
     const variables = zipArraysToObject(variableNames, variableValues)
+
     const data = await graphQLquery(query, variables, connection)
     if (!data) throw new Error('GraphQL query problem')
     try {
