@@ -173,10 +173,7 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
     const [query, variableNames, variableValues, returnProperty] = assignChildNodesToQuery(
       queryArray
     )
-
     const variables = zipArraysToObject(variableNames, variableValues)
-    console.log('query', query)
-    console.log('variables', variables)
     const data = await graphQLquery(query, variables, connection)
     if (!data) throw new Error('GraphQL query problem')
     try {
@@ -232,7 +229,8 @@ const extractProperty = (
     return data.map((item) => extractProperty(item, propertyPathArray, fallback))
   }
   const currentProperty = propertyPathArray[0]
-  if (propertyPathArray.length === 1) return data?.[currentProperty] || fallback
+  if (propertyPathArray.length === 1)
+    return data?.[currentProperty] != null ? data?.[currentProperty] : fallback
   else return extractProperty(data[currentProperty], propertyPathArray.slice(1), fallback)
 }
 
