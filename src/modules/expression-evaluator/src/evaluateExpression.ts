@@ -126,7 +126,7 @@ export default async function evaluateExpression(
           throw new Error('Problem with API call')
         }
         try {
-          return extractAndSimplify(data, returnProperty)
+          return extractAndSimplify(data, returnProperty, "API - Can't resolve property")
         } catch {
           throw new Error('Problem parsing requested node from API result')
         }
@@ -175,11 +175,12 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
     )
 
     const variables = zipArraysToObject(variableNames, variableValues)
-
+    console.log('query', query)
+    console.log('variables', variables)
     const data = await graphQLquery(query, variables, connection)
     if (!data) throw new Error('GraphQL query problem')
     try {
-      return extractAndSimplify(data, returnProperty)
+      return extractAndSimplify(data, returnProperty, "GraphQL - Can't resolve node")
     } catch (err) {
       throw new Error('GraphQL -- unable to retrieve node')
     }
@@ -190,9 +191,10 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
 
 const extractAndSimplify = (
   data: BasicObject | BasicObject[],
-  returnProperty: string | undefined
+  returnProperty: string | undefined,
+  fallback: any = "Can't resolve property"
 ) => {
-  const selectedProperty = returnProperty ? extractProperty(data, returnProperty) : data
+  const selectedProperty = returnProperty ? extractProperty(data, returnProperty, fallback) : data
   return Array.isArray(selectedProperty)
     ? selectedProperty.map((item) => simplifyObject(item))
     : returnProperty
