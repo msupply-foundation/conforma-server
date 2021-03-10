@@ -3,6 +3,7 @@ TEMPLATE C -- User Registration
   - the form filled in by an unregistered user to create an 
     account in the system
 */
+// const { coreActions } = require('./core_actions')
 exports.queries = [
   `mutation {
     createTemplate(
@@ -142,6 +143,7 @@ exports.queries = [
           templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
           templateActionsUsingId: {
             create: [
+              # No Core Actions for this one
               {
                 actionCode: "incrementStage"
                 trigger: ON_APPLICATION_CREATE

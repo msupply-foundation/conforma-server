@@ -3,6 +3,8 @@ TEMPLATE B - Organisation Registration
   - still a work in progress, but this will be the template for creating an
     application to register an organisation
 */
+const { coreActions } = require('./core_actions')
+
 exports.queries = [
   `mutation {
     createTemplate(
@@ -229,16 +231,7 @@ exports.queries = [
           }
           templateActionsUsingId: {
             create: [
-              {
-                actionCode: "incrementStage"
-                trigger: ON_APPLICATION_CREATE
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                }
-              }
+              ${coreActions}
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
@@ -247,31 +240,9 @@ exports.queries = [
                 }
               }
               {
-                actionCode: "changeStatus"
-                trigger: ON_APPLICATION_SUBMIT
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  newStatus: { value: "Submitted" }
-                }
-              }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_REVIEW_CREATE
-                parameterQueries: {
-                  reviewId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  newStatus: { value: "Draft" }
-                }
-              }
-              {
                 actionCode: "changeOutcome"
                 trigger: ON_REVIEW_SUBMIT
-                sequence: 1
+                sequence: 100
                 # condition: TO-DO -- need to check if
                 # Decision is Approved
                 parameterQueries: {
@@ -285,7 +256,7 @@ exports.queries = [
               {
                 actionCode: "createOrg"
                 trigger: ON_REVIEW_SUBMIT
-                sequence: 2
+                sequence: 101
                 # condition: TO-DO -- need to check if
                 # Decision is Approved
                 parameterQueries: {
@@ -316,7 +287,7 @@ exports.queries = [
               {
                 actionCode: "joinUserOrg"
                 trigger: ON_REVIEW_SUBMIT
-                sequence: 3
+                sequence: 102
                 # condition: TO-DO -- need to check if
                 # Decision is Approved
                 parameterQueries: {
@@ -334,7 +305,7 @@ exports.queries = [
               {
                 actionCode: "grantPermissions"
                 trigger: ON_REVIEW_SUBMIT
-                sequence: 4
+                sequence: 103
                 # condition: TO-DO -- need to check if
                 # Decision is Approved
                 parameterQueries: {

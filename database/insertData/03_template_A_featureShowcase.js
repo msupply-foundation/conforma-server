@@ -3,6 +3,8 @@ TEMPLATE A - General Registration (Feature showcase)
     - used to demonstrate and test features such as new plugins, actions,
       dynamic visibility, complex dynamic expressions, etc.
 */
+const { coreActions } = require('./core_actions')
+
 exports.queries = [
   `mutation {
     createTemplate(
@@ -689,20 +691,11 @@ exports.queries = [
           }
           templateActionsUsingId: {
             create: [
-              {
-                actionCode: "incrementStage"
-                trigger: ON_APPLICATION_CREATE
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
-                }
-              }
+              ${coreActions}
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 1
+                sequence: 100
                 parameterQueries: {
                   message: {
                     value: "Sequential logger -- this message should appear before new user and application approval messages."
@@ -712,7 +705,7 @@ exports.queries = [
               {
                 actionCode: "createUser"
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 2
+                sequence: 101
                 parameterQueries: {
                   first_name: {
                     operator: "objectProperties"
@@ -739,7 +732,7 @@ exports.queries = [
               {
                 actionCode: "grantPermissions"
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 3
+                sequence: 102
                 parameterQueries: {
                   username: {
                     operator: "objectProperties"
@@ -748,10 +741,11 @@ exports.queries = [
                   permissionNames: { value: ["applyCompanyRego"] }
                 }
               }
+              # Because it is later in sequence, this Action should over-ride the Core one
               {
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 4
+                sequence: 103
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
@@ -763,7 +757,7 @@ exports.queries = [
               {
                 actionCode: "changeOutcome"
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 5
+                sequence: 104
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
@@ -775,7 +769,7 @@ exports.queries = [
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 6
+                sequence: 105
                 parameterQueries: {
                   message: {
                     operator: "stringSubstitution"
@@ -800,29 +794,6 @@ exports.queries = [
                 parameterQueries: {
                   message: {
                     value: "Testing parallel actions -- This message is Asynchronous. \\nEven though it is last in the Actions list, it'll probably appear first."
-                  }
-                }
-              }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_REVIEW_CREATE
-                parameterQueries: {
-                  reviewId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  newStatus: { value: "Draft" }
-                }
-              }
-              # This one is just for demonstration/testing
-              {
-                actionCode: "trimResponses"
-                trigger: ON_APPLICATION_SAVE
-                sequence: 1
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
                   }
                 }
               }

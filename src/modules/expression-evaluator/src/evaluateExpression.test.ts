@@ -298,6 +298,22 @@ test('Test returning single application property, depth 2, no object index', () 
   })
 })
 
+test('Test unresolved object', () => {
+  return evaluateExpression(testData.objectPropertyUnresolved, {
+    objects: { application: testData.application },
+  }).then((result: any) => {
+    expect(result).toBe("Can't resolve object")
+  })
+})
+
+test('Test unresolved object with Null fallback', () => {
+  return evaluateExpression(testData.objectPropertyUnresolvedWithNullFallback, {
+    objects: { application: testData.application },
+  }).then((result: any) => {
+    expect(result).toBe(null)
+  })
+})
+
 // String substitution
 
 test('Simple string substitution', () => {
