@@ -5,7 +5,10 @@ const config = require('../src/config.json')
 
 const graphQLendpoint = config.graphQLendpoint
 
-const filesToProcess = fs.readdirSync('./database/insertData').filter((file) => !file.match(/^\./)) // Ignore hidden files
+const filesToProcess = fs
+  .readdirSync('./database/insertData')
+  .filter((file) => !file.match(/^\./)) // Ignore hidden files
+  .filter((file) => file !== 'core_actions.js')
 
 processQueries(filesToProcess)
 

@@ -3,6 +3,8 @@ TEMPLATE D - Review (testing)
   - a simple template with multiple pages in multiple sections to be used
     for testing the application review process
 */
+const { coreActions } = require('./core_actions')
+
 exports.queries = [
   `mutation {
     createTemplate(
@@ -239,210 +241,12 @@ exports.queries = [
           }
           templateActionsUsingId: {
             create: [
-              {
-                actionCode: "incrementStage"
-                trigger: ON_APPLICATION_CREATE
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
-                }
-              }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 1
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
-                  newStatus: { value: "Submitted" }
-                }
-              }
+              ${coreActions}
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: { message: "Application Submitted" }
-              }
-              {
-                actionCode: "trimResponses"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 3
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  timestamp: {
-                    operator: "objectProperties"
-                    children: ["output.applicationStatusHistoryTimestamp"]
-                  }
-                }
-              }
-              {
-                actionCode: "generateReviewAssignments"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 4
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
-                  templateId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.templateId"]
-                  }
-                  stageId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.stageId"]
-                  }
-                  stageNumber: {
-                    operator: "objectProperties"
-                    children: ["applicationData.stageNumber"]
-                  }
-                }
-              }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_REVIEW_CREATE
-                parameterQueries: {
-                  reviewId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  newStatus: { value: "Draft" }
-                }
-              }
-              {
-                actionCode: "generateReviewAssignments"
-                trigger: ON_REVIEW_SUBMIT
-                # sequence: 1
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
-                  templateId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.templateId"]
-                  }
-                  reviewId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  stageId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.stageId"]
-                  }
-                  stageNumber: {
-                    operator: "objectProperties"
-                    children: ["applicationData.stageNumber"]
-                  }
-                }
-              }
-              {
-                actionCode: "updateReviewAssignmentsStatus"
-                trigger: ON_REVIEW_SELF_ASSIGN
-                # sequence: 1
-                parameterQueries: {
-                  reviewAssignmentId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  trigger: {
-                    operator: "objectProperties"
-                    children: ["applicationData.trigger"]
-                  }
-                }
-              }
-              {
-                actionCode: "updateReviewAssignmentsStatus"
-                trigger: ON_REVIEW_ASSIGN
-                # sequence: 1
-                parameterQueries: {
-                  reviewAssignmentId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  trigger: {
-                    operator: "objectProperties"
-                    children: ["applicationData.trigger"]
-                  }
-                }
-              }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 1
-                parameterQueries: {
-                  reviewId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  newStatus: "Submitted"
-                }
-              }
-              {
-                actionCode: "trimResponses"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 2
-                parameterQueries: {
-                  reviewId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  timestamp: {
-                    operator: "objectProperties"
-                    children: ["output.reviewStatusHistoryTimestamp"]
-                  }
-                }
-              }
-              {
-                actionCode: "updateReviewVisibility"
-                sequence: 2
-                trigger: ON_REVIEW_SUBMIT
-                condition: {
-                  operator: "AND"
-                  children: [
-                    {
-                      operator: "="
-                      children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "LIST_OF_QUESTIONS"
-                      ]
-                    }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
-                  ]
-                }
-                parameterQueries: {
-                  reviewId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                }
-              }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 2
-                parameterQueries: {
-                  reviewId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  newStatus: { value: "Submitted" }
-                }
               }
             ]
           }
@@ -476,6 +280,5 @@ exports.queries = [
         name
       }
     }
-  }
-  `,
+  }`,
 ]
