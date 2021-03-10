@@ -87,6 +87,7 @@ exports.coreActions = `
     # 2 - trim responses
     # 3 - generate review assignments
     # 4 - adjust visibility of review responses (for applicant)
+    # 5 - change application status
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_SUBMIT
@@ -176,6 +177,42 @@ exports.coreActions = `
         }
         }
     }
+    # change application status to changes requested
+    # condition checks for latest review decison = LIST_OF_QUESTIONS
+    # AND review being isLastLevel
+    {
+      actionCode: "changeStatus"
+      sequence: 5
+      trigger: ON_REVIEW_SUBMIT
+      condition: {
+        operator: "AND"
+        children: [
+          {
+            operator: "="
+            children: [
+              {
+                operator: "objectProperties"
+                children: [
+                  "applicationData.reviewData.latestDecision.decision"
+                ]
+              }
+              "LIST_OF_QUESTIONS"
+            ]
+          }
+          {
+            operator: "objectProperties"
+            children: ["applicationData.reviewData.isLastLevel"]
+          }
+        ]
+      }
+      parameterQueries: {
+        applicationId: {
+          operator: "objectProperties"
+          children: ["applicationData.applicationId"]
+        }
+        newStatus: { value: "Changes Required" }
+      }
+    }
     # ON_REVIEW_SELF_ASSIGN
     # change review assignment status for other reviewers
     {
@@ -193,4 +230,5 @@ exports.coreActions = `
         }
         }
     }   
+    
     `
