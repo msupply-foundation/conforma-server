@@ -86,9 +86,10 @@ export default async function evaluateExpression(
         try {
           const inputObject = params?.objects ? params.objects : {}
           const property = childrenResolved[0]
-          return extractProperty(inputObject, property)
+          const fallback = childrenResolved?.[1]
+          return extractProperty(inputObject, property, fallback)
         } catch {
-          throw new Error("Can't resolve object")
+          throw new Error('Problem evaluating object')
         }
 
       case 'stringSubstitution':
@@ -125,7 +126,7 @@ export default async function evaluateExpression(
           throw new Error('Problem with API call')
         }
         try {
-          return extractAndSimplify(data, returnProperty)
+          return extractAndSimplify(data, returnProperty, "API - Can't resolve property")
         } catch {
           throw new Error('Problem parsing requested node from API result')
         }
@@ -178,7 +179,7 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
     const data = await graphQLquery(query, variables, connection)
     if (!data) throw new Error('GraphQL query problem')
     try {
-      return extractAndSimplify(data, returnProperty)
+      return extractAndSimplify(data, returnProperty, "GraphQL - Can't resolve node")
     } catch (err) {
       throw new Error('GraphQL -- unable to retrieve node')
     }
@@ -189,9 +190,10 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
 
 const extractAndSimplify = (
   data: BasicObject | BasicObject[],
-  returnProperty: string | undefined
+  returnProperty: string | undefined,
+  fallback: any = "Can't resolve property"
 ) => {
-  const selectedProperty = returnProperty ? extractProperty(data, returnProperty) : data
+  const selectedProperty = returnProperty ? extractProperty(data, returnProperty, fallback) : data
   return Array.isArray(selectedProperty)
     ? selectedProperty.map((item) => simplifyObject(item))
     : returnProperty
@@ -219,17 +221,19 @@ const zipArraysToObject = (variableNames: string[], variableValues: any[]) => {
 // Returns a specific property (e.g. application.name) from a nested Object
 const extractProperty = (
   data: BasicObject | BasicObject[],
-  node: string | string[]
+  node: string | string[],
+  fallback: any = "Can't resolve object"
 ): BasicObject | string | number | boolean | BasicObject[] => {
   const propertyPathArray = Array.isArray(node) ? node : node.split('.')
   // ie. "application.template.name" => ["applcation", "template", "name"]
   if (Array.isArray(data)) {
     // If an array, extract the property from *each item*
-    return data.map((item) => extractProperty(item, propertyPathArray))
+    return data.map((item) => extractProperty(item, propertyPathArray, fallback))
   }
   const currentProperty = propertyPathArray[0]
-  if (propertyPathArray.length === 1) return data[currentProperty]
-  else return extractProperty(data[currentProperty], propertyPathArray.slice(1))
+  if (propertyPathArray.length === 1)
+    return data?.[currentProperty] != null ? data[currentProperty] : fallback
+  else return extractProperty(data[currentProperty], propertyPathArray.slice(1), fallback)
 }
 
 // If Object has only 1 property, return just the value of that property,
