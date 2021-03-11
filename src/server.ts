@@ -53,10 +53,10 @@ const startServer = async () => {
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {
-    // TO-DO: Check if logged in
+    // TO-DO: Authentication
     const data = await request.files()
     await saveFiles(data, request.query)
-    reply.send()
+    reply.send({ success: true })
   })
 
   server.get('/', async (request, reply) => {

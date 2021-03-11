@@ -55,7 +55,7 @@ async function registerFileInDB(file: any, parameters: any) {
   // Insert record into Db and get back ID
   const fileID = await DBConnect.addFile({
     user_id: parameters.user_id,
-    unique_id: '12345', // temporary value, will update next issue
+    unique_id: String(Math.floor(Math.random() * Math.floor(999999))), // temporary value, will update next issue
     original_filename: file.filename,
     application_id: parameters.application_id,
     application_response_id: parameters.application_response_id,
