@@ -3,7 +3,7 @@ const databaseMethods = (DBConnect: any) => ({
     const text = `DELETE from application_response
       WHERE id = ANY ($1)
       RETURNING id AS "applicationResponseId",
-      template_element_id AS "templateElementID"
+      template_element_id AS "templateElementId"
       `
     try {
       const result = await DBConnect.query({ text, values: [responsesToDelete] })
