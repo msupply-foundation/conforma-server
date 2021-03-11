@@ -1,21 +1,6 @@
 import databaseMethods from './databaseMethods'
 
 type ReviewStatus = 'Draft' | 'Submitted' | 'Changes Requested' | 'Pending' | 'Locked'
-interface Response {
-  id: number
-  code: string
-  template_element_id?: number
-  application_response_id?: number
-  review_response_link_id?: number
-  value: { [key: string]: any }
-  comment?: string
-  decision?: string
-  time_updated: any
-}
-
-interface ResponsesById {
-  [key: number]: Response[]
-}
 interface Review {
   reviewId: number
   reviewAssignmentId: number
@@ -47,7 +32,8 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
       if (level > 1) reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
       else if (await haveAssignedResponsesChanged(reviewAssignmentId))
         reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
-      else if (reviewStatus === 'Pending') reviewsToUpdate.push({ ...review })
+      else if (reviewStatus === 'Pending' || reviewStatus === 'Locked')
+        reviewsToUpdate.push({ ...review })
     }
     console.log('reviewsToUpdate', reviewsToUpdate)
 

@@ -22,29 +22,25 @@ beforeAll(async (done) => {
   `,
     values: [],
   })
-  // Duplicate review responses, with some modifications
-  // await DBConnect.query({
-  //   text: `
-  //   INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'Approve', 1015, 4024, NULL, 5, 'NOW()', 'Submitted');
-  //   INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'Approve', 1014, 4023, NULL, 5, 'NOW()', 'Submitted');
-  //   INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'Approve', 1013, 4022, NULL, 5, 'NOW()', 'Submitted');
-  //   INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, 'This is still not right', 'Decline', 1012, 4021, NULL, 5, 'NOW()', 'Submitted');
-  //   INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'Approve', 1011, 4020, NULL, 5, 'NOW()', 'Submitted');`,
-  //   values: [],
-  // })
   done()
 })
 
 test('Test: Should update 2 reviews', () => {
   return Action.updateReviews(
-    { applicationId: 4000, changedApplicationResponses: [7, 9] },
+    {
+      applicationId: 4000,
+      changedApplicationResponses: [
+        { applicationResponseId: 7, templateElementId: 4005 },
+        { applicationResponseId: 9, templateElementId: 4002 },
+      ],
+    },
     DBConnect
   ).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
       output: {
-        reviewsToUpdate: [
+        updatedReviews: [
           {
             reviewId: 1,
             reviewAssignmentId: 1000,

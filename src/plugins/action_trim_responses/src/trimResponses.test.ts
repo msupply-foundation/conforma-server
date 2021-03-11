@@ -38,15 +38,15 @@ test('Test: remove unchanged application_response duplicates', () => {
       error_log: '',
       output: {
         deletedResponses: [
-          { applicationResponseId: 1, templateElementID: 1009 },
-          { applicationResponseId: 4, templateElementID: 1005 },
-          { applicationResponseId: 6, templateElementID: 1002 },
+          { applicationResponseId: 1, templateElementId: 1009 },
+          { applicationResponseId: 4, templateElementId: 1005 },
+          { applicationResponseId: 6, templateElementId: 1002 },
         ],
         updatedResponses: [
-          { applicationResponseId: 1000, templateElementID: 1001 },
-          { applicationResponseId: 2, templateElementID: 1007 },
-          { applicationResponseId: 3, templateElementID: 1006 },
-          { applicationResponseId: 5, templateElementID: 1004 },
+          { applicationResponseId: 1000, templateElementId: 1001 },
+          { applicationResponseId: 2, templateElementId: 1007 },
+          { applicationResponseId: 3, templateElementId: 1006 },
+          { applicationResponseId: 5, templateElementId: 1004 },
         ],
       },
     })
