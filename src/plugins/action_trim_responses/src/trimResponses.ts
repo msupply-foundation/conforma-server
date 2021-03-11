@@ -57,25 +57,25 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
     })
 
     // Run delete operation on all in toDelete array (new method)
-    const deletedIds = reviewId
+    const deletedResponses = reviewId
       ? await db.deleteReviewResponses(responsesToDelete)
       : await db.deleteApplicationResponses(responsesToDelete)
 
     // Update timestamp of remaining responses
     const timeUpdated = timestamp ? timestamp : new Date().toISOString()
-    const updatedIds = reviewId
+    const updatedResponses = reviewId
       ? await db.updateReviewResponseTimestamps(responsesToUpdate, timeUpdated)
       : await db.updateApplicationResponseTimestamps(responsesToUpdate, timeUpdated)
 
-    console.log(`IDs of deleted ${reviewId ? 'review' : 'application'} responses: `, deletedIds)
-    console.log(`IDs of updated ${reviewId ? 'review' : 'application'} responses: `, updatedIds)
+    console.log(`Deleted ${reviewId ? 'review' : 'application'} responses: `, deletedResponses)
+    console.log(`Updated ${reviewId ? 'review' : 'application'} responses: `, updatedResponses)
 
     return {
       status: 'Success',
       error_log: '',
       output: {
-        deletedIds,
-        updatedIds,
+        deletedResponses,
+        updatedResponses,
       },
     }
   } catch (error) {

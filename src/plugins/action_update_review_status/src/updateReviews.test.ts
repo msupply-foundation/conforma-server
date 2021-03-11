@@ -32,7 +32,10 @@ const Action = require('./updateReviews')
 // })
 
 test('Test: Just see what happens', () => {
-  return Action.updateReviews({ applicationId: 4000 }, DBConnect).then((result: any) => {
+  return Action.updateReviews(
+    { applicationId: 4000, changedApplicationResponses: [4005, 4006] },
+    DBConnect
+  ).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',

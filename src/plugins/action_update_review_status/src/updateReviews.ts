@@ -31,79 +31,56 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
 
   console.log('Updating reviews status...')
 
-  const { applicationId } = input
+  const { applicationId, changedApplicationResponses = [] } = input
 
-  const applicationResponses = groupResponses(
-    await await DBConnect.getAllApplicationResponses(applicationId),
-    'template_element_id'
-  )
+  // const applicationResponses = groupResponses(
+  //   await await DBConnect.getAllApplicationResponses(applicationId),
+  //   'template_element_id'
+  // )
 
   const reviewsToUpdate = []
 
   try {
     // Get reviews/review assignments (with status) matching application_id
-    const reviews = (await db.getAssociatedReviews(applicationId)).filter(
-      (review: Review) => review.reviewStatus in ['Submitted', 'Locked', 'Draft']
+    const reviews = (await db.getAssociatedReviews(applicationId)).filter((review: Review) =>
+      ['Submitted', 'Locked', 'Draft'].includes(review.reviewStatus)
     )
+    // Deduce which ones should be updated
     for (const review of reviews) {
+      console.log('review', review)
       const { reviewAssignmentId, level, reviewStatus } = review
       if (level > 1) reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
-      else if (await haveResponsesChanged(reviewAssignmentId, applicationResponses))
+      else if (await haveAssignedResponsesChanged(reviewAssignmentId))
         reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
+      else if (reviewStatus === 'Pending') reviewsToUpdate.push({ ...review })
     }
-    // .map((review: Review) => {
-    //   const { reviewAssignmentId, level, reviewStatus } = review
-    //   if (level !== 1 || (await haveResponsesChanged(reviewAssignmentId, applicationId)))
-    //     return { ...review, reviewStatus: 'Pending' }
-    // })
-    // .filter((review: Review) => review.reviewStatus === 'Pending')
+    console.log('reviewsToUpdate', reviewsToUpdate)
 
-    // Iterate over reviews
-    // If Draft/Locked/(Submitted && !Level1) -> change to Pending, continue
-    // If Submitted && L1 (assumed now):
-    // Get application responses and collect which have changed
-    // check latest application response timestamp later than review?
-    // If changes, add to Update with status "Pending"
-
-    // reviews to update to Action Queue (which will trigger status change)
+    // Update review statuses
+    for (const review of reviewsToUpdate) {
+      const { reviewId, reviewStatus } = review
+      DBConnect.addNewReviewStatusHistory(reviewId.reviewStatus)
+    }
 
     return {
       status: 'Success',
       error_log: '',
       output: {
-        // deletedCodes,
-        // updatedCodes,
+        updatedReviews: reviewsToUpdate,
       },
     }
   } catch (error) {
     console.log(error.message)
     return {
       status: 'Fail',
-      error_log: 'There was a problem trimming duplicated responses.',
+      error_log: 'There was a problem updating review statuses.',
     }
   }
 
-  async function haveResponsesChanged(reviewAssignmentId: number, applicationResponses: any) {
+  async function haveAssignedResponsesChanged(reviewAssignmentId: number) {
     const questionAssignments = await db.getReviewQuestionAssignments(reviewAssignmentId)
-    // const groupedResponses = groupResponses(
-    //   db.getAllApplicationResponses(applicationId),
-    //   'template_element_id'
-    // )
-    return true
+    return changedApplicationResponses.reduce((isInAssigned: boolean, responseId: number) => {
+      return isInAssigned || questionAssignments.includes(responseId)
+    }, false)
   }
-}
-
-type GroupField = 'template_element_id' | 'application_response_id' | 'review_response_link_id'
-
-function groupResponses(responses: Response[], groupField: GroupField): ResponsesById {
-  const responsesGrouped: ResponsesById = {}
-  for (const response of responses) {
-    const id = response[groupField]
-    if (!id) continue
-    if (groupField === 'application_response_id' || groupField === 'review_response_link_id')
-      response.value = { comment: response.comment, decision: response.decision }
-    if (!(id in responsesGrouped)) responsesGrouped[id] = [response]
-    else responsesGrouped[id].push(response)
-  }
-  return responsesGrouped
 }
