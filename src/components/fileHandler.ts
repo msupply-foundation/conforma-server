@@ -32,6 +32,7 @@ export async function getFilename(id: number) {
 }
 
 const pump = util.promisify(pipeline)
+
 export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
   for await (const file of data) {
     await pump(
@@ -54,11 +55,13 @@ async function registerFileInDB(file: any, parameters: any) {
   // Insert record into Db and get back ID
   const fileID = await DBConnect.addFile({
     user_id: parameters.user_id,
+    unique_id: '12345', // temporary value, will update next issue
     original_filename: file.filename,
-    path: filesFolderName,
-    mimetype: file.mimetype,
     application_id: parameters.application_id,
     application_response_id: parameters.application_response_id,
+    file_path: filesFolderName, // Not correct, will update next issue
+    thumbnail_path: '',
+    mimetype: file.mimetype,
   })
   if (fileID === 0) return false
   // Rename file with ID
