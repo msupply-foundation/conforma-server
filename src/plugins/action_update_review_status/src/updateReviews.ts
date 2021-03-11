@@ -1,5 +1,4 @@
 import databaseMethods from './databaseMethods'
-const isEqual = require('deep-equal')
 
 type ReviewStatus = 'Draft' | 'Submitted' | 'Changes Requested' | 'Pending' | 'Locked'
 interface Response {
@@ -33,12 +32,9 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
 
   const { applicationId, changedApplicationResponses = [] } = input
 
-  // const applicationResponses = groupResponses(
-  //   await await DBConnect.getAllApplicationResponses(applicationId),
-  //   'template_element_id'
-  // )
-
   const reviewsToUpdate = []
+
+  console.log('changedApplicationResponses', changedApplicationResponses)
 
   try {
     // Get reviews/review assignments (with status) matching application_id
@@ -47,7 +43,6 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
     )
     // Deduce which ones should be updated
     for (const review of reviews) {
-      console.log('review', review)
       const { reviewAssignmentId, level, reviewStatus } = review
       if (level > 1) reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
       else if (await haveAssignedResponsesChanged(reviewAssignmentId))
@@ -59,7 +54,7 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
     // Update review statuses
     for (const review of reviewsToUpdate) {
       const { reviewId, reviewStatus } = review
-      DBConnect.addNewReviewStatusHistory(reviewId.reviewStatus)
+      DBConnect.addNewReviewStatusHistory(reviewId, reviewStatus)
     }
 
     return {
@@ -79,8 +74,11 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
 
   async function haveAssignedResponsesChanged(reviewAssignmentId: number) {
     const questionAssignments = await db.getReviewQuestionAssignments(reviewAssignmentId)
-    return changedApplicationResponses.reduce((isInAssigned: boolean, responseId: number) => {
-      return isInAssigned || questionAssignments.includes(responseId)
-    }, false)
+    return changedApplicationResponses.reduce(
+      (isInAssigned: boolean, { templateElementId }: any) => {
+        return isInAssigned || questionAssignments.includes(templateElementId)
+      },
+      false
+    )
   }
 }

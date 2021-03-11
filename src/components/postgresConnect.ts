@@ -509,7 +509,7 @@ class PostgresDB {
   }
 
   public getApplicationCurrentStatusHistory = async (applicationId: number) => {
-    const text = `SELECT id, status, application_stage_history_id FROM
+    const text = `SELECT id, status, application_stage_history_id, time_created FROM
       application_status_history WHERE
       application_id = $1 and is_current = true;`
     try {
@@ -535,7 +535,7 @@ class PostgresDB {
   }
 
   public getReviewCurrentStatusHistory = async (reviewId: number) => {
-    const text = `SELECT id, status FROM
+    const text = `SELECT id, status, time_created FROM
       review_status_history WHERE
       review_id = $1 and is_current = true;`
     try {

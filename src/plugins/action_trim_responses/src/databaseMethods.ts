@@ -32,7 +32,7 @@ const databaseMethods = (DBConnect: any) => ({
       SET time_updated = $1
       WHERE id = ANY ($2)
       RETURNING id AS "applicationResponseId",
-      template_element_id AS "templateElementID"
+      template_element_id AS "templateElementId"
       `
     try {
       const result = await DBConnect.query({ text, values: [timestamp, responsesToUpdate] })

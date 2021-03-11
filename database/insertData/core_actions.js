@@ -55,7 +55,7 @@ exports.coreActions = `
           }
           timestamp: {
             operator: "objectProperties"
-            children: ["output.applicationStatusHistoryTimestamp"]
+            children: ["output.applicationStatusHistoryTimestamp", null]
           }
         }
     }
@@ -80,6 +80,21 @@ exports.coreActions = `
             operator: "objectProperties"
             children: ["applicationData.stageNumber"]
         }
+        }
+    }
+    {
+        actionCode: "updateReviews"
+        trigger: ON_APPLICATION_SUBMIT
+        sequence: 4
+        parameterQueries: {
+          applicationId: {
+            operator: "objectProperties"
+            children: ["applicationData.record_id"]
+          }
+          changedApplicationResponses: {
+            operator: "objectProperties"
+            children: ["output.updatedResponses"]
+          }
         }
     }
     # ON_REVIEW_SUBMIT

@@ -1,3 +1,4 @@
+import { time } from 'console'
 import databaseMethods from './databaseMethods'
 const isEqual = require('deep-equal')
 interface Response {
