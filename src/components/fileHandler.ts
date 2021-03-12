@@ -30,6 +30,7 @@ export async function getFilePath(uid: string, thumbnail = false) {
 const pump = util.promisify(pipeline)
 
 export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
+  const files = []
   try {
     for await (const file of data) {
       const ext = path.extname(file.filename)
@@ -53,10 +54,16 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       } catch {
         throw 'Problem uploading file'
       }
+      files.push({
+        filename: file.filename,
+        fileUrl: `/file?uid=${unique_id}`,
+        thumbnailUrl: `/file?uid=${unique_id}&thumbnail=true`,
+      })
     }
   } catch {
     throw 'Problem uploading file(s)'
   }
+  return files
 }
 
 async function registerFileInDB({

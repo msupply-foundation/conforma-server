@@ -60,8 +60,8 @@ const startServer = async () => {
   server.post('/upload', async function (request: any, reply) {
     // TO-DO: Authentication
     const data = await request.files()
-    await saveFiles(data, request.query)
-    reply.send({ success: true })
+    const files = await saveFiles(data, request.query)
+    reply.send({ success: true, files })
   })
 
   server.get('/', async (request, reply) => {
