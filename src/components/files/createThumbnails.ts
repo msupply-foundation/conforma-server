@@ -49,7 +49,22 @@ const createThumbnail = async ({
       return getGenericThumbnailPath(type)
     }
   } else if (mimetype === 'application/pdf') {
-    return getGenericThumbnailPath('pdf')
+    const options = {
+      density: 100,
+      saveFilename: `${basename}_${unique_id}_thumb`,
+      savePath: filesPath,
+      format: 'png',
+      // width: thumbnailMaxWidth,
+      // height: thumbnailMaxHeight,
+    }
+    const convertToPdf = fromPath(origFilePath, options)
+    try {
+      await convertToPdf(1)
+      await fs.rename(`${thumbnailFilePath}.1.png`, `${thumbnailFilePath}.png`, () => {})
+      return `${basename}_${unique_id}_thumb.png`
+    } catch {
+      return getGenericThumbnailPath('pdf')
+    }
   } else if (['.pdf', '.doc', '.docx'].includes(ext))
     return getGenericThumbnailPath(`_/${ext.replace('.', '')}`)
   else return getGenericThumbnailPath(mimetype)
