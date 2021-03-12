@@ -1,3 +1,5 @@
+// Maps file types (mimetype or ext) to generic
+// thumbnail files
 const genericThumbnails: { [key: string]: string } = {
   image: 'noun_Image_1570203.png',
   doc: 'noun_word_3515287.png',
@@ -22,6 +24,9 @@ interface ThumbnailInput {
   mimetype: string
 }
 
+// We use a combination of mimetype (type/subtype) and file extension to
+// determine which conversion process to use, or which generic
+// thumbnail to return
 const createThumbnail = async ({
   filesPath,
   unique_id,
