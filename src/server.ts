@@ -40,13 +40,11 @@ const startServer = async () => {
 
   // File download endpoint (get by Database ID)
   server.get('/file', async function (request: any, reply: any) {
-    console.log('Requesting file...', request.query.uid)
     const { original_filename, file_path, thumbnail_path } = await getFilePath(request.query.uid)
-    console.log('file_path', file_path)
     // TO-DO Check for permission to access file
     try {
       // TO-DO: Rename file back to original for download
-      return reply.sendFile(file_path)
+      return reply.sendFile(file_path ? file_path : thumbnail_path)
     } catch {
       return reply.send({ success: false, message: 'Unable to retrieve file' })
     }

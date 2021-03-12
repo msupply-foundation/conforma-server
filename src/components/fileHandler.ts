@@ -35,8 +35,11 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       const ext = path.extname(file.filename)
       const basename = path.basename(file.filename, ext)
       const unique_id = nanoid()
-      const file_path = path.join(filesFolderName, `${basename}_${unique_id}${ext}`)
-      await pump(file.file, fs.createWriteStream(path.join(getAppRootDir(), file_path)))
+      const file_path = path.join(`${basename}_${unique_id}${ext}`)
+      await pump(
+        file.file,
+        fs.createWriteStream(path.join(getAppRootDir(), filesFolderName, file_path))
+      )
 
       const parameters = { ...queryParams }
 
