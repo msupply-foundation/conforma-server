@@ -64,7 +64,6 @@ const splitMimetype = (mimetype: string) => {
 
 const getGenericThumbnailPath = (mimetype: string) => {
   const { type, subtype } = splitMimetype(mimetype)
-  console.log('type', type, 'subtype', subtype)
   if (subtype in genericThumbnails) return genericThumbnails[subtype]
   if (type in genericThumbnails) return genericThumbnails[type]
   return genericThumbnails.file
