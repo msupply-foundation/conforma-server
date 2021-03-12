@@ -6,7 +6,7 @@ import {
   ActionInTemplate,
   ActionQueue,
   ActionPlugin,
-  File,
+  FileDownloadInfo,
   ActionInTemplateGetPayload,
   ActionQueueExecutePayload,
   ActionQueueGetPayload,
@@ -187,11 +187,15 @@ class PostgresDB {
     }
   }
 
-  public getFile = async (payload: FileGetPayload): Promise<File | undefined> => {
-    const text = 'SELECT path, original_filename FROM file WHERE id = $1'
+  public getFileDownloadInfo = async (
+    uid: string,
+    thumbnail = false
+  ): Promise<FileDownloadInfo | undefined> => {
+    const path = thumbnail ? 'thumbnail_path' : 'file_path'
+    const text = `SELECT original_filename, ${path} FROM file WHERE unique_id = $1`
     try {
-      const result = await this.query({ text, values: [payload.id] })
-      return result.rows[0] as File
+      const result = await this.query({ text, values: [uid] })
+      return result.rows[0] as FileDownloadInfo
     } catch (err) {
       throw err
     }

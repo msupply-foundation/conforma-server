@@ -21,38 +21,38 @@ export function createFilesFolder() {
   }
 }
 
-export async function getFilename(id: number) {
-  const result = await DBConnect.getFile({ id: id })
-  if (!result) return ''
-  const folder = result.path // Not currently used
-  const filenameOrig = result.original_filename
-  const ext = path.extname(String(filenameOrig))
-  const basename = path.basename(filenameOrig, ext)
-  return `${basename}_${id}${ext}`
+export async function getFilePath(uid: string, thumbnail = false) {
+  const result = await DBConnect.getFileDownloadInfo(uid, thumbnail)
+  if (!result) throw new Error()
+  return result
 }
 
 const pump = util.promisify(pipeline)
 
 export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
-  for await (const file of data) {
-    const ext = path.extname(file.filename)
-    const basename = path.basename(file.filename, ext)
-    const unique_id = nanoid()
-    const file_path = path.join(filesFolderName, `${basename}_${unique_id}${ext}`)
-    await pump(file.file, fs.createWriteStream(path.join(getAppRootDir(), file_path)))
+  try {
+    for await (const file of data) {
+      const ext = path.extname(file.filename)
+      const basename = path.basename(file.filename, ext)
+      const unique_id = nanoid()
+      const file_path = path.join(filesFolderName, `${basename}_${unique_id}${ext}`)
+      await pump(file.file, fs.createWriteStream(path.join(getAppRootDir(), file_path)))
 
-    const parameters = { ...queryParams }
+      const parameters = { ...queryParams }
 
-    ;['user_id', 'application_id', 'application_response_id'].forEach((field) => {
-      const queryFieldValue = queryParams[field]
-      const bodyFieldValue = file.fields[field] ? file.fields[field].value : undefined
-      parameters[field] = queryFieldValue ? queryFieldValue : bodyFieldValue
-    })
-    try {
-      await registerFileInDB({ unique_id, file, file_path, ...parameters })
-    } catch {
-      throw 'Problem uploading file'
+      ;['user_id', 'application_id', 'application_response_id'].forEach((field) => {
+        const queryFieldValue = queryParams[field]
+        const bodyFieldValue = file.fields[field] ? file.fields[field].value : undefined
+        parameters[field] = queryFieldValue ? queryFieldValue : bodyFieldValue
+      })
+      try {
+        await registerFileInDB({ unique_id, file, file_path, ...parameters })
+      } catch {
+        throw 'Problem uploading file'
+      }
     }
+  } catch {
+    throw 'Problem uploading file(s)'
   }
 }
 
@@ -76,8 +76,8 @@ async function registerFileInDB({
       thumbnail_path: '',
       mimetype: file.mimetype,
     })
-  } catch {
-    throw new Error()
+  } catch (err) {
+    throw err
   }
 }
 

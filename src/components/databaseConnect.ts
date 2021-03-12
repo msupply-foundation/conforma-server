@@ -28,7 +28,7 @@ class DBConnect {
 
   public addFile = PostgresDB.addFile
 
-  public getFile = PostgresDB.getFile
+  public getFileDownloadInfo = PostgresDB.getFileDownloadInfo
 
   public addActionPlugin = PostgresDB.addActionPlugin
 

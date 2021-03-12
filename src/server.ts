@@ -13,7 +13,7 @@ import {
 } from './components/permissions'
 import {
   saveFiles,
-  getFilename,
+  getFilePath,
   createFilesFolder,
   filesFolderName,
 } from './components/fileHandler'
@@ -40,9 +40,16 @@ const startServer = async () => {
 
   // File download endpoint (get by Database ID)
   server.get('/file', async function (request: any, reply: any) {
-    const filename = await getFilename(request.query.id)
+    console.log('Requesting file...', request.query.uid)
+    const { original_filename, file_path, thumbnail_path } = await getFilePath(request.query.uid)
+    console.log('file_path', file_path)
     // TO-DO Check for permission to access file
-    return reply.sendFile(filename)
+    try {
+      // TO-DO: Rename file back to original for download
+      return reply.sendFile(file_path)
+    } catch {
+      return reply.send({ success: false, message: 'Unable to retrieve file' })
+    }
   })
 
   server.get('/user-info', routeUserInfo)

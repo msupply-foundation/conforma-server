@@ -111,10 +111,10 @@ export interface ActionPluginPayload {
   required_parameters: { [key: string]: any }
 }
 
-export interface File {
-  id: number
-  path: string
+export interface FileDownloadInfo {
   original_filename: string
+  file_path?: string
+  thumbnail_path?: string
 }
 
 export interface FilePayload {
