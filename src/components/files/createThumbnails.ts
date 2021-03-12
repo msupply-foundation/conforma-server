@@ -12,6 +12,7 @@ import * as config from '../../config.json'
 import path from 'path'
 import fs from 'fs'
 const sharp = require('sharp')
+import { fromPath } from 'pdf2pic'
 const { thumbnailMaxWidth, thumbnailMaxHeight } = config
 
 interface ThumbnailInput {
@@ -48,7 +49,6 @@ const createThumbnail = async ({
       return getGenericThumbnailPath(type)
     }
   } else if (mimetype === 'application/pdf') {
-    // TO-DO: Find a PDF conversion library
     return getGenericThumbnailPath('pdf')
   } else if (['.pdf', '.doc', '.docx'].includes(ext))
     return getGenericThumbnailPath(`_/${ext.replace('.', '')}`)
