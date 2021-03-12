@@ -1,8 +1,11 @@
-const genericThumbnailPaths: { [key: string]: string } = {
-  image: 'generic_image_file.png',
-  audio: 'generic_audio_file.png',
-  video: 'generic_video_file.png',
-  pdf: 'generic_pdf_file.png',
+const genericThumbnails: { [key: string]: string } = {
+  image: 'noun_Image_1570203.png',
+  doc: 'noun_word_3515287.png',
+  docx: 'noun_word_3515287.png',
+  pdf: 'noun_PDF_3283219.png',
+  text: 'noun_word_3515287.png',
+  msword: 'noun_word_3515287.png',
+  file: 'noun_File_3764922.png',
 }
 
 import * as config from '../../config.json'
@@ -28,25 +31,28 @@ const createThumbnail = async ({
 }: ThumbnailInput) => {
   const { type, subtype } = splitMimetype(mimetype)
 
-  const oldFilePath = path.join(filesPath, `${basename}_${unique_id}${ext}`)
-  const newFilePath = path.join(filesPath, `${basename}_${unique_id}_thumb`) // No ext
+  const origFilePath = path.join(filesPath, `${basename}_${unique_id}${ext}`)
+  const thumbnailFilePath = path.join(filesPath, `${basename}_${unique_id}_thumb`) // No ext, added after conversion
 
   if (type === 'image') {
     try {
-      const { format } = await sharp(oldFilePath)
-        .resize(thumbnailMaxWidth, thumbnailMaxHeight)
-        .toFile(newFilePath)
-      await fs.rename(newFilePath, `${newFilePath}.${format}`, _)
+      const { format } = await sharp(origFilePath)
+        .resize(thumbnailMaxWidth, thumbnailMaxHeight, {
+          fit: 'inside',
+          withoutEnlargement: true,
+        })
+        .toFile(thumbnailFilePath)
+      await fs.rename(thumbnailFilePath, `${thumbnailFilePath}.${format}`, () => {})
       return `${basename}_${unique_id}_thumb.${format}`
     } catch {
       return getGenericThumbnailPath(type)
     }
   } else if (mimetype === 'application/pdf') {
     // TO-DO: Find a PDF conversion library
-  } else {
-    return getGenericThumbnailPath(type)
-  }
-  return 'This is the new path'
+    return getGenericThumbnailPath('pdf')
+  } else if (['.pdf', '.doc', '.docx'].includes(ext))
+    return getGenericThumbnailPath(`_/${ext.replace('.', '')}`)
+  else return getGenericThumbnailPath(mimetype)
 }
 
 const splitMimetype = (mimetype: string) => {
@@ -56,9 +62,12 @@ const splitMimetype = (mimetype: string) => {
   return { type, subtype }
 }
 
-const getGenericThumbnailPath = (type: string) => {
-  if (type in genericThumbnailPaths) return genericThumbnailPaths[type]
-  else return 'extremely_generic_file_image.png'
+const getGenericThumbnailPath = (mimetype: string) => {
+  const { type, subtype } = splitMimetype(mimetype)
+  console.log('type', type, 'subtype', subtype)
+  if (subtype in genericThumbnails) return genericThumbnails[subtype]
+  if (type in genericThumbnails) return genericThumbnails[type]
+  return genericThumbnails.file
 }
 
 export default createThumbnail

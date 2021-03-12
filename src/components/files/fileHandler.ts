@@ -22,6 +22,16 @@ export function createFilesFolder() {
   } catch {
     // Folder already exists
   }
+  // Move generic thumbnails to files root
+  fs.readdir(path.join(getAppRootDir(), 'images', 'generic_file_thumbnails'), (_, files) => {
+    files.forEach((file) =>
+      fs.copyFile(
+        path.join(getAppRootDir(), 'images', 'generic_file_thumbnails', file),
+        path.join(getAppRootDir(), filesFolderName, file),
+        () => {}
+      )
+    )
+  })
 }
 
 export async function getFilePath(uid: string, thumbnail = false) {
