@@ -97,7 +97,6 @@ async function registerFileInDB({
   user_id,
   application_response_id,
 }: any) {
-  // Insert record into Db and get back ID
   try {
     await DBConnect.addFile({
       user_id,
