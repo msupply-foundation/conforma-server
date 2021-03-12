@@ -16,7 +16,7 @@ import {
   getFilePath,
   createFilesFolder,
   filesFolderName,
-} from './components/fileHandler'
+} from './components/files/fileHandler'
 import { getAppRootDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
 import config from './config.json'
@@ -40,7 +40,11 @@ const startServer = async () => {
 
   // File download endpoint (get by Database ID)
   server.get('/file', async function (request: any, reply: any) {
-    const { original_filename, file_path, thumbnail_path } = await getFilePath(request.query.uid)
+    const { uid, thumbnail } = request.query
+    const { original_filename, file_path, thumbnail_path } = await getFilePath(
+      uid,
+      thumbnail === 'true'
+    )
     // TO-DO Check for permission to access file
     try {
       // TO-DO: Rename file back to original for download
@@ -60,8 +64,8 @@ const startServer = async () => {
   server.post('/upload', async function (request: any, reply) {
     // TO-DO: Authentication
     const data = await request.files()
-    const files = await saveFiles(data, request.query)
-    reply.send({ success: true, files })
+    const fileData = await saveFiles(data, request.query)
+    reply.send({ success: true, fileData })
   })
 
   server.get('/', async (request, reply) => {
