@@ -43,14 +43,6 @@ test('Test: Should update 2 reviews', () => {
       output: {
         updatedReviews: [
           {
-            reviewId: 1,
-            reviewAssignmentId: 1000,
-            applicationId: 4000,
-            reviewer_id: 6,
-            level: 1,
-            reviewStatus: 'Pending',
-          },
-          {
             reviewId: 2,
             reviewAssignmentId: 1001,
             applicationId: 4000,
