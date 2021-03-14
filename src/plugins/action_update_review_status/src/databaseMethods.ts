@@ -24,7 +24,7 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
-  getReviewQuestionAssignments: async (reviewAssignmentId: number) => {
+  getReviewAssignedElementIds: async (reviewAssignmentId: number) => {
     const text = `
     SELECT template_element_id AS "templateElementId"
     FROM review_question_assignment

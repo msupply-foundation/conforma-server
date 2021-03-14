@@ -61,7 +61,7 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
   }
 
   async function haveAssignedResponsesChanged(reviewAssignmentId: number) {
-    const questionAssignments = await db.getReviewQuestionAssignments(reviewAssignmentId)
+    const questionAssignments = await db.getReviewAssignedElementIds(reviewAssignmentId)
     return changedApplicationResponses.reduce(
       (isInAssigned: boolean, { templateElementId }: any) => {
         return isInAssigned || questionAssignments.includes(templateElementId)
