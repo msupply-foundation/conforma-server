@@ -176,7 +176,7 @@ class PostgresDB {
     }
   }
 
-  public addFile = async (payload: FilePayload): Promise<number> => {
+  public addFile = async (payload: FilePayload): Promise<string> => {
     const text = `INSERT INTO file (${Object.keys(payload)}) 
       VALUES (${this.getValuesPlaceholders(payload)}) RETURNING unique_id`
     try {

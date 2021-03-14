@@ -724,7 +724,7 @@ export type Application = Node & {
   /** Reads and enables pagination through a set of `Review`. */
   reviews: ReviewsConnection;
   /** Reads and enables pagination through a set of `File`. */
-  files: FilesConnection;
+  filesByApplicationSerial: FilesConnection;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
   stage?: Maybe<Scalars['String']>;
@@ -793,7 +793,7 @@ export type ApplicationReviewsArgs = {
 };
 
 
-export type ApplicationFilesArgs = {
+export type ApplicationFilesByApplicationSerialArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -907,10 +907,10 @@ export type ApplicationFilter = {
   reviews?: Maybe<ApplicationToManyReviewFilter>;
   /** Some related `reviews` exist. */
   reviewsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `files` relation. */
-  files?: Maybe<ApplicationToManyFileFilter>;
-  /** Some related `files` exist. */
-  filesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `filesByApplicationSerial` relation. */
+  filesByApplicationSerial?: Maybe<ApplicationToManyFileFilter>;
+  /** Some related `filesByApplicationSerial` exist. */
+  filesByApplicationSerialExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `notifications` relation. */
   notifications?: Maybe<ApplicationToManyNotificationFilter>;
   /** Some related `notifications` exist. */
@@ -954,7 +954,7 @@ export type ApplicationInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -1256,7 +1256,7 @@ export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplic
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate = {
+export type ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `file` to be connected. */
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `file` being updated. */
@@ -1264,16 +1264,16 @@ export type ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate = {
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnFileForFileApplicationIdFkeyUsingApplicationPkeyUpdate = {
+export type ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnFileForFileApplicationIdFkeyPatch;
+  patch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
   id: Scalars['Int'];
 };
 
 /** The fields on `application` to look up the row to update. */
-export type ApplicationOnFileForFileApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+export type ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate = {
   /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnFileForFileApplicationIdFkeyPatch;
+  patch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
   serial: Scalars['String'];
 };
 
@@ -1361,7 +1361,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -1478,7 +1478,7 @@ export type ApplicationPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -1545,7 +1545,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -1951,7 +1951,7 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -2328,7 +2328,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -3191,7 +3191,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -3442,7 +3442,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -3856,7 +3856,7 @@ export type CreateFilePayload = {
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `File`. */
-  application?: Maybe<Application>;
+  applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** An edge for our `File`. May be used by Relay 1. */
@@ -5119,7 +5119,7 @@ export type DeleteFilePayload = {
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `File`. */
-  application?: Maybe<Application>;
+  applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** An edge for our `File`. May be used by Relay 1. */
@@ -6250,7 +6250,7 @@ export type File = Node & {
   uniqueId: Scalars['String'];
   originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -6260,7 +6260,7 @@ export type File = Node & {
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `File`. */
-  application?: Maybe<Application>;
+  applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** Reads and enables pagination through a set of `Notification`. */
@@ -6277,97 +6277,6 @@ export type FileNotificationsByDocumentIdArgs = {
   orderBy?: Maybe<Array<NotificationsOrderBy>>;
   condition?: Maybe<NotificationCondition>;
   filter?: Maybe<NotificationFilter>;
-};
-
-/** The `application` to be created by this mutation. */
-export type FileApplicationIdFkeyApplicationCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
-  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-};
-
-/** The `file` to be created by this mutation. */
-export type FileApplicationIdFkeyFileCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  uniqueId: Scalars['String'];
-  originalFilename: Scalars['String'];
-  userId?: Maybe<Scalars['Int']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  filePath: Scalars['String'];
-  thumbnailPath?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  submitted?: Maybe<Scalars['Boolean']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `application` in the `FileInput` mutation. */
-export type FileApplicationIdFkeyInput = {
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationOnFileForFileApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySerial?: Maybe<ApplicationOnFileForFileApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateByNodeId?: Maybe<FileOnFileForFileApplicationIdFkeyNodeIdUpdate>;
-  /** A `ApplicationInput` object that will be created and connected to this object. */
-  create?: Maybe<FileApplicationIdFkeyApplicationCreateInput>;
-};
-
-/** Input for the nested mutation of `file` in the `ApplicationInput` mutation. */
-export type FileApplicationIdFkeyInverseInput = {
-  /** Flag indicating whether all other `file` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectById?: Maybe<Array<FileFilePkeyConnect>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectByUniqueId?: Maybe<Array<FileFileUniqueIdKeyConnect>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<FileNodeIdConnect>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteById?: Maybe<Array<FileFilePkeyDelete>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteByUniqueId?: Maybe<Array<FileFileUniqueIdKeyDelete>>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<FileNodeIdDelete>>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateById?: Maybe<Array<FileOnFileForFileApplicationIdFkeyUsingFilePkeyUpdate>>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateByUniqueId?: Maybe<Array<FileOnFileForFileApplicationIdFkeyUsingFileUniqueIdKeyUpdate>>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate>>;
-  /** A `FileInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<FileApplicationIdFkeyFileCreateInput>>;
 };
 
 /** The `applicationResponse` to be created by this mutation. */
@@ -6390,14 +6299,14 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   uniqueId: Scalars['String'];
   originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -6446,6 +6355,97 @@ export type FileApplicationResponseIdFkeyInverseInput = {
   create?: Maybe<Array<FileApplicationResponseIdFkeyFileCreateInput>>;
 };
 
+/** The `application` to be created by this mutation. */
+export type FileApplicationSerialFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** The `file` to be created by this mutation. */
+export type FileApplicationSerialFkeyFileCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  originalFilename: Scalars['String'];
+  userId?: Maybe<Scalars['Int']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath: Scalars['String'];
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  userToUserId?: Maybe<FileUserIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `application` in the `FileInput` mutation. */
+export type FileApplicationSerialFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<FileOnFileForFileApplicationSerialFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<FileApplicationSerialFkeyApplicationCreateInput>;
+};
+
+/** Input for the nested mutation of `file` in the `ApplicationInput` mutation. */
+export type FileApplicationSerialFkeyInverseInput = {
+  /** Flag indicating whether all other `file` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  connectById?: Maybe<Array<FileFilePkeyConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  connectByUniqueId?: Maybe<Array<FileFileUniqueIdKeyConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<FileNodeIdConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteById?: Maybe<Array<FileFilePkeyDelete>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteByUniqueId?: Maybe<Array<FileFileUniqueIdKeyDelete>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<FileNodeIdDelete>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateById?: Maybe<Array<FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateByUniqueId?: Maybe<Array<FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate>>;
+  /** A `FileInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<FileApplicationSerialFkeyFileCreateInput>>;
+};
+
 /** A condition to be used against `File` object types. All fields are tested for equality and combined with a logical ‘and.’ */
 export type FileCondition = {
   /** Checks for equality with the object’s `id` field. */
@@ -6456,8 +6456,8 @@ export type FileCondition = {
   originalFilename?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `applicationSerial` field. */
+  applicationSerial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicationResponseId` field. */
   applicationResponseId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `filePath` field. */
@@ -6502,8 +6502,8 @@ export type FileFilter = {
   originalFilename?: Maybe<StringFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `applicationSerial` field. */
+  applicationSerial?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponseId` field. */
   applicationResponseId?: Maybe<IntFilter>;
   /** Filter by the object’s `filePath` field. */
@@ -6524,10 +6524,10 @@ export type FileFilter = {
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
   userExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `applicationByApplicationSerial` relation. */
+  applicationByApplicationSerial?: Maybe<ApplicationFilter>;
+  /** A related `applicationByApplicationSerial` exists. */
+  applicationByApplicationSerialExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `applicationResponse` relation. */
   applicationResponse?: Maybe<ApplicationResponseFilter>;
   /** A related `applicationResponse` exists. */
@@ -6546,7 +6546,7 @@ export type FileInput = {
   uniqueId: Scalars['String'];
   originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -6554,7 +6554,7 @@ export type FileInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -6569,28 +6569,6 @@ export type FileNodeIdConnect = {
 export type FileNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `file` to be deleted. */
   nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type FileOnFileForFileApplicationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `application` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: ApplicationPatch;
-};
-
-/** The fields on `file` to look up the row to update. */
-export type FileOnFileForFileApplicationIdFkeyUsingFilePkeyUpdate = {
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: UpdateFileOnFileForFileApplicationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The fields on `file` to look up the row to update. */
-export type FileOnFileForFileApplicationIdFkeyUsingFileUniqueIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: UpdateFileOnFileForFileApplicationIdFkeyPatch;
-  uniqueId: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -6612,6 +6590,28 @@ export type FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate = {
 export type FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate = {
   /** An object where the defined keys will be set on the `file` being updated. */
   patch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
+  uniqueId: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type FileOnFileForFileApplicationSerialFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The fields on `file` to look up the row to update. */
+export type FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate = {
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `file` to look up the row to update. */
+export type FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
   uniqueId: Scalars['String'];
 };
 
@@ -6665,7 +6665,7 @@ export type FilePatch = {
   uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -6673,7 +6673,7 @@ export type FilePatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -6711,8 +6711,8 @@ export enum FilesOrderBy {
   OriginalFilenameDesc = 'ORIGINAL_FILENAME_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  ApplicationSerialAsc = 'APPLICATION_SERIAL_ASC',
+  ApplicationSerialDesc = 'APPLICATION_SERIAL_DESC',
   ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
   ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
   FilePathAsc = 'FILE_PATH_ASC',
@@ -6744,7 +6744,7 @@ export type FileUserIdFkeyFileCreateInput = {
   id?: Maybe<Scalars['Int']>;
   uniqueId: Scalars['String'];
   originalFilename: Scalars['String'];
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -6752,7 +6752,7 @@ export type FileUserIdFkeyFileCreateInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -8181,7 +8181,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -8273,7 +8273,7 @@ export type NotificationDocumentIdFkeyFileCreateInput = {
   uniqueId: Scalars['String'];
   originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -8281,7 +8281,7 @@ export type NotificationDocumentIdFkeyFileCreateInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -11132,7 +11132,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -11273,7 +11273,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -16858,7 +16858,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -16880,7 +16880,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -16902,7 +16902,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -16925,7 +16925,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -16948,7 +16948,7 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -16971,12 +16971,12 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
-export type UpdateApplicationOnFileForFileApplicationIdFkeyPatch = {
+export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
@@ -16994,7 +16994,7 @@ export type UpdateApplicationOnFileForFileApplicationIdFkeyPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -17017,7 +17017,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -17040,7 +17040,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -17063,7 +17063,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -17496,7 +17496,25 @@ export type UpdateFileInput = {
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
-export type UpdateFileOnFileForFileApplicationIdFkeyPatch = {
+export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
+  originalFilename?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
+  filePath?: Maybe<Scalars['String']>;
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  userToUserId?: Maybe<FileUserIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `file` being updated. */
+export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
@@ -17508,25 +17526,7 @@ export type UpdateFileOnFileForFileApplicationIdFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `file` being updated. */
-export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  uniqueId?: Maybe<Scalars['String']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  filePath?: Maybe<Scalars['String']>;
-  thumbnailPath?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  submitted?: Maybe<Scalars['Boolean']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -17536,7 +17536,7 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -17544,7 +17544,7 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -17555,7 +17555,7 @@ export type UpdateFileOnNotificationForNotificationDocumentIdFkeyPatch = {
   uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -17563,7 +17563,7 @@ export type UpdateFileOnNotificationForNotificationDocumentIdFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<FileApplicationIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
   notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
@@ -17583,7 +17583,7 @@ export type UpdateFilePayload = {
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `File`. */
-  application?: Maybe<Application>;
+  applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
   /** An edge for our `File`. May be used by Relay 1. */
@@ -21410,15 +21410,15 @@ export type ResolversTypes = {
   ReviewApplicationIdFkeyInput: ReviewApplicationIdFkeyInput;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnReviewForReviewApplicationIdFkeyPatch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
-  FileApplicationIdFkeyInverseInput: FileApplicationIdFkeyInverseInput;
+  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
   FileFilePkeyConnect: FileFilePkeyConnect;
   FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
   FileNodeIdConnect: FileNodeIdConnect;
   FileFilePkeyDelete: FileFilePkeyDelete;
   FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
   FileNodeIdDelete: FileNodeIdDelete;
-  FileOnFileForFileApplicationIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationIdFkeyPatch: UpdateFileOnFileForFileApplicationIdFkeyPatch;
+  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
   FileUserIdFkeyInput: FileUserIdFkeyInput;
   UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
@@ -21431,9 +21431,9 @@ export type ResolversTypes = {
   FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
   FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
-  FileApplicationIdFkeyInput: FileApplicationIdFkeyInput;
-  ApplicationOnFileForFileApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnFileForFileApplicationIdFkeyPatch: UpdateApplicationOnFileForFileApplicationIdFkeyPatch;
+  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
   NotificationApplicationIdFkeyInverseInput: NotificationApplicationIdFkeyInverseInput;
   NotificationNotificationPkeyConnect: NotificationNotificationPkeyConnect;
   NotificationNodeIdConnect: NotificationNodeIdConnect;
@@ -21610,9 +21610,9 @@ export type ResolversTypes = {
   NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
   NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
-  ApplicationOnFileForFileApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  FileOnFileForFileApplicationIdFkeyNodeIdUpdate: FileOnFileForFileApplicationIdFkeyNodeIdUpdate;
-  FileApplicationIdFkeyApplicationCreateInput: FileApplicationIdFkeyApplicationCreateInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
+  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
   FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
   UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
@@ -21624,9 +21624,9 @@ export type ResolversTypes = {
   UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
   FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
-  FileOnFileForFileApplicationIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationIdFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate;
-  FileApplicationIdFkeyFileCreateInput: FileApplicationIdFkeyFileCreateInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyApplicationCreateInput: ReviewApplicationIdFkeyApplicationCreateInput;
@@ -22597,15 +22597,15 @@ export type ResolversParentTypes = {
   ReviewApplicationIdFkeyInput: ReviewApplicationIdFkeyInput;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnReviewForReviewApplicationIdFkeyPatch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
-  FileApplicationIdFkeyInverseInput: FileApplicationIdFkeyInverseInput;
+  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
   FileFilePkeyConnect: FileFilePkeyConnect;
   FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
   FileNodeIdConnect: FileNodeIdConnect;
   FileFilePkeyDelete: FileFilePkeyDelete;
   FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
   FileNodeIdDelete: FileNodeIdDelete;
-  FileOnFileForFileApplicationIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationIdFkeyPatch: UpdateFileOnFileForFileApplicationIdFkeyPatch;
+  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
   FileUserIdFkeyInput: FileUserIdFkeyInput;
   UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
@@ -22618,9 +22618,9 @@ export type ResolversParentTypes = {
   FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
   FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
   updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
-  FileApplicationIdFkeyInput: FileApplicationIdFkeyInput;
-  ApplicationOnFileForFileApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnFileForFileApplicationIdFkeyPatch: UpdateApplicationOnFileForFileApplicationIdFkeyPatch;
+  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
   NotificationApplicationIdFkeyInverseInput: NotificationApplicationIdFkeyInverseInput;
   NotificationNotificationPkeyConnect: NotificationNotificationPkeyConnect;
   NotificationNodeIdConnect: NotificationNodeIdConnect;
@@ -22797,9 +22797,9 @@ export type ResolversParentTypes = {
   NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
   NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
-  ApplicationOnFileForFileApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  FileOnFileForFileApplicationIdFkeyNodeIdUpdate: FileOnFileForFileApplicationIdFkeyNodeIdUpdate;
-  FileApplicationIdFkeyApplicationCreateInput: FileApplicationIdFkeyApplicationCreateInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
+  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
   FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
   UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
@@ -22811,9 +22811,9 @@ export type ResolversParentTypes = {
   UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
   FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
   FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
-  FileOnFileForFileApplicationIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationIdFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationIdFkeyNodeIdUpdate;
-  FileApplicationIdFkeyFileCreateInput: FileApplicationIdFkeyFileCreateInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyApplicationCreateInput: ReviewApplicationIdFkeyApplicationCreateInput;
@@ -23356,7 +23356,7 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   applicationResponses?: Resolver<ResolversTypes['ApplicationResponsesConnection'], ParentType, ContextType, RequireFields<ApplicationApplicationResponsesArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewAssignmentsArgs, 'orderBy'>>;
   reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewsArgs, 'orderBy'>>;
-  files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationFilesArgs, 'orderBy'>>;
+  filesByApplicationSerial?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationFilesByApplicationSerialArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ApplicationNotificationsArgs, 'orderBy'>>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -23695,7 +23695,7 @@ export type CreateFilePayloadResolvers<ContextType = any, ParentType extends Res
   file?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<CreateFilePayloadFileEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -23997,7 +23997,7 @@ export type DeleteFilePayloadResolvers<ContextType = any, ParentType extends Res
   deletedFileNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<DeleteFilePayloadFileEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -24250,7 +24250,7 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   uniqueId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   originalFilename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  applicationSerial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   filePath?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   thumbnailPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -24258,7 +24258,7 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   submitted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   notificationsByDocumentId?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<FileNotificationsByDocumentIdArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -25175,7 +25175,7 @@ export type UpdateFilePayloadResolvers<ContextType = any, ParentType extends Res
   file?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
-  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<UpdateFilePayloadFileEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
