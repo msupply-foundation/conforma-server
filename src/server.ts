@@ -38,7 +38,7 @@ const startServer = async () => {
 
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
 
-  // File download endpoint (get by Database ID)
+  // File download endpoint (get by unique ID)
   server.get('/file', async function (request: any, reply: any) {
     const { uid, thumbnail } = request.query
     const { original_filename, file_path, thumbnail_path } = await getFilePath(

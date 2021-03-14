@@ -49,8 +49,6 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       const ext = path.extname(file.filename)
       const basename = path.basename(file.filename, ext)
       const unique_id = nanoid()
-      const file_path = path.join(`${basename}_${unique_id}${ext}`)
-      // const thumbnail_path = path.join(`${basename}_${unique_id}_thumb${ext}`)
 
       // Process file data/url queries
       const parameters = { ...queryParams }
@@ -59,6 +57,8 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
         const bodyFieldValue = file.fields[field] ? file.fields[field].value : undefined
         parameters[field] = queryFieldValue ? queryFieldValue : bodyFieldValue
       })
+
+      const file_path = path.join(`${basename}_${unique_id}${ext}`)
 
       // Save file
       await pump(file.file, fs.createWriteStream(path.join(filesPath, file_path)))
