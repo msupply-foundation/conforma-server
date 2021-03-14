@@ -35,7 +35,7 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
       else if (await haveAssignedResponsesChanged(reviewAssignmentId))
         reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
       else if (reviewStatus === 'Pending' || reviewStatus === 'Locked')
-        reviewsToUpdate.push({ ...review })
+        reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
     }
     console.log('reviewsToUpdate', reviewsToUpdate)
 
