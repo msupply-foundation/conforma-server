@@ -15,17 +15,19 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
 
   console.log('Updating reviews status...')
 
-  const { applicationId, changedApplicationResponses = [] } = input
+  const { applicationId, applicationData, changedApplicationResponses = [] } = input
+
+  const stageId = input?.stageId || applicationData.stageId
 
   const reviewsToUpdate = []
 
   console.log('changedApplicationResponses', changedApplicationResponses)
 
   try {
-    // Get reviews/review assignments (with status) matching application_id
-    const reviews = (await db.getAssociatedReviews(applicationId)).filter((review: Review) =>
-      ['Submitted', 'Locked', 'Draft'].includes(review.reviewStatus)
-    )
+    // Get reviews/review assignments (with status) matching application_id & current stage
+    const reviews = (
+      await db.getAssociatedReviews(applicationId, stageId)
+    ).filter((review: Review) => ['Submitted', 'Locked', 'Draft'].includes(review.reviewStatus))
     // Deduce which ones should be updated
     for (const review of reviews) {
       const { reviewAssignmentId, level, reviewStatus } = review

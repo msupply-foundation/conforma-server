@@ -33,6 +33,7 @@ test('Test: Should update 2 reviews', () => {
         { applicationResponseId: 7, templateElementId: 4005 },
         { applicationResponseId: 9, templateElementId: 4002 },
       ],
+      applicationData: { stageId: 6 },
     },
     DBConnect
   ).then((result: any) => {
