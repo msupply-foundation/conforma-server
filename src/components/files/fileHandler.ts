@@ -49,15 +49,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       const basename = path.basename(file.filename, ext)
       const unique_id = nanoid()
 
-      // Process file data/url queries
-      const parameters = { ...queryParams }
-      ;['user_id', 'application_serial', 'application_response_id'].forEach((field) => {
-        const queryFieldValue = queryParams[field]
-        const bodyFieldValue = file.fields[field] ? file.fields[field].value : undefined
-        parameters[field] = queryFieldValue ? queryFieldValue : bodyFieldValue
-      })
-
-      const subfolder = parameters?.application_serial ? parameters.application_serial : ''
+      const subfolder = queryParams?.application_serial || ''
 
       const file_path = path.join(subfolder, `${basename}_${unique_id}${ext}`)
 
@@ -65,6 +57,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       if (!fs.existsSync(path.join(getAppRootDir(), filesFolderName, subfolder))) {
         fs.mkdirSync(path.join(getAppRootDir(), filesFolderName, subfolder))
       }
+
       await pump(file.file, fs.createWriteStream(path.join(filesPath, file_path)))
 
       // Create thumbnail from saved file
@@ -78,7 +71,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       })
 
       // Save file info to database
-      await registerFileInDB({ unique_id, file, file_path, thumbnail_path, ...parameters })
+      await registerFileInDB({ unique_id, file, file_path, thumbnail_path, ...queryParams })
 
       filesInfo.push({
         filename: file.filename,
