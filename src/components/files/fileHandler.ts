@@ -57,7 +57,6 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       if (!fs.existsSync(path.join(getAppRootDir(), filesFolderName, subfolder))) {
         fs.mkdirSync(path.join(getAppRootDir(), filesFolderName, subfolder))
       }
-
       await pump(file.file, fs.createWriteStream(path.join(filesPath, file_path)))
 
       // Create thumbnail from saved file

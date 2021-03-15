@@ -38,20 +38,20 @@ const createThumbnail = async ({
 }: ThumbnailInput) => {
   const { type, subtype } = splitMimetype(mimetype)
 
-  const origFilePath = path.join(filesPath, subfolder, `${basename}_${unique_id}${ext}`)
-  const thumbnailFilePath = path.join(filesPath, subfolder, `${basename}_${unique_id}_thumb`) // No ext, added after conversion
+  const fullFilePath = path.join(filesPath, subfolder, `${basename}_${unique_id}${ext}`)
+  const thumbnailFilePath = path.join(filesPath, subfolder, `${basename}_${unique_id}_thumb`) // No ext, added after conversion -- could be different
 
   if (type === 'image') {
     try {
-      const { format } = await sharp(origFilePath)
+      await sharp(fullFilePath)
         .resize(thumbnailMaxWidth, thumbnailMaxHeight, {
           fit: 'inside',
           withoutEnlargement: true,
         })
-        .toFile(thumbnailFilePath)
-      await fs.rename(thumbnailFilePath, `${thumbnailFilePath}.${format}`, () => {})
-      return path.join(subfolder, `${basename}_${unique_id}_thumb.${format}`)
+        .toFile(thumbnailFilePath + '.jpg')
+      return path.join(subfolder, `${basename}_${unique_id}_thumb.jpg`)
     } catch {
+      console.log('Problem converting image file, reverting to generic fallback')
       return getGenericThumbnailPath(type)
     }
   } else if (mimetype === 'application/pdf') {
