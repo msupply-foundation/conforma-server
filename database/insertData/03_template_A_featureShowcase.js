@@ -497,9 +497,21 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1029
+                      code: "Q_upload1"
+                      index: 20
+                      title: "File upload demo"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Please upload your documentation"
+                        description: "You can provide multiple files"
+                      }
+                    }
+                    {
                       id: 1020
                       code: "PB4"
-                      index: 19
+                      index: 21
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
@@ -507,7 +519,7 @@ exports.queries = [
                     {
                       id: 1021
                       code: "CheckboxShowcase"
-                      index: 20
+                      index: 22
                       title: "Checkbox demonstration"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -519,7 +531,7 @@ exports.queries = [
                     {
                       id: 1022
                       code: "CB1"
-                      index: 21
+                      index: 23
                       title: "Single checkbox"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -532,7 +544,7 @@ exports.queries = [
                     {
                       id: 1023
                       code: "CB2"
-                      index: 22
+                      index: 24
                       title: "Three checkboxes"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -549,7 +561,7 @@ exports.queries = [
                     {
                       id: 1024
                       code: "CB3"
-                      index: 23
+                      index: 25
                       title: "Toggle switch"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -563,7 +575,7 @@ exports.queries = [
                     {
                       id: 1025
                       code: "TXTON-OFF"
-                      index: 24
+                      index: 26
                       title: "Checkbox ON"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -596,7 +608,7 @@ exports.queries = [
                     {
                       id: 1026
                       code: "CB4"
-                      index: 26
+                      index: 27
                       title: "Slider switch"
                       elementTypePluginCode: "checkbox"
                       category: QUESTION
@@ -616,7 +628,7 @@ exports.queries = [
                     {
                       id: 1027
                       code: "TXT_LIKE"
-                      index: 27
+                      index: 28
                       title: "Display Likes"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -654,7 +666,7 @@ exports.queries = [
                     {
                       id: 1028
                       code: "CB5"
-                      index: 28
+                      index: 29
                       title: "Many checkboxes"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
