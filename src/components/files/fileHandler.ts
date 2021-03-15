@@ -73,6 +73,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
         unique_id,
         basename,
         ext,
+        subfolder,
         mimetype: file.mimetype,
       })
 

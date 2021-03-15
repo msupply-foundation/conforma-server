@@ -21,6 +21,7 @@ interface ThumbnailInput {
   unique_id: string
   basename: string
   ext: string
+  subfolder: string
   mimetype: string
 }
 
@@ -32,12 +33,13 @@ const createThumbnail = async ({
   unique_id,
   basename,
   ext,
+  subfolder,
   mimetype,
 }: ThumbnailInput) => {
   const { type, subtype } = splitMimetype(mimetype)
 
-  const origFilePath = path.join(filesPath, `${basename}_${unique_id}${ext}`)
-  const thumbnailFilePath = path.join(filesPath, `${basename}_${unique_id}_thumb`) // No ext, added after conversion
+  const origFilePath = path.join(filesPath, subfolder, `${basename}_${unique_id}${ext}`)
+  const thumbnailFilePath = path.join(filesPath, subfolder, `${basename}_${unique_id}_thumb`) // No ext, added after conversion
 
   if (type === 'image') {
     try {
@@ -48,7 +50,7 @@ const createThumbnail = async ({
         })
         .toFile(thumbnailFilePath)
       await fs.rename(thumbnailFilePath, `${thumbnailFilePath}.${format}`, () => {})
-      return `${basename}_${unique_id}_thumb.${format}`
+      return path.join(subfolder, `${basename}_${unique_id}_thumb.${format}`)
     } catch {
       return getGenericThumbnailPath(type)
     }
