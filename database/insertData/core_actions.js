@@ -136,7 +136,7 @@ exports.coreActions = `
         parameterQueries: {
           applicationId: {
             operator: "objectProperties"
-            children: ["applicationData.applicationId:"]
+            children: ["applicationData.applicationId"]
           }
           changedApplicationResponses: {
             operator: "objectProperties"
