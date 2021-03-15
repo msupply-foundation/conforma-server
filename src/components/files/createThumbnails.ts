@@ -13,7 +13,7 @@ const genericThumbnails: { [key: string]: string } = {
 import * as config from '../../config.json'
 import path from 'path'
 import fs from 'fs'
-const sharp = require('sharp')
+import sharp from 'sharp'
 const { thumbnailMaxWidth, thumbnailMaxHeight } = config
 
 interface ThumbnailInput {

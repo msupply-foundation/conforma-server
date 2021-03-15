@@ -7,7 +7,6 @@ import { getAppRootDir } from '../utilityFunctions'
 import * as config from '../../config.json'
 import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
-const sharp = require('sharp')
 
 export const { filesFolderName } = config
 export const filesPath = path.join(getAppRootDir(), filesFolderName)
