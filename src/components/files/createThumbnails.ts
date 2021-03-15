@@ -58,7 +58,7 @@ const createThumbnail = async ({
     // TO-DO Generate PDF previews/thumbnails
     return getGenericThumbnailPath('pdf')
   } else if (['.pdf', '.doc', '.docx'].includes(ext))
-    return getGenericThumbnailPath(`_/${ext.replace('.', '')}`)
+    return getGenericThumbnailPath(ext.replace('.', ''))
   else return getGenericThumbnailPath(mimetype)
 }
 
