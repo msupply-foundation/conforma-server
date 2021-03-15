@@ -44,6 +44,7 @@ const pump = util.promisify(pipeline)
 export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
   const filesInfo = []
   try {
+    // data is a Promise, so we await it before looping
     for await (const file of data) {
       const ext = path.extname(file.filename)
       const basename = path.basename(file.filename, ext)
