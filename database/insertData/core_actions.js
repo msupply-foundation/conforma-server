@@ -55,7 +55,7 @@ exports.coreActions = `
           }
           timestamp: {
             operator: "objectProperties"
-            children: ["output.applicationStatusHistoryTimestamp"]
+            children: ["output.applicationStatusHistoryTimestamp", null]
           }
         }
     }
@@ -80,6 +80,21 @@ exports.coreActions = `
             operator: "objectProperties"
             children: ["applicationData.stageNumber"]
         }
+        }
+    }
+    {
+        actionCode: "updateReviews"
+        trigger: ON_APPLICATION_SUBMIT
+        sequence: 4
+        parameterQueries: {
+          applicationId: {
+            operator: "objectProperties"
+            children: ["applicationData.record_id"]
+          }
+          changedApplicationResponses: {
+            operator: "objectProperties"
+            children: ["output.updatedResponses"]
+          }
         }
     }
     # ON_REVIEW_SUBMIT
@@ -115,9 +130,24 @@ exports.coreActions = `
         }
     }
     {
-        actionCode: "generateReviewAssignments"
+        actionCode: "updateReviews"
         trigger: ON_REVIEW_SUBMIT
         sequence: 3
+        parameterQueries: {
+          applicationId: {
+            operator: "objectProperties"
+            children: ["applicationData.applicationId"]
+          }
+          changedApplicationResponses: {
+            operator: "objectProperties"
+            children: ["output.updatedResponses"]
+          }
+        }
+    }
+    {
+        actionCode: "generateReviewAssignments"
+        trigger: ON_REVIEW_SUBMIT
+        sequence: 4
         parameterQueries: {
         applicationId: {
             operator: "objectProperties"
@@ -146,7 +176,7 @@ exports.coreActions = `
     # AND review being isLastLevel
     {
         actionCode: "updateReviewVisibility"
-        sequence: 4
+        sequence: 5
         trigger: ON_REVIEW_SUBMIT
         condition: {
         operator: "AND"

@@ -509,7 +509,7 @@ class PostgresDB {
   }
 
   public getApplicationCurrentStatusHistory = async (applicationId: number) => {
-    const text = `SELECT id, status, application_stage_history_id FROM
+    const text = `SELECT id, status, application_stage_history_id, time_created FROM
       application_status_history WHERE
       application_id = $1 and is_current = true;`
     try {
@@ -535,7 +535,7 @@ class PostgresDB {
   }
 
   public getReviewCurrentStatusHistory = async (reviewId: number) => {
-    const text = `SELECT id, status FROM
+    const text = `SELECT id, status, time_created FROM
       review_status_history WHERE
       review_id = $1 and is_current = true;`
     try {
@@ -789,6 +789,45 @@ class PostgresDB {
         values: [applicationId],
       })
       return result.rows[0].is_fully_assigned_level_1
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getAllApplicationResponses = async (applicationId: number) => {
+    const text = `
+    SELECT ar.id, template_element_id, code, value, time_updated
+    FROM application_response ar JOIN template_element te
+    ON ar.template_element_id = te.id
+    WHERE application_id = $1
+    ORDER BY time_updated
+    `
+    try {
+      const result = await this.query({ text, values: [applicationId] })
+      const responses = result.rows
+      return responses
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getAllReviewResponses = async (reviewId: number) => {
+    const text = `
+    SELECT rr.id, r.level, code, comment, decision,
+    rr.application_response_id, rr.review_response_link_id, rr.time_updated
+    FROM review_response rr JOIN application_response ar
+    ON rr.application_response_id = ar.id
+    JOIN template_element te ON ar.template_element_id = te.id
+    JOIN review r ON rr.review_id = r.id
+    WHERE review_id = $1
+    ORDER BY time_updated
+    `
+    try {
+      const result = await this.query({ text, values: [reviewId] })
+      const responses = result.rows
+      return responses
     } catch (err) {
       console.log(err.message)
       throw err

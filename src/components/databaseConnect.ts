@@ -121,6 +121,10 @@ class DBConnect {
 
   public isFullyAssignedLevel1 = PostgresDB.isFullyAssignedLevel1
 
+  public getAllApplicationResponses = PostgresDB.getAllApplicationResponses
+
+  public getAllReviewResponses = PostgresDB.getAllReviewResponses
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery

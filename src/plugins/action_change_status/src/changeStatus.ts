@@ -42,7 +42,11 @@ const changeApplicationStatus = async (
       )
       returnObject.status = 'Success'
       returnObject.error_log = 'Status not changed'
-      returnObject.output = { status: newStatus, statusId: currentStatus.id }
+      returnObject.output = {
+        status: newStatus,
+        statusId: currentStatus.id,
+        applicationStatusHistoryTimestamp: currentStatus.time_created,
+      }
       return returnObject
     }
 
@@ -102,7 +106,11 @@ const changeReviewStatus = async (
       )
       returnObject.status = 'Success'
       returnObject.error_log = 'Status not changed'
-      returnObject.output = { status: newStatus, statusId: currentStatus.id }
+      returnObject.output = {
+        status: newStatus,
+        statusId: currentStatus.id,
+        reviewStatusHistoryTimestamp: currentStatus.time_created,
+      }
       return returnObject
     }
 

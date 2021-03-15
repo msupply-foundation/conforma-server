@@ -37,8 +37,17 @@ test('Test: remove unchanged application_response duplicates', () => {
       status: 'Success',
       error_log: '',
       output: {
-        deletedCodes: ['Q6', 'Q4', 'Q2'],
-        updatedCodes: ['Q1', 'Q5B', 'Q5', 'Q3'],
+        deletedResponses: [
+          { applicationResponseId: 1, templateElementId: 1009 },
+          { applicationResponseId: 4, templateElementId: 1005 },
+          { applicationResponseId: 6, templateElementId: 1002 },
+        ],
+        updatedResponses: [
+          { applicationResponseId: 1000, templateElementId: 1001 },
+          { applicationResponseId: 2, templateElementId: 1007 },
+          { applicationResponseId: 3, templateElementId: 1006 },
+          { applicationResponseId: 5, templateElementId: 1004 },
+        ],
       },
     })
   })
@@ -51,8 +60,15 @@ test('Test: remove unchanged review_response duplicates, with custom timestamp',
         status: 'Success',
         error_log: '',
         output: {
-          deletedCodes: ['Q5', 'Q4', 'Q3'],
-          updatedCodes: ['Q2', 'Q1'],
+          deletedResponses: [
+            { reviewResponseId: 42, templateElementId: 4006 },
+            { reviewResponseId: 43, templateElementId: 4005 },
+            { reviewResponseId: 44, templateElementId: 4003 },
+          ],
+          updatedResponses: [
+            { reviewResponseId: 45, templateElementId: 4002 },
+            { reviewResponseId: 46, templateElementId: 4001 },
+          ],
         },
       })
     }

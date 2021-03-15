@@ -1,3 +1,4 @@
+import { time } from 'console'
 import databaseMethods from './databaseMethods'
 const isEqual = require('deep-equal')
 interface Response {
@@ -25,8 +26,8 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
   try {
     // Get ALL responses associated with application OR review
     const responses = reviewId
-      ? await db.getAllReviewResponses(reviewId)
-      : await db.getAllApplicationResponses(applicationId)
+      ? await DBConnect.getAllReviewResponses(reviewId)
+      : await DBConnect.getAllApplicationResponses(applicationId)
 
     const reviewLevel = responses?.[0]?.level
 
@@ -57,25 +58,25 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
     })
 
     // Run delete operation on all in toDelete array (new method)
-    const deletedCodes = reviewId
+    const deletedResponses = reviewId
       ? await db.deleteReviewResponses(responsesToDelete)
       : await db.deleteApplicationResponses(responsesToDelete)
 
     // Update timestamp of remaining responses
     const timeUpdated = timestamp ? timestamp : new Date().toISOString()
-    const updatedCodes = reviewId
+    const updatedResponses = reviewId
       ? await db.updateReviewResponseTimestamps(responsesToUpdate, timeUpdated)
       : await db.updateApplicationResponseTimestamps(responsesToUpdate, timeUpdated)
 
-    console.log('Codes of deleted responses: ', deletedCodes)
-    console.log('Codes of updated responses: ', updatedCodes)
+    console.log(`Deleted ${reviewId ? 'review' : 'application'} responses: `, deletedResponses)
+    console.log(`Updated ${reviewId ? 'review' : 'application'} responses: `, updatedResponses)
 
     return {
       status: 'Success',
       error_log: '',
       output: {
-        deletedCodes,
-        updatedCodes,
+        deletedResponses,
+        updatedResponses,
       },
     }
   } catch (error) {
