@@ -1,5 +1,5 @@
 const databaseMethods = (DBConnect: any) => ({
-  getAssociatedReviews: async (applicationId: number, stageId: number) => {
+  getAssociatedReviews: async (applicationId: number, stageId: number, level: number) => {
     const text = `
     SELECT
       review.id AS "reviewId",
@@ -15,9 +15,10 @@ const databaseMethods = (DBConnect: any) => ({
       WHERE review_status_history.is_current = true
       AND review_assignment.application_id = $1
       AND stage_id = $2
+      AND review_assignment.level = $3
     `
     try {
-      const result = await DBConnect.query({ text, values: [applicationId, stageId] })
+      const result = await DBConnect.query({ text, values: [applicationId, stageId, level] })
       return result.rows
     } catch (err) {
       console.log(err.message)
