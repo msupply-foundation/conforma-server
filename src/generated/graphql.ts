@@ -16405,6 +16405,7 @@ export type TemplateToManyTemplateStageFilter = {
 
 export enum Trigger {
   OnApplicationCreate = 'ON_APPLICATION_CREATE',
+  OnApplicationRestart = 'ON_APPLICATION_RESTART',
   OnApplicationSubmit = 'ON_APPLICATION_SUBMIT',
   OnApplicationSave = 'ON_APPLICATION_SAVE',
   OnApplicationWithdraw = 'ON_APPLICATION_WITHDRAW',
