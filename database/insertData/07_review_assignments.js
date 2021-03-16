@@ -686,6 +686,54 @@ exports.queries = [
               { id: 3019, templateElementId: 4013 }
             ]
           }
+          reviewsUsingId: {
+            create: {
+              reviewResponsesUsingId: {
+                create: [
+                  {
+                    applicationResponseId: 4025
+                    reviewQuestionAssignmentId: 3015
+                    status: DRAFT
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4026
+                    reviewQuestionAssignmentId: 3016
+                    status: DRAFT
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4027
+                    reviewQuestionAssignmentId: 3017
+                    status: DRAFT
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4028
+                    reviewQuestionAssignmentId: 3018
+                    status: DRAFT
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4029
+                    reviewQuestionAssignmentId: 3019
+                    status: DRAFT
+                    decision: APPROVE
+                  }
+                ]
+              }
+              reviewStatusHistoriesUsingId: {
+                create: [
+                  { status: DRAFT, isCurrent: false, timeCreated: "2021-02-03T00:00:00Z" }
+                  {
+                    status: LOCKED
+                    isCurrent: true
+                    timeCreated: "2021-02-04T10:00:00Z"
+                  }
+                ]
+              }
+            }
+          }
         }
       }
     ) {
