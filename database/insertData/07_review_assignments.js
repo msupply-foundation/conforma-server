@@ -583,11 +583,11 @@ exports.queries = [
           templateSectionRestrictions: ["S1"]
           reviewQuestionAssignmentsUsingId: {
             create: [
-              { id: 3011, templateElementId: 4001 }
-              { id: 3012, templateElementId: 4002 }
-              { id: 3013, templateElementId: 4003 }
-              { id: 3014, templateElementId: 4005 }
-              { id: 3015, templateElementId: 4006 }
+              { id: 3010, templateElementId: 4001 }
+              { id: 3011, templateElementId: 4002 }
+              { id: 3012, templateElementId: 4003 }
+              { id: 3013, templateElementId: 4005 }
+              { id: 3014, templateElementId: 4006 }
             ]
           }
           reviewsUsingId: {
@@ -596,33 +596,33 @@ exports.queries = [
                 create: [
                   {
                     applicationResponseId: 4020
-                    reviewQuestionAssignmentId: 1011
+                    reviewQuestionAssignmentId: 3010
                     status: SUBMITTED
                     decision: DECLINE
                     comment: "Name not conform with uploaded proof of identity"
                   }
                   {
                     applicationResponseId: 4021
-                    reviewQuestionAssignmentId: 1012
+                    reviewQuestionAssignmentId: 3011
                     status: SUBMITTED
                     decision: DECLINE
                     comment: "Surname not conform with uploaded proof of identity"
                   }
                   {
                     applicationResponseId: 4022
-                    reviewQuestionAssignmentId: 1013
+                    reviewQuestionAssignmentId: 3012
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
                     applicationResponseId: 4023
-                    reviewQuestionAssignmentId: 1014
+                    reviewQuestionAssignmentId: 3013
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
                     applicationResponseId: 4024
-                    reviewQuestionAssignmentId: 1015
+                    reviewQuestionAssignmentId: 3014
                     status: SUBMITTED
                     decision: APPROVE
                   }
@@ -661,7 +661,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2 (section 2) = NOT STARTED
+  // -- Reviewer 2 in Stage 2 (section 2) = NOT AVAILABLE (locked for this reviewer to submit)
   `mutation {
     createReviewAssignment(
       input: {
@@ -679,13 +679,13 @@ exports.queries = [
           templateSectionRestrictions: ["S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
-              { id: 3017, templateElementId: 4008 }
-              { id: 3018, templateElementId: 4009 }
-              { id: 3019, templateElementId: 4011 }
-              { id: 3020, templateElementId: 4012 }
-              { id: 3021, templateElementId: 4013 }
+              { id: 3015, templateElementId: 4008 }
+              { id: 3016, templateElementId: 4009 }
+              { id: 3017, templateElementId: 4011 }
+              { id: 3018, templateElementId: 4012 }
+              { id: 3019, templateElementId: 4013 }
             ]
-          }     
+          }
         }
       }
     ) {
@@ -702,7 +702,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 1 Lvl 2 - Stage 2 = NOT AVAILABLE (Locked for this consolidator)
+  // -- Consolidator 1 Lvl 2 - Stage 2 = NOT AVAILABLE (not assignable for this consolidator)
   `mutation {
     createReviewAssignment(
       input: {
@@ -776,34 +776,34 @@ exports.queries = [
                 create: [
                   {
                     applicationResponseId: 4020
-                    reviewQuestionAssignmentId: 1000
-                    status: DRAFT
+                    reviewQuestionAssignmentId: 3033
+                    status: SUBMITTED
                     decision: DECLINE
                     comment: "Please check again"
                   }
                   {
                     applicationResponseId: 4021
-                    reviewQuestionAssignmentId: 1001
-                    status: DRAFT
+                    reviewQuestionAssignmentId: 3034
+                    status: SUBMITTED
                     decision: DECLINE
                     comment: "Please check again"
                   }
                   {
                     applicationResponseId: 4022
-                    reviewQuestionAssignmentId: 1002
-                    status: DRAFT
+                    reviewQuestionAssignmentId: 3035
+                    status: SUBMITTED
                     decision: APPROVE
                   }
                   {
                     applicationResponseId: 4023
-                    reviewQuestionAssignmentId: 1003
-                    status: DRAFT
+                    reviewQuestionAssignmentId: 3036
+                    status: SUBMITTED
                     decision: APPROVE
                   }
                   {
                     applicationResponseId: 4024
-                    reviewQuestionAssignmentId: 1004
-                    status: DRAFT
+                    reviewQuestionAssignmentId: 3037
+                    status: SUBMITTED
                     decision: APPROVE
                   }
                 ]
