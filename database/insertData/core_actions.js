@@ -15,6 +15,20 @@ exports.coreActions = `
         }
         }
     }
+    # ON_APPLICATION_RESTART
+    # change status to draft
+    {
+      actionCode: "changeStatus"
+      trigger: ON_APPLICATION_RESTART
+      sequence: 1
+      parameterQueries: {
+      applicationId: {
+          operator: "objectProperties"
+          children: ["applicationData.applicationId"]
+      }
+      newStatus: { value: "Draft" }
+      }
+    }
     # ON_REVIEW_CREATE
     # change status to draft
     {
@@ -130,21 +144,21 @@ exports.coreActions = `
             }
         }
     }
-    {
-        actionCode: "updateReviews"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 3
-        parameterQueries: {
-          applicationId: {
-            operator: "objectProperties"
-            children: ["applicationData.applicationId"]
-          }
-          changedApplicationResponses: {
-            operator: "objectProperties"
-            children: ["output.updatedResponses"]
-          }
-        }
-    }
+  #  {
+  #      actionCode: "updateReviews"
+  #      trigger: ON_REVIEW_SUBMIT
+  #      sequence: 3
+  #      parameterQueries: {
+  #        applicationId: {
+  #          operator: "objectProperties"
+  #          children: ["applicationData.applicationId"]
+  #        }
+  #        changedApplicationResponses: {
+  #          operator: "objectProperties"
+  #          children: ["output.updatedResponses"]
+  #        }
+  #      }
+  #  }
     {
         actionCode: "generateReviewAssignments"
         trigger: ON_REVIEW_SUBMIT
