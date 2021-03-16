@@ -2,8 +2,8 @@
 Assign Review Test applications to Reviewers
 */
 exports.queries = [
-  // Assign test reviews of Application 1 of Review Testing (template)
-  // -- Review Lvl 1 - Stage 1 APPROVED
+  // Assign test reviews of Application 1 (serial: 12345) of Review Testing (template)
+  // -- Review Lvl 1 - Stage 1 (all sections) = APPROVED
   `mutation {
     createReviewAssignment(
       input: {
@@ -134,7 +134,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 1 in Stage 2 (Section 1) - APPROVED
+  // -- Reviewer 1 in Stage 2 (section 1) = APPROVED
   `mutation {
     createReviewAssignment(
       input: {
@@ -223,7 +223,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2 (Section 2) - DECLINED
+  // -- Reviewer 2 in Stage 2 (section 2) = DECLINED
   `mutation {
     createReviewAssignment(
       input: {
@@ -313,7 +313,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 1 Lvl 2 - Stage 2 - NOT STARTED
+  // -- Consolidator 1 Lvl 2 - Stage 2 = NOT STARTED
   `mutation {
     createReviewAssignment(
       input: {
@@ -356,7 +356,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 2 Lvl 2 - Stage 2 - NOT STARTED (There are 2 possible consolidators...)
+  // -- Consolidator 2 Lvl 2 - Stage 2 = NOT STARTED (There are 2 possible consolidators...)
   `mutation {
     createReviewAssignment(
       input: {
@@ -399,8 +399,8 @@ exports.queries = [
       }
     }
   }`,
-  // Assign test reviews of Application 2 of Review Testing (template)
-  // -- Review Lvl 1 - Stage 1 - NOT STARTED
+  // Assign test reviews of Application 2 (serial: 23456) of Review Testing (template)
+  // -- Review Lvl 1 - Stage 1 (all sections) = NOT STARTED
   `mutation {
     createReviewAssignment(
       input: {
@@ -444,8 +444,8 @@ exports.queries = [
       }
     }
   }`,
-  // Assign test reviews of Application 3 of Review Testing (template)
-  // -- Review Lvl 1 - Stage 1 APPROVED
+  // Assign test reviews of Application 3 (serial: 34567) of Review Testing (template)
+  // -- Review Lvl 1 - Stage 1 (all sections) = APPROVED
   `mutation {
     createReviewAssignment(
       input: {
@@ -567,7 +567,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 1 in Stage 2 (Section 1) - DENIED
+  // -- Reviewer 1 in Stage 2 (section 1) = DECLINED
   `mutation {
     createReviewAssignment(
       input: {
@@ -661,7 +661,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2 (Section 2) - NOT STARTED
+  // -- Reviewer 2 in Stage 2 (section 2) = NOT STARTED
   `mutation {
     createReviewAssignment(
       input: {
@@ -702,7 +702,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 1 Lvl 2 - Stage 2 - NOT AVAILABLE (Locked for this consolidator)
+  // -- Consolidator 1 Lvl 2 - Stage 2 = NOT AVAILABLE (Locked for this consolidator)
   `mutation {
     createReviewAssignment(
       input: {
@@ -745,7 +745,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 2 Lvl 2 - Stage 2 - DRAFT (DISAGREED with Reviewer 1)
+  // -- Consolidator 2 Lvl 2 - Stage 2 = CHANGES REQUESTED (DISAGREED with Reviewer 1)
   `mutation {
     createReviewAssignment(
       input: {
@@ -837,8 +837,8 @@ exports.queries = [
       }
     }
   }`,
-  // Assign test reviews of Application 4 (ABC123) of Review Testing (template)
-  // Reviewer 2 in Stage 1 (Section 1) = NOT STARTED
+  // Assign test reviews of Application 4 (serial: ABC123) of Review Testing (template)
+  // Reviewer 2 in Stage 1 (section 1) = NOT STARTED
   `mutation {
     createReviewAssignment(
       input: {
@@ -879,7 +879,7 @@ exports.queries = [
       }
     }
   }`,
-  // Reviewer 2 in Stage 1 (Section 2) = NOT STARTED
+  // Reviewer 2 in Stage 1 (section 2) = NOT STARTED
   `mutation {
     createReviewAssignment(
       input: {
