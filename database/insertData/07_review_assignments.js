@@ -837,6 +837,8 @@ exports.queries = [
       }
     }
   }`,
+  // Assign test reviews of Application 4 (ABC123) of Review Testing (template)
+  // Reviewer 2 in Stage 1 (Section 1) = NOT STARTED
   `mutation {
     createReviewAssignment(
       input: {
@@ -877,6 +879,7 @@ exports.queries = [
       }
     }
   }`,
+  // Reviewer 2 in Stage 1 (Section 2) = NOT STARTED
   `mutation {
     createReviewAssignment(
       input: {
