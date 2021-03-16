@@ -506,6 +506,9 @@ exports.queries = [
                       parameters: {
                         label: "Please upload your documentation"
                         description: "You can provide multiple files"
+                        fileCountLimit: 6
+                        fileExtensions: ["pdf", "png", "jpg", "doc", "docx", "txt"]
+                        fileSizeLimit: 5000
                       }
                     }
                     {
