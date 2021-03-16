@@ -130,21 +130,21 @@ exports.coreActions = `
             }
         }
     }
-    {
-        actionCode: "updateReviews"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 3
-        parameterQueries: {
-          applicationId: {
-            operator: "objectProperties"
-            children: ["applicationData.applicationId"]
-          }
-          changedApplicationResponses: {
-            operator: "objectProperties"
-            children: ["output.updatedResponses"]
-          }
-        }
-    }
+  #  {
+  #      actionCode: "updateReviews"
+  #      trigger: ON_REVIEW_SUBMIT
+  #      sequence: 3
+  #      parameterQueries: {
+  #        applicationId: {
+  #          operator: "objectProperties"
+  #          children: ["applicationData.applicationId"]
+  #        }
+  #        changedApplicationResponses: {
+  #          operator: "objectProperties"
+  #          children: ["output.updatedResponses"]
+  #        }
+  #      }
+  #  }
     {
         actionCode: "generateReviewAssignments"
         trigger: ON_REVIEW_SUBMIT
