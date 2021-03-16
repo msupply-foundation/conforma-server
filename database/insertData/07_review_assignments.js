@@ -856,7 +856,7 @@ exports.queries = [
           templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
-              {templateElementId: 4001 }
+              { templateElementId: 4001 }
               { templateElementId: 4002 }
               { templateElementId: 4003 }
               { templateElementId: 4005 }
