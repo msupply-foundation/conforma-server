@@ -44,7 +44,7 @@ module.exports['cleanupFiles'] = async function (input: any, DBConnect: any) {
       .map((response: ResponseValue) => response.files)
       .flat()
 
-    const responseFileUids = new Set(fileResponses.map((file: any) => file.uniqueId))
+    const responseFileUids = new Set(fileResponses.map((file: FileInfo) => file.uniqueId))
 
     const deletedFiles: FileInfo[] = []
     const submittedFiles: FileInfo[] = []
@@ -75,7 +75,7 @@ module.exports['cleanupFiles'] = async function (input: any, DBConnect: any) {
     }
   }
 
-  async function deleteFile(file: any) {
+  async function deleteFile(file: FileInfo) {
     try {
       // Delete the file
       await fs.unlink(path.join(appRootFolder, filesFolderName, file.filePath), () => {})
