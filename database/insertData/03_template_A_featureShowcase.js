@@ -497,21 +497,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1029
-                      code: "Q_upload1"
-                      index: 20
-                      title: "File upload demo"
-                      elementTypePluginCode: "fileUpload"
-                      category: QUESTION
-                      parameters: {
-                        label: "Please upload your documentation"
-                        description: "You can provide multiple files"
-                        fileCountLimit: 6
-                        fileExtensions: ["pdf", "png", "jpg", "doc", "docx", "txt"]
-                        fileSizeLimit: 5000
-                      }
-                    }
-                    {
                       id: 1020
                       code: "PB4"
                       index: 21
@@ -688,6 +673,96 @@ exports.queries = [
                             { value: "name" }
                           ]
                         }
+                      }
+                    }
+                  ]
+                }
+              }
+              {
+                id: 1010
+                code: "S2"
+                title: "Section 2 - Documents"
+                index: 2
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      id: 1029
+                      code: "DocText1"
+                      index: 100
+                      title: "Document Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "This sections allows you to upload files"
+                        text: "A demonstration of the File Upload plugin"
+                      }
+                    }
+                    {
+                      id: 1030
+                      code: "Q_upload1"
+                      index: 101
+                      title: "File upload demo 1"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Please upload your documentation"
+                        description: "You can provide multiple files.  \\nFiles must be **image** files or **PDF** and under 5MB."
+                        fileCountLimit: 6
+                        fileExtensions: ["pdf", "png", "jpg"]
+                        fileSizeLimit: 5000
+                      }
+                    }
+                    {
+                      id: 1031
+                      code: "PB10"
+                      index: 102
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      id: 1032
+                      code: "Q_upload2"
+                      index: 103
+                      title: "File upload demo 2"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Please add some more files"
+                        description: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "No restrictions on this one, but we're testing dynamic description:\\n\\n_The files uploaded in the last page were:_  \\n- _%1_"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q_upload1.text"]
+                            }
+                          ]
+                        }
+                        fileCountLimit: 99
+                      }
+                    }
+                    {
+                      id: 1033
+                      code: "PB11"
+                      index: 104
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      id: 1034
+                      code: "Q_upload3"
+                      index: 105
+                      title: "File upload demo 3"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "One more upload demo"
+                        description: "Only 1 file allowed, no other restrictions"
+                        fileCountLimit: 1
                       }
                     }
                   ]
