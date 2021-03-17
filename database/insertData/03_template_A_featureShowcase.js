@@ -106,7 +106,7 @@ exports.queries = [
                             "%1, what is your last name?"
                             {
                               operator: "objectProperties"
-                              children: ["responses.Q1.text"]
+                              children: ["responses.Q1.text", ""]
                             }
                           ]
                         }
@@ -140,11 +140,11 @@ exports.queries = [
                             "The new user's name is: %1 %2"
                             {
                               operator: "objectProperties"
-                              children: ["responses.Q1.text"]
+                              children: ["responses.Q1.text", ""]
                             }
                             {
                               operator: "objectProperties"
-                              children: ["responses.Q2.text"]
+                              children: ["responses.Q2.text", ""]
                             }
                           ]
                         }
