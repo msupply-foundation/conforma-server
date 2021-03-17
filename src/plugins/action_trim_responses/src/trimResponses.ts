@@ -20,7 +20,7 @@ interface ResponsesById {
 module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
   const db = databaseMethods(DBConnect)
 
-  const { applicationId, reviewId, timestamp } = input
+  const { applicationId, reviewId } = input
   console.log(`Trimming unchanged duplicated ${reviewId ? 'Review' : 'Application'} responses...`)
 
   try {
@@ -62,11 +62,10 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
       ? await db.deleteReviewResponses(responsesToDelete)
       : await db.deleteApplicationResponses(responsesToDelete)
 
-    // Update timestamp of remaining responses
-    const timeUpdated = timestamp ? timestamp : new Date().toISOString()
+    // Update timestamp of remaining responses (based on review/application latest status change timestamp)
     const updatedResponses = reviewId
-      ? await db.updateReviewResponseTimestamps(responsesToUpdate, timeUpdated)
-      : await db.updateApplicationResponseTimestamps(responsesToUpdate, timeUpdated)
+      ? await db.updateReviewResponseTimestamps(responsesToUpdate, reviewId)
+      : await db.updateApplicationResponseTimestamps(responsesToUpdate, applicationId)
 
     console.log(`Deleted ${reviewId ? 'review' : 'application'} responses: `, deletedResponses)
     console.log(`Updated ${reviewId ? 'review' : 'application'} responses: `, updatedResponses)
