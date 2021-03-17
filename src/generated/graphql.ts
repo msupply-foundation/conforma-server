@@ -16415,6 +16415,7 @@ export enum Trigger {
   OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
+  DevTest = 'DEV_TEST',
   Processing = 'PROCESSING',
   Error = 'ERROR'
 }

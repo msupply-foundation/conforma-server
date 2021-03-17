@@ -97,6 +97,12 @@ exports.coreActions = `
           }
         }
     }
+    {
+      actionCode: "processFiles"
+      trigger: ON_APPLICATION_SUBMIT
+      sequence: 5
+      parameterQueries: {}
+    }
     # ON_REVIEW_SUBMIT
     # 1 - change status to submitted
     # 2 - trim responses

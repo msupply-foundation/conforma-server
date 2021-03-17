@@ -235,6 +235,7 @@ class PostgresDB {
   public getApplicationData = async (applicationId: number) => {
     const text = `
       SELECT application_id as "applicationId",
+      serial as "applicationSerial",
       template_id as "templateId",
       stage_id as "stageId", stage_number as "stageNumber", stage,
       stage_history_id as "stageHistoryId",

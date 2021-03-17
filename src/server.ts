@@ -65,6 +65,7 @@ const startServer = async () => {
     // TO-DO: Authentication
     const data = await request.files()
     const fileData = await saveFiles(data, request.query)
+    console.log(fileData)
     reply.send({ success: true, fileData })
   })
 

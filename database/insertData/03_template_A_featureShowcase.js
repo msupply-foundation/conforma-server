@@ -4,6 +4,7 @@ TEMPLATE A - General Registration (Feature showcase)
       dynamic visibility, complex dynamic expressions, etc.
 */
 const { coreActions } = require('./core_actions')
+const { devActions } = require('./dev_actions')
 
 exports.queries = [
   `mutation {
@@ -782,6 +783,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               ${coreActions}
+              ${devActions}
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
