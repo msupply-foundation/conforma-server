@@ -27,7 +27,7 @@ const databaseMethods = (DBConnect: any) => ({
         WHERE element_type_plugin_code = $1
       )
       AND application_id = $2
-      
+      AND value IS NOT NULL
     `
     try {
       const result = await DBConnect.query({
@@ -35,6 +35,41 @@ const databaseMethods = (DBConnect: any) => ({
         values: [elementPluginCode, applicationId],
       })
       return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  deleteFileRecord: async (fileUniqueId: string) => {
+    const text = `
+    DELETE FROM file
+    WHERE unique_id = $1
+    RETURNING unique_id
+    `
+    try {
+      const result = await DBConnect.query({
+        text,
+        values: [fileUniqueId],
+      })
+      return result.rows[0].unique_id
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  setFileSubmitted: async (fileUniqueId: string) => {
+    const text = `
+    UPDATE file
+      SET submitted = true
+      WHERE unique_id = $1
+    RETURNING unique_id
+    `
+    try {
+      const result = await DBConnect.query({
+        text,
+        values: [fileUniqueId],
+      })
+      return result.rows[0].unique_id
     } catch (err) {
       console.log(err.message)
       throw err

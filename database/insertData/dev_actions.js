@@ -1,6 +1,6 @@
 /*
 GraphQL Fragment - DEVELOPMENT Actions
-  - Use this to test arbitrary Actions -- but only use the trigger "devTest"
+  - Use this to test arbitrary Actions -- but only use the trigger "DEV_TEST"
 \*/
 exports.devActions = `
     {

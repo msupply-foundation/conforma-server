@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import databaseMethods from './databaseMethods'
 interface Response {
   id: number
@@ -23,50 +25,64 @@ module.exports['processFiles'] = async function (input: any, DBConnect: any) {
   const { applicationData } = input
   const applicationSerial = input?.applicationSerial || applicationData.applicationSerial
   const applicationid = input?.applicationId || applicationData.applicationId
+  const {
+    environmentData: { appRootFolder, filesFolderName },
+  } = applicationData
 
   console.log(`Processing files associated with Application ${applicationSerial}`)
 
   try {
-    // Get all files where application_serial = current and submitted = false
+    // Get all unsubmitted files for current application
     const files = await db.getApplicationFiles(applicationSerial)
 
-    console.log('FILES', files)
-
+    // Get responses that have uploaded file data
     const fileResponses = (await db.getFileResponses(applicationid, fileUploadPluginCode))
       .map((response: any) => response?.value?.files)
       .flat()
 
-    console.log('fileResponses', JSON.stringify(fileResponses, null, 2))
-
     const responseFileUids = new Set(fileResponses.map((file: any) => file.uniqueId))
 
-    console.log('responseFileUids', responseFileUids)
-
-    const deletedFiles = []
+    const deletedFiles: any = []
+    const submittedFiles: any = []
 
     for (const file of files) {
-      if (responseFileUids.has(file.uniqueId)) {
-        deleteFile(file).then((file) => deletedFiles.push(file))
+      if (!responseFileUids.has(file.uniqueId)) {
+        const resultFile = await deleteFile(file)
+        deletedFiles.push(resultFile)
+      } else {
+        await db.setFileSubmitted(file.uniqueId)
+        submittedFiles.push(file)
       }
     }
-    // return {
-    //   status: 'Success',
-    //   error_log: '',
-    //   output: {
-    //     deletedResponses,
-    //     updatedResponses,
-    //   },
-    // }
+    console.log('deletedFiles', deletedFiles)
+    return {
+      status: 'Success',
+      error_log: '',
+      output: {
+        deletedFiles,
+        submittedFiles,
+      },
+    }
   } catch (error) {
     console.log(error.message)
     return {
       status: 'Fail',
-      error_log: 'There was a problem trimming duplicated responses.',
+      error_log: 'Problem cleaning up files:' + error.message,
     }
   }
-}
 
-const deleteFile = async (file: any) => {
-  // Delete the database record
-  // Then delete the file
+  async function deleteFile(file: any) {
+    try {
+      // Delete the file
+      await fs.unlink(path.join(appRootFolder, filesFolderName, file.filePath), () => {})
+      // Delete the thumbnail, but only if it's in the application folder
+      if (file.filePath.split('/')[0] === file.thumbnailPath.split('/')[0])
+        await fs.unlink(path.join(appRootFolder, filesFolderName, file.thumbnailPath), () => {})
+      // Delete the database record
+      await db.deleteFileRecord(file.uniqueId)
+      return file
+    } catch (err) {
+      throw err
+    }
+  }
 }
