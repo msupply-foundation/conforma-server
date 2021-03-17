@@ -80,6 +80,7 @@ module.exports['cleanupFiles'] = async function (input: any, DBConnect: any) {
       // Delete the file
       await fs.unlink(path.join(appRootFolder, filesFolderName, file.filePath), () => {})
       // Delete the thumbnail, but only if it's in the application folder
+      // (i.e. not the generics)
       if (file.filePath.split('/')[0] === file.thumbnailPath.split('/')[0])
         await fs.unlink(path.join(appRootFolder, filesFolderName, file.thumbnailPath), () => {})
       // Delete the database record
