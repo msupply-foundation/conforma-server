@@ -4,7 +4,7 @@ GraphQL Fragment - DEVELOPMENT Actions
 \*/
 exports.devActions = `
     {
-        actionCode: "processFiles"
+        actionCode: "cleanupFiles"
         trigger: DEV_TEST
         parameterQueries: {}
     }

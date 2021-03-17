@@ -1,25 +1,28 @@
 import fs from 'fs'
 import path from 'path'
 import databaseMethods from './databaseMethods'
-interface Response {
-  id: number
-  code: string
-  template_element_id?: number
-  application_response_id?: number
-  review_response_link_id?: number
-  value: { [key: string]: any }
-  comment?: string
-  decision?: string
-  time_updated: any
-}
-
-interface ResponsesById {
-  [key: number]: Response[]
-}
 
 const fileUploadPluginCode = 'fileUpload'
 
-module.exports['processFiles'] = async function (input: any, DBConnect: any) {
+interface FileInfo {
+  uniqueId: string
+  applicationResponseId: number
+  filePath: string
+  thumbnailPath: string
+}
+
+interface ResponseValue {
+  text?: string
+  files?: {
+    fileUrl: string
+    filename: string
+    mimetype: string
+    uniqueId: string
+    thumbnailUrl: string
+  }[]
+}
+
+module.exports['cleanupFiles'] = async function (input: any, DBConnect: any) {
   const db = databaseMethods(DBConnect)
 
   const { applicationData } = input
@@ -37,13 +40,14 @@ module.exports['processFiles'] = async function (input: any, DBConnect: any) {
 
     // Get responses that have uploaded file data
     const fileResponses = (await db.getFileResponses(applicationid, fileUploadPluginCode))
-      .map((response: any) => response?.value?.files)
+      .filter((response: ResponseValue) => response?.files)
+      .map((response: ResponseValue) => response.files)
       .flat()
 
     const responseFileUids = new Set(fileResponses.map((file: any) => file.uniqueId))
 
-    const deletedFiles: any = []
-    const submittedFiles: any = []
+    const deletedFiles: FileInfo[] = []
+    const submittedFiles: FileInfo[] = []
 
     for (const file of files) {
       if (!responseFileUids.has(file.uniqueId)) {

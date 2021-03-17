@@ -34,7 +34,7 @@ const databaseMethods = (DBConnect: any) => ({
         text,
         values: [elementPluginCode, applicationId],
       })
-      return result.rows
+      return result.rows.map((row: any) => row.value)
     } catch (err) {
       console.log(err.message)
       throw err

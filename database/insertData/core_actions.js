@@ -98,7 +98,7 @@ exports.coreActions = `
         }
     }
     {
-      actionCode: "processFiles"
+      actionCode: "cleanupFiles"
       trigger: ON_APPLICATION_SUBMIT
       sequence: 5
       parameterQueries: {}
