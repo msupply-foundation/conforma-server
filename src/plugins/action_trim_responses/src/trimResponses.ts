@@ -40,7 +40,7 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
       ? 'review_response_link_id'
       : 'application_response_id'
 
-    let responsesById = groupResponses(responses, groupByField)
+    const responsesById = groupResponses(responses, groupByField)
     const responsesToDelete: number[] = []
     let responsesToUpdate: number[] = []
 
