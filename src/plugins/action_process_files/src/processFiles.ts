@@ -67,7 +67,7 @@ module.exports['processFiles'] = async function (input: any, DBConnect: any) {
     console.log(error.message)
     return {
       status: 'Fail',
-      error_log: 'Problem cleaning up files:' + error.message,
+      error_log: 'Problem cleaning up files: ' + error.message,
     }
   }
 
