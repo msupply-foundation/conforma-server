@@ -1,9 +1,9 @@
 {
   "type": "action_plugin",
-  "code": "processFiles",
-  "name": "Process application files",
-  "file": "processFiles",
-  "function_name": "processFiles",
+  "code": "cleanupFiles",
+  "name": "Clean up application files",
+  "file": "cleanupFiles",
+  "function_name": "cleanupFiles",
   "description": "Checks all the uploaded files associated with an application, and deletes any that are not part of an application_response",
   "required_parameters": ["applicationId"],
   "output_properties": ["deletedFiles"],
