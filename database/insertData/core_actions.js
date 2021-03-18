@@ -29,6 +29,20 @@ exports.coreActions = `
       newStatus: { value: "Draft" }
       }
     }
+    # ON_REVIEW_RESTART
+    # change status to draft
+    {
+      actionCode: "changeStatus"
+      trigger: ON_REVIEW_RESTART
+      sequence: 1
+      parameterQueries: {
+        reviewId: {
+          operator: "objectProperties"
+          children: ["applicationData.record_id"]
+      }
+      newStatus: { value: "Draft" }
+      }
+    }
     # ON_REVIEW_CREATE
     # change status to draft
     {

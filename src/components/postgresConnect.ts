@@ -731,7 +731,7 @@ class PostgresDB {
 
   public getAllReviewResponses = async (reviewId: number) => {
     const text = `
-    SELECT rr.id, r.level, code, comment, decision,
+    SELECT rr.id, r.level, code, comment, decision, rr.status, rr.template_element_id,
     rr.application_response_id, rr.review_response_link_id, rr.time_updated
     FROM review_response rr JOIN application_response ar
     ON rr.application_response_id = ar.id

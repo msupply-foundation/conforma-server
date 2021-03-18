@@ -41,8 +41,8 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
 
     const responsesById = groupResponses(responses, groupByField)
     const responsesToDelete: number[] = []
-    const responsesToUpdate: number[] = []
 
+    // Calculate review and application responses that should be deleted
     Object.values(responsesById).forEach((responseArray) => {
       const latestResponse = responseArray[responseArray.length - 1]
       const previousResponse =
@@ -53,8 +53,19 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
         latestResponse.value?.decision === null // Review responses
       )
         responsesToDelete.push(latestResponse.id)
-      else responsesToUpdate.push(latestResponse.id)
     })
+
+    // For both application and reviewer level 1 we update latestResponses for template element
+    // (note, trimmed responses won't be updated as they will not exist)
+
+    // Don't need to re-group for application
+    const groupedResponsesForUpdate = !reviewId
+      ? responsesById
+      : groupResponses(responses, 'template_element_id')
+
+    const responsesToUpdate = Object.values(groupedResponsesForUpdate).map(
+      (responseArray) => responseArray[responseArray.length - 1].id
+    )
 
     // Run delete operation on all in toDelete array (new method)
     const deletedResponses = reviewId
