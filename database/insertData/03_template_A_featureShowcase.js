@@ -499,7 +499,7 @@ exports.queries = [
                     {
                       id: 1020
                       code: "PB4"
-                      index: 19
+                      index: 21
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
@@ -507,7 +507,7 @@ exports.queries = [
                     {
                       id: 1021
                       code: "CheckboxShowcase"
-                      index: 20
+                      index: 22
                       title: "Checkbox demonstration"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -519,7 +519,7 @@ exports.queries = [
                     {
                       id: 1022
                       code: "CB1"
-                      index: 21
+                      index: 23
                       title: "Single checkbox"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -532,7 +532,7 @@ exports.queries = [
                     {
                       id: 1023
                       code: "CB2"
-                      index: 22
+                      index: 24
                       title: "Three checkboxes"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -549,7 +549,7 @@ exports.queries = [
                     {
                       id: 1024
                       code: "CB3"
-                      index: 23
+                      index: 25
                       title: "Toggle switch"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -563,7 +563,7 @@ exports.queries = [
                     {
                       id: 1025
                       code: "TXTON-OFF"
-                      index: 24
+                      index: 26
                       title: "Checkbox ON"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -596,7 +596,7 @@ exports.queries = [
                     {
                       id: 1026
                       code: "CB4"
-                      index: 26
+                      index: 27
                       title: "Slider switch"
                       elementTypePluginCode: "checkbox"
                       category: QUESTION
@@ -616,7 +616,7 @@ exports.queries = [
                     {
                       id: 1027
                       code: "TXT_LIKE"
-                      index: 27
+                      index: 28
                       title: "Display Likes"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -654,7 +654,7 @@ exports.queries = [
                     {
                       id: 1028
                       code: "CB5"
-                      index: 28
+                      index: 29
                       title: "Many checkboxes"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -673,6 +673,96 @@ exports.queries = [
                             { value: "name" }
                           ]
                         }
+                      }
+                    }
+                  ]
+                }
+              }
+              {
+                id: 1010
+                code: "S2"
+                title: "Section 2 - Documents"
+                index: 2
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      id: 1029
+                      code: "DocText1"
+                      index: 100
+                      title: "Document Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "This sections allows you to upload files"
+                        text: "A demonstration of the File Upload plugin"
+                      }
+                    }
+                    {
+                      id: 1030
+                      code: "Q_upload1"
+                      index: 101
+                      title: "File upload demo 1"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Please upload your documentation"
+                        description: "You can provide multiple files.  \\nFiles must be **image** files or **PDF** and under 5MB."
+                        fileCountLimit: 6
+                        fileExtensions: ["pdf", "png", "jpg"]
+                        fileSizeLimit: 5000
+                      }
+                    }
+                    {
+                      id: 1031
+                      code: "PB10"
+                      index: 102
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      id: 1032
+                      code: "Q_upload2"
+                      index: 103
+                      title: "File upload demo 2"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Please add some more files"
+                        description: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "No restrictions on this one, but we're testing dynamic description:\\n\\n_The files uploaded in the last page were:_  \\n- _%1_"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q_upload1.text"]
+                            }
+                          ]
+                        }
+                        fileCountLimit: 99
+                      }
+                    }
+                    {
+                      id: 1033
+                      code: "PB11"
+                      index: 104
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      id: 1034
+                      code: "Q_upload3"
+                      index: 105
+                      title: "File upload demo 3"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "One more upload demo"
+                        description: "Only 1 file allowed, no other restrictions"
+                        fileCountLimit: 1
                       }
                     }
                   ]
