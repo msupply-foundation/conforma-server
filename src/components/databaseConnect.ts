@@ -115,8 +115,6 @@ class DBConnect {
 
   public getCurrentReviewLevel = PostgresDB.getCurrentReviewLevel
 
-  public addReviewAssignments = PostgresDB.addReviewAssignments
-
   public isFullyAssignedLevel1 = PostgresDB.isFullyAssignedLevel1
 
   public getAllApplicationResponses = PostgresDB.getAllApplicationResponses

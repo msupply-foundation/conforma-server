@@ -140,8 +140,10 @@ exports.queries = [
       input: {
         user: { email: "assigner1@sussol.net"
           passwordHash: "$2a$10$Kk4m2yhfFC5GqX2mJsXTtO.GLq6zNbezYnI8ix09h/MfNNy6AW7Ne"
-          username: "testAssigner1",
-          firstName: "Assigner1" }
+          username: "testAssigner1"
+          firstName: "Assigner1"
+          permissionJoinsUsingId: { create: { permissionNameId: 9000 } }
+          }
       }
     ) {
       user {
@@ -154,8 +156,10 @@ exports.queries = [
       input: {
         user: { email: "assigner2@sussol.net"
           passwordHash: "$2a$10$DA4a1E2i3dfN5BrdmO6iX.EYt.ob0czyF1sQqNQxPMPrfEPsRCx2a"
-          username: "testAssigner2",
-          firstName: "Assigner2" }
+          username: "testAssigner2"
+          firstName: "Assigner2"
+          permissionJoinsUsingId: { create: { permissionNameId: 9000 } }
+          }
       }
     ) {
       user {

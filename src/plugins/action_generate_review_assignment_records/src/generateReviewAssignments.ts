@@ -30,7 +30,8 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     const nextLevelReviewers = await db.getReviewersForApplicationStageLevel(
       templateId,
       stageNumber,
-      nextReviewLevel
+      nextReviewLevel,
+      'Review'
     )
 
     const reviewAssignments: ReviewAssignmentObject = {}
@@ -64,12 +65,35 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
           isLastLevel: nextReviewLevel === numReviewLevels,
         }
     })
+    console.log('ReviewAssignments', reviewAssignments)
 
-    const reviewAssignmentIds = await DBConnect.addReviewAssignments(
-      Object.values(reviewAssignments)
+    // Save review_assignment records to database
+    const reviewAssignmentIds = await db.addReviewAssignments(Object.values(reviewAssignments))
+
+    // Generate review_assignment_assigner_joins
+    // For now we assume that assigners have no Section restrictions
+    console.log('Generating review_assignment_assigner_join records...')
+    const availableAssigners = await db.getReviewersForApplicationStageLevel(
+      templateId,
+      stageNumber,
+      nextReviewLevel,
+      'Assign'
+    )
+    const reviewAssignmentAssignerJoins = []
+    for (const reviewAssignmentId of Object.values(reviewAssignmentIds)) {
+      for (const assigner of availableAssigners) {
+        reviewAssignmentAssignerJoins.push({
+          assignerId: assigner.userId,
+          orgId: assigner.orgId,
+          reviewAssignmentId,
+        })
+      }
+    }
+    const reviewAssignmentAssignerJoinIds = await db.addReviewAssignmentAssignerJoins(
+      reviewAssignmentAssignerJoins
     )
 
-    console.log('Review Assignment IDs:', reviewAssignmentIds)
+    console.log('ReviewAssignmentAssignerJoins', reviewAssignmentAssignerJoins)
 
     return {
       status: 'Success',
@@ -77,6 +101,8 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       output: {
         reviewAssignments: Object.values(reviewAssignments),
         reviewAssignmentIds,
+        reviewAssignmentAssignerJoins,
+        reviewAssignmentAssignerJoinIds,
         currentReviewLevel,
         nextReviewLevel,
       },
