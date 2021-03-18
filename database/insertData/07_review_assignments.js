@@ -116,6 +116,9 @@ exports.queries = [
                   }
                 ]
               }
+              reviewDecisionsUsingId: {
+                create: { decision: CONFORM }
+              }
             }
           }
         }
@@ -204,6 +207,9 @@ exports.queries = [
                     timeCreated: "2021-02-02T10:00:00Z"
                   }
                 ]
+              }
+              reviewDecisionsUsingId: {
+                create: { decision: CONFORM }
               }
             }
           }
@@ -294,6 +300,12 @@ exports.queries = [
                     timeCreated: "2021-02-02T00:00:00Z"
                   }
                 ]
+              }
+              reviewDecisionsUsingId: {
+                create: { 
+                  decision: LIST_OF_QUESTIONS
+                  comment: "Suggestion by Reviewer 2 to reply to applicant with LOQ"
+                }
               }
             }
           }     
@@ -549,6 +561,9 @@ exports.queries = [
                   }
                 ]
               }
+              reviewDecisionsUsingId: {
+                create: { decision: CONFORM }
+              }
             }
           }
         }
@@ -642,6 +657,12 @@ exports.queries = [
                     timeCreated: "2021-02-04T10:00:00Z"
                   }
                 ]
+              }
+              reviewDecisionsUsingId: {
+                create: { 
+                  decision: LIST_OF_QUESTIONS 
+                  comment: "Suggestion by Reviewer 1 to reply to applicant with LOQ"
+                }
               }
             }
           }
@@ -869,6 +890,12 @@ exports.queries = [
                     timeCreated: "2021-02-04T10:00:00Z"
                   }
                 ]
+              }
+              reviewDecisionsUsingId: {
+                create: { 
+                  decision: NON_CONFORM 
+                  comment: "Reviewer 1 required to update"
+                }
               }
             }
           }
