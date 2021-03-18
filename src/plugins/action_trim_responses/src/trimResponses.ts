@@ -60,11 +60,11 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
     // (note, trimmed responses won't be updated as they will not exist)
 
     // Don't need to re-group for application
-    const groupedResponsesToUse = !reviewId
+    const groupedResponsesForUpdate = !reviewId
       ? responsesById
       : groupResponses(responses, 'template_element_id')
 
-    const responsesToUpdate = Object.values(groupedResponsesToUse).map(
+    const responsesToUpdate = Object.values(groupedResponsesForUpdate).map(
       (responseArray) => responseArray[responseArray.length - 1].id
     )
 
