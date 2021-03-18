@@ -8,7 +8,7 @@ const databaseMethods = (DBConnect: any) => ({
     SELECT
       "userId", "orgId",
       "templatePermissionRestrictions" AS restrictions
-      FROM all_permissions
+      FROM permissions_all
       WHERE "templateId" = $1
       AND "stageNumber" = $2
       AND "reviewLevel" = $3

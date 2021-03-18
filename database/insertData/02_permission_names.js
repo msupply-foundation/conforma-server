@@ -138,4 +138,18 @@ exports.queries = [
       }
     }
   }`,
+  // assignGeneral (associated with multiple templates)
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 9000
+          name: "assignGeneral", permissionPolicyId: 4000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
 ]

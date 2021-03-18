@@ -10,12 +10,13 @@ CREATE TABLE public.template_permission (
     restrictions jsonb
 );
 
-CREATE VIEW all_permissions as (
+CREATE VIEW permissions_all as (
 SELECT 
     permission_policy.type as "permissionType", 
     permission_policy.id as "permissionPolicyId",
     permission_policy.rules as "permissionPolicyRules",
     permission_name.id as "permissionNameId",
+    permission_name.name as "permissionName",
 	template_permission.id as "templatePermissionId",
 	template_permission.stage_number AS "stageNumber",
     template_permission.level AS "reviewLevel",

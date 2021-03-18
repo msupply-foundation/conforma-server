@@ -564,7 +564,7 @@ class PostgresDB {
   }
 
   public getUserTemplatePermissions = async (username: string) => {
-    const text = 'select * from all_permissions where username = $1'
+    const text = 'select * from permissions_all where username = $1'
     try {
       const result = await this.query({ text, values: [username] })
       return result.rows
@@ -575,7 +575,7 @@ class PostgresDB {
   }
 
   public getAllPermissions = async () => {
-    const text = 'select * from all_permissions'
+    const text = 'select * from permissions_all'
     try {
       const result = await this.query({ text, values: [] })
       return result.rows
@@ -687,32 +687,6 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [reviewId] })
       return result.rows[0].level
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  // DELETE ME
-  public getReviewersForApplicationStageLevel = async (
-    templateId: number,
-    stageNumber: number,
-    reviewLevel: number
-  ) => {
-    const text = `
-    SELECT user_id, organisation_id, restrictions FROM 
-    permission_join pj JOIN template_permission tp
-    ON pj.permission_name_id = tp.permission_name_id
-    WHERE template_id = $1
-    AND stage_number = $2
-    AND level = $3
-    `
-    try {
-      const result = await this.query({
-        text,
-        values: [templateId, stageNumber, reviewLevel],
-      })
-      return result.rows
     } catch (err) {
       console.log(err.message)
       throw err
