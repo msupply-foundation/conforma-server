@@ -42,8 +42,8 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
 
     const responsesById = groupResponses(responses, groupByField)
     const responsesToDelete: number[] = []
-    let responsesToUpdate: number[] = []
 
+    // Calculate review and application responses that should be deleted
     Object.values(responsesById).forEach((responseArray) => {
       const latestResponse = responseArray[responseArray.length - 1]
       const previousResponse =
@@ -54,18 +54,19 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
         latestResponse.value?.decision === null // Review responses
       )
         responsesToDelete.push(latestResponse.id)
-      // Review responses to update calculation is seperate
-      else if (!reviewId) responsesToUpdate.push(latestResponse.id)
     })
 
-    // For level 1 reviewer:
-    // We want to update latest review responses if they are not null or duplicates
-    // If we update the latest review response for template element it should be
-    // review response that was changed in this review (not changed or null would be deleted in responsesToDelete)
-    if (reviewId && reviewLevel === 1)
-      responsesToUpdate = Object.values(groupResponses(responses, 'template_element_id')).map(
-        (responseArray) => responseArray[responseArray.length - 1].id
-      )
+    // For both application and reviewer level 1 we update latestResponses for template element
+    // (note, trimmed responses won't be updated as they will not exist)
+
+    // Don't need to re-group for application
+    const groupedResponsesToUse = !reviewId
+      ? responsesById
+      : groupResponses(responses, 'template_element_id')
+
+    const responsesToUpdate = Object.values(groupedResponsesToUse).map(
+      (responseArray) => responseArray[responseArray.length - 1].id
+    )
 
     // Run delete operation on all in toDelete array (new method)
     const deletedResponses = reviewId
