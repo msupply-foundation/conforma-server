@@ -1,6 +1,9 @@
 import { Reviewer, ReviewAssignmentObject, AssignmentStatus } from './types'
+import databaseMethods from './databaseMethods'
 
 module.exports['generateReviewAssignments'] = async function (input: any, DBConnect: any) {
+  const db = databaseMethods(DBConnect)
+
   console.log('Generating review assignment records...')
   try {
     const { applicationId, reviewId, templateId, stageId, stageNumber } = input
@@ -24,7 +27,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     }
     const nextReviewLevel = currentReviewLevel + 1
 
-    const nextLevelReviewers = await DBConnect.getReviewersForApplicationStageLevel(
+    const nextLevelReviewers = await db.getReviewersForApplicationStageLevel(
       templateId,
       stageNumber,
       nextReviewLevel
@@ -35,7 +38,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     // Build reviewers into object map so we can combine duplicate user_orgs
     // and merge their section code restrictions
     nextLevelReviewers.forEach((reviewer: Reviewer) => {
-      const { user_id: userId, organisation_id: orgId, restrictions } = reviewer
+      const { userId, orgId, restrictions } = reviewer
 
       const templateSectionRestrictions = restrictions
         ? restrictions?.templateSectionRestrictions

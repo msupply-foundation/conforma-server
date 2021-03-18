@@ -583,11 +583,15 @@ export type AllPermission = {
   permissionPolicyRules?: Maybe<Scalars['JSON']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   templatePermissionId?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  reviewLevel?: Maybe<Scalars['Int']>;
   templatePermissionRestrictions?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   templateCode?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
   username?: Maybe<Scalars['String']>;
+  orgId?: Maybe<Scalars['Int']>;
+  orgName?: Maybe<Scalars['String']>;
 };
 
 /**
@@ -605,6 +609,10 @@ export type AllPermissionCondition = {
   permissionNameId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templatePermissionId` field. */
   templatePermissionId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewLevel` field. */
+  reviewLevel?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templatePermissionRestrictions` field. */
   templatePermissionRestrictions?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `templateId` field. */
@@ -615,6 +623,10 @@ export type AllPermissionCondition = {
   userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `username` field. */
   username?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `orgId` field. */
+  orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `orgName` field. */
+  orgName?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `AllPermission` object types. All fields are combined with a logical ‘and.’ */
@@ -629,6 +641,10 @@ export type AllPermissionFilter = {
   permissionNameId?: Maybe<IntFilter>;
   /** Filter by the object’s `templatePermissionId` field. */
   templatePermissionId?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewLevel` field. */
+  reviewLevel?: Maybe<IntFilter>;
   /** Filter by the object’s `templatePermissionRestrictions` field. */
   templatePermissionRestrictions?: Maybe<JsonFilter>;
   /** Filter by the object’s `templateId` field. */
@@ -639,6 +655,10 @@ export type AllPermissionFilter = {
   userId?: Maybe<IntFilter>;
   /** Filter by the object’s `username` field. */
   username?: Maybe<StringFilter>;
+  /** Filter by the object’s `orgId` field. */
+  orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `orgName` field. */
+  orgName?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<AllPermissionFilter>>;
   /** Checks for any expressions in this list. */
@@ -682,6 +702,10 @@ export enum AllPermissionsOrderBy {
   PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
   TemplatePermissionIdAsc = 'TEMPLATE_PERMISSION_ID_ASC',
   TemplatePermissionIdDesc = 'TEMPLATE_PERMISSION_ID_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
+  ReviewLevelAsc = 'REVIEW_LEVEL_ASC',
+  ReviewLevelDesc = 'REVIEW_LEVEL_DESC',
   TemplatePermissionRestrictionsAsc = 'TEMPLATE_PERMISSION_RESTRICTIONS_ASC',
   TemplatePermissionRestrictionsDesc = 'TEMPLATE_PERMISSION_RESTRICTIONS_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
@@ -691,7 +715,11 @@ export enum AllPermissionsOrderBy {
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
   UsernameAsc = 'USERNAME_ASC',
-  UsernameDesc = 'USERNAME_DESC'
+  UsernameDesc = 'USERNAME_DESC',
+  OrgIdAsc = 'ORG_ID_ASC',
+  OrgIdDesc = 'ORG_ID_DESC',
+  OrgNameAsc = 'ORG_NAME_ASC',
+  OrgNameDesc = 'ORG_NAME_DESC'
 }
 
 export type Application = Node & {
@@ -24313,11 +24341,15 @@ export type AllPermissionResolvers<ContextType = any, ParentType extends Resolve
   permissionPolicyRules?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templatePermissionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewLevel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templatePermissionRestrictions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  orgName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
