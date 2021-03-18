@@ -64,5 +64,6 @@ $$
 LANGUAGE sql
 STABLE;
 
+-- (https://github.com/graphile/graphile-engine/pull/378)
 COMMENT ON FUNCTION application_list (reviewerid int) IS E'@sortable';
 
