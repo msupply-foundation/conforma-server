@@ -61,13 +61,13 @@ test('Test: remove unchanged review_response duplicates, with custom timestamp',
         error_log: '',
         output: {
           deletedResponses: [
-            { reviewResponseId: 42, templateElementId: 4006 },
-            { reviewResponseId: 43, templateElementId: 4005 },
-            { reviewResponseId: 44, templateElementId: 4003 },
+            { reviewResponseId: 47, templateElementId: 4006 },
+            { reviewResponseId: 48, templateElementId: 4005 },
+            { reviewResponseId: 49, templateElementId: 4003 },
           ],
           updatedResponses: [
-            { reviewResponseId: 45, templateElementId: 4002 },
-            { reviewResponseId: 46, templateElementId: 4001 },
+            { reviewResponseId: 50, templateElementId: 4002 },
+            { reviewResponseId: 51, templateElementId: 4001 },
           ],
         },
       })
