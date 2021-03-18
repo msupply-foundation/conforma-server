@@ -838,4 +838,84 @@ exports.queries = [
       }
     }
   }`,
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          id: 1020
+          applicationId: 4003
+          stageId: 5
+          stageNumber: 1
+          level: 1
+          isLastLevel: true
+          userToReviewerId: { 
+            connectByUsername: { username: "testReviewer1" } 
+          }
+          status: ASSIGNED
+          templateSectionRestrictions: ["S1", "S2"]
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              {templateElementId: 4001 }
+              { templateElementId: 4002 }
+              { templateElementId: 4003 }
+              { templateElementId: 4005 }
+              { templateElementId: 4006 }
+            ]
+          }
+      }
+    }
+    ) {
+      reviewAssignment {
+        application {
+          name
+        }
+        stage {
+          id
+        }
+        reviewer{
+          username
+        }
+      }
+    }
+  }`,
+  `mutation {
+    createReviewAssignment(
+      input: {
+        reviewAssignment: {
+          id: 1021
+          applicationId: 4003
+          stageId: 5
+          stageNumber: 1
+          level: 1
+          isLastLevel: true
+          userToReviewerId: { 
+            connectByUsername: { username: "testReviewer2" } 
+          }
+          status: ASSIGNED
+          templateSectionRestrictions: ["S1", "S2"]
+          reviewQuestionAssignmentsUsingId: {
+            create: [
+              { templateElementId: 4008 }
+              { templateElementId: 4009 }
+              { templateElementId: 4011 }
+              { templateElementId: 4012 }
+              { templateElementId: 4013 }
+            ]
+          }
+      }
+    }
+    ) {
+      reviewAssignment {
+        application {
+          name
+        }
+        stage {
+          id
+        }
+        reviewer{
+          username
+        }
+      }
+    }
+  }`,
 ]

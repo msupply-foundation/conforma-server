@@ -13,5 +13,7 @@
   "filesFolderName": "files",
   "jwtSecret": "devsecret",
   "pluginsFolder": "plugins",
-  "RESTport": 8080
+  "RESTport": 8080,
+  "thumbnailMaxWidth": 300,
+  "thumbnailMaxHeight": 300
 }

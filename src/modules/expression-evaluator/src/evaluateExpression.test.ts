@@ -298,6 +298,22 @@ test('Test returning single application property, depth 2, no object index', () 
   })
 })
 
+test('Test unresolved object', () => {
+  return evaluateExpression(testData.objectPropertyUnresolved, {
+    objects: { application: testData.application },
+  }).then((result: any) => {
+    expect(result).toBe("Can't resolve object")
+  })
+})
+
+test('Test unresolved object with Null fallback', () => {
+  return evaluateExpression(testData.objectPropertyUnresolvedWithNullFallback, {
+    objects: { application: testData.application },
+  }).then((result: any) => {
+    expect(result).toBe(null)
+  })
+})
+
 // String substitution
 
 test('Simple string substitution', () => {
@@ -464,6 +480,7 @@ test('Test Postgres get application list with IDs', () => {
       { id: 4000, name: 'Test Review -- Vitamin C' },
       { id: 4001, name: 'Test Review -- Vitamin B' },
       { id: 4002, name: 'Test Review -- Amoxicillin' },
+      { id: 4003, name: 'Test Review -- Paracetamol' },
     ])
   })
 })
@@ -495,6 +512,7 @@ test('Test GraphQL -- List of Application Names', () => {
       'Test Review -- Vitamin C',
       'Test Review -- Vitamin B',
       'Test Review -- Amoxicillin',
+      'Test Review -- Paracetamol',
     ])
   })
 })
@@ -530,6 +548,10 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
       {
         name: 'Test Review -- Amoxicillin',
         id: 4002,
+      },
+      {
+        name: 'Test Review -- Paracetamol',
+        id: 4003,
       },
     ])
   })

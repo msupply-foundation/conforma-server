@@ -6,7 +6,7 @@ import {
   ActionInTemplate,
   ActionQueue,
   ActionPlugin,
-  File,
+  FileDownloadInfo,
   ActionInTemplateGetPayload,
   ActionQueueExecutePayload,
   ActionQueueGetPayload,
@@ -176,23 +176,26 @@ class PostgresDB {
     }
   }
 
-  public addFile = async (payload: FilePayload): Promise<number> => {
+  public addFile = async (payload: FilePayload): Promise<string> => {
     const text = `INSERT INTO file (${Object.keys(payload)}) 
-      VALUES (${this.getValuesPlaceholders(payload)}) RETURNING id`
-
+      VALUES (${this.getValuesPlaceholders(payload)}) RETURNING unique_id`
     try {
       const result = await this.query({ text, values: Object.values(payload) })
-      return result.rows[0].id
+      return result.rows[0].unique_id
     } catch (err) {
       throw err
     }
   }
 
-  public getFile = async (payload: FileGetPayload): Promise<File | undefined> => {
-    const text = 'SELECT path, original_filename FROM file WHERE id = $1'
+  public getFileDownloadInfo = async (
+    uid: string,
+    thumbnail = false
+  ): Promise<FileDownloadInfo | undefined> => {
+    const path = thumbnail ? 'thumbnail_path' : 'file_path'
+    const text = `SELECT original_filename, ${path} FROM file WHERE unique_id = $1`
     try {
-      const result = await this.query({ text, values: [payload.id] })
-      return result.rows[0] as File
+      const result = await this.query({ text, values: [uid] })
+      return result.rows[0] as FileDownloadInfo
     } catch (err) {
       throw err
     }
@@ -255,7 +258,7 @@ class PostgresDB {
     FROM application_response JOIN template_element
     ON template_element.id = application_response.template_element_id
     WHERE application_id = $1
-    ORDER BY code, time_created DESC
+    ORDER BY code, time_updated DESC
     `
     const result = await this.query({ text, values: [applicationId] })
     const responses = result.rows
@@ -509,7 +512,7 @@ class PostgresDB {
   }
 
   public getApplicationCurrentStatusHistory = async (applicationId: number) => {
-    const text = `SELECT id, status, application_stage_history_id FROM
+    const text = `SELECT id, status, application_stage_history_id, time_created FROM
       application_status_history WHERE
       application_id = $1 and is_current = true;`
     try {
@@ -524,7 +527,7 @@ class PostgresDB {
   public addNewApplicationStatusHistory = async (stageHistoryId: number, status = 'Draft') => {
     // Note: switching is_current of previous status_histories to False is done automatically by a Postgres trigger function
     const text =
-      'INSERT into application_status_history (application_stage_history_id, status, time_created) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id, status'
+      'INSERT into application_status_history (application_stage_history_id, status, time_created) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id, status, time_created'
     try {
       const result = await this.query({ text, values: [stageHistoryId, status] })
       return result.rows[0]
@@ -535,7 +538,7 @@ class PostgresDB {
   }
 
   public getReviewCurrentStatusHistory = async (reviewId: number) => {
-    const text = `SELECT id, status FROM
+    const text = `SELECT id, status, time_created FROM
       review_status_history WHERE
       review_id = $1 and is_current = true;`
     try {
@@ -550,7 +553,7 @@ class PostgresDB {
   public addNewReviewStatusHistory = async (reviewId: number, status = 'Draft') => {
     // Note: switching is_current of previous status_histories to False is done automatically by a Postgres trigger function
     const text =
-      'INSERT into review_status_history (review_id, status) VALUES ($1, $2) RETURNING id, status'
+      'INSERT into review_status_history (review_id, status) VALUES ($1, $2) RETURNING id, status, time_created'
     try {
       const result = await this.query({ text, values: [reviewId, status] })
       return result.rows[0]
@@ -789,6 +792,45 @@ class PostgresDB {
         values: [applicationId],
       })
       return result.rows[0].is_fully_assigned_level_1
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getAllApplicationResponses = async (applicationId: number) => {
+    const text = `
+    SELECT ar.id, template_element_id, code, value, time_updated
+    FROM application_response ar JOIN template_element te
+    ON ar.template_element_id = te.id
+    WHERE application_id = $1
+    ORDER BY time_updated
+    `
+    try {
+      const result = await this.query({ text, values: [applicationId] })
+      const responses = result.rows
+      return responses
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getAllReviewResponses = async (reviewId: number) => {
+    const text = `
+    SELECT rr.id, r.level, code, comment, decision,
+    rr.application_response_id, rr.review_response_link_id, rr.time_updated
+    FROM review_response rr JOIN application_response ar
+    ON rr.application_response_id = ar.id
+    JOIN template_element te ON ar.template_element_id = te.id
+    JOIN review r ON rr.review_id = r.id
+    WHERE review_id = $1
+    ORDER BY time_updated
+    `
+    try {
+      const result = await this.query({ text, values: [reviewId] })
+      const responses = result.rows
+      return responses
     } catch (err) {
       console.log(err.message)
       throw err

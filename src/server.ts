@@ -13,10 +13,10 @@ import {
 } from './components/permissions'
 import {
   saveFiles,
-  getFilename,
+  getFilePath,
   createFilesFolder,
   filesFolderName,
-} from './components/fileHandler'
+} from './components/files/fileHandler'
 import { getAppRootDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
 import config from './config.json'
@@ -38,11 +38,20 @@ const startServer = async () => {
 
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
 
-  // File download endpoint (get by Database ID)
+  // File download endpoint (get by unique ID)
   server.get('/file', async function (request: any, reply: any) {
-    const filename = await getFilename(request.query.id)
+    const { uid, thumbnail } = request.query
+    const { original_filename, file_path, thumbnail_path } = await getFilePath(
+      uid,
+      thumbnail === 'true'
+    )
     // TO-DO Check for permission to access file
-    return reply.sendFile(filename)
+    try {
+      // TO-DO: Rename file back to original for download
+      return reply.sendFile(file_path ? file_path : thumbnail_path)
+    } catch {
+      return reply.send({ success: false, message: 'Unable to retrieve file' })
+    }
   })
 
   server.get('/user-info', routeUserInfo)
@@ -53,10 +62,10 @@ const startServer = async () => {
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {
-    // TO-DO: Check if logged in
+    // TO-DO: Authentication
     const data = await request.files()
-    await saveFiles(data, request.query)
-    reply.send()
+    const fileData = await saveFiles(data, request.query)
+    reply.send({ success: true, fileData })
   })
 
   server.get('/', async (request, reply) => {

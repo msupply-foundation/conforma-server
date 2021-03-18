@@ -29,14 +29,13 @@ Web-based GUI available at:
 Usage: `POST` request with file(s) in the request `body` form-data:  
 `key: "file" value: <File(s)>`
 
-Additional (optional) fields:
+URL query paramter fields (optional):
 
 - `user_id`
-- `application_id`
+- `application_serial`
 - `application_response_id`
 
-Note: optional fields can be supplied _either_ as additional `key/value `pairs in the request `body` _or_ as `query parameters`  
-e.g. `/upload?user=2&application_id=3`
+e.g. `/upload?user=2&application_serial=3`
 
 Files are uploaded to `src/files` with their database table id appended to the filename (to ensure uniqueness).
 

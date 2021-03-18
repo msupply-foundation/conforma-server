@@ -30,5 +30,8 @@ export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
     responseData[response.code] = response.value
   }
 
-  return { ...payload, ...applicationData, ...userData, responses: responseData }
+  const reviewData =
+    payload.table === 'review' ? await DBConnect.getReviewData(payload.record_id) : {}
+
+  return { ...payload, ...applicationData, ...userData, responses: responseData, reviewData }
 }

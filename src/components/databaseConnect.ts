@@ -28,7 +28,7 @@ class DBConnect {
 
   public addFile = PostgresDB.addFile
 
-  public getFile = PostgresDB.getFile
+  public getFileDownloadInfo = PostgresDB.getFileDownloadInfo
 
   public addActionPlugin = PostgresDB.addActionPlugin
 
@@ -121,9 +121,15 @@ class DBConnect {
 
   public isFullyAssignedLevel1 = PostgresDB.isFullyAssignedLevel1
 
+  public getAllApplicationResponses = PostgresDB.getAllApplicationResponses
+
+  public getAllReviewResponses = PostgresDB.getAllReviewResponses
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
+
+  public getReviewData = GraphQLdb.getReviewData
 }
 
 const dbConnectInstance = DBConnect.Instance

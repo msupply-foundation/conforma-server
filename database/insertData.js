@@ -5,7 +5,10 @@ const config = require('../src/config.json')
 
 const graphQLendpoint = config.graphQLendpoint
 
-const filesToProcess = fs.readdirSync('./database/insertData').filter((file) => !file.match(/^\./)) // Ignore hidden files
+const filesToProcess = fs
+  .readdirSync('./database/insertData')
+  .filter((file) => !file.match(/^\./)) // Ignore hidden files
+  .filter((file) => file !== 'core_actions.js')
 
 processQueries(filesToProcess)
 
@@ -32,7 +35,11 @@ async function executeGraphQLQuery(query) {
       query,
     }),
   })
-  const data = await res.json()
+  const response = await res.json()
+  if (response.errors) {
+    console.log(JSON.stringify(response.errors, null, '  '))
+    process.exit(0)
+  }
 }
 
 async function updateRowPolicies() {

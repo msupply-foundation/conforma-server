@@ -1,63 +1,81 @@
+import { time } from 'console'
 import databaseMethods from './databaseMethods'
-import isEqual from '@openmsupply/deep-comparison'
-
+const isEqual = require('deep-equal')
 interface Response {
   id: number
   code: string
+  template_element_id?: number
+  application_response_id?: number
+  review_response_link_id?: number
   value: { [key: string]: any }
   comment?: string
   decision?: string
-  time_created: any
+  time_updated: any
 }
 
-interface ResponsesByCode {
-  [key: string]: Response[]
+interface ResponsesById {
+  [key: number]: Response[]
 }
 
 module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
   const db = databaseMethods(DBConnect)
 
-  console.log('Trimming unchanged duplicated responses...')
+  const { applicationId, reviewId } = input
+  console.log(`Trimming unchanged duplicated ${reviewId ? 'Review' : 'Application'} responses...`)
 
   try {
-    const { applicationId, reviewId } = input
     // Get ALL responses associated with application OR review
     const responses = reviewId
-      ? await db.getAllReviewResponses(reviewId)
-      : await db.getAllApplicationResponses(applicationId)
+      ? await DBConnect.getAllReviewResponses(reviewId)
+      : await DBConnect.getAllApplicationResponses(applicationId)
 
-    // Create object of responses indexed by code, with response
-    // objects added to array for each code
-    const responsesByCode: ResponsesByCode = {}
-    responses.forEach((response: Response) => {
-      const { code } = response
-      if (reviewId) response.value = { comment: response.comment, decision: response.decision }
-      if (!(code in responsesByCode)) responsesByCode[code] = [response]
-      else responsesByCode[code].push(response)
-    })
+    const reviewLevel = responses?.[0]?.level
 
+    // Create object of indexed responses, with array of response
+    // objects for each indexed id
+
+    const groupByField = !reviewId
+      ? 'template_element_id'
+      : reviewLevel > 1
+      ? 'review_response_link_id'
+      : 'application_response_id'
+
+    const responsesById = groupResponses(responses, groupByField)
     const responsesToDelete: number[] = []
+    const responsesToUpdate: number[] = []
 
-    Object.values(responsesByCode).forEach((responseArray) => {
-      if (responseArray.length === 1) return
+    Object.values(responsesById).forEach((responseArray) => {
       const latestResponse = responseArray[responseArray.length - 1]
-      const previousResponse = responseArray[responseArray.length - 2]
-      if (isEqual(latestResponse.value, previousResponse.value))
+      const previousResponse =
+        responseArray.length > 1 ? responseArray[responseArray.length - 2] : null
+      if (
+        isEqual(latestResponse.value, previousResponse?.value) ||
+        latestResponse.value === null || // Application Responses
+        latestResponse.value?.decision === null // Review responses
+      )
         responsesToDelete.push(latestResponse.id)
+      else responsesToUpdate.push(latestResponse.id)
     })
 
     // Run delete operation on all in toDelete array (new method)
-    const deletedCodes = reviewId
+    const deletedResponses = reviewId
       ? await db.deleteReviewResponses(responsesToDelete)
       : await db.deleteApplicationResponses(responsesToDelete)
 
-    console.log('Codes of deleted responses: ', deletedCodes)
+    // Update timestamp of remaining responses (based on review/application latest status change timestamp)
+    const updatedResponses = reviewId
+      ? await db.updateReviewResponseTimestamps(responsesToUpdate, reviewId)
+      : await db.updateApplicationResponseTimestamps(responsesToUpdate, applicationId)
+
+    console.log(`Deleted ${reviewId ? 'review' : 'application'} responses: `, deletedResponses)
+    console.log(`Updated ${reviewId ? 'review' : 'application'} responses: `, updatedResponses)
 
     return {
       status: 'Success',
       error_log: '',
       output: {
-        deletedCodes,
+        deletedResponses,
+        updatedResponses,
       },
     }
   } catch (error) {
@@ -67,4 +85,19 @@ module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
       error_log: 'There was a problem trimming duplicated responses.',
     }
   }
+}
+
+type GroupField = 'template_element_id' | 'application_response_id' | 'review_response_link_id'
+
+function groupResponses(responses: Response[], groupField: GroupField): ResponsesById {
+  const responsesGrouped: ResponsesById = {}
+  for (const response of responses) {
+    const id = response[groupField]
+    if (!id) continue
+    if (groupField === 'application_response_id' || groupField === 'review_response_link_id')
+      response.value = { comment: response.comment, decision: response.decision }
+    if (!(id in responsesGrouped)) responsesGrouped[id] = [response]
+    else responsesGrouped[id].push(response)
+  }
+  return responsesGrouped
 }
