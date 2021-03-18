@@ -1,9 +1,9 @@
 const databaseMethods = (DBConnect: any) => ({
-  getReviewersForApplicationStageLevel: async (
+  getPersonnelForApplicationStageLevel: async (
     templateId: number,
     stageNumber: number,
     reviewLevel: number,
-    type: 'Apply' | 'Review' | 'Assign'
+    type: 'Review' | 'Assign'
   ) => {
     const text = `
     SELECT

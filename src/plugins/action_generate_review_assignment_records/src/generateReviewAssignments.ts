@@ -27,7 +27,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     }
     const nextReviewLevel = currentReviewLevel + 1
 
-    const nextLevelReviewers = await db.getReviewersForApplicationStageLevel(
+    const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
       templateId,
       stageNumber,
       nextReviewLevel,
@@ -73,7 +73,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     // Generate review_assignment_assigner_joins
     // For now we assume that assigners have no Section restrictions
     console.log('Generating review_assignment_assigner_join records...')
-    const availableAssigners = await db.getReviewersForApplicationStageLevel(
+    const availableAssigners = await db.getPersonnelForApplicationStageLevel(
       templateId,
       stageNumber,
       nextReviewLevel,
@@ -111,7 +111,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     console.log(error.message)
     return {
       status: 'Fail',
-      error_log: 'Problem creating review_assignment records.',
+      error_log: 'Problem creating review_assignment records: ' + error.message,
     }
   }
 }
