@@ -48,10 +48,10 @@ const databaseMethods = (DBConnect: any) => ({
         INSERT INTO review_assignment (
           reviewer_id, stage_id,
           stage_number, status, application_id,
-          template_section_restrictions, level, is_last_level
-          ${orgId ? ', organisation_id' : ''}
+          template_section_restrictions, level, is_last_level,
+          organisation_id
           )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8${orgId ? ', $9' : ''})
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         ON CONFLICT (reviewer_id,${
           orgId ? ' organisation_id,' : ''
         } stage_number, application_id, level)
@@ -72,7 +72,7 @@ const databaseMethods = (DBConnect: any) => ({
             templateSectionRestrictions,
             level,
             isLastLevel,
-            ...(orgId ? orgId : []),
+            orgId,
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
@@ -96,10 +96,10 @@ const databaseMethods = (DBConnect: any) => ({
       const text = `
         INSERT INTO review_assignment_assigner_join (
           assigner_id,
-          review_assignment_id
-          ${orgId ? ', organisation_id' : ''}          
+          review_assignment_id,
+          organisation_id     
           )
-        VALUES ($1, $2${orgId ? ', $9' : ''})
+        VALUES ($1, $2, $3)
         ON CONFLICT (assigner_id,
           review_assignment_id
           ${orgId ? ', organisation_id' : ''} 
@@ -111,7 +111,7 @@ const databaseMethods = (DBConnect: any) => ({
       try {
         const result = await DBConnect.query({
           text,
-          values: [assignerId, reviewAssignmentId, ...(orgId ? orgId : [])],
+          values: [assignerId, reviewAssignmentId, orgId],
         })
         reviewAssignmentAssignerJoinIds.push(result.rows[0]?.id)
 
