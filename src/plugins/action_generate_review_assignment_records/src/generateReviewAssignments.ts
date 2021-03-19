@@ -65,7 +65,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
           isLastLevel: nextReviewLevel === numReviewLevels,
         }
     })
-    console.log('ReviewAssignments', reviewAssignments)
+    // console.log('ReviewAssignments', reviewAssignments)
 
     // Save review_assignment records to database
     const reviewAssignmentIds = await db.addReviewAssignments(Object.values(reviewAssignments))
@@ -80,7 +80,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       'Assign'
     )
     const reviewAssignmentAssignerJoins = []
-    for (const reviewAssignmentId of Object.values(reviewAssignmentIds)) {
+    for (const reviewAssignmentId of reviewAssignmentIds) {
       for (const assigner of availableAssigners) {
         reviewAssignmentAssignerJoins.push({
           assignerId: assigner.userId,
