@@ -564,7 +564,7 @@ class PostgresDB {
   }
 
   public getUserTemplatePermissions = async (username: string) => {
-    const text = 'select * from all_permissions where username = $1'
+    const text = 'select * from permissions_all where username = $1'
     try {
       const result = await this.query({ text, values: [username] })
       return result.rows
@@ -575,7 +575,7 @@ class PostgresDB {
   }
 
   public getAllPermissions = async () => {
-    const text = 'select * from all_permissions'
+    const text = 'select * from permissions_all'
     try {
       const result = await this.query({ text, values: [] })
       return result.rows
@@ -691,93 +691,6 @@ class PostgresDB {
       console.log(err.message)
       throw err
     }
-  }
-
-  public getReviewersForApplicationStageLevel = async (
-    templateId: number,
-    stageNumber: number,
-    reviewLevel: number
-  ) => {
-    const text = `
-    SELECT user_id, organisation_id, restrictions FROM 
-    permission_join pj JOIN template_permission tp
-    ON pj.permission_name_id = tp.permission_name_id
-    WHERE template_id = $1
-    AND stage_number = $2
-    AND level = $3
-    `
-    try {
-      const result = await this.query({
-        text,
-        values: [templateId, stageNumber, reviewLevel],
-      })
-      return result.rows
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  public addReviewAssignments = async (reviewAssignments: any) => {
-    const reviewAssignmentIds = []
-    for (const reviewAssignment of reviewAssignments) {
-      const {
-        reviewerId,
-        orgId,
-        stageId,
-        stageNumber,
-        status,
-        applicationId,
-        templateSectionRestrictions,
-        level,
-        isLastLevel,
-      } = reviewAssignment
-      // Needs a slightly different query with different CONFLICT restrictions
-      // depending on whether orgId exists or not.
-      // On conflict, existing records have their Section Restrictions updated,
-      // but assignment status remains unchanged.
-      const text = `
-        INSERT INTO review_assignment (
-          reviewer_id, stage_id,
-          stage_number, status, application_id,
-          template_section_restrictions, level, is_last_level
-          ${orgId ? ', organisation_id' : ''}
-          )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8${orgId ? ', $9' : ''})
-        ON CONFLICT (reviewer_id,${
-          orgId ? ' organisation_id,' : ''
-        } stage_number, application_id, level)
-          WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
-        DO
-          UPDATE SET template_section_restrictions = $6
-        RETURNING id`
-
-      try {
-        const result = await this.query({
-          text,
-          values: [
-            reviewerId,
-            stageId,
-            stageNumber,
-            status,
-            applicationId,
-            templateSectionRestrictions,
-            level,
-            isLastLevel,
-            ...(orgId ? orgId : []),
-          ],
-        })
-        reviewAssignmentIds.push(result.rows[0].id)
-
-        // TO-DO: What to do with existing records that don't match the
-        // generated ones? Delete them? Set their status = "Not Available"?
-      } catch (err) {
-        console.log(err.message)
-        reviewAssignmentIds.push(err.message)
-        throw err
-      }
-    }
-    return reviewAssignmentIds
   }
 
   public isFullyAssignedLevel1 = async (applicationId: number) => {
