@@ -20,7 +20,7 @@ CREATE FUNCTION review_list (reviewerid int)
         COUNT(*) FILTER (WHERE review_status_history.status = 'Draft') AS review_draft_count,
         COUNT(*) FILTER (WHERE review_status_history.status = 'Submitted') AS review_submitted_count,
         COUNT(*) FILTER (WHERE review_status_history.status = 'Changes Requested') AS review_change_request_count,
-        COUNT(*) FILTER (WHERE review_status_history.status = 'Changes Requested') AS review_pending_count
+        COUNT(*) FILTER (WHERE review_status_history.status = 'Pending') AS review_pending_count
     FROM
         review_assignment
     LEFT JOIN review ON review.review_assignment_id = review_assignment.id
@@ -34,4 +34,3 @@ GROUP BY
 $$
 LANGUAGE sql
 STABLE;
-
