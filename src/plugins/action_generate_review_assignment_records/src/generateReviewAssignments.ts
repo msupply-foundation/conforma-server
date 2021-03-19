@@ -93,7 +93,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       reviewAssignmentAssignerJoins
     )
 
-    console.log('ReviewAssignmentAssignerJoins', reviewAssignmentAssignerJoins)
+    console.log('ReviewAssignmentAssignerJoinIds', reviewAssignmentAssignerJoinIds)
 
     return {
       status: 'Success',
