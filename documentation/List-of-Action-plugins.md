@@ -2,59 +2,127 @@
 
 ### **Console Log**
 
-- Just prints a message to the console. For demo purposes only.
+Just prints a message to the console. For demo purposes only.
 
-| Required parameters | Output properties |
-| ------------------- | ----------------- |
-| `message`           |                   |
+_Action Code:_ **`cLog`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `message`\*                              |                   |
 
 ### **Create User**:
 
-- Creates a new User in the database based on user input parameters.
+Creates a new User in the database based on user input parameters.
 
-| Required parameters | Output properties |
-| ------------------- | ----------------- |
-| `first_name`        | `userId`          |
-| `last_name`         | `username`        |
-| `username`          | `firstName`       |
-| `date_of_birth`     | `lastName`        |
-| `password_hash`     | `email`           |
-| `email`             |                   |
+- _Action Code:_ **`cLog`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `first_name`\*                           | `userId`          |
+| `last_name`                              | `username`        |
+| `username`\*                             | `firstName`       |
+| `date_of_birth`                          | `lastName`        |
+| `password_hash`\*                        | `email`           |
+| `email`\*                                |                   |
 
 ### **Change Outcome**:
 
-- Set the Outcome of an application to the input parameter ("Pending", "Approved", "Rejected")
+Set the Outcome of an application to the input parameter ("Pending", "Approved", "Rejected")
 
-| Required parameters | Output properties |
-| ------------------- | ----------------- |
-| `applicationId`     | `applicationId`   |
-| `newOutcome`        | `newOutcome`      |
+- _Action Code:_ **`changeOutcome`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `applicationId`\*                        | `applicationId`   |
+| `newOutcome`\*                           | `newOutcome`      |
+
+**To-do**:
+
+- update to take either applicationId or applicationSerial input
+- update to use applicationData for application input if not provided
+- output also include serial
 
 ### **Increment Stage**:
 
-- Changes the application Stage to the next in the sequence
+Changes the application Stage to the next in the sequence
 
-  - Should be a default Action for all templates `onApplicationCreate`
+- _Action Code:_ **`incrementStage`**
+
   - If a new application, will create a corresponding Status set to "Draft"
   - If application is already on final stage, will leave unchanged
 
-  | Required parameters | Output properties |
-  | ------------------- | ----------------- |
-  | `applicationId`     | `applicationId`   |
-  |                     | `stageNumber`     |
-  |                     | `stageName`       |
-  |                     | `stageId`         |
-  |                     | `status`          |
-  |                     | `statusId`        |
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `applicationId`\*                        | `applicationId`   |
+|                                          | `stageNumber`     |
+|                                          | `stageName`       |
+|                                          | `stageId`         |
+|                                          | `status`          |
+|                                          | `statusId`        |
+
+**To-do**:
+
+- update to take either applicationId or applicationSerial
+- update to use applicationData for application input if not provided
+- output also include serial
 
 ### **Change Status**:
 
 - Changes the application or review Status to the specifed input parameter
 
-| Required parameters           | Output properties             |
-| ----------------------------- | ----------------------------- |
-| `applicationId` or `reviewId` | `applicationId` or `reviewId` |
-| `newStatus`                   | `status`                      |
-|                               | `statusId`                    |
+| Input parameters<br />(\*required) <br/> | Output properties             |
+| ---------------------------------------- | ----------------------------- |
+| `applicationId` or `reviewId`            | `applicationId` or `reviewId` |
+| `newStatus` \*                           | `status`                      |
+|                                          | `statusId`                    |
 
 Will determine to change status of review or application based on `applicationId` or `reviewId`
+
+**To-do**:
+
+- update to take either applicationId or applicationSerial
+- update to use applicationData for application input if not provided
+- output also include serial
+- also update Status of associated application/review respones (on Submission)
+
+### **Create Organisation**
+
+Creates a new Organisation in the database based on user input parameters.
+
+- _Action Code:_ **`createOrg`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `name`\*                                 | `orgId`           |
+| `licence_number`                         | `orgName`         |
+| `address`                                |                   |
+
+### Join User to Organsation
+
+Creates a link between a user and an organisation -- i.e. user is a "member" of that organisation. Adds a new record to the `user_organisation` table.
+
+- _Action Code:_ **`joinUserOrg`**
+
+| Input parameters<br />(\*required) <br/>    | Output properties |
+| ------------------------------------------- | ----------------- |
+| `user_id`\*                                 | `userOrgId`       |
+| `org_id` \*                                 |                   |
+| `user_role` (Arbitrary title, e.g. "Owner") |                   |
+
+### Grant Permissions
+
+Grants permission to user/org -- i.e. creates `permission_join` from user/org to permission name. If org not provided, the permission will be granted to the user only.
+
+- _Action Code:_ **`grantPermission`**
+
+| Input parameters<br />(\*required) <br/> | Output properties   |
+| ---------------------------------------- | ------------------- |
+| `username`\*                             | `permissionJoinIds` |
+| `orgName`                                | `permissionNames`   |
+| `permissionNames`\* [Array of names]     |                     |
+
+---
+
+### Core Actions
+
+-- TO DOCUMENT...
