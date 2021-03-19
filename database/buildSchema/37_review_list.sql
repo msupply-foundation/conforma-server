@@ -1,4 +1,4 @@
--- Aggregated VIEW method of review data, used in application_list for application list page
+-- Aggregated VIEW method of all related review data to each application on application list page
 CREATE FUNCTION review_list (reviewerid int)
     RETURNS TABLE (
         application_id int,
