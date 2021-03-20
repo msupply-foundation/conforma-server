@@ -34,4 +34,3 @@ GROUP BY
 $$
 LANGUAGE sql
 STABLE;
-
