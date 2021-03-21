@@ -7,6 +7,7 @@ export enum AssignmentStatus {
 
 interface Restrictions {
   templateSectionRestrictions?: string[] | undefined
+  canSelfAssign?: boolean
 }
 
 export interface Reviewer {
