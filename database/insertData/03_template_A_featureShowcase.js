@@ -23,6 +23,22 @@ exports.queries = [
               }
             ]
           }
+          templateCategoryToTemplateCategoryId: {
+            create: { icon: "building outline", id: 5000, title: "Organisations" }
+          }
+          templateFilterJoinsUsingId: {
+            create: {
+              filterToTemplateFilterId: {
+                create: {
+                  icon: "edit"
+                  code: "check"
+                  query: { status: "submitted" }
+                  title: "Applications Submitted"
+                  userRole: "Apply"
+                }
+              }
+            }
+          }
           submissionMessage: {
             operator: "stringSubstitution"
             children: [
