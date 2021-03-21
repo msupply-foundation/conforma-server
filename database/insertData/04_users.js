@@ -58,7 +58,8 @@ exports.queries = [
         user: { email: "valerio@nra.org"
           passwordHash: "$2a$10$ne2WcPISMw/Do3JzlwThYeO2GcodrumjI3FwGu1ZUoKgRQyAgNS3e"
           username: "valerio",
-          firstName: "Valerio" }
+          firstName: "Valerio" 
+          permissionJoinsUsingId: { create: { permissionNameId: 10000 } }}
       }
     ) {
       user {
