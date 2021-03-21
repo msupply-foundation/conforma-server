@@ -130,7 +130,8 @@ exports.queries = [
         user: { email: "consolidator2@sussol.net"
           passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
           username: "testConsolidator2",
-          firstName: "Consolidator2" }
+          firstName: "Consolidator2" 
+        }
       }
     ) {
       user {
@@ -146,7 +147,7 @@ exports.queries = [
           username: "testAssigner1"
           firstName: "Assigner1"
           permissionJoinsUsingId: { create: { permissionNameId: 9000 } }
-          }
+        }
       }
     ) {
       user {
@@ -180,6 +181,7 @@ exports.queries = [
           email: ""
           passwordHash: "$2a$10$UIfa3GTUbOS92Ygy/UpqheTngGo3O54Q5UOnJ5CBlra9LYCcr4IGq"
           username: "nonRegistered"
+          firstName: "Not registered"
           permissionJoinsUsingId: { create: { permissionNameId: 1000 } }
         }
       }
@@ -311,6 +313,7 @@ exports.queries = [
       input: {
         user: {
           username: "userWithMultiplePermissions"
+          firstName: "Admin"
           passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
           permissionJoinsUsingId: {
             create: [
