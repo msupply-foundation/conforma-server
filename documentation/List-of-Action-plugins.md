@@ -123,6 +123,28 @@ Grants permission to user/org -- i.e. creates `permission_join` from user/org to
 
 ---
 
+### Generate Review Assignments
+
+Generates records in the `review_assignment` table -- i.e. which users (reviewers) are allowed to do a review for the current stage/level (and for which Sections). The records are set with status "Available" or "Available for self-assignment", waiting for assignment.
+
+It also creates records in the `review_assignment_assigner_join` table -- basically a list of users who have permission to make the _assignments_ in the review_assignment table.
+
+Should be run whenever an application or review is submitted, and it will generate the review assignments for the next _review_ that should be done.
+
+- _Action Code:_ **`generateReviewAssignments`**
+
+| Input parameters<br />(\*required) <br/> | Output properties                 |
+| ---------------------------------------- | --------------------------------- |
+| `applicationId`\*                        | `reviewAssignmentIds`             |
+| `reviewId`                               | `reviewAssignmentAssignerJoins`   |
+| `templateId`\*                           | `reviewAssignmentAssignerJoinIds` |
+| `stageId`\*                              | `currentReviewLevel`              |
+| `stageNumber`\*                          | `nextReviewLevel`                 |
+
+Note: if a `reviewId` is supplied, the Action will generate review assignments for that _review_. If not, they will be generated for the _application_ (i.e. level 1)
+
+---
+
 ### Core Actions
 
 -- TO DOCUMENT...
