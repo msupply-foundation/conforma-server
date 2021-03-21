@@ -15,6 +15,55 @@ exports.queries = [
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- Proof of your identity\\n- Pictures of product\\n- Product licence document"
           versionTimestamp: "NOW()"
+          templateFilterJoinsUsingId: {
+            create: [{
+              filterToTemplateFilterId: {
+                create: {
+                  icon: "save"
+                  code: "check"
+                  query: { status: "submitted" }
+                  title: "Applications Submitted"
+                  userRole: "Apply"
+                  color: "#003BFE"
+                }
+              }
+            }
+            {
+              filterToTemplateFilterId: {
+                create: {
+                  icon: "info"
+                  code: "check"
+                  query: { stage: "Assessment" }
+                  title: "Applications In Assessmet"
+                  userRole: "Review"
+                  color: "rgb(150, 150, 150)"
+                }
+              }
+            }
+            {
+              filterToTemplateFilterId: {
+                create: {
+                  icon: "info circle"
+                  code: "check"
+                  query: { reviewAssignedNotStartedCount: "1:1000" }
+                  title: "Reviews can be started"
+                  userRole: "Review"
+                  color: "#003BFE"
+                }
+              }
+            }
+            {
+              filterToTemplateFilterId: {
+                create: {
+                  icon: "edit"
+                  code: "check"
+                  query: { reviewDraftCount: "1:1000" }
+                  title: "Reviews in progress"
+                  userRole: "Review"
+                }
+              }
+            }]
+          }
           templateSectionsUsingId: {
             create: [
               {
@@ -260,6 +309,7 @@ exports.queries = [
                 level: 1
                 restrictions: { templateSectionRestrictions: ["S1"] }
               }
+              
               {
                 id: 4002
                 permissionNameId: 5001
@@ -275,6 +325,13 @@ exports.queries = [
                 permissionNameId: 9000
                 stageNumber: 1
                 level: 1
+              }
+              {
+                id: 4007
+                permissionNameId: 10000
+                stageNumber: 1
+                level: 1
+                restrictions: { canSelfAssign: true }
               }
             ]
           }

@@ -33,7 +33,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       nextReviewLevel,
       'Review'
     )
-
+    console.log(nextLevelReviewers, nextReviewLevel, templateId, stageNumber)
     const reviewAssignments: ReviewAssignmentObject = {}
 
     // Build reviewers into object map so we can combine duplicate user_orgs
@@ -58,7 +58,11 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
           stageId,
           stageNumber,
           // TO-DO: allow STATUS to be configurable in template
-          status: nextReviewLevel === 1 ? AssignmentStatus.AVAILABLE : AssignmentStatus.SELF_ASSIGN,
+          status: restrictions?.canSelfAssign
+            ? AssignmentStatus.SELF_ASSIGN
+            : nextReviewLevel === 1
+            ? AssignmentStatus.AVAILABLE
+            : AssignmentStatus.SELF_ASSIGN,
           applicationId,
           templateSectionRestrictions,
           level: nextReviewLevel,

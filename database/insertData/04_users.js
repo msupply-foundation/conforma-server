@@ -42,7 +42,9 @@ exports.queries = [
         user: { email: "andrei@sussol.net"
           passwordHash: "$2a$10$3Ufr.//hLoxp6BEEbFIq4u.zh435BNxNNLFEmJN74Ka/U5SMp0A2e"
           username: "andrei",
-          firstName: "Andrei" }
+          firstName: "Andrei",
+          permissionJoinsUsingId: { create: { permissionNameId: 10000 } }
+         }
       }
     ) {
       user {
