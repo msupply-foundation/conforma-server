@@ -13,7 +13,7 @@ exports.queries = [
           code: "DrugRegoGen"
           name: "Drug Registration - General Medicines Procedure"
           status: AVAILABLE
-          startMessage: "## You will need the following documents ready for upload:\\n- Ingredients\\n- Samples\\n- Product images\\n- Indications"
+          startMessage: "## You will need the following documents ready for upload:\\n- Ingredients\\n- Samples\\n- Product images"
           versionTimestamp: "NOW()"
           templateCategoryToTemplateCategoryId: {
             create: { icon: "pills", id: 5001, title: "Drug Registration" }
@@ -77,18 +77,16 @@ exports.queries = [
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 5000
                       code: "S1Info1"
                       index: 0
-                      title: "Product information"
+                      title: "General information"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        text: "In this section, we require your **PRODUCT information**"
+                        text: "Start application, by providing the product **NAME** and **ORIGIN**"
                       }
                     }
                     {
-                      id: 5010
                       code: "S1Q1"
                       index: 10
                       title: "Product name"
@@ -97,7 +95,6 @@ exports.queries = [
                       parameters: { label: "Product name" }
                     }
                     {
-                      id: 5020
                       code: "S1Q2"
                       index: 20
                       title: "Origin category"
@@ -107,57 +104,62 @@ exports.queries = [
                         label: "Product origin"
                         description: "_Select which is the origin of the drug._"
                         options: ["Domestic", "Imported"]
-                        validation: { value: true }
                         default: 0
                       }
                     }
                     {
-                      id: 5030
-                      code: "S1Q3"
+                      code: "S1PB1"
                       index: 30
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "S1Info2"
+                      index: 40
+                      title: "Universal code"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "In this section, we require information for **USAGE**"
+                      }
+                    }
+                    {
+                      code: "S1Q3"
+                      index: 50
                       title: "ATC Code"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
-                        label: "ATC Code (TODO: Replace with API using UI)"
+                        label: "ATC Code (TODO: Replace with API using UC)"
                       }
+                      isRequired: false
                     }
                     {
-                      id: 5040
                       code: "S1Q4"
-                      index: 40
+                      index: 60
                       title: "Generic name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
-                        label: "Generic name"
-                        text: {
-                          operator: "stringSubstitution"
-                          children: [
-                            "%1"
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q2.text"]
-                            }
-                          ]
-                        }
+                        label: "Generic name (TODO: Replace with API using UC)"
                       }
+                      isRequired: false
                     }
                     {
-                      id: 5050
                       code: "S1Q5"
-                      index: 50
+                      index: 70
                       title: "Therapeutic class"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
-                        label: "Therapeutic class"
+                        label: "Therapeutic class (TODO: Replace with API using UC)"
                       }
+                      isRequired: false
                     }
                     {
-                      id: 5060
                       code: "S1Q6"
-                      index: 60
+                      index: 80
                       title: "Formulations"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
@@ -168,20 +170,29 @@ exports.queries = [
                           "This presentation has dosage forms with different formulations"
                         ]
                       }
+                      isRequired: false
                     }
                     {
-                      id: 5090
-                      code: "S1PB1"
-                      index: 80
+                      code: "S1PB2"
+                      index: 90
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
-                      id: 5070
+                      code: "S1Info4"
+                      index: 100
+                      title: "Prescription/OTC information"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "In this section, we require information about **PRESCRIPTION**"
+                      }
+                    }
+                    {
                       code: "S1Q7"
-                      index: 70
-                      title: "Prescriptions/OTC - Code"
+                      index: 110
+                      title: "Prescriptions/OTC - code"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
@@ -196,9 +207,8 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5110
                       code: "S1Q9"
-                      index: 110
+                      index: 120
                       title: "Strength"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -207,20 +217,35 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5120
                       code: "S1Q10"
-                      index: 120
+                      index: 130
                       title: "Route of administration"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
-                        label: "Route of administration"
+                        label: "Route of administration (Replace with Lookup table)"
                       }
                     }
                     {
-                      id: 5130
+                      code: "S1PB3"
+                      index: 140
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "S1Info5"
+                      index: 150
+                      title: "Container information"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "In this section, we require information about **CONTAINER**"
+                      }
+                    }
+                    {
                       code: "S1Q11"
-                      index: 130
+                      index: 160
                       title: "Primary container"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -229,9 +254,8 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5140
                       code: "S1Q12"
-                      index: 140
+                      index: 170
                       title: "Packaging and number of units"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -240,27 +264,42 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5150
+                      code: "S1PB4"
+                      index: 180
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "S1Info6"
+                      index: 190
+                      title: "Dosage information"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "In this section, we require information about **DOSAGE**"
+                      }
+                    }
+                    {
                       code: "S1Q13"
-                      index: 150
+                      index: 200
                       title: "Administration unit"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
-                        label: "_Administration unit is_"
+                        label: "Administration unit"
                         options: [
                           "1. Same as dosage form (e.g. tablet, capsule)",
                           "2. Same as primary container (e.g. ampoule, vial, sachet)",
                           "3. Liquid or reconstituted preparation (e.g. oral solution, dry syrup, large volume injectable solution)",
                           "4. Semisolid (e.g. cream)",
-                          "5. Other, specify"
+                          "5. Other, specify below"
                         ]
                       }
                     }
                     {
-                      id: 5160
                       code: "S1Q14"
-                      index: 160
+                      index: 210
                       title: "Number of (dosage form)"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -279,9 +318,8 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5170
                       code: "S1Q15"
-                      index: 170
+                      index: 220
                       title: "Number of (primary container)"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -300,9 +338,8 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5180
                       code: "S1Q16"
-                      index: 180
+                      index: 230
                       title: "Number of millilitres (primary container)"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -321,9 +358,8 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5190
                       code: "S1Q17"
-                      index: 190
+                      index: 240
                       title: "Number of millilitres per primary container (as provided or after reconstitution)"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -342,14 +378,33 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5210
-                      code: "S1Q20"
-                      index: 210
-                      title: "Other - specify"
+                      code: "S1Q18"
+                      index: 250
+                      title: "Number of grams per pack"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
                         label: "Number of grams per pack"
+                      }
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.S1Q13.optionIndex"]
+                          }
+                          { value: 3 }
+                        ]
+                      }
+                    }
+                    {
+                      code: "S1Q19"
+                      index: 260
+                      title: "Specify administration unit"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Specify administration unit"
                       }
                       visibilityCondition: {
                         operator: "="
@@ -363,26 +418,72 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5220
+                      code: "S1Q20"
+                      index: 270
+                      title: "Number of (specify) per pack"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Number of (%1) per pack"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.S1Q19.text", "other"]
+                            }
+                          ]
+                        }
+                      }
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.S1Q13.optionIndex"]
+                          }
+                          { value: 4 }
+                        ]
+                      }
+                    }
+                    {
+                      code: "S1PB5"
+                      index: 280
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "S1Info7"
+                      index: 290
+                      title: "Optinal information"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "Optinal information"
+                      }
+                    }
+                    {
                       code: "S1Q21"
-                      index: 160
+                      index: 300
                       title: "Shelf life (months)"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
                         label: "Shelf life (months)"
                       }
+                      isRequired: false
                     }
                     {
-                      id: 5230
                       code: "S1Q22"
-                      index: 170
+                      index: 310
                       title: "Comments"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
                         label: "Comments"
                       }
+                      isRequired: false
                     }
                   ]
                 }
@@ -395,7 +496,6 @@ exports.queries = [
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 6000
                       code: "S2Info1"
                       index: 0
                       title: "Product Intro"
@@ -406,16 +506,16 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 6010
                       code: "S2Q1"
-                      index: 10
-                      title: "File upload - ingredients"
+                      index: 1
+                      title: "File upload: Ingredients"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       isRequired: false
                       parameters: {
                         label: "Upload ingredients list"
                         description: "Only 1 file allowed, no other restrictions"
+                        fileExtensions: ["pdf", "doc", "docx", "xls"]
                         fileCountLimit: 1
                       }
                     }
@@ -425,65 +525,42 @@ exports.queries = [
               {
                 id: 1009
                 code: "S3"
-                title: "Images Uploads"
+                title: "Product images"
                 index: 2
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 7000
-                      code: "S3Info2"
-                      index: 0
-                      title: "Samples"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
-                      parameters: {
-                        text: "In this section, we require the SAMPLES for **Drug registered**"
-                      }
-                    }
-                    {
-                      id: 7010
                       code: "S3Q1"
-                      index: 10
-                      title: "File upload - sample"
+                      index: 0
+                      title: "File upload: Samples"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       isRequired: false
                       parameters: {
                         label: "Upload samples"
-                        description: "Only 1 file allowed, no other restrictions"
+                        description: "Maximum of 5 files allowed, no other restrictions"
+                        fileExtensions: ["pdf", "png", "jpg", "jpeg"]
                         fileCountLimit: 5
                       }
                     }
                     {
-                      id: 7020
                       code: "S3PB1"
-                      index: 20
+                      index: 1
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
-                      id: 7040
-                      code: "S2Info3"
-                      index: 30
-                      title: "Product images"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
-                      parameters: {
-                        text: "In this section, we require the PRODUCT IMAGES for **Drug registered**"
-                      }
-                    }
-                    {
-                      id: 7050
                       code: "S3Q2"
-                      index: 40
-                      title: "File upload - product images"
+                      index: 2
+                      title: "File upload: Product images"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       isRequired: false
                       parameters: {
                         label: "Upload product images"
-                        description: "Only 1 file allowed, no other restrictions"
+                        description: "Maximum of 5 files allowed, no other restrictions"
+                        fileExtensions: ["pdf", "png", "jpg", "jpeg"]
                         fileCountLimit: 5
                       }
                     }

@@ -25,7 +25,6 @@ exports.queries = [
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 5000
                       code: "S1T1"
                       index: 0
                       title: "Intro Section 1"
@@ -45,7 +44,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5001
                       code: "S1Q1"
                       index: 1
                       title: "Select Organisation"
@@ -57,7 +55,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5002
                       code: "S1Q2"
                       index: 2
                       title: "Reason"
@@ -69,7 +66,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5003
                       code: "PB01"
                       index: 3
                       title: "Page Break"
@@ -77,7 +73,6 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 5004
                       code: "T2"
                       index: 4
                       title: "Documentation Info"
@@ -86,7 +81,6 @@ exports.queries = [
                       parameters: { title: "Documentation" }
                     }
                     {
-                      id: 5005
                       code: "IDUpload"
                       index: 5
                       title: "Upload ID"
@@ -101,7 +95,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5006
                       code: "DocUpload"
                       index: 6
                       title: "Upload Doc"
