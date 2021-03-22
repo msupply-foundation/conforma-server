@@ -405,7 +405,20 @@ exports.queries = [
                         text: "In this section, we require the INGREDIENTS for **Drug registered**"
                       }
                     }
-
+                    {
+                      id: 6010
+                      code: "S2Q1"
+                      index: 10
+                      title: "File upload - ingredients"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Upload ingredients list"
+                        description: "Only 1 file allowed, no other restrictions"
+                        fileCountLimit: 1
+                      }
+                    }
                   ]
                 }
               }
@@ -418,7 +431,7 @@ exports.queries = [
                   create: [
                     {
                       id: 7000
-                      code: "S2Info2"
+                      code: "S3Info2"
                       index: 0
                       title: "Samples"
                       elementTypePluginCode: "textInfo"
@@ -426,30 +439,52 @@ exports.queries = [
                       parameters: {
                         text: "In this section, we require the SAMPLES for **Drug registered**"
                       }
-                      {
-                        id: 7010
-                        code: "Q1"
-                        index: 105
-                        title: "File upload demo 3"
-                        elementTypePluginCode: "fileUpload"
-                        category: QUESTION
-                        isRequired: false
-                        parameters: {
-                          label: "One more upload demo"
-                          description: "Only 1 file allowed, no other restrictions"
-                          fileCountLimit: 1
-                        }
+                    }
+                    {
+                      id: 7010
+                      code: "S3Q1"
+                      index: 10
+                      title: "File upload - sample"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Upload samples"
+                        description: "Only 1 file allowed, no other restrictions"
+                        fileCountLimit: 5
                       }
                     }
                     {
-                      id: 8000
+                      id: 7020
+                      code: "S3PB1"
+                      index: 20
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      id: 7040
                       code: "S2Info3"
-                      index: 6
+                      index: 30
                       title: "Product images"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
                         text: "In this section, we require the PRODUCT IMAGES for **Drug registered**"
+                      }
+                    }
+                    {
+                      id: 7050
+                      code: "S3Q2"
+                      index: 40
+                      title: "File upload - product images"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Upload product images"
+                        description: "Only 1 file allowed, no other restrictions"
+                        fileCountLimit: 5
                       }
                     }
                   ]
