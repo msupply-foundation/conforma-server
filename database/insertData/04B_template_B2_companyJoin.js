@@ -151,7 +151,28 @@ exports.queries = [
               {
                 actionCode: "joinUserOrg"
                 trigger: ON_REVIEW_SUBMIT
-                sequence: 11           
+                sequence: 11    
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }       
                 parameterQueries: {
                   user_id: {
                     operator: "objectProperties"
@@ -161,7 +182,7 @@ exports.queries = [
                     type: "number"
                     operator: "pgSQL"
                     children: [
-                      "SELECT id FROM organisation WHERE name = $1"
+                      "SELECT id FROM organisation WHERE like %$1%"
                       {
                         operator: "objectProperties"
                         children: ["responses.S1Q1.text"]
