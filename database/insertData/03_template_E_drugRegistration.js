@@ -597,7 +597,6 @@ exports.queries = [
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 2
                 parameterQueries: { message: "Application Submitted" }
               }
             ]
