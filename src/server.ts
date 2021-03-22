@@ -20,6 +20,9 @@ import {
 import { getAppRootDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
 import config from './config.json'
+const fs = require('fs')
+const carbone = require('carbone')
+const libre = require('libreoffice-convert')
 
 // Bare-bones Fastify server
 
@@ -56,6 +59,42 @@ const startServer = async () => {
 
   server.get('/user-info', routeUserInfo)
   server.post('/login', routeLogin)
+
+  server.post('/generatedoc', (request: any, reply: any) => {
+    console.log('here')
+    // const token = extractJWTfromHeader(request)
+    // const { userId, orgId, error } = await getTokenData(token)
+    // if (error) return reply.send({ success: false, message: error })
+    // return reply.send({ success: false, message: 'Unable to retrieve file' })
+    // const convertedFile = path.join(__dirname, '/generatedFiles/check.pdf')
+
+    console.log(request.query)
+
+    const templateFilename = `/Users/andrei/Documents/carboneTemplates/${request.query.templateType}_${request.query.submissionType}.odt`
+    if (!fs.existsSync(templateFilename)) return reply.sendFile('/notConfigured.pdf')
+
+    carbone.render(templateFilename, request.body, function (err: any, result: any) {
+      if (err) {
+        return console.log(err)
+      }
+      // write the result
+      fs.writeFileSync('checkout.odt', result)
+      const enterPath = path.join(__dirname, '../checkout.odt')
+      const outputPath = path.join(__dirname, `/files/check.pdf`)
+      const file = fs.readFileSync(enterPath)
+      libre.convert(file, '.pdf', undefined, (err: any, done: any) => {
+        if (err) {
+          console.log(`Error converting file: ${err}`)
+        }
+        // Here in done you have pdf file which you can save or transfer in another stream
+        fs.writeFileSync(outputPath, done)
+        return reply.sendFile('/check.pdf')
+      })
+    })
+
+    // return reply.send({ success: false, message: 'Unable to retrieve file' })
+  })
+
   server.post('/login-org', routeLoginOrg)
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
   server.post('/create-hash', routeCreateHash)
