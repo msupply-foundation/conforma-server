@@ -19,7 +19,7 @@ module.exports['joinUserOrg'] = async function (userOrg: any, DBConnect: any) {
     console.log(error.message)
     return {
       status: 'Fail',
-      error_log: 'There was a problem adding user to organisation',
+      error_log: 'There was a problem adding user to organisation: ' + error.message,
     }
   }
 }
