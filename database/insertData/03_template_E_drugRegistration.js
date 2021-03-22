@@ -527,37 +527,11 @@ exports.queries = [
           }
           templatePermissionsUsingId: {
             create: [
-              { id: 5000, permissionNameId: 2000 }
-              {
-                id: 5001
-                permissionNameId: 5000
-                stageNumber: 1
-                level: 1
-                restrictions: { templateSectionRestrictions: ["S1"] }
-              }
-              {
-                id: 5002
-                permissionNameId: 5001
-                stageNumber: 1
-                level: 1
-                restrictions: { templateSectionRestrictions: ["S2"] }
-              }
-              { id: 5003, permissionNameId: 6000, stageNumber: 2, level: 1 }
-              { id: 5004, permissionNameId: 6001, stageNumber: 2, level: 2 }
-              { id: 5005, permissionNameId: 7000, stageNumber: 3, level: 1 }
-              {
-                id: 5006
-                permissionNameId: 9000
-                stageNumber: 1
-                level: 1
-              }
-              {
-                id: 5007
-                permissionNameId: 10000
-                stageNumber: 1
-                level: 1
-                restrictions: { canSelfAssign: true }
-              }
+              { permissionNameId: 54 }
+              { permissionNameId: 55, restrictions: {canSelfAssign: true}, level: 1, stageNumber: 1 }
+              { permissionNameId: 56, level: 1, stageNumber: 2 }
+              { permissionNameId: 57, level: 1, stageNumber: 2 }
+             
             ]
           }
         }

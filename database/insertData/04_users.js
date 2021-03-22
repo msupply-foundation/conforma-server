@@ -55,10 +55,10 @@ exports.queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "valerio@nra.org"
+        user: { email: "John@nra.org"
           passwordHash: "$2a$10$ne2WcPISMw/Do3JzlwThYeO2GcodrumjI3FwGu1ZUoKgRQyAgNS3e"
-          username: "valerio",
-          firstName: "Valerio" 
+          username: "John",
+          firstName: "John" 
           permissionJoinsUsingId: { create: { permissionNameId: 10000 } }}
       }
     ) {
@@ -145,7 +145,7 @@ exports.queries = [
           passwordHash: "$2a$10$Kk4m2yhfFC5GqX2mJsXTtO.GLq6zNbezYnI8ix09h/MfNNy6AW7Ne"
           username: "testAssigner1"
           firstName: "Assigner1"
-          permissionJoinsUsingId: { create: { permissionNameId: 9000 } }
+          permissionJoinsUsingId: { create: [{ permissionNameId: 9000 },{ permissionNameId: 57 }]  }
           }
       }
     ) {
@@ -338,6 +338,7 @@ exports.queries = [
           permissionJoinsUsingId: {
             create: [
               { permissionNameId: 53 }
+              { permissionNameId: 55 }
             ]
           }
         }
@@ -359,6 +360,48 @@ exports.queries = [
           permissionJoinsUsingId: {
             create: [
               { permissionNameId: 53 }
+              { permissionNameId: 55 }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+
+  ` mutation MyMutation {
+    createUser(
+      input: {
+        user: {
+          username: "assessor1"
+          firstName: "assessor1"
+          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          permissionJoinsUsingId: {
+            create: [
+              { permissionNameId: 56 }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+  ` mutation MyMutation {
+    createUser(
+      input: {
+        user: {
+          username: "assessor2"
+          firstName: "assessor2"
+          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          permissionJoinsUsingId: {
+            create: [
+              { permissionNameId: 56 }
             ]
           }
         }
