@@ -165,7 +165,6 @@ exports.queries = [
       }
     }
   }`,
-
   `mutation reviewJoinCompanyPermission {
     createPermissionName(
       input: {
