@@ -497,6 +497,27 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1035
+                      code: "QGraphQLTest"
+                      index: 20
+                      title: "Role"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select a company (GraphQL query)"
+                        options: {
+                          operator: "graphQL",
+                          children: [
+                            "query getOrgs {organisations {nodes {name}}}",
+                            [],
+                            "organisations.nodes"
+                          ]
+                        }
+                        placeholder: "Select one"
+                      }
+                      isRequired: false
+                    }
+                    {
                       id: 1020
                       code: "PB4"
                       index: 21
