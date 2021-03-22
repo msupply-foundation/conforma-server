@@ -53,7 +53,7 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Please select the organisation you wish to join"
-                        options: [ "Drugs-R-Us", "Medicinal Importers, Ltd.", "Drug Dealers West", "Lab Facilities Inc." ]
+                        options: [ "Demo organisation", "Medicinal Importers, Ltd.", "Lab Facilities Inc." ]
                       }
                     }
                     {
@@ -174,14 +174,8 @@ exports.queries = [
           }
           templatePermissionsUsingId: {
             create: [
-              { id: 5000, permissionNameId: 2000, level: 1, stageNumber: 1 }
-              { id: 5001, permissionNameId: 4000, level: 1, stageNumber: 1 }
-              { id: 5002, permissionNameId: 5000, level: 1, stageNumber: 1 }
-              { id: 5003, permissionNameId: 5001, level: 1, stageNumber: 1 }
-              { id: 5004, permissionNameId: 6000, level: 1, stageNumber: 1 }
-              { id: 5005, permissionNameId: 6001, level: 1, stageNumber: 1 }
-              { id: 5006, permissionNameId: 7000, level: 1, stageNumber: 1 }
-              { id: 5007, permissionNameId: 9000, level: 1, stageNumber: 1 }
+              { permissionNameId: 50 }
+              { permissionNameId: 51, level: 1, stageNumber: 1, restrictions: { canSelfAssign: true } }
             ]
           }
         }

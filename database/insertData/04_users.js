@@ -327,4 +327,46 @@ exports.queries = [
       }
     }
   }`,
+  `
+  mutation MyMutation {
+    createUser(
+      input: {
+        user: {
+          username: "screener1"
+          firstName: "Screener1"
+          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          permissionJoinsUsingId: {
+            create: [
+              { permissionNameId: 53 }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }
+  `,
+  ` mutation MyMutation {
+    createUser(
+      input: {
+        user: {
+          username: "screener2"
+          firstName: "Screener2"
+          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          permissionJoinsUsingId: {
+            create: [
+              { permissionNameId: 53 }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
 ]
