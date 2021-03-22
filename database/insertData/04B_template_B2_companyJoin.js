@@ -141,33 +141,21 @@ exports.queries = [
                 }
               }
               {
+                actionCode: "cLog"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 10
+                parameterQueries: {
+                  message: { value: "Trying to join user to org..." }
+                }
+              }
+              {
                 actionCode: "joinUserOrg"
                 trigger: ON_REVIEW_SUBMIT
-                condition: {
-                  operator: "AND"
-                  children: [
-                      {
-                      operator: "="
-                      children: [
-                          {
-                          operator: "objectProperties"
-                          children: [
-                              "applicationData.reviewData.latestDecision.decision"
-                          ]
-                          }
-                          "LIST_OF_QUESTIONS"
-                      ]
-                      }
-                      {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                      }
-                  ]
-                  }
+                sequence: 11           
                 parameterQueries: {
                   user_id: {
                     operator: "objectProperties"
-                    children: ["currentUser.userId"]
+                    children: ["applicationData.userId"]
                   }
                   org_id: {
                     type: "number"
