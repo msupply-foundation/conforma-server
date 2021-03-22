@@ -165,4 +165,59 @@ exports.queries = [
       }
     }
   }`,
+
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 50
+          name: "canApplyToJoinCompany", permissionPolicyId: 2000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 51
+          name: "canReviewJoinCompany",  permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 52
+          name: "canApplyToCreateCompany",  permissionPolicyId: 2000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 53
+          name: "canReviewCompanyRego",  permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
 ]

@@ -161,7 +161,7 @@ exports.queries = [
                 parameterQueries: {
                   first_name: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q1.text"]
+                    children: ["applicationData.responses.Q1.text" ,null]
                   }
                   last_name: {
                     operator: "objectProperties"
@@ -203,6 +203,18 @@ exports.queries = [
                     children: ["applicationData.applicationId"]
                   }
                   newOutcome: { value: "Approved" }
+                }
+              }
+              {
+                actionCode: "grantPermissions"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 103
+                parameterQueries: {
+                  username: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q3.text"]
+                  }
+                  permissionNames: ["canApplyToJoinCompany", "canApplyToCreateCompany"]
                 }
               }
             ]

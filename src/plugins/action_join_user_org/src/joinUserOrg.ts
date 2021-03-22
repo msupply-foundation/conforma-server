@@ -1,7 +1,8 @@
 module.exports['joinUserOrg'] = async function (userOrg: any, DBConnect: any) {
   try {
     console.log(`\nAdding user to organisation...`)
-    const result = await DBConnect.addUserOrg(userOrg)
+    const { applicationData, applicationdata, ...orgInfo } = userOrg
+    const result = await DBConnect.addUserOrg(orgInfo)
     if (result.success)
       return {
         status: 'Success',
