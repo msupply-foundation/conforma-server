@@ -219,4 +219,56 @@ exports.queries = [
       }
     }
   }`,
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 54
+          name: "canApplyDrugRego",  permissionPolicyId: 2000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 55
+          name: "canScreenDrugRego",  permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 56
+          name: "canAssessDrugRego",  permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation reviewJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 57
+          name: "canAssignDrugRego",  permissionPolicyId: 4000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
 ]
