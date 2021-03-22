@@ -18,7 +18,7 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 2000
+     
                 code: "S1"
                 title: "Personal Information"
                 index: 0
@@ -183,7 +183,42 @@ exports.queries = [
                     ]
                   }
                 }
+                
               }
+              {
+                actionCode: "grantPermissions"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 103
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
+                parameterQueries: {
+                  username: {
+                    operator: "objectProperties"
+                    children: ["applicationData.username"]
+                  }
+                  permissionNames: ["canApplyDrugRego"]
+                }
+              }
+              
             ]
           }
           templatePermissionsUsingId: {
