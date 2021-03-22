@@ -1,7 +1,9 @@
 module.exports['createOrg'] = async function (org: any, DBConnect: any) {
   try {
     console.log(`\nAdding new organisation: ${org.name}`)
-    const result = await DBConnect.createOrg(org)
+    const { applicationData, applicationdata, ...orgInfo } = org
+    const result = await DBConnect.createOrg(orgInfo)
+
     if (result.success)
       return {
         status: 'Success',

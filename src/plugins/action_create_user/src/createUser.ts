@@ -1,7 +1,10 @@
 module.exports['createUser'] = async function (user: any, DBConnect: any) {
   try {
+    console.log('here')
     console.log(`\nAdding new user: ${user.username}`)
-    const result = await DBConnect.createUser(user)
+    const { applicationData, applicationdata, ...userInfo } = user
+    console.log(user)
+    const result = await DBConnect.createUser(userInfo)
     if (result.success)
       return {
         status: 'Success',

@@ -224,7 +224,7 @@ exports.queries = [
             create: [
               {
                 number: 1
-                title: "Approval"
+                title: "REVIEW"
                 description: "This application will be approved by a Reviewer"
               }
             ]
@@ -239,26 +239,32 @@ exports.queries = [
                   message: { value: "Company Registration submission" }
                 }
               }
-              {
-                actionCode: "changeOutcome"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 100
-                # condition: TO-DO -- need to check if
-                # Decision is Approved
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
-                  newOutcome: { value: "Approved" }
-                }
-              }
+              
               {
                 actionCode: "createOrg"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 101
-                # condition: TO-DO -- need to check if
-                # Decision is Approved
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
                 parameterQueries: {
                   name: {
                     operator: "objectProperties"
@@ -288,8 +294,27 @@ exports.queries = [
                 actionCode: "joinUserOrg"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 102
-                # condition: TO-DO -- need to check if
-                # Decision is Approved
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
                 parameterQueries: {
                   user_id: {
                     operator: "objectProperties"
@@ -306,8 +331,27 @@ exports.queries = [
                 actionCode: "grantPermissions"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 103
-                # condition: TO-DO -- need to check if
-                # Decision is Approved
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
                 parameterQueries: {
                   username: {
                     operator: "objectProperties"
@@ -317,15 +361,15 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["output.orgName"]
                   }
-                  permissionNames: ["reviewJoinCompany"]
+                  permissionNames: ["canReviewJoinCompany"]
                 }
               }
             ]
           }
           templatePermissionsUsingId: {
             create: [
-              { id: 2000, permissionNameId: 2000 }
-              { id: 2001, permissionNameId: 4000, stageNumber: 1 }
+              { id: 2000, permissionNameId: 52 }
+              { id: 2001, permissionNameId: 53, restrictions: { canSelfAssign: true }, level: 1, stageNumber: 1 }
             ]
           }
         }
