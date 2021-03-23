@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import databaseMethods from './databaseMethods'
+const fsPromises = fs.promises
 
 const fileUploadPluginCode = 'fileUpload'
 
@@ -78,11 +79,11 @@ module.exports['cleanupFiles'] = async function (input: any, DBConnect: any) {
   async function deleteFile(file: FileInfo) {
     try {
       // Delete the file
-      await fs.unlink(path.join(appRootFolder, filesFolderName, file.filePath), () => {})
+      await fsPromises.unlink(path.join(appRootFolder, filesFolderName, file.filePath))
       // Delete the thumbnail, but only if it's in the application folder
       // (i.e. not the generics)
       if (file.filePath.split('/')[0] === file.thumbnailPath.split('/')[0])
-        await fs.unlink(path.join(appRootFolder, filesFolderName, file.thumbnailPath), () => {})
+        await fsPromises.unlink(path.join(appRootFolder, filesFolderName, file.thumbnailPath))
       // Delete the database record
       await db.deleteFileRecord(file.uniqueId)
       return file
