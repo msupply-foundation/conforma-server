@@ -85,7 +85,7 @@ exports.queries = [
         user: { email: "reviewer1@sussol.net"
           passwordHash: "$2a$10$r8XTfUWIzrSaDfn0rxbIlei0kFHitJMI4W3g59w/94/9VopxNB4w."
           username: "testReviewer1",
-          firstName: "Reviewer", lastName: "1" }
+          firstName: "Reviewer1" }
       }
     ) {
       user {
@@ -99,7 +99,7 @@ exports.queries = [
         user: { email: "reviewer2@sussol.net"
           passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
           username: "testReviewer2",
-          firstName: "Reviewer", lastName: "2" }
+          firstName: "Reviewer2" }
       }
     ) {
       user {
@@ -113,7 +113,7 @@ exports.queries = [
         user: { email: "consolidator1@sussol.net"
           passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
           username: "testConsolidator1",
-          firstName: "Consolidator", lastName: "1" }
+          firstName: "Consolidator1" }
       }
     ) {
       user {
@@ -127,7 +127,7 @@ exports.queries = [
         user: { email: "consolidator2@sussol.net"
           passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
           username: "testConsolidator2",
-          firstName: "Consolidator", lastName: "2" }
+          firstName: "Consolidator2" }
       }
     ) {
       user {
@@ -138,10 +138,28 @@ exports.queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "assigner@sussol.net"
+        user: { email: "assigner1@sussol.net"
           passwordHash: "$2a$10$Kk4m2yhfFC5GqX2mJsXTtO.GLq6zNbezYnI8ix09h/MfNNy6AW7Ne"
-          username: "testAssigner1",
-          firstName: "Assigner", lastName: "1" }
+          username: "testAssigner1"
+          firstName: "Assigner1"
+          permissionJoinsUsingId: { create: { permissionNameId: 9000 } }
+          }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: { email: "assigner2@sussol.net"
+          passwordHash: "$2a$10$DA4a1E2i3dfN5BrdmO6iX.EYt.ob0czyF1sQqNQxPMPrfEPsRCx2a"
+          username: "testAssigner2"
+          firstName: "Assigner2"
+          permissionJoinsUsingId: { create: { permissionNameId: 9000 } }
+          }
       }
     ) {
       user {

@@ -65,6 +65,8 @@ test('Test: Submit Application ID#4000', () => {
           },
         ],
         reviewAssignmentIds: [1001, 1002, 3, 4],
+        reviewAssignmentAssignerJoins: [],
+        reviewAssignmentAssignerJoinIds: [],
         currentReviewLevel: 0,
         nextReviewLevel: 1,
       },
@@ -117,6 +119,39 @@ test('Test: Submit Application ID#4001', () => {
           },
         ],
         reviewAssignmentIds: [1005, 6, 7],
+        reviewAssignmentAssignerJoins: [
+          {
+            assignerId: 10,
+            orgId: null,
+            reviewAssignmentId: 1005,
+          },
+          {
+            assignerId: 11,
+            orgId: null,
+            reviewAssignmentId: 1005,
+          },
+          {
+            assignerId: 10,
+            orgId: null,
+            reviewAssignmentId: 6,
+          },
+          {
+            assignerId: 11,
+            orgId: null,
+            reviewAssignmentId: 6,
+          },
+          {
+            assignerId: 10,
+            orgId: null,
+            reviewAssignmentId: 7,
+          },
+          {
+            assignerId: 11,
+            orgId: null,
+            reviewAssignmentId: 7,
+          },
+        ],
+        reviewAssignmentAssignerJoinIds: [1, 2, 3, 4, 5, 6],
         currentReviewLevel: 0,
         nextReviewLevel: 1,
       },
@@ -180,6 +215,8 @@ test('Test: Submit Application ID#4002', () => {
           },
         ],
         reviewAssignmentIds: [1007, 1008, 10, 11],
+        reviewAssignmentAssignerJoins: [],
+        reviewAssignmentAssignerJoinIds: [],
         currentReviewLevel: 0,
         nextReviewLevel: 1,
       },
@@ -223,6 +260,8 @@ test('Test: Submit Review for Application ID#4000, S2 Lvl1', () => {
           },
         ],
         reviewAssignmentIds: [1003, 1004],
+        reviewAssignmentAssignerJoins: [],
+        reviewAssignmentAssignerJoinIds: [],
         currentReviewLevel: 1,
         nextReviewLevel: 2,
       },
@@ -230,7 +269,7 @@ test('Test: Submit Review for Application ID#4000, S2 Lvl1', () => {
   })
 })
 
-test('Test: Submit Review for Application ID#4002, S2 Lvl2 -- no assignments to generate', () => {
+test('Test: Submit Review for Application ID#4002, S2 Lvl2', () => {
   return Action.generateReviewAssignments(
     { templateId: 4, stageNumber: 2, stageId: 6, applicationId: 4002, reviewId: 6 },
     DBConnect
@@ -238,7 +277,37 @@ test('Test: Submit Review for Application ID#4002, S2 Lvl2 -- no assignments to 
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
-      output: {},
+      output: {
+        reviewAssignments: [
+          {
+            reviewerId: 8,
+            orgId: null,
+            stageId: 6,
+            stageNumber: 2,
+            status: 'Available for self-assignment',
+            applicationId: 4002,
+            templateSectionRestrictions: null,
+            level: 2,
+            isLastLevel: true,
+          },
+          {
+            reviewerId: 9,
+            orgId: null,
+            stageId: 6,
+            stageNumber: 2,
+            status: 'Available for self-assignment',
+            applicationId: 4002,
+            templateSectionRestrictions: null,
+            level: 2,
+            isLastLevel: true,
+          },
+        ],
+        reviewAssignmentIds: [1009, 1010],
+        reviewAssignmentAssignerJoins: [],
+        reviewAssignmentAssignerJoinIds: [],
+        currentReviewLevel: 1,
+        nextReviewLevel: 2,
+      },
     })
   })
 })

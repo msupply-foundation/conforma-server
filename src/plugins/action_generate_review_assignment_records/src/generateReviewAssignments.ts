@@ -1,6 +1,9 @@
 import { Reviewer, ReviewAssignmentObject, AssignmentStatus } from './types'
+import databaseMethods from './databaseMethods'
 
 module.exports['generateReviewAssignments'] = async function (input: any, DBConnect: any) {
+  const db = databaseMethods(DBConnect)
+
   console.log('Generating review assignment records...')
   try {
     const { applicationId, reviewId, templateId, stageId, stageNumber } = input
@@ -24,10 +27,11 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     }
     const nextReviewLevel = currentReviewLevel + 1
 
-    const nextLevelReviewers = await DBConnect.getReviewersForApplicationStageLevel(
+    const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
       templateId,
       stageNumber,
-      nextReviewLevel
+      nextReviewLevel,
+      'Review'
     )
 
     const reviewAssignments: ReviewAssignmentObject = {}
@@ -35,7 +39,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     // Build reviewers into object map so we can combine duplicate user_orgs
     // and merge their section code restrictions
     nextLevelReviewers.forEach((reviewer: Reviewer) => {
-      const { user_id: userId, organisation_id: orgId, restrictions } = reviewer
+      const { userId, orgId, restrictions } = reviewer
 
       const templateSectionRestrictions = restrictions
         ? restrictions?.templateSectionRestrictions
@@ -61,12 +65,35 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
           isLastLevel: nextReviewLevel === numReviewLevels,
         }
     })
+    // console.log('ReviewAssignments', reviewAssignments)
 
-    const reviewAssignmentIds = await DBConnect.addReviewAssignments(
-      Object.values(reviewAssignments)
+    // Save review_assignment records to database
+    const reviewAssignmentIds = await db.addReviewAssignments(Object.values(reviewAssignments))
+
+    // Generate review_assignment_assigner_joins
+    // For now we assume that assigners have no Section restrictions
+    console.log('Generating review_assignment_assigner_join records...')
+    const availableAssigners = await db.getPersonnelForApplicationStageLevel(
+      templateId,
+      stageNumber,
+      nextReviewLevel,
+      'Assign'
+    )
+    const reviewAssignmentAssignerJoins = []
+    for (const reviewAssignmentId of reviewAssignmentIds) {
+      for (const assigner of availableAssigners) {
+        reviewAssignmentAssignerJoins.push({
+          assignerId: assigner.userId,
+          orgId: assigner.orgId,
+          reviewAssignmentId,
+        })
+      }
+    }
+    const reviewAssignmentAssignerJoinIds = await db.addReviewAssignmentAssignerJoins(
+      reviewAssignmentAssignerJoins
     )
 
-    console.log('Review Assignment IDs:', reviewAssignmentIds)
+    console.log('ReviewAssignmentAssignerJoinIds', reviewAssignmentAssignerJoinIds)
 
     return {
       status: 'Success',
@@ -74,6 +101,8 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       output: {
         reviewAssignments: Object.values(reviewAssignments),
         reviewAssignmentIds,
+        reviewAssignmentAssignerJoins,
+        reviewAssignmentAssignerJoinIds,
         currentReviewLevel,
         nextReviewLevel,
       },
@@ -82,7 +111,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     console.log(error.message)
     return {
       status: 'Fail',
-      error_log: 'Problem creating review_assignment records.',
+      error_log: 'Problem creating review_assignment records: ' + error.message,
     }
   }
 }

@@ -15,6 +15,34 @@ exports.coreActions = `
         }
         }
     }
+    # ON_APPLICATION_RESTART
+    # change status to draft
+    {
+      actionCode: "changeStatus"
+      trigger: ON_APPLICATION_RESTART
+      sequence: 1
+      parameterQueries: {
+      applicationId: {
+          operator: "objectProperties"
+          children: ["applicationData.applicationId"]
+      }
+      newStatus: { value: "Draft" }
+      }
+    }
+    # ON_REVIEW_RESTART
+    # change status to draft
+    {
+      actionCode: "changeStatus"
+      trigger: ON_REVIEW_RESTART
+      sequence: 1
+      parameterQueries: {
+        reviewId: {
+          operator: "objectProperties"
+          children: ["applicationData.record_id"]
+      }
+      newStatus: { value: "Draft" }
+      }
+    }
     # ON_REVIEW_CREATE
     # change status to draft
     {

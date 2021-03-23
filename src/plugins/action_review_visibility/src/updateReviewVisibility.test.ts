@@ -6,10 +6,10 @@ const Action = require('./updateReviewVisibility')
 
 // Setup database
 beforeAll(async (done) => {
-  // Set field recommended_applicant_visibility on review 6 (it had two decline review_response, ID: 37 and 38)
+  // Set field recommended_applicant_visibility on review 5 (it had two decline review_response, ID: 32 and 33)
   await DBConnect.query({
     text: `
-    UPDATE review_response SET recommended_applicant_visibility = 'Original Response Visible to Applicant' where decision = 'Decline' and review_id = 6
+    UPDATE review_response SET recommended_applicant_visibility = 'Original Response Visible to Applicant' where decision = 'Decline' and review_id = 5
   `,
     values: [],
   })
@@ -17,12 +17,12 @@ beforeAll(async (done) => {
 })
 
 test('Test: updateReviewVisibility', () => {
-  return Action.updateReviewVisibility({ reviewId: 6 }, DBConnect).then((result: any) => {
+  return Action.updateReviewVisibility({ reviewId: 5 }, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
       output: {
-        reviewResponsesWithUpdatedVisibility: [37, 38],
+        reviewResponsesWithUpdatedVisibility: [33, 32],
       },
     })
   })

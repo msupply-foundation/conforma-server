@@ -31,7 +31,7 @@ test('Test: add User to database', () => {
         email: 'test@sussol.net',
         firstName: 'Carl',
         lastName: 'Smith',
-        userId: 13,
+        userId: 14,
         username: 'ceejay',
       },
     })
