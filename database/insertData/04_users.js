@@ -12,6 +12,11 @@ exports.queries = [
           passwordHash: "$2a$10$dSDSYzTuuwJvEDp/tRsKXOV7LQc9Ue0gR8bctN4V7TcMRIfcCKhme"
           username: "nmadruga"
           firstName: "Nicole"
+          permissionJoinsUsingId: {
+            create: [
+              { permissionNameId: 54 }
+            ]
+          }
         }
       }
     ) {

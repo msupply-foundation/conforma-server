@@ -9,10 +9,10 @@ exports.coreActions = `
         actionCode: "incrementStage"
         trigger: ON_APPLICATION_CREATE
         parameterQueries: {
-        applicationId: {
-            operator: "objectProperties"
-            children: ["applicationData.applicationId"]
-        }
+          applicationId: {
+              operator: "objectProperties"
+              children: ["applicationData.applicationId"]
+          }
         }
     }
     # ON_APPLICATION_RESTART
@@ -88,27 +88,15 @@ exports.coreActions = `
         }
     }
     {
-        actionCode: "generateReviewAssignments"
-        trigger: ON_APPLICATION_SUBMIT
-        sequence: 3
-        parameterQueries: {
+      actionCode: "generateReviewAssignments"
+      trigger: ON_APPLICATION_SUBMIT
+      sequence: 3
+      parameterQueries: {
         applicationId: {
-            operator: "objectProperties"
-            children: ["applicationData.applicationId"]
+          operator: "objectProperties"
+          children: ["applicationData.applicationId"]
         }
-        templateId: {
-            operator: "objectProperties"
-            children: ["applicationData.templateId"]
-        }
-        stageId: {
-            operator: "objectProperties"
-            children: ["applicationData.stageId"]
-        }
-        stageNumber: {
-            operator: "objectProperties"
-            children: ["applicationData.stageNumber"]
-        }
-        }
+      }
     }
     {
         actionCode: "updateReviews"
@@ -125,12 +113,14 @@ exports.coreActions = `
           }
         }
     }
+    # -------------------------------------------
     # ON_REVIEW_SUBMIT
     # 1 - change status to submitted
     # 2 - trim responses
-    # 3 - generate review assignments
-    # 4 - adjust visibility of review responses (for applicant)
-    # 5 - change application status
+    # 3 - increment application stage (after last level reviewer conforms)
+    # 4 - generate review assignments
+    # 5 - adjust visibility of review responses (for applicant - LOQ)
+    # 6 - change application status (for applicant - LOQ)
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_SUBMIT
@@ -173,39 +163,65 @@ exports.coreActions = `
   #        }
   #      }
   #  }
+    # increment stage of application (ignored if last stage)
+    # condition checks for latest review decison = CONFORM
+    # AND review being isLastLevel
     {
-        actionCode: "generateReviewAssignments"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 4
-        parameterQueries: {
+      actionCode: "incrementStage"
+      trigger: ON_REVIEW_SUBMIT
+      sequence: 4
+      condition: {
+        operator: "AND"
+        children: [
+          {
+            operator: "="
+            children: [
+              {
+                operator: "objectProperties"
+                children: [
+                  "applicationData.reviewData.latestDecision.decision"
+                ]
+              }
+              "CONFORM"
+            ]
+          }
+          {
+            operator: "objectProperties"
+            children: ["applicationData.reviewData.isLastLevel"]
+          }
+        ]
+      }
+      parameterQueries: {
         applicationId: {
-            operator: "objectProperties"
-            children: ["applicationData.applicationId"]
+          operator: "objectProperties"
+          children: ["applicationData.applicationId"]
         }
-        templateId: {
-            operator: "objectProperties"
-            children: ["applicationData.templateId"]
+      }
+    }
+    # generates next review assignments
+    # condition checks current review stage and level in review submitted
+    # only create next level (or next stage) review assignments 
+    {
+      actionCode: "generateReviewAssignments"
+      trigger: ON_REVIEW_SUBMIT
+      sequence: 5
+      parameterQueries: {
+        applicationId: {
+          operator: "objectProperties"
+          children: ["applicationData.applicationId"]
         }
         reviewId: {
-            operator: "objectProperties"
-            children: ["applicationData.record_id"]
+          operator: "objectProperties"
+          children: ["applicationData.record_id"]
         }
-        stageId: {
-            operator: "objectProperties"
-            children: ["applicationData.stageId"]
-        }
-        stageNumber: {
-            operator: "objectProperties"
-            children: ["applicationData.stageNumber"]
-        }
-        }
+      }
     }
     # update review visibility for applicant
     # condition checks for latest review decison = LIST_OF_QUESTIONS
     # AND review being isLastLevel
     {
         actionCode: "updateReviewVisibility"
-        sequence: 5
+        sequence: 6
         trigger: ON_REVIEW_SUBMIT
         condition: {
         operator: "AND"
@@ -229,10 +245,10 @@ exports.coreActions = `
         ]
         }
         parameterQueries: {
-        reviewId: {
-            operator: "objectProperties"
-            children: ["applicationData.record_id"]
-        }
+          reviewId: {
+              operator: "objectProperties"
+              children: ["applicationData.record_id"]
+          }
         }
     }
     # change application status to changes requested
@@ -240,7 +256,7 @@ exports.coreActions = `
     # AND review being isLastLevel
     {
       actionCode: "changeStatus"
-      sequence: 5
+      sequence: 7
       trigger: ON_REVIEW_SUBMIT
       condition: {
         operator: "AND"
@@ -271,6 +287,7 @@ exports.coreActions = `
         newStatus: { value: "Changes Required" }
       }
     }
+    # -------------------------------------------
     # ON_REVIEW_SELF_ASSIGN
     # change review assignment status for other reviewers
     {
