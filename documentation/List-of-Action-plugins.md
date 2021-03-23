@@ -10,6 +10,8 @@ _Action Code:_ **`cLog`**
 | ---------------------------------------- | ----------------- |
 | `message`\*                              |                   |
 
+---
+
 ### **Create User**:
 
 Creates a new User in the database based on user input parameters.
@@ -24,6 +26,8 @@ Creates a new User in the database based on user input parameters.
 | `date_of_birth`                          | `lastName`        |
 | `password_hash`\*                        | `email`           |
 | `email`\*                                |                   |
+
+---
 
 ### **Change Outcome**:
 
@@ -41,6 +45,8 @@ Set the Outcome of an application to the input parameter ("Pending", "Approved",
 - update to take either applicationId or applicationSerial input
 - update to use applicationData for application input if not provided
 - output also include serial
+
+---
 
 ### **Increment Stage**:
 
@@ -66,6 +72,8 @@ Changes the application Stage to the next in the sequence
 - update to use applicationData for application input if not provided
 - output also include serial
 
+---
+
 ### **Change Status**:
 
 - Changes the application or review Status to the specifed input parameter
@@ -85,6 +93,8 @@ Will determine to change status of review or application based on `applicationId
 - output also include serial
 - also update Status of associated application/review respones (on Submission)
 
+---
+
 ### **Create Organisation**
 
 Creates a new Organisation in the database based on user input parameters.
@@ -97,6 +107,8 @@ Creates a new Organisation in the database based on user input parameters.
 | `licence_number`                         | `orgName`         |
 | `address`                                |                   |
 
+---
+
 ### Join User to Organsation
 
 Creates a link between a user and an organisation -- i.e. user is a "member" of that organisation. Adds a new record to the `user_organisation` table.
@@ -108,6 +120,8 @@ Creates a link between a user and an organisation -- i.e. user is a "member" of 
 | `user_id`\*                                 | `userOrgId`       |
 | `org_id` \*                                 |                   |
 | `user_role` (Arbitrary title, e.g. "Owner") |                   |
+
+---
 
 ### Grant Permissions
 
@@ -131,6 +145,10 @@ It also creates records in the `review_assignment_assigner_join` table -- basica
 
 Should be run whenever an application or review is submitted, and it will generate the review assignments for the next _review_ that should be done.
 
+Note: if assignment records already exist (i.e. if it's a re-assignment), they will just be updated (new timestamp)
+
+_TO-DO: decide what to do with records that exist, but no longer should be (e.g. the reviewer has been removed/permissions revoked)_
+
 - _Action Code:_ **`generateReviewAssignments`**
 
 | Input parameters<br />(\*required) <br/> | Output properties                 |
@@ -145,6 +163,95 @@ Note: if a `reviewId` is supplied, the Action will generate review assignments f
 
 ---
 
-### Core Actions
+### Update Review Assignments
 
--- TO DOCUMENT...
+When a reviewer self-assigns themselves to a review_assignment (i.e. its status changes from "Available for self-assignment" to "Assigned") the other review assignment records pertaining to that review/stage/level are marked as "Self-assigned by another" so that no other reviewer can start a review for the same thing.
+
+- _Action Code:_ **`updateReviewAssignmentsStatus`**
+
+| Input parameters<br />(\*required) <br/>            | Output properties                                     |
+| --------------------------------------------------- | ----------------------------------------------------- |
+| `reviewAssignmentId`\*                              | `reviewAssignmentUpdates` (`array` of `{id, status}`) |
+| `trigger`\* (only executes on `onReviewSelfAssign`) |                                                       |
+
+---
+
+### Trim Responses
+
+Whenever an application or review is submitted, this Action "cleans up", by deleting all responses that have not changed since the last submission (or are `null`). Also, the remaining responses have their timestamps (`timeUpdated`) updated to match the timestamp of the most recent status_history (application or review, as appropriate).
+
+- _Action Code:_ **`trimResponses`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `applicationId` _OR_                     | `deletedIds`      |
+| `reviewId`                               | `updatedIds`      |
+
+---
+
+### Update Review Visibility
+
+Updates the applicant visibility of level 1 review responses based on the recommendations of the last-level review. I.e. it generate the "List of Questions" the applicant sees for making changes to their application.
+
+- _Action Code:_ **`updateReviewVisibility`**
+
+| Input parameters<br />(\*required) <br/> | Output properties                      |
+| ---------------------------------------- | -------------------------------------- |
+| `reviewId`\*                             | `reviewResponsesWithUpdatedVisibility` |
+
+---
+
+### Update Review Statuses
+
+When an applicant re-submits an application after making changes, this Action updates the status of associated reviews to determine whether they should be "Pending" or "Locked" (or left as is)
+
+- _Action Code:_ **`updateReviews`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `applicationId`\*                        | `updatedReviews`  |
+
+## Core Actions
+
+There are certain Actions that _must_ run on particular to facilitate a standard application/review workflow process. We have called these **Core Actions**, and they have been collected in a single "core_actions.js" file (for insertion into database via GraphQL). Each template (other than "User Registration") has this block slugged into it as a template literal (`${coreActions}`) in its Action insertion block, before any Actions that are specific to that template.
+
+Here is a summary of the core actions and the triggers that launch them:
+
+#### On Application Create:
+
+- Increment Stage (sets to Stage 1, also sets Status to "Draft")
+
+#### On Application Submit
+
+- Change Status (to "Submitted")
+- Trim Responses (removes Null responses and unchanged ones if re-submission)
+- Generate Review Assignments (for first level reviewers)
+- Update Reviews (statuses)
+
+#### On Application Restart (i.e. after "Changes Requested"):
+
+- Change Status (back to "Draft")
+
+#### On Review Self-Assign:
+
+- Update Review Assignment Status (for other reviewers)
+
+#### On Review Assign (by other)
+
+- Nothing yet (To-do?)
+
+#### On Review Create
+
+- Change Status (to "Draft")
+
+#### On Review Submit:
+
+- Change Status (to "Submitted")
+- Trim Responses
+- Generate Review Assignments (for next level review)
+- Update review response visibility (for applicant)
+- Change Status (Application, conditional on the review decision)
+
+#### On Review Restart: (i.e. review making changes based on higher level requests)
+
+- Change Status (review status to "Draft")
