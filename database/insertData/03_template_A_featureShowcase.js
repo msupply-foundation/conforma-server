@@ -891,9 +891,8 @@ exports.queries = [
           }
           templatePermissionsUsingId: {
             create: [
-              {
-                id: 1000, permissionNameId: 1000
-              }
+              # Apply General
+              { permissionNameId: 10100 }
             ]
           }
         }

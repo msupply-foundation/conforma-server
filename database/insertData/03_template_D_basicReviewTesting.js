@@ -270,6 +270,7 @@ exports.queries = [
               { id: 4003, permissionNameId: 6000, stageNumber: 2, level: 1 }
               { id: 4004, permissionNameId: 6001, stageNumber: 2, level: 2 }
               { id: 4005, permissionNameId: 7000, stageNumber: 3, level: 1 }
+              # Assign general
               {
                 id: 4006
                 permissionNameId: 9000
