@@ -1,0 +1,1 @@
+-- Aggregated VIEW method of all related assigner data to each application on application list page
