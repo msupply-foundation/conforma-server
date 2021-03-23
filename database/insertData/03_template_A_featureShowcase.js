@@ -500,7 +500,7 @@ exports.queries = [
                       id: 1035
                       code: "QGraphQLTest"
                       index: 20
-                      title: "Role"
+                      title: "GraphQL query"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
