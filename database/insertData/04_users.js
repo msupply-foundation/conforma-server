@@ -422,6 +422,7 @@ exports.queries = [
       input: {
         user: {
           username: "userWithMultiplePermissions"
+          firstName: "Admin"
           passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
           permissionJoinsUsingId: {
             create: [
