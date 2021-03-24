@@ -147,21 +147,25 @@ It also creates records in the `review_assignment_assigner_join` table -- basica
 
 Should be run whenever an application or review is submitted, and it will generate the review assignments for the next _review_ that should be done.
 
-Note: if assignment records already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp)
-
-_TO-DO: decide what to do with records that exist, but no longer should be (e.g. the reviewer has been removed/permissions revoked)_
-
 - _Action Code:_ **`generateReviewAssignments`**
 
 | Input parameters<br />(\*required) <br/> | Output properties                 |
 | ---------------------------------------- | --------------------------------- |
 | `applicationId`\*                        | `reviewAssignmentIds`             |
 | `reviewId`                               | `reviewAssignmentAssignerJoins`   |
-| `templateId`\*                           | `reviewAssignmentAssignerJoinIds` |
+|                                          | `reviewAssignmentAssignerJoinIds` |
 |                                          | `currentReviewLevel`              |
 |                                          | `nextReviewLevel`                 |
 
-Note: if a `reviewId` is not supplied, the Action will generate review assignment records for Stage 1, level 1 review. If it is present, it'll generate records for the _next_ review level (either in the same Stage or level 1 of the next Stage)
+**Notes**:
+
+- if a `reviewId` is not supplied, the Action will generate review assignment records for Stage 1, level 1 review. If it is present, it'll generate records for the _next_ review level (either in the same Stage or level 1 of the next Stage).
+- if assignment records already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp)
+
+TO-DO:
+
+- decide what to do with records that exist, but no longer should be (e.g. the reviewer has been removed/permissions revoked)\_
+- allow optional parameter for `userId`: this will be for when we re-generate all review assignment records for a specific reviewer if (for example) they've had their permissions changed. When and how this occurs needs to be further thought out.
 
 ---
 
