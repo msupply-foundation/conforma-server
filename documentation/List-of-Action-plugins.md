@@ -16,7 +16,7 @@ _Action Code:_ **`cLog`**
 
 Creates a new User in the database based on user input parameters.
 
-- _Action Code:_ **`cLog`**
+- _Action Code:_ **`createUser`**
 
 | Input parameters<br />(\*required) <br/> | Output properties |
 | ---------------------------------------- | ----------------- |
