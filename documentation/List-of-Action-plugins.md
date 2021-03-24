@@ -78,6 +78,8 @@ Changes the application Stage to the next in the sequence
 
 - Changes the application or review Status to the specifed input parameter
 
+- _Action Code:_ **`changeStatus`**
+
 | Input parameters<br />(\*required) <br/> | Output properties             |
 | ---------------------------------------- | ----------------------------- |
 | `applicationId` or `reviewId`            | `applicationId` or `reviewId` |
@@ -145,7 +147,7 @@ It also creates records in the `review_assignment_assigner_join` table -- basica
 
 Should be run whenever an application or review is submitted, and it will generate the review assignments for the next _review_ that should be done.
 
-Note: if assignment records already exist (i.e. if it's a re-assignment), they will just be updated (new timestamp)
+Note: if assignment records already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp)
 
 _TO-DO: decide what to do with records that exist, but no longer should be (e.g. the reviewer has been removed/permissions revoked)_
 
@@ -156,10 +158,10 @@ _TO-DO: decide what to do with records that exist, but no longer should be (e.g.
 | `applicationId`\*                        | `reviewAssignmentIds`             |
 | `reviewId`                               | `reviewAssignmentAssignerJoins`   |
 | `templateId`\*                           | `reviewAssignmentAssignerJoinIds` |
-| `stageId`\*                              | `currentReviewLevel`              |
-| `stageNumber`\*                          | `nextReviewLevel`                 |
+|                                          | `currentReviewLevel`              |
+|                                          | `nextReviewLevel`                 |
 
-Note: if a `reviewId` is supplied, the Action will generate review assignments for that _review_. If not, they will be generated for the _application_ (i.e. level 1)
+Note: if a `reviewId` is not supplied, the Action will generate review assignment records for Stage 1, level 1 review. If it is present, it'll generate records for the _next_ review level (either in the same Stage or level 1 of the next Stage)
 
 ---
 
@@ -213,7 +215,7 @@ When an applicant re-submits an application after making changes, this Action up
 
 ## Core Actions
 
-There are certain Actions that _must_ run on particular to facilitate a standard application/review workflow process. We have called these **Core Actions**, and they have been collected in a single "core_actions.js" file (for insertion into database via GraphQL). Each template (other than "User Registration") has this block slugged into it as a template literal (`${coreActions}`) in its Action insertion block, before any Actions that are specific to that template.
+There are certain Actions that _must_ run on particular events to facilitate a standard application/review workflow process. We have called these **Core Actions**, and they have been collected in a single "core_actions.js" file (for insertion into database via GraphQL). Each template (other than "User Registration") has this block slugged into it as a template literal (`${coreActions}`) in its Action insertion block, before any Actions that are specific to that template.
 
 Here is a summary of the core actions and the triggers that launch them:
 
@@ -251,6 +253,7 @@ Here is a summary of the core actions and the triggers that launch them:
 - Generate Review Assignments (for next level review)
 - Update review response visibility (for applicant)
 - Change Status (Application, conditional on the review decision)
+- Increment Stage (if last level reviewer approves)
 
 #### On Review Restart: (i.e. review making changes based on higher level requests)
 
