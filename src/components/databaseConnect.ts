@@ -113,7 +113,7 @@ class DBConnect {
 
   public getNumReviewLevels = PostgresDB.getNumReviewLevels
 
-  public getCurrentReviewLevel = PostgresDB.getCurrentReviewLevel
+  public getReviewStageAndLevel = PostgresDB.getReviewStageAndLevel
 
   public isFullyAssignedLevel1 = PostgresDB.isFullyAssignedLevel1
 

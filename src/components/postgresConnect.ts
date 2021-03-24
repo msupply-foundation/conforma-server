@@ -681,9 +681,7 @@ class PostgresDB {
       throw err
     }
   }
-
-  // TODO: Rename to getReviewStageAndLevel
-  public getCurrentReviewLevel = async (reviewId: number) => {
+  public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
       SELECT review.level, stage_number as "stageNumber"
       FROM review JOIN review_assignment ra

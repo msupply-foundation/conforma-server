@@ -47,7 +47,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
       const {
         stageNumber: previousStage,
         level: previousLevel,
-      } = await DBConnect.getCurrentReviewLevel(reviewId)
+      } = await DBConnect.getReviewStageAndLevel(reviewId)
       console.log('Review existing', previousStage, previousLevel)
       // Review in new stage - first level
       if (previousStage !== stageNumber) {
