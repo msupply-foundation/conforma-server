@@ -12,6 +12,7 @@ exports.queries = [
         template: {
           code: "DrugRegoGen"
           name: "Drug Registration - General Medicines Procedure"
+          isLinear: false
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- Ingredients\\n- Samples\\n- Product images"
           versionTimestamp: "NOW()"
@@ -464,7 +465,7 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Upload ingredients list"
-                        description: "Only 1 file allowed.\\nFile extension allowed: .pdf, .doc, .docx, .xls"
+                        description: "Only 1 file allowed.  \\nFile extension allowed: **pdf**, **doc**, **docx**, **xls**."
                         fileExtensions: ["pdf", "doc", "docx", "xls"]
                         fileCountLimit: 1
                       }
@@ -488,9 +489,8 @@ exports.queries = [
                       isRequired: false
                       parameters: {
                         label: "Upload samples"
-                        description: "Maximum of 5 image files allowed.\\nFile extension allowed: .pdf, .png, .jpg, .jpeg"
+                        description: "Maximum of 5 image files allowed.  \\nFile extension allowed: **pdf**, **png**, **jpg**, **jpeg**."
                         fileExtensions: ["pdf", "png", "jpg", "jpeg"]
-                        fileCountLimit: 5
                       }
                     }
                     {
@@ -509,7 +509,7 @@ exports.queries = [
                       isRequired: false
                       parameters: {
                         label: "Upload product images"
-                        description: "Maximum of 5 image files allowed.\\nFile extension allowed: .pdf, .png, .jpg, .jpeg"
+                        description: "Maximum of 5 image files allowed.  \\nFile extension allowed: **pdf**, **png**, **jpg**, **jpeg**."
                         fileExtensions: ["pdf", "png", "jpg", "jpeg"]
                         fileCountLimit: 5
                       }
