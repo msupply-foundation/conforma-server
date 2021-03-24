@@ -14,6 +14,8 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     const numReviewLevels: number =
       (await DBConnect.getNumReviewLevels(templateId, stageNumber)) || 0
 
+    let nextReviewLevel = 1
+
     // NB: reviewId comes from record_id on TriggerPayload when triggered from review table
     // For first review assignment
     if (!reviewId) {
@@ -28,21 +30,8 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
           output: {},
         }
       }
-      const nextReviewLevel = 1
-      const isLastLevel = nextReviewLevel === numReviewLevels
-      return generateNextReviewAssignments({
-        db,
-        applicationId,
-        templateId,
-        nextReviewLevel,
-        nextStageNumber: stageNumber,
-        nextStageId: stageId,
-        isLastLevel,
-      })
     }
     // For level 1+ or next stages review assignment
-    // TODO - #440: Needs to lock same level reviews
-    // TODO: Unlock lower level review when consolidator has submitted "Change requested"
     else {
       const {
         stageNumber: previousStage,
@@ -61,22 +50,11 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
             output: {},
           }
         }
-        const nextReviewLevel = 1
-        const isLastLevel = nextReviewLevel === numReviewLevels
         console.log('New stage - total levels: ', numReviewLevels, stageNumber, previousStage)
-        return generateNextReviewAssignments({
-          db,
-          applicationId,
-          templateId,
-          nextReviewLevel,
-          nextStageNumber: stageNumber,
-          nextStageId: stageId,
-          isLastLevel,
-        })
       }
       // Review in same stage - for next level
       else {
-        const nextReviewLevel = previousLevel + 1
+        nextReviewLevel = previousLevel + 1
         if (nextReviewLevel > numReviewLevels) {
           console.log(
             'Final review level reached for current stage, no later review assignments to generate.'
@@ -88,18 +66,18 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
           }
         }
         console.log('Same stage - total levels: ', numReviewLevels, stageNumber, nextReviewLevel)
-        const isLastLevel = nextReviewLevel === numReviewLevels
-        return generateNextReviewAssignments({
-          db,
-          applicationId,
-          templateId,
-          nextReviewLevel,
-          nextStageNumber: stageNumber,
-          nextStageId: stageId,
-          isLastLevel,
-        })
       }
     }
+    const isLastLevel = nextReviewLevel === numReviewLevels
+    return generateNextReviewAssignments({
+      db,
+      applicationId,
+      templateId,
+      nextReviewLevel,
+      nextStageNumber: stageNumber,
+      nextStageId: stageId,
+      isLastLevel,
+    })
   } catch (error) {
     console.log(error.message)
     return {
@@ -128,8 +106,6 @@ const generateNextReviewAssignments = async ({
   nextStageId,
   isLastLevel,
 }: GenerateNextReviewAssignmentsProps) => {
-  // TODO: Needs to check if there are already reviews created - if partial review
-  // for level - 1 are submitted separetedily will create 2 reviewAssignments for level 1++
   const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
     templateId,
     nextStageNumber,
