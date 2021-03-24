@@ -89,43 +89,36 @@ exports.queries = [
             create: [
               {
                 id: 1007
-                status: SUBMITTED 
                 value: { text: "Carl" }
                 templateElementToTemplateElementId: { connectById: { id: 1001 } }
               }
               {
                 id: 1008
-                status: SUBMITTED 
                 value: { text: "Smith" }
                 templateElementToTemplateElementId: { connectById: { id: 1002 } }
               }
               {
                 id: 1009
-                status: SUBMITTED 
                 value: { text: "cjsmith" }
                 templateElementToTemplateElementId: { connectById: { id: 1004 } }
               }
               {
                 id: 1010
-                status: SUBMITTED 
                 value: { text: "carl@sussol.net" }
                 templateElementToTemplateElementId: { connectById: { id: 1005 } }
               }
               {
                 id: 1011
-                status: SUBMITTED 
                 value: { text: "123456" }
                 templateElementToTemplateElementId: { connectById: { id: 1006 } }
               }
               {
                 id: 1012
-                status: SUBMITTED 
                 value: { optionIndex: 0, text: "Importer" }
                 templateElementToTemplateElementId: { connectById: { id: 1007 } }
               }
               {
                 id: 1013
-                status: SUBMITTED 
                 value: { optionIndex: 1, text: "Importer A" }
                 templateElementToTemplateElementId: { connectById: { id: 1009 } }
               }
