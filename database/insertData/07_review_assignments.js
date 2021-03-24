@@ -26,7 +26,6 @@ exports.queries = [
               { id: 1002, templateElementId: 4003 }
               { id: 1003, templateElementId: 4005 }
               { id: 1004, templateElementId: 4006 }
-              { id: 1005, templateElementId: 4007 }
               { id: 1006, templateElementId: 4008 }
               { id: 1007, templateElementId: 4009 }
               { id: 1008, templateElementId: 4011 }
@@ -70,36 +69,30 @@ exports.queries = [
                   }
                   {
                     applicationResponseId: 4005
-                    reviewQuestionAssignmentId: 1005
-                    status: SUBMITTED
-                    decision: APPROVE
-                  }
-                  {
-                    applicationResponseId: 4006
                     reviewQuestionAssignmentId: 1006
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4007
+                    applicationResponseId: 4006
                     reviewQuestionAssignmentId: 1007
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4008
+                    applicationResponseId: 4007
                     reviewQuestionAssignmentId: 1008
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4009
+                    applicationResponseId: 4008
                     reviewQuestionAssignmentId: 1009
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4010
+                    applicationResponseId: 4009
                     reviewQuestionAssignmentId: 1010
                     status: SUBMITTED
                     decision: APPROVE
@@ -259,31 +252,31 @@ exports.queries = [
               reviewResponsesUsingId: { 
                 create: [
                   { 
-                    applicationResponseId: 4006
+                    applicationResponseId: 4005
                     reviewQuestionAssignmentId: 1017
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   { 
-                    applicationResponseId: 4007
+                    applicationResponseId: 4006
                     reviewQuestionAssignmentId: 1018
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   { 
-                    applicationResponseId: 4008
+                    applicationResponseId: 4007
                     reviewQuestionAssignmentId: 1019
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   { 
-                    applicationResponseId: 4009
+                    applicationResponseId: 4008
                     reviewQuestionAssignmentId: 1020
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   { 
-                    applicationResponseId: 4010
+                    applicationResponseId: 4009
                     reviewQuestionAssignmentId: 1021
                     status: SUBMITTED
                     decision: DECLINE

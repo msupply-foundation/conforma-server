@@ -4,7 +4,7 @@
   "name": "Update Applicant's Review Visibility",
   "file": "updateReviewVisibility",
   "function_name": "updateReviewVisibility",
-  "description": "Updates review records to be visible to Applicant based on recommendations of last level review",
+  "description": "Updates review response records to be visible to Applicant based on recommendations of last level review",
   "required_parameters": ["reviewId"],
   "output_properties": ["reviewResponsesWithUpdatedVisibility"],
   "info": {

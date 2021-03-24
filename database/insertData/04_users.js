@@ -138,12 +138,20 @@ exports.queries = [
   `mutation {
     createUser(
       input: {
-        user: { email: "assigner1@sussol.net"
+        user: { 
+          email: "assigner1@sussol.net"
           passwordHash: "$2a$10$Kk4m2yhfFC5GqX2mJsXTtO.GLq6zNbezYnI8ix09h/MfNNy6AW7Ne"
           username: "testAssigner1"
           firstName: "Assigner1"
-          permissionJoinsUsingId: { create: { permissionNameId: 9000 } }
+          permissionJoinsUsingId: { 
+            create: [
+              # Assign General
+              { permissionNameId: 9000 }
+              # Assign DrugRegoGen
+              { permissionNameId: 10100 }
+            ]
           }
+        }
       }
     ) {
       user {
@@ -158,8 +166,106 @@ exports.queries = [
           passwordHash: "$2a$10$DA4a1E2i3dfN5BrdmO6iX.EYt.ob0czyF1sQqNQxPMPrfEPsRCx2a"
           username: "testAssigner2"
           firstName: "Assigner2"
-          permissionJoinsUsingId: { create: { permissionNameId: 9000 } }
+          permissionJoinsUsingId: {
+            create: [
+              # Assign General
+              { permissionNameId: 9000 }
+            ]
           }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: {
+          username: "screener1"
+          firstName: "Screener1"
+          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          permissionJoinsUsingId: {
+            create: [
+              # Review General
+              { permissionNameId: 10000 }
+              # Review DrugRego Screening (Stage 1)
+              { permissionNameId: 10300 }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }
+  `,
+  ` mutation {
+    createUser(
+      input: {
+        user: {
+          username: "screener2"
+          firstName: "Screener2"
+          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          permissionJoinsUsingId: {
+            create: [
+              # Review General
+              { permissionNameId: 10000 }
+              # Review DrugRego Screening (Stage 1)
+              { permissionNameId: 10300 }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+  ` mutation {
+    createUser(
+      input: {
+        user: {
+          username: "assessor1"
+          firstName: "assessor1"
+          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          permissionJoinsUsingId: {
+            create: [
+              # Review General
+              { permissionNameId: 10000 }
+              # Review DrugRego Assessment (Stage 2)
+              { permissionNameId: 10400 }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+  ` mutation {
+    createUser(
+      input: {
+        user: {
+          username: "assessor2"
+          firstName: "assessor2"
+          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          permissionJoinsUsingId: {
+            create: [
+              # Review General
+              { permissionNameId: 10000 }
+              # Review DrugRego Assessment (Stage 2)
+              { permissionNameId: 10400 }
+            ]
+          }
+        }
       }
     ) {
       user {
@@ -177,7 +283,12 @@ exports.queries = [
           email: ""
           passwordHash: "$2a$10$UIfa3GTUbOS92Ygy/UpqheTngGo3O54Q5UOnJ5CBlra9LYCcr4IGq"
           username: "nonRegistered"
-          permissionJoinsUsingId: { create: { permissionNameId: 1000 } }
+          permissionJoinsUsingId: { 
+            create: {
+              # Apply UserRego
+              permissionNameId: 1000 
+            } 
+          }
         }
       }
     ) {
@@ -186,7 +297,24 @@ exports.queries = [
       }
     }
   }`,
-  // Registered User Permissions - Apply for applications
+  // Registered Applicant users - Apply application (General)
+  `mutation joinUsersToPermissionName {
+    updatePermissionName(
+      input: {
+        patch: {
+          permissionJoinsUsingId: {
+            create: [{ userId: 1 }, { userId: 2 }, { userId: 3 }, { userId: 4 }]
+          }
+        }
+        id: 10100
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // Registered Applicant users - Apply application (ReviewTest)
   `mutation joinUsersToPermissionName {
     updatePermissionName(
       input: {
@@ -203,23 +331,7 @@ exports.queries = [
       }
     }
   }`,
-  `mutation joinUsersToPermissionName {
-    updatePermissionName(
-      input: {
-        patch: {
-          permissionJoinsUsingId: {
-            create: [{ userId: 1 }, { userId: 2 }]
-          }
-        }
-        id: 3000
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  // Registered User Permissions - Review applications
+  // Registered Reviewers Stage 1 S1 - Review application (ReviewTest)
   `mutation joinUsersToPermissionName {
     updatePermissionName(
       input: {
@@ -236,6 +348,7 @@ exports.queries = [
       }
     }
   }`,
+  // Registered Reviewers Stage 1 S2 - Review application (ReviewTest)
   `mutation joinUsersToPermissionName {
     updatePermissionName(
       input: {
@@ -252,6 +365,7 @@ exports.queries = [
       }
     }
   }`,
+  // Registered Reviewers Stage 2 lvl 1 - Review application (ReviewTest)
   `mutation joinUsersToPermissionName {
     updatePermissionName(
       input: {
@@ -268,7 +382,7 @@ exports.queries = [
       }
     }
   }`,
-  // Registered User Permissions - Consolidation of applications
+  // Registered Reviewers Stage 2 lvl 2 - Review application (ReviewTest)
   `mutation joinUsersToPermissionName {
     updatePermissionName(
       input: {
@@ -285,7 +399,7 @@ exports.queries = [
       }
     }
   }`,
-  // Registered User Permissions - Final decision of applications
+  // Registered Reviewers Stage 3 - Review application (ReviewTest)
   `mutation joinUsersToPermissionName {
     updatePermissionName(
       input: {
@@ -308,6 +422,7 @@ exports.queries = [
       input: {
         user: {
           username: "userWithMultiplePermissions"
+          firstName: "Admin"
           passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
           permissionJoinsUsingId: {
             create: [

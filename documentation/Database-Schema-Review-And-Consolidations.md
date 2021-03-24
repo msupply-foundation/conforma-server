@@ -59,7 +59,11 @@ These records are created upon assignment, and should only be created for level 
 Either a review of applications questions (base review, level 1) or review of review (consolidation, level > 1). See diagram (responses flow). Always created by front end, but duplicates are trimmed on back end.
 Can be used to agree or disagree on overall review_decision.
 
-A few trick bits:
+## Review Assignment Assigner Join
+
+A collection of users who have permission to assign other users (reviewers) to applications. These records are generated upon submission of any application or review: after review assignments are generated, each new review assignment is joined with the users who have "Assign" permissions for those applications. (This happens as part of the **generateReviewAssignments** Action)
+
+### A few trick bits:
 
 #### Review Responses Are Always Duplicated
 
