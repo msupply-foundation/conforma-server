@@ -11,7 +11,7 @@ const Action = require('./generateReviewAssignments')
 
 test('Test: Submit Application ID#4000', () => {
   return Action.generateReviewAssignments(
-    { templateId: 4, stageNumber: 2, stageId: 6, applicationId: 4000 },
+    { templateId: 4, applicationId: 4000 }, // stageNumber: 2, stageId: 6,
     DBConnect
   ).then((result: any) => {
     expect(result).toEqual({
@@ -76,7 +76,7 @@ test('Test: Submit Application ID#4000', () => {
 
 test('Test: Submit Application ID#4001', () => {
   return Action.generateReviewAssignments(
-    { templateId: 4, stageNumber: 1, stageId: 5, applicationId: 4001 },
+    { templateId: 4, applicationId: 4001 }, //stageNumber: 1, stageId: 5,
     DBConnect
   ).then((result: any) => {
     expect(result).toEqual({
@@ -161,7 +161,7 @@ test('Test: Submit Application ID#4001', () => {
 
 test('Test: Submit Application ID#4002', () => {
   return Action.generateReviewAssignments(
-    { templateId: 4, stageNumber: 2, stageId: 6, applicationId: 4002 },
+    { templateId: 4, applicationId: 4002 }, // stageNumber: 2, stageId: 6,
     DBConnect
   ).then((result: any) => {
     expect(result).toEqual({
@@ -228,7 +228,7 @@ test('Test: Submit Application ID#4002', () => {
 
 test('Test: Submit Review for Application ID#4000, S2 Lvl1', () => {
   return Action.generateReviewAssignments(
-    { templateId: 4, stageNumber: 2, stageId: 6, applicationId: 4000, reviewId: 3 },
+    { templateId: 4, applicationId: 4000, reviewId: 3 }, // stageNumber: 2, stageId: 6,
     DBConnect
   ).then((result: any) => {
     expect(result).toEqual({
@@ -271,7 +271,7 @@ test('Test: Submit Review for Application ID#4000, S2 Lvl1', () => {
 
 test('Test: Submit Review for Application ID#4002, S2 Lvl2', () => {
   return Action.generateReviewAssignments(
-    { templateId: 4, stageNumber: 2, stageId: 6, applicationId: 4002, reviewId: 6 },
+    { templateId: 4, applicationId: 4002, reviewId: 6 }, // stageNumber: 2, stageId: 6,
     DBConnect
   ).then((result: any) => {
     expect(result).toEqual({

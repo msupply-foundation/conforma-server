@@ -5,6 +5,13 @@ export enum AssignmentStatus {
   SELF_ASSIGN = 'Available for self-assignment',
 }
 
+export interface ApplicationData {
+  applicationId: number
+  templateId: number
+  stageId: number
+  stageNumber: number
+}
+
 interface Restrictions {
   templateSectionRestrictions?: string[] | undefined
 }
