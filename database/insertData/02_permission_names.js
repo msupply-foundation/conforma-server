@@ -139,12 +139,80 @@ exports.queries = [
     }
   }`,
   // assignGeneral (associated with multiple templates)
-  `mutation reviewJoinCompanyPermission {
+  `mutation assignGeneralPermission {
     createPermissionName(
       input: {
         permissionName: { 
           id: 9000
           name: "assignGeneral", permissionPolicyId: 4000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // reviewGeneral (associated with multiple templates)
+  `mutation reviewGeneralPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 10000
+          name: "reviewGeneral", permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyGeneral (associated with multiple templates)
+  `mutation assignGeneralPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 10100
+          name: "applyGeneral",  permissionPolicyId: 2000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // Drug Registration permissions
+  `mutation assignDrugRegoPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 10200
+          name: "canAssignDrugRego",  permissionPolicyId: 4000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation reviewScreenDrugRegoPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 10300
+          name: "canScreenDrugRego",  permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation reviewAssessDrugRegoPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 10400
+          name: "canAssessDrugRego",  permissionPolicyId: 3000 }
       }
     ) {
       permissionName {
