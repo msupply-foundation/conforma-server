@@ -60,6 +60,7 @@ exports.coreActions = `
     # 1 - change status to submitted
     # 2 - trim responses
     # 3 - generate review assignments
+    # 4 - update review statuses
     {
         actionCode: "changeStatus"
         trigger: ON_APPLICATION_SUBMIT
@@ -112,6 +113,12 @@ exports.coreActions = `
             children: ["output.updatedResponses"]
           }
         }
+    }
+    {
+      actionCode: "cleanupFiles"
+      trigger: ON_APPLICATION_SUBMIT
+      sequence: 5
+      parameterQueries: {}
     }
     # -------------------------------------------
     # ON_REVIEW_SUBMIT

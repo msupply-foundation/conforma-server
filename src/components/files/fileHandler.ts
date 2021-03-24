@@ -75,6 +75,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
 
       filesInfo.push({
         filename: file.filename,
+        uniqueId: unique_id,
         fileUrl: `/file?uid=${unique_id}`,
         thumbnailUrl: `/file?uid=${unique_id}&thumbnail=true`,
         mimetype: file.mimetype,

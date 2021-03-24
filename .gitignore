@@ -47,6 +47,7 @@ database/schema.json
 # Build folders
 build
 lib
+src/plugins/**/src/*.js
 
 # Temp for expression-evaluator gui
 src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluator/

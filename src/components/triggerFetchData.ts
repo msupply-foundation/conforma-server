@@ -1,6 +1,8 @@
 import { TriggerPayload } from '../types'
 import DBConnect from './databaseConnect'
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
+import { getAppRootDir } from './utilityFunctions'
+import config from '../config.json'
 
 // Add more data (such as org/review, etc.) here as required
 export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
@@ -33,5 +35,17 @@ export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
   const reviewData =
     payload.table === 'review' ? await DBConnect.getReviewData(payload.record_id) : {}
 
-  return { ...payload, ...applicationData, ...userData, responses: responseData, reviewData }
+  const environmentData = {
+    appRootFolder: getAppRootDir(),
+    filesFolderName: config.filesFolderName,
+  }
+
+  return {
+    ...payload,
+    ...applicationData,
+    ...userData,
+    responses: responseData,
+    reviewData,
+    environmentData,
+  }
 }
