@@ -142,14 +142,6 @@ exports.queries = [
                 }
               }
               {
-                actionCode: "cLog"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 10
-                parameterQueries: {
-                  message: { value: "Trying to join user to org..." }
-                }
-              }
-              {
                 actionCode: "joinUserOrg"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 11

@@ -44,6 +44,20 @@ exports.queries = [
       }
     }
   }`,
+  // applyProducts (should be applied to Drug Reg, Imports, etc.)
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 3500
+          name: "applyProducts", permissionPolicyId: 2000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
   // reviewCompanyRego
   `mutation createPermissionName {
     createPermissionName(
