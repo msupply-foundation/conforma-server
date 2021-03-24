@@ -18,14 +18,12 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-     
                 code: "S1"
                 title: "Personal Information"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
-    
                       code: "S1T1"
                       index: 0
                       title: "Intro Section 1"
@@ -45,7 +43,6 @@ exports.queries = [
                       }
                     }
                     {
-          
                       code: "S1Q1"
                       index: 1
                       title: "Select Organisation"
@@ -53,7 +50,15 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Please select the organisation you wish to join"
-                        options: [ "Demo organisation", "Medicinal Importers, Ltd.", "Lab Facilities Inc." ]
+                        options: {
+                          operator: "graphQL"
+                          children: [
+                            "query getOrgs {organisations {nodes {name, id}}}"
+                            []
+                            "organisations.nodes"
+                          ]
+                        }
+                        optionsDisplayProperty: "name"
                       }
                     }
                     {
@@ -69,7 +74,6 @@ exports.queries = [
                       }
                     }
                     {
-     
                       code: "PB01"
                       index: 3
                       title: "Page Break"
@@ -77,7 +81,6 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                   
                       code: "T2"
                       index: 4
                       title: "Documentation Info"
@@ -86,7 +89,6 @@ exports.queries = [
                       parameters: { title: "Documentation" }
                     }
                     {
-                
                       code: "IDUpload"
                       index: 5
                       title: "Upload ID"
@@ -101,7 +103,6 @@ exports.queries = [
                       }
                     }
                     {
-                  
                       code: "DocUpload"
                       index: 6
                       title: "Upload Doc"
@@ -151,7 +152,7 @@ exports.queries = [
               {
                 actionCode: "joinUserOrg"
                 trigger: ON_REVIEW_SUBMIT
-                sequence: 11    
+                sequence: 11
                 condition: {
                   operator: "AND"
                   children: [
@@ -172,7 +173,7 @@ exports.queries = [
                       children: ["applicationData.reviewData.isLastLevel"]
                     }
                   ]
-                }       
+                }
                 parameterQueries: {
                   user_id: {
                     operator: "objectProperties"
@@ -190,7 +191,6 @@ exports.queries = [
                     ]
                   }
                 }
-                
               }
               {
                 actionCode: "grantPermissions"
@@ -225,13 +225,19 @@ exports.queries = [
                   permissionNames: ["canApplyDrugRego"]
                 }
               }
-              
             ]
           }
           templatePermissionsUsingId: {
             create: [
-              { permissionNameId: 50 }
-              { permissionNameId: 51, level: 1, stageNumber: 1, restrictions: { canSelfAssign: true } }
+              # assignGeneral
+              { permissionNameId: 9000 }
+              # reviewJoinCompany
+              {
+                permissionNameId: 8000
+                level: 1
+                stageNumber: 1
+                restrictions: { canSelfAssign: true }
+              }
             ]
           }
         }

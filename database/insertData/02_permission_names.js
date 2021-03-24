@@ -138,8 +138,22 @@ exports.queries = [
       }
     }
   }`,
+  // applyJoinCompany
+  `mutation applyJoinCompanyPermission {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 8500
+          name: "applyJoinCompany", permissionPolicyId: 2000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
   // assignGeneral (associated with multiple templates)
-  `mutation reviewJoinCompanyPermission {
+  `mutation assignGeneral {
     createPermissionName(
       input: {
         permissionName: { 
