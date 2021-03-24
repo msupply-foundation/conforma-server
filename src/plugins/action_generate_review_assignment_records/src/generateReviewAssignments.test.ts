@@ -228,7 +228,7 @@ test('Test: Submit Application ID#4002', () => {
 
 test('Test: Submit Review for Application ID#4000, S2 Lvl1', () => {
   return Action.generateReviewAssignments(
-    { templateId: 4, applicationId: 4000, reviewId: 3 }, // stageNumber: 2, stageId: 6,
+    { templateId: 4, applicationId: 4000, reviewId: 3 }, // stageNumber: 2, stageId: 6, levels: 2
     DBConnect
   ).then((result: any) => {
     expect(result).toEqual({
@@ -237,33 +237,33 @@ test('Test: Submit Review for Application ID#4000, S2 Lvl1', () => {
       output: {
         reviewAssignments: [
           {
-            reviewerId: 8,
+            reviewerId: 6,
             orgId: null,
             stageId: 6,
             stageNumber: 2,
-            status: 'Available for self-assignment',
+            status: 'Available',
             applicationId: 4000,
             templateSectionRestrictions: null,
-            level: 2,
-            isLastLevel: true,
+            level: 1,
+            isLastLevel: false,
           },
           {
-            reviewerId: 9,
+            reviewerId: 7,
             orgId: null,
             stageId: 6,
             stageNumber: 2,
-            status: 'Available for self-assignment',
+            status: 'Available',
             applicationId: 4000,
             templateSectionRestrictions: null,
-            level: 2,
-            isLastLevel: true,
+            level: 1,
+            isLastLevel: false,
           },
         ],
         reviewAssignmentIds: [1003, 1004],
         reviewAssignmentAssignerJoins: [],
         reviewAssignmentAssignerJoinIds: [],
-        currentReviewLevel: 1,
-        nextReviewLevel: 2,
+        nextStageNumber: 2,
+        nextReviewLevel: 1,
       },
     })
   })
@@ -271,7 +271,7 @@ test('Test: Submit Review for Application ID#4000, S2 Lvl1', () => {
 
 test('Test: Submit Review for Application ID#4002, S2 Lvl2', () => {
   return Action.generateReviewAssignments(
-    { templateId: 4, applicationId: 4002, reviewId: 6 }, // stageNumber: 2, stageId: 6,
+    { templateId: 4, applicationId: 4002, reviewId: 6 }, // stageNumber: 2, stageId: 6, levels: 2
     DBConnect
   ).then((result: any) => {
     expect(result).toEqual({
@@ -305,7 +305,7 @@ test('Test: Submit Review for Application ID#4002, S2 Lvl2', () => {
         reviewAssignmentIds: [1009, 1010],
         reviewAssignmentAssignerJoins: [],
         reviewAssignmentAssignerJoinIds: [],
-        currentReviewLevel: 1,
+        nextStageNumber: 2,
         nextReviewLevel: 2,
       },
     })
