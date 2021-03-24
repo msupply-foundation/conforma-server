@@ -42,60 +42,71 @@ exports.queries = [
                 id: 4000
                 isValid: true
                 templateElementId: 4001
+                status: SUBMITTED 
                 value: { text: "John" }
               }
               {
                 id: 4001
                 isValid: true
                 templateElementId: 4002
+                status: SUBMITTED 
                 value: { text: "Smith" }
               }
               {
                 id: 4002
+                status: SUBMITTED 
                 isValid: true
                 templateElementId: 4003
+                status: SUBMITTED 
                 value: { text: "js@nowhere.com" }
               }
               {
                 id: 4003
                 isValid: true
                 templateElementId: 4005
+                status: SUBMITTED 
                 value: { text: "39" }
               }
               {
                 id: 4004
                 isValid: true
                 templateElementId: 4006
+                status: SUBMITTED 
                 value: { text: "New Zealand" }
               }
               {
                 id: 4005
                 isValid: true
                 templateElementId: 4008
+                status: SUBMITTED 
                 value: { text: "Vitamin C" }
               }
               {
                 id: 4006
                 isValid: true
                 templateElementId: 4009
+                status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
               }
               {
                 id: 4007
                 isValid: true
                 templateElementId: 4011
+                status: SUBMITTED 
                 value: { text: "50mg" }
               }
               {
                 id: 4008
                 isValid: true
                 templateElementId: 4012
+                status: SUBMITTED 
                 value: { text: "100" }
               }
               {
                 id: 4009
                 isValid: true
                 templateElementId: 4013
+                status: SUBMITTED 
                 value: { text: "Turning orange" }
               }
             ]
@@ -142,60 +153,70 @@ exports.queries = [
                 id: 4010
                 isValid: true
                 templateElementId: 4001
+                status: SUBMITTED 
                 value: { text: "Valerio" }
               }
               {
                 id: 4011
                 isValid: true
                 templateElementId: 4002
+                status: SUBMITTED 
                 value: { text: "Red" }
               }
               {
                 id: 4012
                 isValid: true
                 templateElementId: 4003
+                status: SUBMITTED 
                 value: { text: "jj@nowhere.com" }
               }
               {
                 id: 4013
                 isValid: true
                 templateElementId: 4005
+                status: SUBMITTED 
                 value: { text: "42" }
               }
               {
                 id: 4014
                 isValid: true
                 templateElementId: 4006
+                status: SUBMITTED 
                 value: { text: "Tonga" }
               }
               {
                 id: 4015
                 isValid: true
                 templateElementId: 4008
+                status: SUBMITTED 
                 value: { text: "Vitamin B" }
               }
               {
                 id: 4016
                 isValid: true
                 templateElementId: 4009
+                status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
               }
               {
                 id: 4017
                 isValid: true
                 templateElementId: 4011
+                status: SUBMITTED 
                 value: { text: "100mg" }
               }
               {
                 id: 4018
                 isValid: true
                 templateElementId: 4012
+                status: SUBMITTED 
                 value: { text: "200" }
               }
               {
                 id: 4019
                 isValid: true
                 templateElementId: 4013
+                status: SUBMITTED 
                 value: { text: "No side effects" }
               }
             ]
@@ -251,60 +272,70 @@ exports.queries = [
                 id: 4020
                 isValid: true
                 templateElementId: 4001
+                status: SUBMITTED 
                 value: { text: "Andrei" }
               }
               {
                 id: 4021
                 isValid: true
                 templateElementId: 4002
+                status: SUBMITTED 
                 value: { text: "Blue" }
               }
               {
                 id: 4022
                 isValid: true
                 templateElementId: 4003
+                status: SUBMITTED 
                 value: { text: "jw@nowhere.com" }
               }
               {
                 id: 4023
                 isValid: true
                 templateElementId: 4005
+                status: SUBMITTED 
                 value: { text: "22" }
               }
               {
                 id: 4024
                 isValid: true
                 templateElementId: 4006
+                status: SUBMITTED 
                 value: { text: "China" }
               }
               {
                 id: 4025
                 isValid: true
                 templateElementId: 4008
+                status: SUBMITTED 
                 value: { text: "Amoxicillin" }
               }
               {
                 id: 4026
                 isValid: true
                 templateElementId: 4009
+                status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
               }
               {
                 id: 4027
                 isValid: true
                 templateElementId: 4011
+                status: SUBMITTED 
                 value: { text: "250mg" }
               }
               {
                 id: 4028
                 isValid: true
                 templateElementId: 4012
+                status: SUBMITTED 
                 value: { text: "1000" }
               }
               {
                 id: 4029
                 isValid: true
                 templateElementId: 4013
+                status: SUBMITTED 
                 value: { text: "nausea\\nvomiting\\ndiarrhea\\nstomach pain\\nswollen, black, or \\"hairy\\" tongue." }
               }
             ]
@@ -352,60 +383,70 @@ exports.queries = [
                 id: 4100
                 isValid: true
                 templateElementId: 4001
+                status: SUBMITTED 
                 value: { text: "Valerio" }
               }
               {
                 id: 4101
                 isValid: true
                 templateElementId: 4002
+                status: SUBMITTED 
                 value: { text: "Red" }
               }
               {
                 id: 4102
                 isValid: true
                 templateElementId: 4003
+                status: SUBMITTED 
                 value: { text: "vw@nowhere.com" }
               }
               {
                 id: 4103
                 isValid: true
                 templateElementId: 4005
+                status: SUBMITTED 
                 value: { text: "63" }
               }
               {
                 id: 4104
                 isValid: true
                 templateElementId: 4006
+                status: SUBMITTED 
                 value: { text: "Italy" }
               }
               {
                 id: 4105
                 isValid: true
                 templateElementId: 4008
+                status: SUBMITTED 
                 value: { text: "Paracetamol" }
               }
               {
                 id: 4106
                 isValid: true
                 templateElementId: 4009
+                status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
               }
               {
                 id: 4107
                 isValid: true
                 templateElementId: 4011
+                status: SUBMITTED 
                 value: { text: "250mg" }
               }
               {
                 id: 4108
                 isValid: true
                 templateElementId: 4012
+                status: SUBMITTED 
                 value: { text: "1000" }
               }
               {
                 id: 4109
                 isValid: true
                 templateElementId: 4013
+                status: SUBMITTED 
                 value: { text: "Nothing too serious" }
               }
             ]

@@ -25,11 +25,13 @@ exports.queries = [
             create: [
               {
                 id: 2000
+                status: DRAFT 
                 value: { text: "Company C" }
                 templateElementToTemplateElementId: { connectById: { id: 2001 } }
               }
               {
                 id: 2001
+                status: DRAFT 
                 value: { option: 2 }
                 templateElementToTemplateElementId: { connectById: { id: 2002 } }
               }
