@@ -462,10 +462,9 @@ exports.queries = [
                       title: "File upload: Ingredients"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false
                       parameters: {
                         label: "Upload ingredients list"
-                        description: "Only 1 file allowed, no other restrictions"
+                        description: "Only 1 file allowed.\\nFile extension allowed: .pdf, .doc, .docx, .xls"
                         fileExtensions: ["pdf", "doc", "docx", "xls"]
                         fileCountLimit: 1
                       }
@@ -489,7 +488,7 @@ exports.queries = [
                       isRequired: false
                       parameters: {
                         label: "Upload samples"
-                        description: "Maximum of 5 files allowed, no other restrictions"
+                        description: "Maximum of 5 image files allowed.\\nFile extension allowed: .pdf, .png, .jpg, .jpeg"
                         fileExtensions: ["pdf", "png", "jpg", "jpeg"]
                         fileCountLimit: 5
                       }
@@ -510,7 +509,7 @@ exports.queries = [
                       isRequired: false
                       parameters: {
                         label: "Upload product images"
-                        description: "Maximum of 5 files allowed, no other restrictions"
+                        description: "Maximum of 5 image files allowed.\\nFile extension allowed: .pdf, .png, .jpg, .jpeg"
                         fileExtensions: ["pdf", "png", "jpg", "jpeg"]
                         fileCountLimit: 5
                       }
