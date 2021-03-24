@@ -14,6 +14,7 @@ export interface ApplicationData {
 
 interface Restrictions {
   templateSectionRestrictions?: string[] | undefined
+  canSelfAssign?: boolean
 }
 
 export interface Reviewer {
