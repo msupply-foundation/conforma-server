@@ -217,6 +217,16 @@ When an applicant re-submits an application after making changes, this Action up
 | ---------------------------------------- | ----------------- |
 | `applicationId`\*                        | `updatedReviews`  |
 
+### Clean Up Files
+
+After application submission or re-submission, this Action looks at all the uploaded files associated with the application and deletes any that are not part of a submitted response. This takes care of any files that the user "deleted" from the UI before submitting.
+
+- _Action Code:_ **`cleanupFiles`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `applicationSerial`                      | `deletedFiles`    |
+
 ## Core Actions
 
 There are certain Actions that _must_ run on particular events to facilitate a standard application/review workflow process. We have called these **Core Actions**, and they have been collected in a single "core_actions.js" file (for insertion into database via GraphQL). Each template (other than "User Registration") has this block slugged into it as a template literal (`${coreActions}`) in its Action insertion block, before any Actions that are specific to that template.
@@ -233,6 +243,7 @@ Here is a summary of the core actions and the triggers that launch them:
 - Trim Responses (removes Null responses and unchanged ones if re-submission)
 - Generate Review Assignments (for first level reviewers)
 - Update Reviews (statuses)
+- Clean up Files
 
 #### On Application Restart (i.e. after "Changes Requested"):
 

@@ -61,6 +61,7 @@ exports.coreActions = `
     # 2 - trim responses
     # 3 - generate review assignments
     # 4 - update review statuses
+    # 5 - cleanup files
     {
         actionCode: "changeStatus"
         trigger: ON_APPLICATION_SUBMIT
