@@ -660,7 +660,7 @@ class PostgresDB {
 
   public getNumReviewLevels = async (templateId: number, stageNumber: number) => {
     const text = `
-    SELECT MAX(level) FROM template_permission
+    SELECT MAX(level_number) FROM template_permission
     WHERE template_id = $1 
     AND stage_number = $2
     `

@@ -2542,6 +2542,7 @@ export type ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput = {
   description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
@@ -4551,6 +4552,41 @@ export type CreateTemplateStagePayloadTemplateStageEdgeArgs = {
   orderBy?: Maybe<Array<TemplateStagesOrderBy>>;
 };
 
+/** All input for the create `TemplateStageReviewLevel` mutation. */
+export type CreateTemplateStageReviewLevelInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateStageReviewLevel` to be created by this mutation. */
+  templateStageReviewLevel: TemplateStageReviewLevelInput;
+};
+
+/** The output of our create `TemplateStageReviewLevel` mutation. */
+export type CreateTemplateStageReviewLevelPayload = {
+  __typename?: 'CreateTemplateStageReviewLevelPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateStageReviewLevel` that was created by this mutation. */
+  templateStageReviewLevel?: Maybe<TemplateStageReviewLevel>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `TemplateStage` that is related to this `TemplateStageReviewLevel`. */
+  stage?: Maybe<TemplateStage>;
+  /** An edge for our `TemplateStageReviewLevel`. May be used by Relay 1. */
+  templateStageReviewLevelEdge?: Maybe<TemplateStageReviewLevelsEdge>;
+};
+
+
+/** The output of our create `TemplateStageReviewLevel` mutation. */
+export type CreateTemplateStageReviewLevelPayloadTemplateStageReviewLevelEdgeArgs = {
+  orderBy?: Maybe<Array<TemplateStageReviewLevelsOrderBy>>;
+};
+
 /** All input for the create `TriggerQueue` mutation. */
 export type CreateTriggerQueueInput = {
   /**
@@ -6071,6 +6107,52 @@ export type DeleteTemplateStagePayloadTemplateStageEdgeArgs = {
   orderBy?: Maybe<Array<TemplateStagesOrderBy>>;
 };
 
+/** All input for the `deleteTemplateStageReviewLevelByNodeId` mutation. */
+export type DeleteTemplateStageReviewLevelByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `TemplateStageReviewLevel` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteTemplateStageReviewLevel` mutation. */
+export type DeleteTemplateStageReviewLevelInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `TemplateStageReviewLevel` mutation. */
+export type DeleteTemplateStageReviewLevelPayload = {
+  __typename?: 'DeleteTemplateStageReviewLevelPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateStageReviewLevel` that was deleted by this mutation. */
+  templateStageReviewLevel?: Maybe<TemplateStageReviewLevel>;
+  deletedTemplateStageReviewLevelNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `TemplateStage` that is related to this `TemplateStageReviewLevel`. */
+  stage?: Maybe<TemplateStage>;
+  /** An edge for our `TemplateStageReviewLevel`. May be used by Relay 1. */
+  templateStageReviewLevelEdge?: Maybe<TemplateStageReviewLevelsEdge>;
+};
+
+
+/** The output of our delete `TemplateStageReviewLevel` mutation. */
+export type DeleteTemplateStageReviewLevelPayloadTemplateStageReviewLevelEdgeArgs = {
+  orderBy?: Maybe<Array<TemplateStageReviewLevelsOrderBy>>;
+};
+
 /** All input for the `deleteTriggerQueueByNodeId` mutation. */
 export type DeleteTriggerQueueByNodeIdInput = {
   /**
@@ -7056,6 +7138,8 @@ export type Mutation = {
   createTemplateSection?: Maybe<CreateTemplateSectionPayload>;
   /** Creates a single `TemplateStage`. */
   createTemplateStage?: Maybe<CreateTemplateStagePayload>;
+  /** Creates a single `TemplateStageReviewLevel`. */
+  createTemplateStageReviewLevel?: Maybe<CreateTemplateStageReviewLevelPayload>;
   /** Creates a single `TriggerQueue`. */
   createTriggerQueue?: Maybe<CreateTriggerQueuePayload>;
   /** Creates a single `User`. */
@@ -7178,6 +7262,10 @@ export type Mutation = {
   updateTemplateStageByNodeId?: Maybe<UpdateTemplateStagePayload>;
   /** Updates a single `TemplateStage` using a unique key and a patch. */
   updateTemplateStage?: Maybe<UpdateTemplateStagePayload>;
+  /** Updates a single `TemplateStageReviewLevel` using its globally unique id and a patch. */
+  updateTemplateStageReviewLevelByNodeId?: Maybe<UpdateTemplateStageReviewLevelPayload>;
+  /** Updates a single `TemplateStageReviewLevel` using a unique key and a patch. */
+  updateTemplateStageReviewLevel?: Maybe<UpdateTemplateStageReviewLevelPayload>;
   /** Updates a single `TriggerQueue` using its globally unique id and a patch. */
   updateTriggerQueueByNodeId?: Maybe<UpdateTriggerQueuePayload>;
   /** Updates a single `TriggerQueue` using a unique key and a patch. */
@@ -7308,6 +7396,10 @@ export type Mutation = {
   deleteTemplateStageByNodeId?: Maybe<DeleteTemplateStagePayload>;
   /** Deletes a single `TemplateStage` using a unique key. */
   deleteTemplateStage?: Maybe<DeleteTemplateStagePayload>;
+  /** Deletes a single `TemplateStageReviewLevel` using its globally unique id. */
+  deleteTemplateStageReviewLevelByNodeId?: Maybe<DeleteTemplateStageReviewLevelPayload>;
+  /** Deletes a single `TemplateStageReviewLevel` using a unique key. */
+  deleteTemplateStageReviewLevel?: Maybe<DeleteTemplateStageReviewLevelPayload>;
   /** Deletes a single `TriggerQueue` using its globally unique id. */
   deleteTriggerQueueByNodeId?: Maybe<DeleteTriggerQueuePayload>;
   /** Deletes a single `TriggerQueue` using a unique key. */
@@ -7490,6 +7582,12 @@ export type MutationCreateTemplateSectionArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateTemplateStageArgs = {
   input: CreateTemplateStageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateTemplateStageReviewLevelArgs = {
+  input: CreateTemplateStageReviewLevelInput;
 };
 
 
@@ -7856,6 +7954,18 @@ export type MutationUpdateTemplateStageByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTemplateStageArgs = {
   input: UpdateTemplateStageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateStageReviewLevelByNodeIdArgs = {
+  input: UpdateTemplateStageReviewLevelByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateStageReviewLevelArgs = {
+  input: UpdateTemplateStageReviewLevelInput;
 };
 
 
@@ -8246,6 +8356,18 @@ export type MutationDeleteTemplateStageByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTemplateStageArgs = {
   input: DeleteTemplateStageInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateStageReviewLevelByNodeIdArgs = {
+  input: DeleteTemplateStageReviewLevelByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateStageReviewLevelArgs = {
+  input: DeleteTemplateStageReviewLevelInput;
 };
 
 
@@ -10404,6 +10526,8 @@ export type Query = Node & {
   templateSections?: Maybe<TemplateSectionsConnection>;
   /** Reads and enables pagination through a set of `TemplateStage`. */
   templateStages?: Maybe<TemplateStagesConnection>;
+  /** Reads and enables pagination through a set of `TemplateStageReviewLevel`. */
+  templateStageReviewLevels?: Maybe<TemplateStageReviewLevelsConnection>;
   /** Reads and enables pagination through a set of `TriggerQueue`. */
   triggerQueues?: Maybe<TriggerQueuesConnection>;
   /** Reads and enables pagination through a set of `User`. */
@@ -10443,6 +10567,7 @@ export type Query = Node & {
   templatePermission?: Maybe<TemplatePermission>;
   templateSection?: Maybe<TemplateSection>;
   templateStage?: Maybe<TemplateStage>;
+  templateStageReviewLevel?: Maybe<TemplateStageReviewLevel>;
   triggerQueue?: Maybe<TriggerQueue>;
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
@@ -10512,6 +10637,8 @@ export type Query = Node & {
   templateSectionByNodeId?: Maybe<TemplateSection>;
   /** Reads a single `TemplateStage` using its globally unique `ID`. */
   templateStageByNodeId?: Maybe<TemplateStage>;
+  /** Reads a single `TemplateStageReviewLevel` using its globally unique `ID`. */
+  templateStageReviewLevelByNodeId?: Maybe<TemplateStageReviewLevel>;
   /** Reads a single `TriggerQueue` using its globally unique `ID`. */
   triggerQueueByNodeId?: Maybe<TriggerQueue>;
   /** Reads a single `User` using its globally unique `ID`. */
@@ -10944,6 +11071,19 @@ export type QueryTemplateStagesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryTemplateStageReviewLevelsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TemplateStageReviewLevelsOrderBy>>;
+  condition?: Maybe<TemplateStageReviewLevelCondition>;
+  filter?: Maybe<TemplateStageReviewLevelFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryTriggerQueuesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -11177,6 +11317,12 @@ export type QueryTemplateSectionArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTemplateStageArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateStageReviewLevelArgs = {
   id: Scalars['Int'];
 };
 
@@ -11436,6 +11582,12 @@ export type QueryTemplateSectionByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryTemplateStageByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateStageReviewLevelByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -12857,6 +13009,7 @@ export type ReviewAssignmentStageIdFkeyTemplateStageCreateInput = {
   description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
@@ -16274,7 +16427,7 @@ export type TemplatePermission = Node & {
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   /** Reads a single `PermissionName` that is related to this `TemplatePermission`. */
   permissionName?: Maybe<PermissionName>;
@@ -16295,8 +16448,8 @@ export type TemplatePermissionCondition = {
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `level` field. */
-  level?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `levelNumber` field. */
+  levelNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `restrictions` field. */
   restrictions?: Maybe<Scalars['JSON']>;
 };
@@ -16311,8 +16464,8 @@ export type TemplatePermissionFilter = {
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
-  /** Filter by the object’s `level` field. */
-  level?: Maybe<IntFilter>;
+  /** Filter by the object’s `levelNumber` field. */
+  levelNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `restrictions` field. */
   restrictions?: Maybe<JsonFilter>;
   /** Filter by the object’s `permissionName` relation. */
@@ -16337,7 +16490,7 @@ export type TemplatePermissionInput = {
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -16391,7 +16544,7 @@ export type TemplatePermissionPatch = {
   permissionNameId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -16456,7 +16609,7 @@ export type TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput 
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -16495,8 +16648,8 @@ export enum TemplatePermissionsOrderBy {
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
-  LevelAsc = 'LEVEL_ASC',
-  LevelDesc = 'LEVEL_DESC',
+  LevelNumberAsc = 'LEVEL_NUMBER_ASC',
+  LevelNumberDesc = 'LEVEL_NUMBER_DESC',
   RestrictionsAsc = 'RESTRICTIONS_ASC',
   RestrictionsDesc = 'RESTRICTIONS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -16564,7 +16717,7 @@ export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -16943,10 +17096,24 @@ export type TemplateStage = Node & {
   templateId?: Maybe<Scalars['Int']>;
   /** Reads a single `Template` that is related to this `TemplateStage`. */
   template?: Maybe<Template>;
+  /** Reads and enables pagination through a set of `TemplateStageReviewLevel`. */
+  templateStageReviewLevelsByStageId: TemplateStageReviewLevelsConnection;
   /** Reads and enables pagination through a set of `ApplicationStageHistory`. */
   applicationStageHistoriesByStageId: ApplicationStageHistoriesConnection;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignmentsByStageId: ReviewAssignmentsConnection;
+};
+
+
+export type TemplateStageTemplateStageReviewLevelsByStageIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TemplateStageReviewLevelsOrderBy>>;
+  condition?: Maybe<TemplateStageReviewLevelCondition>;
+  filter?: Maybe<TemplateStageReviewLevelFilter>;
 };
 
 
@@ -17002,6 +17169,10 @@ export type TemplateStageFilter = {
   description?: Maybe<StringFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateStageReviewLevelsByStageId` relation. */
+  templateStageReviewLevelsByStageId?: Maybe<TemplateStageToManyTemplateStageReviewLevelFilter>;
+  /** Some related `templateStageReviewLevelsByStageId` exist. */
+  templateStageReviewLevelsByStageIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `applicationStageHistoriesByStageId` relation. */
   applicationStageHistoriesByStageId?: Maybe<TemplateStageToManyApplicationStageHistoryFilter>;
   /** Some related `applicationStageHistoriesByStageId` exist. */
@@ -17030,6 +17201,7 @@ export type TemplateStageInput = {
   description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
@@ -17091,6 +17263,21 @@ export type TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyUsingTempl
   id: Scalars['Int'];
 };
 
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateStageReviewLevel` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `templateStageReviewLevel` being updated. */
+  patch: TemplateStageReviewLevelPatch;
+};
+
+/** The fields on `templateStage` to look up the row to update. */
+export type TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate = {
+  /** An object where the defined keys will be set on the `templateStage` being updated. */
+  patch: UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
 /** Represents an update to a `TemplateStage`. Fields that are set will be updated. */
 export type TemplateStagePatch = {
   id?: Maybe<Scalars['Int']>;
@@ -17099,8 +17286,219 @@ export type TemplateStagePatch = {
   description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
+};
+
+export type TemplateStageReviewLevel = Node & {
+  __typename?: 'TemplateStageReviewLevel';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  stageId?: Maybe<Scalars['Int']>;
+  number: Scalars['Int'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  /** Reads a single `TemplateStage` that is related to this `TemplateStageReviewLevel`. */
+  stage?: Maybe<TemplateStage>;
+};
+
+/**
+ * A condition to be used against `TemplateStageReviewLevel` object types. All
+ * fields are tested for equality and combined with a logical ‘and.’
+ */
+export type TemplateStageReviewLevelCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageId` field. */
+  stageId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `number` field. */
+  number?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `TemplateStageReviewLevel` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateStageReviewLevelFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageId` field. */
+  stageId?: Maybe<IntFilter>;
+  /** Filter by the object’s `number` field. */
+  number?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: Maybe<StringFilter>;
+  /** Filter by the object’s `stage` relation. */
+  stage?: Maybe<TemplateStageFilter>;
+  /** A related `stage` exists. */
+  stageExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<TemplateStageReviewLevelFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<TemplateStageReviewLevelFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<TemplateStageReviewLevelFilter>;
+};
+
+/** An input for mutations affecting `TemplateStageReviewLevel` */
+export type TemplateStageReviewLevelInput = {
+  id?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  number: Scalars['Int'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  templateStageToStageId?: Maybe<TemplateStageReviewLevelStageIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type TemplateStageReviewLevelNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `templateStageReviewLevel` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type TemplateStageReviewLevelNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `templateStageReviewLevel` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateStage` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `templateStage` being updated. */
+  patch: TemplateStagePatch;
+};
+
+/** The fields on `templateStageReviewLevel` to look up the row to update. */
+export type TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate = {
+  /** An object where the defined keys will be set on the `templateStageReviewLevel` being updated. */
+  patch: UpdateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `TemplateStageReviewLevel`. Fields that are set will be updated. */
+export type TemplateStageReviewLevelPatch = {
+  id?: Maybe<Scalars['Int']>;
+  stageId?: Maybe<Scalars['Int']>;
+  number?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  templateStageToStageId?: Maybe<TemplateStageReviewLevelStageIdFkeyInput>;
+};
+
+/** A connection to a list of `TemplateStageReviewLevel` values. */
+export type TemplateStageReviewLevelsConnection = {
+  __typename?: 'TemplateStageReviewLevelsConnection';
+  /** A list of `TemplateStageReviewLevel` objects. */
+  nodes: Array<Maybe<TemplateStageReviewLevel>>;
+  /** A list of edges which contains the `TemplateStageReviewLevel` and cursor to aid in pagination. */
+  edges: Array<TemplateStageReviewLevelsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TemplateStageReviewLevel` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `TemplateStageReviewLevel` edge in the connection. */
+export type TemplateStageReviewLevelsEdge = {
+  __typename?: 'TemplateStageReviewLevelsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `TemplateStageReviewLevel` at the end of the edge. */
+  node?: Maybe<TemplateStageReviewLevel>;
+};
+
+/** Methods to use when ordering `TemplateStageReviewLevel`. */
+export enum TemplateStageReviewLevelsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  StageIdAsc = 'STAGE_ID_ASC',
+  StageIdDesc = 'STAGE_ID_DESC',
+  NumberAsc = 'NUMBER_ASC',
+  NumberDesc = 'NUMBER_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** Input for the nested mutation of `templateStage` in the `TemplateStageReviewLevelInput` mutation. */
+export type TemplateStageReviewLevelStageIdFkeyInput = {
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  connectById?: Maybe<TemplateStageTemplateStagePkeyConnect>;
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateStageNodeIdConnect>;
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateStageTemplateStagePkeyDelete>;
+  /** The primary key(s) for `templateStage` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateStageNodeIdDelete>;
+  /** The primary key(s) and patch data for `templateStage` for the far side of the relationship. */
+  updateById?: Maybe<TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate>;
+  /** The primary key(s) and patch data for `templateStage` for the far side of the relationship. */
+  updateByNodeId?: Maybe<TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate>;
+  /** A `TemplateStageInput` object that will be created and connected to this object. */
+  create?: Maybe<TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput>;
+};
+
+/** Input for the nested mutation of `templateStageReviewLevel` in the `TemplateStageInput` mutation. */
+export type TemplateStageReviewLevelStageIdFkeyInverseInput = {
+  /** Flag indicating whether all other `templateStageReviewLevel` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
+  connectById?: Maybe<Array<TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect>>;
+  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<TemplateStageReviewLevelNodeIdConnect>>;
+  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
+  deleteById?: Maybe<Array<TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete>>;
+  /** The primary key(s) for `templateStageReviewLevel` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<TemplateStageReviewLevelNodeIdDelete>>;
+  /** The primary key(s) and patch data for `templateStageReviewLevel` for the far side of the relationship. */
+  updateById?: Maybe<Array<TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate>>;
+  /** The primary key(s) and patch data for `templateStageReviewLevel` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate>>;
+  /** A `TemplateStageReviewLevelInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput>>;
+};
+
+/** The `templateStage` to be created by this mutation. */
+export type TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  number?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
+};
+
+/** The `templateStageReviewLevel` to be created by this mutation. */
+export type TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  number: Scalars['Int'];
+  name: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  templateStageToStageId?: Maybe<TemplateStageReviewLevelStageIdFkeyInput>;
+};
+
+/** The fields on `templateStageReviewLevel` to look up the row to connect. */
+export type TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `templateStageReviewLevel` to look up the row to delete. */
+export type TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete = {
+  id: Scalars['Int'];
 };
 
 /** A connection to a list of `TemplateStage` values. */
@@ -17205,6 +17603,7 @@ export type TemplateStageTemplateIdFkeyTemplateStageCreateInput = {
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
@@ -17237,6 +17636,16 @@ export type TemplateStageToManyReviewAssignmentFilter = {
   some?: Maybe<ReviewAssignmentFilter>;
   /** No related `ReviewAssignment` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ReviewAssignmentFilter>;
+};
+
+/** A filter to be used against many `TemplateStageReviewLevel` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateStageToManyTemplateStageReviewLevelFilter = {
+  /** Every related `TemplateStageReviewLevel` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<TemplateStageReviewLevelFilter>;
+  /** Some related `TemplateStageReviewLevel` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<TemplateStageReviewLevelFilter>;
+  /** No related `TemplateStageReviewLevel` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<TemplateStageReviewLevelFilter>;
 };
 
 export enum TemplateStatus {
@@ -20281,7 +20690,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionPer
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -20292,7 +20701,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTem
   id?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
-  level?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
   permissionNameToPermissionNameId?: Maybe<TemplatePermissionPermissionNameIdFkeyInput>;
   templateToTemplateId?: Maybe<TemplatePermissionTemplateIdFkeyInput>;
@@ -20441,6 +20850,7 @@ export type UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHisto
   description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
@@ -20453,6 +20863,7 @@ export type UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyP
   description?: Maybe<Scalars['String']>;
   templateId?: Maybe<Scalars['Int']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
@@ -20464,6 +20875,20 @@ export type UpdateTemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyPatc
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `templateStage` being updated. */
+export type UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  number?: Maybe<Scalars['Int']>;
+  title?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateStageTemplateIdFkeyInput>;
+  templateStageReviewLevelsUsingId?: Maybe<TemplateStageReviewLevelStageIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryStageIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentStageIdFkeyInverseInput>;
 };
@@ -20490,6 +20915,64 @@ export type UpdateTemplateStagePayload = {
 /** The output of our update `TemplateStage` mutation. */
 export type UpdateTemplateStagePayloadTemplateStageEdgeArgs = {
   orderBy?: Maybe<Array<TemplateStagesOrderBy>>;
+};
+
+/** All input for the `updateTemplateStageReviewLevelByNodeId` mutation. */
+export type UpdateTemplateStageReviewLevelByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `TemplateStageReviewLevel` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `TemplateStageReviewLevel` being updated. */
+  patch: TemplateStageReviewLevelPatch;
+};
+
+/** All input for the `updateTemplateStageReviewLevel` mutation. */
+export type UpdateTemplateStageReviewLevelInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `TemplateStageReviewLevel` being updated. */
+  patch: TemplateStageReviewLevelPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `templateStageReviewLevel` being updated. */
+export type UpdateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  number?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  templateStageToStageId?: Maybe<TemplateStageReviewLevelStageIdFkeyInput>;
+};
+
+/** The output of our update `TemplateStageReviewLevel` mutation. */
+export type UpdateTemplateStageReviewLevelPayload = {
+  __typename?: 'UpdateTemplateStageReviewLevelPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateStageReviewLevel` that was updated by this mutation. */
+  templateStageReviewLevel?: Maybe<TemplateStageReviewLevel>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `TemplateStage` that is related to this `TemplateStageReviewLevel`. */
+  stage?: Maybe<TemplateStage>;
+  /** An edge for our `TemplateStageReviewLevel`. May be used by Relay 1. */
+  templateStageReviewLevelEdge?: Maybe<TemplateStageReviewLevelsEdge>;
+};
+
+
+/** The output of our update `TemplateStageReviewLevel` mutation. */
+export type UpdateTemplateStageReviewLevelPayloadTemplateStageReviewLevelEdgeArgs = {
+  orderBy?: Maybe<Array<TemplateStageReviewLevelsOrderBy>>;
 };
 
 /** All input for the `updateTriggerQueueByNodeId` mutation. */
@@ -21983,7 +22466,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['ApplicationSection'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['File'] | ResolversTypes['Notification'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['ApplicationSection'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['File'] | ResolversTypes['Notification'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -22020,6 +22503,8 @@ export type ResolversTypes = {
   TemplateStatus: TemplateStatus;
   TemplateToManyTemplateStageFilter: TemplateToManyTemplateStageFilter;
   TemplateStageFilter: TemplateStageFilter;
+  TemplateStageToManyTemplateStageReviewLevelFilter: TemplateStageToManyTemplateStageReviewLevelFilter;
+  TemplateStageReviewLevelFilter: TemplateStageReviewLevelFilter;
   TemplateStageToManyApplicationStageHistoryFilter: TemplateStageToManyApplicationStageHistoryFilter;
   ApplicationStageHistoryFilter: ApplicationStageHistoryFilter;
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
@@ -22122,6 +22607,11 @@ export type ResolversTypes = {
   TemplateStageCondition: TemplateStageCondition;
   TemplateStagesConnection: ResolverTypeWrapper<TemplateStagesConnection>;
   TemplateStage: ResolverTypeWrapper<TemplateStage>;
+  TemplateStageReviewLevelsOrderBy: TemplateStageReviewLevelsOrderBy;
+  TemplateStageReviewLevelCondition: TemplateStageReviewLevelCondition;
+  TemplateStageReviewLevelsConnection: ResolverTypeWrapper<TemplateStageReviewLevelsConnection>;
+  TemplateStageReviewLevel: ResolverTypeWrapper<TemplateStageReviewLevel>;
+  TemplateStageReviewLevelsEdge: ResolverTypeWrapper<TemplateStageReviewLevelsEdge>;
   ApplicationStageHistoriesOrderBy: ApplicationStageHistoriesOrderBy;
   ApplicationStageHistoryCondition: ApplicationStageHistoryCondition;
   ApplicationStageHistoriesConnection: ResolverTypeWrapper<ApplicationStageHistoriesConnection>;
@@ -22551,6 +23041,16 @@ export type ResolversTypes = {
   ReviewAssignmentStageIdFkeyInput: ReviewAssignmentStageIdFkeyInput;
   TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate;
   updateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  TemplateStageReviewLevelStageIdFkeyInverseInput: TemplateStageReviewLevelStageIdFkeyInverseInput;
+  TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect: TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect;
+  TemplateStageReviewLevelNodeIdConnect: TemplateStageReviewLevelNodeIdConnect;
+  TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete: TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete;
+  TemplateStageReviewLevelNodeIdDelete: TemplateStageReviewLevelNodeIdDelete;
+  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate;
+  updateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
+  TemplateStageReviewLevelStageIdFkeyInput: TemplateStageReviewLevelStageIdFkeyInput;
+  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
   ApplicationStageHistoryStageIdFkeyInverseInput: ApplicationStageHistoryStageIdFkeyInverseInput;
   ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
   updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
@@ -22869,6 +23369,11 @@ export type ResolversTypes = {
   ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput;
   TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
   ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput;
+  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
+  TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput;
+  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
+  TemplateStageReviewLevelPatch: TemplateStageReviewLevelPatch;
+  TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
   ReviewAssignmentStageIdFkeyTemplateStageCreateInput: ReviewAssignmentStageIdFkeyTemplateStageCreateInput;
   OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate;
@@ -23076,6 +23581,9 @@ export type ResolversTypes = {
   CreateTemplateStageInput: CreateTemplateStageInput;
   TemplateStageInput: TemplateStageInput;
   CreateTemplateStagePayload: ResolverTypeWrapper<CreateTemplateStagePayload>;
+  CreateTemplateStageReviewLevelInput: CreateTemplateStageReviewLevelInput;
+  TemplateStageReviewLevelInput: TemplateStageReviewLevelInput;
+  CreateTemplateStageReviewLevelPayload: ResolverTypeWrapper<CreateTemplateStageReviewLevelPayload>;
   CreateTriggerQueueInput: CreateTriggerQueueInput;
   TriggerQueueInput: TriggerQueueInput;
   CreateTriggerQueuePayload: ResolverTypeWrapper<CreateTriggerQueuePayload>;
@@ -23172,6 +23680,9 @@ export type ResolversTypes = {
   UpdateTemplateStageByNodeIdInput: UpdateTemplateStageByNodeIdInput;
   UpdateTemplateStagePayload: ResolverTypeWrapper<UpdateTemplateStagePayload>;
   UpdateTemplateStageInput: UpdateTemplateStageInput;
+  UpdateTemplateStageReviewLevelByNodeIdInput: UpdateTemplateStageReviewLevelByNodeIdInput;
+  UpdateTemplateStageReviewLevelPayload: ResolverTypeWrapper<UpdateTemplateStageReviewLevelPayload>;
+  UpdateTemplateStageReviewLevelInput: UpdateTemplateStageReviewLevelInput;
   UpdateTriggerQueueByNodeIdInput: UpdateTriggerQueueByNodeIdInput;
   UpdateTriggerQueuePayload: ResolverTypeWrapper<UpdateTriggerQueuePayload>;
   UpdateTriggerQueueInput: UpdateTriggerQueueInput;
@@ -23267,6 +23778,9 @@ export type ResolversTypes = {
   DeleteTemplateStageByNodeIdInput: DeleteTemplateStageByNodeIdInput;
   DeleteTemplateStagePayload: ResolverTypeWrapper<DeleteTemplateStagePayload>;
   DeleteTemplateStageInput: DeleteTemplateStageInput;
+  DeleteTemplateStageReviewLevelByNodeIdInput: DeleteTemplateStageReviewLevelByNodeIdInput;
+  DeleteTemplateStageReviewLevelPayload: ResolverTypeWrapper<DeleteTemplateStageReviewLevelPayload>;
+  DeleteTemplateStageReviewLevelInput: DeleteTemplateStageReviewLevelInput;
   DeleteTriggerQueueByNodeIdInput: DeleteTriggerQueueByNodeIdInput;
   DeleteTriggerQueuePayload: ResolverTypeWrapper<DeleteTriggerQueuePayload>;
   DeleteTriggerQueueInput: DeleteTriggerQueueInput;
@@ -23282,7 +23796,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['File'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['File'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -23313,6 +23827,8 @@ export type ResolversParentTypes = {
   TemplateStatusFilter: TemplateStatusFilter;
   TemplateToManyTemplateStageFilter: TemplateToManyTemplateStageFilter;
   TemplateStageFilter: TemplateStageFilter;
+  TemplateStageToManyTemplateStageReviewLevelFilter: TemplateStageToManyTemplateStageReviewLevelFilter;
+  TemplateStageReviewLevelFilter: TemplateStageReviewLevelFilter;
   TemplateStageToManyApplicationStageHistoryFilter: TemplateStageToManyApplicationStageHistoryFilter;
   ApplicationStageHistoryFilter: ApplicationStageHistoryFilter;
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
@@ -23404,6 +23920,10 @@ export type ResolversParentTypes = {
   TemplateStageCondition: TemplateStageCondition;
   TemplateStagesConnection: TemplateStagesConnection;
   TemplateStage: TemplateStage;
+  TemplateStageReviewLevelCondition: TemplateStageReviewLevelCondition;
+  TemplateStageReviewLevelsConnection: TemplateStageReviewLevelsConnection;
+  TemplateStageReviewLevel: TemplateStageReviewLevel;
+  TemplateStageReviewLevelsEdge: TemplateStageReviewLevelsEdge;
   ApplicationStageHistoryCondition: ApplicationStageHistoryCondition;
   ApplicationStageHistoriesConnection: ApplicationStageHistoriesConnection;
   ApplicationStageHistory: ApplicationStageHistory;
@@ -23800,6 +24320,16 @@ export type ResolversParentTypes = {
   ReviewAssignmentStageIdFkeyInput: ReviewAssignmentStageIdFkeyInput;
   TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate;
   updateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  TemplateStageReviewLevelStageIdFkeyInverseInput: TemplateStageReviewLevelStageIdFkeyInverseInput;
+  TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect: TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect;
+  TemplateStageReviewLevelNodeIdConnect: TemplateStageReviewLevelNodeIdConnect;
+  TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete: TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete;
+  TemplateStageReviewLevelNodeIdDelete: TemplateStageReviewLevelNodeIdDelete;
+  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate;
+  updateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
+  TemplateStageReviewLevelStageIdFkeyInput: TemplateStageReviewLevelStageIdFkeyInput;
+  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
   ApplicationStageHistoryStageIdFkeyInverseInput: ApplicationStageHistoryStageIdFkeyInverseInput;
   ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
   updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
@@ -24118,6 +24648,11 @@ export type ResolversParentTypes = {
   ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput;
   TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
   ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput;
+  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
+  TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput;
+  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
+  TemplateStageReviewLevelPatch: TemplateStageReviewLevelPatch;
+  TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
   ReviewAssignmentStageIdFkeyTemplateStageCreateInput: ReviewAssignmentStageIdFkeyTemplateStageCreateInput;
   OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate;
@@ -24325,6 +24860,9 @@ export type ResolversParentTypes = {
   CreateTemplateStageInput: CreateTemplateStageInput;
   TemplateStageInput: TemplateStageInput;
   CreateTemplateStagePayload: CreateTemplateStagePayload;
+  CreateTemplateStageReviewLevelInput: CreateTemplateStageReviewLevelInput;
+  TemplateStageReviewLevelInput: TemplateStageReviewLevelInput;
+  CreateTemplateStageReviewLevelPayload: CreateTemplateStageReviewLevelPayload;
   CreateTriggerQueueInput: CreateTriggerQueueInput;
   TriggerQueueInput: TriggerQueueInput;
   CreateTriggerQueuePayload: CreateTriggerQueuePayload;
@@ -24421,6 +24959,9 @@ export type ResolversParentTypes = {
   UpdateTemplateStageByNodeIdInput: UpdateTemplateStageByNodeIdInput;
   UpdateTemplateStagePayload: UpdateTemplateStagePayload;
   UpdateTemplateStageInput: UpdateTemplateStageInput;
+  UpdateTemplateStageReviewLevelByNodeIdInput: UpdateTemplateStageReviewLevelByNodeIdInput;
+  UpdateTemplateStageReviewLevelPayload: UpdateTemplateStageReviewLevelPayload;
+  UpdateTemplateStageReviewLevelInput: UpdateTemplateStageReviewLevelInput;
   UpdateTriggerQueueByNodeIdInput: UpdateTriggerQueueByNodeIdInput;
   UpdateTriggerQueuePayload: UpdateTriggerQueuePayload;
   UpdateTriggerQueueInput: UpdateTriggerQueueInput;
@@ -24516,6 +25057,9 @@ export type ResolversParentTypes = {
   DeleteTemplateStageByNodeIdInput: DeleteTemplateStageByNodeIdInput;
   DeleteTemplateStagePayload: DeleteTemplateStagePayload;
   DeleteTemplateStageInput: DeleteTemplateStageInput;
+  DeleteTemplateStageReviewLevelByNodeIdInput: DeleteTemplateStageReviewLevelByNodeIdInput;
+  DeleteTemplateStageReviewLevelPayload: DeleteTemplateStageReviewLevelPayload;
+  DeleteTemplateStageReviewLevelInput: DeleteTemplateStageReviewLevelInput;
   DeleteTriggerQueueByNodeIdInput: DeleteTriggerQueueByNodeIdInput;
   DeleteTriggerQueuePayload: DeleteTriggerQueuePayload;
   DeleteTriggerQueueInput: DeleteTriggerQueueInput;
@@ -25147,6 +25691,15 @@ export type CreateTemplateStagePayloadResolvers<ContextType = any, ParentType ex
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateTemplateStageReviewLevelPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTemplateStageReviewLevelPayload'] = ResolversParentTypes['CreateTemplateStageReviewLevelPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateStageReviewLevel?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevel']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
+  templateStageReviewLevelEdge?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevelsEdge']>, ParentType, ContextType, RequireFields<CreateTemplateStageReviewLevelPayloadTemplateStageReviewLevelEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateTriggerQueuePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTriggerQueuePayload'] = ResolversParentTypes['CreateTriggerQueuePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   triggerQueue?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
@@ -25478,6 +26031,16 @@ export type DeleteTemplateStagePayloadResolvers<ContextType = any, ParentType ex
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteTemplateStageReviewLevelPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteTemplateStageReviewLevelPayload'] = ResolversParentTypes['DeleteTemplateStageReviewLevelPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateStageReviewLevel?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevel']>, ParentType, ContextType>;
+  deletedTemplateStageReviewLevelNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
+  templateStageReviewLevelEdge?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevelsEdge']>, ParentType, ContextType, RequireFields<DeleteTemplateStageReviewLevelPayloadTemplateStageReviewLevelEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteTriggerQueuePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteTriggerQueuePayload'] = ResolversParentTypes['DeleteTriggerQueuePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   triggerQueue?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
@@ -25601,6 +26164,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createTemplatePermission?: Resolver<Maybe<ResolversTypes['CreateTemplatePermissionPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplatePermissionArgs, 'input'>>;
   createTemplateSection?: Resolver<Maybe<ResolversTypes['CreateTemplateSectionPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateSectionArgs, 'input'>>;
   createTemplateStage?: Resolver<Maybe<ResolversTypes['CreateTemplateStagePayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateStageArgs, 'input'>>;
+  createTemplateStageReviewLevel?: Resolver<Maybe<ResolversTypes['CreateTemplateStageReviewLevelPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateStageReviewLevelArgs, 'input'>>;
   createTriggerQueue?: Resolver<Maybe<ResolversTypes['CreateTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateTriggerQueueArgs, 'input'>>;
   createUser?: Resolver<Maybe<ResolversTypes['CreateUserPayload']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   createUserOrganisation?: Resolver<Maybe<ResolversTypes['CreateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationCreateUserOrganisationArgs, 'input'>>;
@@ -25662,6 +26226,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateTemplateSection?: Resolver<Maybe<ResolversTypes['UpdateTemplateSectionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateSectionArgs, 'input'>>;
   updateTemplateStageByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateStagePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateStageByNodeIdArgs, 'input'>>;
   updateTemplateStage?: Resolver<Maybe<ResolversTypes['UpdateTemplateStagePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateStageArgs, 'input'>>;
+  updateTemplateStageReviewLevelByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateStageReviewLevelPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateStageReviewLevelByNodeIdArgs, 'input'>>;
+  updateTemplateStageReviewLevel?: Resolver<Maybe<ResolversTypes['UpdateTemplateStageReviewLevelPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateStageReviewLevelArgs, 'input'>>;
   updateTriggerQueueByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTriggerQueueByNodeIdArgs, 'input'>>;
   updateTriggerQueue?: Resolver<Maybe<ResolversTypes['UpdateTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTriggerQueueArgs, 'input'>>;
   updateUserByNodeId?: Resolver<Maybe<ResolversTypes['UpdateUserPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserByNodeIdArgs, 'input'>>;
@@ -25727,6 +26293,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTemplateSection?: Resolver<Maybe<ResolversTypes['DeleteTemplateSectionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateSectionArgs, 'input'>>;
   deleteTemplateStageByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateStagePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateStageByNodeIdArgs, 'input'>>;
   deleteTemplateStage?: Resolver<Maybe<ResolversTypes['DeleteTemplateStagePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateStageArgs, 'input'>>;
+  deleteTemplateStageReviewLevelByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateStageReviewLevelPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateStageReviewLevelByNodeIdArgs, 'input'>>;
+  deleteTemplateStageReviewLevel?: Resolver<Maybe<ResolversTypes['DeleteTemplateStageReviewLevelPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateStageReviewLevelArgs, 'input'>>;
   deleteTriggerQueueByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTriggerQueueByNodeIdArgs, 'input'>>;
   deleteTriggerQueue?: Resolver<Maybe<ResolversTypes['DeleteTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTriggerQueueArgs, 'input'>>;
   deleteUserByNodeId?: Resolver<Maybe<ResolversTypes['DeleteUserPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserByNodeIdArgs, 'input'>>;
@@ -25737,7 +26305,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'ApplicationStageHistory' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ReviewAssignment' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'TemplateElement' | 'TemplateSection' | 'ApplicationSection' | 'ApplicationResponse' | 'File' | 'Notification' | 'ReviewDecision' | 'ReviewStatusHistory' | 'ApplicationStatusHistory' | 'TemplateAction' | 'ElementTypePlugin', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ReviewAssignment' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'TemplateElement' | 'TemplateSection' | 'ApplicationSection' | 'ApplicationResponse' | 'File' | 'Notification' | 'ReviewDecision' | 'ReviewStatusHistory' | 'ApplicationStatusHistory' | 'TemplateAction' | 'ElementTypePlugin', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -25954,6 +26522,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templatePermissions?: Resolver<Maybe<ResolversTypes['TemplatePermissionsConnection']>, ParentType, ContextType, RequireFields<QueryTemplatePermissionsArgs, 'orderBy'>>;
   templateSections?: Resolver<Maybe<ResolversTypes['TemplateSectionsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateSectionsArgs, 'orderBy'>>;
   templateStages?: Resolver<Maybe<ResolversTypes['TemplateStagesConnection']>, ParentType, ContextType, RequireFields<QueryTemplateStagesArgs, 'orderBy'>>;
+  templateStageReviewLevels?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevelsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateStageReviewLevelsArgs, 'orderBy'>>;
   triggerQueues?: Resolver<Maybe<ResolversTypes['TriggerQueuesConnection']>, ParentType, ContextType, RequireFields<QueryTriggerQueuesArgs, 'orderBy'>>;
   users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'orderBy'>>;
   userOrgJoins?: Resolver<Maybe<ResolversTypes['UserOrgJoinsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrgJoinsArgs, 'orderBy'>>;
@@ -25989,6 +26558,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templatePermission?: Resolver<Maybe<ResolversTypes['TemplatePermission']>, ParentType, ContextType, RequireFields<QueryTemplatePermissionArgs, 'id'>>;
   templateSection?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType, RequireFields<QueryTemplateSectionArgs, 'id'>>;
   templateStage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType, RequireFields<QueryTemplateStageArgs, 'id'>>;
+  templateStageReviewLevel?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevel']>, ParentType, ContextType, RequireFields<QueryTemplateStageReviewLevelArgs, 'id'>>;
   triggerQueue?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType, RequireFields<QueryTriggerQueueArgs, 'id'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByUsernameArgs, 'username'>>;
@@ -26030,6 +26600,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templatePermissionByNodeId?: Resolver<Maybe<ResolversTypes['TemplatePermission']>, ParentType, ContextType, RequireFields<QueryTemplatePermissionByNodeIdArgs, 'nodeId'>>;
   templateSectionByNodeId?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType, RequireFields<QueryTemplateSectionByNodeIdArgs, 'nodeId'>>;
   templateStageByNodeId?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType, RequireFields<QueryTemplateStageByNodeIdArgs, 'nodeId'>>;
+  templateStageReviewLevelByNodeId?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevel']>, ParentType, ContextType, RequireFields<QueryTemplateStageReviewLevelByNodeIdArgs, 'nodeId'>>;
   triggerQueueByNodeId?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType, RequireFields<QueryTriggerQueueByNodeIdArgs, 'nodeId'>>;
   userByNodeId?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByNodeIdArgs, 'nodeId'>>;
   userOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationByNodeIdArgs, 'nodeId'>>;
@@ -26365,7 +26936,7 @@ export type TemplatePermissionResolvers<ContextType = any, ParentType extends Re
   permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  level?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  levelNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   restrictions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
@@ -26435,8 +27006,34 @@ export type TemplateStageResolvers<ContextType = any, ParentType extends Resolve
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  templateStageReviewLevelsByStageId?: Resolver<ResolversTypes['TemplateStageReviewLevelsConnection'], ParentType, ContextType, RequireFields<TemplateStageTemplateStageReviewLevelsByStageIdArgs, 'orderBy'>>;
   applicationStageHistoriesByStageId?: Resolver<ResolversTypes['ApplicationStageHistoriesConnection'], ParentType, ContextType, RequireFields<TemplateStageApplicationStageHistoriesByStageIdArgs, 'orderBy'>>;
   reviewAssignmentsByStageId?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateStageReviewAssignmentsByStageIdArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateStageReviewLevelResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateStageReviewLevel'] = ResolversParentTypes['TemplateStageReviewLevel']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  number?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateStageReviewLevelsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateStageReviewLevelsConnection'] = ResolversParentTypes['TemplateStageReviewLevelsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['TemplateStageReviewLevel']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['TemplateStageReviewLevelsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateStageReviewLevelsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateStageReviewLevelsEdge'] = ResolversParentTypes['TemplateStageReviewLevelsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevel']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -26747,6 +27344,15 @@ export type UpdateTemplateStagePayloadResolvers<ContextType = any, ParentType ex
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateTemplateStageReviewLevelPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTemplateStageReviewLevelPayload'] = ResolversParentTypes['UpdateTemplateStageReviewLevelPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateStageReviewLevel?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevel']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
+  templateStageReviewLevelEdge?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevelsEdge']>, ParentType, ContextType, RequireFields<UpdateTemplateStageReviewLevelPayloadTemplateStageReviewLevelEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateTriggerQueuePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTriggerQueuePayload'] = ResolversParentTypes['UpdateTriggerQueuePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   triggerQueue?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
@@ -26926,6 +27532,7 @@ export type Resolvers<ContextType = any> = {
   CreateTemplatePermissionPayload?: CreateTemplatePermissionPayloadResolvers<ContextType>;
   CreateTemplateSectionPayload?: CreateTemplateSectionPayloadResolvers<ContextType>;
   CreateTemplateStagePayload?: CreateTemplateStagePayloadResolvers<ContextType>;
+  CreateTemplateStageReviewLevelPayload?: CreateTemplateStageReviewLevelPayloadResolvers<ContextType>;
   CreateTriggerQueuePayload?: CreateTriggerQueuePayloadResolvers<ContextType>;
   CreateUserOrganisationPayload?: CreateUserOrganisationPayloadResolvers<ContextType>;
   CreateUserPayload?: CreateUserPayloadResolvers<ContextType>;
@@ -26959,6 +27566,7 @@ export type Resolvers<ContextType = any> = {
   DeleteTemplatePermissionPayload?: DeleteTemplatePermissionPayloadResolvers<ContextType>;
   DeleteTemplateSectionPayload?: DeleteTemplateSectionPayloadResolvers<ContextType>;
   DeleteTemplateStagePayload?: DeleteTemplateStagePayloadResolvers<ContextType>;
+  DeleteTemplateStageReviewLevelPayload?: DeleteTemplateStageReviewLevelPayloadResolvers<ContextType>;
   DeleteTriggerQueuePayload?: DeleteTriggerQueuePayloadResolvers<ContextType>;
   DeleteUserOrganisationPayload?: DeleteUserOrganisationPayloadResolvers<ContextType>;
   DeleteUserPayload?: DeleteUserPayloadResolvers<ContextType>;
@@ -27031,6 +27639,9 @@ export type Resolvers<ContextType = any> = {
   TemplateSectionsEdge?: TemplateSectionsEdgeResolvers<ContextType>;
   TemplatesEdge?: TemplatesEdgeResolvers<ContextType>;
   TemplateStage?: TemplateStageResolvers<ContextType>;
+  TemplateStageReviewLevel?: TemplateStageReviewLevelResolvers<ContextType>;
+  TemplateStageReviewLevelsConnection?: TemplateStageReviewLevelsConnectionResolvers<ContextType>;
+  TemplateStageReviewLevelsEdge?: TemplateStageReviewLevelsEdgeResolvers<ContextType>;
   TemplateStagesConnection?: TemplateStagesConnectionResolvers<ContextType>;
   TemplateStagesEdge?: TemplateStagesEdgeResolvers<ContextType>;
   TriggerQueue?: TriggerQueueResolvers<ContextType>;
@@ -27063,6 +27674,7 @@ export type Resolvers<ContextType = any> = {
   UpdateTemplatePermissionPayload?: UpdateTemplatePermissionPayloadResolvers<ContextType>;
   UpdateTemplateSectionPayload?: UpdateTemplateSectionPayloadResolvers<ContextType>;
   UpdateTemplateStagePayload?: UpdateTemplateStagePayloadResolvers<ContextType>;
+  UpdateTemplateStageReviewLevelPayload?: UpdateTemplateStageReviewLevelPayloadResolvers<ContextType>;
   UpdateTriggerQueuePayload?: UpdateTriggerQueuePayloadResolvers<ContextType>;
   UpdateUserOrganisationPayload?: UpdateUserOrganisationPayloadResolvers<ContextType>;
   UpdateUserPayload?: UpdateUserPayloadResolvers<ContextType>;

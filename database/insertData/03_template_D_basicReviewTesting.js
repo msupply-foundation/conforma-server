@@ -225,18 +225,30 @@ exports.queries = [
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
               {
                 id: 6
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
+                templateStageReviewLevelsUsingId: {
+                  create: [
+                    { number: 1, name: "Review" }
+                    { number: 2, name: "Consolidation" }
+                  ]
+                }
               }
               {
                 id: 7
                 number: 3
                 title: "Final Decision"
                 description: "This is the final step and will change the outcome of this applications."
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Approval" }]
+                }
               }
             ]
           }
@@ -259,25 +271,25 @@ exports.queries = [
                 id: 4001
                 permissionNameId: 5000
                 stageNumber: 1
-                level: 1
+                levelNumber: 1
                 restrictions: { templateSectionRestrictions: ["S1"] }
               }
               {
                 id: 4002
                 permissionNameId: 5001
                 stageNumber: 1
-                level: 1
+                levelNumber: 1
                 restrictions: { templateSectionRestrictions: ["S2"] }
               }
-              { id: 4003, permissionNameId: 6000, stageNumber: 2, level: 1 }
-              { id: 4004, permissionNameId: 6001, stageNumber: 2, level: 2 }
-              { id: 4005, permissionNameId: 7000, stageNumber: 3, level: 1 }
+              { id: 4003, permissionNameId: 6000, stageNumber: 2, levelNumber: 1 }
+              { id: 4004, permissionNameId: 6001, stageNumber: 2, levelNumber: 2 }
+              { id: 4005, permissionNameId: 7000, stageNumber: 3, levelNumber: 1 }
               # Assign general
               {
                 id: 4006
                 permissionNameId: 9000
                 stageNumber: 1
-                level: 1
+                levelNumber: 1
               }
             ]
           }

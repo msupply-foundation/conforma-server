@@ -15,6 +15,7 @@ CREATE TABLE public.review_assignment (
 	trigger public.trigger,
 	time_created timestamptz default current_timestamp,
 	level integer,
+-- 	level_id integer references public.template_stage_review_level(id),
 	is_last_level boolean
 );
 
