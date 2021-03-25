@@ -45,6 +45,13 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
         ? restrictions?.templateSectionRestrictions
         : null
 
+      const canSelfAssign = restrictions?.canSelfAssign
+      // Automatic option for slef assignment if review is above level 1
+      const status =
+        canSelfAssign || nextReviewLevel > 1
+          ? AssignmentStatus.SELF_ASSIGN
+          : AssignmentStatus.AVAILABLE
+
       const userOrgKey = `${userId}_${orgId ? orgId : 0}`
       if (reviewAssignments[userOrgKey])
         reviewAssignments[userOrgKey].templateSectionRestrictions = mergeSectionRestrictions(
@@ -58,7 +65,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
           stageId,
           stageNumber,
           // TO-DO: allow STATUS to be configurable in template
-          status: nextReviewLevel === 1 ? AssignmentStatus.AVAILABLE : AssignmentStatus.SELF_ASSIGN,
+          status,
           applicationId,
           templateSectionRestrictions,
           level: nextReviewLevel,
