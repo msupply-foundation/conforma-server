@@ -35,6 +35,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 1000
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -600,6 +601,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 4000
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -834,6 +836,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 5000
               reviewResponsesUsingId: {
                 create: [
                   {
