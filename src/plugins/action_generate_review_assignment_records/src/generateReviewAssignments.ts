@@ -125,7 +125,7 @@ const generateNextReviewAssignments = async ({
       : null
 
     const status =
-      restrictions?.canSelfAssign || nextReviewLevel >= 1
+      restrictions?.canSelfAssign || nextReviewLevel > 1
         ? AssignmentStatus.SELF_ASSIGN
         : AssignmentStatus.AVAILABLE
 
