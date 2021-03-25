@@ -1,3 +1,3 @@
-import ImportCsvController from './ImportCsvController'
+import ImportCsvController from './ImportCsv.controller'
 
 export { ImportCsvController }
