@@ -8,7 +8,7 @@ const graphQLendpoint = config.graphQLendpoint
 const filesToProcess = fs
   .readdirSync('./database/insertData')
   .filter((file) => !file.match(/^\./)) // Ignore hidden files
-  .filter((file) => file !== 'core_actions.js')
+  .filter((file) => !['core_actions.js', 'dev_actions.js'].includes(file))
 
 processQueries(filesToProcess)
 

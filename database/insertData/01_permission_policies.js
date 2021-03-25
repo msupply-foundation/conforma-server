@@ -68,4 +68,25 @@ exports.queries = [
       }
     }
   }`,
+  // basicAssign
+  `mutation createPolicy {
+    createPermissionPolicy(
+      input: {
+        permissionPolicy: {
+          id: 4000
+          name: "basicAssign"
+          rules: {
+            application: {
+              view: { template_id: "jwtPermission_bigint_templateId" }
+            }
+          }
+          type: ASSIGN
+        }
+      }
+    ) {
+      permissionPolicy {
+        name
+      }
+    }
+  }`,
 ]

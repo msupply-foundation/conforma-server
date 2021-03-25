@@ -4,6 +4,7 @@ TEMPLATE D - Review (testing)
     for testing the application review process
 */
 const { coreActions } = require('./core_actions')
+const { devActions } = require('./dev_actions')
 
 exports.queries = [
   `mutation {
@@ -242,6 +243,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               ${coreActions}
+              ${devActions}
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
@@ -270,6 +272,13 @@ exports.queries = [
               { id: 4003, permissionNameId: 6000, stageNumber: 2, level: 1 }
               { id: 4004, permissionNameId: 6001, stageNumber: 2, level: 2 }
               { id: 4005, permissionNameId: 7000, stageNumber: 3, level: 1 }
+              # Assign general
+              {
+                id: 4006
+                permissionNameId: 9000
+                stageNumber: 1
+                level: 1
+              }
             ]
           }
         }

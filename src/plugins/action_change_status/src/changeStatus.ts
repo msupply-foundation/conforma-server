@@ -33,9 +33,9 @@ const changeApplicationStatus = async (
   console.log(`Changing the Status of Application ${applicationId}...`)
 
   try {
-    const currentStatus = await DBConnect.getApplicationCurrentStatusHistory(applicationId)
+    const current = await DBConnect.getCurrentStageStatusHistory(applicationId)
 
-    if (currentStatus?.status === newStatus) {
+    if (current?.status === newStatus) {
       // Do nothing
       console.log(
         `WARNING: Application ${applicationId} already has status: ${newStatus}. No changes were made.`
@@ -44,23 +44,20 @@ const changeApplicationStatus = async (
       returnObject.error_log = 'Status not changed'
       returnObject.output = {
         status: newStatus,
-        statusId: currentStatus.id,
-        applicationStatusHistoryTimestamp: currentStatus.time_created,
+        statusId: current.status_history_id,
+        applicationStatusHistoryTimestamp: current.statu_history_time_created,
       }
       return returnObject
     }
 
-    // Get current stage_history_id if not already known from status_history
-    let currentStageHistoryId
-    if (!currentStatus?.status) {
-      const result = await DBConnect.getCurrentStageHistory(applicationId)
-      if (!result) {
-        returnObject.status = 'Fail'
-        returnObject.error_log =
-          "No stage defined for this Application. Can't create a status_history record."
-        return returnObject
-      } else currentStageHistoryId = result.id
-    } else currentStageHistoryId = currentStatus.application_stage_history_id
+    if (!current?.status) {
+      returnObject.status = 'Fail'
+      returnObject.error_log =
+        "No stage defined for this Application. Can't create a status_history record."
+      return returnObject
+    }
+
+    const currentStageHistoryId = current.stage_history_id
 
     // Create a new application_status_history record
     const result = await DBConnect.addNewApplicationStatusHistory(currentStageHistoryId, newStatus)
@@ -108,8 +105,8 @@ const changeReviewStatus = async (
       returnObject.error_log = 'Status not changed'
       returnObject.output = {
         status: newStatus,
-        statusId: currentStatus.id,
-        reviewStatusHistoryTimestamp: currentStatus.time_created,
+        statusId: currentStatus.status_history_id,
+        reviewStatusHistoryTimestamp: currentStatus.status_history_time_created,
       }
       return returnObject
     }
