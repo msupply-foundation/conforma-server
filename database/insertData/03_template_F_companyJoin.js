@@ -3,6 +3,7 @@ TEMPLATE F - Join Organisation
   - Template to join an existing organisation
 */
 const { coreActions } = require('./core_actions')
+const { devActions } = require('./dev_actions')
 
 exports.queries = [
   `mutation {
@@ -70,7 +71,7 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Reason for joining"
-                        description: "Please provide a brief summary of your relationship to this organisaion"
+                        description: "Please provide a brief summary of your relationship to this organisation"
                       }
                     }
                     {
@@ -134,6 +135,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               ${coreActions}
+              ${devActions}
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
@@ -142,9 +144,9 @@ exports.queries = [
                 }
               }
               {
-                actionCode: "joinUserOrg"
+                actionCode: "changeOutcome"
                 trigger: ON_REVIEW_SUBMIT
-                sequence: 11
+                sequence: 100
                 condition: {
                   operator: "AND"
                   children: [
@@ -164,6 +166,36 @@ exports.queries = [
                       operator: "objectProperties"
                       children: ["applicationData.reviewData.isLastLevel"]
                     }
+                  ]
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 110
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: ["output.newOutcome"]
+                    }
+                    "Approved"
+                  ]
+                }
+              }
+              {
+                actionCode: "joinUserOrg"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 120
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: ["output.newOutcome"]
+                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -172,47 +204,33 @@ exports.queries = [
                     children: ["applicationData.userId"]
                   }
                   org_id: {
-                    type: "number"
-                    operator: "pgSQL"
-                    children: [
-                      "SELECT id FROM organisation WHERE like %$1%"
-                      {
-                        operator: "objectProperties"
-                        children: ["responses.S1Q1.text"]
-                      }
-                    ]
+                    operator: "objectProperties"
+                    children: ["responses.S1Q1.id"]
                   }
                 }
               }
               {
                 actionCode: "grantPermissions"
                 trigger: ON_REVIEW_SUBMIT
-                sequence: 103
+                sequence: 130
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
-                      children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
-                      ]
-                    }
-                    {
                       operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
+                      children: ["output.newOutcome"]
                     }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
                   username: {
                     operator: "objectProperties"
                     children: ["applicationData.username"]
+                  }
+                  orgName: {
+                    operator: "objectProperties"
+                    children: ["responses.S1Q1.text"]
                   }
                   permissionNames: ["canApplyDrugRego"]
                 }
@@ -221,11 +239,20 @@ exports.queries = [
           }
           templatePermissionsUsingId: {
             create: [
+              # applyJoinCompany
+              { permissionNameId: 8000 }
               # assignGeneral
               { permissionNameId: 9000 }
               # reviewJoinCompany
               {
                 permissionNameId: 8000
+                level: 1
+                stageNumber: 1
+                restrictions: { canSelfAssign: true }
+              }
+              # reviewGeneral
+              {
+                permissionNameId: 10000
                 level: 1
                 stageNumber: 1
                 restrictions: { canSelfAssign: true }
@@ -240,5 +267,6 @@ exports.queries = [
         name
       }
     }
-  }`,
+  }
+  `,
 ]
