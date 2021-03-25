@@ -3929,6 +3929,39 @@ export type CreateFilePayloadFileEdgeArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
 };
 
+/** All input for the create `LookupTable` mutation. */
+export type CreateLookupTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` to be created by this mutation. */
+  lookupTable: LookupTableInput;
+};
+
+/** The output of our create `LookupTable` mutation. */
+export type CreateLookupTablePayload = {
+  __typename?: 'CreateLookupTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` that was created by this mutation. */
+  lookupTable?: Maybe<LookupTable>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTable`. May be used by Relay 1. */
+  lookupTableEdge?: Maybe<LookupTablesEdge>;
+};
+
+
+/** The output of our create `LookupTable` mutation. */
+export type CreateLookupTablePayloadLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
 /** All input for the create `Notification` mutation. */
 export type CreateNotificationInput = {
   /**
@@ -5229,6 +5262,50 @@ export type DeleteFilePayload = {
 /** The output of our delete `File` mutation. */
 export type DeleteFilePayloadFileEdgeArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
+};
+
+/** All input for the `deleteLookupTableByNodeId` mutation. */
+export type DeleteLookupTableByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTable` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLookupTable` mutation. */
+export type DeleteLookupTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `LookupTable` mutation. */
+export type DeleteLookupTablePayload = {
+  __typename?: 'DeleteLookupTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` that was deleted by this mutation. */
+  lookupTable?: Maybe<LookupTable>;
+  deletedLookupTableNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTable`. May be used by Relay 1. */
+  lookupTableEdge?: Maybe<LookupTablesEdge>;
+};
+
+
+/** The output of our delete `LookupTable` mutation. */
+export type DeleteLookupTablePayloadLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
 };
 
 /** All input for the `deleteNotificationByNodeId` mutation. */
@@ -7040,6 +7117,102 @@ export type JsonFilter = {
   containedBy?: Maybe<Scalars['JSON']>;
 };
 
+export type LookupTable = Node & {
+  __typename?: 'LookupTable';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/**
+ * A condition to be used against `LookupTable` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type LookupTableCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `name` field. */
+  name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `label` field. */
+  label?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `fieldMap` field. */
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** A filter to be used against `LookupTable` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `name` field. */
+  name?: Maybe<StringFilter>;
+  /** Filter by the object’s `label` field. */
+  label?: Maybe<StringFilter>;
+  /** Filter by the object’s `fieldMap` field. */
+  fieldMap?: Maybe<JsonFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableFilter>;
+};
+
+/** An input for mutations affecting `LookupTable` */
+export type LookupTableInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** Represents an update to a `LookupTable`. Fields that are set will be updated. */
+export type LookupTablePatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  label?: Maybe<Scalars['String']>;
+  fieldMap?: Maybe<Scalars['JSON']>;
+};
+
+/** A connection to a list of `LookupTable` values. */
+export type LookupTablesConnection = {
+  __typename?: 'LookupTablesConnection';
+  /** A list of `LookupTable` objects. */
+  nodes: Array<Maybe<LookupTable>>;
+  /** A list of edges which contains the `LookupTable` and cursor to aid in pagination. */
+  edges: Array<LookupTablesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTable` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `LookupTable` edge in the connection. */
+export type LookupTablesEdge = {
+  __typename?: 'LookupTablesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTable` at the end of the edge. */
+  node?: Maybe<LookupTable>;
+};
+
+/** Methods to use when ordering `LookupTable`. */
+export enum LookupTablesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  NameAsc = 'NAME_ASC',
+  NameDesc = 'NAME_DESC',
+  LabelAsc = 'LABEL_ASC',
+  LabelDesc = 'LABEL_DESC',
+  FieldMapAsc = 'FIELD_MAP_ASC',
+  FieldMapDesc = 'FIELD_MAP_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 /** The root mutation type which contains root level fields which mutate data. */
 export type Mutation = {
   __typename?: 'Mutation';
@@ -7063,6 +7236,8 @@ export type Mutation = {
   createElementTypePlugin?: Maybe<CreateElementTypePluginPayload>;
   /** Creates a single `File`. */
   createFile?: Maybe<CreateFilePayload>;
+  /** Creates a single `LookupTable`. */
+  createLookupTable?: Maybe<CreateLookupTablePayload>;
   /** Creates a single `Notification`. */
   createNotification?: Maybe<CreateNotificationPayload>;
   /** Creates a single `Organisation`. */
@@ -7145,6 +7320,10 @@ export type Mutation = {
   updateFile?: Maybe<UpdateFilePayload>;
   /** Updates a single `File` using a unique key and a patch. */
   updateFileByUniqueId?: Maybe<UpdateFilePayload>;
+  /** Updates a single `LookupTable` using its globally unique id and a patch. */
+  updateLookupTableByNodeId?: Maybe<UpdateLookupTablePayload>;
+  /** Updates a single `LookupTable` using a unique key and a patch. */
+  updateLookupTable?: Maybe<UpdateLookupTablePayload>;
   /** Updates a single `Notification` using its globally unique id and a patch. */
   updateNotificationByNodeId?: Maybe<UpdateNotificationPayload>;
   /** Updates a single `Notification` using a unique key and a patch. */
@@ -7275,6 +7454,10 @@ export type Mutation = {
   deleteFile?: Maybe<DeleteFilePayload>;
   /** Deletes a single `File` using a unique key. */
   deleteFileByUniqueId?: Maybe<DeleteFilePayload>;
+  /** Deletes a single `LookupTable` using its globally unique id. */
+  deleteLookupTableByNodeId?: Maybe<DeleteLookupTablePayload>;
+  /** Deletes a single `LookupTable` using a unique key. */
+  deleteLookupTable?: Maybe<DeleteLookupTablePayload>;
   /** Deletes a single `Notification` using its globally unique id. */
   deleteNotificationByNodeId?: Maybe<DeleteNotificationPayload>;
   /** Deletes a single `Notification` using a unique key. */
@@ -7425,6 +7608,12 @@ export type MutationCreateElementTypePluginArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateFileArgs = {
   input: CreateFileInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableArgs = {
+  input: CreateLookupTableInput;
 };
 
 
@@ -7671,6 +7860,18 @@ export type MutationUpdateFileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateFileByUniqueIdArgs = {
   input: UpdateFileByUniqueIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableByNodeIdArgs = {
+  input: UpdateLookupTableByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableArgs = {
+  input: UpdateLookupTableInput;
 };
 
 
@@ -8061,6 +8262,18 @@ export type MutationDeleteFileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteFileByUniqueIdArgs = {
   input: DeleteFileByUniqueIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableByNodeIdArgs = {
+  input: DeleteLookupTableByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableArgs = {
+  input: DeleteLookupTableInput;
 };
 
 
@@ -10409,6 +10622,8 @@ export type Query = Node & {
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
   files?: Maybe<FilesConnection>;
+  /** Reads and enables pagination through a set of `LookupTable`. */
+  lookupTables?: Maybe<LookupTablesConnection>;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications?: Maybe<NotificationsConnection>;
   /** Reads and enables pagination through a set of `Organisation`. */
@@ -10466,6 +10681,7 @@ export type Query = Node & {
   elementTypePlugin?: Maybe<ElementTypePlugin>;
   file?: Maybe<File>;
   fileByUniqueId?: Maybe<File>;
+  lookupTable?: Maybe<LookupTable>;
   notification?: Maybe<Notification>;
   organisation?: Maybe<Organisation>;
   organisationByName?: Maybe<Organisation>;
@@ -10519,6 +10735,8 @@ export type Query = Node & {
   elementTypePluginByNodeId?: Maybe<ElementTypePlugin>;
   /** Reads a single `File` using its globally unique `ID`. */
   fileByNodeId?: Maybe<File>;
+  /** Reads a single `LookupTable` using its globally unique `ID`. */
+  lookupTableByNodeId?: Maybe<LookupTable>;
   /** Reads a single `Notification` using its globally unique `ID`. */
   notificationByNodeId?: Maybe<Notification>;
   /** Reads a single `Organisation` using its globally unique `ID`. */
@@ -10736,6 +10954,19 @@ export type QueryFilesArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
   condition?: Maybe<FileCondition>;
   filter?: Maybe<FileFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTablesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+  condition?: Maybe<LookupTableCondition>;
+  filter?: Maybe<LookupTableFilter>;
 };
 
 
@@ -11105,6 +11336,12 @@ export type QueryFileByUniqueIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLookupTableArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryNotificationArgs = {
   id: Scalars['Int'];
 };
@@ -11371,6 +11608,12 @@ export type QueryElementTypePluginByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryFileByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -18585,6 +18828,53 @@ export type UpdateFilePayloadFileEdgeArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
 };
 
+/** All input for the `updateLookupTableByNodeId` mutation. */
+export type UpdateLookupTableByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTable` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTable` being updated. */
+  patch: LookupTablePatch;
+};
+
+/** All input for the `updateLookupTable` mutation. */
+export type UpdateLookupTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTable` being updated. */
+  patch: LookupTablePatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `LookupTable` mutation. */
+export type UpdateLookupTablePayload = {
+  __typename?: 'UpdateLookupTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTable` that was updated by this mutation. */
+  lookupTable?: Maybe<LookupTable>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTable`. May be used by Relay 1. */
+  lookupTableEdge?: Maybe<LookupTablesEdge>;
+};
+
+
+/** The output of our update `LookupTable` mutation. */
+export type UpdateLookupTablePayloadLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
 /** All input for the `updateNotificationByNodeId` mutation. */
 export type UpdateNotificationByNodeIdInput = {
   /**
@@ -22031,7 +22321,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['ApplicationSection'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['File'] | ResolversTypes['Notification'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['ApplicationSection'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['File'] | ResolversTypes['Notification'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -22314,6 +22604,12 @@ export type ResolversTypes = {
   ElementTypePluginsConnection: ResolverTypeWrapper<ElementTypePluginsConnection>;
   ElementTypePlugin: ResolverTypeWrapper<ElementTypePlugin>;
   ElementTypePluginsEdge: ResolverTypeWrapper<ElementTypePluginsEdge>;
+  LookupTablesOrderBy: LookupTablesOrderBy;
+  LookupTableCondition: LookupTableCondition;
+  LookupTableFilter: LookupTableFilter;
+  LookupTablesConnection: ResolverTypeWrapper<LookupTablesConnection>;
+  LookupTable: ResolverTypeWrapper<LookupTable>;
+  LookupTablesEdge: ResolverTypeWrapper<LookupTablesEdge>;
   OrganisationsOrderBy: OrganisationsOrderBy;
   OrganisationCondition: OrganisationCondition;
   OrganisationsConnection: ResolverTypeWrapper<OrganisationsConnection>;
@@ -23072,6 +23368,9 @@ export type ResolversTypes = {
   CreateFileInput: CreateFileInput;
   FileInput: FileInput;
   CreateFilePayload: ResolverTypeWrapper<CreateFilePayload>;
+  CreateLookupTableInput: CreateLookupTableInput;
+  LookupTableInput: LookupTableInput;
+  CreateLookupTablePayload: ResolverTypeWrapper<CreateLookupTablePayload>;
   CreateNotificationInput: CreateNotificationInput;
   NotificationInput: NotificationInput;
   CreateNotificationPayload: ResolverTypeWrapper<CreateNotificationPayload>;
@@ -23166,6 +23465,10 @@ export type ResolversTypes = {
   UpdateFilePayload: ResolverTypeWrapper<UpdateFilePayload>;
   UpdateFileInput: UpdateFileInput;
   UpdateFileByUniqueIdInput: UpdateFileByUniqueIdInput;
+  UpdateLookupTableByNodeIdInput: UpdateLookupTableByNodeIdInput;
+  LookupTablePatch: LookupTablePatch;
+  UpdateLookupTablePayload: ResolverTypeWrapper<UpdateLookupTablePayload>;
+  UpdateLookupTableInput: UpdateLookupTableInput;
   UpdateNotificationByNodeIdInput: UpdateNotificationByNodeIdInput;
   UpdateNotificationPayload: ResolverTypeWrapper<UpdateNotificationPayload>;
   UpdateNotificationInput: UpdateNotificationInput;
@@ -23261,6 +23564,9 @@ export type ResolversTypes = {
   DeleteFilePayload: ResolverTypeWrapper<DeleteFilePayload>;
   DeleteFileInput: DeleteFileInput;
   DeleteFileByUniqueIdInput: DeleteFileByUniqueIdInput;
+  DeleteLookupTableByNodeIdInput: DeleteLookupTableByNodeIdInput;
+  DeleteLookupTablePayload: ResolverTypeWrapper<DeleteLookupTablePayload>;
+  DeleteLookupTableInput: DeleteLookupTableInput;
   DeleteNotificationByNodeIdInput: DeleteNotificationByNodeIdInput;
   DeleteNotificationPayload: ResolverTypeWrapper<DeleteNotificationPayload>;
   DeleteNotificationInput: DeleteNotificationInput;
@@ -23332,7 +23638,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['File'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['File'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -23571,6 +23877,11 @@ export type ResolversParentTypes = {
   ElementTypePluginsConnection: ElementTypePluginsConnection;
   ElementTypePlugin: ElementTypePlugin;
   ElementTypePluginsEdge: ElementTypePluginsEdge;
+  LookupTableCondition: LookupTableCondition;
+  LookupTableFilter: LookupTableFilter;
+  LookupTablesConnection: LookupTablesConnection;
+  LookupTable: LookupTable;
+  LookupTablesEdge: LookupTablesEdge;
   OrganisationCondition: OrganisationCondition;
   OrganisationsConnection: OrganisationsConnection;
   OrganisationsEdge: OrganisationsEdge;
@@ -24322,6 +24633,9 @@ export type ResolversParentTypes = {
   CreateFileInput: CreateFileInput;
   FileInput: FileInput;
   CreateFilePayload: CreateFilePayload;
+  CreateLookupTableInput: CreateLookupTableInput;
+  LookupTableInput: LookupTableInput;
+  CreateLookupTablePayload: CreateLookupTablePayload;
   CreateNotificationInput: CreateNotificationInput;
   NotificationInput: NotificationInput;
   CreateNotificationPayload: CreateNotificationPayload;
@@ -24416,6 +24730,10 @@ export type ResolversParentTypes = {
   UpdateFilePayload: UpdateFilePayload;
   UpdateFileInput: UpdateFileInput;
   UpdateFileByUniqueIdInput: UpdateFileByUniqueIdInput;
+  UpdateLookupTableByNodeIdInput: UpdateLookupTableByNodeIdInput;
+  LookupTablePatch: LookupTablePatch;
+  UpdateLookupTablePayload: UpdateLookupTablePayload;
+  UpdateLookupTableInput: UpdateLookupTableInput;
   UpdateNotificationByNodeIdInput: UpdateNotificationByNodeIdInput;
   UpdateNotificationPayload: UpdateNotificationPayload;
   UpdateNotificationInput: UpdateNotificationInput;
@@ -24511,6 +24829,9 @@ export type ResolversParentTypes = {
   DeleteFilePayload: DeleteFilePayload;
   DeleteFileInput: DeleteFileInput;
   DeleteFileByUniqueIdInput: DeleteFileByUniqueIdInput;
+  DeleteLookupTableByNodeIdInput: DeleteLookupTableByNodeIdInput;
+  DeleteLookupTablePayload: DeleteLookupTablePayload;
+  DeleteLookupTableInput: DeleteLookupTableInput;
   DeleteNotificationByNodeIdInput: DeleteNotificationByNodeIdInput;
   DeleteNotificationPayload: DeleteNotificationPayload;
   DeleteNotificationInput: DeleteNotificationInput;
@@ -25020,6 +25341,14 @@ export type CreateFilePayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateLookupTablePayload'] = ResolversParentTypes['CreateLookupTablePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  lookupTableEdge?: Resolver<Maybe<ResolversTypes['LookupTablesEdge']>, ParentType, ContextType, RequireFields<CreateLookupTablePayloadLookupTableEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateNotificationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateNotificationPayload'] = ResolversParentTypes['CreateNotificationPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   notification?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType>;
@@ -25333,6 +25662,15 @@ export type DeleteFilePayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteLookupTablePayload'] = ResolversParentTypes['DeleteLookupTablePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType>;
+  deletedLookupTableNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  lookupTableEdge?: Resolver<Maybe<ResolversTypes['LookupTablesEdge']>, ParentType, ContextType, RequireFields<DeleteLookupTablePayloadLookupTableEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteNotificationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteNotificationPayload'] = ResolversParentTypes['DeleteNotificationPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   notification?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType>;
@@ -25624,6 +25962,29 @@ export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes
   name: 'JSON';
 }
 
+export type LookupTableResolvers<ContextType = any, ParentType extends ResolversParentTypes['LookupTable'] = ResolversParentTypes['LookupTable']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  label?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  fieldMap?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LookupTablesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['LookupTablesConnection'] = ResolversParentTypes['LookupTablesConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['LookupTable']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['LookupTablesEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LookupTablesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['LookupTablesEdge'] = ResolversParentTypes['LookupTablesEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createActionPlugin?: Resolver<Maybe<ResolversTypes['CreateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateActionPluginArgs, 'input'>>;
   createActionQueue?: Resolver<Maybe<ResolversTypes['CreateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateActionQueueArgs, 'input'>>;
@@ -25635,6 +25996,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createApplicationStatusHistory?: Resolver<Maybe<ResolversTypes['CreateApplicationStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationStatusHistoryArgs, 'input'>>;
   createElementTypePlugin?: Resolver<Maybe<ResolversTypes['CreateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateElementTypePluginArgs, 'input'>>;
   createFile?: Resolver<Maybe<ResolversTypes['CreateFilePayload']>, ParentType, ContextType, RequireFields<MutationCreateFileArgs, 'input'>>;
+  createLookupTable?: Resolver<Maybe<ResolversTypes['CreateLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationCreateLookupTableArgs, 'input'>>;
   createNotification?: Resolver<Maybe<ResolversTypes['CreateNotificationPayload']>, ParentType, ContextType, RequireFields<MutationCreateNotificationArgs, 'input'>>;
   createOrganisation?: Resolver<Maybe<ResolversTypes['CreateOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationCreateOrganisationArgs, 'input'>>;
   createPermissionJoin?: Resolver<Maybe<ResolversTypes['CreatePermissionJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreatePermissionJoinArgs, 'input'>>;
@@ -25676,6 +26038,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateFileByNodeId?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileByNodeIdArgs, 'input'>>;
   updateFile?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileArgs, 'input'>>;
   updateFileByUniqueId?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileByUniqueIdArgs, 'input'>>;
+  updateLookupTableByNodeId?: Resolver<Maybe<ResolversTypes['UpdateLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableByNodeIdArgs, 'input'>>;
+  updateLookupTable?: Resolver<Maybe<ResolversTypes['UpdateLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableArgs, 'input'>>;
   updateNotificationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateNotificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateNotificationByNodeIdArgs, 'input'>>;
   updateNotification?: Resolver<Maybe<ResolversTypes['UpdateNotificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateNotificationArgs, 'input'>>;
   updateOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateOrganisationByNodeIdArgs, 'input'>>;
@@ -25741,6 +26105,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteFileByNodeId?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileByNodeIdArgs, 'input'>>;
   deleteFile?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileArgs, 'input'>>;
   deleteFileByUniqueId?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileByUniqueIdArgs, 'input'>>;
+  deleteLookupTableByNodeId?: Resolver<Maybe<ResolversTypes['DeleteLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableByNodeIdArgs, 'input'>>;
+  deleteLookupTable?: Resolver<Maybe<ResolversTypes['DeleteLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableArgs, 'input'>>;
   deleteNotificationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteNotificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteNotificationByNodeIdArgs, 'input'>>;
   deleteNotification?: Resolver<Maybe<ResolversTypes['DeleteNotificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteNotificationArgs, 'input'>>;
   deleteOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteOrganisationByNodeIdArgs, 'input'>>;
@@ -25789,7 +26155,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'ApplicationStageHistory' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ReviewAssignment' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'TemplateElement' | 'TemplateSection' | 'ApplicationSection' | 'ApplicationResponse' | 'File' | 'Notification' | 'ReviewDecision' | 'ReviewStatusHistory' | 'ApplicationStatusHistory' | 'TemplateAction' | 'ElementTypePlugin', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'ApplicationStageHistory' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ReviewAssignment' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'TemplateElement' | 'TemplateSection' | 'ApplicationSection' | 'ApplicationResponse' | 'File' | 'Notification' | 'ReviewDecision' | 'ReviewStatusHistory' | 'ApplicationStatusHistory' | 'TemplateAction' | 'ElementTypePlugin' | 'LookupTable', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -25987,6 +26353,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationTriggerStates?: Resolver<Maybe<ResolversTypes['ApplicationTriggerStatesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationTriggerStatesArgs, 'orderBy'>>;
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
   files?: Resolver<Maybe<ResolversTypes['FilesConnection']>, ParentType, ContextType, RequireFields<QueryFilesArgs, 'orderBy'>>;
+  lookupTables?: Resolver<Maybe<ResolversTypes['LookupTablesConnection']>, ParentType, ContextType, RequireFields<QueryLookupTablesArgs, 'orderBy'>>;
   notifications?: Resolver<Maybe<ResolversTypes['NotificationsConnection']>, ParentType, ContextType, RequireFields<QueryNotificationsArgs, 'orderBy'>>;
   organisations?: Resolver<Maybe<ResolversTypes['OrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryOrganisationsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<Maybe<ResolversTypes['PermissionJoinsConnection']>, ParentType, ContextType, RequireFields<QueryPermissionJoinsArgs, 'orderBy'>>;
@@ -26021,6 +26388,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginArgs, 'code'>>;
   file?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileArgs, 'id'>>;
   fileByUniqueId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByUniqueIdArgs, 'uniqueId'>>;
+  lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType, RequireFields<QueryLookupTableArgs, 'id'>>;
   notification?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<QueryNotificationArgs, 'id'>>;
   organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationArgs, 'id'>>;
   organisationByName?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationByNameArgs, 'name'>>;
@@ -26064,6 +26432,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryByNodeIdArgs, 'nodeId'>>;
   elementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginByNodeIdArgs, 'nodeId'>>;
   fileByNodeId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByNodeIdArgs, 'nodeId'>>;
+  lookupTableByNodeId?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType, RequireFields<QueryLookupTableByNodeIdArgs, 'nodeId'>>;
   notificationByNodeId?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<QueryNotificationByNodeIdArgs, 'nodeId'>>;
   organisationByNodeId?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationByNodeIdArgs, 'nodeId'>>;
   permissionJoinByNodeId?: Resolver<Maybe<ResolversTypes['PermissionJoin']>, ParentType, ContextType, RequireFields<QueryPermissionJoinByNodeIdArgs, 'nodeId'>>;
@@ -26620,6 +26989,14 @@ export type UpdateFilePayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateLookupTablePayload'] = ResolversParentTypes['UpdateLookupTablePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  lookupTableEdge?: Resolver<Maybe<ResolversTypes['LookupTablesEdge']>, ParentType, ContextType, RequireFields<UpdateLookupTablePayloadLookupTableEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateNotificationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateNotificationPayload'] = ResolversParentTypes['UpdateNotificationPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   notification?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType>;
@@ -26960,6 +27337,7 @@ export type Resolvers<ContextType = any> = {
   CreateApplicationStatusHistoryPayload?: CreateApplicationStatusHistoryPayloadResolvers<ContextType>;
   CreateElementTypePluginPayload?: CreateElementTypePluginPayloadResolvers<ContextType>;
   CreateFilePayload?: CreateFilePayloadResolvers<ContextType>;
+  CreateLookupTablePayload?: CreateLookupTablePayloadResolvers<ContextType>;
   CreateNotificationPayload?: CreateNotificationPayloadResolvers<ContextType>;
   CreateOrganisationPayload?: CreateOrganisationPayloadResolvers<ContextType>;
   CreatePermissionJoinPayload?: CreatePermissionJoinPayloadResolvers<ContextType>;
@@ -26993,6 +27371,7 @@ export type Resolvers<ContextType = any> = {
   DeleteApplicationStatusHistoryPayload?: DeleteApplicationStatusHistoryPayloadResolvers<ContextType>;
   DeleteElementTypePluginPayload?: DeleteElementTypePluginPayloadResolvers<ContextType>;
   DeleteFilePayload?: DeleteFilePayloadResolvers<ContextType>;
+  DeleteLookupTablePayload?: DeleteLookupTablePayloadResolvers<ContextType>;
   DeleteNotificationPayload?: DeleteNotificationPayloadResolvers<ContextType>;
   DeleteOrganisationPayload?: DeleteOrganisationPayloadResolvers<ContextType>;
   DeletePermissionJoinPayload?: DeletePermissionJoinPayloadResolvers<ContextType>;
@@ -27021,6 +27400,9 @@ export type Resolvers<ContextType = any> = {
   FilesConnection?: FilesConnectionResolvers<ContextType>;
   FilesEdge?: FilesEdgeResolvers<ContextType>;
   JSON?: GraphQLScalarType;
+  LookupTable?: LookupTableResolvers<ContextType>;
+  LookupTablesConnection?: LookupTablesConnectionResolvers<ContextType>;
+  LookupTablesEdge?: LookupTablesEdgeResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
   Notification?: NotificationResolvers<ContextType>;
@@ -27097,6 +27479,7 @@ export type Resolvers<ContextType = any> = {
   UpdateApplicationStatusHistoryPayload?: UpdateApplicationStatusHistoryPayloadResolvers<ContextType>;
   UpdateElementTypePluginPayload?: UpdateElementTypePluginPayloadResolvers<ContextType>;
   UpdateFilePayload?: UpdateFilePayloadResolvers<ContextType>;
+  UpdateLookupTablePayload?: UpdateLookupTablePayloadResolvers<ContextType>;
   UpdateNotificationPayload?: UpdateNotificationPayloadResolvers<ContextType>;
   UpdateOrganisationPayload?: UpdateOrganisationPayloadResolvers<ContextType>;
   UpdatePermissionJoinPayload?: UpdatePermissionJoinPayloadResolvers<ContextType>;
