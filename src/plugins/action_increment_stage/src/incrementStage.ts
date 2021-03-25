@@ -20,11 +20,11 @@ module.exports['incrementStage'] = async function (
 
     console.log('Getting template Id', templateId)
 
-    const currentStageHistory = await DBConnect.getCurrentStageHistory(applicationId)
+    const current = await DBConnect.getCurrentStageStatusHistory(applicationId)
 
-    const currentStageHistoryId = currentStageHistory?.stage_history_id
-    const currentStageNum = currentStageHistory?.stage_number
-    const currentStatus = currentStageHistory?.status
+    const currentStageHistoryId = current?.stage_history_id
+    const currentStageNum = current?.stage_number
+    const currentStatus = current?.status
 
     const nextStage = await DBConnect.getNextStage(templateId, currentStageNum)
 
@@ -35,7 +35,7 @@ module.exports['incrementStage'] = async function (
       return returnObject
     }
 
-    if (currentStageHistory) {
+    if (current) {
       // Make a "Completed" status_history for existing stage_history
       const result = await DBConnect.addNewApplicationStatusHistory(
         currentStageHistoryId,

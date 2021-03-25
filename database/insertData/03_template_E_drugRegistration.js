@@ -549,39 +549,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: { message: "Application Submitted" }
               }
-       
-              {
-                actionCode: "incrementStage"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: -1
-                condition: {
-                  operator: "AND"
-                  children: [
-                    {
-                      operator: "="
-                      children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
-                      ]
-                    }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
-                  ]
-                }
-                parameterQueries: {
-                  applicationId: {
-                      operator: "objectProperties"
-                      children: ["applicationData.applicationId"]
-                  }
-                }
-              }
             ]
           }
           templatePermissionsUsingId: {
