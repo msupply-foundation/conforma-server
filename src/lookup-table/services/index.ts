@@ -1,12 +1,4 @@
-import addStructureToDb from './addLookupTableStructure.service'
-import createLookupTable from './createLookupTable.service'
-import { addDataToLookupTable, addIntoLookupTable } from './addDataToLookupTable.service'
-import parseCsvHeaders from './parseCsvHeaders.service'
+import LookupTableStructureService from './LookupTableStructure.service'
+import LookupTableService from './LookupTable.service'
 
-export {
-  addStructureToDb,
-  createLookupTable,
-  addDataToLookupTable,
-  addIntoLookupTable,
-  parseCsvHeaders,
-}
+export { LookupTableStructureService, LookupTableService }

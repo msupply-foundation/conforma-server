@@ -1,12 +1,7 @@
 import { parseStream } from 'fast-csv'
 import { toSnakeCase } from '../utils'
 import { FieldMapType } from '../types'
-import {
-  addStructureToDb,
-  createLookupTable,
-  addDataToLookupTable,
-  parseCsvHeaders,
-} from '../services'
+import { LookupTableStructureService, LookupTableService } from '../services'
 
 const ImportCsvController = async (request: any, reply: any) => {
   const data = await request.file()
@@ -15,29 +10,30 @@ const ImportCsvController = async (request: any, reply: any) => {
 
   const tableNameLabel = data.fields.tableName.value
   const tableName = toSnakeCase(tableNameLabel)
-  const parseHeaders = parseCsvHeaders()
+  const lookupTableStructureService = LookupTableStructureService()
+  const lookupTableService = LookupTableService()
 
   try {
     parseStream(data.file, {
-      headers: parseHeaders.parse,
+      headers: lookupTableStructureService.parseCsvHeaders,
     })
       .on('headers', (_) => {
-        fieldMaps = parseHeaders.fieldMap
+        fieldMaps = lookupTableStructureService.csvFieldMap
       })
       .on('data', function (row) {
         rows.push(row)
       })
       .on('end', async (rowCount: any) => {
-        await addStructureToDb({
+        await lookupTableStructureService.create({
           tableName,
           label: tableNameLabel,
           fieldMap: fieldMaps,
         })
-        await createLookupTable({
+        await lookupTableService.createTable({
           tableName,
           fieldMap: fieldMaps,
         })
-        await addDataToLookupTable({ tableName, rows })
+        await lookupTableService.createRows({ tableName, rows })
 
         reply.send({ status: 'success', message: rowCount })
       })
