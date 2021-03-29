@@ -5,16 +5,18 @@ const { promisify } = require('util')
 const graphQLendpoint = require('../src/config.json').graphQLendpoint
 const { graphQLdefinition, defaultGenerateFileName } = require('./graphQLdefinitions.js')
 const { execSync } = require('child_process')
+const { executeGraphQLQuery } = require('./insertData.js')
 
 const asyncRimraf = promisify(rimraf)
 const snapshotNameFile = './database/snapshots/currentSnapshot.txt'
 
 const takeSnapshot = async () => {
-  console.log(process.argv)
   let snapshotName = process.argv[2]
   const previousSnapshotName = fs.readFileSync(snapshotNameFile, 'utf-8')
   if (!snapshotName) snapshotName = previousSnapshotName
-  else fs.writeFileSync(snapshotNameFile, snapshotName)
+  fs.writeFileSync(snapshotNameFile, snapshotName)
+
+  console.log('creating or updating snapshot: ', snapshotName)
 
   const snapshotFolder = 'database/snapshots/' + snapshotName
 
@@ -54,38 +56,28 @@ const takeSnapshot = async () => {
 }
 
 const getSchema = async () => {
-  const fetchResult = await fetch(graphQLendpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
-      query: `query IntrospectionQuery {
-          __schema {
-            types{
-              kind, 
-              name,
-              fields {
-                  name
-                  type {
-                      kind
-                  }
-              }
-              inputFields {
-                name,
-                type {
-                  kind
-                  name
-                }
-              }
+  const jsonResult = await executeGraphQLQuery(`
+  query IntrospectionQuery {
+    __schema {
+      types{
+        kind, 
+        name,
+        fields {
+            name
+            type {
+                kind
             }
+        }
+        inputFields {
+          name,
+          type {
+            kind
+            name
           }
-        }`,
-    }),
-  })
-
-  const jsonResult = await fetchResult.json()
+        }
+      }
+    }
+  }`)
 
   return jsonResult.data.__schema
 }
@@ -150,18 +142,7 @@ const getQueries = (inputTypes) => {
 
 const getQueryData = async (query) => {
   const { query: gql, queryName } = query
-  const result = await fetch(graphQLendpoint, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-    body: JSON.stringify({
-      query: gql,
-    }),
-  })
-
-  const json = await result.json()
+  const json = await executeGraphQLQuery(gql)
   return { results: json.data[queryName].nodes, query }
 }
 
