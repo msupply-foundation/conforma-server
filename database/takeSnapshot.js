@@ -124,6 +124,7 @@ const fromInputTypeToQueryType = (type) => {
 }
 
 const getType = (field) => field.type?.ofType?.kind || field.type.kind
+const getFieldName = (field) => field.type?.ofType?.name || field.type.name
 
 const getQueries = (inputTypes) => {
   const queries = inputTypes.map((type) => {
@@ -182,7 +183,9 @@ const getMutationFieldsAndValues = (record, rawFields, queryName) => {
     else if (typeof record[key] === 'object' && record[key] !== null)
       value = noQuoteKeyStringify(value)
 
-    if (isGeneratedColumn(queryName, key)) return '\n # generated -  ' + key + ':' + value + '\n'
+    if (getFieldName(field) === 'Datetime') return '\n # ignore datetime -  ' + key + ':\n'
+    if (isGeneratedColumn(queryName, key))
+      return '\n # ignore generated -  ' + key + ':' + value + '\n'
     return key + ':' + value
   })
 
