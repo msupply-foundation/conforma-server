@@ -34,6 +34,10 @@ const useSnapshot = async () => {
   }
   await updateRowPolicies()
 
+  console.log('running post data insert ... ')
+  execSync('./database/post_data_insert.sh')
+  console.log('running post data insert ... done')
+
   console.log('all ... done')
 }
 
