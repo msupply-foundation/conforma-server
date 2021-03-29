@@ -7,10 +7,18 @@ const { graphQLdefinition, defaultGenerateFileName } = require('./graphQLdefinit
 const { execSync } = require('child_process')
 
 const asyncRimraf = promisify(rimraf)
-
-const snapshotFolder = 'database/snapshots/current'
+const snapshotNameFile = './database/snapshots/currentSnapshot.txt'
 
 const takeSnapshot = async () => {
+  console.log(process.argv)
+  let snapshotName = process.argv[2]
+  const previousSnapshotName = fs.readFileSync(snapshotNameFile, 'utf-8')
+  if (!snapshotName) snapshotName = previousSnapshotName
+  else fs.writeFileSync(snapshotNameFile, snapshotName)
+
+  const snapshotFolder = 'database/snapshots/' + snapshotName
+
+  console.log(previousSnapshotName, snapshotName, snapshotFolder)
   console.log('getting schema ...')
   const types = (await getSchema()).types
   console.log('getting schema ... done')
@@ -35,12 +43,11 @@ const takeSnapshot = async () => {
   console.log('creating mutations ... done')
 
   console.log('saving mutations to file ...')
-  mutations.forEach((mutation) => saveMutationToFile(mutation))
+  mutations.forEach((mutation) => saveMutationToFile(snapshotFolder, mutation))
   console.log('saving mutations to file ... done')
 
   console.log('prettifying mutations ...')
   execSync('yarn prettier --write "' + snapshotFolder + '/**/*.graphql"')
-
   console.log('prettifying mutations ... done')
 
   console.log('all ... done')
@@ -100,13 +107,9 @@ const getInputTypes = (types, tableNames) => {
       !type.name.startsWith('Update') &&
       !type.name.startsWith('Delete')
   )
-
-  console.log(noCreateUpdateOrDelete, tableNames)
-  return noCreateUpdateOrDelete.filter(({ name }) => {
-    console.log('looking for' + toPlural(name.replace('Input', '')))
-
-    return tableNames.includes(toPlural(name.replace('Input', '')).toLowerCase())
-  })
+  return noCreateUpdateOrDelete.filter(({ name }) =>
+    tableNames.includes(toPlural(name.replace('Input', '')).toLowerCase())
+  )
 }
 
 const toPlural = (string) => {
@@ -227,7 +230,7 @@ const generateMutations = ({ query, results }) => {
   return mutations
 }
 
-const saveMutationToFile = ({ mutation, query, record }) => {
+const saveMutationToFile = (snapshotFolder, { mutation, query, record }) => {
   const tableName = getRecordNameFromQueryName(query.queryName)
 
   const tableDir = snapshotFolder + '/' + tableName
