@@ -27,13 +27,14 @@ const graphQLdefinition = [
     generateFileName: (record) => String(record.id) + '_' + record.code,
   },
   {
-    table: 'templateElement',
-    generateFileName: (record) => String(record.id) + '_S' + record.sectionId + '_' + record.code,
-  },
-  {
     table: 'templateSection',
     generateFileName: (record) => String(record.id) + '_T' + record.templateId,
   },
+  {
+    table: 'templateElement',
+    generateFileName: (record) => String(record.id) + '_S' + record.sectionId + '_' + record.code,
+  },
+
   {
     table: 'templateStage',
     generateFileName: (record) =>

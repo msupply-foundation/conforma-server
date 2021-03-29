@@ -123,18 +123,15 @@ const fromInputTypeToQueryType = (type) => {
 const getQueries = (inputTypes) => {
   const queries = inputTypes.map((type) => {
     const queryName = fromInputTypeToQueryType(type)
-    const fields = type.inputFields
-      .filter(
-        (field) =>
-          field.type.kind === 'SCALAR' ||
-          field.type.kind === 'NON_NULL' ||
-          field.type.kind === 'ENUM'
-      )
-      .map((field) => field.name)
+    const rawFields = type.inputFields.filter(
+      (field) =>
+        field.type.kind === 'SCALAR' || field.type.kind === 'NON_NULL' || field.type.kind === 'ENUM'
+    )
+    const fields = rawFields.map((field) => field.name)
 
     const query = `query { ${queryName} { nodes {${fields.join(',')}} } }`
 
-    return { query, queryName, fields }
+    return { query, queryName, fields, rawFields }
   })
 
   return queries
@@ -164,14 +161,15 @@ const getMutationNameFromQueryName = (queryName) => {
   return 'create' + queryNameCapitalised
 }
 
-const getMutationFieldsAndValues = (record, queryFields) => {
-  const fieldsAndValues = queryFields.map((field) => {
-    let value = record[field]
-    if (typeof record[field] === 'string') value = `${JSON.stringify(value)}`
-    if (typeof record[field] === 'object' && record[field] !== null)
+const getMutationFieldsAndValues = (record, rawFields) => {
+  const fieldsAndValues = rawFields.map(({ name, type }) => {
+    let value = record[name]
+    if (type.kind === 'ENUM' && value != null) value = value.replace(/\"/g, '')
+    else if (typeof record[name] === 'string') value = `${JSON.stringify(value)}`
+    else if (typeof record[name] === 'object' && record[name] !== null)
       value = noQuoteKeyStringify(value)
 
-    return field + ':' + value
+    return name + ':' + value
   })
 
   return fieldsAndValues.join(',')
@@ -202,10 +200,10 @@ const generateMutations = ({ query, results }) => {
   const recordName = getRecordNameFromQueryName(query.queryName)
 
   const mutations = results.map((record) => {
-    const fieldsAndValues = getMutationFieldsAndValues(record, query.fields)
+    const fieldsAndValues = getMutationFieldsAndValues(record, query.rawFields)
     let mutation = `mutation { ${mutationName}(input: {${recordName}: {`
     mutation += fieldsAndValues
-    mutation += '}})}'
+    mutation += '}}){clientMutationId}}'
     return { mutation, query, record }
   })
   return mutations
