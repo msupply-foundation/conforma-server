@@ -21,7 +21,7 @@ const useSnapshot = async () => {
 
   console.log('inserting from snapshot: ' + snapshotName)
   for (let definition of graphQLdefinition) {
-    if (definition.skip) return
+    if (definition.skip) continue
 
     const currentTableFolder = snapshotFolder + definition.table
 
@@ -39,6 +39,8 @@ const useSnapshot = async () => {
 
 const insertDataFromFile = async (filename) => {
   const content = fs.readFileSync(filename, 'utf-8')
+
+  console.log(content)
   await executeGraphQLQuery(content)
 }
 

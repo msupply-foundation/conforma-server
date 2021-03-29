@@ -78,7 +78,7 @@ const graphQLdefinition = [
   },
   {
     table: 'application',
-    generateFileName: (record) => String(record.id) + '_' + record.name,
+    generateFileName: (record) => String(record.id) + '_T' + record.templateId,
   },
   {
     table: 'applicationSection',
@@ -97,6 +97,7 @@ const graphQLdefinition = [
   },
   {
     table: 'applicationStatusHistory',
+    generatedColumns: ['applicationId'],
     generateFileName: (record) =>
       String(record.id) +
       '_A' +
@@ -129,6 +130,7 @@ const graphQLdefinition = [
   },
   {
     table: 'review',
+    generatedColumns: ['applicationId', 'reviewerId', 'level', 'isLastLevel'],
     generateFileName: (record) =>
       String(record.id) +
       '_A' +

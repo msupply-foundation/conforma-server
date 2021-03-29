@@ -72,6 +72,9 @@ const getSchema = async () => {
           name,
           type {
             kind
+            ofType {
+              kind
+            }
             name
           }
         }
@@ -120,12 +123,13 @@ const fromInputTypeToQueryType = (type) => {
   return queryNameCamelCase
 }
 
+const getType = (field) => field.type?.ofType?.kind || field.type.kind
+
 const getQueries = (inputTypes) => {
   const queries = inputTypes.map((type) => {
     const queryName = fromInputTypeToQueryType(type)
     const rawFields = type.inputFields.filter(
-      (field) =>
-        field.type.kind === 'SCALAR' || field.type.kind === 'NON_NULL' || field.type.kind === 'ENUM'
+      (field) => getType(field) === 'SCALAR' || getType(field) === 'ENUM'
     )
     const fields = rawFields.map((field) => field.name)
 
@@ -160,16 +164,26 @@ const getMutationNameFromQueryName = (queryName) => {
 
   return 'create' + queryNameCapitalised
 }
+const isGeneratedColumn = (queryName, field) => {
+  const tableName = toSingular(queryName)
+  const definition = graphQLdefinition.find((definition) => definition.table === tableName)
 
-const getMutationFieldsAndValues = (record, rawFields) => {
-  const fieldsAndValues = rawFields.map(({ name, type }) => {
-    let value = record[name]
-    if (type.kind === 'ENUM' && value != null) value = value.replace(/\"/g, '')
-    else if (typeof record[name] === 'string') value = `${JSON.stringify(value)}`
-    else if (typeof record[name] === 'object' && record[name] !== null)
+  if (definition?.generatedColumns?.includes(field)) return true
+
+  return false
+}
+
+const getMutationFieldsAndValues = (record, rawFields, queryName) => {
+  const fieldsAndValues = rawFields.map((field) => {
+    const key = field.name
+    let value = record[key]
+    if (getType(field) === 'ENUM' && value != null) value = value.replace(/\"/g, '')
+    else if (typeof record[key] === 'string') value = `${JSON.stringify(value)}`
+    else if (typeof record[key] === 'object' && record[key] !== null)
       value = noQuoteKeyStringify(value)
 
-    return name + ':' + value
+    if (isGeneratedColumn(queryName, key)) return '\n # generated -  ' + key + ':' + value + '\n'
+    return key + ':' + value
   })
 
   return fieldsAndValues.join(',')
@@ -200,7 +214,7 @@ const generateMutations = ({ query, results }) => {
   const recordName = getRecordNameFromQueryName(query.queryName)
 
   const mutations = results.map((record) => {
-    const fieldsAndValues = getMutationFieldsAndValues(record, query.rawFields)
+    const fieldsAndValues = getMutationFieldsAndValues(record, query.rawFields, query.queryName)
     let mutation = `mutation { ${mutationName}(input: {${recordName}: {`
     mutation += fieldsAndValues
     mutation += '}}){clientMutationId}}'
