@@ -116,7 +116,7 @@ export async function processTrigger(payload: TriggerPayload) {
     if (condition) {
       if (action.sequence) actionsSequential.push(action as ActionSequential)
       else actionsAsync.push(action)
-    }
+    } else console.log('Condition not met:', action.code)
   }
 
   for (const action of [...actionsAsync, ...actionsSequential]) {
@@ -162,6 +162,7 @@ export async function processTrigger(payload: TriggerPayload) {
       }
       const result = await executeAction(actionPayload, actionLibrary, { output: outputCumulative })
       outputCumulative = { ...outputCumulative, ...result.output }
+      // console.log('Cumulative Output:', outputCumulative)
       if (result.status === 'Fail') console.log(result.error_log)
     } catch (err) {
       actionFailed = action.action_code

@@ -8,7 +8,12 @@ exports.devActions = `
         trigger: DEV_TEST
         parameterQueries: {}
     }
-   # {
-   # Add more Actions
-   # }   
+    {
+      actionCode: "joinUserOrg"
+      trigger: DEV_TEST
+      parameterQueries: {
+        organisation_id: 3
+        user_id: 4
+      }
+    } 
     `

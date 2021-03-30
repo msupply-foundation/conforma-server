@@ -51,6 +51,7 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Please select the organisation you wish to join"
+                        search: true
                         options: {
                           operator: "graphQL"
                           children: [
@@ -168,20 +169,12 @@ exports.queries = [
                     }
                   ]
                 }
-              }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 110
-                condition: {
-                  operator: "="
-                  children: [
-                    {
-                      operator: "objectProperties"
-                      children: ["output.newOutcome"]
-                    }
-                    "Approved"
-                  ]
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
+                  newOutcome: "Approved"
                 }
               }
               {
@@ -189,13 +182,24 @@ exports.queries = [
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 120
                 condition: {
-                  operator: "="
+                  operator: "AND"
                   children: [
                     {
-                      operator: "objectProperties"
-                      children: ["output.newOutcome"]
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
                     }
-                    "Approved"
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
                   ]
                 }
                 parameterQueries: {
@@ -203,9 +207,9 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.userId"]
                   }
-                  org_id: {
+                  organisation_id: {
                     operator: "objectProperties"
-                    children: ["responses.S1Q1.id"]
+                    children: ["applicationData.responses.S1Q1.selection.id"]
                   }
                 }
               }
@@ -214,13 +218,24 @@ exports.queries = [
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 130
                 condition: {
-                  operator: "="
+                  operator: "AND"
                   children: [
                     {
-                      operator: "objectProperties"
-                      children: ["output.newOutcome"]
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
                     }
-                    "Approved"
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
                   ]
                 }
                 parameterQueries: {
@@ -230,9 +245,42 @@ exports.queries = [
                   }
                   orgName: {
                     operator: "objectProperties"
-                    children: ["responses.S1Q1.text"]
+                    children: ["applicationData.responses.S1Q1.selection.name"]
                   }
                   permissionNames: ["canApplyDrugRego"]
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 110
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
+                  newStatus: "Completed"
                 }
               }
             ]
@@ -267,6 +315,5 @@ exports.queries = [
         name
       }
     }
-  }
-  `,
+  }`,
 ]
