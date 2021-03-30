@@ -1,3 +1,4 @@
+-- https://wiki.postgresql.org/wiki/Fixing_Sequences
 SELECT
     'SELECT SETVAL(' || quote_literal(quote_ident(PGT.schemaname) || '.' || quote_ident(S.relname)) || ', COALESCE(MAX(' || quote_ident(C.attname) || '), 1) ) FROM ' || quote_ident(PGT.schemaname) || '.' || quote_ident(T.relname) || ';'
 FROM

@@ -1,9 +1,9 @@
 // data import order and filename generating methods
 const defaultGenerateFileName = (record) => String(record.id)
 
-// where is POLICY ?
-// where is ENUM trigger
-
+// TODO
+// - filter ? (to be used in export of specific template, or parts of)
+// - how to export without IDs (and make sure ID's are added when mutation executes)
 const graphQLdefinition = [
   {
     table: 'user',
@@ -71,11 +71,6 @@ const graphQLdefinition = [
     generateFileName: (record) =>
       String(record.id) + '_T' + record.templateId + '_' + record.actionCode + '_' + record.trigger,
   },
-
-  {
-    table: 'actionPlugin',
-    skip: true,
-  },
   {
     table: 'application',
     generateFileName: (record) => String(record.id) + '_T' + record.templateId,
@@ -124,6 +119,16 @@ const graphQLdefinition = [
       record.level,
   },
   {
+    table: 'reviewAssignmentAssignerJoin',
+    generateFileName: (record) =>
+      String(record.id) +
+      '_RA' +
+      record.reviewAssignmentId +
+      '_A' +
+      record.assignerId +
+      (record.organisationId ? '_O' + record.organisationId : ''),
+  },
+  {
     table: 'reviewQuestionAssignment',
     generateFileName: (record) =>
       String(record.id) + '_RA' + record.reviewAssignmentId + '_TE' + record.templateElementId,
@@ -158,6 +163,39 @@ const graphQLdefinition = [
       record.reviewQuestionAssignmentId +
       '_AR' +
       record.applicationResponseId,
+  },
+
+  {
+    table: 'actionPlugin',
+    skip: true,
+  },
+  {
+    table: 'actionQueue',
+    skip: true,
+  },
+  {
+    table: 'applicationListShape',
+    skip: true,
+  },
+  {
+    table: 'elementTypePlugin',
+    skip: true,
+  },
+  {
+    table: 'file',
+    skip: true,
+  },
+  {
+    table: 'notification',
+    skip: true,
+  },
+  {
+    table: 'notification',
+    skip: true,
+  },
+  {
+    table: 'trigger_queue',
+    skip: true,
   },
 ]
 

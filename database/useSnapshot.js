@@ -7,12 +7,10 @@ const { execSync } = require('child_process')
 const snapshotNameFile = './database/snapshots/currentSnapshot.txt'
 
 console.log('initialising database ... ')
-
 execSync('./database/initialise_database.sh')
-
 console.log('initialising database ... done')
 
-const useSnapshot = async () => {
+const useSnapshot = async (definitions) => {
   let snapshotName = process.argv[2]
   const previousSnapshotName = fs.readFileSync(snapshotNameFile, 'utf-8')
   if (!snapshotName) snapshotName = previousSnapshotName
@@ -20,7 +18,7 @@ const useSnapshot = async () => {
   const snapshotFolder = './database/snapshots/' + snapshotName + '/'
 
   console.log('inserting from snapshot: ' + snapshotName)
-  for (let definition of graphQLdefinition) {
+  for (let definition of definitions) {
     if (definition.skip) continue
 
     const currentTableFolder = snapshotFolder + definition.table
@@ -59,4 +57,4 @@ const extractId = (file) => {
   return Number(file.slice(0, index))
 }
 
-useSnapshot()
+useSnapshot(graphQLdefinition)
