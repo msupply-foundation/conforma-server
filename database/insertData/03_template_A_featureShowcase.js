@@ -795,17 +795,105 @@ exports.queries = [
                       id: 1038
                       code: "Img01"
                       index: 106
-                      title: "Page Break"
+                      title: "Show uploaded image"
                       elementTypePluginCode: "imageDisplay"
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q_upload3.text"]
+                          }
+                          ""
+                        ]
+                      }
                       category: INFORMATION
                       parameters: {
-                        url: ""
+                        url: {
+                          operator: "CONCAT",
+                          children: [
+                            "http://localhost:8080",
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "responses.Q_upload3.files.fileUrl"
+                              ]
+                            }
+                          ]
+                        }
+                        size: {
+                          operator: "objectProperties"
+                          children: ["responses.ImgOpt1.text"]
+                        }
+                        alignment: {
+                          operator: "objectProperties"
+                          children: ["responses.ImgOpt2.text"]
+                        }
+                      }
+                    }
+                    {
+                      id: 1039
+                      code: "ImgOpt1"
+                      index: 107
+                      title: "Image size control"
+                      elementTypePluginCode: "dropdownChoice"
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q_upload3.text"]
+                          }
+                          ""
+                        ]
+                      }
+                      category: QUESTION
+                      parameters: {
+                        label: "Select image size"
+                        default: 3
+                        options: [
+                          "mini"
+                          "tiny"
+                          "small"
+                          "medium"
+                          "large"
+                          "big"
+                          "huge"
+                          "massive"
+                        ]
+                      }
+                    }
+                    {
+                      id: 1040
+                      code: "ImgOpt2"
+                      index: 108
+                      title: "Image alignment control"
+                      elementTypePluginCode: "dropdownChoice"
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q_upload3.text"]
+                          }
+                          ""
+                        ]
+                      }
+                      category: QUESTION
+                      parameters: {
+                        label: "Select image alignment"
+                        default: 1
+                        options: [
+                          "left"
+                          "center"
+                          "right"
+                        ]
                       }
                     }
                     {
                       id: 1036
                       code: "PB12"
-                      index: 107
+                      index: 110
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
@@ -813,7 +901,7 @@ exports.queries = [
                     {
                       id: 1037
                       code: "LongText1"
-                      index: 108
+                      index: 111
                       title: "LongText Demo"
                       elementTypePluginCode: "longText"
                       category: QUESTION
