@@ -481,7 +481,7 @@ exports.queries = [
                       code: "Q13"
                       index: 19
                       title: "Other description"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "longText"
                       category: QUESTION
                       isEditable: {
                         operator: "="
@@ -496,7 +496,7 @@ exports.queries = [
                       isRequired: false
                       parameters: {
                         label: "If Other, please describe"
-                        placeholder: "Describe your role"
+                        description: "Please use as much detail as necessary"
                       }
                     }
                     {
@@ -788,6 +788,41 @@ exports.queries = [
                         description: "Only 1 file allowed, no other restrictions"
                         fileCountLimit: 1
                       }
+                    }
+                    {
+                      id: 1036
+                      code: "PB12"
+                      index: 106
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      id: 1037
+                      code: "LongText1"
+                      index: 107
+                      title: "LongText Demo"
+                      elementTypePluginCode: "longText"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Any final comments?"
+                        lines: 8
+                        placeholder: "Enter here..."
+                      }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.thisResponse"
+                            ]
+                          }
+                          "^[\\\\s\\\\S]{0,100}$"
+                        ]
+                      }
+                      validationMessage: "Response must be less than 100 characters"
                     }
                   ]
                 }
