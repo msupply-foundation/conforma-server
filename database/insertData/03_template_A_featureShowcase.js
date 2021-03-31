@@ -829,6 +829,7 @@ exports.queries = [
                           operator: "objectProperties"
                           children: ["responses.ImgOpt2.text"]
                         }
+                        altText: "This is the image you uploaded"
                       }
                     }
                     {
