@@ -779,20 +779,33 @@ exports.queries = [
                       id: 1034
                       code: "Q_upload3"
                       index: 105
-                      title: "File upload demo 3"
+                      title: "File image upload"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       isRequired: false
                       parameters: {
-                        label: "One more upload demo"
-                        description: "Only 1 file allowed, no other restrictions"
+                        label: "Please upload an image file to display"
+                        description: "Only 1 file allowed, must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB"
                         fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "gif", "svg"]
+                        fileSizeLimit: 5000
+                      }
+                    }
+                    {
+                      id: 1038
+                      code: "Img01"
+                      index: 106
+                      title: "Page Break"
+                      elementTypePluginCode: "imageDisplay"
+                      category: INFORMATION
+                      parameters: {
+                        url: ""
                       }
                     }
                     {
                       id: 1036
                       code: "PB12"
-                      index: 106
+                      index: 107
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
@@ -800,7 +813,7 @@ exports.queries = [
                     {
                       id: 1037
                       code: "LongText1"
-                      index: 107
+                      index: 108
                       title: "LongText Demo"
                       elementTypePluginCode: "longText"
                       category: QUESTION
