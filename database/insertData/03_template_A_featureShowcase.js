@@ -457,6 +457,7 @@ exports.queries = [
                         options: ["Option A", "Option B", "Option C"]
                         # Testing no default
                         hasOther: true
+                        otherPlaceholder: "Enter other answer"
                       }
                       isRequired: true
                     }
