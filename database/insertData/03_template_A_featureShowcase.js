@@ -341,6 +341,7 @@ exports.queries = [
                           "Distributor B"
                           "Distributor C"
                         ]
+                      default: 1
                       }
                       isRequired: false
                     }
@@ -366,6 +367,7 @@ exports.queries = [
                         label: "Select Importer"
                         placeholder: "Select"
                         options: ["Importer A", "Importer B", "Importer C"]
+                        default: "Importer C"
                       }
                       isRequired: false
                     }
