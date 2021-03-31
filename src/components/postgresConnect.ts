@@ -235,6 +235,7 @@ class PostgresDB {
   public getApplicationData = async (applicationId: number) => {
     const text = `
       SELECT application_id as "applicationId",
+      serial as "applicationSerial",
       template_id as "templateId",
       stage_id as "stageId", stage_number as "stageNumber", stage,
       stage_history_id as "stageHistoryId",
@@ -470,9 +471,12 @@ class PostgresDB {
     }
   }
 
-  public getCurrentStageHistory = async (applicationId: number) => {
-    const text =
-      'SELECT stage_id, stage_number, stage, stage_history_id, status_history_id, status FROM application_stage_status_all WHERE application_id = $1 AND stage_is_current = true'
+  public getCurrentStageStatusHistory = async (applicationId: number) => {
+    const text = `
+      SELECT stage_id, stage_number, stage, stage_history_id, status_history_id, status, status_history_time_created 
+      FROM application_stage_status_latest 
+      WHERE application_id = $1
+    `
     try {
       const result = await this.query({ text, values: [applicationId] })
       return result.rows[0]
@@ -505,19 +509,6 @@ class PostgresDB {
     try {
       const result = await this.query({ text, values: [applicationId, stageId] })
       return result.rows[0].id
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  public getApplicationCurrentStatusHistory = async (applicationId: number) => {
-    const text = `SELECT id, status, application_stage_history_id, time_created FROM
-      application_status_history WHERE
-      application_id = $1 and is_current = true;`
-    try {
-      const result = await this.query({ text, values: [applicationId] })
-      return result.rows[0]
     } catch (err) {
       console.log(err.message)
       throw err
@@ -681,12 +672,16 @@ class PostgresDB {
       throw err
     }
   }
-
-  public getCurrentReviewLevel = async (reviewId: number) => {
-    const text = `SELECT level FROM review WHERE id = $1`
+  public getReviewStageAndLevel = async (reviewId: number) => {
+    const text = `
+      SELECT review.level, stage_number as "stageNumber"
+      FROM review JOIN review_assignment ra
+      ON review.review_assignment_id = ra.id
+      WHERE review.id = $1
+    `
     try {
       const result = await this.query({ text, values: [reviewId] })
-      return result.rows[0].level
+      return result.rows[0]
     } catch (err) {
       console.log(err.message)
       throw err

@@ -4,6 +4,7 @@ TEMPLATE B - Organisation Registration
     application to register an organisation
 */
 const { coreActions } = require('./core_actions')
+const { devActions } = require('./dev_actions')
 
 exports.queries = [
   `mutation {
@@ -232,6 +233,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               ${coreActions}
+              ${devActions}
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
@@ -324,8 +326,10 @@ exports.queries = [
           }
           templatePermissionsUsingId: {
             create: [
-              { id: 2000, permissionNameId: 2000 }
-              { id: 2001, permissionNameId: 4000, stageNumber: 1 }
+              # Apply General
+              { permissionNameId: 10100 }
+              # Review Company rego
+              { permissionNameId: 4000, stageNumber: 1 }
             ]
           }
         }

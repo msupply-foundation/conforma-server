@@ -1,8 +1,8 @@
 {
-  "name": "increment_application_stage",
+  "name": "cleanup_files_action",
   "version": "0.1",
-  "description": "Increments (or creates) the application Stage, if possible.",
-  "main": "incrementStage.ts",
+  "description": "Checks all the uploaded files associated with an application, and deletes any that are not part of an application_response",
+  "main": "cleanupFiles.ts",
   "author": "The mSupplyFoundation",
   "license": "MIT",
   "scripts": {
@@ -16,6 +16,5 @@
     "ts-jest": "^26.2.0",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.2"
-  },
-  "dependencies": {}
+  }
 }

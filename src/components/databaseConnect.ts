@@ -79,13 +79,11 @@ class DBConnect {
 
   public getTemplateStages = PostgresDB.getTemplateStages
 
-  public getCurrentStageHistory = PostgresDB.getCurrentStageHistory
+  public getCurrentStageStatusHistory = PostgresDB.getCurrentStageStatusHistory
 
   public getNextStage = PostgresDB.getNextStage
 
   public addNewStageHistory = PostgresDB.addNewStageHistory
-
-  public getApplicationCurrentStatusHistory = PostgresDB.getApplicationCurrentStatusHistory
 
   public getReviewCurrentStatusHistory = PostgresDB.getReviewCurrentStatusHistory
 
@@ -113,7 +111,7 @@ class DBConnect {
 
   public getNumReviewLevels = PostgresDB.getNumReviewLevels
 
-  public getCurrentReviewLevel = PostgresDB.getCurrentReviewLevel
+  public getReviewStageAndLevel = PostgresDB.getReviewStageAndLevel
 
   public isFullyAssignedLevel1 = PostgresDB.isFullyAssignedLevel1
 

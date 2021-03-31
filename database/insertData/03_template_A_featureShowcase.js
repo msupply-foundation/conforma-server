@@ -4,6 +4,7 @@ TEMPLATE A - General Registration (Feature showcase)
       dynamic visibility, complex dynamic expressions, etc.
 */
 const { coreActions } = require('./core_actions')
+const { devActions } = require('./dev_actions')
 
 exports.queries = [
   `mutation {
@@ -105,7 +106,7 @@ exports.queries = [
                             "%1, what is your last name?"
                             {
                               operator: "objectProperties"
-                              children: ["responses.Q1.text"]
+                              children: ["responses.Q1.text", ""]
                             }
                           ]
                         }
@@ -139,11 +140,11 @@ exports.queries = [
                             "The new user's name is: %1 %2"
                             {
                               operator: "objectProperties"
-                              children: ["responses.Q1.text"]
+                              children: ["responses.Q1.text", ""]
                             }
                             {
                               operator: "objectProperties"
-                              children: ["responses.Q2.text"]
+                              children: ["responses.Q2.text", ""]
                             }
                           ]
                         }
@@ -498,6 +499,27 @@ exports.queries = [
                       }
                     }
                     {
+                      id: 1035
+                      code: "QGraphQLTest"
+                      index: 20
+                      title: "GraphQL query"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select a company (GraphQL query)"
+                        options: {
+                          operator: "graphQL",
+                          children: [
+                            "query getOrgs {organisations {nodes {name}}}",
+                            [],
+                            "organisations.nodes"
+                          ]
+                        }
+                        placeholder: "Select one"
+                      }
+                      isRequired: false
+                    }
+                    {
                       id: 1020
                       code: "PB4"
                       index: 21
@@ -783,6 +805,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               ${coreActions}
+              ${devActions}
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
@@ -892,9 +915,8 @@ exports.queries = [
           }
           templatePermissionsUsingId: {
             create: [
-              {
-                id: 1000, permissionNameId: 1000
-              }
+              # Apply General
+              { permissionNameId: 10100 }
             ]
           }
         }
