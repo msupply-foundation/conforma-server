@@ -812,7 +812,12 @@ exports.queries = [
                         url: {
                           operator: "CONCAT",
                           children: [
-                            "http://localhost:8080",
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "applicationData.config.serverREST"
+                              ]
+                            }
                             {
                               operator: "objectProperties",
                               children: [
