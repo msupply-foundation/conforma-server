@@ -13,7 +13,7 @@ exports.queries = [
         template: {
           code: "OrgRego1"
           name: "Organisation Registration"
-          isLinear: false
+          isLinear: true
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- Proof of Company name\\n- Proof of company address\\n- Organisation licence document"
           versionTimestamp: "NOW()"
@@ -22,26 +22,26 @@ exports.queries = [
               {
                 id: 1001
                 code: "S1"
-                title: "Section 1 - Organisation Details"
+                title: "Section 1: Organisation Details"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
                       id: 2000
                       code: "S1T1"
-                      index: 0
+                      index: 10
                       title: "Intro Section 1"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Company details"
-                        text: "The details entered should match with your registered company documents attached."
+                        title: "Organisation details"
+                        text: "The details entered should match with your registered company documents. You will attach these in Section 2."
                       }
                     }
                     {
-                      id: 2001
-                      code: "S1Q1"
-                      index: 1
+                      id: 2010
+                      code: "name"
+                      index: 20
                       title: "Organisation Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -59,52 +59,129 @@ exports.queries = [
                         ]
                       }
                       validationMessage: "An organisation with that name already exists"
-                      parameters: { label: "What is your company name?" }
+                      parameters: { label: "What is the name of your organisation?" }
                     }
                     {
-                      id: 2002
-                      code: "S1Q2"
-                      index: 2
-                      title: "Organisation Activity"
-                      elementTypePluginCode: "dropdownChoice"
+                      id: 2020
+                      code: "rego"
+                      index: 30
+                      title: "Registration"
+                      elementTypePluginCode: "shortText"
                       category: QUESTION
+                      validation: {
+                        operator: "API"
+                        children: [
+                          {
+                            operator: "CONCAT",
+                            children: [
+                              {
+                                operator: "objectProperties",
+                                children: [
+                                  "applicationData.config.serverREST"
+                                ]
+                              }
+                              "/check-unique"
+                            ]
+                          }
+                          ["type", "value"]
+                          "orgRegistration"
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          "unique"
+                        ]
+                      }
+                      validationMessage: "An organisation with that registration code already exists"
                       parameters: {
-                        label: "Select type of activity"
-                        options: ["Manufacturer", "Importer", "Producer"]
+                        label: "Please enter your organisation registration code"
                       }
                     }
                     {
-                      id: 2003
-                      code: "S1Q3"
-                      index: 5
-                      title: "Organisation national or international"
-                      elementTypePluginCode: "dropdownChoice"
+                      id: 2030
+                      code: "physAdd"
+                      index: 40
+                      title: "Address"
+                      elementTypePluginCode: "longText"
                       category: QUESTION
                       parameters: {
-                        label: "Organisation Nationality"
-                        description: "Select the nationality of this company:"
-                        options: ["National", "International"]
+                        label: "Organisation **physical** address"
                       }
                     }
                     {
-                      id: 2004
-                      code: "S1Q4"
-                      index: 6
-                      title: "Import permit upload"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
+                      id: 2040
+                      code: "addressCheckbox"
+                      index: 50
+                      title: "Postal Address Checkbox"
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "Is the organisation **postal** address *different* to the physical address?"
+                      checkboxes: [
+                        {
+                          label: "Yes"
+                          key: "1"
+                          selected: false
+                        }
+                      ]
+                      }
+                    }
+                    {
+                      id: 2050
+                      code: "postAdd"
+                      index: 60
+                      title: "Address"
+                      elementTypePluginCode: "longText"
+                      category: QUESTION
                       visibilityCondition: {
                         operator: "="
                         children: [
                           {
                             operator: "objectProperties"
-                            children: ["responses.S1Q3.text"]
+                            children: ["responses.addressCheckbox.text"]
                           }
-                          "International"
+                          "Yes"
                         ]
                       }
-                      parameters: { text: "Upload your valid import permit" }
+                      parameters: {
+                        label: "Organisation **postal** address"
+                      }
+                    }
+                    {
+                      id: 2060
+                      code: "PB1"
+                      index: 70
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      id: 2070
+                      code: "logo"
+                      index: 80
+                      title: "Logo upload"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
                       isRequired: false
+                      parameters: {
+                        label: "Upload a logo for your organisation"
+                        description: "File must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "gif", "svg"]
+                        fileSizeLimit: 5000
+                      }
+                    }
+                    {
+                      id: 2080
+                      code: "activity"
+                      index: 90
+                      title: "Organisation Activity"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "What is your organisation's primary activity"
+                        options: ["Manufacturer", "Importer", "Producer"]
+                      }
                     }
                   ]
                 }
@@ -112,109 +189,96 @@ exports.queries = [
               {
                 id: 1002
                 code: "S2"
-                title: "Section 2"
+                title: "Section 2: Documentation"
                 index: 1
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 2005
-                      code: "S2T1"
-                      index: 0
+                      id: 2100
+                      code: "orgInfo"
+                      index: 10
                       title: "Intro Section 2 - Page 1/2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "Company location" }
-                      visibilityCondition: {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.S1Q3.text"]
-                          }
-                          "National"
-                        ]
-                      }
-                    }
-                    {
-                      id: 2006
-                      code: "S2Q1"
-                      index: 1
-                      title: "Address"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
                       parameters: {
-                        label: "Enter the organisation street address"
+                        title: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Documentation for Organisation: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.name.text"]
+                            }
+                          ]
+                        }
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Registration no. **%1**"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.rego.text"]
+                            }
+                          ]
+                        }
                       }
                     }
                     {
-                      id: 2007
-                      code: "S2Q2"
-                      index: 2
-                      title: "Organisation region"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
-                      parameters: { label: "Enter the company region" }
-                    }
-                    {
-                      id: 2008
-                      code: "S2T2"
-                      index: 4
-                      title: "Intro Section 2 - Page 2/2"
-                      elementTypePluginCode: "textInfo"
+                      id: 2110
+                      code: "logoShow"
+                      index: 20
+                      title: "Show uploaded logo"
+                      elementTypePluginCode: "imageDisplay"
                       category: INFORMATION
-                      parameters: { title: "Licence Details" }
+                      parameters: {
+                        url: {
+                          operator: "CONCAT"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["applicationData.config.serverREST"]
+                            }
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.logo.files.fileUrl"]
+                            }
+                          ]
+                        }
+                        size: "tiny"
+                        alignment: "center"
+                        altText: "Organisation logo"
+                      }
                     }
                     {
-                      id: 2009
-                      code: "S2Q3"
-                      index: 5
-                      title: "Licence"
-                      elementTypePluginCode: "shortText"
+                      id: 2120
+                      code: "regoDoc"
+                      index: 30
+                      title: "Registration upload"
+                      elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      parameters: { label: "What is your licence no.?" }
+                      isRequired: true
+                      parameters: {
+                        label: "Please provide proof of your organisation registration"
+                        description: "A certificate from your country's registration body will be required.  \\nAllowed formats: .pdf, .doc, .jpg, .png"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc", "docx"]
+                        fileSizeLimit: 5000
+                      }
                     }
                     {
-                      id: 2010
-                      code: "S2Q4"
-                      index: 6
-                      title: "Registration document"
-                      elementTypePluginCode: "shortText"
+                      id: 2130
+                      code: "otherDoc"
+                      index: 40
+                      title: "Other documentation upload"
+                      elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       isRequired: false
-                      isEditable: false
-                      parameters: { label: "TO-DO: upload licence" }
-                    }
-                  ]
-                }
-              }
-              {
-                id: 1003
-                code: "S3"
-                title: "Section 3"
-                index: 2
-                templateElementsUsingId: {
-                  create: [
-                    {
-                      id: 2011
-                      code: "S3T1"
-                      index: 0
-                      title: "Intro Section 1 - Page 1/1"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
-                      parameters: { title: "Company staff details" }
-                    }
-                    {
-                      id: 2012
-                      code: "S3Q1"
-                      index: 1
-                      title: "Organisation Size"
-                      elementTypePluginCode: "dropdownChoice"
-                      category: QUESTION
                       parameters: {
-                        label: "What is the size of the organization"
-                        options: ["Small", "Medium", "Large"]
+                        label: "Please provide any other documentation pertinent to your organisation's activities"
+                        description: "For example: import permits  \\nAllowed formats: .pdf, .doc, .jpg, .png"
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc", "docx"]
+                        fileSizeLimit: 5000
                       }
-                      isRequired: false
                     }
                   ]
                 }
