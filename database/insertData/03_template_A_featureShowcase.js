@@ -126,11 +126,11 @@ exports.queries = [
                             "Current User: %1 %2"
                             {
                               operator: "objectProperties"
-                              children: ["currentUser.firstName"]
+                              children: ["applicationData.user.firstName"]
                             }
                             {
                               operator: "objectProperties"
-                              children: ["currentUser.lastName"]
+                              children: ["applicationData.user.lastName", ""]
                             }
                           ]
                         }
