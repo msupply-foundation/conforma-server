@@ -37,7 +37,7 @@ exports.queries = [
                             "Welcome, %1."
                             {
                               operator: "objectProperties"
-                              children: ["currentUser.firstName"]
+                              children: ["applicationData.user.firstName"]
                             }
                           ]
                         }
