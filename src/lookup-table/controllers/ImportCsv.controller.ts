@@ -13,33 +13,32 @@ const ImportCsvController = async (request: any, reply: any) => {
   const lookupTableStructureService = LookupTableStructureService()
   const lookupTableService = LookupTableService()
 
-  try {
-    parseStream(data.file, {
-      headers: lookupTableStructureService.parseCsvHeaders,
+  await parseStream(data.file, {
+    headers: lookupTableStructureService.parseCsvHeaders,
+  })
+    .on('headers', (_) => {
+      fieldMaps = lookupTableStructureService.csvFieldMap
     })
-      .on('headers', (_) => {
-        fieldMaps = lookupTableStructureService.csvFieldMap
+    .on('data', function (row) {
+      rows.push(row)
+    })
+    .on('end', async (rowCount: any) => {
+      await lookupTableStructureService.create({
+        tableName,
+        label: tableNameLabel,
+        fieldMap: fieldMaps,
       })
-      .on('data', function (row) {
-        rows.push(row)
+      await lookupTableService.createTable({
+        tableName,
+        fieldMap: fieldMaps,
       })
-      .on('end', async (rowCount: any) => {
-        await lookupTableStructureService.create({
-          tableName,
-          label: tableNameLabel,
-          fieldMap: fieldMaps,
-        })
-        await lookupTableService.createTable({
-          tableName,
-          fieldMap: fieldMaps,
-        })
-        await lookupTableService.createRows({ tableName, rows })
+      await lookupTableService.createRows({ tableName, rows })
 
-        reply.send({ status: 'success', message: rowCount })
-      })
-  } catch (error) {
-    reply.status(422).send({ status: 'error', message: error.message })
-  }
+      reply.send({ status: 'success', message: rowCount })
+    })
+    .on('error', (error) => {
+      reply.status(422).send({ status: 'error', name: error.name, message: error.message })
+    })
 }
 
 export default ImportCsvController

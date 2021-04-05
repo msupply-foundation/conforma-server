@@ -1,23 +1,44 @@
 import { parseStream } from 'fast-csv'
-import { LookupTableStructureService } from '../services'
+import { LookupTableService, LookupTableStructureService } from '../services'
 
 const ImportCsvUpdateController = async (request: any, reply: any) => {
   const lookupTableId = Number(request.params.lookupTableId)
   const data = await request.file()
+  let lookupTableDbStructure: any = {}
 
   const lookupTableStructure = LookupTableStructureService()
-  let fieldMaps = []
+  const lookupTableService = LookupTableService()
 
   try {
-    const LookupTableStructure = await lookupTableStructure.getById(lookupTableId)
+    lookupTableDbStructure = await lookupTableStructure.getById(lookupTableId)
 
-    await parseStream(data.file, {
+    let stream = await parseStream(data.file, {
       headers: lookupTableStructure.parseCsvHeaders,
-    }).on('headers', (_) => {
-      fieldMaps = lookupTableStructure.csvFieldMap
     })
+      .on('headers', (_) => {
+        lookupTableStructure.compareFieldMaps(
+          lookupTableDbStructure.fieldMap,
+          lookupTableStructure.csvFieldMap
+        )
+      })
+      .on('data', async (row: any) => {
+        stream.pause()
+        // TODO: Row ID validation, if row has id and that does not exist in database
+        await lookupTableStructure.addToCsvRows(row, lookupTableDbStructure)
 
-    reply.send({ status: 'success', message: LookupTableStructure })
+        stream.resume()
+      })
+      .on('end', async (rowCount: any) => {
+        await lookupTableStructure.createNewColumns(lookupTableDbStructure)
+        await lookupTableService.createUpdateRows(
+          lookupTableDbStructure.name,
+          lookupTableStructure.finalRows
+        )
+        reply.send({ status: 'success', message: lookupTableStructure.finalRows })
+      })
+      .on('error', (error: any) => {
+        reply.send(error)
+      })
   } catch (error) {
     reply.send(error)
   }
