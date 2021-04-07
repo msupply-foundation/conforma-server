@@ -25,7 +25,6 @@ const ImportCsvUpdateController = async (request: any, reply: any) => {
         stream.pause()
         // TODO: Row ID validation, if row has id and that does not exist in database
         await lookupTableStructure.addToCsvRows(row, lookupTableDbStructure)
-
         stream.resume()
       })
       .on('end', async (rowCount: any) => {
@@ -34,7 +33,6 @@ const ImportCsvUpdateController = async (request: any, reply: any) => {
           lookupTableDbStructure.name,
           lookupTableStructure.finalRows
         )
-        reply.send({ status: 'success', message: lookupTableStructure.finalRows })
       })
       .on('error', (error: any) => {
         reply.send(error)
@@ -42,6 +40,8 @@ const ImportCsvUpdateController = async (request: any, reply: any) => {
   } catch (error) {
     reply.send(error)
   }
+
+  reply.send({ status: 'success', message: 'Lookup table successfully updated' })
 }
 
 export default ImportCsvUpdateController
