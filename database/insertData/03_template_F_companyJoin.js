@@ -178,6 +178,39 @@ exports.queries = [
                 }
               }
               {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 110
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
+                parameterQueries: {
+                  applicationId: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
+                  newStatus: "Completed"
+                }
+              }
+              {
                 actionCode: "joinUserOrg"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 120
@@ -250,39 +283,7 @@ exports.queries = [
                   permissionNames: ["canApplyDrugRego"]
                 }
               }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 110
-                condition: {
-                  operator: "AND"
-                  children: [
-                    {
-                      operator: "="
-                      children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
-                      ]
-                    }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
-                  ]
-                }
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
-                  newStatus: "Completed"
-                }
-              }
+              
             ]
           }
           templatePermissionsUsingId: {
