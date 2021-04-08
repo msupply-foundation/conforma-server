@@ -2,6 +2,12 @@ import { LookupTableStructurePropType } from '../types'
 import DBConnect from '../../components/databaseConnect'
 
 const LookupTableModel = () => {
+  const getAll = async ({ tableName }: any) => {
+    const text = `SELECT * FROM lookup_table_${tableName}`
+    const result = await DBConnect.query({ text })
+    return result.rows
+  }
+
   const getById = async ({ tableName, id }: any) => {
     const text = `SELECT * FROM ${tableName} WHERE id = $1 LIMIT 1`
     const result = await DBConnect.query({ text, values: [Number(id)] })
@@ -58,7 +64,7 @@ const LookupTableModel = () => {
     return true
   }
 
-  return { getById, createTable, create, update, addNewColumn }
+  return { getAll, getById, createTable, create, update, addNewColumn }
 }
 
 export default LookupTableModel

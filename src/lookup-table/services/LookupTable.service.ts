@@ -6,6 +6,11 @@ const LookupTableService = () => {
   const _TABLE_PREFIX = 'lookup_table_'
   let _tableName: string = ''
 
+  const getAll = async ({ tableName }: { tableName: string }) => {
+    const result = await _lookupTableModel.getAll({ tableName })
+    return result
+  }
+
   const getById = async ({ tableName, id }: { tableName: string; id: any }) => {
     try {
       return await _lookupTableModel.getById({ tableName: _TABLE_PREFIX + tableName, id })
@@ -68,6 +73,7 @@ const LookupTableService = () => {
     get tableName() {
       return _tableName
     },
+    getAll,
     getById,
     addNewColumns,
     createTable,
