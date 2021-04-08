@@ -17,14 +17,8 @@ const LookupTableStructureService = () => {
   const lookupTableStructureModel = LookupTableStructureModel()
   const lookupTableService = LookupTableService()
 
-  const getById = async (lookupTableStructureID: number) => {
-    try {
-      return await lookupTableStructureModel.getByID(lookupTableStructureID)
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
+  const getById = async (lookupTableStructureID: number) =>
+    await lookupTableStructureModel.getByID(lookupTableStructureID)
 
   const createNewColumns = async (dbStructure: any) => {
     const dbFieldMap = dbStructure.fieldMap

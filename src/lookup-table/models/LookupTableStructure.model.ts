@@ -16,7 +16,8 @@ const LookupTableStructureModel = () => {
       `,
         { id: lookupTableId }
       )
-      return data.lookupTable
+      if (data.lookupTable) return data.lookupTable
+      throw new Error(`Table structure with id "${lookupTableId}" not found.`)
     } catch (error) {
       throw error
     }
