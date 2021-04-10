@@ -328,11 +328,11 @@ exports.queries = [
                 parameterQueries: {
                   name: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.S1Q1.text"]
+                    children: ["applicationData.responses.name.text"]
                   }
-                  licence_number: {
+                  registration: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.S2Q3.text"]
+                    children: ["applicationData.responses.rego.text"]
                   }
                   address: {
                     operator: "stringSubstitution"
