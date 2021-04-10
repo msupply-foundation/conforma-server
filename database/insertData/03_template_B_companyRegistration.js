@@ -145,6 +145,7 @@ exports.queries = [
                       }
                       parameters: {
                         label: "Organisation **postal** address"
+                        description: "*Note: in the current schema only one address value is actually saved to the database. This is just for demonstration purposes.*"
                       }
                     }
                     {
