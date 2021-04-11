@@ -37,7 +37,7 @@ const databaseMethods = (DBConnect: any) => ({
         status,
         applicationId,
         templateSectionRestrictions,
-        level,
+        levelNumber,
         isLastLevel,
       } = reviewAssignment
       // Needs a slightly different query with different CONFLICT restrictions
@@ -48,13 +48,13 @@ const databaseMethods = (DBConnect: any) => ({
         INSERT INTO review_assignment (
           reviewer_id, stage_id,
           stage_number, status, application_id,
-          template_section_restrictions, level, is_last_level,
+          template_section_restrictions, level_number, is_last_level,
           organisation_id
           )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         ON CONFLICT (reviewer_id,${
           orgId ? ' organisation_id,' : ''
-        } stage_number, application_id, level)
+        } stage_number, application_id, level_number)
           WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
         DO
           UPDATE SET template_section_restrictions = $6
@@ -70,7 +70,7 @@ const databaseMethods = (DBConnect: any) => ({
             status,
             applicationId,
             templateSectionRestrictions,
-            level,
+            levelNumber,
             isLastLevel,
             orgId,
           ],

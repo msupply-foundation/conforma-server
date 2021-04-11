@@ -35,7 +35,7 @@ module.exports['generateReviewAssignments'] = async function (input: any, DBConn
     else {
       const {
         stageNumber: previousStage,
-        level: previousLevel,
+        levelNumber: previousLevel,
       } = await DBConnect.getReviewStageAndLevel(reviewId)
       console.log('Review existing', previousStage, previousLevel)
       // Review in new stage - first level
@@ -144,7 +144,7 @@ const generateNextReviewAssignments = async ({
           : AssignmentStatus.SELF_ASSIGN,
         applicationId,
         templateSectionRestrictions,
-        level: nextReviewLevel,
+        levelNumber: nextReviewLevel,
         isLastLevel,
       }
   })

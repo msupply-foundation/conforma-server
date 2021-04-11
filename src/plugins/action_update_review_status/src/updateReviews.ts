@@ -6,7 +6,7 @@ interface Review {
   reviewAssignmentId: number
   applicationId: number
   reviewerId: number
-  level: number
+  levelNumber: number
   reviewStatus: ReviewStatus
 }
 
@@ -30,8 +30,8 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
     ).filter((review: Review) => ['Submitted', 'Locked', 'Draft'].includes(review.reviewStatus))
     // Deduce which ones should be updated
     for (const review of reviews) {
-      const { reviewAssignmentId, level, reviewStatus } = review
-      if (level > 1) reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
+      const { reviewAssignmentId, levelNumber, reviewStatus } = review
+      if (levelNumber > 1) reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
       else if (await haveAssignedResponsesChanged(reviewAssignmentId))
         reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
       else if (reviewStatus === 'Locked')

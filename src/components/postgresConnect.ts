@@ -674,7 +674,8 @@ class PostgresDB {
   }
   public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
-      SELECT review.level, stage_number as "stageNumber"
+      SELECT review.level_number AS "levelNumber",
+      stage_number as "stageNumber"
       FROM review JOIN review_assignment ra
       ON review.review_assignment_id = ra.id
       WHERE review.id = $1
@@ -726,7 +727,7 @@ class PostgresDB {
 
   public getAllReviewResponses = async (reviewId: number) => {
     const text = `
-    SELECT rr.id, r.level, code, comment, decision, rr.status, rr.template_element_id,
+    SELECT rr.id, r.level_number, code, comment, decision, rr.status, rr.template_element_id,
     rr.application_response_id, rr.review_response_link_id, rr.time_updated
     FROM review_response rr JOIN application_response ar
     ON rr.application_response_id = ar.id

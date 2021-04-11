@@ -6,7 +6,7 @@ const databaseMethods = (DBConnect: any) => ({
       review_assignment_id AS "reviewAssignmentId",
       review_assignment.application_id AS "applicationId",
       review_assignment.reviewer_id,
-      review_assignment.level,
+      review_assignment.level_number AS "levelNumber",
       review_assignment.id AS "reviewAssignmentId",
       review_status_history.status AS "reviewStatus"
       FROM review JOIN review_assignment
@@ -15,7 +15,7 @@ const databaseMethods = (DBConnect: any) => ({
       WHERE review_status_history.is_current = true
       AND review_assignment.application_id = $1
       AND stage_id = $2
-      AND review_assignment.level = $3
+      AND review_assignment.level_number = $3
     `
     try {
       const result = await DBConnect.query({ text, values: [applicationId, stageId, level] })
