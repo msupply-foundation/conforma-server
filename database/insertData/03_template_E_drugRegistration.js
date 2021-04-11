@@ -569,8 +569,8 @@ exports.queries = [
               { permissionNameId: 10300, restrictions: {canSelfAssign: true}, levelNumber: 1, stageNumber: 1 }
               # Assign Drug Registration Stage 2
               { permissionNameId: 10200, levelNumber: 1, stageNumber: 2 }
-              # Review Drug Registration Stage 2 
-              { permissionNameId: 10400, levelNumber: 1, stageNumber: 2 }
+              # Review Drug Registration Stage 2 -- uncomment when available
+              # { permissionNameId: 10400, levelNumber: 1, stageNumber: 2 }
              
             ]
           }
