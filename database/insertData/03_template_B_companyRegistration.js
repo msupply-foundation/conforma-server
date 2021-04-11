@@ -466,9 +466,25 @@ exports.queries = [
           templatePermissionsUsingId: {
             create: [
               # Apply General
-              { permissionNameId: 10100 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyGeneral" }
+                }
+              }
               # Review Company rego
-              { permissionNameId: 4000, stageNumber: 1 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewCompanyRego" }
+                }
+                stageNumber: 1
+                level: 1
+              }
+              # Assign General
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "assignGeneral" }
+                }
+              }
             ]
           }
         }
