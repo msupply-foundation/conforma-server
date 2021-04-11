@@ -72,13 +72,11 @@ exports.queries = [
                         operator: "API"
                         children: [
                           {
-                            operator: "CONCAT",
+                            operator: "CONCAT"
                             children: [
                               {
-                                operator: "objectProperties",
-                                children: [
-                                  "applicationData.config.serverREST"
-                                ]
+                                operator: "objectProperties"
+                                children: ["applicationData.config.serverREST"]
                               }
                               "/check-unique"
                             ]
@@ -310,8 +308,27 @@ exports.queries = [
                 actionCode: "changeOutcome"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 100
-                # condition: TO-DO -- need to check if
-                # Decision is Approved
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
                 parameterQueries: {
                   applicationId: {
                     operator: "objectProperties"
@@ -324,8 +341,29 @@ exports.queries = [
                 actionCode: "createOrg"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 101
-                # condition: TO-DO -- need to check if
-                # Decision is Approved
+                # TO-DO -- update condition to just check Outcome
+                # (from applicationData)
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
                 parameterQueries: {
                   name: {
                     operator: "objectProperties"
@@ -336,18 +374,12 @@ exports.queries = [
                     children: ["applicationData.responses.rego.text"]
                   }
                   address: {
-                    operator: "stringSubstitution"
-                    children: [
-                      "%1\\n%2"
-                      {
-                        operator: "objectProperties"
-                        children: ["applicationData.responses.S2Q1.text"]
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: ["applicationData.responses.S2Q2.text"]
-                      }
-                    ]
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.physAdd.text"]
+                  }
+                  logoUrl: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.logo.files[0].fileUrl"]
                   }
                 }
               }
@@ -355,8 +387,29 @@ exports.queries = [
                 actionCode: "joinUserOrg"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 102
-                # condition: TO-DO -- need to check if
-                # Decision is Approved
+                # TO-DO -- update condition to just check Outcome
+                # (from applicationData)
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
                 parameterQueries: {
                   user_id: {
                     operator: "objectProperties"
@@ -373,8 +426,29 @@ exports.queries = [
                 actionCode: "grantPermissions"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 103
-                # condition: TO-DO -- need to check if
-                # Decision is Approved
+                # TO-DO -- update condition to just check Outcome
+                # (from applicationData)
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
                 parameterQueries: {
                   username: {
                     operator: "objectProperties"
