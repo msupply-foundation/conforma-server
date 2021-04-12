@@ -6,14 +6,14 @@ const LookupTableStructureModel = () => {
     try {
       const data = await DBConnect.gqlQuery(
         `
-      query getLookupTableStructure($id: Int!) {
-        lookupTable(id: $id) {
-          label
-          name
-          fieldMap
-        }
-      }
-      `,
+          query getLookupTableStructure($id: Int!) {
+            lookupTable(id: $id) {
+              label
+              name
+              fieldMap
+            }
+          }
+        `,
         { id: lookupTableId }
       )
       if (data.lookupTable) return data.lookupTable
