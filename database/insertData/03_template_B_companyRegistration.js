@@ -378,8 +378,21 @@ exports.queries = [
                     children: ["applicationData.responses.physAdd.text"]
                   }
                   logo_url: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.logo.files.fileUrl"]
+                    operator: "CONCAT",
+                    children: [
+                      {
+                        operator: "objectProperties",
+                        children: [
+                          "applicationData.config.serverREST"
+                        ]
+                      },
+                      {
+                        operator: "objectProperties",
+                        children: [
+                          "responses.logo.files.fileUrl"
+                        ]
+                      }
+                    ]
                   }
                 }
               }
