@@ -456,6 +456,8 @@ exports.queries = [
                         label: "This Radio button group has no default"
                         options: ["Option A", "Option B", "Option C"]
                         # Testing no default
+                        hasOther: true
+                        otherPlaceholder: "Enter other answer"
                       }
                       isRequired: true
                     }
