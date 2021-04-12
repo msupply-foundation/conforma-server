@@ -294,14 +294,14 @@ exports.queries = [
               # reviewJoinCompany
               {
                 permissionNameId: 8000
-                level: 1
+                levelNumber: 1
                 stageNumber: 1
                 restrictions: { canSelfAssign: true }
               }
               # reviewGeneral
               {
                 permissionNameId: 10000
-                level: 1
+                levelNumber: 1
                 stageNumber: 1
                 restrictions: { canSelfAssign: true }
               }

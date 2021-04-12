@@ -489,7 +489,7 @@ exports.queries = [
                   connectByName: { name: "reviewCompanyRego" }
                 }
                 stageNumber: 1
-                level: 1
+                levelNumber: 1
                 restrictions: { canSelfAssign: true }
               }
               # Assign General
