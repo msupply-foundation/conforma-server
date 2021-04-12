@@ -124,6 +124,11 @@ const generateNextReviewAssignments = async ({
       ? restrictions?.templateSectionRestrictions
       : null
 
+    const status =
+      restrictions?.canSelfAssign || nextReviewLevel > 1
+        ? AssignmentStatus.SELF_ASSIGN
+        : AssignmentStatus.AVAILABLE
+
     const userOrgKey = `${userId}_${orgId ? orgId : 0}`
     if (reviewAssignments[userOrgKey])
       reviewAssignments[userOrgKey].templateSectionRestrictions = mergeSectionRestrictions(
@@ -137,11 +142,7 @@ const generateNextReviewAssignments = async ({
         stageId: nextStageId,
         stageNumber: nextStageNumber,
         // TO-DO: allow STATUS to be configurable in template
-        status: restrictions?.canSelfAssign
-          ? AssignmentStatus.SELF_ASSIGN
-          : nextReviewLevel === 1
-          ? AssignmentStatus.AVAILABLE
-          : AssignmentStatus.SELF_ASSIGN,
+        status,
         applicationId,
         templateSectionRestrictions,
         level: nextReviewLevel,

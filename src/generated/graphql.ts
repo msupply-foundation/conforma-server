@@ -3334,103 +3334,6 @@ export type ApplicationToManyReviewFilter = {
   none?: Maybe<ReviewFilter>;
 };
 
-export type ApplicationTriggerState = {
-  __typename?: 'ApplicationTriggerState';
-  serial?: Maybe<Scalars['String']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  applicationTrigger?: Maybe<Trigger>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  reviewAssignmentTrigger?: Maybe<Trigger>;
-  reviewId?: Maybe<Scalars['Int']>;
-  reviewTrigger?: Maybe<Trigger>;
-};
-
-/**
- * A condition to be used against `ApplicationTriggerState` object types. All
- * fields are tested for equality and combined with a logical ‘and.’
- */
-export type ApplicationTriggerStateCondition = {
-  /** Checks for equality with the object’s `serial` field. */
-  serial?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationTrigger` field. */
-  applicationTrigger?: Maybe<Trigger>;
-  /** Checks for equality with the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewAssignmentTrigger` field. */
-  reviewAssignmentTrigger?: Maybe<Trigger>;
-  /** Checks for equality with the object’s `reviewId` field. */
-  reviewId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewTrigger` field. */
-  reviewTrigger?: Maybe<Trigger>;
-};
-
-/** A filter to be used against `ApplicationTriggerState` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationTriggerStateFilter = {
-  /** Filter by the object’s `serial` field. */
-  serial?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationTrigger` field. */
-  applicationTrigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `reviewAssignmentId` field. */
-  reviewAssignmentId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewAssignmentTrigger` field. */
-  reviewAssignmentTrigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `reviewId` field. */
-  reviewId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewTrigger` field. */
-  reviewTrigger?: Maybe<TriggerFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ApplicationTriggerStateFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ApplicationTriggerStateFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ApplicationTriggerStateFilter>;
-};
-
-/** A connection to a list of `ApplicationTriggerState` values. */
-export type ApplicationTriggerStatesConnection = {
-  __typename?: 'ApplicationTriggerStatesConnection';
-  /** A list of `ApplicationTriggerState` objects. */
-  nodes: Array<Maybe<ApplicationTriggerState>>;
-  /** A list of edges which contains the `ApplicationTriggerState` and cursor to aid in pagination. */
-  edges: Array<ApplicationTriggerStatesEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ApplicationTriggerState` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `ApplicationTriggerState` edge in the connection. */
-export type ApplicationTriggerStatesEdge = {
-  __typename?: 'ApplicationTriggerStatesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ApplicationTriggerState` at the end of the edge. */
-  node?: Maybe<ApplicationTriggerState>;
-};
-
-/** Methods to use when ordering `ApplicationTriggerState`. */
-export enum ApplicationTriggerStatesOrderBy {
-  Natural = 'NATURAL',
-  SerialAsc = 'SERIAL_ASC',
-  SerialDesc = 'SERIAL_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  ApplicationTriggerAsc = 'APPLICATION_TRIGGER_ASC',
-  ApplicationTriggerDesc = 'APPLICATION_TRIGGER_DESC',
-  ReviewAssignmentIdAsc = 'REVIEW_ASSIGNMENT_ID_ASC',
-  ReviewAssignmentIdDesc = 'REVIEW_ASSIGNMENT_ID_DESC',
-  ReviewAssignmentTriggerAsc = 'REVIEW_ASSIGNMENT_TRIGGER_ASC',
-  ReviewAssignmentTriggerDesc = 'REVIEW_ASSIGNMENT_TRIGGER_DESC',
-  ReviewIdAsc = 'REVIEW_ID_ASC',
-  ReviewIdDesc = 'REVIEW_ID_DESC',
-  ReviewTriggerAsc = 'REVIEW_TRIGGER_ASC',
-  ReviewTriggerDesc = 'REVIEW_TRIGGER_DESC'
-}
-
 /** The `application` to be created by this mutation. */
 export type ApplicationUserIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
@@ -10497,8 +10400,6 @@ export type Query = Node & {
   applicationStageStatusLatests?: Maybe<ApplicationStageStatusLatestsConnection>;
   /** Reads and enables pagination through a set of `ApplicationStatusHistory`. */
   applicationStatusHistories?: Maybe<ApplicationStatusHistoriesConnection>;
-  /** Reads and enables pagination through a set of `ApplicationTriggerState`. */
-  applicationTriggerStates?: Maybe<ApplicationTriggerStatesConnection>;
   /** Reads and enables pagination through a set of `ElementTypePlugin`. */
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
@@ -10792,19 +10693,6 @@ export type QueryApplicationStatusHistoriesArgs = {
   orderBy?: Maybe<Array<ApplicationStatusHistoriesOrderBy>>;
   condition?: Maybe<ApplicationStatusHistoryCondition>;
   filter?: Maybe<ApplicationStatusHistoryFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryApplicationTriggerStatesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ApplicationTriggerStatesOrderBy>>;
-  condition?: Maybe<ApplicationTriggerStateCondition>;
-  filter?: Maybe<ApplicationTriggerStateFilter>;
 };
 
 
@@ -11792,10 +11680,10 @@ export type ReviewAssignment = Node & {
   application?: Maybe<Application>;
   /** Reads and enables pagination through a set of `ReviewAssignmentAssignerJoin`. */
   reviewAssignmentAssignerJoins: ReviewAssignmentAssignerJoinsConnection;
-  /** Reads and enables pagination through a set of `Review`. */
-  reviews: ReviewsConnection;
   /** Reads and enables pagination through a set of `ReviewQuestionAssignment`. */
   reviewQuestionAssignments: ReviewQuestionAssignmentsConnection;
+  /** Reads and enables pagination through a set of `Review`. */
+  reviews: ReviewsConnection;
 };
 
 
@@ -11811,18 +11699,6 @@ export type ReviewAssignmentReviewAssignmentAssignerJoinsArgs = {
 };
 
 
-export type ReviewAssignmentReviewsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ReviewsOrderBy>>;
-  condition?: Maybe<ReviewCondition>;
-  filter?: Maybe<ReviewFilter>;
-};
-
-
 export type ReviewAssignmentReviewQuestionAssignmentsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -11832,6 +11708,18 @@ export type ReviewAssignmentReviewQuestionAssignmentsArgs = {
   orderBy?: Maybe<Array<ReviewQuestionAssignmentsOrderBy>>;
   condition?: Maybe<ReviewQuestionAssignmentCondition>;
   filter?: Maybe<ReviewQuestionAssignmentFilter>;
+};
+
+
+export type ReviewAssignmentReviewsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ReviewsOrderBy>>;
+  condition?: Maybe<ReviewCondition>;
+  filter?: Maybe<ReviewFilter>;
 };
 
 /** The `application` to be created by this mutation. */
@@ -11921,8 +11809,8 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ReviewAssignmentInput` mutation. */
@@ -11989,8 +11877,8 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** The `user` to be created by this mutation. */
@@ -12380,8 +12268,8 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `ReviewAssignmentAssignerJoin` values. */
@@ -12486,14 +12374,14 @@ export type ReviewAssignmentFilter = {
   reviewAssignmentAssignerJoins?: Maybe<ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter>;
   /** Some related `reviewAssignmentAssignerJoins` exist. */
   reviewAssignmentAssignerJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `reviews` relation. */
-  reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
-  /** Some related `reviews` exist. */
-  reviewsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewQuestionAssignments` relation. */
   reviewQuestionAssignments?: Maybe<ReviewAssignmentToManyReviewQuestionAssignmentFilter>;
   /** Some related `reviewQuestionAssignments` exist. */
   reviewQuestionAssignmentsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `reviews` relation. */
+  reviews?: Maybe<ReviewAssignmentToManyReviewFilter>;
+  /** Some related `reviews` exist. */
+  reviewsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `assigner` relation. */
   assigner?: Maybe<UserFilter>;
   /** A related `assigner` exists. */
@@ -12543,8 +12431,8 @@ export type ReviewAssignmentInput = {
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -12763,8 +12651,8 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** Represents an update to a `ReviewAssignment`. Fields that are set will be updated. */
@@ -12788,8 +12676,8 @@ export type ReviewAssignmentPatch = {
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** The fields on `reviewAssignment` to look up the row to connect. */
@@ -12866,8 +12754,8 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** The `user` to be created by this mutation. */
@@ -13003,8 +12891,8 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** The `templateStage` to be created by this mutation. */
@@ -13787,8 +13675,8 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** The `reviewQuestionAssignment` to be created by this mutation. */
@@ -14847,8 +14735,8 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** The `review` to be created by this mutation. */
@@ -19316,8 +19204,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
@@ -19340,8 +19228,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
@@ -19364,8 +19252,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
@@ -19388,8 +19276,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
@@ -19412,8 +19300,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
@@ -19436,8 +19324,8 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
@@ -19461,8 +19349,8 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `reviewAssignment` being updated. */
@@ -19486,8 +19374,8 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   templateStageToStageId?: Maybe<ReviewAssignmentStageIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewAssignmentApplicationIdFkeyInput>;
   reviewAssignmentAssignerJoinsUsingId?: Maybe<ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
   reviewQuestionAssignmentsUsingId?: Maybe<ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewReviewAssignmentIdFkeyInverseInput>;
 };
 
 /** The output of our update `ReviewAssignment` mutation. */
@@ -22170,7 +22058,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['Review'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['ApplicationSection'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['File'] | ResolversTypes['Notification'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['TemplateElement'] | ResolversTypes['TemplateSection'] | ResolversTypes['ApplicationSection'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -22284,8 +22172,8 @@ export type ResolversTypes = {
   FileToManyNotificationFilter: FileToManyNotificationFilter;
   UserToManyFileFilter: UserToManyFileFilter;
   UserToManyNotificationFilter: UserToManyNotificationFilter;
-  ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
   ReviewAssignmentToManyReviewQuestionAssignmentFilter: ReviewAssignmentToManyReviewQuestionAssignmentFilter;
+  ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
   ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
   TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
   TemplateElementToManyReviewResponseFilter: TemplateElementToManyReviewResponseFilter;
@@ -22351,14 +22239,9 @@ export type ResolversTypes = {
   ReviewAssignmentAssignerJoinsConnection: ResolverTypeWrapper<ReviewAssignmentAssignerJoinsConnection>;
   ReviewAssignmentAssignerJoin: ResolverTypeWrapper<ReviewAssignmentAssignerJoin>;
   ReviewAssignmentAssignerJoinsEdge: ResolverTypeWrapper<ReviewAssignmentAssignerJoinsEdge>;
-  ReviewsOrderBy: ReviewsOrderBy;
-  ReviewCondition: ReviewCondition;
-  ReviewsConnection: ResolverTypeWrapper<ReviewsConnection>;
-  Review: ResolverTypeWrapper<Review>;
-  ReviewResponsesOrderBy: ReviewResponsesOrderBy;
-  ReviewResponseCondition: ReviewResponseCondition;
-  ReviewResponsesConnection: ResolverTypeWrapper<ReviewResponsesConnection>;
-  ReviewResponse: ResolverTypeWrapper<ReviewResponse>;
+  ReviewQuestionAssignmentsOrderBy: ReviewQuestionAssignmentsOrderBy;
+  ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
+  ReviewQuestionAssignmentsConnection: ResolverTypeWrapper<ReviewQuestionAssignmentsConnection>;
   ReviewQuestionAssignment: ResolverTypeWrapper<ReviewQuestionAssignment>;
   TemplateElement: ResolverTypeWrapper<TemplateElement>;
   TemplateSection: ResolverTypeWrapper<TemplateSection>;
@@ -22375,22 +22258,11 @@ export type ResolversTypes = {
   ApplicationResponseCondition: ApplicationResponseCondition;
   ApplicationResponsesConnection: ResolverTypeWrapper<ApplicationResponsesConnection>;
   ApplicationResponse: ResolverTypeWrapper<ApplicationResponse>;
-  FilesOrderBy: FilesOrderBy;
-  FileCondition: FileCondition;
-  FilesConnection: ResolverTypeWrapper<FilesConnection>;
-  File: ResolverTypeWrapper<File>;
-  NotificationsOrderBy: NotificationsOrderBy;
-  NotificationCondition: NotificationCondition;
-  NotificationsConnection: ResolverTypeWrapper<NotificationsConnection>;
-  Notification: ResolverTypeWrapper<Notification>;
-  NotificationsEdge: ResolverTypeWrapper<NotificationsEdge>;
-  FilesEdge: ResolverTypeWrapper<FilesEdge>;
-  ApplicationResponsesEdge: ResolverTypeWrapper<ApplicationResponsesEdge>;
-  ReviewQuestionAssignmentsOrderBy: ReviewQuestionAssignmentsOrderBy;
-  ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
-  ReviewQuestionAssignmentsConnection: ResolverTypeWrapper<ReviewQuestionAssignmentsConnection>;
-  ReviewQuestionAssignmentsEdge: ResolverTypeWrapper<ReviewQuestionAssignmentsEdge>;
-  ReviewResponsesEdge: ResolverTypeWrapper<ReviewResponsesEdge>;
+  ReviewResponsesOrderBy: ReviewResponsesOrderBy;
+  ReviewResponseCondition: ReviewResponseCondition;
+  ReviewResponsesConnection: ResolverTypeWrapper<ReviewResponsesConnection>;
+  ReviewResponse: ResolverTypeWrapper<ReviewResponse>;
+  Review: ResolverTypeWrapper<Review>;
   ReviewDecisionsOrderBy: ReviewDecisionsOrderBy;
   ReviewDecisionCondition: ReviewDecisionCondition;
   ReviewDecisionsConnection: ResolverTypeWrapper<ReviewDecisionsConnection>;
@@ -22401,6 +22273,22 @@ export type ResolversTypes = {
   ReviewStatusHistoriesConnection: ResolverTypeWrapper<ReviewStatusHistoriesConnection>;
   ReviewStatusHistory: ResolverTypeWrapper<ReviewStatusHistory>;
   ReviewStatusHistoriesEdge: ResolverTypeWrapper<ReviewStatusHistoriesEdge>;
+  NotificationsOrderBy: NotificationsOrderBy;
+  NotificationCondition: NotificationCondition;
+  NotificationsConnection: ResolverTypeWrapper<NotificationsConnection>;
+  Notification: ResolverTypeWrapper<Notification>;
+  File: ResolverTypeWrapper<File>;
+  NotificationsEdge: ResolverTypeWrapper<NotificationsEdge>;
+  ReviewResponsesEdge: ResolverTypeWrapper<ReviewResponsesEdge>;
+  FilesOrderBy: FilesOrderBy;
+  FileCondition: FileCondition;
+  FilesConnection: ResolverTypeWrapper<FilesConnection>;
+  FilesEdge: ResolverTypeWrapper<FilesEdge>;
+  ApplicationResponsesEdge: ResolverTypeWrapper<ApplicationResponsesEdge>;
+  ReviewQuestionAssignmentsEdge: ResolverTypeWrapper<ReviewQuestionAssignmentsEdge>;
+  ReviewsOrderBy: ReviewsOrderBy;
+  ReviewCondition: ReviewCondition;
+  ReviewsConnection: ResolverTypeWrapper<ReviewsConnection>;
   ReviewsEdge: ResolverTypeWrapper<ReviewsEdge>;
   ReviewAssignmentsEdge: ResolverTypeWrapper<ReviewAssignmentsEdge>;
   UserOrganisationsEdge: ResolverTypeWrapper<UserOrganisationsEdge>;
@@ -22441,12 +22329,6 @@ export type ResolversTypes = {
   ApplicationStageStatusLatestsConnection: ResolverTypeWrapper<ApplicationStageStatusLatestsConnection>;
   ApplicationStageStatusLatest: ResolverTypeWrapper<ApplicationStageStatusLatest>;
   ApplicationStageStatusLatestsEdge: ResolverTypeWrapper<ApplicationStageStatusLatestsEdge>;
-  ApplicationTriggerStatesOrderBy: ApplicationTriggerStatesOrderBy;
-  ApplicationTriggerStateCondition: ApplicationTriggerStateCondition;
-  ApplicationTriggerStateFilter: ApplicationTriggerStateFilter;
-  ApplicationTriggerStatesConnection: ResolverTypeWrapper<ApplicationTriggerStatesConnection>;
-  ApplicationTriggerState: ResolverTypeWrapper<ApplicationTriggerState>;
-  ApplicationTriggerStatesEdge: ResolverTypeWrapper<ApplicationTriggerStatesEdge>;
   ElementTypePluginsOrderBy: ElementTypePluginsOrderBy;
   ElementTypePluginCondition: ElementTypePluginCondition;
   ElementTypePluginFilter: ElementTypePluginFilter;
@@ -22786,6 +22668,22 @@ export type ResolversTypes = {
   ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInput: ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInput;
   ReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
   updateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput;
+  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect;
+  ReviewQuestionAssignmentNodeIdConnect: ReviewQuestionAssignmentNodeIdConnect;
+  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete;
+  ReviewQuestionAssignmentNodeIdDelete: ReviewQuestionAssignmentNodeIdDelete;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
+  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
+  ReviewQuestionAssignmentTemplateElementIdFkeyInput: ReviewQuestionAssignmentTemplateElementIdFkeyInput;
+  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
+  updateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
+  ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput: ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
+  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInput;
+  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
   ReviewReviewAssignmentIdFkeyInverseInput: ReviewReviewAssignmentIdFkeyInverseInput;
   ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch;
@@ -22847,24 +22745,8 @@ export type ResolversTypes = {
   ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate;
   updateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch;
   ReviewResponseReviewQuestionAssignmentIdFkeyInput: ReviewResponseReviewQuestionAssignmentIdFkeyInput;
-  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect;
-  ReviewQuestionAssignmentNodeIdConnect: ReviewQuestionAssignmentNodeIdConnect;
-  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete;
-  ReviewQuestionAssignmentNodeIdDelete: ReviewQuestionAssignmentNodeIdDelete;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
   updateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
-  ReviewQuestionAssignmentTemplateElementIdFkeyInput: ReviewQuestionAssignmentTemplateElementIdFkeyInput;
-  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
-  updateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
-  ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput: ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput;
-  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
-  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
-  ReviewQuestionAssignmentReviewAssignmentIdFkeyInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInput;
-  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
-  ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput;
-  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
-  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
   ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput: ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate;
   updateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
@@ -22968,17 +22850,8 @@ export type ResolversTypes = {
   ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
   ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput;
-  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
-  ReviewQuestionAssignmentPatch: ReviewQuestionAssignmentPatch;
-  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
-  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
-  ReviewAssignmentPatch: ReviewAssignmentPatch;
-  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput;
-  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
-  ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput;
-  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
-  ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentPatch: ReviewQuestionAssignmentPatch;
   ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
   ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
   ReviewResponseReviewIdFkeyReviewResponseCreateInput: ReviewResponseReviewIdFkeyReviewResponseCreateInput;
@@ -23014,6 +22887,15 @@ export type ResolversTypes = {
   ReviewApplicationIdFkeyApplicationCreateInput: ReviewApplicationIdFkeyApplicationCreateInput;
   ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
   ReviewReviewAssignmentIdFkeyReviewCreateInput: ReviewReviewAssignmentIdFkeyReviewCreateInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewAssignmentPatch: ReviewAssignmentPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput;
+  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput;
+  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
   ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyNodeIdUpdate;
   ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCreateInput;
   OrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyNodeIdUpdate: OrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyNodeIdUpdate;
@@ -23480,7 +23362,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['File'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -23577,8 +23459,8 @@ export type ResolversParentTypes = {
   FileToManyNotificationFilter: FileToManyNotificationFilter;
   UserToManyFileFilter: UserToManyFileFilter;
   UserToManyNotificationFilter: UserToManyNotificationFilter;
-  ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
   ReviewAssignmentToManyReviewQuestionAssignmentFilter: ReviewAssignmentToManyReviewQuestionAssignmentFilter;
+  ReviewAssignmentToManyReviewFilter: ReviewAssignmentToManyReviewFilter;
   ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
   TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
   TemplateElementToManyReviewResponseFilter: TemplateElementToManyReviewResponseFilter;
@@ -23635,12 +23517,8 @@ export type ResolversParentTypes = {
   ReviewAssignmentAssignerJoinsConnection: ReviewAssignmentAssignerJoinsConnection;
   ReviewAssignmentAssignerJoin: ReviewAssignmentAssignerJoin;
   ReviewAssignmentAssignerJoinsEdge: ReviewAssignmentAssignerJoinsEdge;
-  ReviewCondition: ReviewCondition;
-  ReviewsConnection: ReviewsConnection;
-  Review: Review;
-  ReviewResponseCondition: ReviewResponseCondition;
-  ReviewResponsesConnection: ReviewResponsesConnection;
-  ReviewResponse: ReviewResponse;
+  ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
+  ReviewQuestionAssignmentsConnection: ReviewQuestionAssignmentsConnection;
   ReviewQuestionAssignment: ReviewQuestionAssignment;
   TemplateElement: TemplateElement;
   TemplateSection: TemplateSection;
@@ -23654,19 +23532,10 @@ export type ResolversParentTypes = {
   ApplicationResponseCondition: ApplicationResponseCondition;
   ApplicationResponsesConnection: ApplicationResponsesConnection;
   ApplicationResponse: ApplicationResponse;
-  FileCondition: FileCondition;
-  FilesConnection: FilesConnection;
-  File: File;
-  NotificationCondition: NotificationCondition;
-  NotificationsConnection: NotificationsConnection;
-  Notification: Notification;
-  NotificationsEdge: NotificationsEdge;
-  FilesEdge: FilesEdge;
-  ApplicationResponsesEdge: ApplicationResponsesEdge;
-  ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
-  ReviewQuestionAssignmentsConnection: ReviewQuestionAssignmentsConnection;
-  ReviewQuestionAssignmentsEdge: ReviewQuestionAssignmentsEdge;
-  ReviewResponsesEdge: ReviewResponsesEdge;
+  ReviewResponseCondition: ReviewResponseCondition;
+  ReviewResponsesConnection: ReviewResponsesConnection;
+  ReviewResponse: ReviewResponse;
+  Review: Review;
   ReviewDecisionCondition: ReviewDecisionCondition;
   ReviewDecisionsConnection: ReviewDecisionsConnection;
   ReviewDecision: ReviewDecision;
@@ -23675,6 +23544,19 @@ export type ResolversParentTypes = {
   ReviewStatusHistoriesConnection: ReviewStatusHistoriesConnection;
   ReviewStatusHistory: ReviewStatusHistory;
   ReviewStatusHistoriesEdge: ReviewStatusHistoriesEdge;
+  NotificationCondition: NotificationCondition;
+  NotificationsConnection: NotificationsConnection;
+  Notification: Notification;
+  File: File;
+  NotificationsEdge: NotificationsEdge;
+  ReviewResponsesEdge: ReviewResponsesEdge;
+  FileCondition: FileCondition;
+  FilesConnection: FilesConnection;
+  FilesEdge: FilesEdge;
+  ApplicationResponsesEdge: ApplicationResponsesEdge;
+  ReviewQuestionAssignmentsEdge: ReviewQuestionAssignmentsEdge;
+  ReviewCondition: ReviewCondition;
+  ReviewsConnection: ReviewsConnection;
   ReviewsEdge: ReviewsEdge;
   ReviewAssignmentsEdge: ReviewAssignmentsEdge;
   UserOrganisationsEdge: UserOrganisationsEdge;
@@ -23709,11 +23591,6 @@ export type ResolversParentTypes = {
   ApplicationStageStatusLatestsConnection: ApplicationStageStatusLatestsConnection;
   ApplicationStageStatusLatest: ApplicationStageStatusLatest;
   ApplicationStageStatusLatestsEdge: ApplicationStageStatusLatestsEdge;
-  ApplicationTriggerStateCondition: ApplicationTriggerStateCondition;
-  ApplicationTriggerStateFilter: ApplicationTriggerStateFilter;
-  ApplicationTriggerStatesConnection: ApplicationTriggerStatesConnection;
-  ApplicationTriggerState: ApplicationTriggerState;
-  ApplicationTriggerStatesEdge: ApplicationTriggerStatesEdge;
   ElementTypePluginCondition: ElementTypePluginCondition;
   ElementTypePluginFilter: ElementTypePluginFilter;
   ElementTypePluginsConnection: ElementTypePluginsConnection;
@@ -24045,6 +23922,22 @@ export type ResolversParentTypes = {
   ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInput: ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInput;
   ReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
   updateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput;
+  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect;
+  ReviewQuestionAssignmentNodeIdConnect: ReviewQuestionAssignmentNodeIdConnect;
+  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete;
+  ReviewQuestionAssignmentNodeIdDelete: ReviewQuestionAssignmentNodeIdDelete;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
+  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
+  ReviewQuestionAssignmentTemplateElementIdFkeyInput: ReviewQuestionAssignmentTemplateElementIdFkeyInput;
+  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
+  updateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
+  ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput: ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
+  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInput;
+  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
   ReviewReviewAssignmentIdFkeyInverseInput: ReviewReviewAssignmentIdFkeyInverseInput;
   ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch;
@@ -24106,24 +23999,8 @@ export type ResolversParentTypes = {
   ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate;
   updateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch;
   ReviewResponseReviewQuestionAssignmentIdFkeyInput: ReviewResponseReviewQuestionAssignmentIdFkeyInput;
-  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyConnect;
-  ReviewQuestionAssignmentNodeIdConnect: ReviewQuestionAssignmentNodeIdConnect;
-  ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete: ReviewQuestionAssignmentReviewQuestionAssignmentPkeyDelete;
-  ReviewQuestionAssignmentNodeIdDelete: ReviewQuestionAssignmentNodeIdDelete;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
   updateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
-  ReviewQuestionAssignmentTemplateElementIdFkeyInput: ReviewQuestionAssignmentTemplateElementIdFkeyInput;
-  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
-  updateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
-  ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput: ReviewQuestionAssignmentTemplateElementIdFkeyInverseInput;
-  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
-  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyPatch;
-  ReviewQuestionAssignmentReviewAssignmentIdFkeyInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInput;
-  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
-  ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyInverseInput;
-  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
-  updateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
   ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput: ReviewResponseReviewQuestionAssignmentIdFkeyInverseInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewResponsePkeyUpdate;
   updateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
@@ -24227,17 +24104,8 @@ export type ResolversParentTypes = {
   ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
   ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput;
-  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
-  ReviewQuestionAssignmentPatch: ReviewQuestionAssignmentPatch;
-  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
-  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
-  ReviewAssignmentPatch: ReviewAssignmentPatch;
-  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput;
-  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
-  ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput;
-  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
-  ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentPatch: ReviewQuestionAssignmentPatch;
   ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
   ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
   ReviewResponseReviewIdFkeyReviewResponseCreateInput: ReviewResponseReviewIdFkeyReviewResponseCreateInput;
@@ -24273,6 +24141,15 @@ export type ResolversParentTypes = {
   ReviewApplicationIdFkeyApplicationCreateInput: ReviewApplicationIdFkeyApplicationCreateInput;
   ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
   ReviewReviewAssignmentIdFkeyReviewCreateInput: ReviewReviewAssignmentIdFkeyReviewCreateInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewAssignmentPatch: ReviewAssignmentPatch;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput;
+  TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput;
+  ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyTemplateElementCreateInput;
+  ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
   ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyNodeIdUpdate;
   ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCreateInput;
   OrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyNodeIdUpdate: OrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyNodeIdUpdate;
@@ -25050,31 +24927,6 @@ export type ApplicationStatusHistoryResolvers<ContextType = any, ParentType exte
   isCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   applicationStageHistory?: Resolver<Maybe<ResolversTypes['ApplicationStageHistory']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ApplicationTriggerStateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationTriggerState'] = ResolversParentTypes['ApplicationTriggerState']> = {
-  serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  applicationTrigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
-  reviewAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewAssignmentTrigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
-  reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewTrigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ApplicationTriggerStatesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationTriggerStatesConnection'] = ResolversParentTypes['ApplicationTriggerStatesConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['ApplicationTriggerState']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['ApplicationTriggerStatesEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ApplicationTriggerStatesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationTriggerStatesEdge'] = ResolversParentTypes['ApplicationTriggerStatesEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ApplicationTriggerState']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -25948,7 +25800,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'ApplicationStageHistory' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ReviewAssignment' | 'ReviewAssignmentAssignerJoin' | 'Review' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'TemplateElement' | 'TemplateSection' | 'ApplicationSection' | 'ApplicationResponse' | 'File' | 'Notification' | 'ReviewDecision' | 'ReviewStatusHistory' | 'ApplicationStatusHistory' | 'TemplateAction' | 'ElementTypePlugin', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'ApplicationStageHistory' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ReviewAssignment' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'TemplateElement' | 'TemplateSection' | 'ApplicationSection' | 'ApplicationResponse' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationStatusHistory' | 'TemplateAction' | 'ElementTypePlugin', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -26144,7 +25996,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStageStatusAlls?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusAllsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageStatusAllsArgs, 'orderBy'>>;
   applicationStageStatusLatests?: Resolver<Maybe<ResolversTypes['ApplicationStageStatusLatestsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStageStatusLatestsArgs, 'orderBy'>>;
   applicationStatusHistories?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoriesArgs, 'orderBy'>>;
-  applicationTriggerStates?: Resolver<Maybe<ResolversTypes['ApplicationTriggerStatesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationTriggerStatesArgs, 'orderBy'>>;
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
   files?: Resolver<Maybe<ResolversTypes['FilesConnection']>, ParentType, ContextType, RequireFields<QueryFilesArgs, 'orderBy'>>;
   notifications?: Resolver<Maybe<ResolversTypes['NotificationsConnection']>, ParentType, ContextType, RequireFields<QueryNotificationsArgs, 'orderBy'>>;
@@ -26291,8 +26142,8 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   stage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   reviewAssignmentAssignerJoins?: Resolver<ResolversTypes['ReviewAssignmentAssignerJoinsConnection'], ParentType, ContextType, RequireFields<ReviewAssignmentReviewAssignmentAssignerJoinsArgs, 'orderBy'>>;
-  reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ReviewAssignmentReviewsArgs, 'orderBy'>>;
   reviewQuestionAssignments?: Resolver<ResolversTypes['ReviewQuestionAssignmentsConnection'], ParentType, ContextType, RequireFields<ReviewAssignmentReviewQuestionAssignmentsArgs, 'orderBy'>>;
+  reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ReviewAssignmentReviewsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -27107,9 +26958,6 @@ export type Resolvers<ContextType = any> = {
   ApplicationStatusHistoriesConnection?: ApplicationStatusHistoriesConnectionResolvers<ContextType>;
   ApplicationStatusHistoriesEdge?: ApplicationStatusHistoriesEdgeResolvers<ContextType>;
   ApplicationStatusHistory?: ApplicationStatusHistoryResolvers<ContextType>;
-  ApplicationTriggerState?: ApplicationTriggerStateResolvers<ContextType>;
-  ApplicationTriggerStatesConnection?: ApplicationTriggerStatesConnectionResolvers<ContextType>;
-  ApplicationTriggerStatesEdge?: ApplicationTriggerStatesEdgeResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
   CreateActionPluginPayload?: CreateActionPluginPayloadResolvers<ContextType>;
   CreateActionQueuePayload?: CreateActionQueuePayloadResolvers<ContextType>;
