@@ -25,7 +25,7 @@ const databaseMethods = (DBConnect: any) => ({
     SELECT * FROM review_assignment
     WHERE application_id = $2
     AND stage_number = $3
-    AND level = $4
+    AND level_number = $4
     AND id <> $1
     `
     try {

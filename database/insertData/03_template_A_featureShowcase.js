@@ -942,6 +942,9 @@ exports.queries = [
                 number: 1
                 title: "Automatic"
                 description: "Please check your email to confirm your account."
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
             ]
           }

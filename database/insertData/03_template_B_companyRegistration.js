@@ -290,6 +290,9 @@ exports.queries = [
                 number: 1
                 title: "Approval"
                 description: "This application will be approved by a Reviewer"
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
             ]
           }

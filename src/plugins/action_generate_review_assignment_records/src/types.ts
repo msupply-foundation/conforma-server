@@ -31,7 +31,7 @@ interface ReviewAssignment {
   status: AssignmentStatus
   applicationId: number
   templateSectionRestrictions: string[] | null | undefined
-  level: number
+  levelNumber: number
   isLastLevel: boolean
 }
 
