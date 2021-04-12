@@ -377,9 +377,9 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.physAdd.text"]
                   }
-                  logoUrl: {
+                  logo_url: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.logo.files[0].fileUrl"]
+                    children: ["applicationData.responses.logo.files.fileUrl"]
                   }
                 }
               }
