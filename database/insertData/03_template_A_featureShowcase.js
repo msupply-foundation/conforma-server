@@ -809,6 +809,7 @@ exports.queries = [
                         label: "Any final comments?"
                         lines: 8
                         placeholder: "Enter here..."
+                        maxLength: 101
                       }
                       validation: {
                         operator: "REGEX"
