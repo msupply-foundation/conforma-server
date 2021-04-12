@@ -380,16 +380,12 @@ exports.queries = [
                   logo_url: {
                     operator: "CONCAT",
                     children: [
+                      # This is a clunky hack to extract a value from an array
+                      "",
                       {
                         operator: "objectProperties",
                         children: [
-                          "applicationData.config.serverREST"
-                        ]
-                      },
-                      {
-                        operator: "objectProperties",
-                        children: [
-                          "responses.logo.files.fileUrl"
+                          "applicationData.responses.logo.files.fileUrl"
                         ]
                       }
                     ]
