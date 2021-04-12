@@ -6,16 +6,18 @@ const LookupTableStructureModel = () => {
     try {
       const data = await DBConnect.gqlQuery(
         `
-      query getLookupTableStructure($id: Int!) {
-        lookupTable(id: $id) {
-          label
-          name
-          fieldMap
-        }
-      }
-      `,
+          query getLookupTableStructure($id: Int!) {
+            lookupTable(id: $id) {
+              label
+              name
+              fieldMap
+            }
+          }
+        `,
         { id: lookupTableId }
       )
+      if (!data.lookupTable)
+        throw new Error(`Lookup table structure with id '${lookupTableId}' does not exist.`)
       return data.lookupTable
     } catch (error) {
       throw error
