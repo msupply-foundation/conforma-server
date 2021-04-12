@@ -64,7 +64,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5002
                       code: "S1Q2"
                       index: 2
                       title: "Reason"
@@ -288,21 +287,33 @@ exports.queries = [
           templatePermissionsUsingId: {
             create: [
               # applyJoinCompany
-              { permissionNameId: 8000 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyJoinCompany" }
+                }
+              }
               # assignGeneral
-              { permissionNameId: 9000 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "assignGeneral" }
+                }
+              }
               # reviewJoinCompany
               {
-                permissionNameId: 8000
-                levelNumber: 1
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewJoinCompany" }
+                }
                 stageNumber: 1
+                levelNumber: 1
                 restrictions: { canSelfAssign: true }
               }
               # reviewGeneral
               {
-                permissionNameId: 10000
-                levelNumber: 1
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewGeneral" }
+                }
                 stageNumber: 1
+                levelNumber: 1
                 restrictions: { canSelfAssign: true }
               }
             ]

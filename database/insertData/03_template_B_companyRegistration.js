@@ -20,14 +20,12 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 1001
                 code: "S1"
                 title: "Section 1: Organisation Details"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 2000
                       code: "S1T1"
                       index: 10
                       title: "Intro Section 1"
@@ -39,7 +37,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2010
                       code: "name"
                       index: 20
                       title: "Organisation Name"
@@ -62,7 +59,6 @@ exports.queries = [
                       parameters: { label: "What is the name of your organisation?" }
                     }
                     {
-                      id: 2020
                       code: "rego"
                       index: 30
                       title: "Registration"
@@ -96,7 +92,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2030
                       code: "physAdd"
                       index: 40
                       title: "Address"
@@ -107,7 +102,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2040
                       code: "addressCheckbox"
                       index: 50
                       title: "Postal Address Checkbox"
@@ -125,7 +119,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2050
                       code: "postAdd"
                       index: 60
                       title: "Address"
@@ -147,7 +140,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2060
                       code: "PB1"
                       index: 70
                       title: "Page Break"
@@ -155,7 +147,6 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 2070
                       code: "logo"
                       index: 80
                       title: "Logo upload"
@@ -171,7 +162,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2080
                       code: "activity"
                       index: 90
                       title: "Organisation Activity"
@@ -186,14 +176,12 @@ exports.queries = [
                 }
               }
               {
-                id: 1002
                 code: "S2"
                 title: "Section 2: Documentation"
                 index: 1
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 2100
                       code: "orgInfo"
                       index: 10
                       title: "Intro Section 2 - Page 1/2"
@@ -223,7 +211,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2110
                       code: "logoShow"
                       index: 20
                       title: "Show uploaded logo"
@@ -249,7 +236,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2120
                       code: "regoDoc"
                       index: 30
                       title: "Registration upload"
@@ -265,7 +251,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2130
                       code: "otherDoc"
                       index: 40
                       title: "Other documentation upload"
