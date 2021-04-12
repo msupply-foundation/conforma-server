@@ -208,7 +208,12 @@ exports.queries = [
             ]
           }
           templatePermissionsUsingId: {
-            create: [{ id: 3000, permissionNameId: 1000 }]
+            create: [
+              {
+              permissionNameToPermissionNameId: {
+              connectByName: { name: "applyUserRegistration" } }
+              }
+            ]
           }
         }
       }

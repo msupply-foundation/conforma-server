@@ -5401,6 +5401,16 @@ export type DeletePermissionNamePayloadPermissionNameEdgeArgs = {
   orderBy?: Maybe<Array<PermissionNamesOrderBy>>;
 };
 
+/** All input for the `deletePermissionPolicyByName` mutation. */
+export type DeletePermissionPolicyByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
+};
+
 /** All input for the `deletePermissionPolicyByNodeId` mutation. */
 export type DeletePermissionPolicyByNodeIdInput = {
   /**
@@ -7179,6 +7189,8 @@ export type Mutation = {
   updatePermissionPolicyByNodeId?: Maybe<UpdatePermissionPolicyPayload>;
   /** Updates a single `PermissionPolicy` using a unique key and a patch. */
   updatePermissionPolicy?: Maybe<UpdatePermissionPolicyPayload>;
+  /** Updates a single `PermissionPolicy` using a unique key and a patch. */
+  updatePermissionPolicyByName?: Maybe<UpdatePermissionPolicyPayload>;
   /** Updates a single `Review` using its globally unique id and a patch. */
   updateReviewByNodeId?: Maybe<UpdateReviewPayload>;
   /** Updates a single `Review` using a unique key and a patch. */
@@ -7315,6 +7327,8 @@ export type Mutation = {
   deletePermissionPolicyByNodeId?: Maybe<DeletePermissionPolicyPayload>;
   /** Deletes a single `PermissionPolicy` using a unique key. */
   deletePermissionPolicy?: Maybe<DeletePermissionPolicyPayload>;
+  /** Deletes a single `PermissionPolicy` using a unique key. */
+  deletePermissionPolicyByName?: Maybe<DeletePermissionPolicyPayload>;
   /** Deletes a single `Review` using its globally unique id. */
   deleteReviewByNodeId?: Maybe<DeleteReviewPayload>;
   /** Deletes a single `Review` using a unique key. */
@@ -7779,6 +7793,12 @@ export type MutationUpdatePermissionPolicyArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdatePermissionPolicyByNameArgs = {
+  input: UpdatePermissionPolicyByNameInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateReviewByNodeIdArgs = {
   input: UpdateReviewByNodeIdInput;
 };
@@ -8183,6 +8203,12 @@ export type MutationDeletePermissionPolicyByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeletePermissionPolicyArgs = {
   input: DeletePermissionPolicyInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeletePermissionPolicyByNameArgs = {
+  input: DeletePermissionPolicyByNameInput;
 };
 
 
@@ -10014,13 +10040,19 @@ export type PermissionNamePermissionPolicyIdFkeyInput = {
   /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
   connectById?: Maybe<PermissionPolicyPermissionPolicyPkeyConnect>;
   /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
+  connectByName?: Maybe<PermissionPolicyPermissionPolicyNameKeyConnect>;
+  /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
   connectByNodeId?: Maybe<PermissionPolicyNodeIdConnect>;
   /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
   deleteById?: Maybe<PermissionPolicyPermissionPolicyPkeyDelete>;
   /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
+  deleteByName?: Maybe<PermissionPolicyPermissionPolicyNameKeyDelete>;
+  /** The primary key(s) for `permissionPolicy` for the far side of the relationship. */
   deleteByNodeId?: Maybe<PermissionPolicyNodeIdDelete>;
   /** The primary key(s) and patch data for `permissionPolicy` for the far side of the relationship. */
   updateById?: Maybe<PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyPkeyUpdate>;
+  /** The primary key(s) and patch data for `permissionPolicy` for the far side of the relationship. */
+  updateByName?: Maybe<PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyNameKeyUpdate>;
   /** The primary key(s) and patch data for `permissionPolicy` for the far side of the relationship. */
   updateByNodeId?: Maybe<PermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate>;
   /** A `PermissionPolicyInput` object that will be created and connected to this object. */
@@ -10272,6 +10304,13 @@ export type PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdF
 };
 
 /** The fields on `permissionPolicy` to look up the row to update. */
+export type PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `permissionPolicy` being updated. */
+  patch: UpdatePermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `permissionPolicy` to look up the row to update. */
 export type PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyPkeyUpdate = {
   /** An object where the defined keys will be set on the `permissionPolicy` being updated. */
   patch: UpdatePermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch;
@@ -10287,6 +10326,16 @@ export type PermissionPolicyPatch = {
   type?: Maybe<PermissionPolicyType>;
   defaultRestrictions?: Maybe<Scalars['JSON']>;
   permissionNamesUsingId?: Maybe<PermissionNamePermissionPolicyIdFkeyInverseInput>;
+};
+
+/** The fields on `permissionPolicy` to look up the row to connect. */
+export type PermissionPolicyPermissionPolicyNameKeyConnect = {
+  name: Scalars['String'];
+};
+
+/** The fields on `permissionPolicy` to look up the row to delete. */
+export type PermissionPolicyPermissionPolicyNameKeyDelete = {
+  name: Scalars['String'];
 };
 
 /** The fields on `permissionPolicy` to look up the row to connect. */
@@ -10597,6 +10646,7 @@ export type Query = Node & {
   permissionName?: Maybe<PermissionName>;
   permissionNameByName?: Maybe<PermissionName>;
   permissionPolicy?: Maybe<PermissionPolicy>;
+  permissionPolicyByName?: Maybe<PermissionPolicy>;
   review?: Maybe<Review>;
   reviewAssignment?: Maybe<ReviewAssignment>;
   reviewAssignmentAssignerJoin?: Maybe<ReviewAssignmentAssignerJoin>;
@@ -11276,6 +11326,12 @@ export type QueryPermissionNameByNameArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryPermissionPolicyArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryPermissionPolicyByNameArgs = {
+  name: Scalars['String'];
 };
 
 
@@ -19599,6 +19655,18 @@ export type UpdatePermissionNamePayloadPermissionNameEdgeArgs = {
   orderBy?: Maybe<Array<PermissionNamesOrderBy>>;
 };
 
+/** All input for the `updatePermissionPolicyByName` mutation. */
+export type UpdatePermissionPolicyByNameInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `PermissionPolicy` being updated. */
+  patch: PermissionPolicyPatch;
+  name: Scalars['String'];
+};
+
 /** All input for the `updatePermissionPolicyByNodeId` mutation. */
 export type UpdatePermissionPolicyByNodeIdInput = {
   /**
@@ -23156,8 +23224,10 @@ export type ResolversTypes = {
   updatePermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyPatch: UpdatePermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyPatch;
   PermissionNamePermissionPolicyIdFkeyInput: PermissionNamePermissionPolicyIdFkeyInput;
   PermissionPolicyPermissionPolicyPkeyConnect: PermissionPolicyPermissionPolicyPkeyConnect;
+  PermissionPolicyPermissionPolicyNameKeyConnect: PermissionPolicyPermissionPolicyNameKeyConnect;
   PermissionPolicyNodeIdConnect: PermissionPolicyNodeIdConnect;
   PermissionPolicyPermissionPolicyPkeyDelete: PermissionPolicyPermissionPolicyPkeyDelete;
+  PermissionPolicyPermissionPolicyNameKeyDelete: PermissionPolicyPermissionPolicyNameKeyDelete;
   PermissionPolicyNodeIdDelete: PermissionPolicyNodeIdDelete;
   PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyPkeyUpdate: PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyPkeyUpdate;
   updatePermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch: UpdatePermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch;
@@ -23797,6 +23867,7 @@ export type ResolversTypes = {
   PermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionNameNameKeyUpdate;
   PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate: PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate;
   PermissionNamePermissionPolicyIdFkeyPermissionNameCreateInput: PermissionNamePermissionPolicyIdFkeyPermissionNameCreateInput;
+  PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyNameKeyUpdate: PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyNameKeyUpdate;
   PermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate: PermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate;
   PermissionPolicyPatch: PermissionPolicyPatch;
   PermissionNamePermissionPolicyIdFkeyPermissionPolicyCreateInput: PermissionNamePermissionPolicyIdFkeyPermissionPolicyCreateInput;
@@ -23960,6 +24031,7 @@ export type ResolversTypes = {
   UpdatePermissionPolicyByNodeIdInput: UpdatePermissionPolicyByNodeIdInput;
   UpdatePermissionPolicyPayload: ResolverTypeWrapper<UpdatePermissionPolicyPayload>;
   UpdatePermissionPolicyInput: UpdatePermissionPolicyInput;
+  UpdatePermissionPolicyByNameInput: UpdatePermissionPolicyByNameInput;
   UpdateReviewByNodeIdInput: UpdateReviewByNodeIdInput;
   UpdateReviewPayload: ResolverTypeWrapper<UpdateReviewPayload>;
   UpdateReviewInput: UpdateReviewInput;
@@ -24059,6 +24131,7 @@ export type ResolversTypes = {
   DeletePermissionPolicyByNodeIdInput: DeletePermissionPolicyByNodeIdInput;
   DeletePermissionPolicyPayload: ResolverTypeWrapper<DeletePermissionPolicyPayload>;
   DeletePermissionPolicyInput: DeletePermissionPolicyInput;
+  DeletePermissionPolicyByNameInput: DeletePermissionPolicyByNameInput;
   DeleteReviewByNodeIdInput: DeleteReviewByNodeIdInput;
   DeleteReviewPayload: ResolverTypeWrapper<DeleteReviewPayload>;
   DeleteReviewInput: DeleteReviewInput;
@@ -24451,8 +24524,10 @@ export type ResolversParentTypes = {
   updatePermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyPatch: UpdatePermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyPatch;
   PermissionNamePermissionPolicyIdFkeyInput: PermissionNamePermissionPolicyIdFkeyInput;
   PermissionPolicyPermissionPolicyPkeyConnect: PermissionPolicyPermissionPolicyPkeyConnect;
+  PermissionPolicyPermissionPolicyNameKeyConnect: PermissionPolicyPermissionPolicyNameKeyConnect;
   PermissionPolicyNodeIdConnect: PermissionPolicyNodeIdConnect;
   PermissionPolicyPermissionPolicyPkeyDelete: PermissionPolicyPermissionPolicyPkeyDelete;
+  PermissionPolicyPermissionPolicyNameKeyDelete: PermissionPolicyPermissionPolicyNameKeyDelete;
   PermissionPolicyNodeIdDelete: PermissionPolicyNodeIdDelete;
   PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyPkeyUpdate: PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyPkeyUpdate;
   updatePermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch: UpdatePermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyPatch;
@@ -25092,6 +25167,7 @@ export type ResolversParentTypes = {
   PermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionNameNameKeyUpdate;
   PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate: PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate;
   PermissionNamePermissionPolicyIdFkeyPermissionNameCreateInput: PermissionNamePermissionPolicyIdFkeyPermissionNameCreateInput;
+  PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyNameKeyUpdate: PermissionPolicyOnPermissionNameForPermissionNamePermissionPolicyIdFkeyUsingPermissionPolicyNameKeyUpdate;
   PermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate: PermissionNameOnPermissionNameForPermissionNamePermissionPolicyIdFkeyNodeIdUpdate;
   PermissionPolicyPatch: PermissionPolicyPatch;
   PermissionNamePermissionPolicyIdFkeyPermissionPolicyCreateInput: PermissionNamePermissionPolicyIdFkeyPermissionPolicyCreateInput;
@@ -25255,6 +25331,7 @@ export type ResolversParentTypes = {
   UpdatePermissionPolicyByNodeIdInput: UpdatePermissionPolicyByNodeIdInput;
   UpdatePermissionPolicyPayload: UpdatePermissionPolicyPayload;
   UpdatePermissionPolicyInput: UpdatePermissionPolicyInput;
+  UpdatePermissionPolicyByNameInput: UpdatePermissionPolicyByNameInput;
   UpdateReviewByNodeIdInput: UpdateReviewByNodeIdInput;
   UpdateReviewPayload: UpdateReviewPayload;
   UpdateReviewInput: UpdateReviewInput;
@@ -25354,6 +25431,7 @@ export type ResolversParentTypes = {
   DeletePermissionPolicyByNodeIdInput: DeletePermissionPolicyByNodeIdInput;
   DeletePermissionPolicyPayload: DeletePermissionPolicyPayload;
   DeletePermissionPolicyInput: DeletePermissionPolicyInput;
+  DeletePermissionPolicyByNameInput: DeletePermissionPolicyByNameInput;
   DeleteReviewByNodeIdInput: DeleteReviewByNodeIdInput;
   DeleteReviewPayload: DeleteReviewPayload;
   DeleteReviewInput: DeleteReviewInput;
@@ -26515,6 +26593,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updatePermissionNameByName?: Resolver<Maybe<ResolversTypes['UpdatePermissionNamePayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionNameByNameArgs, 'input'>>;
   updatePermissionPolicyByNodeId?: Resolver<Maybe<ResolversTypes['UpdatePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionPolicyByNodeIdArgs, 'input'>>;
   updatePermissionPolicy?: Resolver<Maybe<ResolversTypes['UpdatePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionPolicyArgs, 'input'>>;
+  updatePermissionPolicyByName?: Resolver<Maybe<ResolversTypes['UpdatePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationUpdatePermissionPolicyByNameArgs, 'input'>>;
   updateReviewByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewByNodeIdArgs, 'input'>>;
   updateReview?: Resolver<Maybe<ResolversTypes['UpdateReviewPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewArgs, 'input'>>;
   updateReviewAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['UpdateReviewAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewAssignmentByNodeIdArgs, 'input'>>;
@@ -26583,6 +26662,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deletePermissionNameByName?: Resolver<Maybe<ResolversTypes['DeletePermissionNamePayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionNameByNameArgs, 'input'>>;
   deletePermissionPolicyByNodeId?: Resolver<Maybe<ResolversTypes['DeletePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionPolicyByNodeIdArgs, 'input'>>;
   deletePermissionPolicy?: Resolver<Maybe<ResolversTypes['DeletePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionPolicyArgs, 'input'>>;
+  deletePermissionPolicyByName?: Resolver<Maybe<ResolversTypes['DeletePermissionPolicyPayload']>, ParentType, ContextType, RequireFields<MutationDeletePermissionPolicyByNameArgs, 'input'>>;
   deleteReviewByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewByNodeIdArgs, 'input'>>;
   deleteReview?: Resolver<Maybe<ResolversTypes['DeleteReviewPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewArgs, 'input'>>;
   deleteReviewAssignmentByNodeId?: Resolver<Maybe<ResolversTypes['DeleteReviewAssignmentPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewAssignmentByNodeIdArgs, 'input'>>;
@@ -26862,6 +26942,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType, RequireFields<QueryPermissionNameArgs, 'id'>>;
   permissionNameByName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType, RequireFields<QueryPermissionNameByNameArgs, 'name'>>;
   permissionPolicy?: Resolver<Maybe<ResolversTypes['PermissionPolicy']>, ParentType, ContextType, RequireFields<QueryPermissionPolicyArgs, 'id'>>;
+  permissionPolicyByName?: Resolver<Maybe<ResolversTypes['PermissionPolicy']>, ParentType, ContextType, RequireFields<QueryPermissionPolicyByNameArgs, 'name'>>;
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType, RequireFields<QueryReviewArgs, 'id'>>;
   reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentArgs, 'id'>>;
   reviewAssignmentAssignerJoin?: Resolver<Maybe<ResolversTypes['ReviewAssignmentAssignerJoin']>, ParentType, ContextType, RequireFields<QueryReviewAssignmentAssignerJoinArgs, 'id'>>;

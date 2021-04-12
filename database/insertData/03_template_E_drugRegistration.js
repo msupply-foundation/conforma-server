@@ -564,14 +564,36 @@ exports.queries = [
           templatePermissionsUsingId: {
             create: [
               # Apply General
-              { permissionNameId: 10100 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyGeneral" }
+                }
+              }
               # Review Drug Registration Stage 1
-              { permissionNameId: 10300, restrictions: {canSelfAssign: true}, levelNumber: 1, stageNumber: 1 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "canScreenDrugRego" }
+                }
+                restrictions: { canSelfAssign: true }
+                levelNumber: 1
+                stageNumber: 1
+              }
               # Assign Drug Registration Stage 2
-              { permissionNameId: 10200, levelNumber: 1, stageNumber: 2 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "canAssignDrugRego" }
+                }
+                levelNumber: 1
+                stageNumber: 2
+              }
               # Review Drug Registration Stage 2 -- uncomment when available
-              # { permissionNameId: 10400, levelNumber: 1, stageNumber: 2 }
-             
+              # {
+              #   permissionNameToPermissionNameId: {
+              #     connectByName: { name: "canAssessDrugRego" }
+              #   }
+              #   levelNumber: 1
+              #   stageNumber: 2
+              # }
             ]
           }
         }

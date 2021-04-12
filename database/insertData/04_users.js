@@ -14,8 +14,16 @@ exports.queries = [
           firstName: "Nicole"
           permissionJoinsUsingId: { 
             create: [
-              # Self assign
-              { permissionNameId: 10500 }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "applyGeneral" }
+              }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "reviewSelfAssignable" }
+              }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "applyCompanyRego" }
+              }
+            }
             ]
           }
         }
@@ -36,8 +44,16 @@ exports.queries = [
           firstName: "Carl", lastName: "Smith"
           permissionJoinsUsingId: { 
             create: [
-              # Self assign
-              { permissionNameId: 10500 }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "applyGeneral" }
+              }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "reviewSelfAssignable" }
+              }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "applyCompanyRego" }
+              }
+            }
             ]
           }
         }
@@ -57,8 +73,16 @@ exports.queries = [
           firstName: "Andrei" 
           permissionJoinsUsingId: { 
             create: [
-              # Self assign
-              { permissionNameId: 10500 }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "applyGeneral" }
+              }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "reviewSelfAssignable" }
+              }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "applyCompanyRego" }
+              }
+            }
             ]
           }
         }
@@ -75,7 +99,22 @@ exports.queries = [
         user: { email: "valerio@nra.org"
           passwordHash: "$2a$10$ne2WcPISMw/Do3JzlwThYeO2GcodrumjI3FwGu1ZUoKgRQyAgNS3e"
           username: "valerio",
-          firstName: "Valerio" }
+          firstName: "Valerio"
+          permissionJoinsUsingId: { 
+            create: [
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "applyGeneral" }
+              }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "reviewSelfAssignable" }
+              }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "applyCompanyRego" }
+              }
+            }
+            ]
+          }
+        }
       }
     ) {
       user {
@@ -90,6 +129,17 @@ exports.queries = [
           passwordHash: "$2a$10$WQ5VMHB6bOVwjyE8Vhh64.TLQKcUOeJpfU6ZUSqYq3tlts3vCN2mG"
           username: "js",
           firstName: "John", lastName: "Smith"
+          permissionJoinsUsingId: { 
+            create: [
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "applyGeneral" }
+              }
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "applyCompanyRego" }
+              }
+            }
+            ]
+          }
        }
       }
     ) {
@@ -104,7 +154,16 @@ exports.queries = [
         user: { email: "reviewer1@sussol.net"
           passwordHash: "$2a$10$r8XTfUWIzrSaDfn0rxbIlei0kFHitJMI4W3g59w/94/9VopxNB4w."
           username: "testReviewer1",
-          firstName: "Reviewer1" }
+          firstName: "Reviewer1"
+          permissionJoinsUsingId: { 
+            create: [
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "reviewReviewTestScreeningSection1" }
+              }
+            }
+            ]
+          }
+        }
       }
     ) {
       user {
@@ -118,7 +177,16 @@ exports.queries = [
         user: { email: "reviewer2@sussol.net"
           passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
           username: "testReviewer2",
-          firstName: "Reviewer2" }
+          firstName: "Reviewer2"
+          permissionJoinsUsingId: { 
+            create: [
+              { permissionNameToPermissionNameId: {
+                connectByName: { name: "reviewReviewTestScreeningSection1" }
+              }
+            }
+            ]
+          }
+        }
       }
     ) {
       user {
@@ -305,7 +373,8 @@ exports.queries = [
           permissionJoinsUsingId: { 
             create: {
               # Apply UserRego
-              permissionNameId: 1000 
+              permissionNameToPermissionNameId: {
+              connectByName: { name: "applyUserRegistration" }
             } 
           }
         }
@@ -313,40 +382,6 @@ exports.queries = [
     ) {
       user {
         username
-      }
-    }
-  }`,
-  // Registered Applicant users - Apply application (General)
-  `mutation joinUsersToPermissionName {
-    updatePermissionName(
-      input: {
-        patch: {
-          permissionJoinsUsingId: {
-            create: [{ userId: 1 }, { userId: 2 }, { userId: 3 }, { userId: 4 }]
-          }
-        }
-        id: 10100
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  // Registered Applicant users - Apply application (ReviewTest)
-  `mutation joinUsersToPermissionName {
-    updatePermissionName(
-      input: {
-        patch: {
-          permissionJoinsUsingId: {
-            create: [{ userId: 1 }, { userId: 2 }, { userId: 3 }, { userId: 4 }]
-          }
-        }
-        id: 2000
-      }
-    ) {
-      permissionName {
-        name
       }
     }
   }`,

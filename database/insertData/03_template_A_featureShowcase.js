@@ -1062,7 +1062,10 @@ exports.queries = [
           templatePermissionsUsingId: {
             create: [
               # Apply General
-              { permissionNameId: 10100 }
+              {
+                permissionNameToPermissionNameId: {
+                connectByName: { name: "applyGeneral" } }
+              }
             ]
           }
         }
