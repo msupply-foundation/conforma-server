@@ -71,7 +71,7 @@ const routeUserInfo = async (request: any, reply: any) => {
   const { userId, orgId, error } = await getTokenData(token)
   if (error) return reply.send({ success: false, message: error })
 
-  return reply.send(await getUserInfo({ userId, orgId }))
+  return reply.send({ success: true, ...(await getUserInfo({ userId, orgId })) })
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
