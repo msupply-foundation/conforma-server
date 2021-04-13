@@ -79,10 +79,10 @@ exports.queries = [
     createUser(
       input: {
         user: {
-          email: "andrei@sussol.net"
-          passwordHash: "$2a$10$3Ufr.//hLoxp6BEEbFIq4u.zh435BNxNNLFEmJN74Ka/U5SMp0A2e"
-          username: "andrei"
-          firstName: "Andrei"
+          email: "valerio@nra.org"
+          passwordHash: "$2a$10$ne2WcPISMw/Do3JzlwThYeO2GcodrumjI3FwGu1ZUoKgRQyAgNS3e"
+          username: "valerio"
+          firstName: "Valerio"
           permissionJoinsUsingId: {
             create: [
               {
@@ -205,7 +205,7 @@ exports.queries = [
         username
       }
     }
-  }s`,
+  }`,
   `mutation {
     createUser(
       input: {

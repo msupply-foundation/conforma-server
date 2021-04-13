@@ -68,9 +68,9 @@ exports.queries = [
     createUserOrganisation(
       input: {
         userOrganisation: {
-          userId: 1
-          organisationId: 1
           userRole: "Owner"
+          organisationToOrganisationId: { connectByName: { name: "Drugs-R-Us" } }
+          userToUserId: { connectByUsername: { username: "nmadruga" } }
         }
       }
     ) {
@@ -86,8 +86,10 @@ exports.queries = [
     createUserOrganisation(
       input: {
         userOrganisation: {
-          userId: 1
-          organisationId: 2
+          organisationToOrganisationId: {
+            connectByName: { name: "Medicinal Importers, Ltd." }
+          }
+          userToUserId: { connectByUsername: { username: "nmadruga" } }
         }
       }
     ) {
@@ -103,8 +105,10 @@ exports.queries = [
     createUserOrganisation(
       input: {
         userOrganisation: {
-          userId: 1
-          organisationId: 3
+          organisationToOrganisationId: {
+            connectByName: { name: "Drug Dealers West" }
+          }
+          userToUserId: { connectByUsername: { username: "nmadruga" } }
         }
       }
     ) {
@@ -120,9 +124,11 @@ exports.queries = [
     createUserOrganisation(
       input: {
         userOrganisation: {
-          userId: 2
-          organisationId: 2
           userRole: "Owner"
+          organisationToOrganisationId: {
+            connectByName: { name: "Medicinal Importers, Ltd." }
+          }
+          userToUserId: { connectByUsername: { username: "carl" } }
         }
       }
     ) {
@@ -138,8 +144,10 @@ exports.queries = [
     createUserOrganisation(
       input: {
         userOrganisation: {
-          userId: 2
-          organisationId: 3
+          organisationToOrganisationId: {
+            connectByName: { name: "Drug Dealers West" }
+          }
+          userToUserId: { connectByUsername: { username: "carl" } }
         }
       }
     ) {
@@ -155,8 +163,10 @@ exports.queries = [
     createUserOrganisation(
       input: {
         userOrganisation: {
-          userId: 2
-          organisationId: 4
+          organisationToOrganisationId: {
+            connectByName: { name: "Lab Facilities Inc." }
+          }
+          userToUserId: { connectByUsername: { username: "carl" } }
         }
       }
     ) {
@@ -172,9 +182,11 @@ exports.queries = [
     createUserOrganisation(
       input: {
         userOrganisation: {
-          userId: 3
-          organisationId: 3
           userRole: "Owner"
+          organisationToOrganisationId: {
+            connectByName: { name: "Drug Dealers West" }
+          }
+          userToUserId: { connectByUsername: { username: "andrei" } }
         }
       }
     ) {
@@ -190,9 +202,11 @@ exports.queries = [
     createUserOrganisation(
       input: {
         userOrganisation: {
-          userId: 5
-          organisationId: 3
           userRole: "Owner"
+          organisationToOrganisationId: {
+            connectByName: { name: "Drug Dealers West" }
+          }
+          userToUserId: { connectByUsername: { username: "js" } }
         }
       }
     ) {
