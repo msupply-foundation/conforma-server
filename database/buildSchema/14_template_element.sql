@@ -2,6 +2,14 @@
 
 CREATE TYPE public.template_element_category AS ENUM ('Question', 'Information');
 
+-- FUNCTION to return template_code for current element/section
+CREATE or replace FUNCTION public.get_template_code(section_id int)
+RETURNS VARCHAR AS $$
+	SELECT template.code FROM template JOIN template_section
+	ON template_id = template.id
+	WHERE template_section.id = $1;
+$$ LANGUAGE SQL IMMUTABLE;
+
 CREATE TABLE public.template_element (
     id serial primary key,
     section_id integer references public.template_section(id),
@@ -15,5 +23,9 @@ CREATE TABLE public.template_element (
     is_editable jsonb DEFAULT '{"value":true}'::jsonb,
     validation jsonb DEFAULT '{"value":true}'::jsonb,
     validation_message varchar,
-    parameters jsonb
+    parameters jsonb,
+    template_code varchar GENERATED ALWAYS AS (public.get_template_code(section_id)) STORED,
+    UNIQUE (template_code, code)
 );
+
+-- CREATE INDEX template_element_code ON public.template_element (section_id, code);
