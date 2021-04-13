@@ -18,22 +18,21 @@ exports.queries = [
             create: [
               { templateSectionId: 1001 }
               { templateSectionId: 1002 }
-              { templateSectionId: 1003 }
             ]
           }
           applicationResponsesUsingId: {
             create: [
               {
                 id: 2000
-                status: DRAFT 
+                status: DRAFT
                 value: { text: "Company C" }
-                templateElementToTemplateElementId: { connectById: { id: 2001 } }
+                templateElementToTemplateElementId: { connectById: { id: 2010 } }
               }
               {
                 id: 2001
-                status: DRAFT 
-                value: { option: 2 }
-                templateElementToTemplateElementId: { connectById: { id: 2002 } }
+                status: DRAFT
+                value: { text: "ZZZ9999" }
+                templateElementToTemplateElementId: { connectById: { id: 2020 } }
               }
             ]
           }
