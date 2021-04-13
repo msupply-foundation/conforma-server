@@ -1,6 +1,9 @@
 /* 
 TEMPLATE F - Join Organisation
-  - Template to join an existing organisation
+  - for applying to join an existing organisation.
+  Still to-do:
+   - more specific policies to limit reviewers to their own organisation
+   - Org selector needs a plugin that doesn't show all companies to user
 */
 const { coreActions } = require('./core_actions')
 const { devActions } = require('./dev_actions')

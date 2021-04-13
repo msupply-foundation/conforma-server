@@ -1,7 +1,7 @@
 /* 
 TEMPLATE B - Organisation Registration
-  - still a work in progress, but this will be the template for creating an
-    application to register an organisation
+  - for creating a new Organisation in the system. Requires single review
+  by reviewer with "reviewCompanyRego" permission
 */
 const { coreActions } = require('./core_actions')
 const { devActions } = require('./dev_actions')
