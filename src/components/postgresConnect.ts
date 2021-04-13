@@ -691,7 +691,7 @@ class PostgresDB {
   public isFullyAssignedLevel1 = async (applicationId: number) => {
     const text = `
     SELECT is_fully_assigned_level_1
-    FROM application_list
+    FROM application_list()
     WHERE id = $1
     `
     try {
