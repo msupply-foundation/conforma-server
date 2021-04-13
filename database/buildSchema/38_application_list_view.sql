@@ -28,7 +28,7 @@ CREATE TABLE application_list_shape (
     assign_count bigint
 );
 
-CREATE FUNCTION application_list (userid int)
+CREATE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
     SELECT
