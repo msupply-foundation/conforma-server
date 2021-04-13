@@ -29,6 +29,11 @@ exports.queries = [
                   connectByName: { name: "applyCompanyRego" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewJoinCompany" }
+                }
+              }
             ]
           }
         }
@@ -63,6 +68,11 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyCompanyRego" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewJoinCompany" }
                 }
               }
             ]

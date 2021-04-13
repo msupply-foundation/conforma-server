@@ -27,5 +27,3 @@ CREATE TABLE public.template_element (
     template_code varchar GENERATED ALWAYS AS (public.get_template_code(section_id)) STORED,
     UNIQUE (template_code, code)
 );
-
--- CREATE INDEX template_element_code ON public.template_element (section_id, code);
