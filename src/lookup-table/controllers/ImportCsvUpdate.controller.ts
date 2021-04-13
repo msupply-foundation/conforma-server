@@ -9,39 +9,35 @@ const ImportCsvUpdateController = async (request: any, reply: any) => {
   const lookupTableStructure = LookupTableStructureService()
   const lookupTableService = LookupTableService()
 
-  try {
-    lookupTableDbStructure = await lookupTableStructure.getById(lookupTableId)
+  lookupTableDbStructure = await lookupTableStructure.getById(lookupTableId)
 
-    let stream = await parseStream(data.file, {
-      headers: lookupTableStructure.parseCsvHeaders,
+  let stream = await parseStream(data.file, {
+    headers: lookupTableStructure.parseCsvHeaders,
+  })
+    .on('headers', (_) => {
+      lookupTableStructure.compareFieldMaps(
+        lookupTableDbStructure.fieldMap,
+        lookupTableStructure.csvFieldMap
+      )
     })
-      .on('headers', (_) => {
-        lookupTableStructure.compareFieldMaps(
-          lookupTableDbStructure.fieldMap,
-          lookupTableStructure.csvFieldMap
-        )
-      })
-      .on('data', async (row: any) => {
-        stream.pause()
-        // TODO: Row ID validation, if row has id and that does not exist in database
-        await lookupTableStructure.addToCsvRows(row, lookupTableDbStructure)
-        stream.resume()
-      })
-      .on('end', async (rowCount: any) => {
-        await lookupTableStructure.createNewColumns(lookupTableDbStructure)
-        await lookupTableService.createUpdateRows(
-          lookupTableDbStructure.name,
-          lookupTableStructure.finalRows
-        )
-      })
-      .on('error', (error: any) => {
-        reply.send(error)
-      })
-  } catch (error) {
-    reply.send(error)
-  }
+    .on('data', async (row: any) => {
+      stream.pause()
+      // TODO: Row ID validation, if row has id and that does not exist in database
+      await lookupTableStructure.addToCsvRows(row, lookupTableDbStructure)
+      stream.resume()
+    })
+    .on('end', async (rowCount: any) => {
+      await lookupTableStructure.createNewColumns(lookupTableDbStructure)
+      await lookupTableService.createUpdateRows(
+        lookupTableDbStructure.name,
+        lookupTableStructure.finalRows
+      )
 
-  reply.send({ status: 'success', message: 'Lookup table successfully updated' })
+      reply.send({ status: 'success', message: 'Lookup table successfully updated' })
+    })
+    .on('error', (error: any) => {
+      reply.status(422).send({ status: 'error', name: error.name, message: error.message })
+    })
 }
 
 export default ImportCsvUpdateController

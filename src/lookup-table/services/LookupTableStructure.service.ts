@@ -2,13 +2,9 @@ import { LookupTableStructureModel } from '../models'
 import { toCamelCase, toSnakeCase } from '../utils'
 import { FieldMapType, LookupTableStructurePropType } from '../types'
 import { LookupTableService } from '.'
-
-class HeaderValidationError extends Error {
-  constructor(message: string[]) {
-    super(JSON.stringify(message))
-    this.name = 'ValidationError'
-  }
-}
+import { LookupTableHeadersValidator } from '../utils/validations'
+import { IValidator } from '../utils/validations/types'
+import { ValidationErrors } from '../utils/validations/error'
 
 const LookupTableStructureService = () => {
   let _csvFieldMap: FieldMapType[] = []
@@ -49,35 +45,12 @@ const LookupTableStructureService = () => {
     }
   }
 
-  const validateHeaders = (headers: string[]) => {
-    let errors: string[] = []
-
-    if (headers.findIndex((header) => 'id' === header.toLowerCase()) === -1) {
-      errors.push(`Column header 'ID' is required`)
-    }
-
-    return errors.concat(
-      headers
-        .map((header) => {
-          let errorList: string[] = []
-          if (!/^[A-Za-z]{1}/.test(header)) {
-            errorList.push(`Column header '${header}' has non-alphabet first letter.`)
-          }
-          if (!/^[A-Za-z0-9_-\s]+$/.test(header)) {
-            errorList.push(
-              `Column header '${header}' can only have space, dash and alpha-numeric characters.`
-            )
-          }
-          return errorList
-        })
-        .flat()
-    )
-  }
-
   const parseCsvHeaders = (headers: any) => {
-    const HeaderValidationErrors = validateHeaders(headers)
+    const lookupTableHeadersValidator: IValidator = new LookupTableHeadersValidator(headers)
 
-    if (HeaderValidationErrors.length > 0) throw new HeaderValidationError(HeaderValidationErrors)
+    if (!lookupTableHeadersValidator.isValid) {
+      throw new ValidationErrors(lookupTableHeadersValidator.errorMessages)
+    }
 
     return headers.map((h: string) => {
       const fieldName = toSnakeCase(h)
