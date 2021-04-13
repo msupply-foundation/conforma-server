@@ -37,7 +37,6 @@ class LookupTableHeadersValidator implements IValidator {
   }
 
   get errorMessages() {
-    console.log('this._errorMessages', this._errorMessages)
     return this._errorMessages
   }
 }
