@@ -7,13 +7,13 @@
 
 import * as fs from 'fs'
 import path from 'path'
-import { getAppRootDir } from './utilityFunctions'
+import { getAppEntryPointDir } from './utilityFunctions'
 import * as config from '../config.json'
 import DBConnect from './databaseConnect'
 import { deepEquality } from './utilityFunctions'
 import { ActionPlugin } from '../types'
 
-const pluginsFolder = path.join(getAppRootDir(), config.pluginsFolder)
+const pluginsFolder = path.join(getAppEntryPointDir(), config.pluginsFolder)
 const pluginJsonFilename = 'plugin.json'
 const getPluginIndexPath = (pluginFolderPath: string) =>
   fs.existsSync(path.join(pluginFolderPath, 'src', 'index.js'))
