@@ -1,20 +1,18 @@
 ###################
-#  application
-#  1_T5
+#  actionPlugin
+#  undefined
 ###################
 mutation {
-  createApplication(
+  createActionPlugin(
     input: {
-      application: {
-        id: 1
-        templateId: 5
-        userId: 3
-        orgId: 3
-        serial: "3975"
-        name: "Drug Registration - General Medicines Procedure"
-        outcome: PENDING
-        isActive: true
-        trigger: null
+      actionPlugin: {
+        code: "cLog"
+        name: "Console Logger"
+        description: "All it does is print a message to the console. That's it."
+        path: "action_console_log/src/consoleLog"
+        functionName: "consoleLog"
+        requiredParameters: ["message"]
+        outputProperties: null
       }
     }
   ) {
@@ -23,22 +21,358 @@ mutation {
 }
 
 ###################
-#  application
-#  2_T3
+#  actionPlugin
+#  undefined
 ###################
 mutation {
-  createApplication(
+  createActionPlugin(
     input: {
-      application: {
+      actionPlugin: {
+        code: "changeOutcome"
+        name: "Change Outcome"
+        description: "Changes the outcome field of an application."
+        path: "action_change_outcome/src/changeOutcome"
+        functionName: "changeOutcome"
+        requiredParameters: ["applicationId", "newOutcome"]
+        outputProperties: ["applicationId", "newOutcome"]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "changeStatus"
+        name: "Change Status"
+        description: "Changes the Status of an application"
+        path: "action_change_status/src/changeStatus"
+        functionName: "changeStatus"
+        requiredParameters: ["applicationId", "newStatus"]
+        outputProperties: [
+          "applicationId"
+          "status"
+          "statusId"
+          "applicationStatusHistoryTimestamp"
+          "reviewStatusHistoryTimestamp"
+        ]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "cleanupFiles"
+        name: "Clean up application files"
+        description: "Checks all the uploaded files associated with an application, and deletes any that are not part of an application_response"
+        path: "action_files_cleanup/src/cleanupFiles"
+        functionName: "cleanupFiles"
+        requiredParameters: ["applicationSerial"]
+        outputProperties: ["deletedFiles"]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "createOrg"
+        name: "Create Organisation"
+        description: "Inserts a new organisation in the database"
+        path: "action_create_org/src/createOrg"
+        functionName: "createOrg"
+        requiredParameters: ["name", "licence_number", "address"]
+        outputProperties: ["orgId", "orgName"]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "createUser"
+        name: "Create User"
+        description: "Inserts a new user in the database"
+        path: "action_create_user/src/createUser"
+        functionName: "createUser"
+        requiredParameters: [
+          "first_name"
+          "last_name"
+          "username"
+          "date_of_birth"
+          "password_hash"
+          "email"
+        ]
+        outputProperties: ["userId", "username", "firstName", "lastName", "email"]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "generateReviewAssignments"
+        name: "Generate Review Assignment Records"
+        description: "Generates review_assignment records for current application"
+        path: "action_generate_review_assignment_records/src/generateReviewAssignments"
+        functionName: "generateReviewAssignments"
+        requiredParameters: ["applicationId", "reviewId"]
+        outputProperties: []
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "grantPermissions"
+        name: "Grant Permissions"
+        description: "Grants permission to user/org, creates permission join from user/org to permission name. If org not provided, the permission will be granted to the user only."
+        path: "action_grant_permissions/src/grantPermissions"
+        functionName: "grantPermissions"
+        requiredParameters: ["username", "orgName", "permissionNames"]
+        outputProperties: ["permissionJoinIds", "permissionNames"]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "incrementStage"
+        name: "Increment Stage"
+        description: "Increments (or creates) the application Stage, if possible."
+        path: "action_increment_stage/src/incrementStage"
+        functionName: "incrementStage"
+        requiredParameters: ["application_id"]
+        outputProperties: [
+          "applicationId"
+          "stageNumber"
+          "stageName"
+          "stageId"
+          "status"
+          "statusId"
+        ]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "joinUserOrg"
+        name: "Add User to Organisation"
+        description: "Links a user to an organisation"
+        path: "action_join_user_org/src/joinUserOrg"
+        functionName: "joinUserOrg"
+        requiredParameters: ["user_id", "org_id", "user_role"]
+        outputProperties: ["userOrgId"]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "trimResponses"
+        name: "Trim duplicate reponses"
+        description: "Trims duplicated application or review responses if nothing has changed"
+        path: "action_trim_responses/src/trimResponses"
+        functionName: "trimResponses"
+        requiredParameters: ["applicationId", "review_id"]
+        outputProperties: ["deletedIds", "updatedIds"]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "updateReviewAssignmentsStatus"
+        name: "Update Review Assignment statuses"
+        description: "Update status of Review Assignment records when one is Assigned"
+        path: "action_update_review_assignments/src/updateReviewAssignmentsStatus"
+        functionName: "updateReviewAssignmentsStatus"
+        requiredParameters: ["reviewAssignmentId", "trigger"]
+        outputProperties: []
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "updateReviewVisibility"
+        name: "Update Applicant's Review Visibility"
+        description: "Updates review response records to be visible to Applicant based on recommendations of last level review"
+        path: "action_review_visibility/src/updateReviewVisibility"
+        functionName: "updateReviewVisibility"
+        requiredParameters: ["reviewId"]
+        outputProperties: ["reviewResponsesWithUpdatedVisibility"]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionPlugin
+#  undefined
+###################
+mutation {
+  createActionPlugin(
+    input: {
+      actionPlugin: {
+        code: "updateReviews"
+        name: "Update Review Statuses"
+        description: "Updates status of associated reviews when application re-submitted"
+        path: "action_update_review_status/src/updateReviews"
+        functionName: "updateReviews"
+        requiredParameters: ["applicationId"]
+        outputProperties: ["updatedReviews"]
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  actionQueue
+#  2
+###################
+mutation {
+  createActionQueue(
+    input: {
+      actionQueue: {
         id: 2
+        triggerEvent: 2
         templateId: 3
-        userId: 16
-        orgId: null
-        serial: "5878"
-        name: "User Registration"
-        outcome: APPROVED
-        isActive: false
-        trigger: null
+        sequence: null
+        actionCode: "incrementStage"
+        applicationData: {
+          table: "application"
+          trigger: "onApplicationCreate"
+          record_id: 4004
+          responses: { Q1: null, Q2: null, Q3: null, Q4: null, Q5: null }
+          reviewData: {}
+          templateId: 3
+          trigger_id: 2
+          applicationId: 4004
+          environmentData: {
+            appRootFolder: "/Users/andrei/STM32CubeIDE/workspace_1.4.0/testTimers/application-manager-server/src"
+            filesFolderName: "files"
+          }
+        }
+        parameterQueries: {
+          applicationId: {
+            children: ["applicationData.applicationId"]
+            operator: "objectProperties"
+          }
+        }
+        parametersEvaluated: { applicationId: 4004 }
+        status: SUCCESS
+        output: {
+          status: "Draft"
+          statusId: 9
+          stageName: "Automatic"
+          stageNumber: 1
+          applicationId: 4004
+          stageHistoryId: 9
+        }
+        # ignore datetime -  timeQueued:
+        # ignore datetime -  timeCompleted:
+        # ignore datetime -  timeScheduled:
+        errorLog: ""
       }
     }
   ) {
@@ -47,46 +381,52 @@ mutation {
 }
 
 ###################
-#  application
-#  3_T3
+#  actionQueue
+#  3
 ###################
 mutation {
-  createApplication(
+  createActionQueue(
     input: {
-      application: {
+      actionQueue: {
         id: 3
+        triggerEvent: 3
         templateId: 3
-        userId: 16
-        orgId: null
-        serial: "1171"
-        name: "User Registration"
-        outcome: APPROVED
-        isActive: false
-        trigger: null
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  application
-#  4_T4
-###################
-mutation {
-  createApplication(
-    input: {
-      application: {
-        id: 4
-        templateId: 4
-        userId: 3
-        orgId: 3
-        serial: "9858"
-        name: "Test -- Review Process"
-        outcome: PENDING
-        isActive: true
-        trigger: null
+        sequence: null
+        actionCode: "incrementStage"
+        applicationData: {
+          table: "application"
+          trigger: "onApplicationCreate"
+          record_id: 4005
+          responses: { Q1: null, Q2: null, Q3: null, Q4: null, Q5: null }
+          reviewData: {}
+          templateId: 3
+          trigger_id: 3
+          applicationId: 4005
+          environmentData: {
+            appRootFolder: "/Users/andrei/STM32CubeIDE/workspace_1.4.0/testTimers/application-manager-server/src"
+            filesFolderName: "files"
+          }
+        }
+        parameterQueries: {
+          applicationId: {
+            children: ["applicationData.applicationId"]
+            operator: "objectProperties"
+          }
+        }
+        parametersEvaluated: { applicationId: 4005 }
+        status: SUCCESS
+        output: {
+          status: "Draft"
+          statusId: 10
+          stageName: "Automatic"
+          stageNumber: 1
+          applicationId: 4005
+          stageHistoryId: 10
+        }
+        # ignore datetime -  timeQueued:
+        # ignore datetime -  timeCompleted:
+        # ignore datetime -  timeScheduled:
+        errorLog: ""
       }
     }
   ) {
@@ -263,20 +603,22 @@ mutation {
 }
 
 ###################
-#  applicationResponse
-#  1_A1_TE2
+#  application
+#  4004_T3
 ###################
 mutation {
-  createApplicationResponse(
+  createApplication(
     input: {
-      applicationResponse: {
-        id: 1
-        templateElementId: 2
-        applicationId: 1
-        status: DRAFT
-        value: { text: "a" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
+      application: {
+        id: 4004
+        templateId: 3
+        userId: 16
+        orgId: null
+        serial: "9430"
+        name: "User Registration"
+        outcome: PENDING
+        isActive: true
+        trigger: null
       }
     }
   ) {
@@ -285,961 +627,22 @@ mutation {
 }
 
 ###################
-#  applicationResponse
-#  2_A1_TE3
+#  application
+#  4005_T3
 ###################
 mutation {
-  createApplicationResponse(
+  createApplication(
     input: {
-      applicationResponse: {
-        id: 2
-        templateElementId: 3
-        applicationId: 1
-        status: DRAFT
-        value: { text: "Domestic", selection: "Domestic", optionIndex: 0 }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  3_A1_TE6
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 3
-        templateElementId: 6
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  4_A1_TE7
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 4
-        templateElementId: 7
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  5_A1_TE8
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 5
-        templateElementId: 8
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  6_A1_TE9
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 6
-        templateElementId: 9
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  7_A1_TE12
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 7
-        templateElementId: 12
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  8_A1_TE13
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 8
-        templateElementId: 13
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  9_A1_TE14
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 9
-        templateElementId: 14
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  10_A1_TE17
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 10
-        templateElementId: 17
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  11_A1_TE18
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 11
-        templateElementId: 18
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  12_A1_TE21
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 12
-        templateElementId: 21
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  13_A1_TE22
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 13
-        templateElementId: 22
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  14_A1_TE23
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 14
-        templateElementId: 23
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  15_A1_TE24
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 15
-        templateElementId: 24
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  16_A1_TE25
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 16
-        templateElementId: 25
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  17_A1_TE26
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 17
-        templateElementId: 26
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  18_A1_TE27
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 18
-        templateElementId: 27
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  19_A1_TE28
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 19
-        templateElementId: 28
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  20_A1_TE31
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 20
-        templateElementId: 31
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  21_A1_TE32
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 21
-        templateElementId: 32
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  22_A1_TE34
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 22
-        templateElementId: 34
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  23_A1_TE35
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 23
-        templateElementId: 35
-        applicationId: 1
-        status: DRAFT
-        value: {
-          text: "Screen Shot 2021-04-14 at 2.30.21 PM.png"
-          files: [
-            {
-              fileUrl: "/file?uid=dR99dIPbml868d05vupFO"
-              filename: "Screen Shot 2021-04-14 at 2.30.21 PM.png"
-              mimetype: "image/png"
-              uniqueId: "dR99dIPbml868d05vupFO"
-              thumbnailUrl: "/file?uid=dR99dIPbml868d05vupFO&thumbnail=true"
-            }
-          ]
-        }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  24_A1_TE37
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 24
-        templateElementId: 37
-        applicationId: 1
-        status: DRAFT
-        value: null
-        isValid: null
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  25_A2_TE3001
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 25
-        templateElementId: 3001
-        applicationId: 2
-        status: SUBMITTED
-        value: { text: "a" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  26_A2_TE3002
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 26
-        templateElementId: 3002
-        applicationId: 2
-        status: SUBMITTED
-        value: { text: "b" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  27_A2_TE3003
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 27
-        templateElementId: 3003
-        applicationId: 2
-        status: SUBMITTED
-        value: { text: "c" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  28_A2_TE3004
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 28
-        templateElementId: 3004
-        applicationId: 2
-        status: SUBMITTED
-        value: { text: "a@a..con" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  29_A2_TE3005
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 29
-        templateElementId: 3005
-        applicationId: 2
-        status: SUBMITTED
-        value: {
-          hash: "$2b$10$jWIazuPyCqL0wziUoEAjuuWquz3blSdYFTIy.KEFua6dxiGhMyVHy"
-          text: "•••••••"
-        }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  30_A3_TE3001
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 30
-        templateElementId: 3001
-        applicationId: 3
-        status: SUBMITTED
-        value: { text: "a" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  31_A3_TE3002
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 31
-        templateElementId: 3002
-        applicationId: 3
-        status: SUBMITTED
-        value: { text: "b" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  32_A3_TE3003
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 32
-        templateElementId: 3003
-        applicationId: 3
-        status: SUBMITTED
-        value: { text: "d" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  33_A3_TE3004
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 33
-        templateElementId: 3004
-        applicationId: 3
-        status: SUBMITTED
-        value: { text: "andrei.evguenov@gmail.com" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  34_A3_TE3005
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 34
-        templateElementId: 3005
-        applicationId: 3
-        status: SUBMITTED
-        value: {
-          hash: "$2b$10$jPGNIlfwJtXsjIH/C7WYC.Gm7MTATZ3skfgE5qs4/WDqV8s2RB7LS"
-          text: "•••••••"
-        }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  35_A4_TE4001
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 35
-        templateElementId: 4001
-        applicationId: 4
-        status: SUBMITTED
-        value: { text: "a" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  36_A4_TE4002
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 36
-        templateElementId: 4002
-        applicationId: 4
-        status: SUBMITTED
-        value: { text: "b" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  37_A4_TE4003
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 37
-        templateElementId: 4003
-        applicationId: 4
-        status: SUBMITTED
-        value: { text: "andrei.evguenov@gmail.com" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  38_A4_TE4005
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 38
-        templateElementId: 4005
-        applicationId: 4
-        status: SUBMITTED
-        value: { text: "1" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  39_A4_TE4006
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 39
-        templateElementId: 4006
-        applicationId: 4
-        status: SUBMITTED
-        value: { text: "ad" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  40_A4_TE4008
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 40
-        templateElementId: 4008
-        applicationId: 4
-        status: SUBMITTED
-        value: { text: "1" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  41_A4_TE4009
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 41
-        templateElementId: 4009
-        applicationId: 4
-        status: SUBMITTED
-        value: { text: "Natural Product", selection: "Natural Product", optionIndex: 1 }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  42_A4_TE4011
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 42
-        templateElementId: 4011
-        applicationId: 4
-        status: SUBMITTED
-        value: { text: "1" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  43_A4_TE4012
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 43
-        templateElementId: 4012
-        applicationId: 4
-        status: SUBMITTED
-        value: { text: "1" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationResponse
-#  44_A4_TE4013
-###################
-mutation {
-  createApplicationResponse(
-    input: {
-      applicationResponse: {
-        id: 44
-        templateElementId: 4013
-        applicationId: 4
-        status: SUBMITTED
-        value: { text: "" }
-        isValid: true
-        # ignore datetime -  timeUpdated:
+      application: {
+        id: 4005
+        templateId: 3
+        userId: 16
+        orgId: null
+        serial: "3922"
+        name: "User Registration"
+        outcome: PENDING
+        isActive: true
+        trigger: null
       }
     }
   ) {
@@ -2482,6 +1885,226 @@ mutation {
 }
 
 ###################
+#  applicationResponse
+#  4110_A4004_TE3001
+###################
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4110
+        templateElementId: 3001
+        applicationId: 4004
+        status: DRAFT
+        value: null
+        isValid: null
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  applicationResponse
+#  4111_A4004_TE3002
+###################
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4111
+        templateElementId: 3002
+        applicationId: 4004
+        status: DRAFT
+        value: null
+        isValid: null
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  applicationResponse
+#  4112_A4004_TE3003
+###################
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4112
+        templateElementId: 3003
+        applicationId: 4004
+        status: DRAFT
+        value: null
+        isValid: null
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  applicationResponse
+#  4113_A4004_TE3004
+###################
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4113
+        templateElementId: 3004
+        applicationId: 4004
+        status: DRAFT
+        value: null
+        isValid: null
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  applicationResponse
+#  4114_A4004_TE3005
+###################
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4114
+        templateElementId: 3005
+        applicationId: 4004
+        status: DRAFT
+        value: null
+        isValid: null
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  applicationResponse
+#  4115_A4005_TE3001
+###################
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4115
+        templateElementId: 3001
+        applicationId: 4005
+        status: DRAFT
+        value: { text: "a" }
+        isValid: true
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  applicationResponse
+#  4116_A4005_TE3002
+###################
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4116
+        templateElementId: 3002
+        applicationId: 4005
+        status: DRAFT
+        value: { text: "b" }
+        isValid: true
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  applicationResponse
+#  4117_A4005_TE3003
+###################
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4117
+        templateElementId: 3003
+        applicationId: 4005
+        status: DRAFT
+        value: { text: "c" }
+        isValid: true
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  applicationResponse
+#  4118_A4005_TE3004
+###################
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4118
+        templateElementId: 3004
+        applicationId: 4005
+        status: DRAFT
+        value: null
+        isValid: null
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  applicationResponse
+#  4119_A4005_TE3005
+###################
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4119
+        templateElementId: 3005
+        applicationId: 4005
+        status: DRAFT
+        value: null
+        isValid: null
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
 #  applicationSection
 #  1_A1000_TS1000
 ###################
@@ -2639,11 +2262,11 @@ mutation {
 
 ###################
 #  applicationSection
-#  14_A1_TS1007
+#  14_A4004_TS1004
 ###################
 mutation {
   createApplicationSection(
-    input: { applicationSection: { id: 14, applicationId: 1, templateSectionId: 1007 } }
+    input: { applicationSection: { id: 14, applicationId: 4004, templateSectionId: 1004 } }
   ) {
     clientMutationId
   }
@@ -2651,71 +2274,11 @@ mutation {
 
 ###################
 #  applicationSection
-#  15_A1_TS1008
+#  15_A4005_TS1004
 ###################
 mutation {
   createApplicationSection(
-    input: { applicationSection: { id: 15, applicationId: 1, templateSectionId: 1008 } }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationSection
-#  16_A1_TS1009
-###################
-mutation {
-  createApplicationSection(
-    input: { applicationSection: { id: 16, applicationId: 1, templateSectionId: 1009 } }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationSection
-#  17_A2_TS1004
-###################
-mutation {
-  createApplicationSection(
-    input: { applicationSection: { id: 17, applicationId: 2, templateSectionId: 1004 } }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationSection
-#  18_A3_TS1004
-###################
-mutation {
-  createApplicationSection(
-    input: { applicationSection: { id: 18, applicationId: 3, templateSectionId: 1004 } }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationSection
-#  19_A4_TS1005
-###################
-mutation {
-  createApplicationSection(
-    input: { applicationSection: { id: 19, applicationId: 4, templateSectionId: 1005 } }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationSection
-#  20_A4_TS1006
-###################
-mutation {
-  createApplicationSection(
-    input: { applicationSection: { id: 20, applicationId: 4, templateSectionId: 1006 } }
+    input: { applicationSection: { id: 15, applicationId: 4005, templateSectionId: 1004 } }
   ) {
     clientMutationId
   }
@@ -2883,15 +2446,15 @@ mutation {
 
 ###################
 #  applicationStageHistory
-#  9_A1_S8
+#  9_A4004_S3
 ###################
 mutation {
   createApplicationStageHistory(
     input: {
       applicationStageHistory: {
         id: 9
-        applicationId: 1
-        stageId: 8
+        applicationId: 4004
+        stageId: 3
         # ignore datetime -  timeCreated:
         isCurrent: true
       }
@@ -2903,55 +2466,15 @@ mutation {
 
 ###################
 #  applicationStageHistory
-#  10_A2_S3
+#  10_A4005_S3
 ###################
 mutation {
   createApplicationStageHistory(
     input: {
       applicationStageHistory: {
         id: 10
-        applicationId: 2
+        applicationId: 4005
         stageId: 3
-        # ignore datetime -  timeCreated:
-        isCurrent: true
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationStageHistory
-#  11_A3_S3
-###################
-mutation {
-  createApplicationStageHistory(
-    input: {
-      applicationStageHistory: {
-        id: 11
-        applicationId: 3
-        stageId: 3
-        # ignore datetime -  timeCreated:
-        isCurrent: true
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationStageHistory
-#  12_A4_S5
-###################
-mutation {
-  createApplicationStageHistory(
-    input: {
-      applicationStageHistory: {
-        id: 12
-        applicationId: 4
-        stageId: 5
         # ignore datetime -  timeCreated:
         isCurrent: true
       }
@@ -3131,7 +2654,7 @@ mutation {
 
 ###################
 #  applicationStatusHistory
-#  9_A1_ASH9_DRAFT
+#  9_A4004_ASH9_DRAFT
 ###################
 mutation {
   createApplicationStatusHistory(
@@ -3142,7 +2665,7 @@ mutation {
         status: DRAFT
         # ignore datetime -  timeCreated:
         isCurrent: true
-        # ignore generated -  applicationId:1
+        # ignore generated -  applicationId:4004
       }
     }
   ) {
@@ -3152,7 +2675,7 @@ mutation {
 
 ###################
 #  applicationStatusHistory
-#  10_A2_ASH10_DRAFT
+#  10_A4005_ASH10_DRAFT
 ###################
 mutation {
   createApplicationStatusHistory(
@@ -3162,113 +2685,8 @@ mutation {
         applicationStageHistoryId: 10
         status: DRAFT
         # ignore datetime -  timeCreated:
-        isCurrent: false
-        # ignore generated -  applicationId:2
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationStatusHistory
-#  11_A2_ASH10_COMPLETED
-###################
-mutation {
-  createApplicationStatusHistory(
-    input: {
-      applicationStatusHistory: {
-        id: 11
-        applicationStageHistoryId: 10
-        status: COMPLETED
-        # ignore datetime -  timeCreated:
         isCurrent: true
-        # ignore generated -  applicationId:2
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationStatusHistory
-#  12_A3_ASH11_DRAFT
-###################
-mutation {
-  createApplicationStatusHistory(
-    input: {
-      applicationStatusHistory: {
-        id: 12
-        applicationStageHistoryId: 11
-        status: DRAFT
-        # ignore datetime -  timeCreated:
-        isCurrent: false
-        # ignore generated -  applicationId:3
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationStatusHistory
-#  13_A3_ASH11_COMPLETED
-###################
-mutation {
-  createApplicationStatusHistory(
-    input: {
-      applicationStatusHistory: {
-        id: 13
-        applicationStageHistoryId: 11
-        status: COMPLETED
-        # ignore datetime -  timeCreated:
-        isCurrent: true
-        # ignore generated -  applicationId:3
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationStatusHistory
-#  14_A4_ASH12_DRAFT
-###################
-mutation {
-  createApplicationStatusHistory(
-    input: {
-      applicationStatusHistory: {
-        id: 14
-        applicationStageHistoryId: 12
-        status: DRAFT
-        # ignore datetime -  timeCreated:
-        isCurrent: false
-        # ignore generated -  applicationId:4
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  applicationStatusHistory
-#  15_A4_ASH12_SUBMITTED
-###################
-mutation {
-  createApplicationStatusHistory(
-    input: {
-      applicationStatusHistory: {
-        id: 15
-        applicationStageHistoryId: 12
-        status: SUBMITTED
-        # ignore datetime -  timeCreated:
-        isCurrent: true
-        # ignore generated -  applicationId:4
+        # ignore generated -  applicationId:4005
       }
     }
   ) {
@@ -3354,11 +2772,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  1_U1
+#  1_U10
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 1, userId: 1, organisationId: null, permissionNameId: 10500 } }
+    input: { permissionJoin: { id: 1, userId: 10, organisationId: null, permissionNameId: 9000 } }
   ) {
     clientMutationId
   }
@@ -3366,11 +2784,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  2_U2
+#  2_U10
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 2, userId: 2, organisationId: null, permissionNameId: 10500 } }
+    input: { permissionJoin: { id: 2, userId: 10, organisationId: null, permissionNameId: 10100 } }
   ) {
     clientMutationId
   }
@@ -3378,11 +2796,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  3_U3
+#  3_U11
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 3, userId: 3, organisationId: null, permissionNameId: 10500 } }
+    input: { permissionJoin: { id: 3, userId: 11, organisationId: null, permissionNameId: 9000 } }
   ) {
     clientMutationId
   }
@@ -3390,11 +2808,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  4_U10
+#  4_U12
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 4, userId: 10, organisationId: null, permissionNameId: 9000 } }
+    input: { permissionJoin: { id: 4, userId: 12, organisationId: null, permissionNameId: 10000 } }
   ) {
     clientMutationId
   }
@@ -3402,11 +2820,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  5_U10
+#  5_U12
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 5, userId: 10, organisationId: null, permissionNameId: 10100 } }
+    input: { permissionJoin: { id: 5, userId: 12, organisationId: null, permissionNameId: 10300 } }
   ) {
     clientMutationId
   }
@@ -3414,11 +2832,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  6_U11
+#  6_U13
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 6, userId: 11, organisationId: null, permissionNameId: 9000 } }
+    input: { permissionJoin: { id: 6, userId: 13, organisationId: null, permissionNameId: 10000 } }
   ) {
     clientMutationId
   }
@@ -3426,11 +2844,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  7_U12
+#  7_U13
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 7, userId: 12, organisationId: null, permissionNameId: 10000 } }
+    input: { permissionJoin: { id: 7, userId: 13, organisationId: null, permissionNameId: 10300 } }
   ) {
     clientMutationId
   }
@@ -3438,11 +2856,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  8_U12
+#  8_U14
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 8, userId: 12, organisationId: null, permissionNameId: 10300 } }
+    input: { permissionJoin: { id: 8, userId: 14, organisationId: null, permissionNameId: 10000 } }
   ) {
     clientMutationId
   }
@@ -3450,11 +2868,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  9_U13
+#  9_U14
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 9, userId: 13, organisationId: null, permissionNameId: 10000 } }
+    input: { permissionJoin: { id: 9, userId: 14, organisationId: null, permissionNameId: 10400 } }
   ) {
     clientMutationId
   }
@@ -3462,11 +2880,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  10_U13
+#  10_U15
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 10, userId: 13, organisationId: null, permissionNameId: 10300 } }
+    input: { permissionJoin: { id: 10, userId: 15, organisationId: null, permissionNameId: 10000 } }
   ) {
     clientMutationId
   }
@@ -3474,11 +2892,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  11_U14
+#  11_U15
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 11, userId: 14, organisationId: null, permissionNameId: 10000 } }
+    input: { permissionJoin: { id: 11, userId: 15, organisationId: null, permissionNameId: 10400 } }
   ) {
     clientMutationId
   }
@@ -3486,11 +2904,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  12_U14
+#  12_U16
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 12, userId: 14, organisationId: null, permissionNameId: 10400 } }
+    input: { permissionJoin: { id: 12, userId: 16, organisationId: null, permissionNameId: 1000 } }
   ) {
     clientMutationId
   }
@@ -3498,11 +2916,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  13_U15
+#  13_U1
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 13, userId: 15, organisationId: null, permissionNameId: 10000 } }
+    input: { permissionJoin: { id: 13, userId: 1, organisationId: null, permissionNameId: 10100 } }
   ) {
     clientMutationId
   }
@@ -3510,11 +2928,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  14_U15
+#  14_U2
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 14, userId: 15, organisationId: null, permissionNameId: 10400 } }
+    input: { permissionJoin: { id: 14, userId: 2, organisationId: null, permissionNameId: 10100 } }
   ) {
     clientMutationId
   }
@@ -3522,11 +2940,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  15_U16
+#  15_U3
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 15, userId: 16, organisationId: null, permissionNameId: 1000 } }
+    input: { permissionJoin: { id: 15, userId: 3, organisationId: null, permissionNameId: 10100 } }
   ) {
     clientMutationId
   }
@@ -3534,11 +2952,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  16_U1
+#  16_U4
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 16, userId: 1, organisationId: null, permissionNameId: 10100 } }
+    input: { permissionJoin: { id: 16, userId: 4, organisationId: null, permissionNameId: 10100 } }
   ) {
     clientMutationId
   }
@@ -3546,11 +2964,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  17_U2
+#  17_U1
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 17, userId: 2, organisationId: null, permissionNameId: 10100 } }
+    input: { permissionJoin: { id: 17, userId: 1, organisationId: null, permissionNameId: 2000 } }
   ) {
     clientMutationId
   }
@@ -3558,11 +2976,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  18_U3
+#  18_U2
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 18, userId: 3, organisationId: null, permissionNameId: 10100 } }
+    input: { permissionJoin: { id: 18, userId: 2, organisationId: null, permissionNameId: 2000 } }
   ) {
     clientMutationId
   }
@@ -3570,11 +2988,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  19_U4
+#  19_U3
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 19, userId: 4, organisationId: null, permissionNameId: 10100 } }
+    input: { permissionJoin: { id: 19, userId: 3, organisationId: null, permissionNameId: 2000 } }
   ) {
     clientMutationId
   }
@@ -3582,11 +3000,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  20_U1
+#  20_U4
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 20, userId: 1, organisationId: null, permissionNameId: 2000 } }
+    input: { permissionJoin: { id: 20, userId: 4, organisationId: null, permissionNameId: 2000 } }
   ) {
     clientMutationId
   }
@@ -3594,11 +3012,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  21_U2
+#  21_U6
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 21, userId: 2, organisationId: null, permissionNameId: 2000 } }
+    input: { permissionJoin: { id: 21, userId: 6, organisationId: null, permissionNameId: 5000 } }
   ) {
     clientMutationId
   }
@@ -3606,11 +3024,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  22_U3
+#  22_U7
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 22, userId: 3, organisationId: null, permissionNameId: 2000 } }
+    input: { permissionJoin: { id: 22, userId: 7, organisationId: null, permissionNameId: 5000 } }
   ) {
     clientMutationId
   }
@@ -3618,11 +3036,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  23_U4
+#  23_U7
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 23, userId: 4, organisationId: null, permissionNameId: 2000 } }
+    input: { permissionJoin: { id: 23, userId: 7, organisationId: null, permissionNameId: 5001 } }
   ) {
     clientMutationId
   }
@@ -3630,11 +3048,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  24_U6
+#  24_U8
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 24, userId: 6, organisationId: null, permissionNameId: 5000 } }
+    input: { permissionJoin: { id: 24, userId: 8, organisationId: null, permissionNameId: 5001 } }
   ) {
     clientMutationId
   }
@@ -3642,11 +3060,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  25_U7
+#  25_U6
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 25, userId: 7, organisationId: null, permissionNameId: 5000 } }
+    input: { permissionJoin: { id: 25, userId: 6, organisationId: null, permissionNameId: 6000 } }
   ) {
     clientMutationId
   }
@@ -3658,7 +3076,7 @@ mutation {
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 26, userId: 7, organisationId: null, permissionNameId: 5001 } }
+    input: { permissionJoin: { id: 26, userId: 7, organisationId: null, permissionNameId: 6000 } }
   ) {
     clientMutationId
   }
@@ -3670,7 +3088,7 @@ mutation {
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 27, userId: 8, organisationId: null, permissionNameId: 5001 } }
+    input: { permissionJoin: { id: 27, userId: 8, organisationId: null, permissionNameId: 6001 } }
   ) {
     clientMutationId
   }
@@ -3678,11 +3096,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  28_U6
+#  28_U9
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 28, userId: 6, organisationId: null, permissionNameId: 6000 } }
+    input: { permissionJoin: { id: 28, userId: 9, organisationId: null, permissionNameId: 6001 } }
   ) {
     clientMutationId
   }
@@ -3690,11 +3108,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  29_U7
+#  29_U8
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 29, userId: 7, organisationId: null, permissionNameId: 6000 } }
+    input: { permissionJoin: { id: 29, userId: 8, organisationId: null, permissionNameId: 7000 } }
   ) {
     clientMutationId
   }
@@ -3702,11 +3120,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  30_U8
+#  30_U17
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 30, userId: 8, organisationId: null, permissionNameId: 6001 } }
+    input: { permissionJoin: { id: 30, userId: 17, organisationId: null, permissionNameId: 1000 } }
   ) {
     clientMutationId
   }
@@ -3714,11 +3132,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  31_U9
+#  31_U17
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 31, userId: 9, organisationId: null, permissionNameId: 6001 } }
+    input: { permissionJoin: { id: 31, userId: 17, organisationId: null, permissionNameId: 2000 } }
   ) {
     clientMutationId
   }
@@ -3726,47 +3144,11 @@ mutation {
 
 ###################
 #  permissionJoin
-#  32_U8
+#  32_U17
 ###################
 mutation {
   createPermissionJoin(
-    input: { permissionJoin: { id: 32, userId: 8, organisationId: null, permissionNameId: 7000 } }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  permissionJoin
-#  33_U17
-###################
-mutation {
-  createPermissionJoin(
-    input: { permissionJoin: { id: 33, userId: 17, organisationId: null, permissionNameId: 1000 } }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  permissionJoin
-#  34_U17
-###################
-mutation {
-  createPermissionJoin(
-    input: { permissionJoin: { id: 34, userId: 17, organisationId: null, permissionNameId: 2000 } }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  permissionJoin
-#  35_U17
-###################
-mutation {
-  createPermissionJoin(
-    input: { permissionJoin: { id: 35, userId: 17, organisationId: null, permissionNameId: 4000 } }
+    input: { permissionJoin: { id: 32, userId: 17, organisationId: null, permissionNameId: 4000 } }
   ) {
     clientMutationId
   }
@@ -3977,18 +3359,6 @@ mutation {
 mutation {
   createPermissionName(
     input: { permissionName: { id: 10400, name: "canAssessDrugRego", permissionPolicyId: 3000 } }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  permissionName
-#  10500_PP3000_reviewSelfAssignable
-###################
-mutation {
-  createPermissionName(
-    input: { permissionName: { id: 10500, name: "reviewSelfAssignable", permissionPolicyId: 3000 } }
   ) {
     clientMutationId
   }
@@ -4232,174 +3602,6 @@ mutation {
         # ignore generated -  reviewerId:9
         # ignore generated -  level:2
         # ignore generated -  isLastLevel:true
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  reviewAssignment
-#  1_A4_RAundefined_U1_S1_L1
-###################
-mutation {
-  createReviewAssignment(
-    input: {
-      reviewAssignment: {
-        id: 1
-        assignerId: null
-        reviewerId: 1
-        organisationId: null
-        stageId: 5
-        stageNumber: 1
-        status: AVAILABLE_FOR_SELF_ASSIGNMENT
-        applicationId: 4
-        templateSectionRestrictions: null
-        trigger: null
-        # ignore datetime -  timeCreated:
-        level: 1
-        isLastLevel: true
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  reviewAssignment
-#  2_A4_RAundefined_U2_S1_L1
-###################
-mutation {
-  createReviewAssignment(
-    input: {
-      reviewAssignment: {
-        id: 2
-        assignerId: null
-        reviewerId: 2
-        organisationId: null
-        stageId: 5
-        stageNumber: 1
-        status: AVAILABLE_FOR_SELF_ASSIGNMENT
-        applicationId: 4
-        templateSectionRestrictions: null
-        trigger: null
-        # ignore datetime -  timeCreated:
-        level: 1
-        isLastLevel: true
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  reviewAssignment
-#  3_A4_RAundefined_U3_S1_L1
-###################
-mutation {
-  createReviewAssignment(
-    input: {
-      reviewAssignment: {
-        id: 3
-        assignerId: null
-        reviewerId: 3
-        organisationId: null
-        stageId: 5
-        stageNumber: 1
-        status: AVAILABLE_FOR_SELF_ASSIGNMENT
-        applicationId: 4
-        templateSectionRestrictions: null
-        trigger: null
-        # ignore datetime -  timeCreated:
-        level: 1
-        isLastLevel: true
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  reviewAssignment
-#  4_A4_RAundefined_U6_S1_L1
-###################
-mutation {
-  createReviewAssignment(
-    input: {
-      reviewAssignment: {
-        id: 4
-        assignerId: null
-        reviewerId: 6
-        organisationId: null
-        stageId: 5
-        stageNumber: 1
-        status: AVAILABLE
-        applicationId: 4
-        templateSectionRestrictions: ["S1"]
-        trigger: null
-        # ignore datetime -  timeCreated:
-        level: 1
-        isLastLevel: true
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  reviewAssignment
-#  5_A4_RAundefined_U7_S1_L1
-###################
-mutation {
-  createReviewAssignment(
-    input: {
-      reviewAssignment: {
-        id: 5
-        assignerId: null
-        reviewerId: 7
-        organisationId: null
-        stageId: 5
-        stageNumber: 1
-        status: AVAILABLE
-        applicationId: 4
-        templateSectionRestrictions: ["S1", "S2"]
-        trigger: null
-        # ignore datetime -  timeCreated:
-        level: 1
-        isLastLevel: true
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  reviewAssignment
-#  6_A4_RAundefined_U8_S1_L1
-###################
-mutation {
-  createReviewAssignment(
-    input: {
-      reviewAssignment: {
-        id: 6
-        assignerId: null
-        reviewerId: 8
-        organisationId: null
-        stageId: 5
-        stageNumber: 1
-        status: AVAILABLE
-        applicationId: 4
-        templateSectionRestrictions: ["S2"]
-        trigger: null
-        # ignore datetime -  timeCreated:
-        level: 1
-        isLastLevel: true
       }
     }
   ) {
@@ -7909,29 +7111,6 @@ mutation {
 }
 
 ###################
-#  template
-#  6_OrgJoin
-###################
-mutation {
-  createTemplate(
-    input: {
-      template: {
-        id: 6
-        name: "Join Organisation"
-        code: "OrgJoin"
-        isLinear: false
-        startMessage: "## You will need the following documents ready for upload:\n- PhotoID"
-        status: AVAILABLE
-        submissionMessage: { value: "Thank you! Your application has been submitted." }
-        # ignore datetime -  versionTimestamp:
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
 #  templateAction
 #  1_T1_incrementStage_ON_APPLICATION_CREATE
 ###################
@@ -7943,7 +7122,7 @@ mutation {
         templateId: 1
         actionCode: "incrementStage"
         trigger: ON_APPLICATION_CREATE
-        sequence: 1
+        sequence: null
         condition: true
         parameterQueries: {
           applicationId: {
@@ -8643,7 +7822,7 @@ mutation {
         templateId: 2
         actionCode: "incrementStage"
         trigger: ON_APPLICATION_CREATE
-        sequence: 1
+        sequence: null
         condition: true
         parameterQueries: {
           applicationId: {
@@ -9271,7 +8450,7 @@ mutation {
         templateId: 3
         actionCode: "incrementStage"
         trigger: ON_APPLICATION_CREATE
-        sequence: 1
+        sequence: null
         condition: true
         parameterQueries: {
           applicationId: {
@@ -9394,7 +8573,7 @@ mutation {
         templateId: 4
         actionCode: "incrementStage"
         trigger: ON_APPLICATION_CREATE
-        sequence: 1
+        sequence: null
         condition: true
         parameterQueries: {
           applicationId: {
@@ -9909,7 +9088,7 @@ mutation {
         templateId: 5
         actionCode: "incrementStage"
         trigger: ON_APPLICATION_CREATE
-        sequence: 1
+        sequence: null
         condition: true
         parameterQueries: {
           applicationId: {
@@ -10383,694 +9562,6 @@ mutation {
         sequence: null
         condition: true
         parameterQueries: { message: "Application Submitted" }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  86_T6_incrementStage_ON_APPLICATION_CREATE
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 86
-        templateId: 6
-        actionCode: "incrementStage"
-        trigger: ON_APPLICATION_CREATE
-        sequence: 1
-        condition: true
-        parameterQueries: {
-          applicationId: {
-            children: ["applicationData.applicationId"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  87_T6_changeStatus_ON_APPLICATION_RESTART
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 87
-        templateId: 6
-        actionCode: "changeStatus"
-        trigger: ON_APPLICATION_RESTART
-        sequence: 1
-        condition: true
-        parameterQueries: {
-          newStatus: { value: "Draft" }
-          applicationId: {
-            children: ["applicationData.applicationId"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  88_T6_changeStatus_ON_REVIEW_RESTART
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 88
-        templateId: 6
-        actionCode: "changeStatus"
-        trigger: ON_REVIEW_RESTART
-        sequence: 1
-        condition: true
-        parameterQueries: {
-          reviewId: { children: ["applicationData.record_id"], operator: "objectProperties" }
-          newStatus: { value: "Draft" }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  89_T6_changeStatus_ON_REVIEW_CREATE
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 89
-        templateId: 6
-        actionCode: "changeStatus"
-        trigger: ON_REVIEW_CREATE
-        sequence: null
-        condition: true
-        parameterQueries: {
-          reviewId: { children: ["applicationData.record_id"], operator: "objectProperties" }
-          newStatus: { value: "Draft" }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  90_T6_changeStatus_ON_APPLICATION_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 90
-        templateId: 6
-        actionCode: "changeStatus"
-        trigger: ON_APPLICATION_SUBMIT
-        sequence: 1
-        condition: true
-        parameterQueries: {
-          newStatus: { value: "Submitted" }
-          applicationId: {
-            children: ["applicationData.applicationId"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  91_T6_trimResponses_ON_APPLICATION_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 91
-        templateId: 6
-        actionCode: "trimResponses"
-        trigger: ON_APPLICATION_SUBMIT
-        sequence: 2
-        condition: true
-        parameterQueries: {
-          timestamp: {
-            children: ["output.applicationStatusHistoryTimestamp", null]
-            operator: "objectProperties"
-          }
-          applicationId: { children: ["applicationData.record_id"], operator: "objectProperties" }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  92_T6_generateReviewAssignments_ON_APPLICATION_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 92
-        templateId: 6
-        actionCode: "generateReviewAssignments"
-        trigger: ON_APPLICATION_SUBMIT
-        sequence: 3
-        condition: true
-        parameterQueries: {
-          applicationId: {
-            children: ["applicationData.applicationId"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  93_T6_updateReviews_ON_APPLICATION_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 93
-        templateId: 6
-        actionCode: "updateReviews"
-        trigger: ON_APPLICATION_SUBMIT
-        sequence: 4
-        condition: true
-        parameterQueries: {
-          applicationId: { children: ["applicationData.record_id"], operator: "objectProperties" }
-          changedApplicationResponses: {
-            children: ["output.updatedResponses"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  94_T6_cleanupFiles_ON_APPLICATION_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 94
-        templateId: 6
-        actionCode: "cleanupFiles"
-        trigger: ON_APPLICATION_SUBMIT
-        sequence: 5
-        condition: true
-        parameterQueries: {}
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  95_T6_changeStatus_ON_REVIEW_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 95
-        templateId: 6
-        actionCode: "changeStatus"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 1
-        condition: true
-        parameterQueries: {
-          reviewId: { children: ["applicationData.record_id"], operator: "objectProperties" }
-          newStatus: { value: "Submitted" }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  96_T6_trimResponses_ON_REVIEW_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 96
-        templateId: 6
-        actionCode: "trimResponses"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 2
-        condition: true
-        parameterQueries: {
-          reviewId: { children: ["applicationData.record_id"], operator: "objectProperties" }
-          timestamp: {
-            children: ["output.reviewStatusHistoryTimestamp"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  97_T6_incrementStage_ON_REVIEW_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 97
-        templateId: 6
-        actionCode: "incrementStage"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 4
-        condition: {
-          children: [
-            {
-              children: [
-                {
-                  children: ["applicationData.reviewData.latestDecision.decision"]
-                  operator: "objectProperties"
-                }
-                "CONFORM"
-              ]
-              operator: "="
-            }
-            { children: ["applicationData.reviewData.isLastLevel"], operator: "objectProperties" }
-          ]
-          operator: "AND"
-        }
-        parameterQueries: {
-          applicationId: {
-            children: ["applicationData.applicationId"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  98_T6_generateReviewAssignments_ON_REVIEW_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 98
-        templateId: 6
-        actionCode: "generateReviewAssignments"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 5
-        condition: true
-        parameterQueries: {
-          reviewId: { children: ["applicationData.record_id"], operator: "objectProperties" }
-          applicationId: {
-            children: ["applicationData.applicationId"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  99_T6_updateReviewVisibility_ON_REVIEW_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 99
-        templateId: 6
-        actionCode: "updateReviewVisibility"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 6
-        condition: {
-          children: [
-            {
-              children: [
-                {
-                  children: ["applicationData.reviewData.latestDecision.decision"]
-                  operator: "objectProperties"
-                }
-                "LIST_OF_QUESTIONS"
-              ]
-              operator: "="
-            }
-            { children: ["applicationData.reviewData.isLastLevel"], operator: "objectProperties" }
-          ]
-          operator: "AND"
-        }
-        parameterQueries: {
-          reviewId: { children: ["applicationData.record_id"], operator: "objectProperties" }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  100_T6_changeStatus_ON_REVIEW_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 100
-        templateId: 6
-        actionCode: "changeStatus"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 7
-        condition: {
-          children: [
-            {
-              children: [
-                {
-                  children: ["applicationData.reviewData.latestDecision.decision"]
-                  operator: "objectProperties"
-                }
-                "LIST_OF_QUESTIONS"
-              ]
-              operator: "="
-            }
-            { children: ["applicationData.reviewData.isLastLevel"], operator: "objectProperties" }
-          ]
-          operator: "AND"
-        }
-        parameterQueries: {
-          newStatus: { value: "Changes Required" }
-          applicationId: {
-            children: ["applicationData.applicationId"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  101_T6_updateReviewAssignmentsStatus_ON_REVIEW_SELF_ASSIGN
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 101
-        templateId: 6
-        actionCode: "updateReviewAssignmentsStatus"
-        trigger: ON_REVIEW_SELF_ASSIGN
-        sequence: null
-        condition: true
-        parameterQueries: {
-          trigger: { children: ["applicationData.trigger"], operator: "objectProperties" }
-          reviewAssignmentId: {
-            children: ["applicationData.record_id"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  102_T6_cleanupFiles_DEV_TEST
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 102
-        templateId: 6
-        actionCode: "cleanupFiles"
-        trigger: DEV_TEST
-        sequence: null
-        condition: true
-        parameterQueries: {}
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  103_T6_cLog_ON_APPLICATION_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 103
-        templateId: 6
-        actionCode: "cLog"
-        trigger: ON_APPLICATION_SUBMIT
-        sequence: null
-        condition: true
-        parameterQueries: { message: { value: "Company Registration submission" } }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  104_T6_changeOutcome_ON_REVIEW_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 104
-        templateId: 6
-        actionCode: "changeOutcome"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 100
-        condition: {
-          children: [
-            {
-              children: [
-                {
-                  children: ["applicationData.reviewData.latestDecision.decision"]
-                  operator: "objectProperties"
-                }
-                "CONFORM"
-              ]
-              operator: "="
-            }
-            { children: ["applicationData.reviewData.isLastLevel"], operator: "objectProperties" }
-          ]
-          operator: "AND"
-        }
-        parameterQueries: {
-          newOutcome: "Approved"
-          applicationId: {
-            children: ["applicationData.applicationId"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  105_T6_joinUserOrg_ON_REVIEW_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 105
-        templateId: 6
-        actionCode: "joinUserOrg"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 120
-        condition: {
-          children: [
-            {
-              children: [
-                {
-                  children: ["applicationData.reviewData.latestDecision.decision"]
-                  operator: "objectProperties"
-                }
-                "CONFORM"
-              ]
-              operator: "="
-            }
-            { children: ["applicationData.reviewData.isLastLevel"], operator: "objectProperties" }
-          ]
-          operator: "AND"
-        }
-        parameterQueries: {
-          user_id: { children: ["applicationData.userId"], operator: "objectProperties" }
-          organisation_id: {
-            children: ["applicationData.responses.S1Q1.selection.id"]
-            operator: "objectProperties"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  106_T6_grantPermissions_ON_REVIEW_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 106
-        templateId: 6
-        actionCode: "grantPermissions"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 130
-        condition: {
-          children: [
-            {
-              children: [
-                {
-                  children: ["applicationData.reviewData.latestDecision.decision"]
-                  operator: "objectProperties"
-                }
-                "CONFORM"
-              ]
-              operator: "="
-            }
-            { children: ["applicationData.reviewData.isLastLevel"], operator: "objectProperties" }
-          ]
-          operator: "AND"
-        }
-        parameterQueries: {
-          orgName: {
-            children: ["applicationData.responses.S1Q1.selection.name"]
-            operator: "objectProperties"
-          }
-          username: { children: ["applicationData.username"], operator: "objectProperties" }
-          permissionNames: ["canApplyDrugRego"]
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateAction
-#  107_T6_changeStatus_ON_REVIEW_SUBMIT
-###################
-mutation {
-  createTemplateAction(
-    input: {
-      templateAction: {
-        id: 107
-        templateId: 6
-        actionCode: "changeStatus"
-        trigger: ON_REVIEW_SUBMIT
-        sequence: 110
-        condition: {
-          children: [
-            {
-              children: [
-                {
-                  children: ["applicationData.reviewData.latestDecision.decision"]
-                  operator: "objectProperties"
-                }
-                "CONFORM"
-              ]
-              operator: "="
-            }
-            { children: ["applicationData.reviewData.isLastLevel"], operator: "objectProperties" }
-          ]
-          operator: "AND"
-        }
-        parameterQueries: {
-          newStatus: "Completed"
-          applicationId: {
-            children: ["applicationData.applicationId"]
-            operator: "objectProperties"
-          }
-        }
       }
     }
   ) {
@@ -12213,206 +10704,6 @@ mutation {
 
 ###################
 #  templateElement
-#  38_S1_S1T1
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 38
-        sectionId: 1
-        code: "S1T1"
-        index: 0
-        title: "Intro Section 1"
-        category: INFORMATION
-        elementTypePluginCode: "textInfo"
-        visibilityCondition: { value: true }
-        isRequired: { value: true }
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: {
-          title: {
-            children: [
-              "Welcome, %1."
-              { children: ["applicationData.user.firstName"], operator: "objectProperties" }
-            ]
-            operator: "stringSubstitution"
-          }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
-#  39_S1_S1Q1
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 39
-        sectionId: 1
-        code: "S1Q1"
-        index: 1
-        title: "Select Organisation"
-        category: QUESTION
-        elementTypePluginCode: "dropdownChoice"
-        visibilityCondition: { value: true }
-        isRequired: { value: true }
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: {
-          label: "Please select the organisation you wish to join"
-          search: true
-          options: {
-            children: [
-              "query getOrgs {organisations {nodes {name, id}}}"
-              []
-              "organisations.nodes"
-            ]
-            operator: "graphQL"
-          }
-          optionsDisplayProperty: "name"
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
-#  40_S1_PB01
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 40
-        sectionId: 1
-        code: "PB01"
-        index: 3
-        title: "Page Break"
-        category: INFORMATION
-        elementTypePluginCode: "pageBreak"
-        visibilityCondition: { value: true }
-        isRequired: { value: true }
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: null
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
-#  41_S1_T2
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 41
-        sectionId: 1
-        code: "T2"
-        index: 4
-        title: "Documentation Info"
-        category: INFORMATION
-        elementTypePluginCode: "textInfo"
-        visibilityCondition: { value: true }
-        isRequired: { value: true }
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: { title: "Documentation" }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
-#  42_S1_IDUpload
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 42
-        sectionId: 1
-        code: "IDUpload"
-        index: 5
-        title: "Upload ID"
-        category: QUESTION
-        elementTypePluginCode: "fileUpload"
-        visibilityCondition: { value: true }
-        isRequired: { value: true }
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: {
-          label: "Please provide photo ID"
-          description: "Please upload a copy of your photo ID. Must be in **image** or **PDF** format and under 5MB."
-          fileSizeLimit: 5000
-          fileCountLimit: 1
-          fileExtensions: ["pdf", "png", "jpg", "jpeg"]
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
-#  43_S1_DocUpload
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 43
-        sectionId: 1
-        code: "DocUpload"
-        index: 6
-        title: "Upload Doc"
-        category: QUESTION
-        elementTypePluginCode: "fileUpload"
-        visibilityCondition: { value: true }
-        isRequired: false
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: {
-          label: "Please upload additional documentation"
-          description: "If necessary, please provide additional documentation showing your relationship to this organisation.\nYou can upload more than one file if necessary, with same restrictions as above."
-          fileSizeLimit: 5000
-          fileCountLimit: 5
-          fileExtensions: ["pdf", "png", "jpg", "jpeg"]
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
 #  1000_S1000_Text1
 ###################
 mutation {
@@ -12556,8 +10847,8 @@ mutation {
           title: {
             children: [
               "Current User: %1 %2"
-              { children: ["applicationData.user.firstName"], operator: "objectProperties" }
-              { children: ["applicationData.user.lastName", ""], operator: "objectProperties" }
+              { children: ["currentUser.firstName"], operator: "objectProperties" }
+              { children: ["currentUser.lastName"], operator: "objectProperties" }
             ]
             operator: "stringSubstitution"
           }
@@ -13066,8 +11357,6 @@ mutation {
         parameters: {
           label: "This Radio button group has no default"
           options: ["Option A", "Option B", "Option C"]
-          hasOther: true
-          otherPlaceholder: "Enter other answer"
         }
       }
     }
@@ -13123,7 +11412,7 @@ mutation {
         index: 19
         title: "Other description"
         category: QUESTION
-        elementTypePluginCode: "longText"
+        elementTypePluginCode: "shortText"
         visibilityCondition: { value: true }
         isRequired: false
         isEditable: {
@@ -13132,10 +11421,7 @@ mutation {
         }
         validation: { value: true }
         validationMessage: null
-        parameters: {
-          label: "If Other, please describe"
-          description: "Please use as much detail as necessary"
-        }
+        parameters: { label: "If Other, please describe", placeholder: "Describe your role" }
       }
     }
   ) {
@@ -13635,7 +11921,7 @@ mutation {
         sectionId: 1010
         code: "Q_upload3"
         index: 105
-        title: "File image upload"
+        title: "File upload demo 3"
         category: QUESTION
         elementTypePluginCode: "fileUpload"
         visibilityCondition: { value: true }
@@ -13644,11 +11930,9 @@ mutation {
         validation: { value: true }
         validationMessage: null
         parameters: {
-          label: "Please upload an image file to display"
-          description: "Only 1 file allowed, must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB"
-          fileSizeLimit: 5000
+          label: "One more upload demo"
+          description: "Only 1 file allowed, no other restrictions"
           fileCountLimit: 1
-          fileExtensions: ["jpg", "jpeg", "png", "gif", "svg"]
         }
       }
     }
@@ -13684,185 +11968,6 @@ mutation {
             operator: "graphQL"
           }
           placeholder: "Select one"
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
-#  1036_S1010_PB12
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 1036
-        sectionId: 1010
-        code: "PB12"
-        index: 110
-        title: "Page Break"
-        category: INFORMATION
-        elementTypePluginCode: "pageBreak"
-        visibilityCondition: { value: true }
-        isRequired: { value: true }
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: null
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
-#  1037_S1010_LongText1
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 1037
-        sectionId: 1010
-        code: "LongText1"
-        index: 111
-        title: "LongText Demo"
-        category: QUESTION
-        elementTypePluginCode: "longText"
-        visibilityCondition: { value: true }
-        isRequired: false
-        isEditable: { value: true }
-        validation: {
-          children: [
-            { children: ["responses.thisResponse"], operator: "objectProperties" }
-            "^[\\s\\S]{0,100}$"
-          ]
-          operator: "REGEX"
-        }
-        validationMessage: "Response must be less than 100 characters"
-        parameters: {
-          label: "Any final comments?"
-          lines: 8
-          maxLength: 101
-          placeholder: "Enter here..."
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
-#  1038_S1010_Img01
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 1038
-        sectionId: 1010
-        code: "Img01"
-        index: 106
-        title: "Show uploaded image"
-        category: INFORMATION
-        elementTypePluginCode: "imageDisplay"
-        visibilityCondition: {
-          children: [{ children: ["responses.Q_upload3.text"], operator: "objectProperties" }, ""]
-          operator: "!="
-        }
-        isRequired: { value: true }
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: {
-          url: {
-            children: [
-              { children: ["applicationData.config.serverREST"], operator: "objectProperties" }
-              { children: ["responses.Q_upload3.files.fileUrl"], operator: "objectProperties" }
-            ]
-            operator: "CONCAT"
-          }
-          size: { children: ["responses.ImgOpt1.text"], operator: "objectProperties" }
-          altText: "This is the image you uploaded"
-          alignment: { children: ["responses.ImgOpt2.text"], operator: "objectProperties" }
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
-#  1039_S1010_ImgOpt1
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 1039
-        sectionId: 1010
-        code: "ImgOpt1"
-        index: 107
-        title: "Image size control"
-        category: QUESTION
-        elementTypePluginCode: "dropdownChoice"
-        visibilityCondition: {
-          children: [{ children: ["responses.Q_upload3.text"], operator: "objectProperties" }, ""]
-          operator: "!="
-        }
-        isRequired: { value: true }
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: {
-          label: "Select image size"
-          default: 3
-          options: ["mini", "tiny", "small", "medium", "large", "big", "huge", "massive"]
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateElement
-#  1040_S1010_ImgOpt2
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 1040
-        sectionId: 1010
-        code: "ImgOpt2"
-        index: 108
-        title: "Image alignment control"
-        category: QUESTION
-        elementTypePluginCode: "dropdownChoice"
-        visibilityCondition: {
-          children: [{ children: ["responses.Q_upload3.text"], operator: "objectProperties" }, ""]
-          operator: "!="
-        }
-        isRequired: { value: true }
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: {
-          label: "Select image alignment"
-          default: 1
-          options: ["left", "center", "right"]
         }
       }
     }
@@ -14888,37 +12993,6 @@ mutation {
 }
 
 ###################
-#  templateElement
-#  5002_S1_S1Q2
-###################
-mutation {
-  createTemplateElement(
-    input: {
-      templateElement: {
-        id: 5002
-        sectionId: 1
-        code: "S1Q2"
-        index: 2
-        title: "Reason"
-        category: QUESTION
-        elementTypePluginCode: "shortText"
-        visibilityCondition: { value: true }
-        isRequired: { value: true }
-        isEditable: { value: true }
-        validation: { value: true }
-        validationMessage: null
-        parameters: {
-          label: "Reason for joining"
-          description: "Please provide a brief summary of your relationship to this organisation"
-        }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
 #  templatePermission
 #  1_T1_PN10100_Snull_Lnull
 ###################
@@ -14983,34 +13057,13 @@ mutation {
 
 ###################
 #  templatePermission
-#  4_T4_PN10500_S1_L1
+#  4_T5_PN10100_Snull_Lnull
 ###################
 mutation {
   createTemplatePermission(
     input: {
       templatePermission: {
         id: 4
-        permissionNameId: 10500
-        templateId: 4
-        stageNumber: 1
-        level: 1
-        restrictions: { canSelfAssign: true }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templatePermission
-#  5_T5_PN10100_Snull_Lnull
-###################
-mutation {
-  createTemplatePermission(
-    input: {
-      templatePermission: {
-        id: 5
         permissionNameId: 10100
         templateId: 5
         stageNumber: null
@@ -15025,13 +13078,13 @@ mutation {
 
 ###################
 #  templatePermission
-#  6_T5_PN10300_S1_L1
+#  5_T5_PN10300_S1_L1
 ###################
 mutation {
   createTemplatePermission(
     input: {
       templatePermission: {
-        id: 6
+        id: 5
         permissionNameId: 10300
         templateId: 5
         stageNumber: 1
@@ -15046,13 +13099,13 @@ mutation {
 
 ###################
 #  templatePermission
-#  7_T5_PN10200_S2_L1
+#  6_T5_PN10200_S2_L1
 ###################
 mutation {
   createTemplatePermission(
     input: {
       templatePermission: {
-        id: 7
+        id: 6
         permissionNameId: 10200
         templateId: 5
         stageNumber: 2
@@ -15067,102 +13120,18 @@ mutation {
 
 ###################
 #  templatePermission
-#  8_T5_PN10400_S2_L1
+#  7_T5_PN10400_S2_L1
 ###################
 mutation {
   createTemplatePermission(
     input: {
       templatePermission: {
-        id: 8
+        id: 7
         permissionNameId: 10400
         templateId: 5
         stageNumber: 2
         level: 1
         restrictions: null
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templatePermission
-#  9_T6_PN8000_Snull_Lnull
-###################
-mutation {
-  createTemplatePermission(
-    input: {
-      templatePermission: {
-        id: 9
-        permissionNameId: 8000
-        templateId: 6
-        stageNumber: null
-        level: null
-        restrictions: null
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templatePermission
-#  10_T6_PN9000_Snull_Lnull
-###################
-mutation {
-  createTemplatePermission(
-    input: {
-      templatePermission: {
-        id: 10
-        permissionNameId: 9000
-        templateId: 6
-        stageNumber: null
-        level: null
-        restrictions: null
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templatePermission
-#  11_T6_PN8000_S1_L1
-###################
-mutation {
-  createTemplatePermission(
-    input: {
-      templatePermission: {
-        id: 11
-        permissionNameId: 8000
-        templateId: 6
-        stageNumber: 1
-        level: 1
-        restrictions: { canSelfAssign: true }
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templatePermission
-#  12_T6_PN10000_S1_L1
-###################
-mutation {
-  createTemplatePermission(
-    input: {
-      templatePermission: {
-        id: 12
-        permissionNameId: 10000
-        templateId: 6
-        stageNumber: 1
-        level: 1
-        restrictions: { canSelfAssign: true }
       }
     }
   ) {
@@ -15332,20 +13301,6 @@ mutation {
         level: 1
         restrictions: null
       }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateSection
-#  1_T6
-###################
-mutation {
-  createTemplateSection(
-    input: {
-      templateSection: { id: 1, templateId: 6, title: "Personal Information", code: "S1", index: 0 }
     }
   ) {
     clientMutationId
@@ -15580,26 +13535,6 @@ mutation {
 
 ###################
 #  templateStage
-#  4_T6_number1
-###################
-mutation {
-  createTemplateStage(
-    input: {
-      templateStage: {
-        id: 4
-        number: 1
-        title: "Approval"
-        description: "This application will be approved by a Reviewer"
-        templateId: 6
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  templateStage
 #  5_T4_number1
 ###################
 mutation {
@@ -15711,6 +13646,50 @@ mutation {
         title: "Final Decision"
         description: "This is the final step and will change the outcome of this applications."
         templateId: 5
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  triggerQueue
+#  2
+###################
+mutation {
+  createTriggerQueue(
+    input: {
+      triggerQueue: {
+        id: 2
+        triggerType: ON_APPLICATION_CREATE
+        table: "application"
+        recordId: 4004
+        # ignore datetime -  timestamp:
+        status: ACTIONS_DISPATCHED
+        log: null
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+
+###################
+#  triggerQueue
+#  3
+###################
+mutation {
+  createTriggerQueue(
+    input: {
+      triggerQueue: {
+        id: 3
+        triggerType: ON_APPLICATION_CREATE
+        table: "application"
+        recordId: 4005
+        # ignore datetime -  timestamp:
+        status: ACTIONS_DISPATCHED
+        log: null
       }
     }
   ) {
@@ -16085,50 +14064,6 @@ mutation {
         email: null
         dateOfBirth: null
         passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  user
-#  18_c
-###################
-mutation {
-  createUser(
-    input: {
-      user: {
-        id: 18
-        firstName: "a"
-        lastName: "b"
-        username: "c"
-        email: "a@a..con"
-        dateOfBirth: null
-        passwordHash: "$2b$10$jWIazuPyCqL0wziUoEAjuuWquz3blSdYFTIy.KEFua6dxiGhMyVHy"
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-
-###################
-#  user
-#  19_d
-###################
-mutation {
-  createUser(
-    input: {
-      user: {
-        id: 19
-        firstName: "a"
-        lastName: "b"
-        username: "d"
-        email: "andrei.evguenov@gmail.com"
-        dateOfBirth: null
-        passwordHash: "$2b$10$jPGNIlfwJtXsjIH/C7WYC.Gm7MTATZ3skfgE5qs4/WDqV8s2RB7LS"
       }
     }
   ) {
