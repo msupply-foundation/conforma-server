@@ -146,6 +146,7 @@ exports.queries = [
               # No Core Actions for this one
               {
                 actionCode: "incrementStage"
+                sequence: 1
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries: {
                   applicationId: {
