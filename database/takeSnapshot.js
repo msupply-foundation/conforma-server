@@ -49,7 +49,7 @@ const takeSnapshot = async (definitions) => {
   console.log('saving mutations to file ... done')
 
   console.log('prettifying mutations ...')
-  execSync('yarn prettier --write "' + snapshotFolder + '/**/*.graphql"')
+  execSync('npx prettier --write "' + snapshotFolder + '/**/*.graphql"')
   console.log('prettifying mutations ... done')
 
   console.log('all ... done')
