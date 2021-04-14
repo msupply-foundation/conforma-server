@@ -7,6 +7,7 @@ exports.coreActions = `
     # change status to draft
     {
         actionCode: "incrementStage"
+        sequence: 1
         trigger: ON_APPLICATION_CREATE
         parameterQueries: {
         applicationId: {
