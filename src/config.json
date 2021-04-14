@@ -13,6 +13,7 @@
   "//": "Folder path from perspective of server.ts/js",
   "filesFolder": "../files",
   "pluginsFolder": "../plugins",
+  "imagesFolder": "../images",
   "jwtSecret": "devsecret",
   "RESTport": 8080,
   "thumbnailMaxWidth": 300,

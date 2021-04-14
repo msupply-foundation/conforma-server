@@ -8,8 +8,8 @@ import * as config from '../../config.json'
 import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
 
-export const { filesFolderName } = config
-export const filesPath = path.join(getAppRootDir(), filesFolderName)
+export const { filesFolder, imagesFolder } = config
+export const filesPath = path.join(getAppRootDir(), filesFolder)
 
 interface HttpQueryParameters {
   [key: string]: string
@@ -17,16 +17,16 @@ interface HttpQueryParameters {
 
 export function createFilesFolder() {
   try {
-    fs.mkdirSync(path.join(getAppRootDir(), filesFolderName))
+    fs.mkdirSync(path.join(getAppRootDir(), filesFolder))
   } catch {
     // Folder already exists
   }
   // Move generic thumbnails to files root
-  fs.readdir(path.join(getAppRootDir(), 'images', 'generic_file_thumbnails'), (_, files) => {
+  fs.readdir(path.join(getAppRootDir(), imagesFolder, 'generic_file_thumbnails'), (_, files) => {
     files.forEach((file) =>
       fs.copyFile(
-        path.join(getAppRootDir(), 'images', 'generic_file_thumbnails', file),
-        path.join(getAppRootDir(), filesFolderName, file),
+        path.join(getAppRootDir(), imagesFolder, 'generic_file_thumbnails', file),
+        path.join(getAppRootDir(), filesFolder, file),
         () => {}
       )
     )
@@ -55,8 +55,8 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       const file_path = path.join(subfolder, `${basename}_${unique_id}${ext}`)
 
       // Save file
-      if (!fs.existsSync(path.join(getAppRootDir(), filesFolderName, subfolder))) {
-        fs.mkdirSync(path.join(getAppRootDir(), filesFolderName, subfolder))
+      if (!fs.existsSync(path.join(getAppRootDir(), filesFolder, subfolder))) {
+        fs.mkdirSync(path.join(getAppRootDir(), filesFolder, subfolder))
       }
       await pump(file.file, fs.createWriteStream(path.join(filesPath, file_path)))
 

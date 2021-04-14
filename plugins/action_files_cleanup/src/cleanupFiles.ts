@@ -30,7 +30,7 @@ async function cleanupFiles(input: any, DBConnect: any) {
   const applicationSerial = input?.applicationSerial || applicationData.applicationSerial
   const applicationid = input?.applicationId || applicationData.applicationId
   const {
-    environmentData: { appRootFolder, filesFolderName },
+    environmentData: { appRootFolder, filesFolder },
   } = applicationData
 
   console.log(`Processing files associated with Application ${applicationSerial}`)
@@ -79,11 +79,11 @@ async function cleanupFiles(input: any, DBConnect: any) {
   async function deleteFile(file: FileInfo) {
     try {
       // Delete the file
-      await fsPromises.unlink(path.join(appRootFolder, filesFolderName, file.filePath))
+      await fsPromises.unlink(path.join(appRootFolder, filesFolder, file.filePath))
       // Delete the thumbnail, but only if it's in the application folder
       // (i.e. not the generics)
       if (file.filePath.split('/')[0] === file.thumbnailPath.split('/')[0])
-        await fsPromises.unlink(path.join(appRootFolder, filesFolderName, file.thumbnailPath))
+        await fsPromises.unlink(path.join(appRootFolder, filesFolder, file.thumbnailPath))
       // Delete the database record
       await db.deleteFileRecord(file.uniqueId)
       return file
