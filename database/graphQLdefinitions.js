@@ -190,10 +190,6 @@ const graphQLdefinition = [
     skip: true,
   },
   {
-    table: 'notification',
-    skip: true,
-  },
-  {
     table: 'trigger_queue',
     skip: true,
   },
