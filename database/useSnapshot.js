@@ -1,8 +1,8 @@
 const fs = require('fs')
-const { graphQLdefinition } = require('./graphQLdefinitions.js')
 const { executeGraphQLQuery } = require('./insertData.js')
 const { updateRowPolicies } = require('./updateRowPolicies.js')
 
+const seperator = '########### MUTATION END ###########'
 const { execSync } = require('child_process')
 const snapshotNameFile = './database/snapshots/currentSnapshot.txt'
 
@@ -10,33 +10,17 @@ console.log('initialising database ... ')
 execSync('./database/initialise_database.sh')
 console.log('initialising database ... done')
 
-const useSnapshot = async (definitions) => {
+const useSnapshot = async () => {
   let snapshotName = process.argv[2]
   const previousSnapshotName = fs.readFileSync(snapshotNameFile, 'utf-8')
   if (!snapshotName) snapshotName = previousSnapshotName
 
-  const snapshotFolder = './database/snapshots/' + snapshotName + '/'
+  const snapshotFileName = './database/snapshots/' + snapshotName + '.graphql'
 
   console.log('inserting from snapshot: ' + snapshotName)
-  for (let definition of definitions) {
-    if (definition.skip) continue
 
-    const currentTableFolder = snapshotFolder + definition.table
+  await insertDataFromFile(snapshotFileName)
 
-    console.log('inserting ' + definition.table + ' ...')
-    let filesToProcess
-
-    try {
-      filesToProcess = fs.readdirSync(currentTableFolder).filter((file) => !file.match(/^\./)) // Ignore hidden files
-    } catch (e) {
-      console.log('mutations not found for ' + definition.table + ' ... skipping')
-      continue
-    }
-
-    sortedFilesToProcess = sortFiles(filesToProcess)
-    for (filename of filesToProcess) await insertDataFromFile(currentTableFolder + '/' + filename)
-    console.log('inserting ' + definition.table + ' ... done')
-  }
   await updateRowPolicies()
 
   console.log('running post data insert ... ')
@@ -47,22 +31,19 @@ const useSnapshot = async (definitions) => {
 }
 
 const insertDataFromFile = async (filename) => {
-  const content = fs.readFileSync(filename, 'utf-8')
+  const wholeFileContent = fs.readFileSync(filename, 'utf-8')
 
-  // console.log(content) // uncomment for debugging
+  const splitContent = wholeFileContent.split(seperator)
 
-  await executeGraphQLQuery(content)
+  for (let content of splitContent) {
+    console.log(content) // uncomment for debugging
+    try {
+      await executeGraphQLQuery(content)
+    } catch (e) {
+      console.log('### error while inserting: ' + content)
+      throw e
+    }
+  }
 }
 
-const sortFiles = (files) => {
-  files.sort((file1, file2) => extractId(file1) - extractId(file2))
-}
-
-const extractId = (file) => {
-  let index = file.indexOf('_')
-  if (index <= 0) index = file.indexOf('.')
-
-  return Number(file.slice(0, index))
-}
-
-useSnapshot(graphQLdefinition)
+useSnapshot()

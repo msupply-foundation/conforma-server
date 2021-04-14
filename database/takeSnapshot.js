@@ -1,11 +1,9 @@
 const fs = require('fs')
-const rimraf = require('rimraf')
-const { promisify } = require('util')
-const { graphQLdefinition, defaultGenerateFileName } = require('./graphQLdefinitions.js')
+const { graphQLdefinition } = require('./graphQLdefinitions.js')
 const { execSync } = require('child_process')
 const { executeGraphQLQuery } = require('./insertData.js')
 
-const asyncRimraf = promisify(rimraf)
+const seperator = '########### MUTATION END ###########'
 const snapshotNameFile = './database/snapshots/currentSnapshot.txt'
 
 const takeSnapshot = async (definitions) => {
@@ -16,9 +14,9 @@ const takeSnapshot = async (definitions) => {
 
   console.log('creating or updating snapshot: ', snapshotName)
 
-  const snapshotFolder = 'database/snapshots/' + snapshotName
+  const snapshotFilename = 'database/snapshots/' + snapshotName + '.graphql'
 
-  console.log(previousSnapshotName, snapshotName, snapshotFolder)
+  console.log(previousSnapshotName, snapshotName, snapshotFilename)
   console.log('getting schema ...')
   const types = (await getSchema()).types
   console.log('getting schema ... done')
@@ -26,17 +24,14 @@ const takeSnapshot = async (definitions) => {
   console.log('creating queries ...')
   const tableNames = getTableNames(types)
   const inputTypes = getInputTypes(types, tableNames)
-  const queries = getQueries(inputTypes)
+  const queries = sortAndFilterQueries(getQueries(inputTypes), definitions)
+
   console.log('creating queries ... done')
 
   console.log('executing queries ...')
   const queryResultsAll = await Promise.all(queries.map((query) => getQueryData(query)))
   const queryResults = queryResultsAll.filter(({ results }) => results.length > 0)
   console.log('executing queries ... done')
-
-  console.log('cleaning up snapshot folder ...')
-  await cleanUpSnapshotFolder(snapshotFolder)
-  console.log('cleaning up snapshot folder ... done')
 
   console.log('creating mutations ...')
   const mutations = queryResults
@@ -45,11 +40,11 @@ const takeSnapshot = async (definitions) => {
   console.log('creating mutations ... done')
 
   console.log('saving mutations to file ...')
-  mutations.forEach((mutation) => saveMutationToFile(snapshotFolder, mutation, definitions))
+  saveMutationsToFile(mutations, snapshotFilename)
   console.log('saving mutations to file ... done')
 
   console.log('prettifying mutations ...')
-  execSync('npx prettier --write "' + snapshotFolder + '/**/*.graphql"')
+  execSync('npx prettier --write "' + snapshotFilename + '"')
   console.log('prettifying mutations ... done')
 
   console.log('all ... done')
@@ -142,21 +137,31 @@ const getQueries = (inputTypes) => {
   return queries
 }
 
+const getRecordNameFromQueryName = (queryName) => {
+  return toSingular(queryName)
+}
+
+const sortAndFilterQueries = (queries, definitions) => {
+  const sortedAndFilteredQueries = []
+
+  definitions.forEach((definition) => {
+    if (definition.skip) return
+    console.log(definition)
+    console.log(getRecordNameFromQueryName(queries[0].queryName))
+    const matchedQuery = queries.find(({ queryName }) => {
+      console.log(getRecordNameFromQueryName(queryName))
+      return getRecordNameFromQueryName(queryName) === definition.table
+    })
+    if (matchedQuery) sortedAndFilteredQueries.push(matchedQuery)
+  })
+  console.log(sortedAndFilteredQueries)
+  return sortedAndFilteredQueries
+}
+
 const getQueryData = async (query) => {
   const { query: gql, queryName } = query
   const json = await executeGraphQLQuery(gql)
   return { results: json.data[queryName].nodes, query }
-}
-
-const cleanUpSnapshotFolder = async (folder) => {
-  if (fs.existsSync(folder)) {
-    await asyncRimraf(folder)
-  }
-  fs.mkdirSync(folder)
-}
-
-const getRecordNameFromQueryName = (queryName) => {
-  return toSingular(queryName)
 }
 
 const getMutationNameFromQueryName = (queryName) => {
@@ -223,31 +228,40 @@ const generateMutations = ({ query, results }, definitions) => {
       query.queryName,
       definitions
     )
-    let mutation = `mutation { ${mutationName}(input: {${recordName}: {`
+
+    let mutation = '\n########### ' + recordName + ' ' + record.id + ' ###########\n'
+    mutation += `mutation { ${mutationName}(input: {${recordName}: {`
     mutation += fieldsAndValues
     mutation += '}}){clientMutationId}}'
-    return { mutation, query, record }
+    return { mutation, query, record, recordName }
   })
   return mutations
 }
 
-const saveMutationToFile = (snapshotFolder, { mutation, query, record }, definitions) => {
-  const tableName = getRecordNameFromQueryName(query.queryName)
+const getSummary = (mutations) => {
+  const summary = {}
 
-  const tableDir = snapshotFolder + '/' + tableName
+  mutations.forEach(({ recordName }) => {
+    if (!summary[recordName]) summary[recordName] = 0
+    summary[recordName]++
+  })
 
-  if (!fs.existsSync(tableDir)) {
-    fs.mkdirSync(tableDir)
-  }
+  let summaryComment = '########### SUMMARY ###########\n'
 
-  const definition = definitions.find((definition) => definition.table === tableName)
-  if (definition?.skip) return
-  const generateFilname =
-    definitions.find((definition) => definition.table === tableName)?.generateFileName ||
-    defaultGenerateFileName
-  const fileName = tableDir + '/' + generateFilname(record) + '.graphql'
+  summaryComment += Object.entries(summary)
+    .map(([recordName, count]) => '#   ' + recordName + '\n#     count :' + count)
+    .join('\n')
 
-  fs.writeFileSync(fileName, mutation)
+  summaryComment += '\n########### MUTATIONS ###########\n'
+
+  return summaryComment
+}
+
+const saveMutationsToFile = (mutations, snapshotFilename) => {
+  let fileContent = getSummary(mutations) + '\n'
+  fileContent += mutations.map(({ mutation }) => mutation).join('\n' + seperator + '\n')
+
+  fs.writeFileSync(snapshotFilename, fileContent)
 }
 
 takeSnapshot(graphQLdefinition)
