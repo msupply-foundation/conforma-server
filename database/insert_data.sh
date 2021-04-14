@@ -1,4 +1,4 @@
-
+#!bin/bash
 #insert data from 
 echo "\nInserting data..."
 
