@@ -24,10 +24,21 @@ const buildPlugins = async () => {
   for (let plugin of plugins) {
     const { pluginName } = plugin
 
-    const pluginBuiltFolder = await buildPlugin(pluginName)
+    let pluginBuiltFolder
+    try {
+      pluginBuiltFolder = await buildPlugin(pluginName)
+    } catch (e) {
+      console.log('!!!! error while building plugin: ' + pluginName)
+      console.log('run tsc command manually from root to see full log')
+      throw e
+    }
 
     console.log('copying plugin to overall build ' + pluginName + ' ...')
-    execSync('cp -R ' + pluginBuiltFolder + ' ' + pluginsBuiltFolder + '/', { cwd: rootDirectory })
+
+    execSync('cp -R ' + pluginBuiltFolder + ' ' + pluginsBuiltFolder + '/', {
+      cwd: rootDirectory,
+    })
+
     console.log('copying plugin to overall build ' + pluginName + ' ... done')
   }
 }

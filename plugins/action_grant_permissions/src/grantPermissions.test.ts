@@ -1,7 +1,7 @@
 // Test suite for the grantPermissions Action -- adds a permisison to valerio user to reviewCompanyRego
 // Ideally would verify that logic works by checking db (permission_join table) before and after
 
-import PostgresDB from '../../../components/databaseConnect'
+import PostgresDB from '../../../src/components/databaseConnect'
 
 const Action = require('./grantPermissions')
 
