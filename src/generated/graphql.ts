@@ -21698,6 +21698,7 @@ export type UserOrgJoin = {
   userRole?: Maybe<Scalars['String']>;
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
+  logoUrl?: Maybe<Scalars['String']>;
 };
 
 /**
@@ -21729,6 +21730,8 @@ export type UserOrgJoinCondition = {
   registration?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `address` field. */
   address?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `logoUrl` field. */
+  logoUrl?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `UserOrgJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -21757,6 +21760,8 @@ export type UserOrgJoinFilter = {
   registration?: Maybe<StringFilter>;
   /** Filter by the object’s `address` field. */
   address?: Maybe<StringFilter>;
+  /** Filter by the object’s `logoUrl` field. */
+  logoUrl?: Maybe<StringFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserOrgJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -21813,7 +21818,9 @@ export enum UserOrgJoinsOrderBy {
   RegistrationAsc = 'REGISTRATION_ASC',
   RegistrationDesc = 'REGISTRATION_DESC',
   AddressAsc = 'ADDRESS_ASC',
-  AddressDesc = 'ADDRESS_DESC'
+  AddressDesc = 'ADDRESS_DESC',
+  LogoUrlAsc = 'LOGO_URL_ASC',
+  LogoUrlDesc = 'LOGO_URL_DESC'
 }
 
 /** Represents an update to a `User`. Fields that are set will be updated. */
@@ -26896,6 +26903,7 @@ export type UserOrgJoinResolvers<ContextType = any, ParentType extends Resolvers
   userRole?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   registration?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  logoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

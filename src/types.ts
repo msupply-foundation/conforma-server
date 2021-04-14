@@ -168,6 +168,7 @@ export interface Organisation {
   orgName: string
   registration?: string
   address?: string
+  logoUrl?: string
 }
 
 export interface UserOrg extends User, Organisation {}
