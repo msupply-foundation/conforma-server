@@ -42,7 +42,8 @@ const useSnapshot = async (definitions) => {
 const insertDataFromFile = async (filename) => {
   const content = fs.readFileSync(filename, 'utf-8')
 
-  console.log(content)
+  // console.log(content) // uncomment for debugging
+
   await executeGraphQLQuery(content)
 }
 
