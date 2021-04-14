@@ -220,4 +220,17 @@ exports.queries = [
       }
     }
   }`,
+  `mutation reviewSelfAssignable {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          id: 10500
+          name: "reviewSelfAssignable",  permissionPolicyId: 3000 }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
 ]

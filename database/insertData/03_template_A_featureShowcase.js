@@ -126,11 +126,11 @@ exports.queries = [
                             "Current User: %1 %2"
                             {
                               operator: "objectProperties"
-                              children: ["currentUser.firstName"]
+                              children: ["applicationData.user.firstName"]
                             }
                             {
                               operator: "objectProperties"
-                              children: ["currentUser.lastName"]
+                              children: ["applicationData.user.lastName", ""]
                             }
                           ]
                         }
@@ -456,6 +456,8 @@ exports.queries = [
                         label: "This Radio button group has no default"
                         options: ["Option A", "Option B", "Option C"]
                         # Testing no default
+                        hasOther: true
+                        otherPlaceholder: "Enter other answer"
                       }
                       isRequired: true
                     }
@@ -479,7 +481,7 @@ exports.queries = [
                       code: "Q13"
                       index: 19
                       title: "Other description"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "longText"
                       category: QUESTION
                       isEditable: {
                         operator: "="
@@ -494,7 +496,7 @@ exports.queries = [
                       isRequired: false
                       parameters: {
                         label: "If Other, please describe"
-                        placeholder: "Describe your role"
+                        description: "Please use as much detail as necessary"
                       }
                     }
                     {
@@ -777,15 +779,158 @@ exports.queries = [
                       id: 1034
                       code: "Q_upload3"
                       index: 105
-                      title: "File upload demo 3"
+                      title: "File image upload"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       isRequired: false
                       parameters: {
-                        label: "One more upload demo"
-                        description: "Only 1 file allowed, no other restrictions"
+                        label: "Please upload an image file to display"
+                        description: "Only 1 file allowed, must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB"
                         fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "gif", "svg"]
+                        fileSizeLimit: 5000
                       }
+                    }
+                    {
+                      id: 1038
+                      code: "Img01"
+                      index: 106
+                      title: "Show uploaded image"
+                      elementTypePluginCode: "imageDisplay"
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q_upload3.text"]
+                          }
+                          ""
+                        ]
+                      }
+                      category: INFORMATION
+                      parameters: {
+                        url: {
+                          operator: "CONCAT",
+                          children: [
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "applicationData.config.serverREST"
+                              ]
+                            }
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "responses.Q_upload3.files.fileUrl"
+                              ]
+                            }
+                          ]
+                        }
+                        size: {
+                          operator: "objectProperties"
+                          children: ["responses.ImgOpt1.text"]
+                        }
+                        alignment: {
+                          operator: "objectProperties"
+                          children: ["responses.ImgOpt2.text"]
+                        }
+                        altText: "This is the image you uploaded"
+                      }
+                    }
+                    {
+                      id: 1039
+                      code: "ImgOpt1"
+                      index: 107
+                      title: "Image size control"
+                      elementTypePluginCode: "dropdownChoice"
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q_upload3.text"]
+                          }
+                          ""
+                        ]
+                      }
+                      category: QUESTION
+                      parameters: {
+                        label: "Select image size"
+                        default: 3
+                        options: [
+                          "mini"
+                          "tiny"
+                          "small"
+                          "medium"
+                          "large"
+                          "big"
+                          "huge"
+                          "massive"
+                        ]
+                      }
+                    }
+                    {
+                      id: 1040
+                      code: "ImgOpt2"
+                      index: 108
+                      title: "Image alignment control"
+                      elementTypePluginCode: "dropdownChoice"
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q_upload3.text"]
+                          }
+                          ""
+                        ]
+                      }
+                      category: QUESTION
+                      parameters: {
+                        label: "Select image alignment"
+                        default: 1
+                        options: [
+                          "left"
+                          "center"
+                          "right"
+                        ]
+                      }
+                    }
+                    {
+                      id: 1036
+                      code: "PB12"
+                      index: 110
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      id: 1037
+                      code: "LongText1"
+                      index: 111
+                      title: "LongText Demo"
+                      elementTypePluginCode: "longText"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Any final comments?"
+                        lines: 8
+                        placeholder: "Enter here..."
+                        maxLength: 101
+                      }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.thisResponse"
+                            ]
+                          }
+                          "^[\\\\s\\\\S]{0,100}$"
+                        ]
+                      }
+                      validationMessage: "Response must be less than 100 characters"
                     }
                   ]
                 }
