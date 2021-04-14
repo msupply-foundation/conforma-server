@@ -24,7 +24,14 @@ const useSnapshot = async (definitions) => {
     const currentTableFolder = snapshotFolder + definition.table
 
     console.log('inserting ' + definition.table + ' ...')
-    const filesToProcess = fs.readdirSync(currentTableFolder).filter((file) => !file.match(/^\./)) // Ignore hidden files
+    let filesToProcess
+
+    try {
+      filesToProcess = fs.readdirSync(currentTableFolder).filter((file) => !file.match(/^\./)) // Ignore hidden files
+    } catch (e) {
+      console.log('mutations not found for ' + definition.table + ' ... skipping')
+      continue
+    }
 
     sortedFilesToProcess = sortFiles(filesToProcess)
     for (filename of filesToProcess) await insertDataFromFile(currentTableFolder + '/' + filename)
