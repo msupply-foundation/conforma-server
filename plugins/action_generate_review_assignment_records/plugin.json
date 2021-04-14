@@ -2,8 +2,6 @@
   "type": "action_plugin",
   "code": "generateReviewAssignments",
   "name": "Generate Review Assignment Records",
-  "file": "generateReviewAssignments",
-  "function_name": "generateReviewAssignments",
   "description": "Generates review_assignment records for current application",
   "required_parameters": ["applicationId", "reviewId"],
   "output_properties": [],

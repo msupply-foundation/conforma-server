@@ -10,7 +10,7 @@ interface Review {
   reviewStatus: ReviewStatus
 }
 
-module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
+async function updateReviews(input: any, DBConnect: any) {
   const db = databaseMethods(DBConnect)
 
   console.log('Updating reviews status...')
@@ -70,3 +70,5 @@ module.exports['updateReviews'] = async function (input: any, DBConnect: any) {
     )
   }
 }
+
+export default updateReviews

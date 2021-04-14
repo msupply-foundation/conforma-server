@@ -1,4 +1,4 @@
-module.exports['changeOutcome'] = async function (parameters: any, DBConnect: any) {
+async function changeOutcome(parameters: any, DBConnect: any) {
   const { applicationId, newOutcome } = parameters
   try {
     console.log(`\nUpdating application: ${newOutcome}`)
@@ -24,3 +24,5 @@ module.exports['changeOutcome'] = async function (parameters: any, DBConnect: an
     }
   }
 }
+
+export default changeOutcome

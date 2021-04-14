@@ -2,8 +2,6 @@
   "type": "action_plugin",
   "code": "createUser",
   "name": "Create User",
-  "file": "createUser",
-  "function_name": "createUser",
   "description": "Inserts a new user in the database",
   "required_parameters": [
     "first_name",

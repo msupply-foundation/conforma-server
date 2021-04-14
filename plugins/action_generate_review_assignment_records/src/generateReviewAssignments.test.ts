@@ -3,7 +3,7 @@
 // NOTE: Just checks that Actions returns expected ouput, doesn't check that
 // database has entered correct information
 
-import DBConnect from '../../../components/databaseConnect'
+import DBConnect from '../../../src/components/databaseConnect'
 
 const Action = require('./generateReviewAssignments')
 

@@ -2,8 +2,6 @@
   "type": "action_plugin",
   "code": "incrementStage",
   "name": "Increment Stage",
-  "file": "incrementStage",
-  "function_name": "incrementStage",
   "description": "Increments (or creates) the application Stage, if possible.",
   "required_parameters": ["application_id"],
   "output_properties": [

@@ -1,4 +1,4 @@
-module.exports['createOrg'] = async function ({ applicationData, ...org }: any, DBConnect: any) {
+async function createOrg({ applicationData, ...org }: any, DBConnect: any) {
   try {
     console.log(`\nAdding new organisation: ${org.name}`)
     const result = await DBConnect.createOrg(org)
@@ -24,3 +24,5 @@ module.exports['createOrg'] = async function ({ applicationData, ...org }: any, 
     }
   }
 }
+
+export default createOrg

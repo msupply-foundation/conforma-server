@@ -1,8 +1,7 @@
 // Test suite for the createUser Action -- just confirms that users are written to database.
 
-import DBConnect from '../../../components/databaseConnect'
-
-const Action = require('./createOrg')
+import DBConnect from '../../../src/components/databaseConnect'
+import createOrg from './createOrg'
 
 const testOrg = {
   name: 'PharmaFarm',
@@ -21,7 +20,7 @@ const invalidOrg = {
 }
 
 test('Test: add Org to database', () => {
-  return Action.createOrg(testOrg, DBConnect).then((result: any) => {
+  return createOrg(testOrg, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
@@ -34,7 +33,7 @@ test('Test: add Org to database', () => {
 })
 
 test('Test: add Org2 -- not all parameters provided', () => {
-  return Action.createOrg(testOrg2, DBConnect).then((result: any) => {
+  return createOrg(testOrg2, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
@@ -47,7 +46,7 @@ test('Test: add Org2 -- not all parameters provided', () => {
 })
 
 test('Test: Invalid user (date_of_birth and username fields mis-named) -- should fail', () => {
-  return Action.createOrg(invalidOrg, DBConnect).then((result: any) => {
+  return createOrg(invalidOrg, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Fail',
       error_log: 'There was a problem creating new organisation.',

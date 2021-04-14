@@ -1,6 +1,6 @@
 // Test suite for the testResponses Action.
 
-import DBConnect from '../../../components/databaseConnect'
+import DBConnect from '../../../src/components/databaseConnect'
 
 const Action = require('./trimResponses')
 

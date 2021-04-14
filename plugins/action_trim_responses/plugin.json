@@ -2,8 +2,6 @@
   "type": "action_plugin",
   "code": "trimResponses",
   "name": "Trim duplicate reponses",
-  "file": "trimResponses",
-  "function_name": "trimResponses",
   "description": "Trims duplicated application or review responses if nothing has changed",
   "required_parameters": ["applicationId", "review_id"],
   "output_properties": ["deletedIds", "updatedIds"],

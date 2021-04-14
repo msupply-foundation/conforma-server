@@ -1,7 +1,7 @@
 import { AssignmentStatus } from './types'
 import databaseMethods from './databaseMethods'
 
-module.exports['updateReviewAssignmentsStatus'] = async function (parameters: any, DBConnect: any) {
+async function updateReviewAssignmentsStatus(parameters: any, DBConnect: any) {
   const db = databaseMethods(DBConnect)
   console.log('Updating review assignment statuses...')
   try {
@@ -50,3 +50,5 @@ module.exports['updateReviewAssignmentsStatus'] = async function (parameters: an
     }
   }
 }
+
+export default updateReviewAssignmentsStatus

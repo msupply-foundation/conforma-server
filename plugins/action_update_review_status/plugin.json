@@ -2,8 +2,6 @@
   "type": "action_plugin",
   "code": "updateReviews",
   "name": "Update Review Statuses",
-  "file": "updateReviews",
-  "function_name": "updateReviews",
   "description": "Updates status of associated reviews when application re-submitted",
   "required_parameters": ["applicationId"],
   "output_properties": ["updatedReviews"],

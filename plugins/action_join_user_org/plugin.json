@@ -2,8 +2,6 @@
   "type": "action_plugin",
   "code": "joinUserOrg",
   "name": "Add User to Organisation",
-  "file": "joinUserOrg",
-  "function_name": "joinUserOrg",
   "description": "Links a user to an organisation",
   "required_parameters": ["user_id", "org_id", "user_role"],
   "output_properties": ["userOrgId"],

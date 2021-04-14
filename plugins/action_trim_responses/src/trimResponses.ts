@@ -16,7 +16,7 @@ interface ResponsesById {
   [key: number]: Response[]
 }
 
-module.exports['trimResponses'] = async function (input: any, DBConnect: any) {
+async function trimResponses(input: any, DBConnect: any) {
   const db = databaseMethods(DBConnect)
 
   const { applicationId, reviewId } = input
@@ -111,3 +111,5 @@ function groupResponses(responses: Response[], groupField: GroupField): Response
   }
   return responsesGrouped
 }
+
+export default trimResponses

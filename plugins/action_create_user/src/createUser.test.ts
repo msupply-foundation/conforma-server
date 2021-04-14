@@ -1,6 +1,6 @@
 // Test suite for the createUser Action -- just confirms that users are written to database.
 
-import DBConnect from '../../../components/databaseConnect'
+import DBConnect from '../../../src/components/databaseConnect'
 
 const Action = require('./createUser')
 

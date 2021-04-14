@@ -23,7 +23,7 @@ interface ResponseValue {
   }[]
 }
 
-module.exports['cleanupFiles'] = async function (input: any, DBConnect: any) {
+async function cleanupFiles(input: any, DBConnect: any) {
   const db = databaseMethods(DBConnect)
 
   const { applicationData } = input
@@ -92,3 +92,5 @@ module.exports['cleanupFiles'] = async function (input: any, DBConnect: any) {
     }
   }
 }
+
+export default cleanupFiles

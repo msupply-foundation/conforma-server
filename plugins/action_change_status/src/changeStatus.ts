@@ -6,10 +6,7 @@ type IParameters = {
   newStatus: Status
 }
 
-module.exports['changeStatus'] = async function (
-  parameters: IParameters,
-  DBConnect: any
-): Promise<ActionPluginOutput> {
+async function changeStatus(parameters: IParameters, DBConnect: any): Promise<ActionPluginOutput> {
   const { applicationId, reviewId, newStatus } = parameters
 
   if (applicationId) {
@@ -136,3 +133,5 @@ const changeReviewStatus = async (
     return returnObject
   }
 }
+
+export default changeStatus

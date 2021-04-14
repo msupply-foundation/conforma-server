@@ -1,7 +1,4 @@
-module.exports['grantPermissions'] = async function (
-  { username, orgName, permissionNames }: any,
-  DBConnect: any
-) {
+const grantPermissions = async ({ username, orgName, permissionNames }: any, DBConnect: any) => {
   try {
     console.log('\nGranting permission/s:')
     console.log({ username, orgName, permissionNames })
@@ -32,3 +29,4 @@ module.exports['grantPermissions'] = async function (
     }
   }
 }
+export default grantPermissions

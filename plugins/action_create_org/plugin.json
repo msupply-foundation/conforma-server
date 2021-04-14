@@ -2,8 +2,6 @@
   "type": "action_plugin",
   "code": "createOrg",
   "name": "Create Organisation",
-  "file": "createOrg",
-  "function_name": "createOrg",
   "description": "Inserts a new organisation in the database",
   "required_parameters": ["name", "licence_number", "address"],
   "output_properties": ["orgId", "orgName"],

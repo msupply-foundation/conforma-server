@@ -2,8 +2,6 @@
   "type": "action_plugin",
   "code": "cLog",
   "name": "Console Logger",
-  "file": "consoleLog",
-  "function_name": "consoleLog",
   "description": "All it does is print a message to the console. That's it.",
   "required_parameters": ["message"],
   "info": {

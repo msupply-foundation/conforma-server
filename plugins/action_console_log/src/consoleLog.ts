@@ -1,4 +1,4 @@
-module.exports['consoleLog'] = function (parameters: any) {
+function consoleLog(parameters: any) {
   try {
     console.log('\nThe Console Log action is running...')
     console.log(parameters.message)
@@ -13,3 +13,5 @@ module.exports['consoleLog'] = function (parameters: any) {
     }
   }
 }
+
+export default consoleLog

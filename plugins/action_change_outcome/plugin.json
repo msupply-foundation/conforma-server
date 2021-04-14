@@ -2,8 +2,6 @@
   "type": "action_plugin",
   "code": "changeOutcome",
   "name": "Change Outcome",
-  "file": "changeOutcome",
-  "function_name": "changeOutcome",
   "description": "Changes the outcome field of an application.",
   "required_parameters": ["applicationId", "newOutcome"],
   "output_properties": ["applicationId", "newOutcome"],

@@ -2,8 +2,6 @@
   "type": "action_plugin",
   "code": "changeStatus",
   "name": "Change Status",
-  "file": "changeStatus",
-  "function_name": "changeStatus",
   "description": "Changes the Status of an application",
   "required_parameters": ["applicationId", "newStatus"],
   "output_properties": [

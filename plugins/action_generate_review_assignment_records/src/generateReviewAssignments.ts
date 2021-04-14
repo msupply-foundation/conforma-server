@@ -1,7 +1,7 @@
 import { Reviewer, ReviewAssignmentObject, AssignmentStatus, ApplicationData } from './types'
 import databaseMethods from './databaseMethods'
 
-module.exports['generateReviewAssignments'] = async function (input: any, DBConnect: any) {
+async function generateReviewAssignments(input: any, DBConnect: any) {
   const db = databaseMethods(DBConnect)
 
   console.log('Generating review assignment records...')
@@ -201,3 +201,5 @@ const mergeSectionRestrictions = (
   else if (!newArray) return prevArray
   else return Array.from(new Set([...prevArray, ...newArray]))
 }
+
+export default generateReviewAssignments

@@ -1,6 +1,6 @@
 import databaseMethods from './databaseMethods'
 
-module.exports['updateReviewVisibility'] = async function ({ reviewId }: any, DBConnect: any) {
+async function updateReviewVisibility({ reviewId }: any, DBConnect: any) {
   console.log('Updating review visibility...')
   const db = databaseMethods(DBConnect)
 
@@ -28,3 +28,5 @@ module.exports['updateReviewVisibility'] = async function ({ reviewId }: any, DB
     }
   }
 }
+
+export default updateReviewVisibility

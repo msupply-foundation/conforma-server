@@ -4,7 +4,7 @@ type IParameters = {
   applicationId: number
 }
 
-module.exports['incrementStage'] = async function (
+async function incrementStage(
   parameters: IParameters,
   DBConnect: any
 ): Promise<ActionPluginOutput> {
@@ -83,3 +83,5 @@ module.exports['incrementStage'] = async function (
     return returnObject
   }
 }
+
+export default incrementStage
