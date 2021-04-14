@@ -37,7 +37,7 @@ export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
 
   const environmentData = {
     appRootFolder: getAppRootDir(),
-    filesFolderName: config.filesFolderName,
+    filesFolder: config.filesFolder,
   }
 
   return {
