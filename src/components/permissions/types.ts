@@ -1,10 +1,10 @@
-import { PermissionPolicyType, AllPermission } from '../../generated/graphql'
+import { PermissionPolicyType, PermissionsAll } from '../../generated/graphql'
 
 type PermissionTypes = keyof typeof PermissionPolicyType
 
 // AllPermission generated type has permissionType as PermissionPolicyType, which won't be assignable
 // to PermissionTypes, thus below declaration
-type PermissionRow = Omit<AllPermission, 'permissionType'> & { permissionType: PermissionTypes }
+type PermissionRow = Omit<PermissionsAll, 'permissionType'> & { permissionType: PermissionTypes }
 
 interface TemplatePermissions {
   [index: string]: Array<PermissionTypes>
