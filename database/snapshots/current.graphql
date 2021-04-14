@@ -1,27 +1,50 @@
 ########### SUMMARY ###########
-# user : 17
-# organisation : 4
-# userOrganisation : 8
-# permissionPolicy : 4
-# template : 6
-# templateSection : 12
-# templateElement : 118
-# templateStage : 10
-# permissionName : 17
-# permissionJoin : 35
-# templatePermission : 20
-# templateAction : 107
-# application : 7
-# applicationSection : 13
-# applicationResponse : 56
-# applicationStageHistory : 8
-# applicationStatusHistory : 8
-# reviewAssignment : 13
-# reviewQuestionAssignment : 95
-# review : 7
-# reviewStatusHistory : 15
-# reviewDecision : 6
-# reviewResponse : 45
+#   user
+#     count :17
+#   organisation
+#     count :4
+#   userOrganisation
+#     count :8
+#   permissionPolicy
+#     count :4
+#   template
+#     count :6
+#   templateSection
+#     count :12
+#   templateElement
+#     count :118
+#   templateStage
+#     count :10
+#   permissionName
+#     count :17
+#   permissionJoin
+#     count :35
+#   templatePermission
+#     count :20
+#   templateAction
+#     count :107
+#   application
+#     count :8
+#   applicationSection
+#     count :14
+#   applicationResponse
+#     count :61
+#   applicationStageHistory
+#     count :9
+#   applicationStatusHistory
+#     count :9
+#   reviewAssignment
+#     count :13
+#   reviewQuestionAssignment
+#     count :95
+#   review
+#     count :7
+#   reviewStatusHistory
+#     count :15
+#   reviewDecision
+#     count :6
+#   reviewResponse
+#     count :45
 ########### MUTATIONS ###########
 
 ########### user 1 ###########
@@ -8678,6 +8701,28 @@ mutation {
 }
 ########### MUTATION END ###########
 
+########### application 4004 ###########
+mutation {
+  createApplication(
+    input: {
+      application: {
+        id: 4004
+        templateId: 3
+        userId: 16
+        orgId: null
+        serial: "3208"
+        name: "User Registration"
+        outcome: PENDING
+        isActive: true
+        trigger: null
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
 ########### applicationSection 1 ###########
 mutation {
   createApplicationSection(
@@ -8802,6 +8847,16 @@ mutation {
 mutation {
   createApplicationSection(
     input: { applicationSection: { id: 13, applicationId: 4003, templateSectionId: 1006 } }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
+########### applicationSection 14 ###########
+mutation {
+  createApplicationSection(
+    input: { applicationSection: { id: 14, applicationId: 4004, templateSectionId: 1004 } }
   ) {
     clientMutationId
   }
@@ -9930,6 +9985,106 @@ mutation {
 }
 ########### MUTATION END ###########
 
+########### applicationResponse 4110 ###########
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4110
+        templateElementId: 3001
+        applicationId: 4004
+        status: DRAFT
+        value: { text: "a" }
+        isValid: true
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
+########### applicationResponse 4111 ###########
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4111
+        templateElementId: 3002
+        applicationId: 4004
+        status: DRAFT
+        value: { text: "b" }
+        isValid: true
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
+########### applicationResponse 4112 ###########
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4112
+        templateElementId: 3003
+        applicationId: 4004
+        status: DRAFT
+        value: { text: "c" }
+        isValid: true
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
+########### applicationResponse 4113 ###########
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4113
+        templateElementId: 3004
+        applicationId: 4004
+        status: DRAFT
+        value: null
+        isValid: null
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
+########### applicationResponse 4114 ###########
+mutation {
+  createApplicationResponse(
+    input: {
+      applicationResponse: {
+        id: 4114
+        templateElementId: 3005
+        applicationId: 4004
+        status: DRAFT
+        value: null
+        isValid: null
+        # ignore datetime -  timeUpdated:
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
 ########### applicationStageHistory 1 ###########
 mutation {
   createApplicationStageHistory(
@@ -10064,6 +10219,24 @@ mutation {
         id: 8
         applicationId: 4003
         stageId: 5
+        # ignore datetime -  timeCreated:
+        isCurrent: true
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
+########### applicationStageHistory 9 ###########
+mutation {
+  createApplicationStageHistory(
+    input: {
+      applicationStageHistory: {
+        id: 9
+        applicationId: 4004
+        stageId: 3
         # ignore datetime -  timeCreated:
         isCurrent: true
       }
@@ -10218,6 +10391,25 @@ mutation {
         # ignore datetime -  timeCreated:
         isCurrent: true
         # ignore generated -  applicationId:4003
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
+########### applicationStatusHistory 9 ###########
+mutation {
+  createApplicationStatusHistory(
+    input: {
+      applicationStatusHistory: {
+        id: 9
+        applicationStageHistoryId: 9
+        status: DRAFT
+        # ignore datetime -  timeCreated:
+        isCurrent: true
+        # ignore generated -  applicationId:4004
       }
     }
   ) {
