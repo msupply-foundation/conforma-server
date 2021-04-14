@@ -44,7 +44,9 @@
     "push_docs": "exec ./utils/push_docs_to_wiki.sh",
     "gui": "cd ./src/modules/expression-evaluator && yarn gui",
     "generate": "graphql-codegen --config codegen.yml",
-    "postinstall": "node ./utils/pluginScripts/yarnInstallPlugins.js"
+    "postinstall": "node ./utils/pluginScripts/yarnInstallPlugins.js",
+    "take_snapshot": "node ./database/takeSnapshot.js",
+    "use_snapshot": "node ./database/useSnapshot.js"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",

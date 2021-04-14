@@ -1,16 +1,15 @@
 const fs = require('fs')
 const fetch = require('node-fetch')
-
 const config = require('../src/config.json')
 
-const graphQLendpoint = config.graphQLendpoint
+if (process.argv[2] === '--from_insert_data.sh') {
+  const filesToProcess = fs
+    .readdirSync('./database/insertData')
+    .filter((file) => !file.match(/^\./)) // Ignore hidden files
+    .filter((file) => !['core_actions.js', 'dev_actions.js'].includes(file))
 
-const filesToProcess = fs
-  .readdirSync('./database/insertData')
-  .filter((file) => !file.match(/^\./)) // Ignore hidden files
-  .filter((file) => !['core_actions.js', 'dev_actions.js'].includes(file))
-
-processQueries(filesToProcess)
+  processQueries(filesToProcess)
+}
 
 async function processQueries(filesToProcess) {
   for (const file of filesToProcess) {
@@ -20,12 +19,10 @@ async function processQueries(filesToProcess) {
       await executeGraphQLQuery(query)
     }
   }
-  console.log('\nUpdating Row Policies...')
-  await updateRowPolicies()
 }
 
 async function executeGraphQLQuery(query) {
-  const res = await fetch(graphQLendpoint, {
+  const res = await fetch(config.graphQLendpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -40,14 +37,8 @@ async function executeGraphQLQuery(query) {
     console.log(JSON.stringify(response.errors, null, '  '))
     process.exit(0)
   }
+
+  return response
 }
 
-async function updateRowPolicies() {
-  await fetch(`http://localhost:${config.RESTport}/updateRowPolicies`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
-  })
-}
+exports.executeGraphQLQuery = executeGraphQLQuery
