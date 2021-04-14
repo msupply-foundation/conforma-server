@@ -146,15 +146,11 @@ const sortAndFilterQueries = (queries, definitions) => {
 
   definitions.forEach((definition) => {
     if (definition.skip) return
-    console.log(definition)
-    console.log(getRecordNameFromQueryName(queries[0].queryName))
-    const matchedQuery = queries.find(({ queryName }) => {
-      console.log(getRecordNameFromQueryName(queryName))
-      return getRecordNameFromQueryName(queryName) === definition.table
-    })
+    const matchedQuery = queries.find(
+      ({ queryName }) => getRecordNameFromQueryName(queryName) === definition.table
+    )
     if (matchedQuery) sortedAndFilteredQueries.push(matchedQuery)
   })
-  console.log(sortedAndFilteredQueries)
   return sortedAndFilteredQueries
 }
 
