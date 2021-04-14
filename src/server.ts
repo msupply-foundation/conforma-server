@@ -15,7 +15,7 @@ import {
   saveFiles,
   getFilePath,
   createFilesFolder,
-  filesFolderName,
+  filesFolder,
 } from './components/files/fileHandler'
 import { getAppRootDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
@@ -31,7 +31,7 @@ const startServer = async () => {
   const server = fastify()
 
   server.register(fastifyStatic, {
-    root: path.join(getAppRootDir(), filesFolderName),
+    root: path.join(getAppRootDir(), filesFolder),
   })
 
   server.register(fastifyMultipart)
