@@ -12,6 +12,12 @@ exports.queries = [
           passwordHash: "$2a$10$dSDSYzTuuwJvEDp/tRsKXOV7LQc9Ue0gR8bctN4V7TcMRIfcCKhme"
           username: "nmadruga"
           firstName: "Nicole"
+          permissionJoinsUsingId: { 
+            create: [
+              # Self assign
+              { permissionNameId: 10500 }
+            ]
+          }
         }
       }
     ) {
@@ -28,6 +34,12 @@ exports.queries = [
           passwordHash: "$2a$10$3Z1cXVI.GzE9F2QYePzbMOg5CGtf6VnNKRiaiRGkzlBXJ0aiMN4JG"
           username: "carl"
           firstName: "Carl", lastName: "Smith"
+          permissionJoinsUsingId: { 
+            create: [
+              # Self assign
+              { permissionNameId: 10500 }
+            ]
+          }
         }
       }
     ) {
@@ -42,7 +54,14 @@ exports.queries = [
         user: { email: "andrei@sussol.net"
           passwordHash: "$2a$10$3Ufr.//hLoxp6BEEbFIq4u.zh435BNxNNLFEmJN74Ka/U5SMp0A2e"
           username: "andrei",
-          firstName: "Andrei" }
+          firstName: "Andrei" 
+          permissionJoinsUsingId: { 
+            create: [
+              # Self assign
+              { permissionNameId: 10500 }
+            ]
+          }
+        }
       }
     ) {
       user {
