@@ -20,7 +20,7 @@ Within a plugin's folder are the following files:
 
 ## Source code file
 
-Plugin can have any number of source files located in the source folder, there must be an exported entrypoint method in `index.ts`, this method will be dynamically loaded via `require` at run-time
+Plugin can have any number of source files located in the source folder, but there must be an exported entrypoint method in `index.ts`. This method will be dynamically loaded via `require` at run-time.
 Calling the function exported by each action plugin, sequentially, is the job of the **Action module**.
 
 Plugin entrypoint method should follow this basic structure:
