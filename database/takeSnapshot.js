@@ -3,20 +3,17 @@ const { graphQLdefinition } = require('./graphQLdefinitions.js')
 const { execSync } = require('child_process')
 const { executeGraphQLQuery } = require('./insertData.js')
 
+const defaultSnapshotName = 'current'
 const seperator = '########### MUTATION END ###########'
-const snapshotNameFile = './database/snapshots/currentSnapshot.txt'
 
 const takeSnapshot = async (definitions) => {
-  let snapshotName = process.argv[2]
-  const previousSnapshotName = fs.readFileSync(snapshotNameFile, 'utf-8')
-  if (!snapshotName) snapshotName = previousSnapshotName
-  fs.writeFileSync(snapshotNameFile, snapshotName)
+  let snapshotName = process.argv[2] || defaultSnapshotName
 
   console.log('creating or updating snapshot: ', snapshotName)
 
   const snapshotFilename = 'database/snapshots/' + snapshotName + '.graphql'
 
-  console.log(previousSnapshotName, snapshotName, snapshotFilename)
+  console.log(snapshotName, snapshotFilename)
   console.log('getting schema ...')
   const types = (await getSchema()).types
   console.log('getting schema ... done')
@@ -146,15 +143,11 @@ const sortAndFilterQueries = (queries, definitions) => {
 
   definitions.forEach((definition) => {
     if (definition.skip) return
-    console.log(definition)
-    console.log(getRecordNameFromQueryName(queries[0].queryName))
-    const matchedQuery = queries.find(({ queryName }) => {
-      console.log(getRecordNameFromQueryName(queryName))
-      return getRecordNameFromQueryName(queryName) === definition.table
-    })
+    const matchedQuery = queries.find(
+      ({ queryName }) => getRecordNameFromQueryName(queryName) === definition.table
+    )
     if (matchedQuery) sortedAndFilteredQueries.push(matchedQuery)
   })
-  console.log(sortedAndFilteredQueries)
   return sortedAndFilteredQueries
 }
 

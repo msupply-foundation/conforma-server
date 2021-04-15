@@ -11,6 +11,7 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 - [Overview](Overview.md)
 - [Glossary](Glossary.md)
 - [Docker](Docker.md)
+- [Snapshots](Snapshots.md)
 
 **Database**
 
