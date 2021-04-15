@@ -2,18 +2,16 @@ const fs = require('fs')
 const { executeGraphQLQuery } = require('./insertData.js')
 const { updateRowPolicies } = require('./updateRowPolicies.js')
 
+const defaultSnapshotName = 'current'
 const seperator = '########### MUTATION END ###########'
 const { execSync } = require('child_process')
-const snapshotNameFile = './database/snapshots/currentSnapshot.txt'
 
 console.log('initialising database ... ')
 execSync('./database/initialise_database.sh')
 console.log('initialising database ... done')
 
 const useSnapshot = async () => {
-  let snapshotName = process.argv[2]
-  const previousSnapshotName = fs.readFileSync(snapshotNameFile, 'utf-8')
-  if (!snapshotName) snapshotName = previousSnapshotName
+  let snapshotName = process.argv[2] || defaultSnapshotName
 
   const snapshotFileName = './database/snapshots/' + snapshotName + '.graphql'
 
