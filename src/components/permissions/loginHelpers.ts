@@ -47,9 +47,9 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const orgList: Organisation[] = userOrgData
     .filter((item) => item.orgId)
-    .map(({ orgId, orgName, userRole, licenceNumber, address }) => {
+    .map(({ orgId, orgName, userRole, registration, address, logoUrl }) => {
       // Destructuring extracts only the relevant fields
-      return { orgId, orgName, userRole, licenceNumber, address }
+      return { orgId, orgName, userRole, registration, address, logoUrl }
     })
 
   const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(newUsername)

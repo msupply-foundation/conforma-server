@@ -13,7 +13,7 @@ CREATE TABLE public.review_assignment (
 	application_id integer references public.application(id),
 	template_section_restrictions varchar [],
 	trigger public.trigger,
-	time_created timestamptz default current_timestamp,
+	time_updated timestamptz default current_timestamp,
 	level integer,
 	is_last_level boolean
 );

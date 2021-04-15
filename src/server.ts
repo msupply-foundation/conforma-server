@@ -97,6 +97,10 @@ const startServer = async () => {
         table = 'organisation'
         field = 'name'
         break
+      case 'orgRegistration':
+        table = 'organisation'
+        field = 'registration'
+        break
       default:
         reply.send({
           unique: false,
