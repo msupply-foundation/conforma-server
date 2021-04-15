@@ -90,5 +90,4 @@ COPY entry.sh .
 WORKDIR /usr/src/application-manager-server
 ENTRYPOINT /./usr/src/entry/entry.sh
 
-
 EXPOSE 3000
