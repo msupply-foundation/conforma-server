@@ -79,10 +79,13 @@ COPY nginx_config/application_manager.conf /etc/nginx/conf.d/
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
 COPY postgres_config/pg_hba.conf .
 
-# -- INITIALISE DATABASE
+# --- INITIALISE DATABASE
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
 RUN ./database.sh
+
+# --- CREATE LOG DIR
+WORKDIR /var/log/application_manager
 
 # --- PREPARING ENTRY
 WORKDIR /usr/src/entry

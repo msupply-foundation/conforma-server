@@ -52,6 +52,16 @@ This repo has the following functionality implemented in basic form:
   - Create scheduled actions (using `node-schedule` which I'm not sure is the best way to go)
 - `evaluateExpression` module
 
+## Docker
+
+To build image edit `Docker/dockerise.sh` and
+`cd Docker` -> `./dockerise.sh`
+
+To run image edit `Docker/run.sh` and
+`cd Docker` -> `./run.sh`
+
+See comments in above scripts and documentation folder for more details
+
 ## Triggers and Actions
 
 In order to see Triggers and Actions working, you'll need to run the `createSchema.sql` then `insertData.sql` scripts in the database folder.
