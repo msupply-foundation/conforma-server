@@ -1,39 +1,19 @@
 import { parseStream } from 'fast-csv'
-import { toSnakeCase } from '../utils'
-import { FieldMapType } from '../types'
-import { LookupTableStructureService, LookupTableService } from '../services'
+import { LookupTableService } from '../services'
 
 const ImportCsvController = async (request: any, reply: any) => {
   const data = await request.file()
-  let fieldMaps: FieldMapType[] = []
-  let rows: object[] = []
-
   const tableNameLabel = data.fields.tableName.value
-  const tableName = toSnakeCase(tableNameLabel)
-  const lookupTableStructureService = LookupTableStructureService()
-  const lookupTableService = LookupTableService()
+  const lookupTableService = LookupTableService({ tableNameLabel })
 
   await parseStream(data.file, {
-    headers: lookupTableStructureService.parseCsvHeaders,
+    headers: lookupTableService.parseCsvHeaders,
   })
-    .on('headers', (_) => {
-      fieldMaps = lookupTableStructureService.csvFieldMap
-    })
     .on('data', function (row) {
-      rows.push(row)
+      lookupTableService.addRow(row)
     })
     .on('end', async (rowCount: any) => {
-      await lookupTableStructureService.create({
-        tableName,
-        label: tableNameLabel,
-        fieldMap: fieldMaps,
-      })
-      await lookupTableService.createTable({
-        tableName,
-        fieldMap: fieldMaps,
-      })
-      await lookupTableService.createRows({ tableName, rows })
-
+      await lookupTableService.createTable()
       reply.send({ status: 'success', message: rowCount })
     })
     .on('error', (error) => {

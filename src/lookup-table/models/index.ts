@@ -1,4 +1,3 @@
-import LookupTableStructureModel from './LookupTableStructure.model'
-import LookupTableModel from './LookupTable.model'
+import LookupTableModel from './LookupTable.Model'
 
-export { LookupTableStructureModel, LookupTableModel }
+export { LookupTableModel }
