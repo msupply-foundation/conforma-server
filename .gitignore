@@ -48,5 +48,8 @@ database/schema.json
 build
 lib
 
+# Ignore temp snapshots
+database/snapshots/**temp**
+
 # Temp for expression-evaluator gui
 src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluator/

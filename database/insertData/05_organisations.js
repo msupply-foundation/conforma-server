@@ -8,7 +8,7 @@ exports.queries = [
           input: {
             organisation: {
               address: "123 Nowhere St\\nAuckland"
-              licenceNumber: "XYZ1234"
+              registration: "XYZ1234"
               name: "Drugs-R-Us"
             }
           }
@@ -23,7 +23,7 @@ exports.queries = [
           input: {
             organisation: {
               address: "Queen St\\nAuckland"
-              licenceNumber: "ABC1982"
+              registration: "ABC1982"
               name: "Medicinal Importers, Ltd."
             }
           }
@@ -38,7 +38,7 @@ exports.queries = [
           input: {
             organisation: {
               address: "West Auckland"
-              licenceNumber: "XXX8798"
+              registration: "XXX8798"
               name: "Drug Dealers West"
             }
           }
@@ -53,7 +53,7 @@ exports.queries = [
           input: {
             organisation: {
               address: "1 Downtown Drive\\nAuckland"
-              licenceNumber: "QRS9999"
+              registration: "QRS9999"
               name: "Lab Facilities Inc."
             }
           }

@@ -52,6 +52,18 @@ This repo has the following functionality implemented in basic form:
   - Create scheduled actions (using `node-schedule` which I'm not sure is the best way to go)
 - `evaluateExpression` module
 
+## Snapshots
+
+Can take snapshot of current DB state via
+`yarn take_snapshot`, optional snapshot name can be provided as a parameter (defaults to current)
+
+Load snapshot with
+`yarn use_snapshot`, optional snapshot name can be provided as a parameter (defaults to current)
+
+Single file GraphQL mutation set of snapshotted data can be found in `./database/snapshot/{snapshot name}.graphql`
+
+See documentation for more details
+
 ## Triggers and Actions
 
 In order to see Triggers and Actions working, you'll need to run the `createSchema.sql` then `insertData.sql` scripts in the database folder.

@@ -10,21 +10,7 @@ psql -U postgres -q -b -d tmf_app_manager -f "./database/create_schema.sql" >&/d
 
 for file in ./database/buildSchema/*; do
     echo "  -- ${file##*/}"
-    psql -U postgres -q -b -d tmf_app_manager -f $file
+    psql -U postgres -q -b -d tmf_app_manager -f $file || { echo 'db initialisation failure' ; exit 1; }
 done
 
 sleep 1
-
-echo "\nInserting data..."
-
-exec node ./database/insertData.js &
-
-# Makes script wait until async node script has completed
-PID=$!
-wait $PID
-
-echo "\nGenerating types file..."
-yarn generate
-
-# This forces server to restart
-touch "./src/server.ts"

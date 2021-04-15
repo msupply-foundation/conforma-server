@@ -164,8 +164,9 @@ export interface Organisation {
   orgId: number
   userRole?: string | null
   orgName: string
-  licenceNumber?: string
+  registration?: string
   address?: string
+  logoUrl?: string
 }
 
 export interface UserOrg extends User, Organisation {}
