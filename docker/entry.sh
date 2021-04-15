@@ -33,4 +33,10 @@ echo '---'
 echo '---'
 node ./build/src/server.js | tee /var/log/application_manager/server.log &
 
+echo '---'
+echo '---'
+echo '--- Ready to go -> http://localhost:3000'
+echo '---'
+echo '---'
+
 /bin/bash
