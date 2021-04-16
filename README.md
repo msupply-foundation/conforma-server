@@ -37,7 +37,7 @@ To build and run compiled files:
 
 In dev mode, uses `nodemon` to monitor changes, and `ts-node` to compile typescript files on the fly.
 
-Note: Plugins (in `src/plugins`) are **standalone packages** and must be compiled individually. However, they should come pre-compiled and are copied to the `build` folder when building the server app.  
+Note: Plugins (in `./plugins`) are **standalone packages** and must be compiled individually. However, they should come pre-compiled and are copied to the `build` folder when building the server app.  
 To automatically re-compile all plugins:  
 `yarn build_plugins`.
 

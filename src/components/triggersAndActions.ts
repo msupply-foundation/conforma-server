@@ -1,6 +1,3 @@
-import path from 'path'
-import { getAppRootDir } from './utilityFunctions'
-import * as config from '../config.json'
 import {
   ActionLibrary,
   ActionInTemplate,
@@ -18,8 +15,6 @@ import { fetchDataFromTrigger } from './triggerFetchData'
 
 const schedule = require('node-schedule')
 
-const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder)
-
 // Load actions from Database at server startup
 export const loadActions = async function (actionLibrary: ActionLibrary) {
   console.log('Loading Actions from Database...')
@@ -28,8 +23,9 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
     const result = await DBConnect.getActionPlugins()
 
     result.forEach((row) => {
-      const action = require(path.join(pluginFolder, row.path))
-      actionLibrary[row.code] = action[row.function_name]
+      // This should import action from index.js (entry point of plugin)
+      actionLibrary[row.code] = require(row.path).action
+      console.log('Action loaded: ' + row.code)
     })
 
     console.log('Actions loaded.')

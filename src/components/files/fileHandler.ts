@@ -3,13 +3,13 @@ import fs from 'fs'
 import util from 'util'
 import { pipeline } from 'stream'
 import { nanoid } from 'nanoid'
-import { getAppRootDir } from '../utilityFunctions'
+import { getAppEntryPointDir } from '../utilityFunctions'
 import * as config from '../../config.json'
 import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
 
-export const { filesFolderName } = config
-export const filesPath = path.join(getAppRootDir(), filesFolderName)
+export const { filesFolder, imagesFolder } = config
+export const filesPath = path.join(getAppEntryPointDir(), filesFolder)
 
 interface HttpQueryParameters {
   [key: string]: string
@@ -17,20 +17,23 @@ interface HttpQueryParameters {
 
 export function createFilesFolder() {
   try {
-    fs.mkdirSync(path.join(getAppRootDir(), filesFolderName))
+    fs.mkdirSync(path.join(getAppEntryPointDir(), filesFolder))
   } catch {
     // Folder already exists
   }
   // Move generic thumbnails to files root
-  fs.readdir(path.join(getAppRootDir(), 'images', 'generic_file_thumbnails'), (_, files) => {
-    files.forEach((file) =>
-      fs.copyFile(
-        path.join(getAppRootDir(), 'images', 'generic_file_thumbnails', file),
-        path.join(getAppRootDir(), filesFolderName, file),
-        () => {}
+  fs.readdir(
+    path.join(getAppEntryPointDir(), imagesFolder, 'generic_file_thumbnails'),
+    (_, files) => {
+      files.forEach((file) =>
+        fs.copyFile(
+          path.join(getAppEntryPointDir(), imagesFolder, 'generic_file_thumbnails', file),
+          path.join(getAppEntryPointDir(), filesFolder, file),
+          () => {}
+        )
       )
-    )
-  })
+    }
+  )
 }
 
 export async function getFilePath(uid: string, thumbnail = false) {
@@ -55,8 +58,8 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       const file_path = path.join(subfolder, `${basename}_${unique_id}${ext}`)
 
       // Save file
-      if (!fs.existsSync(path.join(getAppRootDir(), filesFolderName, subfolder))) {
-        fs.mkdirSync(path.join(getAppRootDir(), filesFolderName, subfolder))
+      if (!fs.existsSync(path.join(getAppEntryPointDir(), filesFolder, subfolder))) {
+        fs.mkdirSync(path.join(getAppEntryPointDir(), filesFolder, subfolder))
       }
       await pump(file.file, fs.createWriteStream(path.join(filesPath, file_path)))
 

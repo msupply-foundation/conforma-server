@@ -80,10 +80,6 @@ The `code` is unique per action plugin.
 
 The `name` and `description` are for visualisation to help Admin users selecting what action to use for an application template.
 
-The `path` is the local path in the server where the imported plugin is stored.
-
-The `function_name` the name of the function to be called when the action runs.
-
 The `required_parameters` is the name of the fields required of local object or queries to be used when the action runs.
 
 ### template action

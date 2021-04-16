@@ -97,7 +97,6 @@ export interface ActionPlugin {
   name: string
   description: string
   path: string
-  function_name: string
   required_parameters: string[]
   output_properties?: string[]
 }
@@ -107,7 +106,6 @@ export interface ActionPluginPayload {
   name: string
   description: string
   path: string
-  function_name: string
   required_parameters: { [key: string]: any }
 }
 

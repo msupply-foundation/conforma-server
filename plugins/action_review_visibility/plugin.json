@@ -1,0 +1,23 @@
+{
+  "type": "action_plugin",
+  "code": "updateReviewVisibility",
+  "name": "Update Applicant's Review Visibility",
+  "description": "Updates review response records to be visible to Applicant based on recommendations of last level review",
+  "required_parameters": ["reviewId"],
+  "output_properties": ["reviewResponsesWithUpdatedVisibility"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "update"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-03-08"
+  }
+}

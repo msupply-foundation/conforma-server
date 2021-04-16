@@ -1,0 +1,23 @@
+{
+  "type": "action_plugin",
+  "code": "joinUserOrg",
+  "name": "Add User to Organisation",
+  "description": "Links a user to an organisation",
+  "required_parameters": ["user_id", "org_id", "user_role"],
+  "output_properties": ["userOrgId"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-01-28"
+  }
+}

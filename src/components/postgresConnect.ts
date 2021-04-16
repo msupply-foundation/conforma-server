@@ -331,11 +331,13 @@ class PostgresDB {
   }
 
   public updateActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
-    const text =
-      'UPDATE action_plugin SET name = $2, description = $3, path = $4, function_name = $5, required_parameters = $6, output_properties = $7 WHERE code = $1'
+    const setMapping = Object.keys(plugin).map((key, index) => `${key} = $${index + 1}`)
+    const text = `UPDATE action_plugin SET ${setMapping.join(',')} WHERE code = $${
+      setMapping.length + 1
+    }`
     // TODO: Dynamically select what is being updated
     try {
-      await this.query({ text, values: Object.values(plugin) })
+      await this.query({ text, values: [...Object.values(plugin), plugin.code] })
       return true
     } catch (err) {
       throw err
