@@ -1,0 +1,15 @@
+{
+  "name": "trim_responses_action",
+  "version": "0.1",
+  "description": "Trims duplicated application or review responses if nothing has changed",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "deep-equal": "^2.0.5"
+  }
+}

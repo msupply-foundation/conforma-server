@@ -25,6 +25,10 @@ const useSnapshot = async () => {
   execSync('./database/post_data_insert.sh')
   console.log('running post data insert ... done')
 
+  console.log('running serial update ... ')
+  execSync('./database/update_serials.sh')
+  console.log('running serial update ... done')
+
   console.log('all ... done')
 }
 

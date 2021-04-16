@@ -1,0 +1,23 @@
+{
+  "type": "action_plugin",
+  "code": "updateReviews",
+  "name": "Update Review Statuses",
+  "description": "Updates status of associated reviews when application re-submitted",
+  "required_parameters": ["applicationId"],
+  "output_properties": ["updatedReviews"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-03-11"
+  }
+}

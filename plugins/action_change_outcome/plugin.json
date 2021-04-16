@@ -1,0 +1,23 @@
+{
+  "type": "action_plugin",
+  "code": "changeOutcome",
+  "name": "Change Outcome",
+  "description": "Changes the outcome field of an application.",
+  "required_parameters": ["applicationId", "newOutcome"],
+  "output_properties": ["applicationId", "newOutcome"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "update"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2020-10-08"
+  }
+}
