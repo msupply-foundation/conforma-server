@@ -11,7 +11,7 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          code: "OrgRego1"
+          code: "OrgRegistration"
           name: "Organisation Registration"
           isLinear: true
           status: AVAILABLE
@@ -45,7 +45,16 @@ exports.queries = [
                       validation: {
                         operator: "API"
                         children: [
-                          "http://localhost:8080/check-unique"
+                          {
+                            operator: "CONCAT"
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: ["applicationData.config.serverREST"]
+                              }
+                              "/check-unique"
+                            ]
+                          }
                           ["type", "value"]
                           "organisation"
                           {

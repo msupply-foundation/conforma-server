@@ -424,7 +424,8 @@ class PostgresDB {
         org_name as "orgName",
         user_role as "userRole",
         registration,
-        address
+        address,
+        logo_url as "logoUrl"
         FROM user_org_join`
     const text = userId ? `${queryText} WHERE user_id = $1` : `${queryText} WHERE username = $1`
     try {
