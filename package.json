@@ -39,11 +39,13 @@
     "pg_permissions": "exec ./utils/postgraphile_launch_permissions.sh",
     "dev_pg": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg\"",
     "dev_pg_permissions": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg_permissions\"",
-    "database_init": "exec ./database/initialise_database.sh",
+    "database_init": "./database/initialise_database.sh && ./database/insert_data.sh && ./database/post_data_insert.sh",
     "build_plugins": "exec ./utils/build_plugins.sh",
     "push_docs": "exec ./utils/push_docs_to_wiki.sh",
     "gui": "cd ./src/modules/expression-evaluator && yarn gui",
-    "generate": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen --config codegen.yml",
+    "take_snapshot": "node ./database/takeSnapshot.js",
+    "use_snapshot": "node ./database/useSnapshot.js"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",

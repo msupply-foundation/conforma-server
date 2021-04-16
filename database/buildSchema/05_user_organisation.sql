@@ -21,6 +21,7 @@ SELECT "user".id AS user_id,
 	name as org_name,
 	user_role,
 	registration,
-	address
+	address,
+	logo_url
 FROM "user" LEFT JOIN user_organisation ON "user".id = user_id
 LEFT JOIN organisation ON organisation.id = organisation_id;
