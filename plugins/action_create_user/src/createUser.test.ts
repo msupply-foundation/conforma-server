@@ -1,8 +1,7 @@
 // Test suite for the createUser Action -- just confirms that users are written to database.
 
 import DBConnect from '../../../src/components/databaseConnect'
-
-const Action = require('./createUser')
+import { action as createUser } from './index'
 
 const testUser = {
   first_name: 'Carl',
@@ -23,7 +22,7 @@ const invalidUser = {
 }
 
 test('Test: add User to database', () => {
-  return Action.createUser(testUser, DBConnect).then((result: any) => {
+  return createUser(testUser, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
@@ -31,7 +30,7 @@ test('Test: add User to database', () => {
         email: 'test@sussol.net',
         firstName: 'Carl',
         lastName: 'Smith',
-        userId: 14,
+        userId: 18,
         username: 'ceejay',
       },
     })
@@ -39,7 +38,7 @@ test('Test: add User to database', () => {
 })
 
 test('Test: Invalid user (date_of_birth and username fields mis-named) -- should fail', () => {
-  return Action.createUser(invalidUser, DBConnect).then((result: any) => {
+  return createUser(invalidUser, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Fail',
       error_log: 'There was a problem creating new user.',

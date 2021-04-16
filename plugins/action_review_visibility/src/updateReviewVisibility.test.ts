@@ -1,8 +1,7 @@
 // Test suite for the updateReviewVisibility Action
 
 import DBConnect from '../../../src/components/databaseConnect'
-
-const Action = require('./updateReviewVisibility')
+import { action as updateReviewVisibility } from './index'
 
 // Setup database
 beforeAll(async (done) => {
@@ -17,7 +16,7 @@ beforeAll(async (done) => {
 })
 
 test('Test: updateReviewVisibility', () => {
-  return Action.updateReviewVisibility({ reviewId: 5 }, DBConnect).then((result: any) => {
+  return updateReviewVisibility({ reviewId: 5 }, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
