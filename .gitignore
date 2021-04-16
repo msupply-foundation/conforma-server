@@ -50,6 +50,7 @@ lib
 
 # Docker related
 githubtoken.txt
+
 # Ignore temp snapshots
 database/snapshots/**temp**
 
