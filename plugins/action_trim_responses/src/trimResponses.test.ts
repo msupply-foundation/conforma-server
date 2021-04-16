@@ -1,8 +1,7 @@
 // Test suite for the testResponses Action.
 
 import DBConnect from '../../../src/components/databaseConnect'
-
-const Action = require('./trimResponses')
+import { action as trimResponses } from './index'
 
 // Setup database
 beforeAll(async (done) => {
@@ -32,7 +31,7 @@ beforeAll(async (done) => {
 })
 
 test('Test: remove unchanged application_response duplicates', () => {
-  return Action.trimResponses({ applicationId: 1000 }, DBConnect).then((result: any) => {
+  return trimResponses({ applicationId: 1000 }, DBConnect).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
@@ -54,7 +53,7 @@ test('Test: remove unchanged application_response duplicates', () => {
 })
 
 test('Test: remove unchanged review_response duplicates, with custom timestamp', () => {
-  return Action.trimResponses({ reviewId: 5, timestamp: '2021-03-09T00:01:00.0Z' }, DBConnect).then(
+  return trimResponses({ reviewId: 5, timestamp: '2021-03-09T00:01:00.0Z' }, DBConnect).then(
     (result: any) => {
       expect(result).toEqual({
         status: 'Success',

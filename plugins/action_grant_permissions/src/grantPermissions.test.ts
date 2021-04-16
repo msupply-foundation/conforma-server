@@ -2,8 +2,7 @@
 // Ideally would verify that logic works by checking db (permission_join table) before and after
 
 import PostgresDB from '../../../src/components/databaseConnect'
-
-const Action = require('./grantPermissions')
+import { action as grantPermissions } from './index'
 
 const testParams = {
   username: 'valerio',
@@ -17,7 +16,7 @@ const testParams2 = {
 }
 
 test('Test: Add permission to Valerio', () => {
-  return Action.grantPermissions(testParams, PostgresDB).then((result: any) => {
+  return grantPermissions(testParams, PostgresDB).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       output: {
@@ -31,7 +30,7 @@ test('Test: Add permission to Valerio', () => {
 
 // Run the test twice to show that result doesn't change even if record already exists
 test('Test: Add permission to Valerio, already exists', () => {
-  return Action.grantPermissions(testParams, PostgresDB).then((result: any) => {
+  return grantPermissions(testParams, PostgresDB).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       output: {
@@ -45,7 +44,7 @@ test('Test: Add permission to Valerio, already exists', () => {
 
 // Include an Organisation
 test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
-  return Action.grantPermissions(testParams2, PostgresDB).then((result: any) => {
+  return grantPermissions(testParams2, PostgresDB).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       output: {
@@ -59,7 +58,7 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
 
 // Repeat insert, as above
 test('Test: Add permission to Carl and Medicinal Importers, Ltd., already exists', () => {
-  return Action.grantPermissions(testParams2, PostgresDB).then((result: any) => {
+  return grantPermissions(testParams2, PostgresDB).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       output: {

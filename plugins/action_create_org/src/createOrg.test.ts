@@ -1,7 +1,7 @@
 // Test suite for the createUser Action -- just confirms that users are written to database.
 
 import DBConnect from '../../../src/components/databaseConnect'
-import createOrg from './createOrg'
+import { action as createOrg } from './index'
 
 const testOrg = {
   name: 'PharmaFarm',

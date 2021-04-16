@@ -1,8 +1,7 @@
 // Test suite for the updateReviews Action.
 
 import DBConnect from '../../../src/components/databaseConnect'
-
-const Action = require('./updateReviews')
+import { action as updateReviews } from './index'
 
 // Setup database
 beforeAll(async (done) => {
@@ -26,7 +25,7 @@ beforeAll(async (done) => {
 })
 
 test('Test: Should update 2 reviews', () => {
-  return Action.updateReviews(
+  return updateReviews(
     {
       applicationId: 4000,
       changedApplicationResponses: [

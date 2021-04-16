@@ -4,13 +4,12 @@
 // database has entered correct information
 
 import DBConnect from '../../../src/components/databaseConnect'
-
-const Action = require('./generateReviewAssignments')
+import { action as generateReviewAssignments } from './index'
 
 // Simulate application submission:
 
 test('Test: Submit Application ID#4001 - Stage 1', () => {
-  return Action.generateReviewAssignments(
+  return generateReviewAssignments(
     { templateId: 4, applicationId: 4001 }, //stageNumber: 1, stageId: 5, levels: 1
     DBConnect
   ).then((result: any) => {
@@ -95,7 +94,7 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
 })
 
 test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
-  return Action.generateReviewAssignments(
+  return generateReviewAssignments(
     { templateId: 4, applicationId: 4002 }, // stageNumber: 2, stageId: 6, levels: 2
     DBConnect
   ).then((result: any) => {
@@ -140,7 +139,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
 // Simulate review submission:
 
 test('Test: Submit Review (Stage 1) for Application ID#4000 - Stage 2 Lvl 1', () => {
-  return Action.generateReviewAssignments(
+  return generateReviewAssignments(
     { templateId: 4, applicationId: 4000, reviewId: 1000 }, // stageNumber: 2, stageId: 6, levels: 2
     DBConnect
   ).then((result: any) => {
@@ -183,7 +182,7 @@ test('Test: Submit Review (Stage 1) for Application ID#4000 - Stage 2 Lvl 1', ()
 })
 
 test('Test: Submit Review  (Stage 2) for Application ID#4002, S2 Lvl2', () => {
-  return Action.generateReviewAssignments(
+  return generateReviewAssignments(
     { templateId: 4, applicationId: 4002, reviewId: 4000 }, // stageNumber: 2, stageId: 6, levels: 2
     DBConnect
   ).then((result: any) => {
