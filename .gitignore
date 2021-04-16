@@ -49,6 +49,9 @@ build
 lib
 src/plugins/**/src/*.js
 
+# Docker related
+githubtoken.txt
+
 # Ignore temp snapshots
 database/snapshots/**temp**
 
