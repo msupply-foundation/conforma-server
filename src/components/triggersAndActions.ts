@@ -118,13 +118,9 @@ export async function processTrigger(payload: TriggerPayload) {
     // }
   }
 
-  // console.log('Async', actionsAsync)
-  // console.log('Seq', actionsSequential)
-
   for (const action of [...actionsAsync, ...actionsSequential]) {
     // Add all actions to Action Queue
     // TODO - better error handling
-    console.log('Adding', action.code)
     await DBConnect.addActionQueue({
       trigger_event: trigger_id,
       template_id: templateId,
@@ -158,12 +154,6 @@ export async function processTrigger(payload: TriggerPayload) {
       })
       continue
     }
-    // Evaluate condition
-    // const condition = await evaluateExpression(action.condition_expression as IQueryNode, {
-    //   objects: { applicationData, outputCumulative },
-    //   pgConnection: DBConnect,
-    // })
-    // if (condition) {
     try {
       const actionPayload = {
         id: action.id,
@@ -180,18 +170,6 @@ export async function processTrigger(payload: TriggerPayload) {
     } catch (err) {
       actionFailed = action.action_code
     }
-    // } else {
-    //   console.log('Condition not met')
-    //   await DBConnect.executedActionStatusUpdate({
-    //     status: 'Condition not met',
-    //     error_log: null,
-    //     parameters_evaluated: null,
-    //     output: null,
-    //     id: action.id,
-    //   })
-    //   // Update condition_evaluated field to False
-    //   // Reset trigger on Action_queue
-    // }
   }
   // After all done, set Trigger on table back to NULL (or Error)
   DBConnect.resetTrigger(table, record_id, actionFailed !== '')
@@ -269,7 +247,7 @@ export async function executeAction(
     console.log('Condition not met')
     return await DBConnect.executedActionStatusUpdate({
       status: 'Condition not met',
-      error_log: null,
+      error_log: '',
       parameters_evaluated: null,
       output: null,
       id: payload.id,

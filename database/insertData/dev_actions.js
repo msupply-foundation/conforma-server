@@ -37,6 +37,17 @@ exports.devActions = `
           message: "Async action with False condition"
       }
     }
+    {
+        actionCode: "cleanupFiles"
+        trigger: DEV_TEST
+        sequence: 3
+        parameterQueries: {
+          applicationSerial: {
+            operator: "objectProperties"
+            children: [ "applicationData.applicationSerial" ]
+          }
+      }
+    }
    # {
    # Add more Actions
    # }   
