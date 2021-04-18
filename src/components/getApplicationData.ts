@@ -1,16 +1,8 @@
-import { ActionPayload, TriggerPayload } from '../types'
+import { ActionPayload } from '../types'
 import DBConnect from './databaseConnect'
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import { getAppEntryPointDir } from './utilityFunctions'
 import config from '../config.json'
-
-// export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
-//   const applicationId = await DBConnect.getApplicationIdFromTrigger(
-//     payload.table,
-//     payload.record_id
-//   )
-//   return await getApplicationData(applicationId)
-// }
 
 // Add more data (such as org/review, etc.) here as required
 export const getApplicationData = async (payload: ActionPayload) => {

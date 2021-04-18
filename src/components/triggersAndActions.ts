@@ -11,7 +11,7 @@ import evaluateExpression from '@openmsupply/expression-evaluator'
 import DBConnect from './databaseConnect'
 import { actionLibrary } from './pluginsConnect'
 import { BasicObject, IParameters, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
-import { getApplicationData } from './triggerFetchData'
+import { getApplicationData } from './getApplicationData'
 
 const schedule = require('node-schedule')
 
@@ -147,7 +147,7 @@ export async function processTrigger(payload: TriggerPayload) {
         trigger_payload: action.trigger_payload,
       }
       const result = await executeAction(actionPayload, actionLibrary, {
-        output: outputCumulative,
+        outputCumulative,
       })
       outputCumulative = { ...outputCumulative, ...result.output }
       if (result.status === 'Fail') console.log(result.error_log)
@@ -180,10 +180,9 @@ async function evaluateParameters(
 export async function executeAction(
   payload: ActionPayload,
   actionLibrary: ActionLibrary,
-  additionalObjects: BasicObject = {}
+  additionalObjects: any = {}
 ): Promise<ActionQueueExecutePayload> {
   // Get fresh applicationData for each Action
-  console.log('Action payload', payload)
   const applicationData = await getApplicationData(payload)
 
   const evaluatorParams = {
@@ -207,13 +206,18 @@ export async function executeAction(
       )
 
       // TO-DO: If Scheduled, create a Job instead
-      const actionResult = await actionLibrary[payload.code](
-        { ...parametersEvaluated, applicationData },
-        DBConnect
-      )
-
+      // const actionResult = await actionLibrary[payload.code](
+      //   { ...parametersEvaluated, applicationData },
+      //   DBConnect
+      // )
+      const actionResult = await actionLibrary[payload.code]({
+        parameters: parametersEvaluated,
+        applicationData,
+        outputCumulative: evaluatorParams.objects?.outputCumulative || {},
+        DBConnect,
+      })
       // Enable next line to inspect output
-      console.log('Output', actionResult.output)
+      // console.log('Output', actionResult.output)
 
       return await DBConnect.executedActionStatusUpdate({
         status: actionResult.status,
