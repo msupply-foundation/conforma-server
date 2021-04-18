@@ -141,10 +141,10 @@ export type ActionQueue = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
   conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
@@ -179,14 +179,14 @@ export type ActionQueueCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `triggerEvent` field. */
   triggerEvent?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `triggerPayload` field. */
+  triggerPayload?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `sequence` field. */
   sequence?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicationData` field. */
-  applicationData?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `conditionExpression` field. */
   conditionExpression?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameterQueries` field. */
@@ -213,14 +213,14 @@ export type ActionQueueFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `triggerEvent` field. */
   triggerEvent?: Maybe<IntFilter>;
+  /** Filter by the object’s `triggerPayload` field. */
+  triggerPayload?: Maybe<JsonFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `sequence` field. */
   sequence?: Maybe<IntFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationData` field. */
-  applicationData?: Maybe<JsonFilter>;
   /** Filter by the object’s `conditionExpression` field. */
   conditionExpression?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameterQueries` field. */
@@ -259,10 +259,10 @@ export type ActionQueueFilter = {
 export type ActionQueueInput = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
   conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
@@ -322,10 +322,10 @@ export type ActionQueueOnActionQueueForActionQueueTriggerEventFkeyUsingActionQue
 export type ActionQueuePatch = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
   conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
@@ -368,14 +368,14 @@ export enum ActionQueuesOrderBy {
   IdDesc = 'ID_DESC',
   TriggerEventAsc = 'TRIGGER_EVENT_ASC',
   TriggerEventDesc = 'TRIGGER_EVENT_DESC',
+  TriggerPayloadAsc = 'TRIGGER_PAYLOAD_ASC',
+  TriggerPayloadDesc = 'TRIGGER_PAYLOAD_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   SequenceAsc = 'SEQUENCE_ASC',
   SequenceDesc = 'SEQUENCE_DESC',
   ActionCodeAsc = 'ACTION_CODE_ASC',
   ActionCodeDesc = 'ACTION_CODE_DESC',
-  ApplicationDataAsc = 'APPLICATION_DATA_ASC',
-  ApplicationDataDesc = 'APPLICATION_DATA_DESC',
   ConditionExpressionAsc = 'CONDITION_EXPRESSION_ASC',
   ConditionExpressionDesc = 'CONDITION_EXPRESSION_DESC',
   ParameterQueriesAsc = 'PARAMETER_QUERIES_ASC',
@@ -437,9 +437,9 @@ export type ActionQueueStatusFilter = {
 export type ActionQueueTemplateIdFkeyActionQueueCreateInput = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
   conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
@@ -512,10 +512,10 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
 /** The `actionQueue` to be created by this mutation. */
 export type ActionQueueTriggerEventFkeyActionQueueCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
   conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
@@ -18495,9 +18495,9 @@ export type UpdateActionQueueInput = {
 export type UpdateActionQueueOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
   conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
@@ -18514,10 +18514,10 @@ export type UpdateActionQueueOnActionQueueForActionQueueTemplateIdFkeyPatch = {
 /** An object where the defined keys will be set on the `actionQueue` being updated. */
 export type UpdateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
   conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
@@ -25683,10 +25683,10 @@ export type ActionQueueResolvers<ContextType = any, ParentType extends Resolvers
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   triggerEvent?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  triggerPayload?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   sequence?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   actionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  applicationData?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   conditionExpression?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   parameterQueries?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   parametersEvaluated?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;

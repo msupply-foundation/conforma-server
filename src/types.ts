@@ -29,7 +29,7 @@ export interface ActionQueue {
   id: number
   status?: ActionQueueStatus
   action_code: string
-  application_data: ActionApplicationData
+  trigger_payload: TriggerPayload
   condition_expression?: IQueryNode
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
@@ -47,9 +47,9 @@ type ActionQueueStatus =
 
 export interface ActionQueuePayload {
   trigger_event: number
+  trigger_payload: TriggerPayload
   template_id: number
   action_code: string
-  application_data: TriggerPayload
   sequence: number | null
   condition_expression: { [key: string]: any }
   condition_evaluated?: boolean

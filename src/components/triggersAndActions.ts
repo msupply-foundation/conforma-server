@@ -45,6 +45,7 @@ export const loadScheduledActions = async function (
   const actions = await DBConnect.getActionsScheduled()
 
   let isExecutedAction = true
+  // TO-DO: Implement Scheduled Actions properly -- this code is probably no longer working
   for await (const scheduledAction of actions)
     while (isExecutedAction) {
       const date = new Date(scheduledAction.time_completed)
@@ -55,7 +56,6 @@ export const loadScheduledActions = async function (
             {
               id: scheduledAction.id,
               code: scheduledAction.action_code,
-              // application_data: scheduledAction.application_data,
               condition_expression: scheduledAction.condition_expression as IQueryNode,
               parameter_queries: scheduledAction.parameter_queries,
             },
@@ -75,7 +75,6 @@ export const loadScheduledActions = async function (
           {
             id: scheduledAction.id,
             code: scheduledAction.action_code,
-            // application_data: scheduledAction.application_data,
             condition_expression: scheduledAction.condition_expression as IQueryNode,
             parameter_queries: scheduledAction.parameter_queries,
           },
@@ -109,10 +108,10 @@ export async function processTrigger(payload: TriggerPayload) {
     // Add all actions to Action Queue
     await DBConnect.addActionQueue({
       trigger_event: trigger_id,
+      trigger_payload: payload,
       template_id: templateId,
       sequence: action.sequence,
       action_code: action.code,
-      application_data: {} as ActionApplicationData,
       parameter_queries: action.parameter_queries,
       parameters_evaluated: {},
       condition_expression: action.condition,
@@ -143,10 +142,9 @@ export async function processTrigger(payload: TriggerPayload) {
       const actionPayload = {
         id: action.id,
         code: action.action_code,
-        // application_data: applicationData,
         condition_expression: action.condition_expression as IQueryNode,
         parameter_queries: action.parameter_queries,
-        trigger_payload: payload,
+        trigger_payload: action.trigger_payload,
       }
       const result = await executeAction(actionPayload, actionLibrary, {
         output: outputCumulative,
@@ -184,12 +182,14 @@ export async function executeAction(
   actionLibrary: ActionLibrary,
   additionalObjects: BasicObject = {}
 ): Promise<ActionQueueExecutePayload> {
+  // Get fresh applicationData for each Action
+  console.log('Action payload', payload)
+  const applicationData = await getApplicationData(payload)
+
   const evaluatorParams = {
-    objects: { ...additionalObjects },
+    objects: { applicationData, ...additionalObjects },
     pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
   }
-  // Get fresh applicationData for each Action
-  evaluatorParams.objects.applicationData = await getApplicationData(payload)
 
   // Evaluate condition
   const condition = await evaluateExpression(
@@ -197,7 +197,8 @@ export async function executeAction(
     evaluatorParams
   )
   if (condition) {
-    console.log('ApplicationData: ', evaluatorParams.objects.applicationData)
+    // Enable next line to inspect applicationData:
+    // console.log('ApplicationData: ', applicationData)
     try {
       // Evaluate parameters
       const parametersEvaluated = await evaluateParameters(
@@ -206,9 +207,13 @@ export async function executeAction(
       )
 
       // TO-DO: If Scheduled, create a Job instead
-      const actionResult = await actionLibrary[payload.code]({ ...parametersEvaluated }, DBConnect)
+      const actionResult = await actionLibrary[payload.code](
+        { ...parametersEvaluated, applicationData },
+        DBConnect
+      )
 
-      // console.log('Output', actionResult.output) //Enable this to check output
+      // Enable next line to inspect output
+      console.log('Output', actionResult.output)
 
       return await DBConnect.executedActionStatusUpdate({
         status: actionResult.status,

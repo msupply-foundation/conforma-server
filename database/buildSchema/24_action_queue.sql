@@ -5,10 +5,10 @@ CREATE TYPE public.action_queue_status as ENUM ('Scheduled', 'Queued', 'Processi
 CREATE TABLE public.action_queue (
     id serial primary key,
     trigger_event integer references public.trigger_queue(id),
+    trigger_payload jsonb,
     template_id integer references public.template(id),
     sequence integer,
     action_code varchar,
-    application_data jsonb,
     condition_expression jsonb,
     parameter_queries jsonb,
     parameters_evaluated jsonb,
@@ -28,8 +28,8 @@ BEGIN
 PERFORM pg_notify('action_notifications', json_build_object(
 	'id', NEW.id,
 	'code', NEW.action_code,
+	'trigger_payload', NEW.trigger_payload,
 	'condition_expression', NEW.condition_expression,
-	'application_data', NEW.application_data,
 	'parameter_queries', NEW.parameter_queries
 	)::text
 );
