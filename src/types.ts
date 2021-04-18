@@ -97,9 +97,10 @@ export interface ActionApplicationData {
 export interface ActionPayload {
   id: number
   code: string
-  application_data: ActionApplicationData
+  // application_data: ActionApplicationData
   parameter_queries: { [key: string]: any }
   condition_expression: IQueryNode
+  trigger_payload?: TriggerPayload
 }
 
 export interface ActionPlugin {
@@ -152,6 +153,7 @@ export interface TriggerPayload {
   trigger: Trigger
   table: string
   record_id: number
+  application_id?: number
 }
 
 export interface TriggerQueueUpdatePayload {
