@@ -10,7 +10,7 @@ import {
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import DBConnect from './databaseConnect'
 import { actionLibrary } from './pluginsConnect'
-import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject, IParameters, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { fetchDataFromTrigger } from './triggerFetchData'
 
 const schedule = require('node-schedule')
@@ -56,6 +56,7 @@ export const loadScheduledActions = async function (
               id: scheduledAction.id,
               code: scheduledAction.action_code,
               application_data: scheduledAction.application_data,
+              condition_expression: scheduledAction.condition_expression as IQueryNode,
               parameter_queries: scheduledAction.parameter_queries,
             },
             actionLibrary
@@ -75,6 +76,7 @@ export const loadScheduledActions = async function (
             id: scheduledAction.id,
             code: scheduledAction.action_code,
             application_data: scheduledAction.application_data,
+            condition_expression: scheduledAction.condition_expression as IQueryNode,
             parameter_queries: scheduledAction.parameter_queries,
           },
           actionLibrary
@@ -94,25 +96,26 @@ export async function processTrigger(payload: TriggerPayload) {
 
   const templateId = applicationData.templateId
 
-  console.log('ApplicationData', applicationData)
+  // console.log('ApplicationData', applicationData)
 
   // Get Actions from matching Template
-  const result = await DBConnect.getActionsByTemplateId(templateId, trigger)
+  const actions = await DBConnect.getActionsByTemplateId(templateId, trigger)
 
   // Filter out Actions that don't match the current condition
   // and separate into Sequential and Async actions
   const actionsSequential: ActionSequential[] = []
   const actionsAsync: ActionInTemplate[] = []
 
-  for (const action of result) {
-    const condition = await evaluateExpression(action.condition, {
-      objects: { applicationData },
-      pgConnection: DBConnect,
-    })
-    if (condition) {
-      if (action.sequence) actionsSequential.push(action as ActionSequential)
-      else actionsAsync.push(action)
-    }
+  for (const action of actions) {
+    // const condition = await evaluateExpression(action.condition, {
+    //   objects: { applicationData },
+    //   pgConnection: DBConnect,
+    // })
+    // if (condition) {
+    if (action.sequence) actionsSequential.push(action as ActionSequential)
+    else actionsAsync.push(action)
+
+    // }
   }
 
   for (const action of [...actionsAsync, ...actionsSequential]) {
@@ -126,6 +129,7 @@ export async function processTrigger(payload: TriggerPayload) {
       application_data: applicationData,
       parameter_queries: action.parameter_queries,
       parameters_evaluated: {},
+      condition_expression: action.condition,
       status: typeof action.sequence === 'number' ? 'Processing' : 'Queued',
     })
   }
@@ -136,9 +140,10 @@ export async function processTrigger(payload: TriggerPayload) {
 
   let outputCumulative = {} // Collect output properties of actions in sequence
 
-  // Execute Actions one by one
+  // Execute sequential Actions one by one
   let actionFailed = ''
   for (const action of actionsToExecute) {
+    console.log('Action: ', action.action_code)
     if (actionFailed) {
       await DBConnect.executedActionStatusUpdate({
         status: 'Fail',
@@ -149,19 +154,40 @@ export async function processTrigger(payload: TriggerPayload) {
       })
       continue
     }
+    // Evaluate condition
+    const condition = await evaluateExpression(action.condition_expression as IQueryNode, {
+      objects: { applicationData, outputCumulative },
+      pgConnection: DBConnect,
+    })
+    // if (condition) {
     try {
       const actionPayload = {
         id: action.id,
         code: action.action_code,
         application_data: applicationData,
+        condition_expression: action.condition_expression as IQueryNode,
         parameter_queries: action.parameter_queries,
       }
-      const result = await executeAction(actionPayload, actionLibrary, { output: outputCumulative })
+      const result = await executeAction(actionPayload, actionLibrary, {
+        output: outputCumulative,
+      })
       outputCumulative = { ...outputCumulative, ...result.output }
       if (result.status === 'Fail') console.log(result.error_log)
     } catch (err) {
       actionFailed = action.action_code
     }
+    // } else {
+    //   console.log('Condition not met')
+    //   await DBConnect.executedActionStatusUpdate({
+    //     status: 'Condition not met',
+    //     error_log: null,
+    //     parameters_evaluated: null,
+    //     output: null,
+    //     id: action.id,
+    //   })
+    //   // Update condition_evaluated field to False
+    //   // Reset trigger on Action_queue
+    // }
   }
   // After all done, set Trigger on table back to NULL (or Error)
   DBConnect.resetTrigger(table, record_id, actionFailed !== '')
@@ -194,35 +220,55 @@ export async function executeAction(
     objects: { applicationData: payload.application_data, ...additionalObjects },
     pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
   }
+  // Evaluate condition
+  const condition = await evaluateExpression(
+    payload.condition_expression as IQueryNode,
+    evaluatorParams
+  )
+  console.log('Condition expression', payload.condition_expression)
+  console.log('Condition ', condition)
+  if (condition) {
+    try {
+      // Evaluate parameters
+      const parametersEvaluated = await evaluateParameters(
+        payload.parameter_queries,
+        evaluatorParams
+      )
 
-  try {
-    // Evaluate parameters
-    const parametersEvaluated = await evaluateParameters(payload.parameter_queries, evaluatorParams)
+      // TO-DO: If Scheduled, create a Job instead
+      const actionResult = await actionLibrary[payload.code](
+        { ...parametersEvaluated, applicationData: payload.application_data },
+        DBConnect
+      )
 
-    // TO-DO: If Scheduled, create a Job instead
-    const actionResult = await actionLibrary[payload.code](
-      { ...parametersEvaluated, applicationData: payload.application_data },
-      DBConnect
-    )
+      // console.log('Output', actionResult.output) //Enable this to check output
 
-    // console.log('Output', actionResult.output) //Enable this to check output
-
+      return await DBConnect.executedActionStatusUpdate({
+        status: actionResult.status,
+        error_log: actionResult.error_log,
+        parameters_evaluated: parametersEvaluated,
+        output: actionResult.output,
+        id: payload.id,
+      })
+    } catch (err) {
+      console.error('>> Error executing action:', payload.code)
+      await DBConnect.executedActionStatusUpdate({
+        status: 'Fail',
+        error_log: "Couldn't execute Action: " + err.message,
+        parameters_evaluated: null,
+        output: null,
+        id: payload.id,
+      })
+      throw err
+    }
+  } else {
+    console.log('Condition not met')
     return await DBConnect.executedActionStatusUpdate({
-      status: actionResult.status,
-      error_log: actionResult.error_log,
-      parameters_evaluated: parametersEvaluated,
-      output: actionResult.output,
-      id: payload.id,
-    })
-  } catch (err) {
-    console.error('>> Error executing action:', payload.code)
-    await DBConnect.executedActionStatusUpdate({
-      status: 'Fail',
-      error_log: "Couldn't execute Action: " + err.message,
+      status: 'Condition not met',
+      error_log: null,
       parameters_evaluated: null,
       output: null,
       id: payload.id,
     })
-    throw err
   }
 }

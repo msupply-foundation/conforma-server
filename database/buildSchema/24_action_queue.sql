@@ -1,6 +1,6 @@
 -- action queue
 
-CREATE TYPE public.action_queue_status as ENUM ('Scheduled', 'Queued', 'Processing', 'Success', 'Fail');
+CREATE TYPE public.action_queue_status as ENUM ('Scheduled', 'Queued', 'Processing', 'Success', 'Fail', 'Condition not met');
 
 CREATE TABLE public.action_queue (
     id serial primary key,
@@ -9,6 +9,7 @@ CREATE TABLE public.action_queue (
     sequence integer,
     action_code varchar,
     application_data jsonb,
+    condition_expression jsonb,
     parameter_queries jsonb,
     parameters_evaluated jsonb,
     status public.action_queue_status,
@@ -27,6 +28,7 @@ BEGIN
 PERFORM pg_notify('action_notifications', json_build_object(
 	'id', NEW.id,
 	'code', NEW.action_code,
+	'condition_expression', NEW.condition_expression,
 	'application_data', NEW.application_data,
 	'parameter_queries', NEW.parameter_queries
 	)::text

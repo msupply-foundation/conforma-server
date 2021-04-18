@@ -54,6 +54,7 @@ class PostgresDB {
         case 'action_notifications':
           // For Async Actions only
           try {
+            console.log('Payload', payload)
             await executeAction(JSON.parse(payload), actionLibrary)
           } catch (err) {
             console.log(err.message)
@@ -133,7 +134,7 @@ class PostgresDB {
 
   public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
     const text =
-      "SELECT id, action_code, application_data, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
+      "SELECT id, action_code, application_data, condition_expression, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
     try {
       const result = await this.query({
         text,

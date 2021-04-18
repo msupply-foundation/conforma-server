@@ -1,4 +1,4 @@
-import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { ApplicationStatus, Trigger } from './generated/graphql'
 
 export interface ActionInTemplate {
@@ -7,7 +7,7 @@ export interface ActionInTemplate {
   name: string
   trigger: string
   sequence: number | null
-  condition: { [key: string]: any }
+  condition: IQueryNode
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
 }
@@ -30,13 +30,20 @@ export interface ActionQueue {
   status?: ActionQueueStatus
   action_code: string
   application_data: ActionApplicationData
+  condition_expression?: IQueryNode
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
   time_completed: string
 }
 
 // TODO: Ideally this would be coming from postgraphile types, to be consistent with the types
-type ActionQueueStatus = 'Scheduled' | 'Processing' | 'Queued' | 'Success' | 'Fail'
+type ActionQueueStatus =
+  | 'Scheduled'
+  | 'Processing'
+  | 'Queued'
+  | 'Success'
+  | 'Fail'
+  | 'Condition not met'
 
 export interface ActionQueuePayload {
   trigger_event: number
@@ -44,6 +51,8 @@ export interface ActionQueuePayload {
   action_code: string
   application_data: TriggerPayload
   sequence: number | null
+  condition_expression: { [key: string]: any }
+  condition_evaluated?: boolean
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
   status: ActionQueueStatus
@@ -55,7 +64,7 @@ export interface ActionQueueGetPayload {
 
 export interface ActionQueueExecutePayload {
   id: number
-  error_log: string
+  error_log: string | null
   parameters_evaluated: { [key: string]: any } | null
   status: ActionQueueStatus
   output: BasicObject | null
@@ -90,6 +99,7 @@ export interface ActionPayload {
   code: string
   application_data: ActionApplicationData
   parameter_queries: { [key: string]: any }
+  condition_expression: IQueryNode
 }
 
 export interface ActionPlugin {
