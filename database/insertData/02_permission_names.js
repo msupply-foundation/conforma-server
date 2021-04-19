@@ -195,7 +195,7 @@ exports.queries = [
     }
   }`,
   // applyGeneral (associated with multiple templates)
-  `mutation assignGeneralPermission {
+  `mutation applyGeneralPermission {
     createPermissionName(
       input: {
         permissionName: { 
