@@ -54,11 +54,9 @@ This repo has the following functionality implemented in basic form:
 
 ## Docker
 
-To build image edit `Docker/dockerise.sh` and
-`cd Docker` -> `./dockerise.sh`
+To build image: `cd Docker` -> `./dockerise.sh` (you can edit `Docker/dockerise.sh` to change build prefs)
 
-To run image edit `Docker/run.sh` and
-`cd Docker` -> `./run.sh`
+To run image: `cd Docker` -> `./run.sh` (you can edit `Docker/run.sh` to change run prefs)
 
 See comments in above scripts and documentation folder for more details
 
