@@ -3,12 +3,6 @@
 
 FROM ubuntu:18.04
 
-ARG SERVER_BRANCH=master
-ARG WEB_APP_BRANCH=master
-
-ARG NODE_VERSION=14
-ARG POSTGRES_VERSION=12
-
 RUN apt update
 RUN apt-get update
 RUN apt upgrade -y
@@ -30,12 +24,14 @@ RUN apt-get install gosu -y
 RUN apt-get install nginx -y
 
 # --- NODE
+ARG NODE_VERSION=14
 # https://github.com/nodesource/distributions/blob/master/README.md -> Node.js LTS (v14.x): -> # Using Debian, as root
 RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash 
 RUN apt-get install -y nodejs
 RUN node -v
 
 # --- POSTGRES 
+ARG POSTGRES_VERSION=12
 # https://www.postgresql.org/download/linux/ubuntu/
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
 RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add
@@ -51,6 +47,8 @@ RUN apt-get update
 RUN apt-get install yarn -y
 
 # --- ADD REPOS
+ARG SERVER_BRANCH=master
+ARG WEB_APP_BRANCH=master
 WORKDIR /usr/src/
 RUN git clone -b ${SERVER_BRANCH} https://github.com/openmsupply/application-manager-server.git
 RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/application-manager-web-app.git
