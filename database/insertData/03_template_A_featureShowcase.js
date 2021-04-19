@@ -507,7 +507,7 @@ exports.queries = [
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
-                        label: "Select a company (GraphQL query)"
+                        label: "Select an organisation (GraphQL query)"
                         options: {
                           operator: "graphQL",
                           children: [
@@ -999,7 +999,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3.text"]
                   }
-                  permissionNames: { value: ["applyCompanyRego"] }
+                  permissionNames: { value: ["applyOrgRego"] }
                 }
               }
               # Because it is later in sequence, this Action should over-ride the Core one
