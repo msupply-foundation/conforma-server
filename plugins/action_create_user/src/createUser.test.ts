@@ -22,7 +22,10 @@ const invalidUser = {
 }
 
 test('Test: add User to database', () => {
-  return createUser(testUser, DBConnect).then((result: any) => {
+  return createUser({
+    parameters: testUser,
+    DBConnect,
+  }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
@@ -38,7 +41,7 @@ test('Test: add User to database', () => {
 })
 
 test('Test: Invalid user (date_of_birth and username fields mis-named) -- should fail', () => {
-  return createUser(invalidUser, DBConnect).then((result: any) => {
+  return createUser({ parameters: invalidUser, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: 'Fail',
       error_log: 'There was a problem creating new user.',

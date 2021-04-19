@@ -35,7 +35,10 @@ export const getApplicationData = async (payload: ActionPayload) => {
 
   const reviewData =
     trigger_payload.table === 'review'
-      ? await DBConnect.getReviewData(trigger_payload.record_id)
+      ? {
+          reviewId: trigger_payload.record_id,
+          ...(await DBConnect.getReviewData(trigger_payload.record_id)),
+        }
       : {}
 
   const environmentData = {

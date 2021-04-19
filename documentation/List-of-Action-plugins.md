@@ -59,17 +59,18 @@ Changes the application Stage to the next in the sequence
 
 | Input parameters<br />(\*required) <br/> | Output properties |
 | ---------------------------------------- | ----------------- |
-| `applicationId`\*                        | `applicationId`   |
+| `applicationId`                          | `applicationId`   |
 |                                          | `stageNumber`     |
 |                                          | `stageName`       |
 |                                          | `stageId`         |
 |                                          | `status`          |
 |                                          | `statusId`        |
 
+**Note:** If `applicationId` is not provided, the plugin will attempt to fetch it from `applicationData`
+
 **To-do**:
 
-- update to take either applicationId or applicationSerial
-- update to use applicationData for application input if not provided
+- update to take either applicationId or applicationSerial?
 - output also include serial
 
 ---
@@ -84,14 +85,12 @@ Changes the application Stage to the next in the sequence
 | ---------------------------------------- | ----------------------------- |
 | `applicationId` or `reviewId`            | `applicationId` or `reviewId` |
 | `newStatus` \*                           | `status`                      |
-|                                          | `statusId`                    |
+| `isReview`                               | `statusId`                    |
 
-Will determine to change status of review or application based on `applicationId` or `reviewId`
+If we are wanting to chagnge the status of a **review**, the parameter `isReview` should be set to `true`. If `applicationId` or `reviewId` are not provided, plugin will try to retrieve from `applicationData`.
 
 **To-do**:
 
-- update to take either applicationId or applicationSerial
-- update to use applicationData for application input if not provided
 - output also include serial
 - also update Status of associated application/review respones (on Submission)
 
@@ -151,15 +150,15 @@ Should be run whenever an application or review is submitted, and it will genera
 
 | Input parameters<br />(\*required) <br/> | Output properties                 |
 | ---------------------------------------- | --------------------------------- |
-| `applicationId`\*                        | `reviewAssignmentIds`             |
+| `applicationId`                          | `reviewAssignmentIds`             |
 | `reviewId`                               | `reviewAssignmentAssignerJoins`   |
-|                                          | `reviewAssignmentAssignerJoinIds` |
+| `isReview`                               | `reviewAssignmentAssignerJoinIds` |
 |                                          | `currentReviewLevel`              |
 |                                          | `nextReviewLevel`                 |
 
 **Notes**:
 
-- if a `reviewId` is not supplied, the Action will generate review assignment records for Stage 1, level 1 review. If it is present, it'll generate records for the _next_ review level (either in the same Stage or level 1 of the next Stage).
+- if `isReview` is NOT `true`, the Action will generate review assignment records for Stage 1, level 1 review. If `true`, it'll generate records for the _next_ review level (either in the same Stage or level 1 of the next Stage).
 - if assignment records already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp)
 
 TO-DO:
@@ -175,12 +174,12 @@ When a reviewer self-assigns themselves to a review_assignment (i.e. its status 
 
 - _Action Code:_ **`updateReviewAssignmentsStatus`**
 
-| Input parameters<br />(\*required) <br/>            | Output properties                                     |
-| --------------------------------------------------- | ----------------------------------------------------- |
-| `reviewAssignmentId`\*                              | `reviewAssignmentUpdates` (`array` of `{id, status}`) |
-| `trigger`\* (only executes on `onReviewSelfAssign`) |                                                       |
+| Input parameters<br />(\*required) <br/>          | Output properties                                     |
+| ------------------------------------------------- | ----------------------------------------------------- |
+| `reviewAssignmentId`\*                            | `reviewAssignmentUpdates` (`array` of `{id, status}`) |
+| `trigger` (only executes on `onReviewSelfAssign`) |                                                       |
 
----
+**Note:** If `trigger` is not supplied, the plugin will try to infer it from `applicationData`
 
 ### Trim Responses
 
@@ -203,7 +202,9 @@ Updates the applicant visibility of level 1 review responses based on the recomm
 
 | Input parameters<br />(\*required) <br/> | Output properties                      |
 | ---------------------------------------- | -------------------------------------- |
-| `reviewId`\*                             | `reviewResponsesWithUpdatedVisibility` |
+| `reviewId`                               | `reviewResponsesWithUpdatedVisibility` |
+
+**Note:** If `reviewId` is not provided, the plugin will attempt to fetch it from `applciationData`
 
 ---
 

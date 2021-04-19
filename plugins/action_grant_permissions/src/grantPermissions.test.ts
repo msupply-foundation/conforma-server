@@ -1,7 +1,7 @@
 // Test suite for the grantPermissions Action -- adds a permisison to valerio user to reviewCompanyRego
 // Ideally would verify that logic works by checking db (permission_join table) before and after
 
-import PostgresDB from '../../../src/components/databaseConnect'
+import DBConnect from '../../../src/components/databaseConnect'
 import { action as grantPermissions } from './index'
 
 const testParams = {
@@ -16,11 +16,11 @@ const testParams2 = {
 }
 
 test('Test: Add permission to Valerio', () => {
-  return grantPermissions(testParams, PostgresDB).then((result: any) => {
+  return grantPermissions({ parameters: testParams, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       output: {
-        permissionJoinIds: [24],
+        permissionJoinIds: [41],
         permissionNames: ['reviewCompanyRego'],
       },
       error_log: '',
@@ -30,11 +30,11 @@ test('Test: Add permission to Valerio', () => {
 
 // Run the test twice to show that result doesn't change even if record already exists
 test('Test: Add permission to Valerio, already exists', () => {
-  return grantPermissions(testParams, PostgresDB).then((result: any) => {
+  return grantPermissions({ parameters: testParams, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       output: {
-        permissionJoinIds: [24],
+        permissionJoinIds: [41],
         permissionNames: ['reviewCompanyRego'],
       },
       error_log: '',
@@ -44,11 +44,11 @@ test('Test: Add permission to Valerio, already exists', () => {
 
 // Include an Organisation
 test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
-  return grantPermissions(testParams2, PostgresDB).then((result: any) => {
+  return grantPermissions({ parameters: testParams2, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       output: {
-        permissionJoinIds: [26],
+        permissionJoinIds: [43],
         permissionNames: ['reviewCompanyRego'],
       },
       error_log: '',
@@ -58,11 +58,11 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
 
 // Repeat insert, as above
 test('Test: Add permission to Carl and Medicinal Importers, Ltd., already exists', () => {
-  return grantPermissions(testParams2, PostgresDB).then((result: any) => {
+  return grantPermissions({ parameters: testParams2, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       output: {
-        permissionJoinIds: [26],
+        permissionJoinIds: [43],
         permissionNames: ['reviewCompanyRego'],
       },
       error_log: '',

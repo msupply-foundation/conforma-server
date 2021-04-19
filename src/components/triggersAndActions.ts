@@ -5,7 +5,6 @@ import {
   ActionPayload,
   ActionSequential,
   ActionQueueExecutePayload,
-  ActionApplicationData,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import DBConnect from './databaseConnect'
@@ -185,6 +184,9 @@ export async function executeAction(
   // Get fresh applicationData for each Action
   const applicationData = await getApplicationData(payload)
 
+  // Enable next line to inspect applicationData:
+  console.log('ApplicationData: ', applicationData)
+
   const evaluatorParams = {
     objects: { applicationData, ...additionalObjects },
     pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
@@ -196,8 +198,6 @@ export async function executeAction(
     evaluatorParams
   )
   if (condition) {
-    // Enable next line to inspect applicationData:
-    // console.log('ApplicationData: ', applicationData)
     try {
       // Evaluate parameters
       const parametersEvaluated = await evaluateParameters(
@@ -217,7 +217,7 @@ export async function executeAction(
         DBConnect,
       })
       // Enable next line to inspect output
-      // console.log('Output', actionResult.output)
+      console.log('Output', actionResult.output)
 
       return await DBConnect.executedActionStatusUpdate({
         status: actionResult.status,

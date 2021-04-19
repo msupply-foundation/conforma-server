@@ -28,11 +28,11 @@ interface ResponseValue {
 async function cleanupFiles({ parameters, applicationData, DBConnect }: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
-  const applicationSerial = parameters?.applicationSerial || applicationData.applicationSerial
-  const applicationid = parameters?.applicationId || applicationData.applicationId
+  const applicationSerial = parameters?.applicationSerial || applicationData?.applicationSerial
+  const applicationid = parameters?.applicationId || applicationData?.applicationId
   const {
     environmentData: { appRootFolder, filesFolder },
-  } = applicationData
+  } = applicationData as { environmentData: { appRootFolder: string; filesFolder: string } }
 
   console.log(`Processing files associated with Application ${applicationSerial}`)
 

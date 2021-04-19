@@ -2,9 +2,9 @@ type ActionQueueStatus = 'Success' | 'Fail' | 'Processing' | 'Queued' | 'Schedul
 
 export interface ActionPluginInput {
   parameters: { [key: string]: any }
-  applicationData: { [key: string]: any }
-  outputCumulative: { [key: string]: any }
-  DBConnect: any
+  applicationData?: { [key: string]: any }
+  outputCumulative?: { [key: string]: any }
+  DBConnect?: any
 }
 export interface ActionPluginOutput {
   status: ActionQueueStatus

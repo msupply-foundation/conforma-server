@@ -476,7 +476,14 @@ class PostgresDB {
 
   public getCurrentStageStatusHistory = async (applicationId: number) => {
     const text = `
-      SELECT stage_id, stage_number, stage, stage_history_id, status_history_id, status, status_history_time_created 
+      SELECT stage_id AS "stageId",
+      stage_number AS "stageNumber",
+      stage,
+      stage_history_id AS "stageHistoryId",
+      stage_history_time_created AS "stageHistoryTimeCreated"
+      status_history_id AS "statusHistoryId",
+      status,
+      status_history_time_created AS "statusHistoryTimeCreated",
       FROM application_stage_status_latest 
       WHERE application_id = $1
     `

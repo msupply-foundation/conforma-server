@@ -1,4 +1,8 @@
-const joinUserOrg = async function ({ applicationData, ...userOrg }: any, DBConnect: any) {
+import { ActionPluginInput } from '../../types'
+
+// const joinUserOrg = async function ({ applicationData, ...userOrg }: any, DBConnect: any) {
+const joinUserOrg = async function ({ parameters: userOrg, DBConnect }: ActionPluginInput) {
+  // const userOrg = parameters
   try {
     console.log(`\nAdding user to organisation...`)
     const result = await DBConnect.addUserOrg(userOrg)
