@@ -4,6 +4,7 @@
 # githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
 
 docker build \
+   --progress plain \
    -t testbuild \
    --build-arg SERVER_BRANCH=309-Dockerise-local-build-of-combined-back-and-front-end \
    --build-arg WEB_APP_BRANCH=master \
@@ -16,3 +17,4 @@ docker build \
 # --build-arg SERVER_BRANCH and WEB_APP_BRANCH -> branch of front and back end to pull and build (should be able to use just the tag name), can escape # with \#
 # --secret id=githubtoken,src=../githubtoken.txt -> can 'secretly' and temporarily mount file (see top comment about this particular file)
 # --no-cache -> can be used to re-build (if for example branch content you are building has changed)
+# --progress plain -> show full progress
