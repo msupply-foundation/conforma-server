@@ -30,6 +30,7 @@ export type ActionPlugin = Node & {
   description?: Maybe<Scalars['String']>;
   path?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -48,6 +49,8 @@ export type ActionPluginCondition = {
   path?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `requiredParameters` field. */
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `optionalParameters` field. */
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `outputProperties` field. */
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
@@ -64,6 +67,8 @@ export type ActionPluginFilter = {
   path?: Maybe<StringFilter>;
   /** Filter by the object’s `requiredParameters` field. */
   requiredParameters?: Maybe<StringListFilter>;
+  /** Filter by the object’s `optionalParameters` field. */
+  optionalParameters?: Maybe<StringListFilter>;
   /** Filter by the object’s `outputProperties` field. */
   outputProperties?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
@@ -81,6 +86,7 @@ export type ActionPluginInput = {
   description?: Maybe<Scalars['String']>;
   path?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -91,6 +97,7 @@ export type ActionPluginPatch = {
   description?: Maybe<Scalars['String']>;
   path?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -129,6 +136,8 @@ export enum ActionPluginsOrderBy {
   PathDesc = 'PATH_DESC',
   RequiredParametersAsc = 'REQUIRED_PARAMETERS_ASC',
   RequiredParametersDesc = 'REQUIRED_PARAMETERS_DESC',
+  OptionalParametersAsc = 'OPTIONAL_PARAMETERS_ASC',
+  OptionalParametersDesc = 'OPTIONAL_PARAMETERS_DESC',
   OutputPropertiesAsc = 'OUTPUT_PROPERTIES_ASC',
   OutputPropertiesDesc = 'OUTPUT_PROPERTIES_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -25661,6 +25670,7 @@ export type ActionPluginResolvers<ContextType = any, ParentType extends Resolver
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   requiredParameters?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  optionalParameters?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   outputProperties?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };

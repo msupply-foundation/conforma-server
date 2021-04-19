@@ -108,6 +108,7 @@ export interface ActionPlugin {
   description: string
   path: string
   required_parameters: string[]
+  optional_parameters: string[]
   output_properties?: string[]
 }
 

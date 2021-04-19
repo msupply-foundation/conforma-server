@@ -3,8 +3,15 @@
   "code": "generateReviewAssignments",
   "name": "Generate Review Assignment Records",
   "description": "Generates review_assignment records for current application",
-  "required_parameters": ["applicationId", "reviewId"],
-  "output_properties": [],
+  "required_parameters": [],
+  "optional_parameters": ["applicationId", "reviewId", "reviewId"],
+  "output_properties": [
+    "reviewAssignmentIds",
+    "reviewAssignmentAssignerJoins",
+    "reviewAssignmentAssignerJoinIds",
+    "currentReviewLevel",
+    "nextReviewLevel"
+  ],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

@@ -37,8 +37,10 @@ Set the Outcome of an application to the input parameter ("Pending", "Approved",
 
 | Input parameters<br />(\*required) <br/> | Output properties |
 | ---------------------------------------- | ----------------- |
-| `applicationId`\*                        | `applicationId`   |
+| `applicationId`                          | `applicationId`   |
 | `newOutcome`\*                           | `newOutcome`      |
+
+**Note:** If `applicationId` is not provided, the plugin will attempt to retrieve it from `applicationData`.
 
 **To-do**:
 
@@ -105,7 +107,7 @@ Creates a new Organisation in the database based on user input parameters.
 | Input parameters<br />(\*required) <br/> | Output properties |
 | ---------------------------------------- | ----------------- |
 | `name`\*                                 | `orgId`           |
-| `licence_number`                         | `orgName`         |
+| `registration`\*                         | `orgName`         |
 | `address`                                |                   |
 
 ---
@@ -204,7 +206,7 @@ Updates the applicant visibility of level 1 review responses based on the recomm
 | ---------------------------------------- | -------------------------------------- |
 | `reviewId`                               | `reviewResponsesWithUpdatedVisibility` |
 
-**Note:** If `reviewId` is not provided, the plugin will attempt to fetch it from `applciationData`
+**Note:** If `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`
 
 ---
 
@@ -214,9 +216,12 @@ When an applicant re-submits an application after making changes, this Action up
 
 - _Action Code:_ **`updateReviews`**
 
-| Input parameters<br />(\*required) <br/> | Output properties |
-| ---------------------------------------- | ----------------- |
-| `applicationId`\*                        | `updatedReviews`  |
+| Input parameters<br />(\*required) <br/>                        | Output properties |
+| --------------------------------------------------------------- | ----------------- |
+| `applicationId`\*                                               | `updatedReviews`  |
+| `changedApplicationResponses` [Array of applicationResponseIds] |                   |
+
+If an array of `changedApplicationResponses` is provided... ?
 
 ## Core Actions
 

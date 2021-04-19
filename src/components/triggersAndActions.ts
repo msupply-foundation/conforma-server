@@ -185,7 +185,7 @@ export async function executeAction(
   const applicationData = await getApplicationData(payload)
 
   // Enable next line to inspect applicationData:
-  console.log('ApplicationData: ', applicationData)
+  // console.log('ApplicationData: ', applicationData)
 
   const evaluatorParams = {
     objects: { applicationData, ...additionalObjects },
@@ -205,11 +205,9 @@ export async function executeAction(
         evaluatorParams
       )
 
+      // TO-DO: Check all required parameters are present
+
       // TO-DO: If Scheduled, create a Job instead
-      // const actionResult = await actionLibrary[payload.code](
-      //   { ...parametersEvaluated, applicationData },
-      //   DBConnect
-      // )
       const actionResult = await actionLibrary[payload.code]({
         parameters: parametersEvaluated,
         applicationData,
@@ -217,7 +215,7 @@ export async function executeAction(
         DBConnect,
       })
       // Enable next line to inspect output
-      console.log('Output', actionResult.output)
+      // console.log('Output', actionResult.output)
 
       return await DBConnect.executedActionStatusUpdate({
         status: actionResult.status,

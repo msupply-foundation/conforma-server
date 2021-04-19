@@ -3,7 +3,8 @@
   "code": "incrementStage",
   "name": "Increment Stage",
   "description": "Increments (or creates) the application Stage, if possible.",
-  "required_parameters": ["application_id"],
+  "required_parameters": [],
+  "optional_parameters": ["application_id"],
   "output_properties": [
     "applicationId",
     "stageNumber",
