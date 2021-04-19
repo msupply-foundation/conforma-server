@@ -35,6 +35,24 @@ const LookupTableModel = () => {
     }
   }
 
+  const countStructureRowsByTableName = async (lookupTableName: string) => {
+    try {
+      const data = await DBConnect.gqlQuery(
+        `
+          query countStructureRowsByTableName($name: String!) {
+            lookupTables(condition: {name: $name}) {
+              totalCount
+            }
+          }
+        `,
+        { name: lookupTableName }
+      )
+      return data.lookupTables.totalCount
+    } catch (error) {
+      throw error
+    }
+  }
+
   const createTable = async ({ tableName, fieldMap: fieldMaps }: LookupTableStructurePropType) => {
     const text = `CREATE TABLE lookup_table_${tableName}
       (
@@ -97,6 +115,7 @@ const LookupTableModel = () => {
   return {
     createStructure,
     getStructureById,
+    countStructureRowsByTableName,
     createTable,
     createRow,
     updateRow,

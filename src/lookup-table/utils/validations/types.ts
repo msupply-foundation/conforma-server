@@ -1,6 +1,10 @@
 interface IValidator {
-  isValid: Boolean
-  errorMessages: string[]
+  isValid: boolean
+  errors: string[]
 }
 
-export { IValidator }
+interface ILookupTableNameValidator extends IValidator {
+  validate(): Promise<void> | void
+}
+
+export { IValidator, ILookupTableNameValidator }

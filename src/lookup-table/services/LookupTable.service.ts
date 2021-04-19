@@ -1,9 +1,9 @@
 import { LookupTableModel } from '../models'
 import { FieldMapType } from '../types'
 import { toCamelCase, toSnakeCase } from '../utils'
-import { LookupTableHeadersValidator } from '../utils/validations'
+import { LookupTableHeadersValidator, LookupTableNameValidator } from '../utils/validations'
 import { ValidationErrors } from '../utils/validations/error'
-import { IValidator } from '../utils/validations/types'
+import { ILookupTableNameValidator, IValidator } from '../utils/validations/types'
 
 type LookupTableServiceProps = {
   tableId?: number
@@ -21,6 +21,18 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
   const createTable = async () => {
     tableName = toSnakeCase(tableNameLabel)
 
+    const lookupTableNameValidator: ILookupTableNameValidator = new LookupTableNameValidator({
+      model: _lookupTableModel,
+      tableName,
+    })
+
+    await lookupTableNameValidator.validate()
+
+    if (!lookupTableNameValidator.isValid)
+      throw new ValidationErrors(lookupTableNameValidator.errors)
+
+    const results = await _compareFieldMaps()
+
     tableId = await _lookupTableModel.createStructure({
       tableName,
       label: tableNameLabel,
@@ -33,6 +45,8 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
     })
 
     await _createUpdateRows()
+
+    return _buildSuccessMessage(results)
   }
 
   const updateTable = async () => {
@@ -41,9 +55,51 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
     tableNameLabel = result.label
     tableId = result.id
     dbFieldMap = result.fieldMap
-    await _compareFieldMaps()
+
+    const results = await _compareFieldMaps()
     await _createNewColumns()
     await _createUpdateRows()
+
+    return _buildSuccessMessage(results)
+  }
+
+  const _buildSuccessMessage = ({
+    onlyInDb,
+    onlyInCsv,
+    inBoth,
+    finalFieldMap,
+  }: {
+    onlyInDb: any
+    onlyInCsv: FieldMapType[]
+    inBoth: any
+    finalFieldMap: FieldMapType[]
+  }) => {
+    const message: string[] = []
+    if (inBoth.length)
+      message.push(
+        `Table rows' fields ${inBoth.map((fieldMap: any) => fieldMap.label).join(', ')} are updated`
+      )
+
+    if (onlyInCsv.length)
+      message.push(
+        `Table rows' fields ${onlyInCsv
+          .map((fieldMap: any) => fieldMap.label)
+          .join(', ')} are newly added`
+      )
+
+    if (onlyInDb.length)
+      message.push(
+        `Table rows' fields ${onlyInDb
+          .map((fieldMap: any) => fieldMap.label)
+          .join(', ')} are left unchanged`
+      )
+
+    if (finalFieldMap.length)
+      message.push(
+        `Final Table fields are ${finalFieldMap.map((fieldMap: any) => fieldMap.label).join(', ')}.`
+      )
+
+    return message
   }
 
   const addRow = (row: object): void => {
@@ -54,7 +110,7 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
     const lookupTableHeadersValidator: IValidator = new LookupTableHeadersValidator(headers)
 
     if (!lookupTableHeadersValidator.isValid) {
-      throw new ValidationErrors(lookupTableHeadersValidator.errorMessages)
+      throw new ValidationErrors(lookupTableHeadersValidator.errors)
     }
 
     return headers.map((header: string) => {
@@ -89,6 +145,25 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
     fieldMaps = [...dbFieldMap, ...fieldMaps].filter(
       ((set) => (obj: any) => (set.has(obj.label) ? false : set.add(obj.label)))(new Set())
     )
+
+    return {
+      onlyInDb: dbFieldMap.filter(_comparer(fieldMaps)),
+      onlyInCsv: fieldMaps.filter(_comparer(dbFieldMap)),
+      inBoth: dbFieldMap.filter((current: any) =>
+        fieldMaps.filter((csvMap: any) => csvMap.label === current.label)
+      ),
+      finalFieldMap: fieldMaps,
+    }
+  }
+
+  function _comparer(otherArray: any[]) {
+    return function (current: any) {
+      return (
+        otherArray.filter(function (other) {
+          return other.label == current.label
+        }).length == 0
+      )
+    }
   }
 
   const _createUpdateRows = async () => {

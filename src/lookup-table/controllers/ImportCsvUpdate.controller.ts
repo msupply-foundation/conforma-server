@@ -7,17 +7,21 @@ const ImportCsvUpdateController = async (request: any, reply: any) => {
 
   const lookupTableService = LookupTableService({ tableId: lookupTableId })
 
-  let stream = await parseStream(data.file, {
+  await parseStream(data.file, {
     headers: lookupTableService.parseCsvHeaders,
   })
     .on('data', async (row: any) => {
-      stream.pause()
       await lookupTableService.addRow(row)
-      stream.resume()
     })
     .on('end', async (rowCount: any) => {
-      await lookupTableService.updateTable()
-      reply.send({ status: 'success', message: 'Lookup table successfully updated' })
+      await lookupTableService
+        .updateTable()
+        .catch((error: Error) =>
+          reply.status(422).send({ status: 'error', name: error.name, message: error.message })
+        )
+        .then((message: string[]) => {
+          reply.send({ status: 'success', message: JSON.stringify(message) })
+        })
     })
     .on('error', (error: any) => {
       reply.status(422).send({ status: 'error', name: error.name, message: error.message })
