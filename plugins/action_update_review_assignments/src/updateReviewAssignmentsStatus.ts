@@ -11,7 +11,7 @@ async function updateReviewAssignmentsStatus(parameters: any, DBConnect: any) {
     const {
       application_id: applicationId,
       stage_number: stageNumber,
-      level: reviewLevel,
+      level_number: reviewLevel,
     } = await db.getReviewAssignmentById(reviewAssignmentId)
 
     const otherReviewAssignments = await db.getMatchingReviewAssignments(

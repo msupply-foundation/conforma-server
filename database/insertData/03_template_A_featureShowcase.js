@@ -943,6 +943,9 @@ exports.queries = [
                 number: 1
                 title: "Automatic"
                 description: "Please check your email to confirm your account."
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
             ]
           }
@@ -1060,7 +1063,10 @@ exports.queries = [
           templatePermissionsUsingId: {
             create: [
               # Apply General
-              { permissionNameId: 10100 }
+              {
+                permissionNameToPermissionNameId: {
+                connectByName: { name: "applyGeneral" } }
+              }
             ]
           }
         }

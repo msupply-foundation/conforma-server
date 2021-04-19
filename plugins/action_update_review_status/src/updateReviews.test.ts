@@ -46,7 +46,7 @@ test('Test: Should update 2 reviews', () => {
             reviewAssignmentId: 1001,
             applicationId: 4000,
             reviewer_id: 6,
-            level: 1,
+            levelNumber: 1,
             reviewStatus: 'Pending',
           },
         ],

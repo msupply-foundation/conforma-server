@@ -28,7 +28,7 @@ async function trimResponses(input: any, DBConnect: any) {
       ? await DBConnect.getAllReviewResponses(reviewId)
       : await DBConnect.getAllApplicationResponses(applicationId)
 
-    const reviewLevel = responses?.[0]?.level
+    const reviewLevel = responses?.[0]?.level_number
 
     // Create object of indexed responses, with array of response
     // objects for each indexed id

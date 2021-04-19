@@ -13,7 +13,7 @@ $$ LANGUAGE SQL IMMUTABLE;
 -- FUNCTION to auto-add level to review
 CREATE or replace FUNCTION public.review_level(review_assignment_id int)
 RETURNS INT AS $$
-select level from review_assignment where id = $1 ;
+select level_number from review_assignment where id = $1 ;
 $$ LANGUAGE SQL IMMUTABLE;
 
 -- FUNCTION to auto-add is_last_level to review
@@ -31,7 +31,7 @@ CREATE TABLE public.review (
 	trigger public.trigger,
 	application_id integer GENERATED ALWAYS AS (public.review_application_id(review_assignment_id)) STORED references public.application(id),
 	reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id(review_assignment_id)) STORED references public.user(id),
-	level integer GENERATED ALWAYS AS (public.review_level(review_assignment_id)) STORED,
+	level_number integer GENERATED ALWAYS AS (public.review_level(review_assignment_id)) STORED,
 	is_last_level boolean GENERATED ALWAYS AS (public.review_is_last_level(review_assignment_id)) STORED
 );
 

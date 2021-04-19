@@ -33,7 +33,7 @@ class GraphQLdb {
       `
       query getReviewData($id: Int!) {
         review(id: $id) {
-          level
+          levelNumber
           isLastLevel
           status
           latestDecision {

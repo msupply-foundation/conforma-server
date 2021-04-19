@@ -1,6 +1,9 @@
 /* 
 TEMPLATE F - Join Organisation
-  - Template to join an existing organisation
+  - for applying to join an existing organisation.
+  Still to-do:
+   - more specific policies to limit reviewers to their own organisation
+   - Org selector needs a plugin that doesn't show all companies to user
 */
 const { coreActions } = require('./core_actions')
 const { devActions } = require('./dev_actions')
@@ -64,7 +67,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5002
                       code: "S1Q2"
                       index: 2
                       title: "Reason"
@@ -287,22 +289,34 @@ exports.queries = [
           }
           templatePermissionsUsingId: {
             create: [
-              # applyJoinCompany
-              { permissionNameId: 8000 }
+              # applyGeneral
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyGeneral" }
+                }
+              }
               # assignGeneral
-              { permissionNameId: 9000 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "assignGeneral" }
+                }
+              }
               # reviewJoinCompany
               {
-                permissionNameId: 8000
-                level: 1
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewJoinCompany" }
+                }
                 stageNumber: 1
+                levelNumber: 1
                 restrictions: { canSelfAssign: true }
               }
               # reviewGeneral
               {
-                permissionNameId: 10000
-                level: 1
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewGeneral" }
+                }
                 stageNumber: 1
+                levelNumber: 1
                 restrictions: { canSelfAssign: true }
               }
             ]
