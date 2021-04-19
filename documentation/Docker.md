@@ -40,6 +40,10 @@ If image was built for specific branch, but branch content was changed, need to 
 
 `-t` is used to specify the build image tag, see `Tagging` below
 
+**NOTE**: If you are using `Docker Desktop` on mac, you would need to increase the size of memory and swap for front end to build correctly, my settings:
+
+![Docker Desktop Settings](images/docker-desktop-settings.png)
+
 ## ./run.sh
 
 See comments in the scripts for some more details.
