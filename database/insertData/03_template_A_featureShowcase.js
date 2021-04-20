@@ -11,8 +11,8 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          code: "TestRego"
-          name: "Test -- General Registration"
+          code: "Demo"
+          name: "Demo -- Feature Showcase"
           isLinear: false
           startMessage: {
             operator: "stringSubstitution"
