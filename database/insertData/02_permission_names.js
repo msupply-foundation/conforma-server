@@ -19,12 +19,12 @@ exports.queries = [
       }
     }
   }`,
-  // applyCompanyRego
+  // applyOrgRego
   `mutation createPermissionName {
     createPermissionName(
       input: {
         permissionName: {
-          name: "applyCompanyRego"
+          name: "applyOrgRego"
           permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "basicApply" }
           }
@@ -53,12 +53,12 @@ exports.queries = [
       }
     }
   }`,
-  // reviewCompanyRego
+  // reviewOrgRego
   `mutation createPermissionName {
     createPermissionName(
       input: {
         permissionName: {
-          name: "reviewCompanyRego"
+          name: "reviewOrgRego"
           permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "basicReview" }
           }
@@ -146,12 +146,12 @@ exports.queries = [
       }
     }
   }`,
-  // reviewJoinCompany
-  `mutation reviewJoinCompanyPermission {
+  // reviewJoinOrg
+  `mutation reviewJoinOrgPermission {
     createPermissionName(
       input: {
         permissionName: { 
-          name: "reviewJoinCompany", permissionPolicyToPermissionPolicyId: {
+          name: "reviewJoinOrg", permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "basicReview" }
           }
         }
@@ -195,7 +195,7 @@ exports.queries = [
     }
   }`,
   // applyGeneral (associated with multiple templates)
-  `mutation assignGeneralPermission {
+  `mutation applyGeneralPermission {
     createPermissionName(
       input: {
         permissionName: { 

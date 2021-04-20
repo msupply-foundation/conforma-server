@@ -1,4 +1,4 @@
-// Test suite for the grantPermissions Action -- adds a permisison to valerio user to reviewCompanyRego
+// Test suite for the grantPermissions Action -- adds a permisison to valerio user to reviewOrgRego
 // Ideally would verify that logic works by checking db (permission_join table) before and after
 
 import DBConnect from '../../../src/components/databaseConnect'
@@ -6,13 +6,13 @@ import { action as grantPermissions } from './index'
 
 const testParams = {
   username: 'valerio',
-  permissionNames: ['reviewCompanyRego'],
+  permissionNames: ['reviewOrgRego'],
 }
 
 const testParams2 = {
   username: 'carl',
   orgName: 'Medicinal Importers, Ltd.',
-  permissionNames: ['reviewCompanyRego'],
+  permissionNames: ['reviewOrgRego'],
 }
 
 test('Test: Add permission to Valerio', () => {
@@ -21,7 +21,7 @@ test('Test: Add permission to Valerio', () => {
       status: 'Success',
       output: {
         permissionJoinIds: [41],
-        permissionNames: ['reviewCompanyRego'],
+        permissionNames: ['reviewOrgRego'],
       },
       error_log: '',
     })
@@ -35,7 +35,7 @@ test('Test: Add permission to Valerio, already exists', () => {
       status: 'Success',
       output: {
         permissionJoinIds: [41],
-        permissionNames: ['reviewCompanyRego'],
+        permissionNames: ['reviewOrgRego'],
       },
       error_log: '',
     })
@@ -49,7 +49,7 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
       status: 'Success',
       output: {
         permissionJoinIds: [43],
-        permissionNames: ['reviewCompanyRego'],
+        permissionNames: ['reviewOrgRego'],
       },
       error_log: '',
     })
@@ -63,7 +63,7 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd., already exists
       status: 'Success',
       output: {
         permissionJoinIds: [43],
-        permissionNames: ['reviewCompanyRego'],
+        permissionNames: ['reviewOrgRego'],
       },
       error_log: '',
     })
