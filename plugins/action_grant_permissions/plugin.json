@@ -1,0 +1,23 @@
+{
+  "type": "action_grant_permissions",
+  "code": "grantPermissions",
+  "name": "Grant Permissions",
+  "description": "Grants permission to user/org, creates permission join from user/org to permission name. If org not provided, the permission will be granted to the user only.",
+  "required_parameters": ["username", "orgName", "permissionNames"],
+  "output_properties": ["permissionJoinIds", "permissionNames"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2020-11-20"
+  }
+}

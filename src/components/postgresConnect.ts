@@ -331,11 +331,13 @@ class PostgresDB {
   }
 
   public updateActionPlugin = async (plugin: ActionPlugin): Promise<boolean> => {
-    const text =
-      'UPDATE action_plugin SET name = $2, description = $3, path = $4, function_name = $5, required_parameters = $6, output_properties = $7 WHERE code = $1'
+    const setMapping = Object.keys(plugin).map((key, index) => `${key} = $${index + 1}`)
+    const text = `UPDATE action_plugin SET ${setMapping.join(',')} WHERE code = $${
+      setMapping.length + 1
+    }`
     // TODO: Dynamically select what is being updated
     try {
-      await this.query({ text, values: Object.values(plugin) })
+      await this.query({ text, values: [...Object.values(plugin), plugin.code] })
       return true
     } catch (err) {
       throw err
@@ -423,8 +425,9 @@ class PostgresDB {
         org_id as "orgId",
         org_name as "orgName",
         user_role as "userRole",
-        licence_number as "licenceNumber",
-        address
+        registration,
+        address,
+        logo_url as "logoUrl"
         FROM user_org_join`
     const text = userId ? `${queryText} WHERE user_id = $1` : `${queryText} WHERE username = $1`
     try {
@@ -660,7 +663,7 @@ class PostgresDB {
 
   public getNumReviewLevels = async (templateId: number, stageNumber: number) => {
     const text = `
-    SELECT MAX(level) FROM template_permission
+    SELECT MAX(level_number) FROM template_permission
     WHERE template_id = $1 
     AND stage_number = $2
     `
@@ -674,7 +677,8 @@ class PostgresDB {
   }
   public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
-      SELECT review.level, stage_number as "stageNumber"
+      SELECT review.level_number AS "levelNumber",
+      stage_number as "stageNumber"
       FROM review JOIN review_assignment ra
       ON review.review_assignment_id = ra.id
       WHERE review.id = $1
@@ -726,7 +730,7 @@ class PostgresDB {
 
   public getAllReviewResponses = async (reviewId: number) => {
     const text = `
-    SELECT rr.id, r.level, code, comment, decision, rr.status, rr.template_element_id,
+    SELECT rr.id, r.level_number, code, comment, decision, rr.status, rr.template_element_id,
     rr.application_response_id, rr.review_response_link_id, rr.time_updated
     FROM review_response rr JOIN application_response ar
     ON rr.application_response_id = ar.id

@@ -10,6 +10,7 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 
 - [Overview](Overview.md)
 - [Glossary](Glossary.md)
+- [Snapshots](Snapshots.md)
 
 **Database**
 

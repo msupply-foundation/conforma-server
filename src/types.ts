@@ -97,7 +97,6 @@ export interface ActionPlugin {
   name: string
   description: string
   path: string
-  function_name: string
   required_parameters: string[]
   output_properties?: string[]
 }
@@ -107,7 +106,6 @@ export interface ActionPluginPayload {
   name: string
   description: string
   path: string
-  function_name: string
   required_parameters: { [key: string]: any }
 }
 
@@ -166,8 +164,9 @@ export interface Organisation {
   orgId: number
   userRole?: string | null
   orgName: string
-  licenceNumber?: string
+  registration?: string
   address?: string
+  logoUrl?: string
 }
 
 export interface UserOrg extends User, Organisation {}

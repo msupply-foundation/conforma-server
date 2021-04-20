@@ -12,7 +12,7 @@ exports.queries = [
           applicationId: 4000
           stageId: 5
           stageNumber: 1
-          level: 1
+          levelNumber: 1
           isLastLevel: true
           userToReviewerId: { 
             connectByUsername: { username: "testReviewer1" } 
@@ -140,7 +140,7 @@ exports.queries = [
           applicationId: 4000
           stageId: 6
           stageNumber: 2
-          level: 1
+          levelNumber: 1
           isLastLevel: false
           userToReviewerId: { 
             connectByUsername: { username: "testReviewer1" } 
@@ -232,7 +232,7 @@ exports.queries = [
           applicationId: 4000
           stageId: 6
           stageNumber: 2
-          level: 1
+          levelNumber: 1
           isLastLevel: false
           userToReviewerId: {
             connectByUsername: { username: "testReviewer2" }
@@ -328,7 +328,7 @@ exports.queries = [
           applicationId: 4000
           stageId: 6
           stageNumber: 2
-          level: 2
+          levelNumber: 2
           isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
@@ -371,7 +371,7 @@ exports.queries = [
           applicationId: 4000
           stageId: 6
           stageNumber: 2
-          level: 2
+          levelNumber: 2
           isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
@@ -415,7 +415,7 @@ exports.queries = [
           applicationId: 4001
           stageId: 5
           stageNumber: 1
-          level: 1
+          levelNumber: 1
           isLastLevel: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
@@ -460,7 +460,7 @@ exports.queries = [
           applicationId: 4002
           stageId: 5
           stageNumber: 1
-          level: 1
+          levelNumber: 1
           isLastLevel: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
@@ -585,7 +585,7 @@ exports.queries = [
           applicationId: 4002
           stageId: 6
           stageNumber: 2
-          level: 1
+          levelNumber: 1
           isLastLevel: false
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
@@ -686,7 +686,7 @@ exports.queries = [
           applicationId: 4002
           stageId: 6
           stageNumber: 2
-          level: 1
+          levelNumber: 1
           isLastLevel: false
           userToReviewerId: {
             connectByUsername: { username: "testReviewer2" }
@@ -775,7 +775,7 @@ exports.queries = [
           applicationId: 4002
           stageId: 6
           stageNumber: 2
-          level: 2
+          levelNumber: 2
           isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
@@ -818,7 +818,7 @@ exports.queries = [
           applicationId: 4002
           stageId: 6
           stageNumber: 2
-          level: 2
+          levelNumber: 2
           isLastLevel: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
@@ -918,7 +918,7 @@ exports.queries = [
           applicationId: 4003
           stageId: 5
           stageNumber: 1
-          level: 1
+          levelNumber: 1
           isLastLevel: true
           userToReviewerId: { 
             connectByUsername: { username: "testReviewer1" } 
@@ -959,7 +959,7 @@ exports.queries = [
           applicationId: 4003
           stageId: 5
           stageNumber: 1
-          level: 1
+          levelNumber: 1
           isLastLevel: true
           userToReviewerId: { 
             connectByUsername: { username: "testReviewer2" } 

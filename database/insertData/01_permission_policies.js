@@ -7,7 +7,6 @@ exports.queries = [
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          id: 1000
           name: "oneTimeApply"
           rules: {
             application: {
@@ -28,7 +27,6 @@ exports.queries = [
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          id: 2000
           name: "basicApply"
           rules: {
             application: {
@@ -52,7 +50,6 @@ exports.queries = [
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          id: 3000
           name: "basicReview"
           rules: {
             application: {
@@ -73,7 +70,6 @@ exports.queries = [
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          id: 4000
           name: "basicAssign"
           rules: {
             application: {

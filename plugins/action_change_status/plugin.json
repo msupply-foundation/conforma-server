@@ -1,0 +1,29 @@
+{
+  "type": "action_plugin",
+  "code": "changeStatus",
+  "name": "Change Status",
+  "description": "Changes the Status of an application",
+  "required_parameters": ["applicationId", "newStatus"],
+  "output_properties": [
+    "applicationId",
+    "status",
+    "statusId",
+    "applicationStatusHistoryTimestamp",
+    "reviewStatusHistoryTimestamp"
+  ],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "update"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2020-10-30"
+  }
+}

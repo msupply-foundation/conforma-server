@@ -4,9 +4,8 @@ import path from 'path'
 // project root. Needed for components that traverse the local directory
 // structure (e.g. fileHandler, registerPlugins), as the project
 // root changes its relative path once built.
-export function getAppRootDir() {
-  const serverRoot = String(require.main?.filename)
-  return path.dirname(serverRoot)
+export function getAppEntryPointDir() {
+  return path.dirname(__dirname)
 }
 
 // Value equality comparison for arrays and objects, which can

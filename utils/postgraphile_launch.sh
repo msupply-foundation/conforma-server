@@ -1,3 +1,3 @@
 #TO-DO: Replace string with variable for DB name
 
-npx postgraphile -c "postgres://postgres@localhost/tmf_app_manager" --watch
+yarn postgraphile -c "postgres://postgres@localhost/tmf_app_manager" --watch
