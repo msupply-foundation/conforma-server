@@ -480,10 +480,10 @@ class PostgresDB {
       stage_number AS "stageNumber",
       stage,
       stage_history_id AS "stageHistoryId",
-      stage_history_time_created AS "stageHistoryTimeCreated"
+      stage_history_time_created AS "stageHistoryTimeCreated",
       status_history_id AS "statusHistoryId",
       status,
-      status_history_time_created AS "statusHistoryTimeCreated",
+      status_history_time_created AS "statusHistoryTimeCreated"
       FROM application_stage_status_latest 
       WHERE application_id = $1
     `

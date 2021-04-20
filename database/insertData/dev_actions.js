@@ -4,50 +4,21 @@ GraphQL Fragment - DEVELOPMENT Actions
 \*/
 exports.devActions = `
       {
-              actionCode: "cLog"
+              actionCode: "incrementStage"
               sequence: 1
               trigger: DEV_TEST
-              condition: false
-              parameterQueries: {
-                message: "This is a console log"
-            }
+          #    parameterQueries: {
+          #      message: "This is a console log"
+          #  }
         }
         {
-              actionCode: "cLog"
-              sequence: 2
-              trigger: DEV_TEST
-              condition: true
-              parameterQueries: {
-                message: "This one should print"
-            }
-        }
-        {
-            actionCode: "cLog"
-            trigger: DEV_TEST
-            condition: true
-            parameterQueries: {
-              message: "Async action with True condition"
+          actionCode: "changeStatus"
+          trigger: DEV_TEST
+          sequence: 2
+          parameterQueries: {
+            newStatus: { value: "Draft" }
           }
         }
-       {
-           actionCode: "cLog"
-           trigger: DEV_TEST
-           condition: false
-           parameterQueries: {
-             message: "Async action with False condition"
-         }
-       }
-       {
-           actionCode: "cleanupFiles"
-           trigger: DEV_TEST
-           sequence: 3
-           parameterQueries: {
-             applicationSerial: {
-               operator: "objectProperties"
-               children: [ "applicationData.applicationSerial" ]
-             }
-         }
-       }
    # {
    # Add more Actions
    # }   

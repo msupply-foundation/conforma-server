@@ -9,12 +9,6 @@ exports.coreActions = `
         actionCode: "incrementStage"
         sequence: 1
         trigger: ON_APPLICATION_CREATE
-        parameterQueries: {
-        applicationId: {
-            operator: "objectProperties"
-            children: ["applicationData.applicationId"]
-        }
-        }
     }
     # ON_APPLICATION_RESTART
     # change status to draft
@@ -23,11 +17,7 @@ exports.coreActions = `
       trigger: ON_APPLICATION_RESTART
       sequence: 1
       parameterQueries: {
-      applicationId: {
-          operator: "objectProperties"
-          children: ["applicationData.applicationId"]
-      }
-      newStatus: { value: "Draft" }
+        newStatus: { value: "Draft" }
       }
     }
     # ON_REVIEW_RESTART

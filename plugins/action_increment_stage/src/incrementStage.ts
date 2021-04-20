@@ -19,9 +19,9 @@ async function incrementStage({
         ? applicationData
         : await DBConnect.getCurrentStageStatusHistory(applicationId)
 
-    const currentStageHistoryId = current.stageHistoryId
-    const currentStageNum = current.stageNumber
-    const currentStatus = current.status
+    const currentStageHistoryId = current?.stageHistoryId
+    const currentStageNum = current?.stageNumber
+    const currentStatus = current?.status
 
     const nextStage = await DBConnect.getNextStage(templateId, currentStageNum)
 

@@ -236,7 +236,7 @@ export async function executeAction(
       throw err
     }
   } else {
-    console.log('Condition not met')
+    console.log(payload.code + ': Condition not met')
     return await DBConnect.executedActionStatusUpdate({
       status: 'Condition not met',
       error_log: '',
