@@ -19,8 +19,7 @@ async function generateReviewAssignments({
     const { templateId, stageNumber, stageId } =
       applicationData ?? (await DBConnect.getApplicationData(applicationId))
 
-    const numReviewLevels: number =
-      (await DBConnect.getNumReviewLevels(templateId, stageNumber)) || 0
+    const numReviewLevels: number = (await DBConnect.getNumReviewLevels(stageId)) || 0
 
     let nextReviewLevel = 1
 

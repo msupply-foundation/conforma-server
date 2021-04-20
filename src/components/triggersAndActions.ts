@@ -185,7 +185,7 @@ export async function executeAction(
   const applicationData = await getApplicationData(payload)
 
   // Enable next line to inspect applicationData:
-  console.log('ApplicationData: ', applicationData)
+  // console.log('ApplicationData: ', applicationData)
 
   const evaluatorParams = {
     objects: { applicationData, ...additionalObjects },

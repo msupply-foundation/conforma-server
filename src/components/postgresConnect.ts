@@ -668,14 +668,13 @@ class PostgresDB {
     }
   }
 
-  public getNumReviewLevels = async (templateId: number, stageNumber: number) => {
+  public getNumReviewLevels = async (stageId: number) => {
     const text = `
-    SELECT MAX(level_number) FROM template_permission
-    WHERE template_id = $1 
-    AND stage_number = $2
+    SELECT MAX(number) FROM template_stage_review_level
+    WHERE stage_id = $1
     `
     try {
-      const result = await this.query({ text, values: [templateId, stageNumber] })
+      const result = await this.query({ text, values: [stageId] })
       return result.rows[0].max
     } catch (err) {
       console.log(err.message)
