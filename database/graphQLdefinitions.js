@@ -23,6 +23,7 @@ const graphQLdefinition = [
   },
   {
     table: 'templateElement',
+    generatedColumns: ['templateCode'],
   },
 
   {
