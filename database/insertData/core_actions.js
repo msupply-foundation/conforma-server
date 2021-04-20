@@ -57,60 +57,20 @@ exports.coreActions = `
         trigger: ON_APPLICATION_SUBMIT
         sequence: 1
         parameterQueries: {
-        applicationId: {
-            operator: "objectProperties"
-            children: ["applicationData.applicationId"]
-        }
-        newStatus: { value: "Submitted" }
+          newStatus: { value: "Submitted" }
         }
     }
     {
         actionCode: "trimResponses"
         trigger: ON_APPLICATION_SUBMIT
         sequence: 2
-        parameterQueries: {
-          applicationId: {
-            operator: "objectProperties"
-            children: ["applicationData.record_id"]
-          }
-          timestamp: {
-            operator: "objectProperties"
-            children: ["output.applicationStatusHistoryTimestamp", null]
-          }
-        }
     }
     {
       actionCode: "generateReviewAssignments"
       trigger: ON_APPLICATION_SUBMIT
       sequence: 3
-      parameterQueries: {
-        applicationId: {
-            operator: "objectProperties"
-            children: ["applicationData.applicationId"]
-        }
-      }
     }
-    {
-        actionCode: "updateReviews"
-        trigger: ON_APPLICATION_SUBMIT
-        sequence: 4
-        parameterQueries: {
-          applicationId: {
-            operator: "objectProperties"
-            children: ["applicationData.record_id"]
-          }
-          changedApplicationResponses: {
-            operator: "objectProperties"
-            children: ["output.updatedResponses"]
-          }
-        }
-    }
-    {
-      actionCode: "cleanupFiles"
-      trigger: ON_APPLICATION_SUBMIT
-      sequence: 5
-      parameterQueries: {}
-    }
+
     # -------------------------------------------
     # ON_REVIEW_SUBMIT
     # 1 - change status to submitted

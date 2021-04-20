@@ -19,7 +19,7 @@ async function updateReviews({ parameters, applicationData, DBConnect }: ActionP
 
   const { applicationId, changedApplicationResponses = [] } = parameters
   const stageId = parameters?.stageId || applicationData?.stageId
-  const level = parameters?.level || applicationData?.reviewData?.level || 1
+  const level = parameters?.level || applicationData?.reviewData?.levelNumber || 1
 
   const reviewsToUpdate = []
 

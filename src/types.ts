@@ -71,11 +71,9 @@ export interface ActionQueueExecutePayload {
 }
 
 export interface ActionApplicationData {
-  trigger_id: number
-  trigger: Trigger
-  table: string
-  record_id: number
+  action_payload: ActionPayload
   applicationId: number
+  applicationSerial: string
   templateId: number
   stageId: number
   stageNumber: number
@@ -86,12 +84,29 @@ export interface ActionApplicationData {
   status: ApplicationStatus
   statusHistoryTimeCreated: Date
   userId: number
+  orgId: number
   firstName: string
   lastName: string
   username: string
-  dateOfBirth: Date
+  dateOfBirth: Date | null
   email: string
-  responses: BasicObject
+  responses: {
+    [key: string]: any
+  }
+  reviewData: {
+    reviewId?: number
+    levelNumber?: number
+    isLastLevel?: boolean
+    status?: string
+    latestDecision?: {
+      decision: string
+      comment: string
+    }
+  }
+  environmentData: {
+    appRootFolder: string
+    filesFolder: string
+  }
 }
 
 export interface ActionPayload {

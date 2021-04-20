@@ -183,6 +183,8 @@ When a reviewer self-assigns themselves to a review_assignment (i.e. its status 
 
 **Note:** If `trigger` is not supplied, the plugin will try to infer it from `applicationData`
 
+---
+
 ### Trim Responses
 
 Whenever an application or review is submitted, this Action "cleans up", by deleting all responses that have not changed since the last submission (or are `null`). Also, the remaining responses have their timestamps (`timeUpdated`) updated to match the timestamp of the most recent status_history (application or review, as appropriate).

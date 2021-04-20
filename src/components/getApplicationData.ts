@@ -47,7 +47,7 @@ export const getApplicationData = async (payload: ActionPayload) => {
   }
 
   return {
-    ...payload,
+    action_payload: payload,
     ...applicationData,
     ...userData,
     responses: responseData,

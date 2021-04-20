@@ -11,7 +11,7 @@ async function updateReviewAssignmentsStatus({
   console.log('Updating review assignment statuses...')
 
   try {
-    const trigger = parameters?.trigger ?? applicationData?.trigger_payload?.trigger
+    const trigger = parameters?.trigger ?? applicationData?.action_payload?.trigger_payload?.trigger
     const { reviewAssignmentId } = parameters
     // NB: reviewAssignmentId comes from record_id on TriggerPayload when
     // triggered from review_assignment table

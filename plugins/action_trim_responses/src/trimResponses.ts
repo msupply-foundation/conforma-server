@@ -21,7 +21,7 @@ interface ResponsesById {
 async function trimResponses({ parameters, applicationData, DBConnect }: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
-  const applicationId = parameters?.applciationId ?? applicationData?.applciationId
+  const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
 
   console.log(`Trimming unchanged duplicated ${reviewId ? 'Review' : 'Application'} responses...`)

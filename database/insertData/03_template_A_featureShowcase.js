@@ -1038,11 +1038,11 @@ exports.queries = [
                       "Output concatenation: The user %1's registration has been %2"
                       {
                         operator: "objectProperties"
-                        children: ["output.username"]
+                        children: ["outputCumulative.username"]
                       }
                       {
                         operator: "objectProperties"
-                        children: ["output.newOutcome"]
+                        children: ["outputCumulative.newOutcome"]
                       }
                     ]
                   }
