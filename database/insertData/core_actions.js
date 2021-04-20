@@ -70,7 +70,22 @@ exports.coreActions = `
       trigger: ON_APPLICATION_SUBMIT
       sequence: 3
     }
-
+    {
+      actionCode: "updateReviews"
+      trigger: ON_APPLICATION_SUBMIT
+      sequence: 4
+      parameterQueries: {
+        changedApplicationResponses: {
+          operator: "objectProperties"
+          children: ["outputCumulative.updatedResponses"]
+        }
+      }
+  }
+  {
+    actionCode: "cleanupFiles"
+    trigger: ON_APPLICATION_SUBMIT
+    sequence: 5
+  }
     # -------------------------------------------
     # ON_REVIEW_SUBMIT
     # 1 - change status to submitted
