@@ -1008,10 +1008,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 103
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newStatus: { value: "Completed" }
                 }
               }
@@ -1020,10 +1016,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 104
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newOutcome: { value: "Approved" }
                 }
               }

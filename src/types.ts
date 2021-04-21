@@ -1,5 +1,5 @@
 import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
-import { ApplicationStatus, Trigger } from './generated/graphql'
+import { ApplicationOutcome, ApplicationStatus, Trigger } from './generated/graphql'
 
 export interface ActionInTemplate {
   code: string
@@ -85,6 +85,7 @@ export interface ActionApplicationData {
   statusHistoryTimeCreated: Date
   userId: number
   orgId: number
+  outcome: ApplicationOutcome
   firstName: string
   lastName: string
   username: string

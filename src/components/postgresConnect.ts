@@ -242,7 +242,8 @@ class PostgresDB {
       stage_history_time_created as "stageHistoryTimeCreated",
       status_history_id as "statusHistoryId", status, status_history_time_created as "statusHistoryTimeCreated",
       user_id as "userId",
-      org_id as "orgId"
+      org_id as "orgId",
+      outcome
       FROM application_stage_status_all
       WHERE application_id = $1
       AND stage_is_current = true

@@ -91,11 +91,7 @@ exports.coreActions = `
         trigger: ON_REVIEW_SUBMIT
         sequence: 1
         parameterQueries: {
-        reviewId: {
-            operator: "objectProperties"
-            children: ["applicationData.record_id"]
-            }
-        newStatus: { value: "Submitted" }
+          newStatus: { value: "Submitted" }
         }
     }
     {
@@ -103,13 +99,9 @@ exports.coreActions = `
         trigger: ON_REVIEW_SUBMIT
         sequence: 2
         parameterQueries: {
-          reviewId: {
-            operator: "objectProperties"
-            children: ["applicationData.record_id"]
-          }
           timestamp: {
             operator: "objectProperties"
-            children: ["output.reviewStatusHistoryTimestamp"]
+            children: ["outputCumulative.reviewStatusHistoryTimestamp"]
             }
         }
     }
@@ -156,12 +148,6 @@ exports.coreActions = `
           }
         ]
       }
-      parameterQueries: {
-        applicationId: {
-          operator: "objectProperties"
-          children: ["applicationData.applicationId"]
-        }
-      }
     }
     # generates next review assignments
     # condition checks current review stage and level in review submitted
@@ -170,16 +156,6 @@ exports.coreActions = `
       actionCode: "generateReviewAssignments"
       trigger: ON_REVIEW_SUBMIT
       sequence: 5
-      parameterQueries: {
-        applicationId: {
-          operator: "objectProperties"
-          children: ["applicationData.applicationId"]
-        }
-        reviewId: {
-            operator: "objectProperties"
-            children: ["applicationData.record_id"]
-        }
-      }
     }
     # update review visibility for applicant
     # condition checks for latest review decison = LIST_OF_QUESTIONS
@@ -208,12 +184,6 @@ exports.coreActions = `
             children: ["applicationData.reviewData.isLastLevel"]
           }
         ]
-      }
-        parameterQueries: {
-        reviewId: {
-          operator: "objectProperties"
-          children: ["applicationData.record_id"]
-        }
       }
     }
     # change application status to changes requested
@@ -245,10 +215,6 @@ exports.coreActions = `
         ]
       }
       parameterQueries: {
-        applicationId: {
-          operator: "objectProperties"
-          children: ["applicationData.applicationId"]
-        }
         newStatus: { value: "Changes Required" }
       }
     }
@@ -262,11 +228,11 @@ exports.coreActions = `
         parameterQueries: {
         reviewAssignmentId: {
             operator: "objectProperties"
-            children: ["applicationData.record_id"]
+            children: ["applicationData.application_payload.trigger_payload.record_id"]
         }
         trigger: {
             operator: "objectProperties"
-            children: ["applicationData.trigger"]
+            children: ["applicationData.application_payload.trigger_payload.trigger"]
         }
         }
     }   

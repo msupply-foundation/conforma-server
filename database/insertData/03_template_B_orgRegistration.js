@@ -341,24 +341,15 @@ exports.queries = [
                 # TO-DO -- update condition to just check Outcome
                 # (from applicationData)
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -396,24 +387,15 @@ exports.queries = [
                 # TO-DO -- update condition to just check Outcome
                 # (from applicationData)
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -423,7 +405,7 @@ exports.queries = [
                   }
                   organisation_id: {
                     operator: "objectProperties"
-                    children: ["output.orgId"]
+                    children: ["outputCumulative.orgId"]
                   }
                   user_role: "Owner"
                 }
@@ -435,24 +417,15 @@ exports.queries = [
                 # TO-DO -- update condition to just check Outcome
                 # (from applicationData)
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -462,7 +435,7 @@ exports.queries = [
                   }
                   orgName: {
                     operator: "objectProperties"
-                    children: ["output.orgName"]
+                    children: ["outputCumulative.orgName"]
                   }
                   permissionNames: ["reviewJoinOrg"]
                 }
