@@ -228,11 +228,11 @@ exports.coreActions = `
         parameterQueries: {
         reviewAssignmentId: {
             operator: "objectProperties"
-            children: ["applicationData.application_payload.trigger_payload.record_id"]
+            children: ["applicationData.action_payload.trigger_payload.record_id"]
         }
         trigger: {
             operator: "objectProperties"
-            children: ["applicationData.application_payload.trigger_payload.trigger"]
+            children: ["applicationData.action_payload.trigger_payload.trigger"]
         }
         }
     }   

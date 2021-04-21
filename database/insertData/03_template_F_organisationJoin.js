@@ -175,10 +175,6 @@ exports.queries = [
                   ]
                 }
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newOutcome: "Approved"
                 }
               }
@@ -187,24 +183,15 @@ exports.queries = [
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 120
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -223,24 +210,15 @@ exports.queries = [
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 130
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -260,31 +238,18 @@ exports.queries = [
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 110
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newStatus: "Completed"
                 }
               }

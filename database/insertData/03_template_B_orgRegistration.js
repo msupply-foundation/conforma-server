@@ -327,10 +327,6 @@ exports.queries = [
                   ]
                 }
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
                   newOutcome: { value: "Approved" }
                 }
               }
