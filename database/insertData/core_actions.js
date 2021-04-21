@@ -27,11 +27,7 @@ exports.coreActions = `
       trigger: ON_REVIEW_RESTART
       sequence: 1
       parameterQueries: {
-        reviewId: {
-          operator: "objectProperties"
-          children: ["applicationData.record_id"]
-      }
-      newStatus: { value: "Draft" }
+        newStatus: { value: "Draft" }
       }
     }
     # ON_REVIEW_CREATE
@@ -40,11 +36,7 @@ exports.coreActions = `
         actionCode: "changeStatus"
         trigger: ON_REVIEW_CREATE
         parameterQueries: {
-        reviewId: {
-            operator: "objectProperties"
-            children: ["applicationData.record_id"]
-        }
-        newStatus: { value: "Draft" }
+          newStatus: { value: "Draft" }
         }
     }
     # ON_APPLICATION_SUBMIT
@@ -80,12 +72,12 @@ exports.coreActions = `
           children: ["outputCumulative.updatedResponses"]
         }
       }
-  }
-  {
-    actionCode: "cleanupFiles"
-    trigger: ON_APPLICATION_SUBMIT
-    sequence: 5
-  }
+    }
+    {
+      actionCode: "cleanupFiles"
+      trigger: ON_APPLICATION_SUBMIT
+      sequence: 5
+    }
     # -------------------------------------------
     # ON_REVIEW_SUBMIT
     # 1 - change status to submitted

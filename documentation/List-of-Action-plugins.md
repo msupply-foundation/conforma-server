@@ -223,7 +223,9 @@ When an applicant re-submits an application after making changes, this Action up
 | `applicationId`\*                                               | `updatedReviews`  |
 | `changedApplicationResponses` [Array of applicationResponseIds] |                   |
 
-If an array of `changedApplicationResponses` is provided... ?
+**Note:** If `applicationId` is not provided, the plugin will attempt to fetch it from `applicationData`
+
+---
 
 ## Core Actions
 

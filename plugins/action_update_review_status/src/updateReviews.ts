@@ -11,13 +11,14 @@ interface Review {
   reviewStatus: ReviewStatus
 }
 
-// async function updateReviews(input: any, DBConnect: any) {
 async function updateReviews({ parameters, applicationData, DBConnect }: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
   console.log('Updating reviews status...')
 
-  const { applicationId, changedApplicationResponses = [] } = parameters
+  const applicationId = parameters?.applicationId ?? applicationData.applicationId
+
+  const { changedApplicationResponses = [] } = parameters
   const stageId = parameters?.stageId || applicationData?.stageId
   const level = parameters?.level || applicationData?.reviewData?.levelNumber || 1
 
