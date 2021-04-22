@@ -18,7 +18,7 @@ The `user_id` links to the Applicant user that created this application.
 
 The `serial` is a string used to display the application number to users - future plan is to allow custom serial numbers.
 
-The `name` will be deduced by the template name + user + company names.
+The `name` will be deduced by the template name + user + organisation names.
 
 The `is_active` is set to `'true'` for all applications that are still in the review process or are in Draft status.
 
