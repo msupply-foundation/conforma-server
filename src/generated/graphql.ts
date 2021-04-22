@@ -844,6 +844,7 @@ export type ApplicationListShape = {
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
+  stageColour?: Maybe<Scalars['String']>;
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
@@ -887,6 +888,8 @@ export type ApplicationListShapeCondition = {
   orgName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `stage` field. */
   stage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageColour` field. */
+  stageColour?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `status` field. */
   status?: Maybe<ApplicationStatus>;
   /** Checks for equality with the object’s `outcome` field. */
@@ -941,6 +944,8 @@ export type ApplicationListShapeFilter = {
   orgName?: Maybe<StringFilter>;
   /** Filter by the object’s `stage` field. */
   stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageColour` field. */
+  stageColour?: Maybe<StringFilter>;
   /** Filter by the object’s `status` field. */
   status?: Maybe<ApplicationStatusFilter>;
   /** Filter by the object’s `outcome` field. */
@@ -990,6 +995,7 @@ export type ApplicationListShapeInput = {
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
+  stageColour?: Maybe<Scalars['String']>;
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
@@ -1053,6 +1059,8 @@ export enum ApplicationListShapesOrderBy {
   OrgNameDesc = 'ORG_NAME_DESC',
   StageAsc = 'STAGE_ASC',
   StageDesc = 'STAGE_DESC',
+  StageColourAsc = 'STAGE_COLOUR_ASC',
+  StageColourDesc = 'STAGE_COLOUR_DESC',
   StatusAsc = 'STATUS_ASC',
   StatusDesc = 'STATUS_DESC',
   OutcomeAsc = 'OUTCOME_ASC',
@@ -2640,6 +2648,7 @@ export type ApplicationStageStatusAll = {
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
+  stageColour?: Maybe<Scalars['String']>;
   stageHistoryId?: Maybe<Scalars['Int']>;
   stageHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   stageIsCurrent?: Maybe<Scalars['Boolean']>;
@@ -2672,6 +2681,8 @@ export type ApplicationStageStatusAllCondition = {
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stage` field. */
   stage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageColour` field. */
+  stageColour?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `stageHistoryId` field. */
   stageHistoryId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageHistoryTimeCreated` field. */
@@ -2708,6 +2719,8 @@ export type ApplicationStageStatusAllFilter = {
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `stage` field. */
   stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageColour` field. */
+  stageColour?: Maybe<StringFilter>;
   /** Filter by the object’s `stageHistoryId` field. */
   stageHistoryId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageHistoryTimeCreated` field. */
@@ -2773,6 +2786,8 @@ export enum ApplicationStageStatusAllsOrderBy {
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   StageAsc = 'STAGE_ASC',
   StageDesc = 'STAGE_DESC',
+  StageColourAsc = 'STAGE_COLOUR_ASC',
+  StageColourDesc = 'STAGE_COLOUR_DESC',
   StageHistoryIdAsc = 'STAGE_HISTORY_ID_ASC',
   StageHistoryIdDesc = 'STAGE_HISTORY_ID_DESC',
   StageHistoryTimeCreatedAsc = 'STAGE_HISTORY_TIME_CREATED_ASC',
@@ -2800,6 +2815,7 @@ export type ApplicationStageStatusLatest = {
   stageId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   stage?: Maybe<Scalars['String']>;
+  stageColour?: Maybe<Scalars['String']>;
   stageHistoryId?: Maybe<Scalars['Int']>;
   stageHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   stageIsCurrent?: Maybe<Scalars['Boolean']>;
@@ -2832,6 +2848,8 @@ export type ApplicationStageStatusLatestCondition = {
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stage` field. */
   stage?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `stageColour` field. */
+  stageColour?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `stageHistoryId` field. */
   stageHistoryId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `stageHistoryTimeCreated` field. */
@@ -2868,6 +2886,8 @@ export type ApplicationStageStatusLatestFilter = {
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `stage` field. */
   stage?: Maybe<StringFilter>;
+  /** Filter by the object’s `stageColour` field. */
+  stageColour?: Maybe<StringFilter>;
   /** Filter by the object’s `stageHistoryId` field. */
   stageHistoryId?: Maybe<IntFilter>;
   /** Filter by the object’s `stageHistoryTimeCreated` field. */
@@ -2933,6 +2953,8 @@ export enum ApplicationStageStatusLatestsOrderBy {
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   StageAsc = 'STAGE_ASC',
   StageDesc = 'STAGE_DESC',
+  StageColourAsc = 'STAGE_COLOUR_ASC',
+  StageColourDesc = 'STAGE_COLOUR_DESC',
   StageHistoryIdAsc = 'STAGE_HISTORY_ID_ASC',
   StageHistoryIdDesc = 'STAGE_HISTORY_ID_DESC',
   StageHistoryTimeCreatedAsc = 'STAGE_HISTORY_TIME_CREATED_ASC',
@@ -25848,6 +25870,7 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   applicant?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   orgName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  stageColour?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
   lastActiveDate?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
@@ -25984,6 +26007,7 @@ export type ApplicationStageStatusAllResolvers<ContextType = any, ParentType ext
   stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  stageColour?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stageHistoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stageHistoryTimeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   stageIsCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -26018,6 +26042,7 @@ export type ApplicationStageStatusLatestResolvers<ContextType = any, ParentType 
   stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  stageColour?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stageHistoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   stageHistoryTimeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   stageIsCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;

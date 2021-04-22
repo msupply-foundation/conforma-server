@@ -9,6 +9,7 @@ CREATE OR REPLACE VIEW public.application_stage_status_all AS
 	stage_id,
 	number as stage_number,
 	title as stage,
+	colour as stage_colour,
 	stage.id as stage_history_id,
 	stage.time_created as stage_history_time_created,
 	stage.is_current as stage_is_current,
