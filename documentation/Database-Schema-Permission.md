@@ -16,7 +16,7 @@ We like to define the permissions definition using: Who, how and what.
 
 **What** => the `template_permission` that connects some permission with an application template or section of an application template.
 
-Before any user is included, permissions can be created. The permission definition consists only of the `permission_policy` and the `permission_name`. And then what links this permission with an application template is the `template_permission`, and after the permission is granted to a user (or a user in a company) what links this permission with an user is the `permission_join`.
+Before any user is included, permissions can be created. The permission definition consists only of the `permission_policy` and the `permission_name`. And then what links this permission with an application template is the `template_permission`, and after the permission is granted to a user (or a user in a organisation) what links this permission with an user is the `permission_join`.
 
 Access to the database is restricted using PostGres row-level security policies, which are defined by these permission settings.
 
@@ -49,4 +49,4 @@ The `permission_name_id` links to the permission name.
 
 The `user_id` links to a user with this permission granted. (Can be NULL, if is a user_organisation permission).
 
-The `user_organisation_id` links to a user from a company with this permission granted (Can be NULL, if is a user permission).
+The `user_organisation_id` links to a user from a organisation with this permission granted (Can be NULL, if is a user permission).

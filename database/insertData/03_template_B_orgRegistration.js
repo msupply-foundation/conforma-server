@@ -1,7 +1,7 @@
 /* 
 TEMPLATE B - Organisation Registration
   - for creating a new Organisation in the system. Requires single review
-  by reviewer with "reviewCompanyRego" permission
+  by reviewer with "reviewOrgRego" permission
 */
 const { coreActions } = require('./core_actions')
 const { devActions } = require('./dev_actions')
@@ -15,7 +15,7 @@ exports.queries = [
           name: "Organisation Registration"
           isLinear: true
           status: AVAILABLE
-          startMessage: "## You will need the following documents ready for upload:\\n- Proof of Company name\\n- Proof of company address\\n- Organisation licence document"
+          startMessage: "## You will need the following documents ready for upload:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -33,7 +33,7 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         title: "Organisation details"
-                        text: "The details entered should match with your registered company documents. You will attach these in Section 2."
+                        text: "The details entered should match with your registered organisation documents. You will attach these in Section 2."
                       }
                     }
                     {
@@ -298,7 +298,7 @@ exports.queries = [
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
-                  message: { value: "Company Registration submission" }
+                  message: { value: "Organisation Registration submission" }
                 }
               }
               {
@@ -464,7 +464,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["output.orgName"]
                   }
-                  permissionNames: ["reviewJoinCompany"]
+                  permissionNames: ["reviewJoinOrg"]
                 }
               }
             ]
@@ -477,10 +477,10 @@ exports.queries = [
                   connectByName: { name: "applyGeneral" }
                 }
               }
-              # Review Company rego
+              # Review Org rego
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewCompanyRego" }
+                  connectByName: { name: "reviewOrgRego" }
                 }
                 stageNumber: 1
                 levelNumber: 1

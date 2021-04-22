@@ -421,7 +421,7 @@ Tree structure:
 }
 ```
 
-**Example 3**: Validation: Company name is unique (i.e. The total count of Organisations with "name" equal to the value of the question response is zero)
+**Example 3**: Validation: Organisation name is unique (i.e. The total count of Organisations with "name" equal to the value of the question response is zero)
 
 Tree structure:
 

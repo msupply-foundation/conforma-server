@@ -26,12 +26,12 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyCompanyRego" }
+                  connectByName: { name: "applyOrgRego" }
                 }
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewJoinCompany" }
+                  connectByName: { name: "reviewJoinOrg" }
                 }
               }
             ]
@@ -67,12 +67,12 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyCompanyRego" }
+                  connectByName: { name: "applyOrgRego" }
                 }
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewJoinCompany" }
+                  connectByName: { name: "reviewJoinOrg" }
                 }
               }
             ]
@@ -107,7 +107,7 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyCompanyRego" }
+                  connectByName: { name: "applyOrgRego" }
                 }
               }
             ]
@@ -142,7 +142,7 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyCompanyRego" }
+                  connectByName: { name: "applyOrgRego" }
                 }
               }
             ]
@@ -173,7 +173,7 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyCompanyRego" }
+                  connectByName: { name: "applyOrgRego" }
                 }
               }
             ]
@@ -519,7 +519,7 @@ exports.queries = [
       }
     }
   }`,
-  // Extra user with multiple permissions (apply company rego, review company rego and apply user rego) -- password is "123456"
+  // Extra user with multiple permissions (apply org rego, review org rego and apply user rego) -- password is "123456"
   `mutation {
     createUser(
       input: {
@@ -536,12 +536,12 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyCompanyRego" }
+                  connectByName: { name: "applyOrgRego" }
                 }
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewCompanyRego" }
+                  connectByName: { name: "reviewOrgRego" }
                 }
               }
             ]
