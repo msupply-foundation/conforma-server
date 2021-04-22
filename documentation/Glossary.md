@@ -36,7 +36,7 @@ In Old IRIMS terms: PROCEDURE.
 
 **Operation (**aka** Permission Type, Policy)** — a policy defining permissions on the Database. These will generally correspond to “Verbs” of “things you can do”, such as “Apply”, “Review”, “Consolidate”, “Finalise”. Will mostly be pre-defined in the system, but more complex policies can be created if required (but probably not via UI initially).
 
-**Permission (Name** aka **Permission Link**) — A “link” between an Operation and an Application Template (or set of them). When creating a new Application Template, the admin can select from existing Permissions, or create new ones. Basically a “tag” that is applied to a particular Operation on an application template and a User must be given this “tag” in order for them to be able to perform the Operation. Examples include: “Apply on behalf of company”, “Has medical reviewing qualification”, “Can assign Type B applications to other reviewers”.
+**Permission (Name** aka **Permission Link**) — A “link” between an Operation and an Application Template (or set of them). When creating a new Application Template, the admin can select from existing Permissions, or create new ones. Basically a “tag” that is applied to a particular Operation on an application template and a User must be given this “tag” in order for them to be able to perform the Operation. Examples include: “Apply on behalf of organisation, “Has medical reviewing qualification”, “Can assign Type B applications to other reviewers”.
 
 (Could also be thought of as a “criterion” or a “filter” for whether a user is allowed to do a particular Operation on a particular Application Type.)
 
