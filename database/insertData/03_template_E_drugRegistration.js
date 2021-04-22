@@ -35,6 +35,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
+                        title: "General information"
                         text: "Start application, by providing the product **NAME** and **ORIGIN**"
                       }
                     }
@@ -45,6 +46,32 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: { label: "Product name" }
+                      validation: {
+                        operator: "AND"
+                        children: [
+                          {
+                            operator: "!="
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: ["responses.Q1.text"]
+                              }
+                              { value: null }
+                            ]
+                          }
+                          {
+                            operator: "!="
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: ["responses.Q1.text"]
+                              }
+                              { value: "" }
+                            ]
+                          }
+                        ]
+                      }
+                      validationMessage: "You need a valid product name."
                     }
                     {
                       code: "S1Q2"
@@ -56,7 +83,6 @@ exports.queries = [
                         label: "Product origin"
                         description: "_Select which is the origin of the drug._"
                         options: ["Domestic", "Imported"]
-                        default: 0
                       }
                     }
                     {
@@ -83,9 +109,22 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
-                        label: "ATC Code (TODO: Replace with API using UC)"
+                        label: "ATC Code"
                       }
-                      isRequired: false
+                      validation: {
+                        operator: "API"
+                        children: [
+                          { value: "http://codes.msupply.foundation:2048/graphql" }
+                          { value: ["type", "code"] }
+                          { value: "GetProductsByCode" }
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "description" }
+                        ]
+                      }
+                      validationMessage: "ATC code not found"
                     }
                     {
                       code: "S1Q4"
