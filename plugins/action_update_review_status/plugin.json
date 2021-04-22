@@ -3,8 +3,8 @@
   "code": "updateReviews",
   "name": "Update Review Statuses",
   "description": "Updates status of associated reviews when application re-submitted",
-  "required_parameters": ["applicationId"],
-  "optional_parameters": ["changedApplicationResponses"],
+  "required_parameters": [],
+  "optional_parameters": ["applicationId", "changedApplicationResponses"],
   "output_properties": ["updatedReviews"],
   "info": {
     "author": {

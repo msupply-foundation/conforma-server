@@ -69,6 +69,7 @@ Example `plugin.json` (from Console Logger):
   "name": "Console Logger",
   "description": "All it does is print a message to the console. That's it.",
   "required_parameters": ["message"],
+  "optional_parameters": [],
   "info": {
     "author": {
       "name": "The mSupply Foundation",
@@ -96,6 +97,7 @@ Compulsory fields are:
 - `name` -- the name displayed in the UI (mainly Template Builder)
 - `description` -- short explanation of the plugin's functionality. Also displayed in the UI.
 - `required_parameters` -- an array of strings that define the names of the fields that must be supplied to the plugin at runtime. Templates store the values (or dynamic expressions) that map to these field names.
+- `optional_parameters` -- parameters that are not required for the Action to run -- either optional, or can be inferred from other sources
 
 ## How plugins are loaded.
 

@@ -11,7 +11,6 @@ const isEqual = require('deep-equal')
 import { getAppEntryPointDir } from './utilityFunctions'
 import * as config from '../config.json'
 import DBConnect from './databaseConnect'
-// import { deepEquality } from './utilityFunctions'
 import { ActionPlugin } from '../types'
 
 const pluginsFolder = path.join(getAppEntryPointDir(), config.pluginsFolder)

@@ -25,9 +25,7 @@ Most triggers are associated with events on the main database tables (Applicatio
 
 Actions can be defined as **Sequential** or **Async** (parallel). Async Actions are executed as soon as the server is notified that they are in the Action queue, whereas Sequential Actions have an additional `sequence` property, and are processed in the prescribed sequence once they've all been inserted into the Action queue.
 
-Actions also return an **output** object (e.g. `createUser` Action returns user details). For sequential Actions, the output properties are collected into a `cumulativeOutput` object which is passed to the parameter evaluator (along with the **application_data\*** field), so subsequent Actions can access any of the output properties of any previous Action in the sequence.
-
-\* The `application_data` field in the **application_queue** contains basic information about the triggering event and the application associated with it (more below).
+Actions also return an **output** object (e.g. `createUser` Action returns user details). For sequential Actions, the output properties are collected into a `cumulativeOutput` object which is passed to the parameter evaluator (along with the **application_data\*** object -- see "Action Parameters" below), so subsequent Actions can access any of the output properties of any previous Action in the sequence.
 
 ## Overview of Trigger and Action system
 
@@ -52,20 +50,7 @@ Actions also return an **output** object (e.g. `createUser` Action returns user 
 
 Actions are implemented as **plug-ins** -- standalone packages that can be created and customised outisde the main application. As far as the Server is concerned, an Action plug-in is basically an imported **function**, with a defined set of expected parameters.
 
-Here is a list of Actions which are anticipated to be part of the core system: (work in progress):
-
-| Action Name              | Required Parameters                                                                                                                                                                                                                                                                      |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sendNotification`       | <ul> <li>user/org (string)</li> <li>Recipient (user/org id)</li> <li>Subject (string)</li> <li>Message (int/string) (reference to predefined messages)</li> <li>Attachments (file paths)</li> </ul>                                                                                      |
-| `changeStatus`           | <ul> <li>Application_id</li> <li>New status (string)</li> </ul>                                                                                                                                                                                                                          |
-| `changeStage`            | <ul> <li>Application_id</li> <li>Change amount (int) (usually +1)</li> </ul>                                                                                                                                                                                                             |
-| `setPriority`            | <ul> <li>Application_id</li> <li>Priority (int)</li> </ul>                                                                                                                                                                                                                               |
-| `setPermission`          | <ul> <li>Permission_name_id</li> <li>user/org (string)</li> <li>user/org_id</li> <li>template_id</li> <li>??</li> <li>Action (add/revoke)</li> </ul>                                                                                                                                     |
-| `modifyEntity`           | <ul> <li>ActionType (create/edit/delete)</li> <li>Database Table (string)</li> <li>Properties (JSON object with attribute:value pairs)</li> </ul>                                                                                                                                        |
-| `duplicate`              | NOT SURE                                                                                                                                                                                                                                                                                 |
-| `createScheduledTrigger` | <ul> <li>Timestamp (time of execution)</li> <li>Action(s) (to execute) (array of Action objects)</li> </ul>                                                                                                                                                                              |
-| ~~`checkCondition`~~     | ~~<ul> <li>Condition (expression)</li> <li>Action results (object mapping results of Condition<br/> to actions (with parameters)) E.g.</li> </ul> <pre><code class="code-highlighted code-sql">{ True: SetPermission(parameters),<br/> False: SetPermission(parameters) }</code></pre>~~ |
-| `multipleAction`         | <ul> <li>Array of action objects (to execute in sequence)</li> </ul>                                                                                                                                                                                                                     |
+See the [list of Action plugins](List-of-Action-plugins.md) for currently available Action plugins.
 
 ## Action parameters
 
@@ -82,34 +67,22 @@ There are two local state objects passed into the expression evaluator (which ca
 
 - **applicationData**: A collection of useful application state information that is fetched during trigger processing. The (current) fields provided are:
 
-  - `trigger_id`: ID of the trigger record in the `trigger_queue` table
-  - `trigger`: name of the trigger e.g. `onApplicationSubmit`
-  - `table`: the table that was triggered e.g. `application`, `review`
-  - `record_id`: the id of the record on the above table that was triggered
-  - `applicationId`
-  - `templateId`
-  - `stageId` (from `template_stage`)
-  - `stageNumber`
-  - `stage` (name of current stage)
-  - `stageHistoryId`
-  - `stageHistoryTimeCreated`
-  - `statusHistoryId`
-  - `status`: (name of current status)
-  - `statusHistoryTimeCreated`
-  - `userId`
-  - `firstName`
-  - `lastName`
-  - `username`
-  - `dateOfBirth`
-  - `email`
-  - `responses` : `{ [questionCode] : value }` (current application responses by code)
+See the interface "ActionApplicationData" in `./src/types.ts` for all the properties available in `applicationData`.
 
-    _Note: more info, such as org data and review state will probably be added to this object._  
-     ~~Because this data is only generated once per trigger, it will not be updated between sequential Actions. i.e if the application status is "Draft", then that value will be still be exposed to subsequent Actions in a sequence even if the first one changes the status to "Submitted" (In which case the `cumulativeOutput` object would be useful).~~ **TO BE UPDATED SOON** - will re-fetch between Actions.
+- **outputCumulative**: When sequential Actions run, the output from each one is collected into this combined object and passed to subsequent Actions in the sequence. So the final Action in a sequence will have access to the output properties from _all_ previous Actions.
 
-- **cumulativeOutput**: When sequential Actions run, the output from each one is collected into this combined object and passed to subsequent Actions in the sequence. So the final Action in a sequence will have access to the output properties from _all_ previous Actions. Note, however, this object is **not** available to the **condition** evaluator, since all Action conditions are evaluated before the Action sequence is run.
+All plugins expect an input object of the following shape:
 
-These two objects are passed to the evalutor in this order, so when using the `objectProperties` operator to access them, `applicationData` will have index `0`, and `cumulativeOutput` will have index `1`.
+```
+{
+  parameters: <required and optional parameters>,
+  applicationData: ..,
+  outputCumulative:...,
+  DBConnect:...,
+}
+```
+
+Note that `applicationData` is regenerated between each Action in a sequence, so each plugin will have access to up-to-date data (even though it may have changed as a result of previous sequential Actions).
 
 **Examples:**
 
@@ -121,14 +94,12 @@ These two objects are passed to the evalutor in this order, so when using the `o
   children: [
     {
       operator: "objectProperties",
-      children: [{ value: { property: "status"}}]
+      children: ["applicationData.status"]
     },
-    { value: "Draft" }
+    "Draft"
   ]
 }
 ```
-
-_Note that the `objectIndex: 0` parameter is not required for `objectProperties` as `0` is the default._
 
 2. For the "Change Status" plugin, the required parameters are `applicationId` and `newStatus`. To change the triggered application to status "Submitted", the `parameter_queries` expression would be:
 
@@ -136,8 +107,8 @@ _Note that the `objectIndex: 0` parameter is not required for `objectProperties`
 {
   applicationId: {
     operator: "objectProperties",
-    children: [{ value: { property: "applicationId" }}] },
-  newStatus: { value: "Submitted" }
+    children: ["applicationData.applicationId"] },
+  newStatus: "Submitted"
 }
 ```
 
@@ -148,15 +119,15 @@ _Note that the `objectIndex: 0` parameter is not required for `objectProperties`
     message: {
       operator: "CONCAT"
       children: [
-        { value: "Output concatenation: The user " },
+        "Output concatenation: The user ",
         {
           operator: "objectProperties",
-          children: [ { value: { objectIndex: 1, property: "username" } } ]
+          children: [ "currentUser.username" ]
         },
-        { value: "'s registration has been " },
+        "'s registration has been ",
         {
           operator: "objectProperties",
-          children: [ { value: { objectIndex: 1, property: "newOutcome" } } ]
+          children: [ "applicationData.outcome" ]
         }
       ]
     }
