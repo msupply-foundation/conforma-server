@@ -4,7 +4,7 @@
   "name": "Generate Review Assignment Records",
   "description": "Generates review_assignment records for current application",
   "required_parameters": [],
-  "optional_parameters": ["applicationId", "reviewId", "reviewId"],
+  "optional_parameters": ["applicationId", "reviewId", "isReview"],
   "output_properties": [
     "reviewAssignmentIds",
     "reviewAssignmentAssignerJoins",

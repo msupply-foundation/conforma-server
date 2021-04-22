@@ -12,6 +12,8 @@ async function generateReviewAssignments({
   // Get application/reviewId from applicationData if not provided in parameters
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
+  const isReview =
+    parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
 
   console.log('Generating review assignment records...')
   try {
@@ -24,7 +26,7 @@ async function generateReviewAssignments({
     let nextReviewLevel = 1
 
     // For first review assignment
-    if (!parameters?.isReview) {
+    if (!isReview) {
       console.log('First review assignment on first stage - total levels:', numReviewLevels)
       if (numReviewLevels === 0) {
         console.log(

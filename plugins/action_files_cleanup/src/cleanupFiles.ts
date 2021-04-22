@@ -24,7 +24,6 @@ interface ResponseValue {
   }[]
 }
 
-// async function cleanupFiles(input: any, DBConnect: any) {
 async function cleanupFiles({ parameters, applicationData, DBConnect }: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
