@@ -334,8 +334,6 @@ exports.queries = [
                 actionCode: "createOrg"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 101
-                # TO-DO -- update condition to just check Outcome
-                # (from applicationData)
                 condition: {
                   operator: "="
                   children: [

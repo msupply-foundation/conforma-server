@@ -42,12 +42,6 @@ Set the Outcome of an application to the input parameter ("Pending", "Approved",
 
 **Note:** If `applicationId` is not provided, the plugin will attempt to retrieve it from `applicationData`.
 
-**To-do**:
-
-- update to take either applicationId or applicationSerial input
-- update to use applicationData for application input if not provided
-- output also include serial
-
 ---
 
 ### **Increment Stage**:
@@ -90,11 +84,6 @@ Changes the application Stage to the next in the sequence
 | `isReview`                               | `statusId`                    |
 
 If we are wanting to chagnge the status of a **review**, the parameter `isReview` should be set to `true`. If `applicationId` or `reviewId` are not provided, plugin will try to retrieve from `applicationData`.
-
-**To-do**:
-
-- output also include serial
-- also update Status of associated application/review respones (on Submission)
 
 ---
 

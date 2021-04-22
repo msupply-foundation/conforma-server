@@ -17,7 +17,6 @@ interface ResponsesById {
   [key: number]: Response[]
 }
 
-// async function trimResponses(input: any, DBConnect: any) {
 async function trimResponses({ parameters, applicationData, DBConnect }: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
