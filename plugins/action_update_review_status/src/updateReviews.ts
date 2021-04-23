@@ -17,7 +17,8 @@ async function updateReviews(input: any, DBConnect: any) {
 
   const { applicationId, applicationData, changedApplicationResponses = [] } = input
   const stageId = input?.stageId || applicationData.stageId
-  const level = input?.level || applicationData?.reviewData?.level || 1
+  const currentReviewLevel = applicationData?.reviewData?.levelNumber
+  const level = input?.level || currentReviewLevel ? currentReviewLevel + 1 : 1
 
   const reviewsToUpdate = []
 
