@@ -14,10 +14,6 @@ async function changeStatus({
       : parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
   const newStatus = parameters?.newStatus
 
-  console.log('parameters?.isReview', parameters?.isReview)
-  console.log('isReview', isReview)
-  console.log('newStatus', newStatus)
-
   if (!isReview) {
     return await changeApplicationStatus(
       applicationId,
