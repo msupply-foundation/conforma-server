@@ -64,11 +64,6 @@ Changes the application Stage to the next in the sequence
 
 **Note:** If `applicationId` is not provided, the plugin will attempt to fetch it from `applicationData`
 
-**To-do**:
-
-- update to take either applicationId or applicationSerial?
-- output also include serial
-
 ---
 
 ### **Change Status**:
@@ -209,7 +204,7 @@ When an applicant re-submits an application after making changes, this Action up
 
 | Input parameters<br />(\*required) <br/>                        | Output properties |
 | --------------------------------------------------------------- | ----------------- |
-| `applicationId`                                               | `updatedReviews`  |
+| `applicationId`                                                 | `updatedReviews`  |
 | `changedApplicationResponses` [Array of applicationResponseIds] |                   |
 
 **Note:** If `applicationId` is not provided, the plugin will attempt to fetch it from `applicationData`
