@@ -30,7 +30,7 @@ RETURNS trigger AS $$
 BEGIN
 	IF NEW.review_response_link_id IS NOT NULL THEN
 	 	NEW.original_review_response_id = (SELECT original_review_response_id FROM review_response where id = NEW.review_response_link_id);
-		NEW.applcation_response_id = (SELECT applcation_response_id FROM review_response where id = NEW.review_response_link_id);
+		NEW.application_response_id = (SELECT application_response_id FROM review_response where id = NEW.review_response_link_id);
 	ELSE
 		-- should always be original review_response when review_response_link_id IS NULL
  		NEW.original_review_response_id = NEW.id;
