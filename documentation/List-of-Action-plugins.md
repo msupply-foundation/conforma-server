@@ -200,7 +200,7 @@ Updates the applicant visibility of level 1 review responses based on the recomm
 
 When an applicant re-submits an application after making changes, this Action updates the status of associated reviews to determine whether they should be "Pending" or "Locked" (or left as is)
 
-- _Action Code:_ **`updateReviews`**
+- _Action Code:_ **`updateReviewsStatuses`**
 
 | Input parameters<br />(\*required) <br/>                        | Output properties |
 | --------------------------------------------------------------- | ----------------- |

@@ -25,7 +25,7 @@ beforeAll(async (done) => {
 })
 
 test('Test: Should update 2 reviews', () => {
-  return updateReviews({
+  return updateReviewsStatuses({
     parameters: {
       applicationId: 4000,
       changedApplicationResponses: [
