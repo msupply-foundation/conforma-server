@@ -170,14 +170,14 @@ exports.queries = [
                       validation: {
                         operator: "API"
                         children: [
-                          { value: "http://localhost:8080/check-unique" }
-                          { value: ["type", "value"] }
-                          { value: "username" }
+                          "http://localhost:8080/"check-unique"
+                          ["type", "value"]
+                          "username"
                           {
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
                           }
-                          { value: "unique" }
+                          "unique"
                         ]
                       }
                       validationMessage: "Username must be unique"
@@ -383,11 +383,9 @@ exports.queries = [
                         options: {
                           operator: "API"
                           children: [
-                            {
-                              value: "https://jsonplaceholder.typicode.com/users"
-                            }
-                            { value: [] }
-                            { value: "name" }
+                            "https://jsonplaceholder.typicode.com/users"
+                            []
+                            "name"
                           ]
                         }
                       }
@@ -690,11 +688,9 @@ exports.queries = [
                         checkboxes: {
                           operator: "API"
                           children: [
-                            {
-                              value: "https://jsonplaceholder.typicode.com/users"
-                            }
-                            { value: [] }
-                            { value: "name" }
+                            "https://jsonplaceholder.typicode.com/users"
+                            []
+                            "name"
                           ]
                         }
                       }
