@@ -17,7 +17,7 @@ exports.coreActions = `
       trigger: ON_APPLICATION_RESTART
       sequence: 1
       parameterQueries: {
-        newStatus: { value: "Draft" }
+        newStatus: "Draft"
       }
     }
     # ON_REVIEW_RESTART
@@ -27,7 +27,7 @@ exports.coreActions = `
       trigger: ON_REVIEW_RESTART
       sequence: 1
       parameterQueries: {
-        newStatus: { value: "Draft" }
+        newStatus: "Draft"
       }
     }
     # ON_REVIEW_CREATE
@@ -36,7 +36,7 @@ exports.coreActions = `
         actionCode: "changeStatus"
         trigger: ON_REVIEW_CREATE
         parameterQueries: {
-          newStatus: { value: "Draft" }
+          newStatus: "Draft"
         }
     }
     # ON_APPLICATION_SUBMIT
@@ -49,7 +49,7 @@ exports.coreActions = `
         trigger: ON_APPLICATION_SUBMIT
         sequence: 1
         parameterQueries: {
-          newStatus: { value: "Submitted" }
+          newStatus: "Submitted"
         }
     }
     {
@@ -91,7 +91,7 @@ exports.coreActions = `
         trigger: ON_REVIEW_SUBMIT
         sequence: 1
         parameterQueries: {
-          newStatus: { value: "Submitted" }
+          newStatus: "Submitted"
         }
     }
     {
@@ -215,7 +215,8 @@ exports.coreActions = `
         ]
       }
       parameterQueries: {
-        newStatus: { value: "Changes Required" }
+        newStatus: "Changes Required"
+        isReview: false #Required since we're updating an application status
       }
     }
     # -------------------------------------------

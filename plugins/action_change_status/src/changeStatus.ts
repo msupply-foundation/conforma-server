@@ -1,12 +1,5 @@
 import { ActionPluginOutput, Status, ActionPluginInput } from '../../types'
 
-type IParameters = {
-  applicationId?: number
-  reviewId?: number
-  newStatus: Status
-  isReview?: boolean
-}
-
 async function changeStatus({
   parameters,
   applicationData,
@@ -16,8 +9,14 @@ async function changeStatus({
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
   const isReview =
-    parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
+    parameters?.isReview !== false
+      ? false
+      : parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
   const newStatus = parameters?.newStatus
+
+  console.log('parameters?.isReview', parameters?.isReview)
+  console.log('isReview', isReview)
+  console.log('newStatus', newStatus)
 
   if (!isReview) {
     return await changeApplicationStatus(

@@ -13,7 +13,9 @@ async function generateReviewAssignments({
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
   const isReview =
-    parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
+    parameters?.isReview !== false
+      ? false
+      : parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
 
   console.log('Generating review assignment records...')
   try {

@@ -78,7 +78,9 @@ Changes the application Stage to the next in the sequence
 | `newStatus` \*                           | `status`                      |
 | `isReview`                               | `statusId`                    |
 
-If we are wanting to chagnge the status of a **review**, the parameter `isReview` should be set to `true`. If `applicationId` or `reviewId` are not provided, plugin will try to retrieve from `applicationData`.
+If we are wanting to change the status of a **review**, the parameter `isReview` should be set to `true`. If `applicationId` or `reviewId` are not provided, plugin will try to retrieve from `applicationData`.
+
+**Note:**: If `isReview` is not provided, it default to `true` if the Action was triggered by a review. However, this means that if we want to set the status of an Application when a review is triggered, then we will need to explicitly set `isReview: false`.
 
 ---
 
