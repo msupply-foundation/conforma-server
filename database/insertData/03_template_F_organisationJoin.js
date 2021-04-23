@@ -144,7 +144,7 @@ exports.queries = [
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
-                  message: { value: "Company Registration submission" }
+                  message: { value: "Organisation Registration submission" }
                 }
               }
               {
@@ -302,10 +302,10 @@ exports.queries = [
                   connectByName: { name: "assignGeneral" }
                 }
               }
-              # reviewJoinCompany
+              # reviewJoinOrg
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewJoinCompany" }
+                  connectByName: { name: "reviewJoinOrg" }
                 }
                 stageNumber: 1
                 levelNumber: 1
