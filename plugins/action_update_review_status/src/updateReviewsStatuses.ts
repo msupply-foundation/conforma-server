@@ -78,4 +78,4 @@ async function updateReviewsStatuses({
   }
 }
 
-export default updateReviews
+export default updateReviewsStatuses
