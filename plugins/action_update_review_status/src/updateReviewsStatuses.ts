@@ -11,7 +11,11 @@ interface Review {
   reviewStatus: ReviewStatus
 }
 
-async function updateReviews({ parameters, applicationData, DBConnect }: ActionPluginInput) {
+async function updateReviewsStatuses({
+  parameters,
+  applicationData,
+  DBConnect,
+}: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
   console.log('Updating reviews status...')
