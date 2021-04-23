@@ -678,7 +678,7 @@ class PostgresDB {
   public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
       SELECT review.level_number AS "levelNumber",
-      stage_number as "stageNumber"
+      review.stage_number as "stageNumber"
       FROM review JOIN review_assignment ra
       ON review.review_assignment_id = ra.id
       WHERE review.id = $1
