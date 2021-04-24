@@ -32,7 +32,7 @@
 #   applicationStageHistory
 #     count :8
 #   applicationStatusHistory
-#     count :10
+#     count :11
 #   reviewAssignment
 #     count :24
 #   reviewAssignmentAssignerJoin
@@ -42,11 +42,11 @@
 #   review
 #     count :11
 #   reviewStatusHistory
-#     count :21
+#     count :22
 #   reviewDecision
 #     count :10
 #   reviewResponse
-#     count :71
+#     count :70
 ########### MUTATIONS ###########
 
 ########### user 1 ###########
@@ -10528,6 +10528,25 @@ mutation {
         applicationStageHistoryId: 8
         status: SUBMITTED
         # ignore datetime -  timeCreated:
+        isCurrent: false
+        # ignore generated -  applicationId:1
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
+########### applicationStatusHistory 11 ###########
+mutation {
+  createApplicationStatusHistory(
+    input: {
+      applicationStatusHistory: {
+        id: 11
+        applicationStageHistoryId: 8
+        status: CHANGES_REQUIRED
+        # ignore datetime -  timeCreated:
         isCurrent: true
         # ignore generated -  applicationId:1
       }
@@ -13552,6 +13571,24 @@ mutation {
         reviewId: 5001
         status: DRAFT
         # ignore datetime -  timeCreated:
+        isCurrent: false
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}
+########### MUTATION END ###########
+
+########### reviewStatusHistory 22 ###########
+mutation {
+  createReviewStatusHistory(
+    input: {
+      reviewStatusHistory: {
+        id: 22
+        reviewId: 5001
+        status: SUBMITTED
+        # ignore datetime -  timeCreated:
         isCurrent: true
       }
     }
@@ -13730,7 +13767,7 @@ mutation {
       reviewDecision: {
         id: 10
         reviewId: 5001
-        decision: NO_DECISION
+        decision: LIST_OF_QUESTIONS
         comment: null
         # ignore datetime -  timeUpdated:
       }
@@ -15237,7 +15274,7 @@ mutation {
         originalReviewResponseId: 63
         reviewId: 6
         # ignore datetime -  timeUpdated:
-        isVisibleToApplicant: false
+        isVisibleToApplicant: true
         templateElementId: 4011
         recommendedApplicantVisibility: ORIGINAL_RESPONSE_VISIBLE_TO_APPLICANT
         status: SUBMITTED
@@ -15509,32 +15546,6 @@ mutation {
 }
 ########### MUTATION END ###########
 
-########### reviewResponse 76 ###########
-mutation {
-  createReviewResponse(
-    input: {
-      reviewResponse: {
-        id: 76
-        comment: null
-        decision: null
-        reviewQuestionAssignmentId: 3043
-        applicationResponseId: 6
-        reviewResponseLinkId: 61
-        originalReviewResponseId: 61
-        reviewId: 5001
-        # ignore datetime -  timeUpdated:
-        isVisibleToApplicant: false
-        templateElementId: 4008
-        recommendedApplicantVisibility: ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT
-        status: DRAFT
-      }
-    }
-  ) {
-    clientMutationId
-  }
-}
-########### MUTATION END ###########
-
 ########### reviewResponse 77 ###########
 mutation {
   createReviewResponse(
@@ -15552,7 +15563,7 @@ mutation {
         isVisibleToApplicant: false
         templateElementId: 4009
         recommendedApplicantVisibility: ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT
-        status: DRAFT
+        status: SUBMITTED
       }
     }
   ) {
@@ -15578,7 +15589,7 @@ mutation {
         isVisibleToApplicant: false
         templateElementId: 4011
         recommendedApplicantVisibility: ORIGINAL_RESPONSE_VISIBLE_TO_APPLICANT
-        status: DRAFT
+        status: SUBMITTED
       }
     }
   ) {
