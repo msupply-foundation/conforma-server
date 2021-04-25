@@ -19,6 +19,7 @@ export type Scalars = {
   Date: any;
   /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
   BigInt: any;
+  SqlIdentifier: any;
 };
 
 export type ActionPlugin = Node & {
@@ -7073,6 +7074,68 @@ export type FileUserIdFkeyUserCreateInput = {
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
 
+export type GeneratedColumn = {
+  __typename?: 'GeneratedColumn';
+  tableName?: Maybe<Scalars['SqlIdentifier']>;
+  columnName?: Maybe<Scalars['SqlIdentifier']>;
+};
+
+/**
+ * A condition to be used against `GeneratedColumn` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type GeneratedColumnCondition = {
+  /** Checks for equality with the object’s `tableName` field. */
+  tableName?: Maybe<Scalars['SqlIdentifier']>;
+  /** Checks for equality with the object’s `columnName` field. */
+  columnName?: Maybe<Scalars['SqlIdentifier']>;
+};
+
+/** A filter to be used against `GeneratedColumn` object types. All fields are combined with a logical ‘and.’ */
+export type GeneratedColumnFilter = {
+  /** Filter by the object’s `tableName` field. */
+  tableName?: Maybe<SqlIdentifierFilter>;
+  /** Filter by the object’s `columnName` field. */
+  columnName?: Maybe<SqlIdentifierFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<GeneratedColumnFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<GeneratedColumnFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<GeneratedColumnFilter>;
+};
+
+/** A connection to a list of `GeneratedColumn` values. */
+export type GeneratedColumnsConnection = {
+  __typename?: 'GeneratedColumnsConnection';
+  /** A list of `GeneratedColumn` objects. */
+  nodes: Array<Maybe<GeneratedColumn>>;
+  /** A list of edges which contains the `GeneratedColumn` and cursor to aid in pagination. */
+  edges: Array<GeneratedColumnsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `GeneratedColumn` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `GeneratedColumn` edge in the connection. */
+export type GeneratedColumnsEdge = {
+  __typename?: 'GeneratedColumnsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `GeneratedColumn` at the end of the edge. */
+  node?: Maybe<GeneratedColumn>;
+};
+
+/** Methods to use when ordering `GeneratedColumn`. */
+export enum GeneratedColumnsOrderBy {
+  Natural = 'NATURAL',
+  TableNameAsc = 'TABLE_NAME_ASC',
+  TableNameDesc = 'TABLE_NAME_DESC',
+  ColumnNameAsc = 'COLUMN_NAME_ASC',
+  ColumnNameDesc = 'COLUMN_NAME_DESC'
+}
+
 /** A filter to be used against Int fields. All fields are combined with a logical ‘and.’ */
 export type IntFilter = {
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
@@ -10675,6 +10738,8 @@ export type Query = Node & {
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
   files?: Maybe<FilesConnection>;
+  /** Reads and enables pagination through a set of `GeneratedColumn`. */
+  generatedColumns?: Maybe<GeneratedColumnsConnection>;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications?: Maybe<NotificationsConnection>;
   /** Reads and enables pagination through a set of `Organisation`. */
@@ -10999,6 +11064,19 @@ export type QueryFilesArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
   condition?: Maybe<FileCondition>;
   filter?: Maybe<FileFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryGeneratedColumnsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<GeneratedColumnsOrderBy>>;
+  condition?: Maybe<GeneratedColumnCondition>;
+  filter?: Maybe<GeneratedColumnFilter>;
 };
 
 
@@ -15651,6 +15729,99 @@ export type ReviewToManyReviewStatusHistoryFilter = {
   some?: Maybe<ReviewStatusHistoryFilter>;
   /** No related `ReviewStatusHistory` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ReviewStatusHistoryFilter>;
+};
+
+
+/** A filter to be used against SqlIdentifier fields. All fields are combined with a logical ‘and.’ */
+export type SqlIdentifierFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Scalars['SqlIdentifier']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Scalars['SqlIdentifier']>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Scalars['SqlIdentifier']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Scalars['SqlIdentifier']>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Scalars['SqlIdentifier']>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Scalars['SqlIdentifier']>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Scalars['SqlIdentifier']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Scalars['SqlIdentifier']>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Scalars['SqlIdentifier']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Scalars['SqlIdentifier']>;
+  /** Contains the specified string (case-sensitive). */
+  includes?: Maybe<Scalars['SqlIdentifier']>;
+  /** Does not contain the specified string (case-sensitive). */
+  notIncludes?: Maybe<Scalars['SqlIdentifier']>;
+  /** Contains the specified string (case-insensitive). */
+  includesInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Does not contain the specified string (case-insensitive). */
+  notIncludesInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Starts with the specified string (case-sensitive). */
+  startsWith?: Maybe<Scalars['SqlIdentifier']>;
+  /** Does not start with the specified string (case-sensitive). */
+  notStartsWith?: Maybe<Scalars['SqlIdentifier']>;
+  /** Starts with the specified string (case-insensitive). */
+  startsWithInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Does not start with the specified string (case-insensitive). */
+  notStartsWithInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Ends with the specified string (case-sensitive). */
+  endsWith?: Maybe<Scalars['SqlIdentifier']>;
+  /** Does not end with the specified string (case-sensitive). */
+  notEndsWith?: Maybe<Scalars['SqlIdentifier']>;
+  /** Ends with the specified string (case-insensitive). */
+  endsWithInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Does not end with the specified string (case-insensitive). */
+  notEndsWithInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /**
+   * Matches the specified pattern (case-sensitive). An underscore (_) matches any
+   * single character; a percent sign (%) matches any sequence of zero or more characters.
+   */
+  like?: Maybe<Scalars['SqlIdentifier']>;
+  /**
+   * Does not match the specified pattern (case-sensitive). An underscore (_)
+   * matches any single character; a percent sign (%) matches any sequence of zero
+   * or more characters.
+   */
+  notLike?: Maybe<Scalars['SqlIdentifier']>;
+  /**
+   * Matches the specified pattern (case-insensitive). An underscore (_) matches
+   * any single character; a percent sign (%) matches any sequence of zero or more characters.
+   */
+  likeInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /**
+   * Does not match the specified pattern (case-insensitive). An underscore (_)
+   * matches any single character; a percent sign (%) matches any sequence of zero
+   * or more characters.
+   */
+  notLikeInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Equal to the specified value (case-insensitive). */
+  equalToInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Not equal to the specified value (case-insensitive). */
+  notEqualToInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Not equal to the specified value, treating null like an ordinary value (case-insensitive). */
+  distinctFromInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Equal to the specified value, treating null like an ordinary value (case-insensitive). */
+  notDistinctFromInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Included in the specified list (case-insensitive). */
+  inInsensitive?: Maybe<Array<Scalars['SqlIdentifier']>>;
+  /** Not included in the specified list (case-insensitive). */
+  notInInsensitive?: Maybe<Array<Scalars['SqlIdentifier']>>;
+  /** Less than the specified value (case-insensitive). */
+  lessThanInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Less than or equal to the specified value (case-insensitive). */
+  lessThanOrEqualToInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Greater than the specified value (case-insensitive). */
+  greaterThanInsensitive?: Maybe<Scalars['SqlIdentifier']>;
+  /** Greater than or equal to the specified value (case-insensitive). */
+  greaterThanOrEqualToInsensitive?: Maybe<Scalars['SqlIdentifier']>;
 };
 
 /** A filter to be used against String fields. All fields are combined with a logical ‘and.’ */
@@ -23345,6 +23516,14 @@ export type ResolversTypes = {
   ElementTypePluginsConnection: ResolverTypeWrapper<ElementTypePluginsConnection>;
   ElementTypePlugin: ResolverTypeWrapper<ElementTypePlugin>;
   ElementTypePluginsEdge: ResolverTypeWrapper<ElementTypePluginsEdge>;
+  GeneratedColumnsOrderBy: GeneratedColumnsOrderBy;
+  GeneratedColumnCondition: GeneratedColumnCondition;
+  SqlIdentifier: ResolverTypeWrapper<Scalars['SqlIdentifier']>;
+  GeneratedColumnFilter: GeneratedColumnFilter;
+  SqlIdentifierFilter: SqlIdentifierFilter;
+  GeneratedColumnsConnection: ResolverTypeWrapper<GeneratedColumnsConnection>;
+  GeneratedColumn: ResolverTypeWrapper<GeneratedColumn>;
+  GeneratedColumnsEdge: ResolverTypeWrapper<GeneratedColumnsEdge>;
   OrganisationsOrderBy: OrganisationsOrderBy;
   OrganisationCondition: OrganisationCondition;
   OrganisationsConnection: ResolverTypeWrapper<OrganisationsConnection>;
@@ -24664,6 +24843,13 @@ export type ResolversParentTypes = {
   ElementTypePluginsConnection: ElementTypePluginsConnection;
   ElementTypePlugin: ElementTypePlugin;
   ElementTypePluginsEdge: ElementTypePluginsEdge;
+  GeneratedColumnCondition: GeneratedColumnCondition;
+  SqlIdentifier: Scalars['SqlIdentifier'];
+  GeneratedColumnFilter: GeneratedColumnFilter;
+  SqlIdentifierFilter: SqlIdentifierFilter;
+  GeneratedColumnsConnection: GeneratedColumnsConnection;
+  GeneratedColumn: GeneratedColumn;
+  GeneratedColumnsEdge: GeneratedColumnsEdge;
   OrganisationCondition: OrganisationCondition;
   OrganisationsConnection: OrganisationsConnection;
   OrganisationsEdge: OrganisationsEdge;
@@ -26792,6 +26978,26 @@ export type FilesEdgeResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type GeneratedColumnResolvers<ContextType = any, ParentType extends ResolversParentTypes['GeneratedColumn'] = ResolversParentTypes['GeneratedColumn']> = {
+  tableName?: Resolver<Maybe<ResolversTypes['SqlIdentifier']>, ParentType, ContextType>;
+  columnName?: Resolver<Maybe<ResolversTypes['SqlIdentifier']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GeneratedColumnsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['GeneratedColumnsConnection'] = ResolversParentTypes['GeneratedColumnsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['GeneratedColumn']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['GeneratedColumnsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type GeneratedColumnsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['GeneratedColumnsEdge'] = ResolversParentTypes['GeneratedColumnsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['GeneratedColumn']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
@@ -27170,6 +27376,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStatusHistories?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoriesArgs, 'orderBy'>>;
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
   files?: Resolver<Maybe<ResolversTypes['FilesConnection']>, ParentType, ContextType, RequireFields<QueryFilesArgs, 'orderBy'>>;
+  generatedColumns?: Resolver<Maybe<ResolversTypes['GeneratedColumnsConnection']>, ParentType, ContextType, RequireFields<QueryGeneratedColumnsArgs, 'orderBy'>>;
   notifications?: Resolver<Maybe<ResolversTypes['NotificationsConnection']>, ParentType, ContextType, RequireFields<QueryNotificationsArgs, 'orderBy'>>;
   organisations?: Resolver<Maybe<ResolversTypes['OrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryOrganisationsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<Maybe<ResolversTypes['PermissionJoinsConnection']>, ParentType, ContextType, RequireFields<QueryPermissionJoinsArgs, 'orderBy'>>;
@@ -27521,6 +27728,10 @@ export type ReviewStatusHistoryResolvers<ContextType = any, ParentType extends R
   review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
+
+export interface SqlIdentifierScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['SqlIdentifier'], any> {
+  name: 'SqlIdentifier';
+}
 
 export type TemplateResolvers<ContextType = any, ParentType extends ResolversParentTypes['Template'] = ResolversParentTypes['Template']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -28254,6 +28465,9 @@ export type Resolvers<ContextType = any> = {
   File?: FileResolvers<ContextType>;
   FilesConnection?: FilesConnectionResolvers<ContextType>;
   FilesEdge?: FilesEdgeResolvers<ContextType>;
+  GeneratedColumn?: GeneratedColumnResolvers<ContextType>;
+  GeneratedColumnsConnection?: GeneratedColumnsConnectionResolvers<ContextType>;
+  GeneratedColumnsEdge?: GeneratedColumnsEdgeResolvers<ContextType>;
   JSON?: GraphQLScalarType;
   Mutation?: MutationResolvers<ContextType>;
   Node?: NodeResolvers<ContextType>;
@@ -28301,6 +28515,7 @@ export type Resolvers<ContextType = any> = {
   ReviewStatusHistoriesConnection?: ReviewStatusHistoriesConnectionResolvers<ContextType>;
   ReviewStatusHistoriesEdge?: ReviewStatusHistoriesEdgeResolvers<ContextType>;
   ReviewStatusHistory?: ReviewStatusHistoryResolvers<ContextType>;
+  SqlIdentifier?: GraphQLScalarType;
   Template?: TemplateResolvers<ContextType>;
   TemplateAction?: TemplateActionResolvers<ContextType>;
   TemplateActionsConnection?: TemplateActionsConnectionResolvers<ContextType>;

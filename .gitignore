@@ -38,7 +38,7 @@ typings/
 .env.test
 
 # File storage folder
-files
+files/
 
 #GraphQL schema auto-generated
 database/schema.graphql
@@ -50,9 +50,6 @@ lib
 
 # Docker related
 githubtoken.txt
-
-# Ignore temp snapshots
-database/snapshots/**temp**
 
 # Temp for expression-evaluator gui
 src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluator/

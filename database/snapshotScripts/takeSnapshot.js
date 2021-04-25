@@ -1,27 +1,34 @@
 const fs = require('fs')
-const { graphQLdefinition } = require('./graphQLdefinitions.js')
-const { execSync } = require('child_process')
-const { executeGraphQLQuery } = require('./insertData.js')
+const path = require('path')
+const { prettifyMutations, createFolder, removeFolder, copyFolder } = require('./helpers.js')
+const { executeGraphQLQuery } = require('../helpers.js')
+const { config } = require('./defaultConfig.js')
 
-const defaultSnapshotName = 'current'
-const seperator = '########### MUTATION END ###########'
-
-const takeSnapshot = async (definitions) => {
-  let snapshotName = process.argv[2] || defaultSnapshotName
-
+const takeSnapshot = async ({
+  snapshotName,
+  snapshotsRootDir,
+  includeTimestamps,
+  includeFiles,
+  filesLocation,
+  profile,
+  snapshotFilesFolder,
+  seperator,
+} = config) => {
   console.log('creating or updating snapshot: ', snapshotName)
 
-  const snapshotFilename = 'database/snapshots/' + snapshotName + '.graphql'
+  const snapshotLocation = path.join(snapshotsRootDir, snapshotName)
+  const snapshotFilesLocation = path.join(snapshotLocation, snapshotFilesFolder)
 
-  console.log(snapshotName, snapshotFilename)
+  console.log(snapshotName, snapshotLocation)
   console.log('getting schema ...')
   const types = (await getSchema()).types
+  const generatedColumns = await getGeneratedColumns()
   console.log('getting schema ... done')
 
   console.log('creating queries ...')
   const tableNames = getTableNames(types)
   const inputTypes = getInputTypes(types, tableNames)
-  const queries = sortAndFilterQueries(getQueries(inputTypes), definitions)
+  const queries = sortAndFilterQueries(getQueries(inputTypes), profile.definitions)
 
   console.log('creating queries ... done')
 
@@ -32,16 +39,28 @@ const takeSnapshot = async (definitions) => {
 
   console.log('creating mutations ...')
   const mutations = queryResults
-    .map((queryResult) => generateMutations(queryResult, definitions))
+    .map((queryResult) => generateMutations(queryResult, generatedColumns, includeTimestamps))
     .flat()
   console.log('creating mutations ... done')
 
   console.log('saving mutations to file ...')
-  saveMutationsToFile(mutations, snapshotFilename)
+  saveMutationsToFile(mutations, snapshotLocation, seperator)
   console.log('saving mutations to file ... done')
 
+  if (includeFiles) {
+    console.log('copying files ...')
+    createFolder(path.join(snapshotFilesLocation))
+    copyFolder(filesLocation, snapshotFilesLocation)
+    console.log('copying files ... done')
+  }
+
+  console.log('saving config ...')
+  const useSnapshotConfigLocation = path.join(snapshotLocation, 'useSnapshotConfig.json')
+  fs.writeFileSync(useSnapshotConfigLocation, JSON.stringify(profile.useSnapshotConfig))
+  console.log('copying files ... done')
+
   console.log('prettifying mutations ...')
-  execSync('npx prettier --write "' + snapshotFilename + '"')
+  prettifyMutations(snapshotLocation)
   console.log('prettifying mutations ... done')
 
   console.log('all ... done')
@@ -76,6 +95,21 @@ const getSchema = async () => {
 
   return jsonResult.data.__schema
 }
+
+const getGeneratedColumns = async () => {
+  const jsonResult = await executeGraphQLQuery(`
+  query generatedColumns {
+    generatedColumns {
+      nodes {
+        columnName
+        tableName
+      }
+    }
+  }`)
+
+  return jsonResult.data.generatedColumns.nodes
+}
+
 const getTableNames = (types) => {
   const query = types.find(({ name }) => name === 'Query')
 
@@ -163,16 +197,25 @@ const getMutationNameFromQueryName = (queryName) => {
 
   return 'create' + queryNameCapitalised
 }
-const isGeneratedColumn = (queryName, field, definitions) => {
-  const tableName = toSingular(queryName)
-  const definition = definitions.find((definition) => definition.table === tableName)
+const isGeneratedColumn = (queryName, field, generatedColumns) => {
+  const tableMatch = toSingular(queryName).toLowerCase()
+  const fieldMatch = field.toLowerCase()
 
-  if (definition?.generatedColumns?.includes(field)) return true
+  const matchConversion = (tableOrField) => tableOrField.replace(/_/g, '').toLowerCase()
 
-  return false
+  return !!generatedColumns.find(
+    ({ columnName, tableName }) =>
+      matchConversion(columnName) === fieldMatch && matchConversion(tableName) === tableMatch
+  )
 }
 
-const getMutationFieldsAndValues = (record, rawFields, queryName, definitions) => {
+const getMutationFieldsAndValues = (
+  record,
+  rawFields,
+  queryName,
+  generatedColumns,
+  includeTimestamps
+) => {
   const fieldsAndValues = rawFields.map((field) => {
     const key = field.name
     let value = record[key]
@@ -181,8 +224,9 @@ const getMutationFieldsAndValues = (record, rawFields, queryName, definitions) =
     else if (typeof record[key] === 'object' && record[key] !== null)
       value = noQuoteKeyStringify(value)
 
-    if (getFieldName(field) === 'Datetime') return '\n # ignore datetime -  ' + key + ':\n'
-    if (isGeneratedColumn(queryName, key, definitions))
+    if (getFieldName(field) === 'Datetime' && !includeTimestamps)
+      return '\n # ignore datetime -  ' + key + ':\n'
+    if (isGeneratedColumn(queryName, key, generatedColumns))
       return '\n # ignore generated -  ' + key + ':' + value + '\n'
     return key + ':' + value
   })
@@ -210,7 +254,7 @@ const noQuoteKeyStringify = (json) => {
   return result + (isArray ? ']' : '}')
 }
 
-const generateMutations = ({ query, results }, definitions) => {
+const generateMutations = ({ query, results }, generatedColumns, includeTimestamps) => {
   const mutationName = getMutationNameFromQueryName(query.queryName)
   const recordName = getRecordNameFromQueryName(query.queryName)
 
@@ -219,7 +263,8 @@ const generateMutations = ({ query, results }, definitions) => {
       record,
       query.rawFields,
       query.queryName,
-      definitions
+      generatedColumns,
+      includeTimestamps
     )
 
     let mutation = '\n########### ' + recordName + ' ' + record.id + ' ###########\n'
@@ -250,11 +295,14 @@ const getSummary = (mutations) => {
   return summaryComment
 }
 
-const saveMutationsToFile = (mutations, snapshotFilename) => {
+const saveMutationsToFile = (mutations, snapshotLocation, seperator) => {
   let fileContent = getSummary(mutations) + '\n'
   fileContent += mutations.map(({ mutation }) => mutation).join('\n' + seperator + '\n')
 
+  removeFolder(snapshotLocation)
+  createFolder(snapshotLocation)
+  snapshotFilename = path.join(snapshotLocation, 'mutation.graphql')
   fs.writeFileSync(snapshotFilename, fileContent)
 }
 
-takeSnapshot(graphQLdefinition)
+exports.takeSnapshot = takeSnapshot

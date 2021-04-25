@@ -60,9 +60,7 @@ Can take snapshot of current DB state via
 Load snapshot with
 `yarn use_snapshot`, optional snapshot name can be provided as a parameter (defaults to current)
 
-Single file GraphQL mutation set of snapshotted data can be found in `./database/snapshot/{snapshot name}.graphql`
-
-See documentation for more details
+See documentation for more details (more parameters can be specified to control profile, snapshot files, etc..)
 
 ## Triggers and Actions
 

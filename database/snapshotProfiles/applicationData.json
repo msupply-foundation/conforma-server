@@ -1,0 +1,122 @@
+{
+  "useSnapshotConfig": {
+    "initialiseDB": true,
+    "insertCoreData": true,
+    "ignoreInsertDataFiles": ["06_applications_D_reviewTest.js", "07_review_assignments.js"]
+  },
+  "definitions": [
+    {
+      "table": "user",
+      "skip": true
+    },
+    {
+      "table": "organisation",
+      "skip": true
+    },
+    {
+      "table": "userOrganisation",
+      "skip": true
+    },
+    {
+      "table": "permissionPolicy",
+      "skip": true
+    },
+    {
+      "table": "template",
+      "skip": true
+    },
+    {
+      "table": "templateSection",
+      "skip": true
+    },
+    {
+      "table": "templateElement",
+      "skip": true
+    },
+    {
+      "table": "templateStage",
+      "skip": true
+    },
+    {
+      "table": "permissionName",
+      "skip": true
+    },
+    {
+      "table": "permissionJoin",
+      "skip": true
+    },
+    {
+      "table": "templatePermission",
+      "skip": true
+    },
+    {
+      "table": "templateAction",
+      "skip": true
+    },
+    {
+      "table": "application"
+    },
+    {
+      "table": "applicationSection"
+    },
+    {
+      "table": "applicationResponse"
+    },
+    {
+      "table": "applicationStageHistory"
+    },
+    {
+      "table": "applicationStatusHistory"
+    },
+    {
+      "table": "reviewAssignment"
+    },
+    {
+      "table": "reviewAssignmentAssignerJoin"
+    },
+    {
+      "table": "reviewQuestionAssignment"
+    },
+    {
+      "table": "review"
+    },
+    {
+      "table": "reviewStatusHistory"
+    },
+    {
+      "table": "reviewDecision"
+    },
+    {
+      "table": "reviewResponse"
+    },
+
+    {
+      "table": "actionPlugin",
+      "skip": true
+    },
+    {
+      "table": "actionQueue",
+      "skip": true
+    },
+    {
+      "table": "applicationListShape",
+      "skip": true
+    },
+    {
+      "table": "elementTypePlugin",
+      "skip": true
+    },
+    {
+      "table": "file",
+      "skip": true
+    },
+    {
+      "table": "notification",
+      "skip": true
+    },
+    {
+      "table": "trigger_queue",
+      "skip": true
+    }
+  ]
+}
