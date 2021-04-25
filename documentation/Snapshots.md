@@ -102,7 +102,7 @@ See `takeSnapshot.js`.
 
 ## Sharing snapshots
 
-The original intent for snapshot sharing was via `git` (just create test back end branch and commit to it, this is also a good way to see how operations change database, as you can clearly see changes as they are commited between subsequent snapshots, of the same name). Test branch can be shared during PR.
+The original intent for snapshot sharing was via `git` (just create test back end branch and commit to it, this is also a good way to see how operations change database, as you can clearly see changes as they are committed between subsequent snapshots, of the same name). Test branch can be shared during PR.
 
 Another way is to zip the whole snapshot folder and share it, it would need to be extracted to `database/snapshot` folder before loading via `yarn use_snaphot {name of snapshot}`
 
