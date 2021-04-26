@@ -701,8 +701,10 @@ exports.queries = [
                       title: "Country code"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      placeholder: "NZ"
-                      parameters: { label: "Enter 2 letters code of a valid country" }
+                      parameters: { 
+                        label: "Enter 2 letters code of a valid country" 
+                        placeholder: "NZ"
+                      }
                     }
                     {
                       code: "TXT_COUNTRY"
