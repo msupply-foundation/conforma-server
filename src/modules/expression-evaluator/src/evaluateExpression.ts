@@ -223,6 +223,7 @@ const assignChildNodesToQuery = (childNodes: any[]) => {
   const lastField = fieldNames.length + skipFields
   const values: string[] = childNodes.slice(skipFields, lastField)
   const returnProperty: string = childNodes[lastField]
+
   return { url, query, fieldNames, values, returnProperty }
 }
 
@@ -267,7 +268,6 @@ const graphQLquery = async (
   connection: IGraphQLConnection
 ) => {
   const endpoint = url !== 'graphQLEndpoint' && url !== '' ? url : connection.endpoint
-  console.log(url, connection.endpoint, endpoint)
   const queryResult = await connection.fetch(endpoint, {
     method: 'POST',
     headers: {
@@ -280,8 +280,6 @@ const graphQLquery = async (
     }),
   })
   const data = await queryResult.json()
-  console.log(data)
-
   return data.data
 }
 

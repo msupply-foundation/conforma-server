@@ -430,7 +430,7 @@ test('API: Return an array of titles plucked from inside array of objects', () =
 test('Test Postgres lookup single string', () => {
   return evaluateExpression(testData.getApplicationName, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toBe('Company Registration: Company C')
+      expect(result).toBe('Test Review -- Vitamin C')
     }
   )
 })
@@ -443,6 +443,8 @@ test('Test Postgres get array of template names', () => {
         'Organisation Registration',
         'User Registration',
         'Test -- Review Process',
+        'Drug Registration - General Medicines Procedure',
+        'Join Organisation',
       ])
     }
   )
@@ -451,20 +453,7 @@ test('Test Postgres get array of template names', () => {
 test('Test Postgres get Count of templates', () => {
   return evaluateExpression(testData.countTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual(4)
-    }
-  )
-})
-
-test('Test Postgres get template names -- no type', () => {
-  return evaluateExpression(testData.getListOfTemplates_noType, { pgConnection: pgConnect }).then(
-    (result: any) => {
-      expect(result).toEqual([
-        { name: 'Test -- General Registration' },
-        { name: 'Organisation Registration' },
-        { name: 'User Registration' },
-        { name: 'Test -- Review Process' },
-      ])
+      expect(result).toEqual(6)
     }
   )
 })
@@ -474,9 +463,6 @@ test('Test Postgres get application list with IDs', () => {
     pgConnection: pgConnect,
   }).then((result: any) => {
     expect(result).toEqual([
-      { id: 1000, name: 'User Registration: Craig Drown' },
-      { id: 1001, name: 'User Registration: Carl Smith' },
-      { id: 2000, name: 'Company Registration: Company C' },
       { id: 4000, name: 'Test Review -- Vitamin C' },
       { id: 4001, name: 'Test Review -- Vitamin B' },
       { id: 4002, name: 'Test Review -- Amoxicillin' },
@@ -494,7 +480,7 @@ test('Test GraphQL -- get single application name', () => {
       endpoint: graphQLendpoint,
     },
   }).then((result: any) => {
-    expect(result).toEqual('User Registration: Craig Drown')
+    expect(result).toEqual('Test Review -- Vitamin C')
   })
 })
 
@@ -506,9 +492,6 @@ test('Test GraphQL -- List of Application Names', () => {
     },
   }).then((result: any) => {
     expect(result).toEqual([
-      'User Registration: Craig Drown',
-      'User Registration: Carl Smith',
-      'Company Registration: Company C',
       'Test Review -- Vitamin C',
       'Test Review -- Vitamin B',
       'Test Review -- Amoxicillin',
@@ -525,18 +508,6 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
     },
   }).then((result: any) => {
     expect(result).toEqual([
-      {
-        name: 'User Registration: Craig Drown',
-        id: 1000,
-      },
-      {
-        name: 'User Registration: Carl Smith',
-        id: 1001,
-      },
-      {
-        name: 'Company Registration: Company C',
-        id: 2000,
-      },
       {
         name: 'Test Review -- Vitamin C',
         id: 4000,
@@ -571,6 +542,8 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
           { node: { name: 'Organisation Registration' } },
           { node: { name: 'User Registration' } },
           { node: { name: 'Test -- Review Process' } },
+          { node: { name: 'Drug Registration - General Medicines Procedure' } },
+          { node: { name: 'Join Organisation' } },
         ],
       },
     })
@@ -585,7 +558,7 @@ test('Test GraphQL -- count Sections on current Application', () => {
       endpoint: graphQLendpoint,
     },
   }).then((result: any) => {
-    expect(result).toEqual(3)
+    expect(result).toEqual(2)
   })
 })
 
