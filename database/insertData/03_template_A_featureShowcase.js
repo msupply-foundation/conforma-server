@@ -170,7 +170,7 @@ exports.queries = [
                       validation: {
                         operator: "API"
                         children: [
-                          "http://localhost:8080/"check-unique"
+                          "http://localhost:8080/check-unique"
                           ["type", "value"]
                           "username"
                           {
@@ -696,19 +696,16 @@ exports.queries = [
                       }
                     }
                     {
-                      index: 30
                       code: "Q2GraphQL"
+                      index: 30
                       title: "Country code"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: {
-                        label: "Enter 2 letters code of a valid country"
-                        description: "Check country name selected on the next field
-                      }
+                      parameters: { label: "Enter 2 letters code of a valid country" }
                     }
                     {
-                      index: 31
                       code: "TXT_COUNTRY"
+                      index: 31
                       title: "Country name"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -716,42 +713,15 @@ exports.queries = [
                         text: {
                           operator: "graphQL"
                           children: [
-                            {
-                              """query country ($code: ID!) {
-                                country (code: $code) {
-                                  name
-                                }
-                              }"""
-                              'https://countries.trevorblades.com'
-                              ['code']
-                              {
-                                operator: "objectProperties"
-                                children: ["responses.Q2GraphQL.text"]
-                              }
-                            }
-                          ]
-                        }
-                        visibilityCondition: {
-                          operator: "!="
-                          children: [
+                            "query country ($code: ID!) { country (code: $code) { name } }"
+                            "https://countries.trevorblades.com"
+                            ["code"]
                             {
                               operator: "objectProperties"
                               children: ["responses.Q2GraphQL.text"]
                             }
-                            { value: "" }
                           ]
                         }
-                        validationInternal: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.thisResponse"]
-                            }
-                            { value: "^[\\\\S]{1,}$" }
-                          ]
-                        }
-                        validationMessageInternal: "Country code not valid!"
                       }
                     }
                   ]
