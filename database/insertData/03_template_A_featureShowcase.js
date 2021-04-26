@@ -510,6 +510,7 @@ exports.queries = [
                           operator: "graphQL",
                           children: [
                             "query getOrgs {organisations {nodes {name}}}",
+                            "graphQLEndpoint"
                             [],
                             "organisations.nodes"
                           ]
@@ -696,36 +697,48 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "Q2GraphQL"
                       index: 30
+                      code: "Q2GraphQL"
                       title: "Country code"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { 
-                        label: "Enter 2 letters code of a valid country" 
-                        placeholder: "NZ"
+                      parameters: {
+                        label: "Enter 2 letters code of a valid country"
                       }
                     }
                     {
-                      code: "TXT_COUNTRY"
                       index: 31
+                      code: "TXT_COUNTRY"
                       title: "Country name"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
                         text: {
-                          operator: "graphQL"
+                          operator: "graphQL",
                           children: [
-                            "query country ($code: ID!) { country (code: $code) { name } }"
-                            "https://countries.trevorblades.com"
-                            ["code"]
+                            "query country ($code: ID!) { country (code: $code) { name } }",
+                            "https://countries.trevorblades.com",
+                            [ "code" ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "responses.Q2GraphQL.text"
+                                ""
+                              ]
+                            }
+                            "country"
+                          ]
+                        }
+                        visibilityCondition: {
+                          operator: "!="
+                          children: [
                             {
                               operator: "objectProperties"
                               children: ["responses.Q2GraphQL.text"]
                             }
+                            ""
                           ]
                         }
-                        validationMessageInternal: "Country code not valid!"
                       }
                     }
                   ]
