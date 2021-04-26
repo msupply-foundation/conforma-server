@@ -556,8 +556,8 @@ testData.form2 = {
 }
 
 testData.application = {
-  id: 2000,
-  name: 'Company Registration',
+  id: 4000,
+  name: 'Test Review -- Vitamin C',
   status: 'Submitted',
   stage: 1,
   questions: { q1: 'What is the answer?', q2: 'Enter your name' },
@@ -663,35 +663,15 @@ testData.stringSubstitutionEmptyStringInReplacements = {
 
 testData.APIisUnique = {
   operator: 'API',
-  children: [
-    {
-      value: 'http://localhost:8080/check-unique',
-    },
-    {
-      value: ['type', 'value'],
-    },
-    { value: 'username' },
-    { value: 'druglord' },
-  ],
+  children: ['http://localhost:8080/check-unique', ['type', 'value'], 'username', 'druglord'],
 }
 testData.onlineTestAPI = {
   operator: 'API',
-  children: [
-    {
-      value: 'https://jsonplaceholder.typicode.com/todos/1',
-    },
-    { value: [] },
-    { value: 'title' },
-  ],
+  children: ['https://jsonplaceholder.typicode.com/todos/1', [], 'title'],
 }
 testData.onlineArrayReturn = {
   operator: 'API',
-  children: [
-    {
-      value: 'https://jsonplaceholder.typicode.com/users',
-    },
-    { value: [] },
-  ],
+  children: ['https://jsonplaceholder.typicode.com/users', []],
 }
 
 // prettier-ignore
@@ -699,13 +679,7 @@ testData.onlineArrayReturnResult = [{"address": {"city": "Gwenborough", "geo": {
 
 testData.onlineArrayNodes = {
   operator: 'API',
-  children: [
-    {
-      value: 'https://jsonplaceholder.typicode.com/albums',
-    },
-    { value: [] },
-    { value: 'title' },
-  ],
+  children: ['https://jsonplaceholder.typicode.com/albums', [], 'title'],
 }
 
 // prettier-ignore
@@ -718,10 +692,10 @@ testData.getApplicationName = {
   operator: 'pgSQL',
   children: [
     {
-      value: 'SELECT name FROM application WHERE template_id = $1',
+      value: 'SELECT name FROM application WHERE template_id = $1 LIMIT 1',
     },
     {
-      value: 2,
+      value: 4,
     },
   ],
 }
@@ -746,15 +720,6 @@ testData.countTemplates = {
   ],
 }
 
-testData.getListOfTemplates_noType = {
-  operator: 'pgSQL',
-  children: [
-    {
-      value: 'SELECT name FROM template',
-    },
-  ],
-}
-
 testData.getListOfApplications_withId = {
   operator: 'pgSQL',
   children: [
@@ -769,94 +734,89 @@ testData.getListOfApplications_withId = {
 testData.simpleGraphQL = {
   operator: 'graphQL',
   children: [
-    {
-      value: `query App($appId:Int!) {
-        application(id: $appId) {
-          name
-        }
-      }`,
-    },
-    { value: ['appId'] },
-    { value: 1000 },
-    { value: 'application.name' },
+    `query App($appId:Int!) {
+      application(id: $appId) {
+        name
+      }
+    }`,
+    'graphQLEndpoint',
+    ['appId'],
+    4000,
+    'application.name',
   ],
 }
 
 testData.GraphQL_listOfApplications = {
   operator: 'graphQL',
   children: [
-    {
-      value: `query Apps {
+    `query Apps {
       applications {
         nodes {
           name
         }
       }
     }`,
-    },
-    { value: [] },
-    { value: 'applications.nodes' },
+    'graphQLEndpoint',
+    [],
+    'applications.nodes',
   ],
 }
 
 testData.GraphQL_listOfApplicationsWithId = {
   operator: 'graphQL',
   children: [
-    {
-      value: `query Apps {
-        applications {
-          nodes {
-            name
-            id
-          }
+    `query Apps {
+      applications {
+        nodes {
+          name
+          id
         }
-      }`,
-    },
-    { value: [] },
-    { value: 'applications.nodes' },
+      }
+    }`,
+    'graphQLEndpoint',
+    [],
+    'applications.nodes',
   ],
 }
 
 testData.GraphQL_listOfTemplates_noReturnSpecified = {
   operator: 'graphQL',
   children: [
-    {
-      value: `query Templates {
-        templates {
-          edges {
-            node {
-              name
-            }
+    `query Templates {
+      templates {
+        edges {
+          node {
+            name
           }
         }
-      }`,
-    },
-    { value: [] },
+      }
+    }`,
+    'graphQLEndpoint',
+    [],
   ],
 }
 
 testData.GraphQL_CountApplicationSections = {
   operator: 'graphQL',
   children: [
-    {
-      value: `query SectionCount($appId:Int!) {
-        application(id: $appId) {
-          id
-          template {
-            name
-          }
-          applicationSections {
-            totalCount
-          }
+    `query SectionCount($appId:Int!) {
+      application(id: $appId) {
+        id
+        template {
+          name
         }
-      }`,
-    },
-    { value: ['appId'] },
+        applicationSections {
+          totalCount
+        }
+      }
+    }`,
+    'graphQLEndpoint',
+    ['appId'],
     {
       operator: 'objectProperties',
       children: ['application.id'],
     },
-    { value: 'application.applicationSections.totalCount' },
+    'application.applicationSections.totalCount',
   ],
 }
 
@@ -888,28 +848,22 @@ testData.emailValidation = {
       children: [
         {
           operator: 'objectProperties',
-          children: [{ value: 'form.q3' }],
+          children: ['form.q3'],
         },
-        {
-          value: '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$',
-        },
+        '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$',
       ],
     },
     {
       operator: 'API',
       children: [
-        {
-          value: 'http://localhost:8080/check-unique',
-        },
-        {
-          value: ['type', 'value'],
-        },
-        { value: 'email' },
+        'http://localhost:8080/check-unique',
+        ['type', 'value'],
+        'email',
         {
           operator: 'objectProperties',
           children: ['form.q3'],
         },
-        { value: 'unique' },
+        'unique',
       ],
     },
   ],
@@ -1048,23 +1002,22 @@ testData.complexValidation = {
     {
       operator: 'graphQL',
       children: [
-        {
-          value: `query Orgs($orgName: String) {
-            organisations(condition: {name: $orgName}) {
-              totalCount
-              nodes {
-                name
-                id
-              }
+        `query Orgs($orgName: String) {
+          organisations(condition: {name: $orgName}) {
+            totalCount
+            nodes {
+              name
+              id
             }
-          }`,
-        },
-        { value: ['orgName'] },
+          }
+        }`,
+        'graphQLEndpoint',
+        ['orgName'],
         {
           operator: 'objectProperties',
           children: ['form2.q2'],
         },
-        { value: 'organisations.totalCount' },
+        'organisations.totalCount',
       ],
     },
     { value: 0 },
