@@ -1,8 +1,16 @@
+import { FastifyRequest, FastifyReply, RequestGenericInterface } from 'fastify'
 import { parseStream } from 'fast-csv'
 import { LookupTableService } from '../services'
 
-const ImportCsvUpdateController = async (request: any, reply: any) => {
-  const lookupTableId = Number(request.params.lookupTableId)
+interface IImportCsvUpdateRequest extends RequestGenericInterface {
+  Params: { lookupTableId: number }
+}
+
+const ImportCsvUpdateController = async (
+  request: FastifyRequest<IImportCsvUpdateRequest>,
+  reply: FastifyReply
+) => {
+  const { lookupTableId } = request.params
   const data = await request.file()
 
   const lookupTableService = LookupTableService({ tableId: lookupTableId })
@@ -10,20 +18,20 @@ const ImportCsvUpdateController = async (request: any, reply: any) => {
   await parseStream(data.file, {
     headers: lookupTableService.parseCsvHeaders,
   })
-    .on('data', async (row: any) => {
+    .on('data', async (row) => {
       await lookupTableService.addRow(row)
     })
-    .on('end', async (rowCount: any) => {
+    .on('end', async (rowCount: number) => {
       await lookupTableService
         .updateTable()
         .catch((error: Error) =>
           reply.status(422).send({ status: 'error', name: error.name, message: error.message })
         )
-        .then((message: string[]) => {
+        .then((message) => {
           reply.send({ status: 'success', message: JSON.stringify(message) })
         })
     })
-    .on('error', (error: any) => {
+    .on('error', (error: Error) => {
       reply.status(422).send({ status: 'error', name: error.name, message: error.message })
     })
 }
