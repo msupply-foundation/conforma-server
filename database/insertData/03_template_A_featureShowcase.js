@@ -499,7 +499,7 @@ exports.queries = [
                     }
                     {
                       id: 1035
-                      code: "QGraphQLTest"
+                      code: "Q1GraphQL"
                       index: 20
                       title: "GraphQL query"
                       elementTypePluginCode: "dropdownChoice"
@@ -693,6 +693,65 @@ exports.queries = [
                             "name"
                           ]
                         }
+                      }
+                    }
+                    {
+                      index: 30
+                      code: "Q2GraphQL"
+                      title: "Country code"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Enter 2 letters code of a valid country"
+                        description: "Check country name selected on the next field
+                      }
+                    }
+                    {
+                      index: 31
+                      code: "TXT_COUNTRY"
+                      title: "Country name"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: {
+                          operator: "graphQL"
+                          children: [
+                            {
+                              """query country ($code: ID!) {
+                                country (code: $code) {
+                                  name
+                                }
+                              }"""
+                              'https://countries.trevorblades.com'
+                              ['code']
+                              {
+                                operator: "objectProperties"
+                                children: ["responses.Q2GraphQL.text"]
+                              }
+                            }
+                          ]
+                        }
+                        visibilityCondition: {
+                          operator: "!="
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q2GraphQL.text"]
+                            }
+                            { value: "" }
+                          ]
+                        }
+                        validationInternal: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.thisResponse"]
+                            }
+                            { value: "^[\\\\S]{1,}$" }
+                          ]
+                        }
+                        validationMessageInternal: "Country code not valid!"
                       }
                     }
                   ]
