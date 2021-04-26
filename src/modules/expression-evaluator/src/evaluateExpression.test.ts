@@ -562,6 +562,28 @@ test('Test GraphQL -- count Sections on current Application', () => {
   })
 })
 
+test('Test GraphQL -- get continents list from External Graphql API ', () => {
+  return evaluateExpression(testData.GraphQL_GetContinentsList_ExternalAPI, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual(testData.continentsResult)
+  })
+})
+
+test('Test GraphQL -- get country details by code from External Graphql API ', () => {
+  return evaluateExpression(testData.GraphQL_GetCountryByCode_ExternalAPI, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual('Oceania')
+  })
+})
+
 // TO-DO: Test with multiple variables and dynamic values
 
 // More complex combinations

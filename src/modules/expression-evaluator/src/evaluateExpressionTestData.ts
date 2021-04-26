@@ -32,6 +32,16 @@ testData.basicArray = {
 
 testData.stringifiedBasicArray = '{"value":["Pharmaceutical","Natural Product","Other"]}'
 
+testData.continentsResult = [
+  'Africa',
+  'Antarctica',
+  'Asia',
+  'Europe',
+  'North America',
+  'Oceania',
+  'South America',
+]
+
 // AND
 testData.operatorAND_2values = {
   type: 'boolean',
@@ -817,6 +827,38 @@ testData.GraphQL_CountApplicationSections = {
       children: ['application.id'],
     },
     'application.applicationSections.totalCount',
+  ],
+}
+
+testData.GraphQL_GetContinentsList_ExternalAPI = {
+  operator: 'graphQL',
+  children: [
+    `query continents {
+      continents {
+        name
+      }
+     }`,
+    'https://countries.trevorblades.com',
+    [],
+    'continents',
+  ],
+}
+
+testData.GraphQL_GetCountryByCode_ExternalAPI = {
+  operator: 'graphQL',
+  children: [
+    `query country ($code: ID!) {
+      country (code: $code) {
+        name
+        continent {
+          name
+        }
+      }
+    }`,
+    'https://countries.trevorblades.com',
+    ['code'],
+    '"NZ"',
+    'country.continent',
   ],
 }
 
