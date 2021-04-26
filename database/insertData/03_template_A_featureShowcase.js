@@ -723,6 +723,7 @@ exports.queries = [
                             }
                           ]
                         }
+                        validationMessageInternal: "Country code not valid!"
                       }
                     }
                   ]
