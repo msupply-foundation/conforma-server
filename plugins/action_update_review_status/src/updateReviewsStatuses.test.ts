@@ -1,7 +1,7 @@
 // Test suite for the updateReviews Action.
 
 import DBConnect from '../../../src/components/databaseConnect'
-import { action as updateReviews } from './index'
+import { action as updateReviewsStatuses } from './index'
 
 // Setup database
 beforeAll(async (done) => {
