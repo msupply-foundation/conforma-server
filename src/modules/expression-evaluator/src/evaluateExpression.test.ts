@@ -439,7 +439,7 @@ test('Test Postgres get array of template names', () => {
   return evaluateExpression(testData.getListOfTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
       expect(result).toEqual([
-        'Test -- General Registration',
+        'Demo -- Feature Showcase',
         'Organisation Registration',
         'User Registration',
         'Test -- Review Process',
@@ -538,7 +538,7 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
     expect(result).toEqual({
       templates: {
         edges: [
-          { node: { name: 'Test -- General Registration' } },
+          { node: { name: 'Demo -- Feature Showcase' } },
           { node: { name: 'Organisation Registration' } },
           { node: { name: 'User Registration' } },
           { node: { name: 'Test -- Review Process' } },
