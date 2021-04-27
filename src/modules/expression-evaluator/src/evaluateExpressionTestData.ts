@@ -830,6 +830,26 @@ testData.GraphQL_CountApplicationSections = {
   ],
 }
 
+testData.GraphQL_CountApplicationResponses = {
+  operator: 'graphQL',
+  children: [
+    `query SectionCount($appId:Int!) {
+      application(id: $appId) {
+        applicationResponses {
+          totalCount
+        }
+      }
+    }`,
+    '', // graphQLEndpoint OR Empty string to use default Endpoint
+    ['appId'],
+    {
+      operator: 'objectProperties',
+      children: ['application.id'],
+    },
+    'application.applicationResponses.totalCount',
+  ],
+}
+
 testData.GraphQL_GetContinentsList_ExternalAPI = {
   operator: 'graphQL',
   children: [

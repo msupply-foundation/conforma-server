@@ -562,6 +562,18 @@ test('Test GraphQL -- count Sections on current Application', () => {
   })
 })
 
+test('Test GraphQL -- count Responses on current Application - using empty url (default)', () => {
+  return evaluateExpression(testData.GraphQL_CountApplicationResponses, {
+    objects: { application: testData.application },
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual(10)
+  })
+})
+
 test('Test GraphQL -- get continents list from External Graphql API ', () => {
   return evaluateExpression(testData.GraphQL_GetContinentsList_ExternalAPI, {
     graphQLConnection: {
