@@ -806,6 +806,22 @@ testData.GraphQL_listOfTemplates_noReturnSpecified = {
   ],
 }
 
+testData.GraphQL_CountTemplates_objectParamsOption = {
+  operator: 'graphQL',
+  children: [
+    {
+      value: `query Templates {
+        templates {
+          totalCount
+        }
+      }`,
+    },
+    { value: 'graphQLEndpoint' },
+    { value: [] },
+    { value: 'templates' },
+  ],
+}
+
 testData.GraphQL_CountApplicationSections = {
   operator: 'graphQL',
   children: [

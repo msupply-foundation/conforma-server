@@ -550,6 +550,17 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
   })
 })
 
+test('Test GraphQL -- Count templates -- passing params as object option', () => {
+  return evaluateExpression(testData.GraphQL_CountTemplates_objectParamsOption, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual(6)
+  })
+})
+
 test('Test GraphQL -- count Sections on current Application', () => {
   return evaluateExpression(testData.GraphQL_CountApplicationSections, {
     objects: { application: testData.application },
