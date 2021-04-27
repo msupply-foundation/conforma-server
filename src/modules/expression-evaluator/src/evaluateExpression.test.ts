@@ -458,6 +458,21 @@ test('Test Postgres get Count of templates', () => {
   )
 })
 
+test('Test Postgres get template names -- no type', () => {
+  return evaluateExpression(testData.getListOfTemplates_noType, { pgConnection: pgConnect }).then(
+    (result: any) => {
+      expect(result).toEqual([
+        { name: 'Demo -- Feature Showcase' },
+        { name: 'Organisation Registration' },
+        { name: 'User Registration' },
+        { name: 'Test -- Review Process' },
+        { name: 'Drug Registration - General Medicines Procedure' },
+        { name: 'Join Organisation' },
+      ])
+    }
+  )
+})
+
 test('Test Postgres get application list with IDs', () => {
   return evaluateExpression(testData.getListOfApplications_withId, {
     pgConnection: pgConnect,

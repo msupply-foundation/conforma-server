@@ -730,6 +730,15 @@ testData.countTemplates = {
   ],
 }
 
+testData.getListOfTemplates_noType = {
+  operator: 'pgSQL',
+  children: [
+    {
+      value: 'SELECT name FROM template',
+    },
+  ],
+}
+
 testData.getListOfApplications_withId = {
   operator: 'pgSQL',
   children: [
