@@ -220,9 +220,9 @@ const assignChildNodesToQuery = (childNodes: any[]) => {
   const url: string = childNodes[1]
   const fieldNames: string[] = childNodes[2]
 
-  const lastField = fieldNames.length + skipFields
-  const values: string[] = childNodes.slice(skipFields, lastField)
-  const returnProperty: string = childNodes[lastField]
+  const lastFieldIndex = fieldNames.length + skipFields
+  const values: string[] = childNodes.slice(skipFields, lastFieldIndex)
+  const returnProperty: string = childNodes[lastFieldIndex]
 
   return { url, query, fieldNames, values, returnProperty }
 }
