@@ -228,7 +228,7 @@ Performs queries on connected GraphQL interface.
 
 - Input:
   - 1st child node returns a **string** representing the GraphQL query
-  - 2nd child node returns a **string** containing the url to GrapqhQL (using "graphQLEndpoint") will the app internal GraphQL server.
+  - 2nd child node returns a **string** containing the url of the GrapqhQL endpoint. Using the value "graphQLEndpoint" (or empty string `""`) will the use the graphQL endpoint specified in the input parameter "GraphQLConnection" object.
   - 3nd child node returns an **array** of field names for the query's associated variables object. If no variables are required for the query, pass an empty array (i.e. `{ value: [] }`).
   - 4rd...N-1 child nodes return the values of the fields for the variables object -- one node for each field in the previous node's array.
   - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`). This last node is optional -- if not provided, the whole result object will be returned unmodified.
