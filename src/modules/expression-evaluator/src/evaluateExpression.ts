@@ -267,7 +267,13 @@ const graphQLquery = async (
   variables: object,
   connection: IGraphQLConnection
 ) => {
-  const endpoint = url !== 'graphQLEndpoint' && url !== '' ? url : connection.endpoint
+  // Get an external endpoint to use, or get the default GraphQL endpoint if received:
+  // "graphqlendpoint" (case insensitive), an empty string "" or null
+  const endpoint =
+    url.toLowerCase() !== 'graphqlendpoint' && url !== '' && url !== null
+      ? url
+      : connection.endpoint
+
   const queryResult = await connection.fetch(endpoint, {
     method: 'POST',
     headers: {
