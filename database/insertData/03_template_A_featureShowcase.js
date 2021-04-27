@@ -170,14 +170,14 @@ exports.queries = [
                       validation: {
                         operator: "API"
                         children: [
-                          "http://localhost:8080/check-unique"
-                          ["type", "value"]
-                          "username"
+                          { value: "http://localhost:8080/check-unique" }
+                          { value: ["type", "value"] }
+                          { value: "username" }
                           {
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
                           }
-                          "unique"
+                          { value: "unique" }
                         ]
                       }
                       validationMessage: "Username must be unique"
@@ -383,9 +383,11 @@ exports.queries = [
                         options: {
                           operator: "API"
                           children: [
-                            "https://jsonplaceholder.typicode.com/users"
-                            []
-                            "name"
+                            {
+                              value: "https://jsonplaceholder.typicode.com/users"
+                            }
+                            { value: [] }
+                            { value: "name" }
                           ]
                         }
                       }
@@ -499,7 +501,7 @@ exports.queries = [
                     }
                     {
                       id: 1035
-                      code: "Q1GraphQL"
+                      code: "QGraphQLTest"
                       index: 20
                       title: "GraphQL query"
                       elementTypePluginCode: "dropdownChoice"
@@ -510,7 +512,6 @@ exports.queries = [
                           operator: "graphQL",
                           children: [
                             "query getOrgs {organisations {nodes {name}}}",
-                            "graphQLEndpoint"
                             [],
                             "organisations.nodes"
                           ]
@@ -689,54 +690,11 @@ exports.queries = [
                         checkboxes: {
                           operator: "API"
                           children: [
-                            "https://jsonplaceholder.typicode.com/users"
-                            []
-                            "name"
-                          ]
-                        }
-                      }
-                    }
-                    {
-                      index: 30
-                      code: "Q2GraphQL"
-                      title: "Country code"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
-                      parameters: {
-                        label: "Enter 2 letters code of a valid country"
-                      }
-                    }
-                    {
-                      index: 31
-                      code: "TXT_COUNTRY"
-                      title: "Country name"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
-                      parameters: {
-                        text: {
-                          operator: "graphQL",
-                          children: [
-                            "query country ($code: ID!) { country (code: $code) { name } }",
-                            "https://countries.trevorblades.com",
-                            [ "code" ],
                             {
-                              operator: "objectProperties",
-                              children: [
-                                "responses.Q2GraphQL.text"
-                                ""
-                              ]
+                              value: "https://jsonplaceholder.typicode.com/users"
                             }
-                            "country"
-                          ]
-                        }
-                        visibilityCondition: {
-                          operator: "!="
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q2GraphQL.text"]
-                            }
-                            ""
+                            { value: [] }
+                            { value: "name" }
                           ]
                         }
                       }
