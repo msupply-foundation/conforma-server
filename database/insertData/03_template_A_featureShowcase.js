@@ -512,6 +512,7 @@ exports.queries = [
                           operator: "graphQL",
                           children: [
                             "query getOrgs {organisations {nodes {name}}}",
+                            "graphQLEndpoint",
                             [],
                             "organisations.nodes"
                           ]
