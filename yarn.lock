@@ -1065,7 +1065,7 @@
   version "1.0.1"
   resolved "https://npm.pkg.github.com/download/@openmsupply/deep-comparison/1.0.1/e2230c86d7c57a929ecced4212c0812c00a98717556a0122ff5f343c3a9dc1df#da636710e93ab0310f3a15967be8eba3aaf3844d"
 
-"@openmsupply/expression-evaluator@^1.5.2":
+"@openmsupply/expression-evaluator@^1.6.2":
   version "1.6.2"
   resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.6.2/75fb208dcc294b8be71b08c77f1c5ae3d2f7b4de9d922e1f9cdd584994d993d4#8e40a1405e7ac9252b23cc77c1628d5dc6cb57da"
 
