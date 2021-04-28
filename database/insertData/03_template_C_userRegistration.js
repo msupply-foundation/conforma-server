@@ -69,14 +69,14 @@ exports.queries = [
                       validation: {
                         operator: "API"
                         children: [
-                          { value: "http://localhost:8080/check-unique" }
-                          { value: ["type", "value"] }
-                          { value: "username" }
+                          "http://localhost:8080/check-unique"
+                          ["type", "value"]
+                          "username"
                           {
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
                           }
-                          { value: "unique" }
+                          "unique"
                         ]
                       }
                       validationMessage: "Username must be unique"
