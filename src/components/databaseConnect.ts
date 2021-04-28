@@ -64,6 +64,7 @@ class DBConnect {
     switch (tableName) {
       case 'application':
       case 'review':
+      case 'review_assignment':
         templateId = await PostgresDB.getTemplateIdFromTrigger(tableName, record_id)
         break
       // TO-DO: Implement these queries once we have more data in database

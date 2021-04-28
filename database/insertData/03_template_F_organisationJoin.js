@@ -1,6 +1,9 @@
 /* 
 TEMPLATE F - Join Organisation
-  - Template to join an existing organisation
+  - for applying to join an existing organisation.
+  Still to-do:
+   - more specific policies to limit reviewers to their own organisation
+   - Org selector needs a plugin that doesn't show all companies to user
 */
 const { coreActions } = require('./core_actions')
 const { devActions } = require('./dev_actions')
@@ -64,7 +67,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 5002
                       code: "S1Q2"
                       index: 2
                       title: "Reason"
@@ -130,6 +132,9 @@ exports.queries = [
                 number: 1
                 title: "Approval"
                 description: "This application will be approved by a Reviewer"
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
             ]
           }
@@ -141,7 +146,7 @@ exports.queries = [
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
-                  message: { value: "Company Registration submission" }
+                  message: { value: "Organisation Registration submission" }
                 }
               }
               {
@@ -170,10 +175,6 @@ exports.queries = [
                   ]
                 }
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newOutcome: "Approved"
                 }
               }
@@ -182,24 +183,15 @@ exports.queries = [
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 120
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -218,24 +210,15 @@ exports.queries = [
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 130
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -255,31 +238,18 @@ exports.queries = [
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 110
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newStatus: "Completed"
                 }
               }
@@ -287,22 +257,36 @@ exports.queries = [
           }
           templatePermissionsUsingId: {
             create: [
-              # applyJoinCompany
-              { permissionNameId: 8000 }
-              # assignGeneral
-              { permissionNameId: 9000 }
-              # reviewJoinCompany
+              # applyGeneral
               {
-                permissionNameId: 8000
-                level: 1
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyGeneral" }
+                }
+              }
+              # assignGeneral
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "assignGeneral" }
+                }
                 stageNumber: 1
+                levelNumber: 1
+              }
+              # reviewJoinOrg
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewJoinOrg" }
+                }
+                stageNumber: 1
+                levelNumber: 1
                 restrictions: { canSelfAssign: true }
               }
               # reviewGeneral
               {
-                permissionNameId: 10000
-                level: 1
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewGeneral" }
+                }
                 stageNumber: 1
+                levelNumber: 1
                 restrictions: { canSelfAssign: true }
               }
             ]

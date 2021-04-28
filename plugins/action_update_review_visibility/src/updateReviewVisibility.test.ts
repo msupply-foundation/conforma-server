@@ -16,7 +16,7 @@ beforeAll(async (done) => {
 })
 
 test('Test: updateReviewVisibility', () => {
-  return updateReviewVisibility({ reviewId: 5 }, DBConnect).then((result: any) => {
+  return updateReviewVisibility({ parameters: { reviewId: 5 }, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',

@@ -119,7 +119,7 @@ class PostgresDB {
     payload: ActionQueueGetPayload = { status: 'Scheduled' }
   ): Promise<ActionQueue[]> => {
     const text =
-      'SELECT id, action_code, application_data, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
+      'SELECT id, action_code, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
     try {
       const result = await this.query({
         text,
@@ -133,7 +133,7 @@ class PostgresDB {
 
   public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
     const text =
-      "SELECT id, action_code, application_data, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
+      "SELECT id, action_code, trigger_payload, condition_expression, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
     try {
       const result = await this.query({
         text,
@@ -242,7 +242,8 @@ class PostgresDB {
       stage_history_time_created as "stageHistoryTimeCreated",
       status_history_id as "statusHistoryId", status, status_history_time_created as "statusHistoryTimeCreated",
       user_id as "userId",
-      org_id as "orgId"
+      org_id as "orgId",
+      outcome
       FROM application_stage_status_all
       WHERE application_id = $1
       AND stage_is_current = true
@@ -476,7 +477,14 @@ class PostgresDB {
 
   public getCurrentStageStatusHistory = async (applicationId: number) => {
     const text = `
-      SELECT stage_id, stage_number, stage, stage_history_id, status_history_id, status, status_history_time_created 
+      SELECT stage_id AS "stageId",
+      stage_number AS "stageNumber",
+      stage,
+      stage_history_id AS "stageHistoryId",
+      stage_history_time_created AS "stageHistoryTimeCreated",
+      status_history_id AS "statusHistoryId",
+      status,
+      status_history_time_created AS "statusHistoryTimeCreated"
       FROM application_stage_status_latest 
       WHERE application_id = $1
     `
@@ -661,14 +669,13 @@ class PostgresDB {
     }
   }
 
-  public getNumReviewLevels = async (templateId: number, stageNumber: number) => {
+  public getNumReviewLevels = async (stageId: number) => {
     const text = `
-    SELECT MAX(level) FROM template_permission
-    WHERE template_id = $1 
-    AND stage_number = $2
+    SELECT MAX(number) FROM template_stage_review_level
+    WHERE stage_id = $1
     `
     try {
-      const result = await this.query({ text, values: [templateId, stageNumber] })
+      const result = await this.query({ text, values: [stageId] })
       return result.rows[0].max
     } catch (err) {
       console.log(err.message)
@@ -677,7 +684,8 @@ class PostgresDB {
   }
   public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
-      SELECT review.level, stage_number as "stageNumber"
+      SELECT review.level_number AS "levelNumber",
+      stage_number as "stageNumber"
       FROM review JOIN review_assignment ra
       ON review.review_assignment_id = ra.id
       WHERE review.id = $1
@@ -694,7 +702,7 @@ class PostgresDB {
   public isFullyAssignedLevel1 = async (applicationId: number) => {
     const text = `
     SELECT is_fully_assigned_level_1
-    FROM application_list
+    FROM application_list()
     WHERE id = $1
     `
     try {
@@ -729,7 +737,7 @@ class PostgresDB {
 
   public getAllReviewResponses = async (reviewId: number) => {
     const text = `
-    SELECT rr.id, r.level, code, comment, decision, rr.status, rr.template_element_id,
+    SELECT rr.id, r.level_number, code, comment, decision, rr.status, rr.template_element_id,
     rr.application_response_id, rr.review_response_link_id, rr.time_updated
     FROM review_response rr JOIN application_response ar
     ON rr.application_response_id = ar.id

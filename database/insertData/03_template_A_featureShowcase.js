@@ -11,8 +11,8 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          code: "TestRego"
-          name: "Test -- General Registration"
+          code: "Demo"
+          name: "Demo -- Feature Showcase"
           isLinear: false
           startMessage: {
             operator: "stringSubstitution"
@@ -507,7 +507,7 @@ exports.queries = [
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
-                        label: "Select a company (GraphQL query)"
+                        label: "Select an organisation (GraphQL query)"
                         options: {
                           operator: "graphQL",
                           children: [
@@ -943,6 +943,9 @@ exports.queries = [
                 number: 1
                 title: "Automatic"
                 description: "Please check your email to confirm your account."
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
             ]
           }
@@ -996,7 +999,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3.text"]
                   }
-                  permissionNames: { value: ["applyCompanyRego"] }
+                  permissionNames: { value: ["applyOrgRego"] }
                 }
               }
               # Because it is later in sequence, this Action should over-ride the Core one
@@ -1005,10 +1008,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 103
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newStatus: { value: "Completed" }
                 }
               }
@@ -1017,10 +1016,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 104
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newOutcome: { value: "Approved" }
                 }
               }
@@ -1035,11 +1030,11 @@ exports.queries = [
                       "Output concatenation: The user %1's registration has been %2"
                       {
                         operator: "objectProperties"
-                        children: ["output.username"]
+                        children: ["outputCumulative.username"]
                       }
                       {
                         operator: "objectProperties"
-                        children: ["output.newOutcome"]
+                        children: ["outputCumulative.newOutcome"]
                       }
                     ]
                   }
@@ -1060,7 +1055,10 @@ exports.queries = [
           templatePermissionsUsingId: {
             create: [
               # Apply General
-              { permissionNameId: 10100 }
+              {
+                permissionNameToPermissionNameId: {
+                connectByName: { name: "applyGeneral" } }
+              }
             ]
           }
         }

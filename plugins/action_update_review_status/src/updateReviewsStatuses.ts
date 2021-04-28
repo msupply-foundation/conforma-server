@@ -1,3 +1,4 @@
+import { ActionPluginInput } from '../../types'
 import databaseMethods from './databaseMethods'
 
 type ReviewStatus = 'Draft' | 'Submitted' | 'Changes Requested' | 'Pending' | 'Locked'
@@ -6,18 +7,24 @@ interface Review {
   reviewAssignmentId: number
   applicationId: number
   reviewerId: number
-  level: number
+  levelNumber: number
   reviewStatus: ReviewStatus
 }
 
-async function updateReviews(input: any, DBConnect: any) {
+async function updateReviewsStatuses({
+  parameters,
+  applicationData,
+  DBConnect,
+}: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
   console.log('Updating reviews status...')
 
-  const { applicationId, applicationData, changedApplicationResponses = [] } = input
-  const stageId = input?.stageId || applicationData.stageId
-  const level = input?.level || applicationData?.reviewData?.level || 1
+  const applicationId = parameters?.applicationId ?? applicationData?.applicationId
+
+  const { changedApplicationResponses = [] } = parameters
+  const stageId = parameters?.stageId || applicationData?.stageId
+  const level = parameters?.level || applicationData?.reviewData?.levelNumber || 1
 
   const reviewsToUpdate = []
 
@@ -30,8 +37,8 @@ async function updateReviews(input: any, DBConnect: any) {
     ).filter((review: Review) => ['Submitted', 'Locked', 'Draft'].includes(review.reviewStatus))
     // Deduce which ones should be updated
     for (const review of reviews) {
-      const { reviewAssignmentId, level, reviewStatus } = review
-      if (level > 1) reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
+      const { reviewAssignmentId, levelNumber, reviewStatus } = review
+      if (levelNumber > 1) reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
       else if (await haveAssignedResponsesChanged(reviewAssignmentId))
         reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
       else if (reviewStatus === 'Locked')
@@ -71,4 +78,4 @@ async function updateReviews(input: any, DBConnect: any) {
   }
 }
 
-export default updateReviews
+export default updateReviewsStatuses

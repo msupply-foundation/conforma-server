@@ -1,7 +1,7 @@
 /* 
 TEMPLATE B - Organisation Registration
-  - still a work in progress, but this will be the template for creating an
-    application to register an organisation
+  - for creating a new Organisation in the system. Requires single review
+  by reviewer with "reviewOrgRego" permission
 */
 const { coreActions } = require('./core_actions')
 const { devActions } = require('./dev_actions')
@@ -15,19 +15,17 @@ exports.queries = [
           name: "Organisation Registration"
           isLinear: true
           status: AVAILABLE
-          startMessage: "## You will need the following documents ready for upload:\\n- Proof of Company name\\n- Proof of company address\\n- Organisation licence document"
+          startMessage: "## You will need the following documents ready for upload:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
               {
-                id: 1001
                 code: "S1"
                 title: "Section 1: Organisation Details"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 2000
                       code: "S1T1"
                       index: 10
                       title: "Intro Section 1"
@@ -35,11 +33,10 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         title: "Organisation details"
-                        text: "The details entered should match with your registered company documents. You will attach these in Section 2."
+                        text: "The details entered should match with your registered organisation documents. You will attach these in Section 2."
                       }
                     }
                     {
-                      id: 2010
                       code: "name"
                       index: 20
                       title: "Organisation Name"
@@ -71,7 +68,6 @@ exports.queries = [
                       parameters: { label: "What is the name of your organisation?" }
                     }
                     {
-                      id: 2020
                       code: "rego"
                       index: 30
                       title: "Registration"
@@ -105,7 +101,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2030
                       code: "physAdd"
                       index: 40
                       title: "Address"
@@ -116,7 +111,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2040
                       code: "addressCheckbox"
                       index: 50
                       title: "Postal Address Checkbox"
@@ -134,7 +128,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2050
                       code: "postAdd"
                       index: 60
                       title: "Address"
@@ -156,7 +149,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2060
                       code: "PB1"
                       index: 70
                       title: "Page Break"
@@ -164,7 +156,6 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 2070
                       code: "logo"
                       index: 80
                       title: "Logo upload"
@@ -180,7 +171,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2080
                       code: "activity"
                       index: 90
                       title: "Organisation Activity"
@@ -195,14 +185,12 @@ exports.queries = [
                 }
               }
               {
-                id: 1002
                 code: "S2"
                 title: "Section 2: Documentation"
                 index: 1
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 2100
                       code: "orgInfo"
                       index: 10
                       title: "Intro Section 2 - Page 1/2"
@@ -232,7 +220,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2110
                       code: "logoShow"
                       index: 20
                       title: "Show uploaded logo"
@@ -258,7 +245,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2120
                       code: "regoDoc"
                       index: 30
                       title: "Registration upload"
@@ -274,7 +260,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 2130
                       code: "otherDoc"
                       index: 40
                       title: "Other documentation upload"
@@ -299,6 +284,9 @@ exports.queries = [
                 number: 1
                 title: "Approval"
                 description: "This application will be approved by a Reviewer"
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
             ]
           }
@@ -310,7 +298,7 @@ exports.queries = [
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
-                  message: { value: "Company Registration submission" }
+                  message: { value: "Organisation Registration submission" }
                 }
               }
               {
@@ -339,10 +327,6 @@ exports.queries = [
                   ]
                 }
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.record_id"]
-                  }
                   newOutcome: { value: "Approved" }
                 }
               }
@@ -350,27 +334,16 @@ exports.queries = [
                 actionCode: "createOrg"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 101
-                # TO-DO -- update condition to just check Outcome
-                # (from applicationData)
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -408,24 +381,15 @@ exports.queries = [
                 # TO-DO -- update condition to just check Outcome
                 # (from applicationData)
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -435,7 +399,7 @@ exports.queries = [
                   }
                   organisation_id: {
                     operator: "objectProperties"
-                    children: ["output.orgId"]
+                    children: ["outputCumulative.orgId"]
                   }
                   user_role: "Owner"
                 }
@@ -447,24 +411,15 @@ exports.queries = [
                 # TO-DO -- update condition to just check Outcome
                 # (from applicationData)
                 condition: {
-                  operator: "AND"
+                  operator: "="
                   children: [
                     {
-                      operator: "="
+                      operator: "objectProperties"
                       children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
+                        "applicationData.outcome"
                       ]
                     }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
+                    "Approved"
                   ]
                 }
                 parameterQueries: {
@@ -474,9 +429,9 @@ exports.queries = [
                   }
                   orgName: {
                     operator: "objectProperties"
-                    children: ["output.orgName"]
+                    children: ["outputCumulative.orgName"]
                   }
-                  permissionNames: ["reviewJoinCompany"]
+                  permissionNames: ["reviewJoinOrg"]
                 }
               }
             ]
@@ -489,13 +444,13 @@ exports.queries = [
                   connectByName: { name: "applyGeneral" }
                 }
               }
-              # Review Company rego
+              # Review Org rego
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewCompanyRego" }
+                  connectByName: { name: "reviewOrgRego" }
                 }
                 stageNumber: 1
-                level: 1
+                levelNumber: 1
                 restrictions: { canSelfAssign: true }
               }
               # Assign General
@@ -503,6 +458,8 @@ exports.queries = [
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "assignGeneral" }
                 }
+                stageNumber: 1
+                levelNumber: 1
               }
             ]
           }

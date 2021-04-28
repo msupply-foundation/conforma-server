@@ -1,7 +1,7 @@
 // Test suite for the updateReviews Action.
 
 import DBConnect from '../../../src/components/databaseConnect'
-import { action as updateReviews } from './index'
+import { action as updateReviewsStatuses } from './index'
 
 // Setup database
 beforeAll(async (done) => {
@@ -25,17 +25,17 @@ beforeAll(async (done) => {
 })
 
 test('Test: Should update 2 reviews', () => {
-  return updateReviews(
-    {
+  return updateReviewsStatuses({
+    parameters: {
       applicationId: 4000,
       changedApplicationResponses: [
         { applicationResponseId: 7, templateElementId: 4005 },
         { applicationResponseId: 9, templateElementId: 4002 },
       ],
-      applicationData: { stageId: 6 },
     },
-    DBConnect
-  ).then((result: any) => {
+    applicationData: { stageId: 6 },
+    DBConnect,
+  }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
@@ -46,7 +46,7 @@ test('Test: Should update 2 reviews', () => {
             reviewAssignmentId: 1001,
             applicationId: 4000,
             reviewer_id: 6,
-            level: 1,
+            levelNumber: 1,
             reviewStatus: 'Pending',
           },
         ],
