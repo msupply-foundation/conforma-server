@@ -16,7 +16,8 @@ CREATE OR REPLACE VIEW public.application_stage_status_all AS
 	status.id as status_history_id,
 	status.status,
 	status.time_created as status_history_time_created,
-	status.is_current as status_is_current
+	status.is_current as status_is_current,
+	application.outcome
 FROM application_stage_history stage
 FULL OUTER JOIN application_status_history status
 ON stage.id = status.application_stage_history_id

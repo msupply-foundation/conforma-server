@@ -3,7 +3,8 @@
   "code": "createOrg",
   "name": "Create Organisation",
   "description": "Inserts a new organisation in the database",
-  "required_parameters": ["name", "licence_number", "address"],
+  "required_parameters": ["name", "registration"],
+  "optional_parameters": ["address"],
   "output_properties": ["orgId", "orgName"],
   "info": {
     "author": {

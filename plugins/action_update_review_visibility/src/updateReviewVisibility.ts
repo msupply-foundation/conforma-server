@@ -1,8 +1,15 @@
 import databaseMethods from './databaseMethods'
+import { ActionPluginInput } from '../../types'
 
-async function updateReviewVisibility({ reviewId }: any, DBConnect: any) {
+async function updateReviewVisibility({
+  parameters,
+  applicationData,
+  DBConnect,
+}: ActionPluginInput) {
   console.log('Updating review visibility...')
   const db = databaseMethods(DBConnect)
+
+  const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
 
   try {
     const queryResult = await db.updateReviewResponseVisibility(reviewId)

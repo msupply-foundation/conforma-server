@@ -1,5 +1,8 @@
-async function changeOutcome(parameters: any, DBConnect: any) {
-  const { applicationId, newOutcome } = parameters
+import { ActionPluginInput } from '../../types'
+
+async function changeOutcome({ parameters, applicationData, DBConnect }: ActionPluginInput) {
+  const applicationId = parameters?.applicationId ?? applicationData?.applicationId
+  const newOutcome = parameters.newOutcome
   try {
     console.log(`\nUpdating application: ${newOutcome}`)
     const success = await DBConnect.setApplicationOutcome(applicationId, newOutcome)

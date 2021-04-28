@@ -30,6 +30,7 @@ export type ActionPlugin = Node & {
   description?: Maybe<Scalars['String']>;
   path?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -48,6 +49,8 @@ export type ActionPluginCondition = {
   path?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `requiredParameters` field. */
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `optionalParameters` field. */
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `outputProperties` field. */
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
@@ -64,6 +67,8 @@ export type ActionPluginFilter = {
   path?: Maybe<StringFilter>;
   /** Filter by the object’s `requiredParameters` field. */
   requiredParameters?: Maybe<StringListFilter>;
+  /** Filter by the object’s `optionalParameters` field. */
+  optionalParameters?: Maybe<StringListFilter>;
   /** Filter by the object’s `outputProperties` field. */
   outputProperties?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
@@ -81,6 +86,7 @@ export type ActionPluginInput = {
   description?: Maybe<Scalars['String']>;
   path?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -91,6 +97,7 @@ export type ActionPluginPatch = {
   description?: Maybe<Scalars['String']>;
   path?: Maybe<Scalars['String']>;
   requiredParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
+  optionalParameters?: Maybe<Array<Maybe<Scalars['String']>>>;
   outputProperties?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
@@ -129,6 +136,8 @@ export enum ActionPluginsOrderBy {
   PathDesc = 'PATH_DESC',
   RequiredParametersAsc = 'REQUIRED_PARAMETERS_ASC',
   RequiredParametersDesc = 'REQUIRED_PARAMETERS_DESC',
+  OptionalParametersAsc = 'OPTIONAL_PARAMETERS_ASC',
+  OptionalParametersDesc = 'OPTIONAL_PARAMETERS_DESC',
   OutputPropertiesAsc = 'OUTPUT_PROPERTIES_ASC',
   OutputPropertiesDesc = 'OUTPUT_PROPERTIES_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -141,10 +150,11 @@ export type ActionQueue = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -178,14 +188,16 @@ export type ActionQueueCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `triggerEvent` field. */
   triggerEvent?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `triggerPayload` field. */
+  triggerPayload?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `sequence` field. */
   sequence?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicationData` field. */
-  applicationData?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `conditionExpression` field. */
+  conditionExpression?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parameterQueries` field. */
   parameterQueries?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `parametersEvaluated` field. */
@@ -210,14 +222,16 @@ export type ActionQueueFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `triggerEvent` field. */
   triggerEvent?: Maybe<IntFilter>;
+  /** Filter by the object’s `triggerPayload` field. */
+  triggerPayload?: Maybe<JsonFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `sequence` field. */
   sequence?: Maybe<IntFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicationData` field. */
-  applicationData?: Maybe<JsonFilter>;
+  /** Filter by the object’s `conditionExpression` field. */
+  conditionExpression?: Maybe<JsonFilter>;
   /** Filter by the object’s `parameterQueries` field. */
   parameterQueries?: Maybe<JsonFilter>;
   /** Filter by the object’s `parametersEvaluated` field. */
@@ -254,10 +268,11 @@ export type ActionQueueFilter = {
 export type ActionQueueInput = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -316,10 +331,11 @@ export type ActionQueueOnActionQueueForActionQueueTriggerEventFkeyUsingActionQue
 export type ActionQueuePatch = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -361,14 +377,16 @@ export enum ActionQueuesOrderBy {
   IdDesc = 'ID_DESC',
   TriggerEventAsc = 'TRIGGER_EVENT_ASC',
   TriggerEventDesc = 'TRIGGER_EVENT_DESC',
+  TriggerPayloadAsc = 'TRIGGER_PAYLOAD_ASC',
+  TriggerPayloadDesc = 'TRIGGER_PAYLOAD_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   SequenceAsc = 'SEQUENCE_ASC',
   SequenceDesc = 'SEQUENCE_DESC',
   ActionCodeAsc = 'ACTION_CODE_ASC',
   ActionCodeDesc = 'ACTION_CODE_DESC',
-  ApplicationDataAsc = 'APPLICATION_DATA_ASC',
-  ApplicationDataDesc = 'APPLICATION_DATA_DESC',
+  ConditionExpressionAsc = 'CONDITION_EXPRESSION_ASC',
+  ConditionExpressionDesc = 'CONDITION_EXPRESSION_DESC',
   ParameterQueriesAsc = 'PARAMETER_QUERIES_ASC',
   ParameterQueriesDesc = 'PARAMETER_QUERIES_DESC',
   ParametersEvaluatedAsc = 'PARAMETERS_EVALUATED_ASC',
@@ -394,7 +412,8 @@ export enum ActionQueueStatus {
   Queued = 'QUEUED',
   Processing = 'PROCESSING',
   Success = 'SUCCESS',
-  Fail = 'FAIL'
+  Fail = 'FAIL',
+  ConditionNotMet = 'CONDITION_NOT_MET'
 }
 
 /** A filter to be used against ActionQueueStatus fields. All fields are combined with a logical ‘and.’ */
@@ -427,9 +446,10 @@ export type ActionQueueStatusFilter = {
 export type ActionQueueTemplateIdFkeyActionQueueCreateInput = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -501,10 +521,11 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
 /** The `actionQueue` to be created by this mutation. */
 export type ActionQueueTriggerEventFkeyActionQueueCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -2656,6 +2677,7 @@ export type ApplicationStageStatusAll = {
   status?: Maybe<ApplicationStatus>;
   statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   statusIsCurrent?: Maybe<Scalars['Boolean']>;
+  outcome?: Maybe<ApplicationOutcome>;
 };
 
 /**
@@ -2697,6 +2719,8 @@ export type ApplicationStageStatusAllCondition = {
   statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `statusIsCurrent` field. */
   statusIsCurrent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcome>;
 };
 
 /** A filter to be used against `ApplicationStageStatusAll` object types. All fields are combined with a logical ‘and.’ */
@@ -2735,6 +2759,8 @@ export type ApplicationStageStatusAllFilter = {
   statusHistoryTimeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `statusIsCurrent` field. */
   statusIsCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationStageStatusAllFilter>>;
   /** Checks for any expressions in this list. */
@@ -2801,7 +2827,9 @@ export enum ApplicationStageStatusAllsOrderBy {
   StatusHistoryTimeCreatedAsc = 'STATUS_HISTORY_TIME_CREATED_ASC',
   StatusHistoryTimeCreatedDesc = 'STATUS_HISTORY_TIME_CREATED_DESC',
   StatusIsCurrentAsc = 'STATUS_IS_CURRENT_ASC',
-  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC'
+  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC',
+  OutcomeAsc = 'OUTCOME_ASC',
+  OutcomeDesc = 'OUTCOME_DESC'
 }
 
 export type ApplicationStageStatusLatest = {
@@ -2823,6 +2851,7 @@ export type ApplicationStageStatusLatest = {
   status?: Maybe<ApplicationStatus>;
   statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   statusIsCurrent?: Maybe<Scalars['Boolean']>;
+  outcome?: Maybe<ApplicationOutcome>;
 };
 
 /**
@@ -2864,6 +2893,8 @@ export type ApplicationStageStatusLatestCondition = {
   statusHistoryTimeCreated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `statusIsCurrent` field. */
   statusIsCurrent?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcome>;
 };
 
 /** A filter to be used against `ApplicationStageStatusLatest` object types. All fields are combined with a logical ‘and.’ */
@@ -2902,6 +2933,8 @@ export type ApplicationStageStatusLatestFilter = {
   statusHistoryTimeCreated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `statusIsCurrent` field. */
   statusIsCurrent?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `outcome` field. */
+  outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationStageStatusLatestFilter>>;
   /** Checks for any expressions in this list. */
@@ -2968,7 +3001,9 @@ export enum ApplicationStageStatusLatestsOrderBy {
   StatusHistoryTimeCreatedAsc = 'STATUS_HISTORY_TIME_CREATED_ASC',
   StatusHistoryTimeCreatedDesc = 'STATUS_HISTORY_TIME_CREATED_DESC',
   StatusIsCurrentAsc = 'STATUS_IS_CURRENT_ASC',
-  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC'
+  StatusIsCurrentDesc = 'STATUS_IS_CURRENT_DESC',
+  OutcomeAsc = 'OUTCOME_ASC',
+  OutcomeDesc = 'OUTCOME_DESC'
 }
 
 export enum ApplicationStatus {
@@ -18602,9 +18637,10 @@ export type UpdateActionQueueInput = {
 export type UpdateActionQueueOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   triggerEvent?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -18620,10 +18656,11 @@ export type UpdateActionQueueOnActionQueueForActionQueueTemplateIdFkeyPatch = {
 /** An object where the defined keys will be set on the `actionQueue` being updated. */
 export type UpdateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  triggerPayload?: Maybe<Scalars['JSON']>;
   templateId?: Maybe<Scalars['Int']>;
   sequence?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
-  applicationData?: Maybe<Scalars['JSON']>;
+  conditionExpression?: Maybe<Scalars['JSON']>;
   parameterQueries?: Maybe<Scalars['JSON']>;
   parametersEvaluated?: Maybe<Scalars['JSON']>;
   status?: Maybe<ActionQueueStatus>;
@@ -25778,6 +25815,7 @@ export type ActionPluginResolvers<ContextType = any, ParentType extends Resolver
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   path?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   requiredParameters?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  optionalParameters?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   outputProperties?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -25800,10 +25838,11 @@ export type ActionQueueResolvers<ContextType = any, ParentType extends Resolvers
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   triggerEvent?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  triggerPayload?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   sequence?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   actionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  applicationData?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  conditionExpression?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   parameterQueries?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   parametersEvaluated?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ActionQueueStatus']>, ParentType, ContextType>;
@@ -26015,6 +26054,7 @@ export type ApplicationStageStatusAllResolvers<ContextType = any, ParentType ext
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   statusHistoryTimeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   statusIsCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -26050,6 +26090,7 @@ export type ApplicationStageStatusLatestResolvers<ContextType = any, ParentType 
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   statusHistoryTimeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   statusIsCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

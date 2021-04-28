@@ -9,15 +9,60 @@ import { action as generateReviewAssignments } from './index'
 // Simulate application submission:
 
 test('Test: Submit Application ID#4001 - Stage 1', () => {
-  return generateReviewAssignments(
-    { templateId: 4, applicationId: 4001 }, //stageNumber: 1, stageId: 5, levels: 1
-    DBConnect
-  ).then((result: any) => {
+  //stageNumber: 1, stageId: 5, levels: 1
+  return generateReviewAssignments({
+    parameters: { applicationId: 4001 },
+    DBConnect,
+  }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
       output: {
         reviewAssignments: [
+          {
+            reviewerId: 1,
+            orgId: null,
+            stageId: 5,
+            stageNumber: 1,
+            status: 'Available for self-assignment',
+            applicationId: 4001,
+            templateSectionRestrictions: undefined,
+            levelNumber: 1,
+            isLastLevel: true,
+          },
+          {
+            reviewerId: 2,
+            orgId: null,
+            stageId: 5,
+            stageNumber: 1,
+            status: 'Available for self-assignment',
+            applicationId: 4001,
+            templateSectionRestrictions: undefined,
+            levelNumber: 1,
+            isLastLevel: true,
+          },
+          {
+            reviewerId: 3,
+            orgId: null,
+            stageId: 5,
+            stageNumber: 1,
+            status: 'Available for self-assignment',
+            applicationId: 4001,
+            templateSectionRestrictions: undefined,
+            levelNumber: 1,
+            isLastLevel: true,
+          },
+          {
+            reviewerId: 4,
+            orgId: null,
+            stageId: 5,
+            stageNumber: 1,
+            status: 'Available for self-assignment',
+            applicationId: 4001,
+            templateSectionRestrictions: undefined,
+            levelNumber: 1,
+            isLastLevel: true,
+          },
           {
             reviewerId: 6,
             orgId: null,
@@ -52,40 +97,24 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
             isLastLevel: true,
           },
         ],
-        reviewAssignmentIds: [1005, 2, 3],
+        reviewAssignmentIds: [1, 2, 3, 4, 1005, 6, 7],
         reviewAssignmentAssignerJoins: [
-          {
-            assignerId: 10,
-            orgId: null,
-            reviewAssignmentId: 1005,
-          },
-          {
-            assignerId: 11,
-            orgId: null,
-            reviewAssignmentId: 1005,
-          },
-          {
-            assignerId: 10,
-            orgId: null,
-            reviewAssignmentId: 2,
-          },
-          {
-            assignerId: 11,
-            orgId: null,
-            reviewAssignmentId: 2,
-          },
-          {
-            assignerId: 10,
-            orgId: null,
-            reviewAssignmentId: 3,
-          },
-          {
-            assignerId: 11,
-            orgId: null,
-            reviewAssignmentId: 3,
-          },
+          { assignerId: 10, orgId: null, reviewAssignmentId: 1 },
+          { assignerId: 11, orgId: null, reviewAssignmentId: 1 },
+          { assignerId: 10, orgId: null, reviewAssignmentId: 2 },
+          { assignerId: 11, orgId: null, reviewAssignmentId: 2 },
+          { assignerId: 10, orgId: null, reviewAssignmentId: 3 },
+          { assignerId: 11, orgId: null, reviewAssignmentId: 3 },
+          { assignerId: 10, orgId: null, reviewAssignmentId: 4 },
+          { assignerId: 11, orgId: null, reviewAssignmentId: 4 },
+          { assignerId: 10, orgId: null, reviewAssignmentId: 1005 },
+          { assignerId: 11, orgId: null, reviewAssignmentId: 1005 },
+          { assignerId: 10, orgId: null, reviewAssignmentId: 6 },
+          { assignerId: 11, orgId: null, reviewAssignmentId: 6 },
+          { assignerId: 10, orgId: null, reviewAssignmentId: 7 },
+          { assignerId: 11, orgId: null, reviewAssignmentId: 7 },
         ],
-        reviewAssignmentAssignerJoinIds: [1, 2, 3, 4, 5, 6],
+        reviewAssignmentAssignerJoinIds: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
         nextStageNumber: 1,
         nextReviewLevel: 1,
       },
@@ -94,10 +123,10 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
 })
 
 test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
-  return generateReviewAssignments(
-    { templateId: 4, applicationId: 4002 }, // stageNumber: 2, stageId: 6, levels: 2
-    DBConnect
-  ).then((result: any) => {
+  return generateReviewAssignments({
+    parameters: { templateId: 4, applicationId: 4002 }, // stageNumber: 2, stageId: 6, levels: 2
+    DBConnect,
+  }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
@@ -139,10 +168,10 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
 // Simulate review submission:
 
 test('Test: Submit Review (Stage 1) for Application ID#4000 - Stage 2 Lvl 1', () => {
-  return generateReviewAssignments(
-    { templateId: 4, applicationId: 4000, reviewId: 1000 }, // stageNumber: 2, stageId: 6, levels: 2
-    DBConnect
-  ).then((result: any) => {
+  return generateReviewAssignments({
+    parameters: { templateId: 4, applicationId: 4000, reviewId: 1000 }, // stageNumber: 2, stageId: 6, levels: 2
+    DBConnect,
+  }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
@@ -182,10 +211,10 @@ test('Test: Submit Review (Stage 1) for Application ID#4000 - Stage 2 Lvl 1', ()
 })
 
 test('Test: Submit Review  (Stage 2) for Application ID#4002, S2 Lvl2', () => {
-  return generateReviewAssignments(
-    { templateId: 4, applicationId: 4002, reviewId: 4000 }, // stageNumber: 2, stageId: 6, levels: 2
-    DBConnect
-  ).then((result: any) => {
+  return generateReviewAssignments({
+    parameters: { templateId: 4, applicationId: 4002, reviewId: 4000 }, // stageNumber: 2, stageId: 6, levels: 2
+    DBConnect,
+  }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',

@@ -11,8 +11,8 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          code: "TestRego"
-          name: "Test -- General Registration"
+          code: "Demo"
+          name: "Demo -- Feature Showcase"
           isLinear: false
           startMessage: {
             operator: "stringSubstitution"
@@ -1008,10 +1008,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 103
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newStatus: { value: "Completed" }
                 }
               }
@@ -1020,10 +1016,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 104
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newOutcome: { value: "Approved" }
                 }
               }
@@ -1038,11 +1030,11 @@ exports.queries = [
                       "Output concatenation: The user %1's registration has been %2"
                       {
                         operator: "objectProperties"
-                        children: ["output.username"]
+                        children: ["outputCumulative.username"]
                       }
                       {
                         operator: "objectProperties"
-                        children: ["output.newOutcome"]
+                        children: ["outputCumulative.newOutcome"]
                       }
                     ]
                   }

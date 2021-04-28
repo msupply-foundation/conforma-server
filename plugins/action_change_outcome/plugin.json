@@ -3,7 +3,8 @@
   "code": "changeOutcome",
   "name": "Change Outcome",
   "description": "Changes the outcome field of an application.",
-  "required_parameters": ["applicationId", "newOutcome"],
+  "required_parameters": ["newOutcome"],
+  "optional_parameters": ["applicationId"],
   "output_properties": ["applicationId", "newOutcome"],
   "info": {
     "author": {
