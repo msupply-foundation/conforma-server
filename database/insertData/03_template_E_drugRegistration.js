@@ -29,7 +29,7 @@ exports.queries = [
                 templateElementsUsingId: {
                   create: [
                     {
-                      code: "S1Info1"
+                      code: "Text1"
                       index: 0
                       title: "General information"
                       elementTypePluginCode: "textInfo"
@@ -40,7 +40,7 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "S1Q1"
+                      code: "Q1-ProductName"
                       index: 10
                       title: "Product name"
                       elementTypePluginCode: "shortText"
@@ -74,7 +74,7 @@ exports.queries = [
                       validationMessage: "You need a valid product name."
                     }
                     {
-                      code: "S1Q2"
+                      code: "Q2-Origin"
                       index: 20
                       title: "Origin category"
                       elementTypePluginCode: "radioChoice"
@@ -84,6 +84,65 @@ exports.queries = [
                         description: "_Select which is the origin of the drug._"
                         options: ["Domestic", "Imported"]
                       }
+                    }
+                    {
+                      index: 21
+                      code: "Q3-CountryCode"
+                      title: "Country code"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Enter 2 letters code of a valid country"
+                      }
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q2-Origin.text"]
+                          }
+                          "Imported"
+                        ]
+                      }
+                    }
+                    {
+                      index: 22
+                      code: "Text-CountryName"
+                      title: "Country name"
+                      elementTypePluginCode: "shortText"
+                      isEditable: false
+                      category: QUESTION
+                      parameters: {
+                        text: {
+                          operator: "graphQL",
+                          children: [
+                            "query country ($code: ID!) { country (code: $code) { name } }"
+                            "https://countries.trevorblades.com"
+                            [ "code" ]
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "responses.Q3-CountryCode.text"
+                                ""
+                              ]
+                            }
+                            "country"
+                          ]
+                        }
+                      }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.thisResponse"
+                            ]
+                          }
+                          "([^\s]*)"
+                        ]
+                      }
+                      validationMessage: "Only 2 characters for country code"
                     }
                     {
                       code: "S1PB1"

@@ -700,6 +700,52 @@ exports.queries = [
                         }
                       }
                     }
+                    {
+                      index: 30
+                      code: "Q2GraphQL"
+                      title: "Country code"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        search: true
+                        options: {
+                          operator: "graphQL",
+                          children: [
+                            "query countries { countries { code } }"
+                            "https://countries.trevorblades.com"
+                            []
+                            "countries"
+                          ]
+                        }
+                        placeholder: "Type one country code (2 digits)"
+                      }
+                    }
+                    {
+                      index: 31
+                      code: "Text-CountryName"
+                      title: "Country name"
+                      elementTypePluginCode: "shortText"
+                      isEditable: false
+                      category: QUESTION
+                      parameters: {
+                        text: {
+                          operator: "graphQL",
+                          children: [
+                            "query country ($code: ID = "") { country (code: $code) { name } }"
+                            "https://countries.trevorblades.com"
+                            [ "code" ]
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "responses.Q2GraphQL.text"
+                                ""
+                              ]
+                            }
+                            "country"
+                          ]
+                        }
+                      }
+                    }
                   ]
                 }
               }
