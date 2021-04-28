@@ -731,14 +731,13 @@ exports.queries = [
                         text: {
                           operator: "graphQL",
                           children: [
-                            "query country ($code: ID = "") { country (code: $code) { name } }"
+                            "query country ($code: ID = \"\") { country (code: $code) { name } }"
                             "https://countries.trevorblades.com"
                             [ "code" ]
                             {
                               operator: "objectProperties",
                               children: [
                                 "responses.Q2GraphQL.text"
-                                ""
                               ]
                             }
                             "country"
