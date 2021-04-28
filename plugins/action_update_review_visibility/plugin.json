@@ -3,7 +3,8 @@
   "code": "updateReviewVisibility",
   "name": "Update Applicant's Review Visibility",
   "description": "Updates review response records to be visible to Applicant based on recommendations of last level review",
-  "required_parameters": ["reviewId"],
+  "required_parameters": [],
+  "optional_parameters": ["reviewId"],
   "output_properties": ["reviewResponsesWithUpdatedVisibility"],
   "info": {
     "author": {

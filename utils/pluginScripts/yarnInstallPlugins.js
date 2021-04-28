@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 const { exec } = require('child_process')
 // should run from root folder yarn scripts
 const pluginsFolder = './plugins/'
@@ -13,6 +14,10 @@ console.log('running yarn install for plugins')
 const command = 'yarn install'
 plugins.forEach((plugin) => {
   const { fullPluginFolder, pluginName } = plugin
+  if (!fs.existsSync(path.join(fullPluginFolder, 'package.json'))) {
+    console.log('no package.json: ' + pluginName)
+    return
+  }
   console.log('running yarn install for ' + pluginName + ' ... ')
 
   const options = { cwd: fullPluginFolder }

@@ -1,4 +1,6 @@
-function consoleLog(parameters: any) {
+import { ActionPluginInput } from '../../types'
+
+function consoleLog({ parameters }: ActionPluginInput) {
   try {
     console.log('\nThe Console Log action is running...')
     console.log(parameters.message)

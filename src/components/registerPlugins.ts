@@ -7,10 +7,10 @@
 
 import * as fs from 'fs'
 import path from 'path'
+const isEqual = require('deep-equal')
 import { getAppEntryPointDir } from './utilityFunctions'
 import * as config from '../config.json'
 import DBConnect from './databaseConnect'
-import { deepEquality } from './utilityFunctions'
 import { ActionPlugin } from '../types'
 
 const pluginsFolder = path.join(getAppEntryPointDir(), config.pluginsFolder)
@@ -79,6 +79,7 @@ export default async function registerPlugins() {
         description: plugin.description,
         path: plugin.path,
         required_parameters: plugin.required_parameters,
+        optional_parameters: plugin.optional_parameters,
         output_properties: plugin.output_properties,
       })
       console.log('Plugin registered:', plugin.name)
@@ -102,6 +103,7 @@ export default async function registerPlugins() {
           description: plugin.description,
           path: plugin.path,
           required_parameters: plugin.required_parameters,
+          optional_parameters: plugin.optional_parameters,
           output_properties: plugin.output_properties,
         })
         console.log('Plugin updated:', plugin.name)
@@ -118,7 +120,8 @@ const isPluginUpdated = (dbPlugin: ActionPlugin, scannedPlugin: ActionPlugin) =>
     scannedPlugin.name !== dbPlugin.name ||
     scannedPlugin.description !== dbPlugin.description ||
     scannedPlugin.path !== dbPlugin.path ||
-    !deepEquality(scannedPlugin.required_parameters, dbPlugin.required_parameters) ||
-    !deepEquality(scannedPlugin.output_properties, dbPlugin.output_properties, true)
+    !isEqual(scannedPlugin.required_parameters, dbPlugin.required_parameters) ||
+    !isEqual(scannedPlugin.optional_parameters, dbPlugin.optional_parameters) ||
+    !isEqual(scannedPlugin.output_properties, dbPlugin.output_properties)
   )
 }

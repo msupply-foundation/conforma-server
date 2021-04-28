@@ -52,6 +52,14 @@ This repo has the following functionality implemented in basic form:
   - Create scheduled actions (using `node-schedule` which I'm not sure is the best way to go)
 - `evaluateExpression` module
 
+## Docker
+
+To build image: `cd Docker` -> `./dockerise.sh` (you can edit `Docker/dockerise.sh` to change build prefs)
+
+To run image: `cd Docker` -> `./run.sh` (you can edit `Docker/run.sh` to change run prefs)
+
+See comments in above scripts and documentation folder for more details
+
 ## Snapshots
 
 Can take snapshot of current DB state via

@@ -1,5 +1,5 @@
-import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
-import { ApplicationStatus, Trigger } from './generated/graphql'
+import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { ApplicationOutcome, ApplicationStatus, Trigger } from './generated/graphql'
 
 export interface ActionInTemplate {
   code: string
@@ -7,7 +7,7 @@ export interface ActionInTemplate {
   name: string
   trigger: string
   sequence: number | null
-  condition: { [key: string]: any }
+  condition: IQueryNode
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
 }
@@ -29,21 +29,30 @@ export interface ActionQueue {
   id: number
   status?: ActionQueueStatus
   action_code: string
-  application_data: ActionApplicationData
+  trigger_payload: TriggerPayload
+  condition_expression?: IQueryNode
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
   time_completed: string
 }
 
 // TODO: Ideally this would be coming from postgraphile types, to be consistent with the types
-type ActionQueueStatus = 'Scheduled' | 'Processing' | 'Queued' | 'Success' | 'Fail'
+type ActionQueueStatus =
+  | 'Scheduled'
+  | 'Processing'
+  | 'Queued'
+  | 'Success'
+  | 'Fail'
+  | 'Condition not met'
 
 export interface ActionQueuePayload {
   trigger_event: number
+  trigger_payload: TriggerPayload
   template_id: number
   action_code: string
-  application_data: TriggerPayload
   sequence: number | null
+  condition_expression: { [key: string]: any }
+  condition_evaluated?: boolean
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
   status: ActionQueueStatus
@@ -55,18 +64,16 @@ export interface ActionQueueGetPayload {
 
 export interface ActionQueueExecutePayload {
   id: number
-  error_log: string
+  error_log: string | null
   parameters_evaluated: { [key: string]: any } | null
   status: ActionQueueStatus
   output: BasicObject | null
 }
 
 export interface ActionApplicationData {
-  trigger_id: number
-  trigger: Trigger
-  table: string
-  record_id: number
+  action_payload: ActionPayload
   applicationId: number
+  applicationSerial: string
   templateId: number
   stageId: number
   stageNumber: number
@@ -77,19 +84,38 @@ export interface ActionApplicationData {
   status: ApplicationStatus
   statusHistoryTimeCreated: Date
   userId: number
+  orgId: number
+  outcome: ApplicationOutcome
   firstName: string
   lastName: string
   username: string
-  dateOfBirth: Date
+  dateOfBirth: Date | null
   email: string
-  responses: BasicObject
+  responses: {
+    [key: string]: any
+  }
+  reviewData: {
+    reviewId?: number
+    levelNumber?: number
+    isLastLevel?: boolean
+    status?: string
+    latestDecision?: {
+      decision: string
+      comment: string
+    }
+  }
+  environmentData: {
+    appRootFolder: string
+    filesFolder: string
+  }
 }
 
 export interface ActionPayload {
   id: number
   code: string
-  application_data: ActionApplicationData
   parameter_queries: { [key: string]: any }
+  condition_expression: IQueryNode
+  trigger_payload?: TriggerPayload
 }
 
 export interface ActionPlugin {
@@ -98,6 +124,7 @@ export interface ActionPlugin {
   description: string
   path: string
   required_parameters: string[]
+  optional_parameters: string[]
   output_properties?: string[]
 }
 
@@ -142,6 +169,7 @@ export interface TriggerPayload {
   trigger: Trigger
   table: string
   record_id: number
+  application_id?: number
 }
 
 export interface TriggerQueueUpdatePayload {

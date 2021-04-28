@@ -1,11 +1,18 @@
+import { ActionPluginInput } from '../../types'
 import { AssignmentStatus } from './types'
 import databaseMethods from './databaseMethods'
 
-async function updateReviewAssignmentsStatus(parameters: any, DBConnect: any) {
+async function updateReviewAssignmentsStatus({
+  parameters,
+  applicationData,
+  DBConnect,
+}: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
   console.log('Updating review assignment statuses...')
+
   try {
-    const { reviewAssignmentId, trigger } = parameters
+    const trigger = parameters?.trigger ?? applicationData?.action_payload?.trigger_payload?.trigger
+    const { reviewAssignmentId } = parameters
     // NB: reviewAssignmentId comes from record_id on TriggerPayload when
     // triggered from review_assignment table
     const {
