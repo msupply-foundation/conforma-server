@@ -270,7 +270,7 @@ const graphQLquery = async (
   // Get an external endpoint to use, or get the default GraphQL endpoint if received:
   // "graphqlendpoint" (case insensitive), an empty string "" or null
   const endpoint =
-    url.toLowerCase() !== 'graphqlendpoint' && url !== '' && url !== null
+    url !== null && url.toLowerCase() !== 'graphqlendpoint' && url !== ''
       ? url
       : connection.endpoint
 
