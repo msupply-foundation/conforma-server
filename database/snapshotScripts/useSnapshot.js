@@ -69,7 +69,7 @@ const insertDataFromFile = async (filename) => {
   for (let content of splitContent) {
     // console.log(content) // uncomment for debugging
     try {
-      await executeGraphQLQuery(content)
+      await executeGraphQLQuery(content, false)
     } catch (e) {
       console.log('### error while inserting: ' + content)
       throw e

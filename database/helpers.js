@@ -2,7 +2,7 @@ const config = require('../src/config.json')
 const fetch = require('node-fetch')
 const fs = require('fs')
 
-async function executeGraphQLQuery(query) {
+async function executeGraphQLQuery(query, exitOnFailure = true) {
   const res = await fetch(config.graphQLendpoint, {
     method: 'POST',
     headers: {
@@ -15,8 +15,12 @@ async function executeGraphQLQuery(query) {
   })
   const response = await res.json()
   if (response.errors) {
-    console.log(JSON.stringify(response.errors, null, '  '))
-    process.exit(0)
+    const errorMessage = JSON.stringify(response.errors, null, '  ')
+    if(exitOnFailure){ 
+      console.log(errorMessage)
+      process.exit(0)
+    } 
+    throw new Error(errorMessage)
   }
 
   return response
