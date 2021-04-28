@@ -684,11 +684,8 @@ class PostgresDB {
   }
   public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
-      SELECT review.level_number AS "levelNumber",
-      review.stage_number as "stageNumber"
-      FROM review JOIN review_assignment ra
-      ON review.review_assignment_id = ra.id
-      WHERE review.id = $1
+      SELECT review.level_number AS "levelNumber", stage_number as "stageNumber"
+      FROM review WHERE review.id = $1
     `
     try {
       const result = await this.query({ text, values: [reviewId] })
