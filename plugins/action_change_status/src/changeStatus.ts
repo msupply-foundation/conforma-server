@@ -1,17 +1,27 @@
-import { ActionPluginOutput, Status } from '../../types'
+import { ActionPluginOutput, Status, ActionPluginInput } from '../../types'
 
-type IParameters = {
-  applicationId: number
-  reviewId: number
-  newStatus: Status
-}
+async function changeStatus({
+  parameters,
+  applicationData,
+  DBConnect,
+}: ActionPluginInput): Promise<ActionPluginOutput> {
+  // Get application/reviewId from applicationData if not provided in parameters
+  const applicationId = parameters?.applicationId ?? applicationData?.applicationId
+  const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
+  const isReview =
+    parameters?.isReview === false
+      ? false
+      : parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
+  const newStatus = parameters?.newStatus
 
-async function changeStatus(parameters: IParameters, DBConnect: any): Promise<ActionPluginOutput> {
-  const { applicationId, reviewId, newStatus } = parameters
-
-  if (applicationId) {
-    return await changeApplicationStatus(applicationId, newStatus, DBConnect)
-  } else if (reviewId) {
+  if (!isReview) {
+    return await changeApplicationStatus(
+      applicationId,
+      applicationData as { [key: string]: any },
+      newStatus,
+      DBConnect
+    )
+  } else if (reviewId && isReview) {
     return await changeReviewStatus(reviewId, newStatus, DBConnect)
   }
 
@@ -23,6 +33,7 @@ async function changeStatus(parameters: IParameters, DBConnect: any): Promise<Ac
 
 const changeApplicationStatus = async (
   applicationId: number,
+  applicationData: { [key: string]: any },
   newStatus: string,
   DBConnect: any
 ): Promise<ActionPluginOutput> => {
@@ -30,7 +41,10 @@ const changeApplicationStatus = async (
   console.log(`Changing the Status of Application ${applicationId}...`)
 
   try {
-    const current = await DBConnect.getCurrentStageStatusHistory(applicationId)
+    const current =
+      applicationData?.stage && applicationData?.status
+        ? applicationData
+        : await DBConnect.getCurrentStageStatusHistory(applicationId)
 
     if (current?.status === newStatus) {
       // Do nothing
@@ -54,7 +68,7 @@ const changeApplicationStatus = async (
       return returnObject
     }
 
-    const currentStageHistoryId = current.stage_history_id
+    const currentStageHistoryId = current.stageHistoryId
 
     // Create a new application_status_history record
     const result = await DBConnect.addNewApplicationStatusHistory(currentStageHistoryId, newStatus)

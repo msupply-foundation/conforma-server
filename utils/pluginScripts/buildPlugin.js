@@ -11,6 +11,11 @@ const rootDirectory = __dirname + '/../..'
 
 const buildPlugin = async (pluginName) => {
   const pluginFolder = rootDirectory + '/plugins/' + pluginName
+  if (!fs.existsSync(path.join(fullPluginFolder, 'package.json'))) {
+    console.log('no package.json: ' + pluginName)
+    return
+  }
+
   const temporaryPluginBuildFolder = rootDirectory + '/temporaryPluginBuild'
 
   const yarnInstallAndPrep = async () => {

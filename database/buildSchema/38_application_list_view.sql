@@ -44,7 +44,7 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         org.name AS org_name,
         stage_status.stage,
         stage_status.status,
-        outcome,
+        app.outcome,
         status_history_time_created AS last_active_date,
         -- 	template_questions_count(app),
         -- 	assigned_questions_count(app, stage_status.stage_id, 1),

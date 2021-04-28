@@ -3,7 +3,8 @@
   "code": "joinUserOrg",
   "name": "Add User to Organisation",
   "description": "Links a user to an organisation",
-  "required_parameters": ["user_id", "org_id", "user_role"],
+  "required_parameters": ["user_id", "org_id"],
+  "optional_parameters": ["user_role"],
   "output_properties": ["userOrgId"],
   "info": {
     "author": {
