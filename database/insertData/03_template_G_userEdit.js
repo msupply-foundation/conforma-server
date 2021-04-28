@@ -75,6 +75,7 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       validation: {
+                        # Must be unique OR same as current
                         operator: "OR"
                         children: [
                           {
@@ -140,6 +141,44 @@ exports.queries = [
                           children: ["currentUser.email"]
                         }
                       }
+                    }
+                    {
+                      code: "passwordCheckbox"
+                      index: 4
+                      title: "Password Change Check"
+                      isRequired: false
+                      elementTypePluginCode: "checkbox"
+                      category: QUESTION
+                      parameters: {
+                        label: "Do you wish to change your password?"
+                        checkboxes: ["Yes"]
+                      }
+                    }
+                    # TO-DO: Need a field for existing password check
+                    # (validate against login endpoint)
+                    # and only then will the "New password" entry appear
+                    # ---
+                    {
+                      code: "currentPassword"
+                      index: 5
+                      title: "Current Password"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [
+                              "responses.passwordCheckbox.values.0.selected"
+                            ]
+                          }
+                          true
+                        ]
+                      }
+                      parameters: { label: "Current password", maskedInput: true }
+                      validation: true
+                      validationMessage: "Password incorrect"
                     }
                     # TO-DO: Add Date of birth question once we have DatePicker element type
                   ]
