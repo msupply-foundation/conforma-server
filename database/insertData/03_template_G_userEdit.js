@@ -2,7 +2,7 @@
 TEMPLATE C -- User Details Edit
   - allows an existing user to update their details
 */
-// const { coreActions } = require('./core_actions')
+
 exports.queries = [
   `mutation {
     createTemplate(
@@ -75,16 +75,34 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       validation: {
-                        operator: "API"
+                        operator: "OR"
                         children: [
-                          { value: "http://localhost:8080/check-unique" }
-                          { value: ["type", "value"] }
-                          { value: "username" }
                           {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
+                            operator: "API"
+                            children: [
+                              "http://localhost:8080/check-unique"
+                              ["type", "value"]
+                              "username"
+                              {
+                                operator: "objectProperties"
+                                children: ["responses.thisResponse"]
+                              }
+                              "unique"
+                            ]
                           }
-                          { value: "unique" }
+                          {
+                            operator: "="
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: ["currentUser.username"]
+                              }
+                              {
+                                operator: "objectProperties"
+                                children: ["responses.thisResponse"]
+                              }
+                            ]
+                          }
                         ]
                       }
                       validationMessage: "Username must be unique"
@@ -115,7 +133,13 @@ exports.queries = [
                         ]
                       }
                       validationMessage: "Not a valid email address"
-                      parameters: { label: "Email" }
+                      parameters: {
+                        label: "Email"
+                        default: {
+                          operator: "objectProperties"
+                          children: ["currentUser.email"]
+                        }
+                      }
                     }
                     # TO-DO: Add Date of birth question once we have DatePicker element type
                   ]
@@ -132,33 +156,36 @@ exports.queries = [
                 sequence: 1
                 trigger: ON_APPLICATION_CREATE
               }
-              {
-                actionCode: "updateUser"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 1
-                parameterQueries: {
-                  first_name: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q1.text"]
-                  }
-                  last_name: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q2.text"]
-                  }
-                  username: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q3.text"]
-                  }
-                  email: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q4.text"]
-                  }
-                  password_hash: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.hash"]
-                  }
-                }
-              }
+              #
+              # TO-DO: Create an UpdateUser / Update Entity Action
+              #
+              # {
+              #   actionCode: "updateUser"
+              #   trigger: ON_APPLICATION_SUBMIT
+              #   sequence: 1
+              #   parameterQueries: {
+              #     first_name: {
+              #       operator: "objectProperties"
+              #       children: ["applicationData.responses.Q1.text"]
+              #     }
+              #     last_name: {
+              #       operator: "objectProperties"
+              #       children: ["applicationData.responses.Q2.text"]
+              #     }
+              #     username: {
+              #       operator: "objectProperties"
+              #       children: ["applicationData.responses.Q3.text"]
+              #     }
+              #     email: {
+              #       operator: "objectProperties"
+              #       children: ["applicationData.responses.Q4.text"]
+              #     }
+              #     password_hash: {
+              #       operator: "objectProperties"
+              #       children: ["applicationData.responses.Q5.hash"]
+              #     }
+              #   }
+              # }
               {
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
@@ -170,15 +197,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
                 parameterQueries: { newOutcome: { value: "Approved" } }
-              }
-            ]
-          }
-          templatePermissionsUsingId: {
-            create: [
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserRegistration" }
-                }
               }
             ]
           }
