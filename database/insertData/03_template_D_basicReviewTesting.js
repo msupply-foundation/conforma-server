@@ -224,6 +224,7 @@ exports.queries = [
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
+                colour: "#24B5DF" #teal blue
                 templateStageReviewLevelsUsingId: {
                   create: [{ number: 1, name: "Review" }]
                 }
@@ -232,6 +233,7 @@ exports.queries = [
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
+                colour: "#E17E48" #orange
                 templateStageReviewLevelsUsingId: {
                   create: [
                     { number: 1, name: "Review" }
@@ -243,6 +245,7 @@ exports.queries = [
                 number: 3
                 title: "Final Decision"
                 description: "This is the final step and will change the outcome of this applications."
+                colour: "#1E14DB" #dark blue
                 templateStageReviewLevelsUsingId: {
                   create: [{ number: 1, name: "Approval" }]
                 }

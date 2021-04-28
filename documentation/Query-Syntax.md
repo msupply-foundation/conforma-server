@@ -216,13 +216,10 @@ Performs queries to a connected PostGres database and returns the result in a fo
 { type: 'string',
   operator: 'pgSQL',
   children: [
-    {
-      value: 'SELECT name FROM application WHERE template_id = $1',
-    },
-    {
-      value: 2,
-    },
-  ] }
+    'SELECT name FROM application WHERE template_id = $1',
+    2,
+  ]
+}
 ```
 
 ## graphQL
@@ -231,8 +228,9 @@ Performs queries on connected GraphQL interface.
 
 - Input:
   - 1st child node returns a **string** representing the GraphQL query
-  - 2nd child node returns an **array** of field names for the query's associated variables object. If no variables are required for the query, pass an empty array (i.e. `{ value: [] }`).
-  - 3rd...N-1 child nodes return the values of the fields for the variables object -- one node for each field in the previous node's array.
+  - 2nd child node returns a **string** containing the url of the GrapqhQL endpoint. Using the value "graphQLEndpoint" (or empty string `""`) will the use the graphQL endpoint specified in the input parameter "GraphQLConnection" object.
+  - 3nd child node returns an **array** of field names for the query's associated variables object. If no variables are required for the query, pass an empty array (i.e. `{ value: [] }`).
+  - 4rd...N-1 child nodes return the values of the fields for the variables object -- one node for each field in the previous node's array.
   - The Nth (last) child node returns a **string** stating the node in the returned GraphQL object that is required. E.g. `applications.name` Because GraphQL returns results as nested objects, to get an output in a "simple type", a node in the return object tree is needed. (See examples below and in `TestData`). This last node is optional -- if not provided, the whole result object will be returned unmodified.
 - Output: the returned GraphQL node can be either `string`, `number`, `boolean`, `array`, or `object`. If the output is an object, it will be returned as follows:
 
@@ -245,18 +243,19 @@ Performs queries on connected GraphQL interface.
 ```
 { operator: 'graphQL',
   children: [
-    {
-      value: `query App($appId:Int!) {
+    `query App($appId:Int!) {
         application(id: $appId) {
           name
         }
-      }`,
-    },
-    { value: ['appId'] },
-    { value: 1 },
-    { value: 'application.name' },
+    }`,
+    "graphQLEndpoint",
+    ['appId'],
+    1,
+    'application.name',
   ] }
 ```
+
+**Note**: To use the GraphQL straight away from what is in the graphil (json like), use it wrapper by \` and \`, otherwise it needs to be all in the same line.
 
 ## API
 
@@ -279,14 +278,10 @@ This expression queries our `check-unique` to test if the username "druglord" is
 {
   operator: 'API',
   children: [
-    {
-      value: 'http://localhost:8080/check-unique',
-    },
-    {
-      value: ['type', 'value'],
-    },
-    { value: 'username' },
-    { value: 'druglord' },
+    'http://localhost:8080/check-unique',
+    ['type', 'value'],
+    'username'
+    'druglord',
   ],
 }
 ```
