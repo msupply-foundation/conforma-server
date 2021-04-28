@@ -1,3 +1,4 @@
+#!/bin/bash
 # Makes script wait until async node script has completed
 PID=$!
 wait $PID
