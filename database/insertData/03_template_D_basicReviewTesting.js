@@ -225,18 +225,33 @@ exports.queries = [
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
+                colour: "#24B5DF" #teal blue
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
               {
                 id: 6
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
+                colour: "#E17E48" #orange
+                templateStageReviewLevelsUsingId: {
+                  create: [
+                    { number: 1, name: "Review" }
+                    { number: 2, name: "Consolidation" }
+                  ]
+                }
               }
               {
                 id: 7
                 number: 3
                 title: "Final Decision"
                 description: "This is the final step and will change the outcome of this applications."
+                colour: "#1E14DB" #dark blue
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Approval" }]
+                }
               }
             ]
           }
@@ -254,31 +269,63 @@ exports.queries = [
           }
           templatePermissionsUsingId: {
             create: [
-              { id: 4000, permissionNameId: 2000 }
               {
-                id: 4001
-                permissionNameId: 5000
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyGeneral" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewReviewTestScreeningSection1" }
+                }
                 stageNumber: 1
-                level: 1
+                levelNumber: 1
                 restrictions: { templateSectionRestrictions: ["S1"] }
               }
               {
-                id: 4002
-                permissionNameId: 5001
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewReviewTestScreeningSection2" }
+                }
                 stageNumber: 1
-                level: 1
+                levelNumber: 1
                 restrictions: { templateSectionRestrictions: ["S2"] }
               }
-              { permissionNameId: 10500, restrictions: { canSelfAssign: true }, stageNumber:1, level: 1 }
-              { id: 4003, permissionNameId: 6000, stageNumber: 2, level: 1 }
-              { id: 4004, permissionNameId: 6001, stageNumber: 2, level: 2 }
-              { id: 4005, permissionNameId: 7000, stageNumber: 3, level: 1 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewSelfAssignable" }
+                }
+                restrictions: { canSelfAssign: true }
+                stageNumber: 1
+                levelNumber: 1
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewReviewTestAssessmentLvl1" }
+                }
+                stageNumber: 2
+                levelNumber: 1
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewReviewTestAssessmentLvl2" }
+                }
+                stageNumber: 2
+                levelNumber: 2
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewReviewTestApproval" }
+                }
+                stageNumber: 3
+                levelNumber: 1
+              }
               # Assign general
               {
-                id: 4006
-                permissionNameId: 9000
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "assignGeneral" }
+                }
                 stageNumber: 1
-                level: 1
+                levelNumber: 1
               }
             ]
           }

@@ -15,9 +15,9 @@ import {
   saveFiles,
   getFilePath,
   createFilesFolder,
-  filesFolderName,
+  filesFolder,
 } from './components/files/fileHandler'
-import { getAppRootDir } from './components/utilityFunctions'
+import { getAppEntryPointDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
 import config from './config.json'
 import lookupTableRoutes from './lookup-table/routes'
@@ -32,7 +32,7 @@ const startServer = async () => {
   const server = fastify()
 
   server.register(fastifyStatic, {
-    root: path.join(getAppRootDir(), filesFolderName),
+    root: path.join(getAppEntryPointDir(), filesFolder),
   })
 
   server.register(fastifyMultipart)
@@ -99,6 +99,10 @@ const startServer = async () => {
       case 'organisation':
         table = 'organisation'
         field = 'name'
+        break
+      case 'orgRegistration':
+        table = 'organisation'
+        field = 'registration'
         break
       default:
         reply.send({

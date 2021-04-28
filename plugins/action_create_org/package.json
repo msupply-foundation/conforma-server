@@ -1,0 +1,13 @@
+{
+  "name": "create_organisation_action",
+  "version": "0.1",
+  "description": "Inserts a new organisation in the database",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

@@ -3,6 +3,7 @@
 CREATE TABLE public.organisation (
     id serial primary key,
     name varchar UNIQUE,
-    licence_number varchar,
-    address varchar
+    registration varchar UNIQUE,
+    address varchar,
+    logo_url varchar
 );

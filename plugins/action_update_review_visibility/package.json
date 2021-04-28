@@ -1,0 +1,13 @@
+{
+  "name": "update_review_visibility_action",
+  "version": "0.1",
+  "description": "Updates review records to be visible to Applicant",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

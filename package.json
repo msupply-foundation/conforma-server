@@ -24,7 +24,7 @@
     "jest": "^26.4.0",
     "node-fetch": "^2.6.1",
     "nodemon": "^2.0.4",
-    "postgraphile-plugin-nested-mutations": "^1.0.1",
+    "postgraphile-plugin-nested-mutations": "^1.1.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.2.0",
     "ts-node": "^8.10.2",
@@ -33,17 +33,20 @@
   "scripts": {
     "dev": "nodemon",
     "start": "yarn build && cd build && node server.js",
-    "build": "rimraf ./build && tsc && rsync -a --exclude \"*/node_modules\" ./src/plugins ./build",
+    "build": "./utils/build_all.sh",
     "test": "jest --runInBand",
     "pg": "exec ./utils/postgraphile_launch.sh",
     "pg_permissions": "exec ./utils/postgraphile_launch_permissions.sh",
     "dev_pg": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg\"",
     "dev_pg_permissions": "concurrently --kill-others-on-fail \"yarn dev\"  \"yarn pg_permissions\"",
-    "database_init": "exec ./database/initialise_database.sh",
-    "build_plugins": "exec ./utils/build_plugins.sh",
+    "database_init": "./database/initialise_database.sh && ./database/insert_data.sh && ./database/post_data_insert.sh",
+    "build_plugins": "node ./utils/pluginScripts/buildPlugins.js",
     "push_docs": "exec ./utils/push_docs_to_wiki.sh",
     "gui": "cd ./src/modules/expression-evaluator && yarn gui",
-    "generate": "graphql-codegen --config codegen.yml"
+    "generate": "graphql-codegen --config codegen.yml",
+    "postinstall": "node ./utils/pluginScripts/yarnInstallPlugins.js",
+    "take_snapshot": "node ./database/takeSnapshot.js",
+    "use_snapshot": "node ./database/useSnapshot.js"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
@@ -51,6 +54,7 @@
     "@openmsupply/expression-evaluator": "^1.5.2",
     "@types/jsonwebtoken": "^8.5.0",
     "bcrypt": "^5.0.0",
+    "comment-json": "^4.1.0",
     "concurrently": "^5.3.0",
     "fast-csv": "^4.3.6",
     "fastify": "^3.2.1",
@@ -64,6 +68,7 @@
     "pg": "^8.4.1",
     "postgraphile": "^4.8.0",
     "postgraphile-plugin-connection-filter": "^2.0.0",
-    "sharp": "^0.27.2"
+    "sharp": "^0.27.2",
+    "deep-equal": "^2.0.5"
   }
 }

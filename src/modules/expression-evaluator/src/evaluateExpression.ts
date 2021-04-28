@@ -105,15 +105,17 @@ export default async function evaluateExpression(
         }, origString)
 
       case 'API':
-        let url, urlWithQuery, queryFields, queryValues: string[], returnProperty
+        let urlWithQuery, returnedProperty
         try {
-          ;[url, queryFields, queryValues, returnProperty] = assignChildNodesToQuery(
-            childrenResolved
-          )
+          const { url, fieldNames, values, returnProperty } = assignChildNodesToQuery([
+            '', // Extra unused field for API (query)
+            ...childrenResolved,
+          ])
+          returnedProperty = returnProperty
           urlWithQuery =
-            queryFields.length > 0
-              ? `${url}?${queryFields
-                  .map((field: string, index: number) => field + '=' + queryValues[index])
+            fieldNames.length > 0
+              ? `${url}?${fieldNames
+                  .map((field: string, index: number) => field + '=' + values[index])
                   .join('&')}`
               : url
         } catch {
@@ -126,7 +128,7 @@ export default async function evaluateExpression(
           throw new Error('Problem with API call')
         }
         try {
-          return extractAndSimplify(data, returnProperty, "API - Can't resolve property")
+          return extractAndSimplify(data, returnedProperty, "API - Can't resolve property")
         } catch {
           throw new Error('Problem parsing requested node from API result')
         }
@@ -168,15 +170,26 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
   }
 }
 
+/*
+ * processGraphQL
+ * Will process the call to a GraphQL API (internal or external) using params
+ * received in the queryArray to determine the following:
+ * @param queryArray
+ *   - url: string with an external API or "graphQLEndpoint" for internal [Default]
+ *   - query: GraphQL query to call (including the fields to be returned)
+ *  A list of dynamic props to pass (break-down in 2 fields)
+ *   - fieldNames: array of field names included in the query
+ *   - values: array of values to be passed for each field names
+ *  And the returned field:
+ *   - returnProperty: string (which can be in any level of the query result)
+ * @param connection
+ *   - fetch: Method used for fetching (front-end bind to browser)
+ */
 async function processGraphQL(queryArray: any[], connection: IGraphQLConnection) {
   try {
-    const [query, variableNames, variableValues, returnProperty] = assignChildNodesToQuery(
-      queryArray
-    )
-
-    const variables = zipArraysToObject(variableNames, variableValues)
-
-    const data = await graphQLquery(query, variables, connection)
+    const { url, query, fieldNames, values, returnProperty } = assignChildNodesToQuery(queryArray)
+    const variables = zipArraysToObject(fieldNames, values)
+    const data = await graphQLquery(url, query, variables, connection)
     if (!data) throw new Error('GraphQL query problem')
     try {
       return extractAndSimplify(data, returnProperty, "GraphQL - Can't resolve node")
@@ -202,11 +215,16 @@ const extractAndSimplify = (
 }
 
 const assignChildNodesToQuery = (childNodes: any[]) => {
-  const query = childNodes[0]
-  const fieldNames = childNodes[1]
-  const values = childNodes.slice(2, fieldNames.length + 2)
-  const returnProperty = childNodes[fieldNames.length + 2]
-  return [query, fieldNames, values, returnProperty]
+  const skipFields = 3 // skip query, url and fieldNames
+  const query: string = childNodes[0]
+  const url: string = childNodes[1]
+  const fieldNames: string[] = childNodes[2]
+
+  const lastFieldIndex = fieldNames.length + skipFields
+  const values: string[] = childNodes.slice(skipFields, lastFieldIndex)
+  const returnProperty: string = childNodes[lastFieldIndex]
+
+  return { url, query, fieldNames, values, returnProperty }
 }
 
 // Build an object from an array of field names and an array of values
@@ -243,8 +261,20 @@ const simplifyObject = (item: number | string | boolean | BasicObject) => {
 }
 
 // Abstraction for GraphQL database query using Fetch
-const graphQLquery = async (query: string, variables: object, connection: IGraphQLConnection) => {
-  const queryResult = await connection.fetch(connection.endpoint, {
+const graphQLquery = async (
+  url: string,
+  query: string,
+  variables: object,
+  connection: IGraphQLConnection
+) => {
+  // Get an external endpoint to use, or get the default GraphQL endpoint if received:
+  // "graphqlendpoint" (case insensitive), an empty string "" or null
+  const endpoint =
+    url !== null && url.toLowerCase() !== 'graphqlendpoint' && url !== ''
+      ? url
+      : connection.endpoint
+
+  const queryResult = await connection.fetch(endpoint, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
