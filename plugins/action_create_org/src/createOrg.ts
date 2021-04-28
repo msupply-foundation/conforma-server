@@ -1,4 +1,7 @@
-async function createOrg({ applicationData, ...org }: any, DBConnect: any) {
+import { ActionPluginInput } from '../../types'
+
+async function createOrg({ parameters, DBConnect }: ActionPluginInput) {
+  const org = parameters
   try {
     console.log(`\nAdding new organisation: ${org.name}`)
     const result = await DBConnect.createOrg(org)

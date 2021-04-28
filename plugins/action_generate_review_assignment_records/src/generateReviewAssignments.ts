@@ -1,24 +1,34 @@
-import { Reviewer, ReviewAssignmentObject, AssignmentStatus, ApplicationData } from './types'
+import { ActionPluginInput } from '../../types'
+import { Reviewer, ReviewAssignmentObject, AssignmentStatus } from './types'
 import databaseMethods from './databaseMethods'
 
-async function generateReviewAssignments(input: any, DBConnect: any) {
+async function generateReviewAssignments({
+  parameters,
+  applicationData,
+  DBConnect,
+}: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
+
+  // Get application/reviewId from applicationData if not provided in parameters
+  const applicationId = parameters?.applicationId ?? applicationData?.applicationId
+  const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
+  const isReview =
+    parameters?.isReview === false
+      ? false
+      : parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
 
   console.log('Generating review assignment records...')
   try {
-    const { applicationId, reviewId } = input
     // Get template information and current stage for application
-    const applicationData: ApplicationData = await DBConnect.getApplicationData(applicationId)
-    const { templateId, stageNumber, stageId } = applicationData
+    const { templateId, stageNumber, stageId } =
+      applicationData ?? (await DBConnect.getApplicationData(applicationId))
 
-    const numReviewLevels: number =
-      (await DBConnect.getNumReviewLevels(templateId, stageNumber)) || 0
+    const numReviewLevels: number = (await DBConnect.getNumReviewLevels(stageId)) || 0
 
     let nextReviewLevel = 1
 
-    // NB: reviewId comes from record_id on TriggerPayload when triggered from review table
     // For first review assignment
-    if (!reviewId) {
+    if (!isReview) {
       console.log('First review assignment on first stage - total levels:', numReviewLevels)
       if (numReviewLevels === 0) {
         console.log(

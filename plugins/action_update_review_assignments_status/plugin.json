@@ -3,8 +3,9 @@
   "code": "updateReviewAssignmentsStatus",
   "name": "Update Review Assignment statuses",
   "description": "Update status of Review Assignment records when one is Assigned",
-  "required_parameters": ["reviewAssignmentId", "trigger"],
-  "output_properties": [],
+  "required_parameters": ["reviewAssignmentId"],
+  "optional_parameters": ["trigger"],
+  "output_properties": ["reviewAssignmentUpdates"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

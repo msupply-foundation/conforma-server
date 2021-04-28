@@ -1,1 +1,1 @@
-export { default as action } from './updateReviews'
+export { default as action } from './updateReviewsStatuses'

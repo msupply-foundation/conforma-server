@@ -1,4 +1,5 @@
 import databaseMethods from './databaseMethods'
+import { ActionPluginInput } from '../../types'
 const isEqual = require('deep-equal')
 interface Response {
   id: number
@@ -16,10 +17,12 @@ interface ResponsesById {
   [key: number]: Response[]
 }
 
-async function trimResponses(input: any, DBConnect: any) {
+async function trimResponses({ parameters, applicationData, DBConnect }: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
-  const { applicationId, reviewId } = input
+  const applicationId = parameters?.applicationId ?? applicationData?.applicationId
+  const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
+
   console.log(`Trimming unchanged duplicated ${reviewId ? 'Review' : 'Application'} responses...`)
 
   try {
