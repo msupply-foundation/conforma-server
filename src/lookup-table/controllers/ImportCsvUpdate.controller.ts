@@ -3,7 +3,7 @@ import { parseStream } from 'fast-csv'
 import { LookupTableService } from '../services'
 
 interface IImportCsvUpdateRequest extends RequestGenericInterface {
-  Params: { lookupTableId: number }
+  Params: { lookupTableId: string }
 }
 
 const ImportCsvUpdateController = async (
@@ -13,7 +13,7 @@ const ImportCsvUpdateController = async (
   const { lookupTableId } = request.params
   const data = await request.file()
 
-  const lookupTableService = LookupTableService({ tableId: lookupTableId })
+  const lookupTableService = LookupTableService({ tableId: Number(lookupTableId) })
 
   await parseStream(data.file, {
     headers: lookupTableService.parseCsvHeaders,

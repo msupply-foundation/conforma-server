@@ -5,7 +5,7 @@ class LookupTableNameValidator extends BaseValidator implements ILookupTableName
   private _model: any = ''
   private _tableName: string = ''
 
-  constructor({ model, tableName }: any) {
+  constructor({ model, tableName }: { model: any; tableName: string }) {
     super()
     this._model = model
     this._tableName = tableName

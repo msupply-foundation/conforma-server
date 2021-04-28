@@ -34,13 +34,13 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
     const results = await _compareFieldMaps()
 
     tableId = await _lookupTableModel.createStructure({
-      tableName,
+      name: tableName,
       label: tableNameLabel,
       fieldMap: fieldMaps,
     })
 
     await _lookupTableModel.createTable({
-      tableName,
+      name: tableName,
       fieldMap: fieldMaps,
     })
 
