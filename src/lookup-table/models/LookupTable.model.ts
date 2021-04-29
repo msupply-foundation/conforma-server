@@ -1,13 +1,23 @@
 import { QueryResult } from 'pg'
 import DBConnect from '../../components/databaseConnect'
-import { Concrete, FieldMapType, GqlQueryResult, LookupTableStructureType } from '../types'
+import {
+  FieldMapType,
+  GqlQueryResult,
+  LookupTableBase,
+  LookupTableStructureFull,
+  LookupTableStructure,
+} from '../types'
 
 const LookupTableModel = () => {
-  const createStructure = async ({
-    name: tableName,
-    label,
-    fieldMap,
-  }: LookupTableStructureType): Promise<number> => {
+  const getAllRowsForTable = async ({ name, fieldMap }: LookupTableStructureFull) => {
+    const mappedField = ({ label, fieldname }: FieldMapType) => `"${fieldname}" as "${label}"`
+    const fields = fieldMap.map(mappedField).join(',')
+    const text = `SELECT ${fields} FROM lookup_table_${name}`
+    const result = await DBConnect.query({ text })
+    return result.rows
+  }
+
+  const createStructure = async ({ name: tableName, label, fieldMap }: LookupTableStructure) => {
     try {
       const text = `INSERT INTO lookup_table (name,label,field_map) VALUES ($1,$2,$3) RETURNING id`
 
@@ -24,11 +34,9 @@ const LookupTableModel = () => {
     }
   }
 
-  const getStructureById = async (
-    lookupTableId: number
-  ): Promise<Concrete<LookupTableStructureType>> => {
+  const getStructureById = async (lookupTableId: number) => {
     try {
-      const result: GqlQueryResult<Concrete<LookupTableStructureType>> = await DBConnect.gqlQuery(
+      const result: GqlQueryResult<LookupTableStructureFull> = await DBConnect.gqlQuery(
         `
           query getLookupTableStructure($id: Int!) {
             lookupTable(id: $id) {
@@ -42,7 +50,7 @@ const LookupTableModel = () => {
         { id: lookupTableId }
       )
 
-      if (!result || !result.lookupTable)
+      if (!result?.lookupTable?.id)
         throw new Error(`Lookup table structure with id '${lookupTableId}' does not exist.`)
 
       return result.lookupTable
@@ -51,7 +59,7 @@ const LookupTableModel = () => {
     }
   }
 
-  const countStructureRowsByTableName = async (lookupTableName: string): Promise<number> => {
+  const countStructureRowsByTableName = async (lookupTableName: string) => {
     try {
       const result = await DBConnect.gqlQuery(
         `
@@ -64,7 +72,7 @@ const LookupTableModel = () => {
         { name: lookupTableName }
       )
 
-      return result.lookupTables.totalCount
+      return result.lookupTables.totalCount as number
     } catch (error) {
       throw error
     }
@@ -73,7 +81,7 @@ const LookupTableModel = () => {
   const createTable = async ({
     name: tableName,
     fieldMap: fieldMaps,
-  }: LookupTableStructureType): Promise<boolean> => {
+  }: LookupTableBase): Promise<boolean> => {
     try {
       const text = `CREATE TABLE lookup_table_${tableName}
       (
@@ -169,6 +177,7 @@ const LookupTableModel = () => {
   return {
     createStructure,
     getStructureById,
+    getAllRowsForTable,
     countStructureRowsByTableName,
     createTable,
     createRow,
