@@ -47,13 +47,13 @@ exports.queries = [
                       category: QUESTION
                       parameters: { label: "Product name" }
                       validation: {
-                        operator: "REGEX"
+                        operator: "!="
                         children: [
                           {
                             operator: "objectProperties"
                             children: ["responses.Q1.text"]
                           }
-                          { value: "/([^\s])/" }
+                          { value: "" }
                         ]
                       }
                       validationMessage: "You need a valid product name."
