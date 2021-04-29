@@ -1,26 +1,15 @@
 import { writeToBuffer } from 'fast-csv'
-import { LookupTableService, LookupTableStructureService } from '../services'
+import { LookupTableService } from '../services'
 
 const ExportCsv = async (request: any, reply: any) => {
-  const lookupTableId = Number(request.params.lookupTableId)
+  const tableId = Number(request.params.lookupTableId)
 
-  const lookupTableStructure = LookupTableStructureService()
-  const lookupTableService = LookupTableService()
+  const lookupTableService = await LookupTableService({ tableId })
   try {
-    const lookupTableDbStructure = await lookupTableStructure.getById(lookupTableId)
-
-    const tableData = await lookupTableService.getAll({ tableName: lookupTableDbStructure.name })
+    const tableData = await lookupTableService.getAllRowsForTable()
 
     var csvStream = await writeToBuffer(tableData, {
       headers: true,
-      transform: (row: any) =>
-        Object.fromEntries(
-          Object.entries(row).map(([key, value]) => [
-            lookupTableDbStructure.fieldMap.find((fieldMap: any) => fieldMap.fieldname === key)
-              .label,
-            value,
-          ])
-        ),
     })
 
     reply

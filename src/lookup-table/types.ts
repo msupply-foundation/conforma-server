@@ -1,13 +1,14 @@
-type LookupTableStructureType = {
-  id?: number
+type LookupTableBase = {
   name: string
-  label?: string
   fieldMap: FieldMapType[]
 }
 
-// Removes 'optional' attributes from a type's properties
-type Concrete<Type> = {
-  [Property in keyof Type]-?: Type[Property]
+interface LookupTableStructure extends LookupTableBase {
+  label: string
+}
+
+interface LookupTableStructureFull extends LookupTableStructure {
+  id: number
 }
 
 interface GqlQueryResult<T = any> {
@@ -21,4 +22,10 @@ type FieldMapType = {
   gqlName: string
 }
 
-export { LookupTableStructureType, FieldMapType, Concrete, GqlQueryResult }
+export {
+  LookupTableBase,
+  LookupTableStructure,
+  LookupTableStructureFull,
+  FieldMapType,
+  GqlQueryResult,
+}
