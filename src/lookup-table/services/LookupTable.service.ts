@@ -1,9 +1,7 @@
 import { LookupTableModel } from '../models'
 import { FieldMapType } from '../types'
 import { toCamelCase, toSnakeCase } from '../utils'
-import { LookupTableHeadersValidator, LookupTableNameValidator } from '../utils/validations'
-import { ValidationErrors } from '../utils/validations/error'
-import { ILookupTableNameValidator, IValidator } from '../utils/validations/types'
+import { IValidator, LookupTableHeadersValidator, ValidationErrors } from '../utils/validations'
 
 type LookupTableServiceProps = {
   tableId?: number
@@ -21,26 +19,16 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
   const createTable = async () => {
     tableName = toSnakeCase(tableNameLabel)
 
-    const lookupTableNameValidator: ILookupTableNameValidator = new LookupTableNameValidator({
-      model: lookupTableModel,
-      tableName,
-    })
-
-    await lookupTableNameValidator.validate()
-
-    if (!lookupTableNameValidator.isValid)
-      throw new ValidationErrors(lookupTableNameValidator.errors)
-
     const results = await _compareFieldMaps()
+
+    await lookupTableModel.createTable({
+      name: tableName,
+      fieldMap: fieldMaps,
+    })
 
     tableId = await lookupTableModel.createStructure({
       name: tableName,
       label: tableNameLabel,
-      fieldMap: fieldMaps,
-    })
-
-    await lookupTableModel.createTable({
-      name: tableName,
       fieldMap: fieldMaps,
     })
 

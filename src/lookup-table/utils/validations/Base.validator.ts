@@ -1,9 +1,9 @@
-import { IValidator } from './types'
+import { IValidator } from '.'
 
 class BaseValidator implements IValidator {
   protected errorMessages: string[] = []
 
-  protected validate(): Promise<void> | void {}
+  protected validate(): void {}
 
   get isValid() {
     return this.errorMessages.length === 0

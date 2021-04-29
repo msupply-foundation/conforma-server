@@ -1,6 +1,17 @@
 import BaseValidator from './Base.validator'
 import LookupTableHeadersValidator from './LookupTableHeaders.validator'
-import LookupTableNameValidator from './LookupTableName.validator'
+
+interface IValidator {
+  isValid: boolean
+  errors: string[]
+}
+
+class ValidationErrors extends Error {
+  constructor(message: string[]) {
+    super(JSON.stringify(message))
+    this.name = 'ValidationErrors'
+  }
+}
 
 const isFirstLetterAlphabetValid = (value: string): boolean => /^[A-Za-z]{1}/.test(value)
 
@@ -10,8 +21,9 @@ const isArrayContainsStringValid = (checkArray: string[], requiredValue: string)
   checkArray.findIndex((value: string) => requiredValue === value.toLowerCase()) !== -1
 
 export {
+  ValidationErrors,
+  IValidator,
   BaseValidator,
-  LookupTableNameValidator,
   LookupTableHeadersValidator,
   isFirstLetterAlphabetValid,
   isSpaceDashAlphanumericValid,
