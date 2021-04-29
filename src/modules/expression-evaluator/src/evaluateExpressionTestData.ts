@@ -907,6 +907,16 @@ testData.GraphQL_GetCountryByCode_ExternalAPI = {
   ],
 }
 
+testData.GraphQL_CheckDefaultResultIsNull = {
+  operator: 'graphQL',
+  children: [
+    `query country ($code: ID = "") { country (code: $code) { name } }`,
+    'https://countries.trevorblades.com',
+    [],
+    'country',
+  ],
+}
+
 // More complex combinations
 
 testData.concatFirstAndLastNames = {
