@@ -170,22 +170,63 @@ exports.queries = [
                         options: {
                           operator: "graphQL",
                           children: [
-                            "query GetAllProducts { entities( filter: {}, offset: 0, first: 1000) { data { description } } } ",
+                            "query GetAllProducts { entities( filter: {}, offset: 0, first: 1000) { data { code description type children { code description } properties { type value } } } }",
                             "https://codes.msupply.foundation:2048/graphql",
                             [],
                             "entities.data"
                           ]
                         }
+                        optionsDisplayProperty: "description"
                         placeholder: "Type name of ATC  code"
                       }
                     }
                     {
-                      code: "S1TextUC-type"
+                      code: "S1TextUC-code"
                       index: 60
-                      title: "UC type"
+                      title: "UC code"
                       elementTypePluginCode: "shortText"
                       isEditable: false
                       category: QUESTION
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [
+                              "responses.S1Q4GraphQL"
+                              ""
+                            ]
+                          }
+                          null
+                        ]
+                      }
+                      parameters: {
+                        label: "mSupply UC - code"
+                        text: {
+                          operator: "objectProperties"
+                          children: [
+                            "responses.S1Q4GraphQL.selected.code"
+                            ""
+                          ]
+                        }
+                      }
+                    }
+                    {
+                      code: "S1TextUC-Type"
+                      index: 70
+                      title: "UC - type"
+                      elementTypePluginCode: "shortText"
+                      isEditable: false
+                      category: QUESTION
+                      parameters: {
+                        label: "Type"
+                        text: {
+                          operator: "objectProperties"
+                          children: [
+                            "responses.S1Q4GraphQL.selected.type"
+                          ]
+                        }
+                      }
                       visibilityCondition: {
                         operator: "!="
                         children: [
@@ -198,25 +239,58 @@ exports.queries = [
                           null
                         ]
                       }
-                      parameters: {
-                        label: "Generic name (TODO: Replace with API using UC)"
-                      }
-                      isRequired: false
                     }
                     {
-                      code: "S1Q5"
-                      index: 70
-                      title: "Therapeutic class"
+                      code: "S1TextUC-WHO"
+                      index: 75
+                      title: "UC - who"
                       elementTypePluginCode: "shortText"
+                      isEditable: false
                       category: QUESTION
                       parameters: {
-                        label: "Therapeutic class (TODO: Replace with API using UC)"
+                        label: "Who code"
+                        text: {
+                          operator: "objectProperties"
+                          children: [
+                            "responses.S1Q4GraphQL.selected.children[1].code",
+                            ""
+                          ]
+                        }
                       }
-                      isRequired: false
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [
+                              "responses.S1Q4GraphQL"
+                              ""
+                            ]
+                          }
+                          null
+                        ]
+                      }
+                    }
+                    {
+                      code: "S1PB2"
+                      index: 80
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "S1TextPage3"
+                      index: 90
+                      title: "Prescription/OTC information"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "In this section, we require information about **PRESCRIPTION**"
+                      }
                     }
                     {
                       code: "S1Q6"
-                      index: 80
+                      index: 100
                       title: "Formulations"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
@@ -228,23 +302,6 @@ exports.queries = [
                         ]
                       }
                       isRequired: false
-                    }
-                    {
-                      code: "S1PB2"
-                      index: 90
-                      title: "Page Break"
-                      elementTypePluginCode: "pageBreak"
-                      category: INFORMATION
-                    }
-                    {
-                      code: "S1Info4"
-                      index: 100
-                      title: "Prescription/OTC information"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
-                      parameters: {
-                        text: "In this section, we require information about **PRESCRIPTION**"
-                      }
                     }
                     {
                       code: "S1Q7"
@@ -271,16 +328,6 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Strength"
-                      }
-                    }
-                    {
-                      code: "S1Q10"
-                      index: 130
-                      title: "Route of administration"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
-                      parameters: {
-                        label: "Route of administration (Replace with Lookup table)"
                       }
                     }
                     {
@@ -319,6 +366,17 @@ exports.queries = [
                       parameters: {
                         label: "Packaging and number of units"
                       }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "^[0-9]+$" }
+                        ]
+                      }
+                      validationMessage: "Response must be a number"
                     }
                     {
                       code: "S1PB4"
@@ -328,7 +386,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      code: "S1Info6"
+                      code: "S1TextPage4"
                       index: 190
                       title: "Dosage information"
                       elementTypePluginCode: "textInfo"
