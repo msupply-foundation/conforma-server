@@ -1,6 +1,6 @@
 import { LookupTableModel } from '../models'
 import { FieldMapType } from '../types'
-import { toCamelCase, toSnakeCase } from '../utils'
+import { comparerFieldMaps, mergeFieldMapsByProperty, toCamelCase, toSnakeCase } from '../utils'
 import { IValidator, LookupTableHeadersValidator, ValidationErrors } from '../utils/validations'
 
 type LookupTableServiceProps = {
@@ -13,13 +13,13 @@ type LookupTableServiceProps = {
 
 const LookupTableService = (structure: LookupTableServiceProps) => {
   let { tableName = '', tableNameLabel = '', tableId = 0, fieldMaps = [], rows = [] } = structure
-  let dbFieldMap: any = []
+  let dbFieldMap: FieldMapType[] = []
   const lookupTableModel = LookupTableModel()
 
   const createTable = async () => {
     tableName = toSnakeCase(tableNameLabel)
 
-    const results = await _compareFieldMaps()
+    const results = updateFieldMaps()
 
     await lookupTableModel.createTable({
       name: tableName,
@@ -44,7 +44,7 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
     tableId = result.id
     dbFieldMap = result.fieldMap
 
-    const results = await _compareFieldMaps()
+    const results = updateFieldMaps()
     await _createNewColumns()
     await _createUpdateRows()
 
@@ -129,28 +129,16 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
     }
   }
 
-  const _compareFieldMaps = () => {
-    fieldMaps = [...dbFieldMap, ...fieldMaps].filter(
-      ((set) => (obj: any) => (set.has(obj.label) ? false : set.add(obj.label)))(new Set())
-    )
+  const updateFieldMaps = () => {
+    fieldMaps = mergeFieldMapsByProperty(dbFieldMap, fieldMaps, 'label')
 
     return {
-      onlyInDb: dbFieldMap.filter(_comparer(fieldMaps)),
-      onlyInCsv: fieldMaps.filter(_comparer(dbFieldMap)),
-      inBoth: dbFieldMap.filter((current: any) =>
-        fieldMaps.filter((csvMap: any) => csvMap.label === current.label)
+      onlyInDb: dbFieldMap.filter(comparerFieldMaps(fieldMaps, 'label')),
+      onlyInCsv: fieldMaps.filter(comparerFieldMaps(dbFieldMap, 'label')),
+      inBoth: dbFieldMap.filter((current: FieldMapType) =>
+        fieldMaps.filter((csvMap: FieldMapType) => csvMap.label === current.label)
       ),
       finalFieldMap: fieldMaps,
-    }
-  }
-
-  function _comparer(otherArray: any[]) {
-    return function (current: any) {
-      return (
-        otherArray.filter(function (other) {
-          return other.label == current.label
-        }).length == 0
-      )
     }
   }
 

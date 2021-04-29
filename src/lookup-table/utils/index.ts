@@ -1,3 +1,5 @@
+import { FieldMapType } from '../types'
+
 const toSnakeCase = (str: any) => {
   return (
     str &&
@@ -13,4 +15,37 @@ const toCamelCase = (text: string) => {
   return text.substr(0, 1).toLowerCase() + text.substr(1)
 }
 
-export { toSnakeCase, toCamelCase }
+const mergeFieldMapsByProperty = (
+  fieldMapOne: FieldMapType[],
+  fieldMapTwo: FieldMapType[],
+  propertyToMergeBy: string
+): FieldMapType[] => {
+  const mergedFieldMaps: FieldMapType[] = [...fieldMapOne, ...fieldMapTwo]
+  const finalFieldMap = mergedFieldMaps.reduce(
+    (accumulator: FieldMapType[], currentFieldMap: FieldMapType) =>
+      accumulator.some(
+        (tempFieldMap: FieldMapType) =>
+          tempFieldMap[propertyToMergeBy as keyof FieldMapType] ===
+          currentFieldMap[propertyToMergeBy as keyof FieldMapType]
+      )
+        ? accumulator
+        : [...accumulator, currentFieldMap],
+    []
+  )
+  return finalFieldMap
+}
+
+function comparerFieldMaps(otherArray: FieldMapType[], propertyToCompareBy: string) {
+  return function (current: FieldMapType) {
+    return (
+      otherArray.filter(function (other) {
+        return (
+          other[propertyToCompareBy as keyof FieldMapType] ===
+          current[propertyToCompareBy as keyof FieldMapType]
+        )
+      }).length == 0
+    )
+  }
+}
+
+export { toSnakeCase, toCamelCase, mergeFieldMapsByProperty, comparerFieldMaps }
