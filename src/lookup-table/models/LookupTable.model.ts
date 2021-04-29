@@ -1,13 +1,23 @@
 import { QueryResult } from 'pg'
 import DBConnect from '../../components/databaseConnect'
-import { FieldMapType, GqlQueryResult, LookupTableStructureType } from '../types'
+import {
+  FieldMapType,
+  GqlQueryResult,
+  LookupTableStructureFull,
+  LookupTableStructure,
+  LookupTableBase,
+} from '../types'
 
 const LookupTableModel = () => {
-  const createStructure = async ({
-    name: tableName,
-    label,
-    fieldMap,
-  }: LookupTableStructureType): Promise<number> => {
+  const getAllRowsFromTable = async ({ name, fieldMap }: LookupTableBase): Promise<any[]> => {
+    const mappedField = ({ label, fieldname }: FieldMapType) => `"${fieldname}" as "${label}"`
+    const fields = fieldMap.map(mappedField).join(',')
+    const text = `SELECT ${fields} FROM lookup_table_${name}`
+    const result: QueryResult<any[]> = await DBConnect.query({ text })
+    return result.rows
+  }
+
+  const createStructure = async ({ name: tableName, label, fieldMap }: LookupTableStructure) => {
     try {
       const text = `INSERT INTO lookup_table (name,label,field_map) VALUES ($1,$2,$3) RETURNING id`
 
@@ -24,11 +34,9 @@ const LookupTableModel = () => {
     }
   }
 
-  const getStructureById = async (
-    lookupTableId: number
-  ): Promise<Required<LookupTableStructureType>> => {
+  const getStructureById = async (lookupTableId: number): Promise<LookupTableStructureFull> => {
     try {
-      const result: GqlQueryResult<Required<LookupTableStructureType>> = await DBConnect.gqlQuery(
+      const result: GqlQueryResult<LookupTableStructureFull> = await DBConnect.gqlQuery(
         `
           query getLookupTableStructure($id: Int!) {
             lookupTable(id: $id) {
@@ -42,7 +50,7 @@ const LookupTableModel = () => {
         { id: lookupTableId }
       )
 
-      if (!result || !result.lookupTable)
+      if (!result?.lookupTable?.id)
         throw new Error(`Lookup table structure with id '${lookupTableId}' does not exist.`)
 
       return result.lookupTable
@@ -54,7 +62,7 @@ const LookupTableModel = () => {
   const createTable = async ({
     name: tableName,
     fieldMap: fieldMaps,
-  }: LookupTableStructureType): Promise<boolean> => {
+  }: LookupTableBase): Promise<boolean> => {
     try {
       const text = `CREATE TABLE lookup_table_${tableName}
       (
@@ -143,6 +151,7 @@ const LookupTableModel = () => {
   }
 
   return {
+    getAllRowsFromTable,
     createStructure,
     getStructureById,
     createTable,

@@ -1,8 +1,20 @@
-type LookupTableStructureType = {
-  id?: number
+import { RequestGenericInterface } from 'fastify'
+
+interface ILookupTableCsvRequest extends RequestGenericInterface {
+  Params: { lookupTableId: string }
+}
+
+type LookupTableBase = {
   name: string
-  label?: string
   fieldMap: FieldMapType[]
+}
+
+interface LookupTableStructure extends LookupTableBase {
+  label: string
+}
+
+interface LookupTableStructureFull extends LookupTableStructure {
+  id: number
 }
 
 interface GqlQueryResult<T = any> {
@@ -16,4 +28,11 @@ type FieldMapType = {
   gqlName: string
 }
 
-export { LookupTableStructureType, FieldMapType, GqlQueryResult }
+export {
+  ILookupTableCsvRequest,
+  LookupTableBase,
+  LookupTableStructure,
+  LookupTableStructureFull,
+  FieldMapType,
+  GqlQueryResult,
+}

@@ -13,7 +13,7 @@ const ImportCsvUpdateController = async (
   const { lookupTableId } = request.params
   const data = await request.file()
 
-  const lookupTableService = LookupTableService({ tableId: Number(lookupTableId) })
+  const lookupTableService = await LookupTableService({ tableId: Number(lookupTableId) })
 
   await parseStream(data.file, {
     headers: lookupTableService.parseCsvHeaders,
