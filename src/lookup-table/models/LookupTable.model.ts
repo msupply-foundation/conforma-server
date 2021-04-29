@@ -104,7 +104,7 @@ const LookupTableModel = () => {
 
       const result: QueryResult<{ id: number }> = await DBConnect.query({
         text,
-        values: [...Object.values(row)],
+        values: Object.values(row),
       })
 
       return result.rows.map((row: any) => row.id)
@@ -136,7 +136,7 @@ const LookupTableModel = () => {
         .join(', ')
 
       const text = `UPDATE lookup_table_${tableName} SET ${setText} WHERE id = $${primaryKeyIndex}`
-      await DBConnect.query({ text, values: [...Object.values(row)] })
+      await DBConnect.query({ text, values: Object.values(row) })
       return true
     } catch (error) {
       throw error
