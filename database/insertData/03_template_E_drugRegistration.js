@@ -34,8 +34,8 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "General information"
-                        text: "Start application, by providing the product **NAME** and **ORIGIN**"
+                        title: "Page 1"
+                        text: "Start application by providing the product **NAME** and **ORIGIN**"
                       }
                     }
                     {
@@ -80,7 +80,7 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Product origin"
-                        description: "_Select which is the origin of the product._"
+                        description: "_Select the origin of the product._"
                         options: ["Domestic", "Imported"]
                       }
                     }
@@ -91,6 +91,7 @@ exports.queries = [
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
+                        label: "Country code"
                         options: {
                           operator: "graphQL",
                           children: [
@@ -122,6 +123,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
+                        title: "Country name"
                         text: {
                           operator: "objectProperties"
                           children: [
@@ -155,6 +157,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
+                        title: "Page 2"
                         text: "In this section, we require information about **PRODUCT**"
                       }
                     }
@@ -165,6 +168,7 @@ exports.queries = [
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
+                        label: "ATC Code"
                         options: {
                           operator: "graphQL",
                           children: [
@@ -264,6 +268,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
+                        title: "Page 3"
                         text: "In this section, we require information about **PRESCRIPTION**"
                       }
                     }
@@ -450,6 +455,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
+                        title: "Page 4"
                         text: "In this section, we require information about **CONTAINER**"
                       }
                     }
@@ -511,7 +517,7 @@ exports.queries = [
                       code: "S1Q12NumberUnits"
                       index: 170
                       title: "Packaging and number of units"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "longText"
                       category: QUESTION
                       parameters: {
                         label: "Packaging and number of units"
@@ -542,6 +548,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
+                        title: "Page 5"
                         text: "In this section, we require information about **DOSAGE**"
                       }
                     }
@@ -783,11 +790,12 @@ exports.queries = [
                     {
                       code: "S1TextPage6"
                       index: 290
-                      title: "Optinal information"
+                      title: "Optional information"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        text: "Optinal information"
+                        title: "Page 6"
+                        text: "Optional information"
                       }
                     }
                     {
@@ -800,6 +808,17 @@ exports.queries = [
                         label: "Shelf life (months)"
                       }
                       isRequired: false
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          { value: "^[0-9]+$" }
+                        ]
+                      }
+                      validationMessage: "Response must be a number"
                     }
                     {
                       code: "S1Q22"
@@ -864,6 +883,7 @@ exports.queries = [
                         label: "Upload samples"
                         description: "Maximum of 5 image files allowed.  \\nFile extension allowed: **pdf**, **png**, **jpg**, **jpeg**."
                         fileExtensions: ["pdf", "png", "jpg", "jpeg"]
+                        fileCountLimit: 5
                       }
                     }
                     {
