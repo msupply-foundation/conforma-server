@@ -64,7 +64,7 @@ exports.queries = [
                       title: "First Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "First Name" }
+                      parameters: { label: "First Name", help: "Just enter your first name here" }
                     }
                     {
                       id: 1002
