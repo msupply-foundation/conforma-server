@@ -711,36 +711,38 @@ exports.queries = [
                         options: {
                           operator: "graphQL",
                           children: [
-                            "query countries { countries { code } }"
+                            "query countries { countries { code name } }"
                             "https://countries.trevorblades.com"
                             []
                             "countries"
                           ]
                         }
+                        optionsDisplayProperty: "code"
                         placeholder: "Type one country code (2 digits)"
                       }
                     }
                     {
                       index: 31
-                      code: "Text-CountryName"
-                      title: "Country name"
-                      elementTypePluginCode: "shortText"
-                      isEditable: false
-                      category: QUESTION
+                      code: "TextCountryName"
+                      title: "Country Name"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q2GraphQL.text"]
+                          }
+                          "Type one country code (2 digits)"
+                        ]
+                      }
                       parameters: {
                         text: {
-                          operator: "graphQL",
+                          operator: "objectProperties"
                           children: [
-                            "query country ($code: ID = \"\") { country (code: $code) { name } }"
-                            "https://countries.trevorblades.com"
-                            [ "code" ]
-                            {
-                              operator: "objectProperties",
-                              children: [
-                                "responses.Q2GraphQL.text"
-                              ]
-                            }
-                            "country"
+                            "responses.Q2GraphQL.selection.name"
+                            ""
                           ]
                         }
                       }
