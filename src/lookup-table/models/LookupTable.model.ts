@@ -76,12 +76,12 @@ const LookupTableModel = () => {
     row: any
   }): Promise<{ id: string }[]> => {
     try {
-      const text = `INSERT INTO lookup_table_${tableName}(${Object.keys(row)}) VALUES (
-          ${Object.keys(row)
-            .map((key, index) => {
-              return '$' + String(index + 1)
-            })
-            .join(', ')}) RETURNING id`
+      const setText = Object.keys(row)
+        .map((key, index) => `$${index + 1}`)
+        .join(', ')
+
+      const text = `INSERT INTO lookup_table_${tableName}(${Object.keys(row)}) VALUES (${setText}
+          ) RETURNING id`
 
       const result: QueryResult<{ id: number }> = await DBConnect.query({
         text,
@@ -102,25 +102,17 @@ const LookupTableModel = () => {
     row: any
   }): Promise<{ id: string }[]> => {
     try {
-      let primaryKeyIndex = 0
-      const setText = Object.keys(row)
-        .map((key, index) => {
-          const currentIndex = index + 1
-          if (key === 'id') {
-            primaryKeyIndex = currentIndex
-            return ''
-          }
-
-          return `${key} = $${currentIndex}`
-        })
-        .filter(Boolean)
-        .join(', ')
+      const keys = Object.keys(row)
+      const primaryKeyIndex = keys.indexOf('id') + 1
+      const setText = keys.map((key, index) => `${key} = $${index + 1}`).join(', ')
 
       const text = `UPDATE lookup_table_${tableName} SET ${setText} WHERE id = $${primaryKeyIndex} RETURNING id`
+
       const result: QueryResult<{ id: number }> = await DBConnect.query({
         text,
         values: Object.values(row),
       })
+
       return result.rows.map((row: any) => row.id)
     } catch (error) {
       throw error
