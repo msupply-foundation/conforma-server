@@ -29,7 +29,7 @@ exports.queries = [
                 templateElementsUsingId: {
                   create: [
                     {
-                      code: "Text1"
+                      code: "S1TextPage1"
                       index: 0
                       title: "General information"
                       elementTypePluginCode: "textInfo"
@@ -40,7 +40,7 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "Q1-ProductName"
+                      code: "S1Q1ProductName"
                       index: 10
                       title: "Product name"
                       elementTypePluginCode: "shortText"
@@ -74,7 +74,7 @@ exports.queries = [
                       validationMessage: "You need a valid product name."
                     }
                     {
-                      code: "Q2-Origin"
+                      code: "S1Q2Origin"
                       index: 20
                       title: "Origin category"
                       elementTypePluginCode: "radioChoice"
@@ -87,19 +87,30 @@ exports.queries = [
                     }
                     {
                       index: 21
-                      code: "Q3-CountryCode"
+                      code: "S1Q3GraphQL"
                       title: "Country code"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
-                        label: "Enter 2 letters code of a valid country"
+                        search: true
+                        options: {
+                          operator: "graphQL",
+                          children: [
+                            "query countries { countries { code name } }"
+                            "https://countries.trevorblades.com"
+                            []
+                            "countries"
+                          ]
+                        }
+                        optionsDisplayProperty: "code"
+                        placeholder: "Type one country code (2 digits)"
                       }
                       visibilityCondition: {
                         operator: "="
                         children: [
                           {
                             operator: "objectProperties"
-                            children: ["responses.Q2-Origin.text"]
+                            children: ["responses.Q2Origin.text"]
                           }
                           "Imported"
                         ]
@@ -107,42 +118,19 @@ exports.queries = [
                     }
                     {
                       index: 22
-                      code: "Text-CountryName"
-                      title: "Country name"
-                      elementTypePluginCode: "shortText"
-                      isEditable: false
-                      category: QUESTION
+                      code: "TextCountryName"
+                      title: "Country Name"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
                       parameters: {
                         text: {
-                          operator: "graphQL",
+                          operator: "objectProperties"
                           children: [
-                            "query country ($code: ID!) { country (code: $code) { name } }"
-                            "https://countries.trevorblades.com"
-                            [ "code" ]
-                            {
-                              operator: "objectProperties",
-                              children: [
-                                "responses.Q3-CountryCode.text"
-                                ""
-                              ]
-                            }
-                            "country"
+                            "responses.Q3GraphQL.selection.name"
+                            ""
                           ]
                         }
                       }
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties",
-                            children: [
-                              "responses.thisResponse"
-                            ]
-                          }
-                          "([^\s]*)"
-                        ]
-                      }
-                      validationMessage: "Only 2 characters for country code"
                     }
                     {
                       code: "S1PB1"
@@ -152,7 +140,7 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      code: "S1Info2"
+                      code: "S1TextPage2"
                       index: 40
                       title: "Universal code"
                       elementTypePluginCode: "textInfo"
@@ -162,7 +150,7 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "S1Q3"
+                      code: "S1Q4GraphQL"
                       index: 50
                       title: "ATC Code"
                       elementTypePluginCode: "shortText"
