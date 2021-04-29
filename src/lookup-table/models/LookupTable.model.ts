@@ -1,6 +1,6 @@
 import { QueryResult } from 'pg'
 import DBConnect from '../../components/databaseConnect'
-import { Concrete, FieldMapType, GqlQueryResult, LookupTableStructureType } from '../types'
+import { FieldMapType, GqlQueryResult, LookupTableStructureType } from '../types'
 
 const LookupTableModel = () => {
   const createStructure = async ({
@@ -26,9 +26,9 @@ const LookupTableModel = () => {
 
   const getStructureById = async (
     lookupTableId: number
-  ): Promise<Concrete<LookupTableStructureType>> => {
+  ): Promise<Required<LookupTableStructureType>> => {
     try {
-      const result: GqlQueryResult<Concrete<LookupTableStructureType>> = await DBConnect.gqlQuery(
+      const result: GqlQueryResult<Required<LookupTableStructureType>> = await DBConnect.gqlQuery(
         `
           query getLookupTableStructure($id: Int!) {
             lookupTable(id: $id) {
