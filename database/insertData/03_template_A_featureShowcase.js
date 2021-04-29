@@ -727,16 +727,6 @@ exports.queries = [
                       title: "Country Name"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      visibilityCondition: {
-                        operator: "!="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.Q2GraphQL.text"]
-                          }
-                          "Type one country code (2 digits)"
-                        ]
-                      }
                       parameters: {
                         text: {
                           operator: "objectProperties"
