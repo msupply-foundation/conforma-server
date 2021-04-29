@@ -1,3 +1,3 @@
-import LookupTableModel from './LookupTable.Model'
+import LookupTableModel from './LookupTable.model'
 
 export { LookupTableModel }

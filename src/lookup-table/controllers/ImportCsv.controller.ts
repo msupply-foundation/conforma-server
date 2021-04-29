@@ -5,7 +5,7 @@ import { LookupTableService } from '../services'
 const ImportCsvController = async (request: FastifyRequest, reply: FastifyReply) => {
   const data = await request.file()
   const tableNameLabel: string = (data.fields.tableName as any).value
-  const lookupTableService = LookupTableService({ tableNameLabel })
+  const lookupTableService = await LookupTableService({ tableNameLabel })
 
   await parseStream(data.file, {
     headers: lookupTableService.parseCsvHeaders,
