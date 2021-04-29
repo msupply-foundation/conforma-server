@@ -4,6 +4,7 @@ TEMPLATE E - Drug Resgistration (Generic Medicines Procedure - simple version)
     for testing the main Drug registation application and review process
 */
 const { coreActions } = require('./core_actions')
+const { devActions } = require('./dev_actions')
 
 exports.queries = [
   `mutation {
@@ -947,6 +948,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               ${coreActions}
+              ${devActions}
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
