@@ -110,7 +110,7 @@ exports.queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: ["responses.Q2Origin.text"]
+                            children: ["responses.S1Q2Origin.text"]
                           }
                           "Imported"
                         ]
@@ -126,10 +126,20 @@ exports.queries = [
                         text: {
                           operator: "objectProperties"
                           children: [
-                            "responses.Q3GraphQL.selection.name"
+                            "responses.S1Q3GraphQL.selection.name"
                             ""
                           ]
                         }
+                      }
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.S1Q2Origin.text"]
+                          }
+                          "Imported"
+                        ]
                       }
                     }
                     {
@@ -146,39 +156,48 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        text: "In this section, we require information for **USAGE**"
+                        text: "In this section, we require information about **PRODUCT**"
                       }
                     }
                     {
                       code: "S1Q4GraphQL"
                       index: 50
-                      title: "ATC Code"
-                      elementTypePluginCode: "shortText"
+                      title: "UC Selector"
+                      elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
-                        label: "ATC Code"
+                        search: true
+                        options: {
+                          operator: "graphQL",
+                          children: [
+                            "query GetAllProducts { entities( filter: {}, offset: 0, first: 1000) { data { description } } } ",
+                            "https://codes.msupply.foundation:2048/graphql",
+                            [],
+                            "entities.data"
+                          ]
+                        }
+                        placeholder: "Type name of ATC  code"
                       }
-                      validation: {
-                        operator: "API"
-                        children: [
-                          { value: "http://codes.msupply.foundation:2048/graphql" }
-                          { value: ["type", "code"] }
-                          { value: "GetProductsByCode" }
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: "description" }
-                        ]
-                      }
-                      validationMessage: "ATC code not found"
                     }
                     {
-                      code: "S1Q4"
+                      code: "S1TextUC-type"
                       index: 60
-                      title: "Generic name"
+                      title: "UC type"
                       elementTypePluginCode: "shortText"
+                      isEditable: false
                       category: QUESTION
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: [
+                              "responses.S1Q4GraphQL"
+                            ]
+                          }
+                          null
+                        ]
+                      }
                       parameters: {
                         label: "Generic name (TODO: Replace with API using UC)"
                       }
