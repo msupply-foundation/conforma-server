@@ -17,7 +17,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
   let dbFieldMap: any = []
   let structure: LookupTableStructureFull
 
-  // Initilisation
+  // Initialisation
   const lookupTableModel = LookupTableModel()
 
   if (props.tableId) {
@@ -34,6 +34,13 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
     tableName = toSnakeCase(tableNameLabel)
 
     const results = updateFieldMaps()
+
+    fieldMaps.unshift({
+      label: 'ID',
+      fieldname: 'id',
+      gqlName: 'ID',
+      dataType: 'serial PRIMARY KEY',
+    })
 
     await lookupTableModel.createTable({
       name: tableName,
@@ -163,8 +170,8 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
   const createUpdateRows = async () => {
     await rows.forEach(async (row: any) => {
-      if (!row.id) {
-        delete row.id
+      if (!('id' in row) || !row.id) {
+        'id' in row && delete row.id
         await lookupTableModel.createRow({ tableName, row })
       } else {
         await lookupTableModel.updateRow({ tableName, row })
