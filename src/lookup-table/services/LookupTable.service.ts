@@ -16,13 +16,13 @@ type LookupTableServiceProps = {
 const LookupTableService = (structure: LookupTableServiceProps) => {
   let { tableName = '', tableNameLabel = '', tableId = 0, fieldMaps = [], rows = [] } = structure
   let dbFieldMap: any = []
-  const _lookupTableModel = LookupTableModel()
+  const lookupTableModel = LookupTableModel()
 
   const createTable = async () => {
     tableName = toSnakeCase(tableNameLabel)
 
     const lookupTableNameValidator: ILookupTableNameValidator = new LookupTableNameValidator({
-      model: _lookupTableModel,
+      model: lookupTableModel,
       tableName,
     })
 
@@ -33,13 +33,13 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
 
     const results = await _compareFieldMaps()
 
-    tableId = await _lookupTableModel.createStructure({
+    tableId = await lookupTableModel.createStructure({
       name: tableName,
       label: tableNameLabel,
       fieldMap: fieldMaps,
     })
 
-    await _lookupTableModel.createTable({
+    await lookupTableModel.createTable({
       name: tableName,
       fieldMap: fieldMaps,
     })
@@ -50,7 +50,7 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
   }
 
   const updateTable = async () => {
-    const result = await _lookupTableModel.getStructureById(tableId)
+    const result = await lookupTableModel.getStructureById(tableId)
     tableName = result.name
     tableNameLabel = result.label
     tableId = result.id
@@ -135,9 +135,9 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
       (obj: any) => dbFieldMap.filter((otherObj: any) => otherObj.label == obj.label).length === 0
     )
 
-    await _lookupTableModel.updateStructureFieldMaps(tableName, fieldMaps)
+    await lookupTableModel.updateStructureFieldMaps(tableName, fieldMaps)
     for (let fieldMap of fieldsToAdd) {
-      await _lookupTableModel.addTableColumns(tableName, fieldMap)
+      await lookupTableModel.addTableColumns(tableName, fieldMap)
     }
   }
 
@@ -170,9 +170,9 @@ const LookupTableService = (structure: LookupTableServiceProps) => {
     await rows.forEach(async (row: any) => {
       if (row.id === '') {
         delete row.id
-        await _lookupTableModel.createRow({ tableName, row })
+        await lookupTableModel.createRow({ tableName, row })
       } else {
-        await _lookupTableModel.updateRow({ tableName, row })
+        await lookupTableModel.updateRow({ tableName, row })
       }
     })
   }
