@@ -6,21 +6,28 @@ import {
 } from '.'
 
 class LookupTableHeadersValidator extends BaseValidator {
-  private _headers: string[] = []
+  private headers: string[] = []
+  private isImport: boolean = false
 
-  constructor(headers: string[]) {
+  constructor({ headers, isImport = false }: { headers: string[]; isImport?: boolean }) {
     super()
-    this._headers = headers
+    this.headers = headers
+    this.isImport = isImport
     this.validate()
   }
 
   protected validate(): void {
     this.errorMessages = []
-    if (!isArrayContainsStringValid(this._headers, 'id')) {
-      this.errorMessages.push(`Column header 'ID' is required`)
+    const isIdPresent = isArrayContainsStringValid(this.headers, 'id')
+    if (isIdPresent && this.isImport) {
+      this.errorMessages.push(
+        `Import csv should not contian internal 'ID' header (can only exist when updating csv)`
+      )
     }
 
-    this._headers.forEach((header) => {
+    if (!isIdPresent && !this.isImport) this.errorMessages.push(`Column header 'ID' is required`)
+
+    this.headers.forEach((header) => {
       if (!isFirstLetterAlphabetValid(header)) {
         this.errorMessages.push(`Column header '${header}' has non-alphabet first letter.`)
       }

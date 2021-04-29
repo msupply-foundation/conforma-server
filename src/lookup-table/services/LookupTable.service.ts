@@ -46,15 +46,24 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
     const results = await compareFieldMaps()
 
+    const idField = {
+      label: 'id',
+      fieldname: 'id',
+      gqlName: 'id',
+      dataType: 'serial PRIMARY KEY',
+    }
+
+    const newTableFieldMap = [idField, ...fieldMaps]
+
     tableId = await lookupTableModel.createStructure({
       name: tableName,
       label: tableNameLabel,
-      fieldMap: fieldMaps,
+      fieldMap: newTableFieldMap,
     })
 
     await lookupTableModel.createTable({
       name: tableName,
-      fieldMap: fieldMaps,
+      fieldMap: newTableFieldMap,
     })
 
     await createUpdateRows()
@@ -80,7 +89,10 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
   }
 
   const parseCsvHeaders = (headers: any) => {
-    const lookupTableHeadersValidator: IValidator = new LookupTableHeadersValidator(headers)
+    const lookupTableHeadersValidator: IValidator = new LookupTableHeadersValidator({
+      headers,
+      isImport: tableId === 0,
+    })
 
     if (!lookupTableHeadersValidator.isValid) {
       throw new ValidationErrors(lookupTableHeadersValidator.errors)
@@ -91,10 +103,10 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
       const gqlName = toCamelCase(header)
 
       const fieldMap: FieldMapType = {
-        label: header!,
+        label: header,
         fieldname: fieldName,
-        gqlName: fieldName == 'id' ? 'id' : gqlName,
-        dataType: fieldName == 'id' ? 'serial PRIMARY KEY' : 'varchar',
+        gqlName,
+        dataType: 'varchar',
       }
 
       fieldMaps.push(fieldMap)
@@ -182,7 +194,7 @@ const LookupTableService = async (props: LookupTableServiceProps) => {
 
   const createUpdateRows = async () => {
     await rows.forEach(async (row: any) => {
-      if (row.id === '') {
+      if (!row.id) {
         delete row.id
         await lookupTableModel.createRow({ tableName, row })
       } else {
