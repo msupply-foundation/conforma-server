@@ -47,28 +47,13 @@ exports.queries = [
                       category: QUESTION
                       parameters: { label: "Product name" }
                       validation: {
-                        operator: "AND"
+                        operator: "REGEX"
                         children: [
                           {
-                            operator: "!="
-                            children: [
-                              {
-                                operator: "objectProperties"
-                                children: ["responses.Q1.text"]
-                              }
-                              { value: null }
-                            ]
+                            operator: "objectProperties"
+                            children: ["responses.Q1.text"]
                           }
-                          {
-                            operator: "!="
-                            children: [
-                              {
-                                operator: "objectProperties"
-                                children: ["responses.Q1.text"]
-                              }
-                              { value: "" }
-                            ]
-                          }
+                          { value: "/([^\s])/" }
                         ]
                       }
                       validationMessage: "You need a valid product name."
