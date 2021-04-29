@@ -207,11 +207,12 @@ const extractAndSimplify = (
   fallback: any = "Can't resolve property"
 ) => {
   const selectedProperty = returnProperty ? extractProperty(data, returnProperty, fallback) : data
-  return Array.isArray(selectedProperty)
-    ? selectedProperty.map((item) => simplifyObject(item))
-    : returnProperty
-    ? simplifyObject(selectedProperty)
-    : selectedProperty
+  if (Array.isArray(selectedProperty)) return selectedProperty.map((item) => simplifyObject(item))
+  if (returnProperty) {
+    if (selectedProperty === null) return null // GraphQL field can return null as valid result
+    return simplifyObject(selectedProperty)
+  }
+  return selectedProperty
 }
 
 const assignChildNodesToQuery = (childNodes: any[]) => {
@@ -250,7 +251,7 @@ const extractProperty = (
   }
   const currentProperty = propertyPathArray[0]
   if (propertyPathArray.length === 1)
-    return data?.[currentProperty] != null ? data[currentProperty] : fallback
+    return data?.[currentProperty] === undefined ? fallback : data[currentProperty]
   else return extractProperty(data[currentProperty], propertyPathArray.slice(1), fallback)
 }
 

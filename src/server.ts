@@ -20,6 +20,7 @@ import {
 import { getAppEntryPointDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
 import config from './config.json'
+import lookupTableRoutes from './lookup-table/routes'
 
 // Bare-bones Fastify server
 
@@ -67,6 +68,8 @@ const startServer = async () => {
     const fileData = await saveFiles(data, request.query)
     reply.send({ success: true, fileData })
   })
+
+  server.register(lookupTableRoutes, { prefix: '/lookup-table' })
 
   server.get('/', async (request, reply) => {
     console.log('Request made')
