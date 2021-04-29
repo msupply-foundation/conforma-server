@@ -22,7 +22,6 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 1007
                 code: "S1"
                 title: "Product Information"
                 index: 0
@@ -817,7 +816,6 @@ exports.queries = [
                 }
               }
               {
-                id: 1008
                 code: "S2"
                 title: "Ingredients"
                 index: 1
@@ -850,7 +848,6 @@ exports.queries = [
                 }
               }
               {
-                id: 1009
                 code: "S3"
                 title: "Product images"
                 index: 2
@@ -898,7 +895,6 @@ exports.queries = [
           templateStagesUsingId: {
             create: [
               {
-                id: 8
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
@@ -907,7 +903,6 @@ exports.queries = [
                 }
               }
               {
-                id: 9
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
@@ -917,7 +912,6 @@ exports.queries = [
                 }
               }
               {
-                id: 10
                 number: 3
                 title: "Final Decision"
                 description: "This is the final step and will change the outcome of this applications."

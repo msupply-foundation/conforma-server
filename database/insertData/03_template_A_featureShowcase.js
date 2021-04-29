@@ -39,14 +39,12 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 1000
                 code: "S1"
                 title: "Section 1"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 1000
                       code: "Text1"
                       index: 0
                       title: "Intro"
@@ -58,7 +56,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1001
                       code: "Q1"
                       index: 1
                       title: "First Name"
@@ -67,7 +64,6 @@ exports.queries = [
                       parameters: { label: "First Name" }
                     }
                     {
-                      id: 1002
                       code: "Q2"
                       index: 2
                       title: "Last Name"
@@ -113,7 +109,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1003
                       code: "Text2"
                       index: 3
                       title: "User Info"
@@ -151,7 +146,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1004
                       code: "Q3"
                       index: 4
                       title: "Username"
@@ -184,7 +178,6 @@ exports.queries = [
                       parameters: { label: "Select a username" }
                     }
                     {
-                      id: 1005
                       code: "Q4"
                       index: 5
                       title: "Email"
@@ -206,7 +199,6 @@ exports.queries = [
                       parameters: { label: "Email" }
                     }
                     {
-                      id: 1006
                       code: "Q5"
                       index: 6
                       title: "Password"
@@ -230,7 +222,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1007
                       code: "Q5B"
                       index: 7
                       title: "Dynamic Options demo"
@@ -265,7 +256,6 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 1008
                       code: "PB1"
                       index: 8
                       title: "Page Break"
@@ -273,7 +263,6 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 1009
                       code: "Q6"
                       index: 9
                       title: "Organisation Category"
@@ -289,7 +278,6 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 1010
                       code: "Q7"
                       index: 10
                       title: "Select Manufacturer"
@@ -316,7 +304,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1011
                       code: "Q8"
                       index: 11
                       title: "Select Distributor"
@@ -345,7 +332,6 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 1012
                       code: "Q9"
                       index: 12
                       title: "Select Importer"
@@ -370,7 +356,6 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 1013
                       code: "Q10"
                       index: 13
                       title: "API Selection demo"
@@ -394,7 +379,6 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 1014
                       code: "Q11"
                       index: 14
                       title: "Test Visibility"
@@ -403,7 +387,6 @@ exports.queries = [
                       parameters: { label: "Enter 'magicword' to see text box" }
                     }
                     {
-                      id: 1015
                       code: "TextTest"
                       index: 15
                       title: "Intro"
@@ -438,7 +421,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1016
                       code: "PB3"
                       index: 16
                       title: "Page Break"
@@ -446,7 +428,6 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 1017
                       code: "Qradio"
                       index: 17
                       title: "Testing Radio buttons"
@@ -462,7 +443,6 @@ exports.queries = [
                       isRequired: true
                     }
                     {
-                      id: 1018
                       code: "Q12"
                       index: 18
                       title: "Role"
@@ -477,7 +457,6 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 1019
                       code: "Q13"
                       index: 19
                       title: "Other description"
@@ -500,7 +479,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1035
                       code: "QGraphQLTest"
                       index: 20
                       title: "GraphQL query"
@@ -522,7 +500,6 @@ exports.queries = [
                       isRequired: false
                     }
                     {
-                      id: 1020
                       code: "PB4"
                       index: 21
                       title: "Page Break"
@@ -530,7 +507,6 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 1021
                       code: "CheckboxShowcase"
                       index: 22
                       title: "Checkbox demonstration"
@@ -542,7 +518,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1022
                       code: "CB1"
                       index: 23
                       title: "Single checkbox"
@@ -555,7 +530,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1023
                       code: "CB2"
                       index: 24
                       title: "Three checkboxes"
@@ -572,7 +546,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1024
                       code: "CB3"
                       index: 25
                       title: "Toggle switch"
@@ -586,7 +559,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1025
                       code: "TXTON-OFF"
                       index: 26
                       title: "Checkbox ON"
@@ -619,7 +591,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1026
                       code: "CB4"
                       index: 27
                       title: "Slider switch"
@@ -639,7 +610,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1027
                       code: "TXT_LIKE"
                       index: 28
                       title: "Display Likes"
@@ -677,7 +647,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1028
                       code: "CB5"
                       index: 29
                       title: "Many checkboxes"
@@ -701,8 +670,8 @@ exports.queries = [
                       }
                     }
                     {
-                      index: 30
                       code: "Q2GraphQL"
+                      index: 30
                       title: "Country code"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
@@ -741,14 +710,12 @@ exports.queries = [
                 }
               }
               {
-                id: 1010
                 code: "S2"
                 title: "Section 2 - Documents"
                 index: 2
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 1029
                       code: "DocText1"
                       index: 100
                       title: "Document Intro"
@@ -760,7 +727,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1030
                       code: "Q_upload1"
                       index: 101
                       title: "File upload demo 1"
@@ -775,7 +741,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1031
                       code: "PB10"
                       index: 102
                       title: "Page Break"
@@ -783,7 +748,6 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 1032
                       code: "Q_upload2"
                       index: 103
                       title: "File upload demo 2"
@@ -806,7 +770,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1033
                       code: "PB11"
                       index: 104
                       title: "Page Break"
@@ -814,7 +777,6 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 1034
                       code: "Q_upload3"
                       index: 105
                       title: "File image upload"
@@ -830,7 +792,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1038
                       code: "Img01"
                       index: 106
                       title: "Show uploaded image"
@@ -876,7 +837,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1039
                       code: "ImgOpt1"
                       index: 107
                       title: "Image size control"
@@ -908,7 +868,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1040
                       code: "ImgOpt2"
                       index: 108
                       title: "Image alignment control"
@@ -935,7 +894,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 1036
                       code: "PB12"
                       index: 110
                       title: "Page Break"
@@ -943,7 +901,6 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      id: 1037
                       code: "LongText1"
                       index: 111
                       title: "LongText Demo"
