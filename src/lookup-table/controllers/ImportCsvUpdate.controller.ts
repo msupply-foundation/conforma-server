@@ -1,13 +1,10 @@
-import { FastifyRequest, FastifyReply, RequestGenericInterface } from 'fastify'
+import { FastifyRequest, FastifyReply } from 'fastify'
 import { parseStream } from 'fast-csv'
 import { LookupTableService } from '../services'
-
-interface IImportCsvUpdateRequest extends RequestGenericInterface {
-  Params: { lookupTableId: string }
-}
+import { ILookupTableCsvRequest } from '../types'
 
 const ImportCsvUpdateController = async (
-  request: FastifyRequest<IImportCsvUpdateRequest>,
+  request: FastifyRequest<ILookupTableCsvRequest>,
   reply: FastifyReply
 ) => {
   const { lookupTableId } = request.params

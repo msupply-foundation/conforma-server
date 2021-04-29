@@ -1,7 +1,9 @@
 import { writeToBuffer } from 'fast-csv'
+import { FastifyRequest, FastifyReply } from 'fastify'
 import { LookupTableService } from '../services'
+import { ILookupTableCsvRequest } from '../types'
 
-const ExportCsv = async (request: any, reply: any) => {
+const ExportCsv = async (request: FastifyRequest<ILookupTableCsvRequest>, reply: FastifyReply) => {
   const tableId = Number(request.params.lookupTableId)
 
   const lookupTableService = await LookupTableService({ tableId })
