@@ -119,7 +119,7 @@ const LookupTableModel = () => {
   }: {
     tableName: string
     row: any
-  }): Promise<boolean> => {
+  }): Promise<{ id: string }[]> => {
     try {
       let primaryKeyIndex = 0
       const setText = Object.keys(row)
@@ -135,9 +135,12 @@ const LookupTableModel = () => {
         .filter(Boolean)
         .join(', ')
 
-      const text = `UPDATE lookup_table_${tableName} SET ${setText} WHERE id = $${primaryKeyIndex}`
-      await DBConnect.query({ text, values: Object.values(row) })
-      return true
+      const text = `UPDATE lookup_table_${tableName} SET ${setText} WHERE id = $${primaryKeyIndex} RETURNING id`
+      const result: QueryResult<{ id: number }> = await DBConnect.query({
+        text,
+        values: Object.values(row),
+      })
+      return result.rows.map((row: any) => row.id)
     } catch (error) {
       throw error
     }
