@@ -17,7 +17,7 @@ RETURNS bigint AS $$
 	WHERE
 		ra.status = 'Assigned'
 		AND ra.stage_id = stage_id
-		AND ra.level = level -- currently restrict partial assignment to level 1
+		AND ra.level_number = level -- currently restrict partial assignment to level 1
 		AND ra.application_id = app.id
 		AND template_element.category = 'Question'
 $$ LANGUAGE sql STABLE;

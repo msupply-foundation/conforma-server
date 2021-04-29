@@ -64,7 +64,7 @@ The template permission is the link between users and templates. Each one can be
 
 The `permission_policy_id` link to the actual permission policy to describe what are the policies associated to this template permission.
 
-The `permission_join_id` links this permission to a user/company and `restrictions` would add more specific rules.
+The `permission_join_id` links this permission to a user/organisation and `restrictions` would add more specific rules.
 
 More detailed description of template permissions coming soon: `restrictions`.
 
@@ -79,10 +79,6 @@ The actions logic are defined inside action plugins, which execute a function to
 The `code` is unique per action plugin.
 
 The `name` and `description` are for visualisation to help Admin users selecting what action to use for an application template.
-
-The `path` is the local path in the server where the imported plugin is stored.
-
-The `function_name` the name of the function to be called when the action runs.
 
 The `required_parameters` is the name of the fields required of local object or queries to be used when the action runs.
 

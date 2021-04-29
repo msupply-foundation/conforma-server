@@ -41,70 +41,120 @@ exports.queries = [
               {
                 id: 4000
                 isValid: true
-                templateElementId: 4001
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q1"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "John" }
               }
               {
                 id: 4001
                 isValid: true
-                templateElementId: 4002
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q2"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "Smith" }
               }
               {
                 id: 4002
                 isValid: true
-                templateElementId: 4003
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q3"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "js@nowhere.com" }
               }
               {
                 id: 4003
                 isValid: true
-                templateElementId: 4005
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q4"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "39" }
               }
               {
                 id: 4004
                 isValid: true
-                templateElementId: 4006
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q5"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "New Zealand" }
               }
               {
                 id: 4005
                 isValid: true
-                templateElementId: 4008
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q20"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "Vitamin C" }
               }
               {
                 id: 4006
                 isValid: true
-                templateElementId: 4009
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q21"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
               }
               {
                 id: 4007
                 isValid: true
-                templateElementId: 4011
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q22"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "50mg" }
               }
               {
                 id: 4008
                 isValid: true
-                templateElementId: 4012
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q23"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "100" }
               }
               {
                 id: 4009
                 isValid: true
-                templateElementId: 4013
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q24"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "Turning orange" }
               }
@@ -151,70 +201,120 @@ exports.queries = [
               {
                 id: 4010
                 isValid: true
-                templateElementId: 4001
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q1"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "Valerio" }
               }
               {
                 id: 4011
                 isValid: true
-                templateElementId: 4002
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q2"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "Red" }
               }
               {
                 id: 4012
                 isValid: true
-                templateElementId: 4003
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q3"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "jj@nowhere.com" }
               }
               {
                 id: 4013
                 isValid: true
-                templateElementId: 4005
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q4"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "42" }
               }
               {
                 id: 4014
                 isValid: true
-                templateElementId: 4006
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q5"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "Tonga" }
               }
               {
                 id: 4015
                 isValid: true
-                templateElementId: 4008
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q20"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "Vitamin B" }
               }
               {
                 id: 4016
                 isValid: true
-                templateElementId: 4009
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q21"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
               }
               {
                 id: 4017
                 isValid: true
-                templateElementId: 4011
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q22"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "100mg" }
               }
               {
                 id: 4018
                 isValid: true
-                templateElementId: 4012
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q23"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "200" }
               }
               {
                 id: 4019
                 isValid: true
-                templateElementId: 4013
+                templateElementToTemplateElementId: {
+                  connectByTemplateCodeAndCode: {
+                    templateCode: "ReviewTest"
+                    code: "Q24"
+                  }
+                }
                 status: SUBMITTED 
                 value: { text: "No side effects" }
               }

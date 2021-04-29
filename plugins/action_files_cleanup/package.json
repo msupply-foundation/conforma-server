@@ -1,0 +1,12 @@
+{
+  "name": "cleanup_files_action",
+  "version": "0.1",
+  "description": "Checks all the uploaded files associated with an application, and deletes any that are not part of an application_response",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {}
+}

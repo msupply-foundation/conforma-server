@@ -1,3 +1,4 @@
+#!/bin/bash
 # This checks if database exists and creates it if not
 psql -U postgres -tc "SELECT 1 FROM pg_database WHERE datname = 'tmf_app_manager'" | grep -q 1 || (psql -U postgres -c "CREATE DATABASE tmf_app_manager" && echo "\nCreating database: tmf_app_manager...")
 
@@ -10,21 +11,7 @@ psql -U postgres -q -b -d tmf_app_manager -f "./database/create_schema.sql" >&/d
 
 for file in ./database/buildSchema/*; do
     echo "  -- ${file##*/}"
-    psql -U postgres -q -b -d tmf_app_manager -f $file
+    psql -U postgres -q -b -d tmf_app_manager -f $file || { echo 'db initialisation failure' ; exit 1; }
 done
 
 sleep 1
-
-echo "\nInserting data..."
-
-exec node ./database/insertData.js &
-
-# Makes script wait until async node script has completed
-PID=$!
-wait $PID
-
-echo "\nGenerating types file..."
-yarn generate
-
-# This forces server to restart
-touch "./src/server.ts"

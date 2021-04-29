@@ -1,5 +1,6 @@
-import { LookupTableStructurePropType } from '../types'
+import { QueryResult } from 'pg'
 import DBConnect from '../../components/databaseConnect'
+import { Concrete, FieldMapType, GqlQueryResult, LookupTableStructureType } from '../types'
 
 const LookupTableModel = () => {
   const getAll = async ({ tableName }: any) => {
@@ -14,57 +15,180 @@ const LookupTableModel = () => {
     return result.rows[0]
   }
 
-  const createTable = async ({ tableName, fieldMap: fieldMaps }: LookupTableStructurePropType) => {
-    const text = `CREATE TABLE lookup_table_${tableName}
+  const createStructure = async ({
+    name: tableName,
+    label,
+    fieldMap,
+  }: LookupTableStructureType): Promise<number> => {
+    try {
+      const text = `INSERT INTO lookup_table (name,label,field_map) VALUES ($1,$2,$3) RETURNING id`
+
+      const result: QueryResult<{ id: number }> = await DBConnect.query({
+        text,
+        values: [tableName, label, JSON.stringify(fieldMap)],
+      })
+
+      if (result.rows[0].id) return result.rows[0].id
+
+      throw new Error(`Lookup table structure '${label}' could not be created.`)
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const getStructureById = async (
+    lookupTableId: number
+  ): Promise<Concrete<LookupTableStructureType>> => {
+    try {
+      const result: GqlQueryResult<Concrete<LookupTableStructureType>> = await DBConnect.gqlQuery(
+        `
+          query getLookupTableStructure($id: Int!) {
+            lookupTable(id: $id) {
+              id
+              label
+              name
+              fieldMap
+            }
+          }
+        `,
+        { id: lookupTableId }
+      )
+
+      if (!result || !result.lookupTable)
+        throw new Error(`Lookup table structure with id '${lookupTableId}' does not exist.`)
+
+      return result.lookupTable
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const countStructureRowsByTableName = async (lookupTableName: string): Promise<number> => {
+    try {
+      const result = await DBConnect.gqlQuery(
+        `
+          query countStructureRowsByTableName($name: String!) {
+            lookupTables(condition: {name: $name}) {
+              totalCount
+            }
+          }
+        `,
+        { name: lookupTableName }
+      )
+
+      return result.lookupTables.totalCount
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const createTable = async ({
+    name: tableName,
+    fieldMap: fieldMaps,
+  }: LookupTableStructureType): Promise<boolean> => {
+    try {
+      const text = `CREATE TABLE lookup_table_${tableName}
       (
         ${fieldMaps.map((fieldMap) => `${fieldMap.fieldname} ${fieldMap.dataType}`).join(', ')}
       )`
 
-    const result = await DBConnect.query({ text })
-    return result.rows
+      await DBConnect.query({ text })
+      return true
+    } catch (error) {
+      throw error
+    }
   }
 
-  const addNewColumn = async (tableName: string, fieldMap: any) => {
-    const text = `ALTER TABLE lookup_table_${tableName} ADD COLUMN ${fieldMap.fieldname} ${fieldMap.dataType}`
-    const result = await DBConnect.query({ text })
-    return result
-  }
-
-  const create = async ({ tableName, row }: { tableName: string; row: any }) => {
-    delete row.id
-    const text = `INSERT INTO lookup_table_${tableName}(${Object.keys(row)}) VALUES (
+  const createRow = async ({
+    tableName,
+    row,
+  }: {
+    tableName: string
+    row: any
+  }): Promise<{ id: string }[]> => {
+    try {
+      const text = `INSERT INTO lookup_table_${tableName}(${Object.keys(row)}) VALUES (
           ${Object.keys(row)
             .map((key, index) => {
               return '$' + String(index + 1)
             })
             .join(', ')}) RETURNING id`
-    const result = await DBConnect.query({ text, values: [...Object.values(row)] })
-    return result.rows.map((row: any) => row.id)
-  }
 
-  const update = async ({ tableName, row }: { tableName: string; row: any }) => {
-    let primaryKeyIndex = 0
-    const setText = Object.keys(row)
-      .map((key, index) => {
-        const currentIndex = index + 1
-        if (key === 'id') {
-          primaryKeyIndex = currentIndex
-          return ''
-        }
-
-        return `${key} = $${currentIndex}`
+      const result: QueryResult<{ id: number }> = await DBConnect.query({
+        text,
+        values: [...Object.values(row)],
       })
-      .filter(Boolean)
-      .join(', ')
 
-    const text = `UPDATE lookup_table_${tableName} SET
-    ${setText} WHERE id = $${primaryKeyIndex}`
-
-    const result = await DBConnect.query({ text, values: [...Object.values(row)] })
-    return true
+      return result.rows.map((row: any) => row.id)
+    } catch (error) {
+      throw error
+    }
   }
 
-  return { getAll, getById, createTable, create, update, addNewColumn }
-}
+  const updateRow = async ({
+    tableName,
+    row,
+  }: {
+    tableName: string
+    row: any
+  }): Promise<boolean> => {
+    try {
+      let primaryKeyIndex = 0
+      const setText = Object.keys(row)
+        .map((key, index) => {
+          const currentIndex = index + 1
+          if (key === 'id') {
+            primaryKeyIndex = currentIndex
+            return ''
+          }
 
+          return `${key} = $${currentIndex}`
+        })
+        .filter(Boolean)
+        .join(', ')
+
+      const text = `UPDATE lookup_table_${tableName} SET ${setText} WHERE id = $${primaryKeyIndex}`
+      await DBConnect.query({ text, values: [...Object.values(row)] })
+      return true
+    } catch (error) {
+      throw error
+    }
+  }
+
+  const updateStructureFieldMaps = async (
+    tableName: string,
+    fieldMaps: FieldMapType[]
+  ): Promise<boolean> => {
+    const text = `UPDATE lookup_table SET field_map = $1 WHERE name = $2`
+    try {
+      await DBConnect.query({ text, values: [JSON.stringify(fieldMaps), tableName] })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
+  const addTableColumns = async (tableName: string, fieldMap: FieldMapType): Promise<boolean> => {
+    try {
+      const text = `ALTER TABLE lookup_table_${tableName} ADD COLUMN ${fieldMap.fieldname} ${fieldMap.dataType}`
+      await DBConnect.query({ text })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
+  return {
+    createStructure,
+    getStructureById,
+    getAll,
+    getById,
+    countStructureRowsByTableName,
+    createTable,
+    createRow,
+    updateRow,
+    updateStructureFieldMaps,
+    addTableColumns,
+  }
+}
 export default LookupTableModel

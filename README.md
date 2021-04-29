@@ -37,7 +37,7 @@ To build and run compiled files:
 
 In dev mode, uses `nodemon` to monitor changes, and `ts-node` to compile typescript files on the fly.
 
-Note: Plugins (in `src/plugins`) are **standalone packages** and must be compiled individually. However, they should come pre-compiled and are copied to the `build` folder when building the server app.  
+Note: Plugins (in `./plugins`) are **standalone packages** and must be compiled individually. However, they should come pre-compiled and are copied to the `build` folder when building the server app.  
 To automatically re-compile all plugins:  
 `yarn build_plugins`.
 
@@ -51,6 +51,26 @@ This repo has the following functionality implemented in basic form:
   - Run actions in response to Database triggers
   - Create scheduled actions (using `node-schedule` which I'm not sure is the best way to go)
 - `evaluateExpression` module
+
+## Docker
+
+To build image: `cd Docker` -> `./dockerise.sh` (you can edit `Docker/dockerise.sh` to change build prefs)
+
+To run image: `cd Docker` -> `./run.sh` (you can edit `Docker/run.sh` to change run prefs)
+
+See comments in above scripts and documentation folder for more details
+
+## Snapshots
+
+Can take snapshot of current DB state via
+`yarn take_snapshot`, optional snapshot name can be provided as a parameter (defaults to current)
+
+Load snapshot with
+`yarn use_snapshot`, optional snapshot name can be provided as a parameter (defaults to current)
+
+Single file GraphQL mutation set of snapshotted data can be found in `./database/snapshot/{snapshot name}.graphql`
+
+See documentation for more details
 
 ## Triggers and Actions
 

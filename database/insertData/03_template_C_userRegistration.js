@@ -17,14 +17,12 @@ exports.queries = [
           templateSectionsUsingId: {
             create: [
               {
-                id: 1004
                 code: "S1"
                 title: "User information"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
-                      id: 3000
                       code: "Text1"
                       index: 0
                       title: "Intro"
@@ -36,7 +34,6 @@ exports.queries = [
                       }
                     }
                     {
-                      id: 3001
                       code: "Q1"
                       index: 1
                       title: "First Name"
@@ -56,7 +53,6 @@ exports.queries = [
                       parameters: { label: "First Name" }
                     }
                     {
-                      id: 3002
                       code: "Q2"
                       index: 2
                       title: "Last Name"
@@ -65,7 +61,6 @@ exports.queries = [
                       parameters: { label: "Last Name" }
                     }
                     {
-                      id: 3003
                       code: "Q3"
                       index: 3
                       title: "Username"
@@ -74,21 +69,20 @@ exports.queries = [
                       validation: {
                         operator: "API"
                         children: [
-                          { value: "http://localhost:8080/check-unique" }
-                          { value: ["type", "value"] }
-                          { value: "username" }
+                          "http://localhost:8080/check-unique"
+                          ["type", "value"]
+                          "username"
                           {
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
                           }
-                          { value: "unique" }
+                          "unique"
                         ]
                       }
                       validationMessage: "Username must be unique"
                       parameters: { label: "Select a username" }
                     }
                     {
-                      id: 3004
                       code: "Q4"
                       index: 4
                       title: "Email"
@@ -110,7 +104,6 @@ exports.queries = [
                       parameters: { label: "Email" }
                     }
                     {
-                      id: 3005
                       code: "Q5"
                       index: 5
                       title: "Password"
@@ -146,13 +139,8 @@ exports.queries = [
               # No Core Actions for this one
               {
                 actionCode: "incrementStage"
+                sequence: 1
                 trigger: ON_APPLICATION_CREATE
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
-                }
               }
               {
                 actionCode: "createUser"
@@ -186,10 +174,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newStatus: { value: "Completed" }
                 }
               }
@@ -198,17 +182,18 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newOutcome: { value: "Approved" }
                 }
               }
             ]
           }
           templatePermissionsUsingId: {
-            create: [{ id: 3000, permissionNameId: 1000 }]
+            create: [
+              {
+              permissionNameToPermissionNameId: {
+              connectByName: { name: "applyUserRegistration" } }
+              }
+            ]
           }
         }
       }

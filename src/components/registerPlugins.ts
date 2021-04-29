@@ -7,31 +7,42 @@
 
 import * as fs from 'fs'
 import path from 'path'
-import { getAppRootDir } from './utilityFunctions'
+const isEqual = require('deep-equal')
+import { getAppEntryPointDir } from './utilityFunctions'
 import * as config from '../config.json'
-// import PostgresDB from './postgresConnect'
 import DBConnect from './databaseConnect'
-import { deepEquality } from './utilityFunctions'
 import { ActionPlugin } from '../types'
 
-const pluginFolder = path.join(getAppRootDir(), config.pluginsFolder)
+const pluginsFolder = path.join(getAppEntryPointDir(), config.pluginsFolder)
+const pluginJsonFilename = 'plugin.json'
+const getPluginIndexPath = (pluginFolderPath: string) =>
+  fs.existsSync(path.join(pluginFolderPath, 'src', 'index.js'))
+    ? path.join(pluginFolderPath, 'src', 'index.js') // in production use index.js
+    : path.join(pluginFolderPath, 'src', 'index.ts') // otherwoise use index.ts
 
 export default async function registerPlugins() {
   // Load plugin info from files
   console.log('Scanning plugins folder...')
   const plugins = fs
-    .readdirSync(pluginFolder)
-    .filter((item) => fs.statSync(path.join(pluginFolder, item)).isDirectory())
-    .map((item) => {
-      return { path: path.join(item, 'src') }
+    .readdirSync(pluginsFolder)
+    .map((pluginFolder) => {
+      return path.join(pluginsFolder, pluginFolder)
     })
-    .filter((item) => fs.existsSync(path.join(pluginFolder, item.path, 'plugin.json')))
-    .map((item) => {
-      const pluginObject = {
-        ...item,
-        ...JSON.parse(fs.readFileSync(path.join(pluginFolder, item.path, 'plugin.json'), 'utf8')),
+    .filter((pluginPath) => fs.statSync(pluginPath).isDirectory())
+    .filter((pluginPath) => fs.existsSync(path.join(pluginPath, pluginJsonFilename)))
+    .map((pluginPath) => {
+      const pluginJsonContent = fs.readFileSync(path.join(pluginPath, pluginJsonFilename), 'utf8')
+      let pluginJson
+      try {
+        pluginJson = JSON.parse(pluginJsonContent)
+      } catch (e) {
+        console.log('Failed to prase plugin.json in: ' + pluginPath)
+        throw e
       }
-      pluginObject.path = path.join(pluginObject.path, pluginObject.file)
+      const pluginObject = {
+        ...pluginJson,
+        path: getPluginIndexPath(pluginPath),
+      }
       return pluginObject
     })
 
@@ -67,8 +78,8 @@ export default async function registerPlugins() {
         name: plugin.name,
         description: plugin.description,
         path: plugin.path,
-        function_name: plugin.function_name,
         required_parameters: plugin.required_parameters,
+        optional_parameters: plugin.optional_parameters,
         output_properties: plugin.output_properties,
       })
       console.log('Plugin registered:', plugin.name)
@@ -91,8 +102,8 @@ export default async function registerPlugins() {
           name: plugin.name,
           description: plugin.description,
           path: plugin.path,
-          function_name: plugin.function_name,
           required_parameters: plugin.required_parameters,
+          optional_parameters: plugin.optional_parameters,
           output_properties: plugin.output_properties,
         })
         console.log('Plugin updated:', plugin.name)
@@ -109,8 +120,8 @@ const isPluginUpdated = (dbPlugin: ActionPlugin, scannedPlugin: ActionPlugin) =>
     scannedPlugin.name !== dbPlugin.name ||
     scannedPlugin.description !== dbPlugin.description ||
     scannedPlugin.path !== dbPlugin.path ||
-    scannedPlugin.function_name !== dbPlugin.function_name ||
-    !deepEquality(scannedPlugin.required_parameters, dbPlugin.required_parameters) ||
-    !deepEquality(scannedPlugin.output_properties, dbPlugin.output_properties, true)
+    !isEqual(scannedPlugin.required_parameters, dbPlugin.required_parameters) ||
+    !isEqual(scannedPlugin.optional_parameters, dbPlugin.optional_parameters) ||
+    !isEqual(scannedPlugin.output_properties, dbPlugin.output_properties)
   )
 }

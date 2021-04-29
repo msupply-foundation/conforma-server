@@ -526,18 +526,28 @@ exports.queries = [
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
               {
                 id: 9
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
+                # To-do: add more review levels for consolidation
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
               {
                 id: 10
                 number: 3
                 title: "Final Decision"
                 description: "This is the final step and will change the outcome of this applications."
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
             ]
           }
@@ -554,14 +564,36 @@ exports.queries = [
           templatePermissionsUsingId: {
             create: [
               # Apply General
-              { permissionNameId: 10100 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyGeneral" }
+                }
+              }
               # Review Drug Registration Stage 1
-              { permissionNameId: 10300, restrictions: {canSelfAssign: true}, level: 1, stageNumber: 1 }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "canScreenDrugRego" }
+                }
+                restrictions: { canSelfAssign: true }
+                levelNumber: 1
+                stageNumber: 1
+              }
               # Assign Drug Registration Stage 2
-              { permissionNameId: 10200, level: 1, stageNumber: 2 }
-              # Review Drug Registration Stage 2 
-              { permissionNameId: 10400, level: 1, stageNumber: 2 }
-             
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "canAssignDrugRego" }
+                }
+                levelNumber: 1
+                stageNumber: 2
+              }
+              # Review Drug Registration Stage 2 -- uncomment when available
+              # {
+              #   permissionNameToPermissionNameId: {
+              #     connectByName: { name: "canAssessDrugRego" }
+              #   }
+              #   levelNumber: 1
+              #   stageNumber: 2
+              # }
             ]
           }
         }

@@ -6,7 +6,7 @@ CREATE TABLE public.template_permission (
     template_id integer references public.template(id),
     stage_number integer,
 --     template_section_id integer references public.template_section(id),
-    level integer,
+    level_number integer,
     restrictions jsonb
 );
 
@@ -19,7 +19,7 @@ SELECT
     permission_name.name as "permissionName",
     template_permission.id as "templatePermissionId",
     template_permission.stage_number AS "stageNumber",
-    template_permission.level AS "reviewLevel",
+    template_permission.level_number AS "reviewLevel",
     template_permission.restrictions as "templatePermissionRestrictions",
     "template".id as "templateId",
     "template".code as "templateCode",

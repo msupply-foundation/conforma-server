@@ -10,9 +10,11 @@
     "connectionTimeoutMillis": 20000
   },
   "graphQLendpoint": "http://localhost:5000/graphql",
-  "filesFolderName": "files",
+  "//": "Folder path from perspective of server.ts/js",
+  "filesFolder": "../files",
+  "pluginsFolder": "../plugins",
+  "imagesFolder": "../images",
   "jwtSecret": "devsecret",
-  "pluginsFolder": "plugins",
   "RESTport": 8080,
   "thumbnailMaxWidth": 300,
   "thumbnailMaxHeight": 300

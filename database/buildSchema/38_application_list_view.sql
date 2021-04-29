@@ -12,6 +12,7 @@ CREATE TABLE application_list_shape (
     applicant varchar,
     org_name varchar,
     stage varchar,
+    stage_colour varchar,
     "status" public.application_status,
     outcome public.application_outcome,
     last_active_date timestamptz,
@@ -22,10 +23,13 @@ CREATE TABLE application_list_shape (
     review_draft_count bigint,
     review_submitted_count bigint,
     review_change_request_count bigint,
-    review_pending_count bigint
+    review_pending_count bigint,
+    assign_reviewer_assigned_count bigint,
+    assign_reviewers_count bigint,
+    assign_count bigint
 );
 
-CREATE FUNCTION application_list (reviewerid int)
+CREATE FUNCTION application_list (userid int DEFAULT 0)
     RETURNS SETOF application_list_shape
     AS $$
     SELECT
@@ -40,8 +44,9 @@ CREATE FUNCTION application_list (reviewerid int)
         CONCAT(first_name, ' ', last_name) AS applicant,
         org.name AS org_name,
         stage_status.stage,
+        stage_status.stage_colour,
         stage_status.status,
-        outcome,
+        app.outcome,
         status_history_time_created AS last_active_date,
         -- 	template_questions_count(app),
         -- 	assigned_questions_count(app, stage_status.stage_id, 1),
@@ -52,7 +57,10 @@ CREATE FUNCTION application_list (reviewerid int)
         review_draft_count,
         review_submitted_count,
         review_change_request_count,
-        review_pending_count
+        review_pending_count,
+        assign_reviewer_assigned_count,
+        assign_reviewers_count,
+        assign_count
     FROM
         application app
     LEFT JOIN TEMPLATE ON app.template_id = template.id
@@ -60,10 +68,10 @@ CREATE FUNCTION application_list (reviewerid int)
     LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
     LEFT JOIN organisation org ON app.org_id = org.id
     LEFT JOIN review_list ($1) ON app.id = review_list.application_id
+    LEFT JOIN assigner_list ($1) ON app.id = assigner_list.application_id
 $$
 LANGUAGE sql
 STABLE;
 
 -- (https://github.com/graphile/graphile-engine/pull/378)
-COMMENT ON FUNCTION application_list (reviewerid int) IS E'@sortable';
-
+COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';

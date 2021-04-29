@@ -11,8 +11,8 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          code: "TestRego"
-          name: "Test -- General Registration"
+          code: "Demo"
+          name: "Demo -- Feature Showcase"
           isLinear: false
           startMessage: {
             operator: "stringSubstitution"
@@ -126,11 +126,11 @@ exports.queries = [
                             "Current User: %1 %2"
                             {
                               operator: "objectProperties"
-                              children: ["currentUser.firstName"]
+                              children: ["applicationData.user.firstName"]
                             }
                             {
                               operator: "objectProperties"
-                              children: ["currentUser.lastName"]
+                              children: ["applicationData.user.lastName", ""]
                             }
                           ]
                         }
@@ -507,7 +507,7 @@ exports.queries = [
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
                       parameters: {
-                        label: "Select a company (GraphQL query)"
+                        label: "Select an organisation (GraphQL query)"
                         options: {
                           operator: "graphQL",
                           children: [
@@ -779,20 +779,127 @@ exports.queries = [
                       id: 1034
                       code: "Q_upload3"
                       index: 105
-                      title: "File upload demo 3"
+                      title: "File image upload"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       isRequired: false
                       parameters: {
-                        label: "One more upload demo"
-                        description: "Only 1 file allowed, no other restrictions"
+                        label: "Please upload an image file to display"
+                        description: "Only 1 file allowed, must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB"
                         fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "gif", "svg"]
+                        fileSizeLimit: 5000
+                      }
+                    }
+                    {
+                      id: 1038
+                      code: "Img01"
+                      index: 106
+                      title: "Show uploaded image"
+                      elementTypePluginCode: "imageDisplay"
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q_upload3.text"]
+                          }
+                          ""
+                        ]
+                      }
+                      category: INFORMATION
+                      parameters: {
+                        url: {
+                          operator: "CONCAT",
+                          children: [
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "applicationData.config.serverREST"
+                              ]
+                            }
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "responses.Q_upload3.files.fileUrl"
+                              ]
+                            }
+                          ]
+                        }
+                        size: {
+                          operator: "objectProperties"
+                          children: ["responses.ImgOpt1.text"]
+                        }
+                        alignment: {
+                          operator: "objectProperties"
+                          children: ["responses.ImgOpt2.text"]
+                        }
+                        altText: "This is the image you uploaded"
+                      }
+                    }
+                    {
+                      id: 1039
+                      code: "ImgOpt1"
+                      index: 107
+                      title: "Image size control"
+                      elementTypePluginCode: "dropdownChoice"
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q_upload3.text"]
+                          }
+                          ""
+                        ]
+                      }
+                      category: QUESTION
+                      parameters: {
+                        label: "Select image size"
+                        default: 3
+                        options: [
+                          "mini"
+                          "tiny"
+                          "small"
+                          "medium"
+                          "large"
+                          "big"
+                          "huge"
+                          "massive"
+                        ]
+                      }
+                    }
+                    {
+                      id: 1040
+                      code: "ImgOpt2"
+                      index: 108
+                      title: "Image alignment control"
+                      elementTypePluginCode: "dropdownChoice"
+                      visibilityCondition: {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q_upload3.text"]
+                          }
+                          ""
+                        ]
+                      }
+                      category: QUESTION
+                      parameters: {
+                        label: "Select image alignment"
+                        default: 1
+                        options: [
+                          "left"
+                          "center"
+                          "right"
+                        ]
                       }
                     }
                     {
                       id: 1036
                       code: "PB12"
-                      index: 106
+                      index: 110
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
@@ -800,7 +907,7 @@ exports.queries = [
                     {
                       id: 1037
                       code: "LongText1"
-                      index: 107
+                      index: 111
                       title: "LongText Demo"
                       elementTypePluginCode: "longText"
                       category: QUESTION
@@ -836,6 +943,9 @@ exports.queries = [
                 number: 1
                 title: "Automatic"
                 description: "Please check your email to confirm your account."
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Review" }]
+                }
               }
             ]
           }
@@ -889,7 +999,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3.text"]
                   }
-                  permissionNames: { value: ["applyCompanyRego"] }
+                  permissionNames: { value: ["applyOrgRego"] }
                 }
               }
               # Because it is later in sequence, this Action should over-ride the Core one
@@ -898,10 +1008,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 103
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newStatus: { value: "Completed" }
                 }
               }
@@ -910,10 +1016,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 104
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newOutcome: { value: "Approved" }
                 }
               }
@@ -928,11 +1030,11 @@ exports.queries = [
                       "Output concatenation: The user %1's registration has been %2"
                       {
                         operator: "objectProperties"
-                        children: ["output.username"]
+                        children: ["outputCumulative.username"]
                       }
                       {
                         operator: "objectProperties"
-                        children: ["output.newOutcome"]
+                        children: ["outputCumulative.newOutcome"]
                       }
                     ]
                   }
@@ -953,7 +1055,10 @@ exports.queries = [
           templatePermissionsUsingId: {
             create: [
               # Apply General
-              { permissionNameId: 10100 }
+              {
+                permissionNameToPermissionNameId: {
+                connectByName: { name: "applyGeneral" } }
+              }
             ]
           }
         }
