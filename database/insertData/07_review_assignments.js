@@ -10,7 +10,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1000
           applicationId: 4000
-          stageId: 5
+          stageId: 4
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
@@ -138,7 +138,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1001
           applicationId: 4000
-          stageId: 6
+          stageId: 5
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
@@ -230,7 +230,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1002
           applicationId: 4000
-          stageId: 6
+          stageId: 5
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
@@ -326,7 +326,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1003
           applicationId: 4000
-          stageId: 6
+          stageId: 5
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
@@ -369,7 +369,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1004
           applicationId: 4000
-          stageId: 6
+          stageId: 5
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
@@ -413,7 +413,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1005
           applicationId: 4001
-          stageId: 5
+          stageId: 4
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
@@ -458,7 +458,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1006
           applicationId: 4002
-          stageId: 5
+          stageId: 4
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
@@ -583,7 +583,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1007
           applicationId: 4002
-          stageId: 6
+          stageId: 5
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
@@ -684,7 +684,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1008
           applicationId: 4002
-          stageId: 6
+          stageId: 5
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
@@ -773,7 +773,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1009
           applicationId: 4002
-          stageId: 6
+          stageId: 5
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
@@ -816,7 +816,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1010
           applicationId: 4002
-          stageId: 6
+          stageId: 5
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
@@ -916,7 +916,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1020
           applicationId: 4003
-          stageId: 5
+          stageId: 4
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
@@ -957,7 +957,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1021
           applicationId: 4003
-          stageId: 5
+          stageId: 4
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
