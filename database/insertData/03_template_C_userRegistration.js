@@ -133,7 +133,15 @@ exports.queries = [
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: { 
+            create: [
+              { 
+                number: 1, 
+                title: "Automatic", 
+                colour: "#1E14DB" #dark blue 
+              }
+            ] 
+          }
           templateActionsUsingId: {
             create: [
               # No Core Actions for this one
