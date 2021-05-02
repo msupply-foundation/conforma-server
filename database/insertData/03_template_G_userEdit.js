@@ -1,5 +1,5 @@
 /*
-TEMPLATE C -- User Details Edit
+TEMPLATE G -- User Details Edit
   - allows an existing user to update their details
 */
 
