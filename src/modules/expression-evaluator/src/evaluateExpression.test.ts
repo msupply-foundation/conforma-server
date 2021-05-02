@@ -622,6 +622,17 @@ test('Test GraphQL -- get country details by code from External Graphql API ', (
   })
 })
 
+test('Test GraphQL -- Check result of field can be null', () => {
+  return evaluateExpression(testData.GraphQL_CheckDefaultResultIsNull, {
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toBe(null)
+  })
+})
+
 // TO-DO: Test with multiple variables and dynamic values
 
 // More complex combinations

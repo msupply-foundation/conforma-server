@@ -59,6 +59,7 @@ exports.queries = [
                           operator: "graphQL"
                           children: [
                             "query getOrgs {organisations {nodes {name, id}}}"
+                            ""
                             []
                             "organisations.nodes"
                           ]
