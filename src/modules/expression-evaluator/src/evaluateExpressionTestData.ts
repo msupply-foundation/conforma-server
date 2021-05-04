@@ -32,6 +32,16 @@ testData.basicArray = {
 
 testData.stringifiedBasicArray = '{"value":["Pharmaceutical","Natural Product","Other"]}'
 
+testData.continentsResult = [
+  'Africa',
+  'Antarctica',
+  'Asia',
+  'Europe',
+  'North America',
+  'Oceania',
+  'South America',
+]
+
 // AND
 testData.operatorAND_2values = {
   type: 'boolean',
@@ -556,8 +566,8 @@ testData.form2 = {
 }
 
 testData.application = {
-  id: 2000,
-  name: 'Company Registration',
+  id: 4000,
+  name: 'Test Review -- Vitamin C',
   status: 'Submitted',
   stage: 1,
   questions: { q1: 'What is the answer?', q2: 'Enter your name' },
@@ -663,35 +673,15 @@ testData.stringSubstitutionEmptyStringInReplacements = {
 
 testData.APIisUnique = {
   operator: 'API',
-  children: [
-    {
-      value: 'http://localhost:8080/check-unique',
-    },
-    {
-      value: ['type', 'value'],
-    },
-    { value: 'username' },
-    { value: 'druglord' },
-  ],
+  children: ['http://localhost:8080/check-unique', ['type', 'value'], 'username', 'druglord'],
 }
 testData.onlineTestAPI = {
   operator: 'API',
-  children: [
-    {
-      value: 'https://jsonplaceholder.typicode.com/todos/1',
-    },
-    { value: [] },
-    { value: 'title' },
-  ],
+  children: ['https://jsonplaceholder.typicode.com/todos/1', [], 'title'],
 }
 testData.onlineArrayReturn = {
   operator: 'API',
-  children: [
-    {
-      value: 'https://jsonplaceholder.typicode.com/users',
-    },
-    { value: [] },
-  ],
+  children: ['https://jsonplaceholder.typicode.com/users', []],
 }
 
 // prettier-ignore
@@ -699,13 +689,7 @@ testData.onlineArrayReturnResult = [{"address": {"city": "Gwenborough", "geo": {
 
 testData.onlineArrayNodes = {
   operator: 'API',
-  children: [
-    {
-      value: 'https://jsonplaceholder.typicode.com/albums',
-    },
-    { value: [] },
-    { value: 'title' },
-  ],
+  children: ['https://jsonplaceholder.typicode.com/albums', [], 'title'],
 }
 
 // prettier-ignore
@@ -718,10 +702,10 @@ testData.getApplicationName = {
   operator: 'pgSQL',
   children: [
     {
-      value: 'SELECT name FROM application WHERE template_id = $1',
+      value: 'SELECT name FROM application WHERE template_id = $1 LIMIT 1',
     },
     {
-      value: 2,
+      value: 4,
     },
   ],
 }
@@ -769,94 +753,167 @@ testData.getListOfApplications_withId = {
 testData.simpleGraphQL = {
   operator: 'graphQL',
   children: [
-    {
-      value: `query App($appId:Int!) {
-        application(id: $appId) {
-          name
-        }
-      }`,
-    },
-    { value: ['appId'] },
-    { value: 1000 },
-    { value: 'application.name' },
+    `query App($appId:Int!) {
+      application(id: $appId) {
+        name
+      }
+    }`,
+    'graphQLEndpoint',
+    ['appId'],
+    4000,
+    'application.name',
   ],
 }
 
 testData.GraphQL_listOfApplications = {
   operator: 'graphQL',
   children: [
-    {
-      value: `query Apps {
+    `query Apps {
       applications {
         nodes {
           name
         }
       }
     }`,
-    },
-    { value: [] },
-    { value: 'applications.nodes' },
+    'graphQLEndpoint',
+    [],
+    'applications.nodes',
   ],
 }
 
 testData.GraphQL_listOfApplicationsWithId = {
   operator: 'graphQL',
   children: [
-    {
-      value: `query Apps {
-        applications {
-          nodes {
-            name
-            id
-          }
+    `query Apps {
+      applications {
+        nodes {
+          name
+          id
         }
-      }`,
-    },
-    { value: [] },
-    { value: 'applications.nodes' },
+      }
+    }`,
+    'graphQLEndpoint',
+    [],
+    'applications.nodes',
   ],
 }
 
 testData.GraphQL_listOfTemplates_noReturnSpecified = {
   operator: 'graphQL',
   children: [
+    `query Templates {
+      templates {
+        edges {
+          node {
+            name
+          }
+        }
+      }
+    }`,
+    'graphQLEndpoint',
+    [],
+  ],
+}
+
+testData.GraphQL_CountTemplates_objectParamsOption = {
+  operator: 'graphQL',
+  children: [
     {
       value: `query Templates {
         templates {
-          edges {
-            node {
-              name
-            }
-          }
+          totalCount
         }
       }`,
     },
+    { value: 'graphQLEndpoint' },
     { value: [] },
+    { value: 'templates' },
   ],
 }
 
 testData.GraphQL_CountApplicationSections = {
   operator: 'graphQL',
   children: [
-    {
-      value: `query SectionCount($appId:Int!) {
-        application(id: $appId) {
-          id
-          template {
-            name
-          }
-          applicationSections {
-            totalCount
-          }
+    `query SectionCount($appId:Int!) {
+      application(id: $appId) {
+        id
+        template {
+          name
         }
-      }`,
-    },
-    { value: ['appId'] },
+        applicationSections {
+          totalCount
+        }
+      }
+    }`,
+    'graphQLEndpoint',
+    ['appId'],
     {
       operator: 'objectProperties',
       children: ['application.id'],
     },
-    { value: 'application.applicationSections.totalCount' },
+    'application.applicationSections.totalCount',
+  ],
+}
+
+testData.GraphQL_CountApplicationResponses = {
+  operator: 'graphQL',
+  children: [
+    `query SectionCount($appId:Int!) {
+      application(id: $appId) {
+        applicationResponses {
+          totalCount
+        }
+      }
+    }`,
+    '', // graphQLEndpoint OR Empty string to use default Endpoint
+    ['appId'],
+    {
+      operator: 'objectProperties',
+      children: ['application.id'],
+    },
+    'application.applicationResponses.totalCount',
+  ],
+}
+
+testData.GraphQL_GetContinentsList_ExternalAPI = {
+  operator: 'graphQL',
+  children: [
+    `query continents {
+      continents {
+        name
+      }
+     }`,
+    'https://countries.trevorblades.com',
+    [],
+    'continents',
+  ],
+}
+
+testData.GraphQL_GetCountryByCode_ExternalAPI = {
+  operator: 'graphQL',
+  children: [
+    `query country ($code: ID!) {
+      country (code: $code) {
+        name
+        continent {
+          name
+        }
+      }
+    }`,
+    'https://countries.trevorblades.com',
+    ['code'],
+    '"NZ"',
+    'country.continent',
+  ],
+}
+
+testData.GraphQL_CheckDefaultResultIsNull = {
+  operator: 'graphQL',
+  children: [
+    `query country ($code: ID = "") { country (code: $code) { name } }`,
+    'https://countries.trevorblades.com',
+    [],
+    'country',
   ],
 }
 
@@ -888,28 +945,22 @@ testData.emailValidation = {
       children: [
         {
           operator: 'objectProperties',
-          children: [{ value: 'form.q3' }],
+          children: ['form.q3'],
         },
-        {
-          value: '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$',
-        },
+        '^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$',
       ],
     },
     {
       operator: 'API',
       children: [
-        {
-          value: 'http://localhost:8080/check-unique',
-        },
-        {
-          value: ['type', 'value'],
-        },
-        { value: 'email' },
+        'http://localhost:8080/check-unique',
+        ['type', 'value'],
+        'email',
         {
           operator: 'objectProperties',
           children: ['form.q3'],
         },
-        { value: 'unique' },
+        'unique',
       ],
     },
   ],
@@ -1048,23 +1099,22 @@ testData.complexValidation = {
     {
       operator: 'graphQL',
       children: [
-        {
-          value: `query Orgs($orgName: String) {
-            organisations(condition: {name: $orgName}) {
-              totalCount
-              nodes {
-                name
-                id
-              }
+        `query Orgs($orgName: String) {
+          organisations(condition: {name: $orgName}) {
+            totalCount
+            nodes {
+              name
+              id
             }
-          }`,
-        },
-        { value: ['orgName'] },
+          }
+        }`,
+        'graphQLEndpoint',
+        ['orgName'],
         {
           operator: 'objectProperties',
           children: ['form2.q2'],
         },
-        { value: 'organisations.totalCount' },
+        'organisations.totalCount',
       ],
     },
     { value: 0 },
