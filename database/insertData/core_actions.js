@@ -35,6 +35,7 @@ exports.coreActions = `
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_CREATE
+        sequence: 1
         parameterQueries: {
           newStatus: "Draft"
         }
