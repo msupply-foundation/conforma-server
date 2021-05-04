@@ -24,8 +24,8 @@ async function updateReviewsStatuses({
 
   const { changedApplicationResponses = [] } = parameters
   const stageId = parameters?.stageId || applicationData?.stageId
-  const currentReviewLevel = applicationData?.reviewData?.levelNumber
-  const level = parameters?.level || currentReviewLevel ? currentReviewLevel + 1 : 1
+  const currentReviewLevel = applicationData?.reviewData?.levelNumber || 0
+  const level = parameters?.level || currentReviewLevel + 1
 
   const reviewsToUpdate = []
 

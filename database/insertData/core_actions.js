@@ -63,7 +63,7 @@ exports.coreActions = `
       sequence: 3
     }
     {
-      actionCode: "updateReviews"
+      actionCode: "updateReviewsStatuses"
       trigger: ON_APPLICATION_SUBMIT
       sequence: 4
       parameterQueries: {
@@ -106,7 +106,7 @@ exports.coreActions = `
         }
     }
    {
-        actionCode: "updateReviews"
+        actionCode: "updateReviewsStatuses"
         trigger: ON_REVIEW_SUBMIT
         sequence: 3
         parameterQueries: {
