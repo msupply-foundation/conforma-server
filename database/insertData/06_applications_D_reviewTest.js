@@ -22,14 +22,14 @@ exports.queries = [
             create: [
               {
                 isCurrent: false
-                templateStageToStageId: { connectById: { id: 5 } }
+                templateStageToStageId: { connectById: { id: 4 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: false, status: COMPLETED }
                 }
               }
               {
                 isCurrent: true
-                templateStageToStageId: { connectById: { id: 6 } }
+                templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: true, status: SUBMITTED }
                 }
@@ -190,7 +190,7 @@ exports.queries = [
           applicationStageHistoriesUsingId: {
             create: {
               isCurrent: true
-              templateStageToStageId: { connectById: { id: 5 } }
+              templateStageToStageId: { connectById: { id: 4 } }
               applicationStatusHistoriesUsingId: {
                 create: { isCurrent: true, status: SUBMITTED }
               }
@@ -351,14 +351,14 @@ exports.queries = [
             create: [
               {
                 isCurrent: false
-                templateStageToStageId: { connectById: { id: 5 } }
+                templateStageToStageId: { connectById: { id: 4 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: false, status: COMPLETED }
                 }
               }
               {
                 isCurrent: true
-                templateStageToStageId: { connectById: { id: 6 } }
+                templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: true, status: SUBMITTED }
                 }
@@ -469,7 +469,7 @@ exports.queries = [
             create: [
               {
                 isCurrent: true
-                templateStageToStageId: { connectById: { id: 5 } }
+                templateStageToStageId: { connectById: { id: 4 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: true, status: SUBMITTED }
                 }
