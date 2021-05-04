@@ -3,7 +3,8 @@
   "code": "changeStatus",
   "name": "Change Status",
   "description": "Changes the Status of an application",
-  "required_parameters": ["applicationId", "newStatus"],
+  "required_parameters": ["newStatus"],
+  "optional_parameters": ["applicationId", "reviewId", "isReview"],
   "output_properties": [
     "applicationId",
     "status",

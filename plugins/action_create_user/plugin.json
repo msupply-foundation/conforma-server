@@ -3,14 +3,8 @@
   "code": "createUser",
   "name": "Create User",
   "description": "Inserts a new user in the database",
-  "required_parameters": [
-    "first_name",
-    "last_name",
-    "username",
-    "date_of_birth",
-    "password_hash",
-    "email"
-  ],
+  "required_parameters": ["first_name", "username", "password_hash", "email"],
+  "optional_parameters": ["last_name", "date_of_birth"],
   "output_properties": ["userId", "username", "firstName", "lastName", "email"],
   "info": {
     "author": {

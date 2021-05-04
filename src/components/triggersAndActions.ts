@@ -5,13 +5,12 @@ import {
   ActionPayload,
   ActionSequential,
   ActionQueueExecutePayload,
-  ActionApplicationData,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import DBConnect from './databaseConnect'
 import { actionLibrary } from './pluginsConnect'
-import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
-import { fetchDataFromTrigger } from './triggerFetchData'
+import { BasicObject, IParameters, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { getApplicationData } from './getApplicationData'
 
 const schedule = require('node-schedule')
 
@@ -45,6 +44,7 @@ export const loadScheduledActions = async function (
   const actions = await DBConnect.getActionsScheduled()
 
   let isExecutedAction = true
+  // TO-DO: Implement Scheduled Actions properly -- this code is probably no longer working
   for await (const scheduledAction of actions)
     while (isExecutedAction) {
       const date = new Date(scheduledAction.time_completed)
@@ -55,7 +55,7 @@ export const loadScheduledActions = async function (
             {
               id: scheduledAction.id,
               code: scheduledAction.action_code,
-              application_data: scheduledAction.application_data,
+              condition_expression: scheduledAction.condition_expression as IQueryNode,
               parameter_queries: scheduledAction.parameter_queries,
             },
             actionLibrary
@@ -74,7 +74,7 @@ export const loadScheduledActions = async function (
           {
             id: scheduledAction.id,
             code: scheduledAction.action_code,
-            application_data: scheduledAction.application_data,
+            condition_expression: scheduledAction.condition_expression as IQueryNode,
             parameter_queries: scheduledAction.parameter_queries,
           },
           actionLibrary
@@ -90,42 +90,30 @@ export const loadScheduledActions = async function (
 export async function processTrigger(payload: TriggerPayload) {
   const { trigger_id, trigger, table, record_id } = payload
 
-  const applicationData: ActionApplicationData = await fetchDataFromTrigger(payload)
-
-  const templateId = applicationData.templateId
-
-  console.log('ApplicationData', applicationData)
+  const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
   // Get Actions from matching Template
-  const result = await DBConnect.getActionsByTemplateId(templateId, trigger)
+  const actions = await DBConnect.getActionsByTemplateId(templateId, trigger)
 
-  // Filter out Actions that don't match the current condition
-  // and separate into Sequential and Async actions
+  // Separate into Sequential and Async actions
   const actionsSequential: ActionSequential[] = []
   const actionsAsync: ActionInTemplate[] = []
-
-  for (const action of result) {
-    const condition = await evaluateExpression(action.condition, {
-      objects: { applicationData },
-      pgConnection: DBConnect,
-    })
-    if (condition) {
-      if (action.sequence) actionsSequential.push(action as ActionSequential)
-      else actionsAsync.push(action)
-    }
+  for (const action of actions) {
+    if (action.sequence) actionsSequential.push(action as ActionSequential)
+    else actionsAsync.push(action)
   }
 
   for (const action of [...actionsAsync, ...actionsSequential]) {
     // Add all actions to Action Queue
-    // TODO - better error handling
     await DBConnect.addActionQueue({
       trigger_event: trigger_id,
+      trigger_payload: payload,
       template_id: templateId,
       sequence: action.sequence,
       action_code: action.code,
-      application_data: applicationData,
       parameter_queries: action.parameter_queries,
       parameters_evaluated: {},
+      condition_expression: action.condition,
       status: typeof action.sequence === 'number' ? 'Processing' : 'Queued',
     })
   }
@@ -136,7 +124,7 @@ export async function processTrigger(payload: TriggerPayload) {
 
   let outputCumulative = {} // Collect output properties of actions in sequence
 
-  // Execute Actions one by one
+  // Execute sequential Actions one by one
   let actionFailed = ''
   for (const action of actionsToExecute) {
     if (actionFailed) {
@@ -153,10 +141,13 @@ export async function processTrigger(payload: TriggerPayload) {
       const actionPayload = {
         id: action.id,
         code: action.action_code,
-        application_data: applicationData,
+        condition_expression: action.condition_expression as IQueryNode,
         parameter_queries: action.parameter_queries,
+        trigger_payload: action.trigger_payload,
       }
-      const result = await executeAction(actionPayload, actionLibrary, { output: outputCumulative })
+      const result = await executeAction(actionPayload, actionLibrary, {
+        outputCumulative,
+      })
       outputCumulative = { ...outputCumulative, ...result.output }
       if (result.status === 'Fail') console.log(result.error_log)
     } catch (err) {
@@ -188,41 +179,70 @@ async function evaluateParameters(
 export async function executeAction(
   payload: ActionPayload,
   actionLibrary: ActionLibrary,
-  additionalObjects: BasicObject = {}
+  additionalObjects: any = {}
 ): Promise<ActionQueueExecutePayload> {
+  // Get fresh applicationData for each Action
+  const applicationData = await getApplicationData(payload)
+
+  // Enable next line to inspect applicationData:
+  // console.log('ApplicationData: ', applicationData)
+
   const evaluatorParams = {
-    objects: { applicationData: payload.application_data, ...additionalObjects },
+    objects: { applicationData, ...additionalObjects },
     pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
   }
 
-  try {
-    // Evaluate parameters
-    const parametersEvaluated = await evaluateParameters(payload.parameter_queries, evaluatorParams)
+  // Evaluate condition
+  const condition = await evaluateExpression(
+    payload.condition_expression as IQueryNode,
+    evaluatorParams
+  )
+  if (condition) {
+    try {
+      // Evaluate parameters
+      const parametersEvaluated = await evaluateParameters(
+        payload.parameter_queries,
+        evaluatorParams
+      )
 
-    // TO-DO: If Scheduled, create a Job instead
-    const actionResult = await actionLibrary[payload.code](
-      { ...parametersEvaluated, applicationData: payload.application_data },
-      DBConnect
-    )
+      // TO-DO: Check all required parameters are present
 
-    // console.log('Output', actionResult.output) //Enable this to check output
+      // TO-DO: If Scheduled, create a Job instead
+      const actionResult = await actionLibrary[payload.code]({
+        parameters: parametersEvaluated,
+        applicationData,
+        outputCumulative: evaluatorParams.objects?.outputCumulative || {},
+        DBConnect,
+      })
+      // Enable next line to inspect output
+      // console.log('Output', actionResult.output)
 
+      return await DBConnect.executedActionStatusUpdate({
+        status: actionResult.status,
+        error_log: actionResult.error_log,
+        parameters_evaluated: parametersEvaluated,
+        output: actionResult.output,
+        id: payload.id,
+      })
+    } catch (err) {
+      console.error('>> Error executing action:', payload.code)
+      await DBConnect.executedActionStatusUpdate({
+        status: 'Fail',
+        error_log: "Couldn't execute Action: " + err.message,
+        parameters_evaluated: null,
+        output: null,
+        id: payload.id,
+      })
+      throw err
+    }
+  } else {
+    console.log(payload.code + ': Condition not met')
     return await DBConnect.executedActionStatusUpdate({
-      status: actionResult.status,
-      error_log: actionResult.error_log,
-      parameters_evaluated: parametersEvaluated,
-      output: actionResult.output,
-      id: payload.id,
-    })
-  } catch (err) {
-    console.error('>> Error executing action:', payload.code)
-    await DBConnect.executedActionStatusUpdate({
-      status: 'Fail',
-      error_log: "Couldn't execute Action: " + err.message,
+      status: 'Condition not met',
+      error_log: '',
       parameters_evaluated: null,
       output: null,
       id: payload.id,
     })
-    throw err
   }
 }

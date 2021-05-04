@@ -141,12 +141,6 @@ exports.queries = [
                 actionCode: "incrementStage"
                 sequence: 1
                 trigger: ON_APPLICATION_CREATE
-                parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
-                }
               }
               {
                 actionCode: "createUser"
@@ -180,10 +174,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newStatus: { value: "Completed" }
                 }
               }
@@ -192,10 +182,6 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
                 parameterQueries: {
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
                   newOutcome: { value: "Approved" }
                 }
               }

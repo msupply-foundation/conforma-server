@@ -1,29 +1,26 @@
-import { ActionPluginOutput } from '../../types'
+import { ActionPluginOutput, ActionPluginInput } from '../../types'
 
-type IParameters = {
-  applicationId: number
-}
-
-async function incrementStage(
-  parameters: IParameters,
-  DBConnect: any
-): Promise<ActionPluginOutput> {
-  const { applicationId } = parameters
+async function incrementStage({
+  parameters,
+  applicationData,
+  DBConnect,
+}: ActionPluginInput): Promise<ActionPluginOutput> {
+  const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const returnObject: ActionPluginOutput = { status: null, error_log: '' }
   console.log(`Incrementing the Stage for Application ${applicationId}...`)
 
   try {
-    const templateId: number = await DBConnect.getTemplateIdFromTrigger(
-      'application',
-      applicationId
-    )
+    const templateId: number =
+      applicationData?.templateId ??
+      (await DBConnect.getTemplateIdFromTrigger('application', applicationId))
 
-    console.log('Getting template Id', templateId)
+    const current =
+      applicationData?.stage && applicationData?.status
+        ? applicationData
+        : await DBConnect.getCurrentStageStatusHistory(applicationId)
 
-    const current = await DBConnect.getCurrentStageStatusHistory(applicationId)
-
-    const currentStageHistoryId = current?.stage_history_id
-    const currentStageNum = current?.stage_number
+    const currentStageHistoryId = current?.stageHistoryId
+    const currentStageNum = current?.stageNumber
     const currentStatus = current?.status
 
     const nextStage = await DBConnect.getNextStage(templateId, currentStageNum)

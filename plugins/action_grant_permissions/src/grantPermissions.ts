@@ -1,4 +1,7 @@
-const grantPermissions = async ({ username, orgName, permissionNames }: any, DBConnect: any) => {
+import { ActionPluginInput } from '../../types'
+
+const grantPermissions = async ({ parameters, DBConnect }: ActionPluginInput) => {
+  const { username, orgName, permissionNames } = parameters
   try {
     console.log('\nGranting permission/s:')
     console.log({ username, orgName, permissionNames })

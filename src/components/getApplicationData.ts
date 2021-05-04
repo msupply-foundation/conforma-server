@@ -1,24 +1,25 @@
-import { TriggerPayload } from '../types'
+import { ActionPayload } from '../types'
 import DBConnect from './databaseConnect'
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import { getAppEntryPointDir } from './utilityFunctions'
 import config from '../config.json'
 
 // Add more data (such as org/review, etc.) here as required
-export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
+export const getApplicationData = async (payload: ActionPayload) => {
+  const { trigger_payload } = payload
+  if (!trigger_payload) throw new Error('trigger_payload required')
   const applicationId = await DBConnect.getApplicationIdFromTrigger(
-    payload.table,
-    payload.record_id
+    trigger_payload.table,
+    trigger_payload.record_id
   )
-
   const applicationResult = await DBConnect.getApplicationData(applicationId)
 
   const applicationData = applicationResult ? applicationResult : { applicationId }
 
   if (!applicationData?.templateId)
     applicationData.templateId = await DBConnect.getTemplateIdFromTrigger(
-      payload.table,
-      payload.record_id
+      trigger_payload.table,
+      trigger_payload.record_id
     )
 
   const userData = applicationData?.userId
@@ -33,7 +34,12 @@ export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
   }
 
   const reviewData =
-    payload.table === 'review' ? await DBConnect.getReviewData(payload.record_id) : {}
+    trigger_payload.table === 'review'
+      ? {
+          reviewId: trigger_payload.record_id,
+          ...(await DBConnect.getReviewData(trigger_payload.record_id)),
+        }
+      : {}
 
   const environmentData = {
     appRootFolder: getAppEntryPointDir(),
@@ -41,7 +47,7 @@ export const fetchDataFromTrigger = async (payload: TriggerPayload) => {
   }
 
   return {
-    ...payload,
+    action_payload: payload,
     ...applicationData,
     ...userData,
     responses: responseData,

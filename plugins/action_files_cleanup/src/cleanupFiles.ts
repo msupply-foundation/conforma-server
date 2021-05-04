@@ -3,6 +3,8 @@ import path from 'path'
 import databaseMethods from './databaseMethods'
 const fsPromises = fs.promises
 
+import { ActionPluginInput } from '../../types'
+
 const fileUploadPluginCode = 'fileUpload'
 
 interface FileInfo {
@@ -11,7 +13,6 @@ interface FileInfo {
   filePath: string
   thumbnailPath: string
 }
-
 interface ResponseValue {
   text?: string
   files?: {
@@ -23,15 +24,14 @@ interface ResponseValue {
   }[]
 }
 
-async function cleanupFiles(input: any, DBConnect: any) {
+async function cleanupFiles({ parameters, applicationData, DBConnect }: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
-  const { applicationData } = input
-  const applicationSerial = input?.applicationSerial || applicationData.applicationSerial
-  const applicationid = input?.applicationId || applicationData.applicationId
+  const applicationSerial = parameters?.applicationSerial || applicationData?.applicationSerial
+  const applicationid = parameters?.applicationId || applicationData?.applicationId
   const {
     environmentData: { appRootFolder, filesFolder },
-  } = applicationData
+  } = applicationData as { environmentData: { appRootFolder: string; filesFolder: string } }
 
   console.log(`Processing files associated with Application ${applicationSerial}`)
 
