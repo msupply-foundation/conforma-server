@@ -1,3 +1,4 @@
+import { ActionPluginInput } from '../../types'
 import databaseMethods from './databaseMethods'
 
 type ReviewStatus = 'Draft' | 'Submitted' | 'Changes Requested' | 'Pending' | 'Locked'
@@ -10,15 +11,21 @@ interface Review {
   reviewStatus: ReviewStatus
 }
 
-async function updateReviews(input: any, DBConnect: any) {
+async function updateReviewsStatuses({
+  parameters,
+  applicationData,
+  DBConnect,
+}: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
   console.log('Updating reviews status...')
 
-  const { applicationId, applicationData, changedApplicationResponses = [] } = input
-  const stageId = input?.stageId || applicationData.stageId
+  const applicationId = parameters?.applicationId ?? applicationData?.applicationId
+
+  const { changedApplicationResponses = [] } = parameters
+  const stageId = parameters?.stageId || applicationData?.stageId
   const currentReviewLevel = applicationData?.reviewData?.levelNumber
-  const level = input?.level || currentReviewLevel ? currentReviewLevel + 1 : 1
+  const level = parameters?.level || currentReviewLevel ? currentReviewLevel + 1 : 1
 
   const reviewsToUpdate = []
 
@@ -72,4 +79,4 @@ async function updateReviews(input: any, DBConnect: any) {
   }
 }
 
-export default updateReviews
+export default updateReviewsStatuses

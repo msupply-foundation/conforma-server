@@ -1,9 +1,10 @@
 {
   "type": "action_plugin",
-  "code": "updateReviews",
+  "code": "updateReviewsStatuses",
   "name": "Update Review Statuses",
   "description": "Updates status of associated reviews when application re-submitted",
-  "required_parameters": ["applicationId"],
+  "required_parameters": [],
+  "optional_parameters": ["applicationId", "changedApplicationResponses"],
   "output_properties": ["updatedReviews"],
   "info": {
     "author": {

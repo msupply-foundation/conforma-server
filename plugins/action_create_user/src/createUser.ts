@@ -1,4 +1,7 @@
-async function createUser({ applicationData, ...user }: any, DBConnect: any) {
+import { ActionPluginInput } from '../../types'
+
+async function createUser({ parameters, DBConnect }: ActionPluginInput) {
+  const user = parameters
   try {
     console.log(`\nAdding new user: ${user.username}`)
     const result = await DBConnect.createUser(user)

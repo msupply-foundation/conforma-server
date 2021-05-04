@@ -31,7 +31,7 @@ beforeAll(async (done) => {
 })
 
 test('Test: remove unchanged application_response duplicates', () => {
-  return trimResponses({ applicationId: 1000 }, DBConnect).then((result: any) => {
+  return trimResponses({ parameters: { applicationId: 1000 }, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: 'Success',
       error_log: '',
@@ -53,23 +53,24 @@ test('Test: remove unchanged application_response duplicates', () => {
 })
 
 test('Test: remove unchanged review_response duplicates, with custom timestamp', () => {
-  return trimResponses({ reviewId: 5, timestamp: '2021-03-09T00:01:00.0Z' }, DBConnect).then(
-    (result: any) => {
-      expect(result).toEqual({
-        status: 'Success',
-        error_log: '',
-        output: {
-          deletedResponses: [
-            { reviewResponseId: 47, templateElementId: 4006 },
-            { reviewResponseId: 48, templateElementId: 4005 },
-            { reviewResponseId: 49, templateElementId: 4003 },
-          ],
-          updatedResponses: [
-            { reviewResponseId: 50, templateElementId: 4002 },
-            { reviewResponseId: 51, templateElementId: 4001 },
-          ],
-        },
-      })
-    }
-  )
+  return trimResponses({
+    parameters: { reviewId: 5, timestamp: '2021-03-09T00:01:00.0Z' },
+    DBConnect,
+  }).then((result: any) => {
+    expect(result).toEqual({
+      status: 'Success',
+      error_log: '',
+      output: {
+        deletedResponses: [
+          { reviewResponseId: 47, templateElementId: 4006 },
+          { reviewResponseId: 48, templateElementId: 4005 },
+          { reviewResponseId: 49, templateElementId: 4003 },
+        ],
+        updatedResponses: [
+          { reviewResponseId: 50, templateElementId: 4002 },
+          { reviewResponseId: 51, templateElementId: 4001 },
+        ],
+      },
+    })
+  })
 })
