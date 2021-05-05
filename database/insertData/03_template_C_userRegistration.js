@@ -29,7 +29,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Create a user account"
+                        title: "## Welcome to IRIMS Application Manager"
                         text: "Please fill in your details to **register** for a user account."
                       }
                     }
