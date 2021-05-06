@@ -1,19 +1,19 @@
 -- review response
 CREATE TYPE public.review_response_decision AS ENUM (
-    'Approve',
-    'Decline',
-    'Agree',
-    'Disagree'
+    'APPROVE',
+    'DECLINE',
+    'AGREE',
+    'DISAGREE'
 );
 
 CREATE TYPE public.review_response_status AS ENUM (
-    'Draft',
-    'Submitted'
+    'DRAFT',
+    'SUBMITTED'
 );
 
 CREATE TYPE public.review_response_recommended_applicant_visibility AS ENUM (
-    'Original Response Visible to Applicant',
-    'Original Response Not Visible to Applicant'
+    'ORIGINAL_RESPONSE_VISIBLE_TO_APPLICANT',
+    'ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT'
 );
 
 CREATE TABLE public.review_response (
@@ -28,8 +28,8 @@ CREATE TABLE public.review_response (
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     is_visible_to_applicant boolean DEFAULT FALSE,
     template_element_id integer REFERENCES public.template_element,
-    recommended_applicant_visibility public.review_response_recommended_applicant_visibility DEFAULT 'Original Response Not Visible to Applicant',
-    status public.review_response_status DEFAULT 'Draft'
+    recommended_applicant_visibility public.review_response_recommended_applicant_visibility DEFAULT 'ORIGINAL_RESPONSE_NOT_VISIBLE_TO_APPLICANT',
+    status public.review_response_status DEFAULT 'DRAFT'
 );
 
 -- set review response original_review_response_id (the response that links to application id should be available for all reaponses)

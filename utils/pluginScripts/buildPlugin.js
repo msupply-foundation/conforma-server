@@ -3,6 +3,7 @@ const { execSync } = require('child_process')
 const json = require('comment-json')
 const removeDir = require('rimraf')
 const { promisify } = require('util')
+const path = require('path')
 
 const asyncRemoveDir = promisify(removeDir)
 
@@ -11,7 +12,7 @@ const rootDirectory = __dirname + '/../..'
 
 const buildPlugin = async (pluginName) => {
   const pluginFolder = rootDirectory + '/plugins/' + pluginName
-  if (!fs.existsSync(path.join(fullPluginFolder, 'package.json'))) {
+  if (!fs.existsSync(path.join(pluginFolder, 'package.json'))) {
     console.log('no package.json: ' + pluginName)
     return
   }

@@ -1,5 +1,5 @@
+import { ActionQueueStatus, ReviewAssignmentStatus, Trigger } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
-import { AssignmentStatus } from './types'
 import databaseMethods from './databaseMethods'
 
 async function updateReviewAssignmentsStatus({
@@ -14,7 +14,7 @@ async function updateReviewAssignmentsStatus({
     const trigger = parameters?.trigger ?? applicationData?.action_payload?.trigger_payload?.trigger
     const { reviewAssignmentId } = parameters
     // NB: reviewAssignmentId comes from record_id on TriggerPayload when
-    // triggered from review_assignment table
+    // TRIGGERED from review_assignment table
     const {
       application_id: applicationId,
       stage_number: stageNumber,
@@ -33,7 +33,10 @@ async function updateReviewAssignmentsStatus({
         const { id, status } = reviewAssignment
         return {
           id,
-          status: trigger === 'onReviewSelfAssign' ? AssignmentStatus.SELF_ASSIGNED_OTHER : status,
+          status:
+            trigger === Trigger.OnReviewAssign
+              ? ReviewAssignmentStatus.SelfAssignedByAnother
+              : status,
         }
       })
     )
@@ -43,7 +46,7 @@ async function updateReviewAssignmentsStatus({
     console.log('Review Assignment status updates:', reviewAssignmentUpdateResults)
 
     return {
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         reviewAssignmentUpdates: reviewAssignmentUpdateResults,
@@ -52,7 +55,7 @@ async function updateReviewAssignmentsStatus({
   } catch (error) {
     console.log(error.message)
     return {
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'Problem updating review_assignment statuses.',
     }
   }

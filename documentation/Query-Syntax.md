@@ -167,7 +167,7 @@ where `application` is the local state object:
 application = {
   id: 1,
   name: 'Drug Registration',
-  status: 'Draft',
+  status: 'DRAFT',
   stage: 1,
   questions: { q1: 'What is the answer?', q2: 'Enter your name' },
 }

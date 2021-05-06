@@ -1,8 +1,8 @@
 -- (application) template table
 CREATE TYPE public.template_status AS ENUM (
-    'Draft',
-    'Available',
-    'Disabled'
+    'DRAFT',
+    'AVAILABLE',
+    'DISABLED'
 );
 
 CREATE TABLE public.template (

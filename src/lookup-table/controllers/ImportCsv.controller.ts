@@ -17,14 +17,14 @@ const ImportCsvController = async (request: FastifyRequest, reply: FastifyReply)
       await lookupTableService
         .createTable()
         .catch((error: Error) =>
-          reply.status(422).send({ status: 'error', name: error.name, message: error.message })
+          reply.status(422).send({ status: 'ERROR', name: error.name, message: error.message })
         )
         .then((message) => {
           reply.send({ status: 'success', message: JSON.stringify(message) })
         })
     })
-    .on('error', (error) => {
-      reply.status(422).send({ status: 'error', name: error.name, message: error.message })
+    .on('ERROR', (error) => {
+      reply.status(422).send({ status: 'ERROR', name: error.name, message: error.message })
     })
 }
 

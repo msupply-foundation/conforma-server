@@ -25,14 +25,14 @@ const ImportCsvUpdateController = async (
       await lookupTableService
         .updateTable()
         .catch((error: Error) =>
-          reply.status(422).send({ status: 'error', name: error.name, message: error.message })
+          reply.status(422).send({ status: 'ERROR', name: error.name, message: error.message })
         )
         .then((message) => {
           reply.send({ status: 'success', message: JSON.stringify(message) })
         })
     })
-    .on('error', (error: Error) => {
-      reply.status(422).send({ status: 'error', name: error.name, message: error.message })
+    .on('ERROR', (error: Error) => {
+      reply.status(422).send({ status: 'ERROR', name: error.name, message: error.message })
     })
 }
 

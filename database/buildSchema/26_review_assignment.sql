@@ -1,9 +1,9 @@
 -- review assignment
 CREATE TYPE public.review_assignment_status AS ENUM (
-    'Available',
-    'Self-assigned by another',
-    'Assigned',
-    'Available for self-assignment'
+    'AVAILABLE',
+    'SELF_ASSIGNED_BY_ANOTHER',
+    'ASSIGNED',
+    'AVAILABLE_FOR_SELF_ASSIGNMENT'
 );
 
 CREATE TABLE public.review_assignment (
@@ -27,7 +27,7 @@ CREATE TABLE public.review_assignment (
 CREATE TRIGGER review_assignment_trigger
     AFTER INSERT OR UPDATE OF trigger ON public.review_assignment
     FOR EACH ROW
-    WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'Processing' AND NEW.trigger <> 'Error')
+    WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 
 CREATE UNIQUE INDEX unique_review_assignment_with_org ON review_assignment (reviewer_id, organisation_id, stage_number, application_id, level_number)

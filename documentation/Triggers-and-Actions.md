@@ -33,18 +33,18 @@ Actions also return an **output** object (e.g. `createUser` Action returns user 
 
 ## List of available Triggers and the "listener" associated with it.
 
-| Trigger Name             | Listener                                                         |
-| ------------------------ | ---------------------------------------------------------------- |
-| `onApplicationCreate`    | Postgres trigger on `Application` table                          |
-| `onApplicationSubmit`    | Postgres trigger on `Application` table                          |
-| `onApplicationSave`      | Postgres trigger on `Application` table                          |
-| `onApplicationWithdrawn` | Postgres trigger on `Application` table                          |
-| `onReviewCreate`         | Postgres trigger on `Review` table                               |
-| `onReviewStart`          | Postgres trigger on `Review` table                               |
-| `onReviewSubmit`         | Postgres trigger on `Review` table                               |
-| `onReviewAssign`         | To be decided                                                    |
-| `onApprovalSubmit`       | To be decided                                                    |
-| `onScheduledTime`        | Server scheduled service (see [here](link to Scheduled actions)) |
+| Trigger Name               | Listener                                                         |
+| -------------------------- | ---------------------------------------------------------------- |
+| `ON_APPLICATION_CREATE`    | Postgres trigger on `Application` table                          |
+| `ON_APPLICATION_SUBMIT`    | Postgres trigger on `Application` table                          |
+| `ON_APPLICATION_SAVE`      | Postgres trigger on `Application` table                          |
+| `ON_APPLICATION_WITHDRAWn` | Postgres trigger on `Application` table                          |
+| `ON_REVIEW_CREATE`         | Postgres trigger on `Review` table                               |
+| `ON_REVIEW_START`          | Postgres trigger on `Review` table                               |
+| `ON_REVIEW_SUBMIT`         | Postgres trigger on `Review` table                               |
+| `ON_REVIEW_ASSIGN`         | To be decided                                                    |
+| `ON_APPROVAL_SUBMIT`       | To be decided                                                    |
+| `onScheduledTime`          | Server scheduled service (see [here](link to Scheduled actions)) |
 
 ## Actions
 

@@ -1,7 +1,7 @@
 -- template element (questions or information elements)
 CREATE TYPE public.template_element_category AS ENUM (
-    'Question',
-    'Information'
+    'QUESTION',
+    'INFORMATION'
 );
 
 -- FUNCTION to return template_code for current element/section

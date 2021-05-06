@@ -4,6 +4,7 @@ import databaseMethods from './databaseMethods'
 const fsPromises = fs.promises
 
 import { ActionPluginInput } from '../../types'
+import { ActionQueueStatus } from '../../../src/generated/graphql'
 
 const fileUploadPluginCode = 'fileUpload'
 
@@ -61,7 +62,7 @@ async function cleanupFiles({ parameters, applicationData, DBConnect }: ActionPl
     }
     console.log('deletedFiles', deletedFiles)
     return {
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         deletedFiles,
@@ -71,7 +72,7 @@ async function cleanupFiles({ parameters, applicationData, DBConnect }: ActionPl
   } catch (error) {
     console.log(error.message)
     return {
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'Problem cleaning up files: ' + error.message,
     }
   }

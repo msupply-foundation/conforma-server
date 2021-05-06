@@ -1,5 +1,6 @@
 import databaseMethods from './databaseMethods'
-import { ActionPluginInput } from '../../types'
+import { ActionPluginType } from '../../types'
+import { ActionQueueStatus } from '../../../src/generated/graphql'
 const isEqual = require('deep-equal')
 interface Response {
   id: number
@@ -17,7 +18,7 @@ interface ResponsesById {
   [key: number]: Response[]
 }
 
-async function trimResponses({ parameters, applicationData, DBConnect }: ActionPluginInput) {
+const trimResponses: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
 
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
@@ -84,7 +85,7 @@ async function trimResponses({ parameters, applicationData, DBConnect }: ActionP
     console.log(`Updated ${reviewId ? 'review' : 'application'} responses: `, updatedResponses)
 
     return {
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         deletedResponses,
@@ -94,7 +95,7 @@ async function trimResponses({ parameters, applicationData, DBConnect }: ActionP
   } catch (error) {
     console.log(error.message)
     return {
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'There was a problem trimming duplicated responses.',
     }
   }

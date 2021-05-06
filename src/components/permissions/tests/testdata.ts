@@ -44,7 +44,7 @@ const compileJWTdata = [
     },
     templatePermissionRows: [
       {
-        permissionType: 'Apply',
+        permissionType: 'APPLY',
         permissionPolicyId: 1,
         permissionPolicyRules: {},
         permissionNameId: 1,
@@ -56,7 +56,7 @@ const compileJWTdata = [
         username: 'userWithMultiplePermissions',
       },
       {
-        permissionType: 'Apply',
+        permissionType: 'APPLY',
         permissionPolicyId: 2,
         permissionPolicyRules: {},
         permissionNameId: 2,
@@ -68,7 +68,7 @@ const compileJWTdata = [
         username: 'userWithMultiplePermissions',
       },
       {
-        permissionType: 'Review',
+        permissionType: 'REVIEW',
         permissionPolicyId: 3,
         permissionPolicyRules: {},
         permissionNameId: 3,
@@ -126,7 +126,7 @@ const generateRowLevelPoliciesData = [
     // Test Row Level Policies Generation: 2
     permissionRows: [
       {
-        permissionType: 'Apply',
+        permissionType: 'APPLY',
         permissionPolicyId: 1,
         permissionPolicyRules: {
           application: {
@@ -144,7 +144,7 @@ const generateRowLevelPoliciesData = [
         username: 'nonRegistered',
       },
       {
-        permissionType: 'Apply',
+        permissionType: 'APPLY',
         permissionPolicyId: 2,
         permissionPolicyRules: {
           application: {
@@ -163,7 +163,7 @@ const generateRowLevelPoliciesData = [
         username: 'nmadruga',
       },
       {
-        permissionType: 'Apply',
+        permissionType: 'APPLY',
         permissionPolicyId: 2,
         permissionPolicyRules: {
           application: {
@@ -182,7 +182,7 @@ const generateRowLevelPoliciesData = [
         username: 'carl',
       },
       {
-        permissionType: 'Apply',
+        permissionType: 'APPLY',
         permissionPolicyId: 2,
         permissionPolicyRules: {
           application: {
@@ -201,7 +201,7 @@ const generateRowLevelPoliciesData = [
         username: 'andrei',
       },
       {
-        permissionType: 'Apply',
+        permissionType: 'APPLY',
         permissionPolicyId: 2,
         permissionPolicyRules: {
           application: {
@@ -220,7 +220,7 @@ const generateRowLevelPoliciesData = [
         username: 'valerio',
       },
       {
-        permissionType: 'Apply',
+        permissionType: 'APPLY',
         permissionPolicyId: 1,
         permissionPolicyRules: {
           application: {
@@ -238,7 +238,7 @@ const generateRowLevelPoliciesData = [
         username: 'userWithMultiplePermissions',
       },
       {
-        permissionType: 'Apply',
+        permissionType: 'APPLY',
         permissionPolicyId: 2,
         permissionPolicyRules: {
           application: {
@@ -257,7 +257,7 @@ const generateRowLevelPoliciesData = [
         username: 'userWithMultiplePermissions',
       },
       {
-        permissionType: 'Review',
+        permissionType: 'REVIEW',
         permissionPolicyId: 3,
         permissionPolicyRules: {
           application: {
@@ -277,7 +277,7 @@ const generateRowLevelPoliciesData = [
         username: 'userWithMultiplePermissions',
       },
       {
-        permissionType: 'Review',
+        permissionType: 'REVIEW',
         permissionPolicyId: 3,
         permissionPolicyRules: {
           application: {

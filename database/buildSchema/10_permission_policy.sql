@@ -1,8 +1,8 @@
 -- permission_policy table
 CREATE TYPE public.permission_policy_type AS ENUM (
-    'Review',
-    'Apply',
-    'Assign'
+    'REVIEW',
+    'APPLY',
+    'ASSIGN'
 );
 
 CREATE TABLE public.permission_policy (
