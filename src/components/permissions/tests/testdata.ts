@@ -1,3 +1,5 @@
+import { PermissionPolicyType } from '../../../generated/graphql'
+
 const compileJWTdata = [
   // Test JWT generation: 1
   {
@@ -44,7 +46,7 @@ const compileJWTdata = [
     },
     templatePermissionRows: [
       {
-        permissionType: 'Apply',
+        permissionType: PermissionPolicyType.Apply,
         permissionPolicyId: 1,
         permissionPolicyRules: {},
         permissionNameId: 1,
@@ -56,7 +58,7 @@ const compileJWTdata = [
         username: 'userWithMultiplePermissions',
       },
       {
-        permissionType: 'Apply',
+        permissionType: PermissionPolicyType.Apply,
         permissionPolicyId: 2,
         permissionPolicyRules: {},
         permissionNameId: 2,
@@ -68,7 +70,7 @@ const compileJWTdata = [
         username: 'userWithMultiplePermissions',
       },
       {
-        permissionType: 'Review',
+        permissionType: PermissionPolicyType.Review,
         permissionPolicyId: 3,
         permissionPolicyRules: {},
         permissionNameId: 3,
@@ -126,7 +128,7 @@ const generateRowLevelPoliciesData = [
     // Test Row Level Policies Generation: 2
     permissionRows: [
       {
-        permissionType: 'Apply',
+        permissionType: PermissionPolicyType.Apply,
         permissionPolicyId: 1,
         permissionPolicyRules: {
           application: {
@@ -144,7 +146,7 @@ const generateRowLevelPoliciesData = [
         username: 'nonRegistered',
       },
       {
-        permissionType: 'Apply',
+        permissionType: PermissionPolicyType.Apply,
         permissionPolicyId: 2,
         permissionPolicyRules: {
           application: {
@@ -163,7 +165,7 @@ const generateRowLevelPoliciesData = [
         username: 'nmadruga',
       },
       {
-        permissionType: 'Apply',
+        permissionType: PermissionPolicyType.Apply,
         permissionPolicyId: 2,
         permissionPolicyRules: {
           application: {
@@ -182,7 +184,7 @@ const generateRowLevelPoliciesData = [
         username: 'carl',
       },
       {
-        permissionType: 'Apply',
+        permissionType: PermissionPolicyType.Apply,
         permissionPolicyId: 2,
         permissionPolicyRules: {
           application: {
@@ -201,7 +203,7 @@ const generateRowLevelPoliciesData = [
         username: 'andrei',
       },
       {
-        permissionType: 'Apply',
+        permissionType: PermissionPolicyType.Apply,
         permissionPolicyId: 2,
         permissionPolicyRules: {
           application: {
@@ -220,7 +222,7 @@ const generateRowLevelPoliciesData = [
         username: 'valerio',
       },
       {
-        permissionType: 'Apply',
+        permissionType: PermissionPolicyType.Apply,
         permissionPolicyId: 1,
         permissionPolicyRules: {
           application: {
@@ -238,7 +240,7 @@ const generateRowLevelPoliciesData = [
         username: 'userWithMultiplePermissions',
       },
       {
-        permissionType: 'Apply',
+        permissionType: PermissionPolicyType.Apply,
         permissionPolicyId: 2,
         permissionPolicyRules: {
           application: {
@@ -257,7 +259,7 @@ const generateRowLevelPoliciesData = [
         username: 'userWithMultiplePermissions',
       },
       {
-        permissionType: 'Review',
+        permissionType: PermissionPolicyType.Review,
         permissionPolicyId: 3,
         permissionPolicyRules: {
           application: {
@@ -277,7 +279,7 @@ const generateRowLevelPoliciesData = [
         username: 'userWithMultiplePermissions',
       },
       {
-        permissionType: 'Review',
+        permissionType: PermissionPolicyType.Review,
         permissionPolicyId: 3,
         permissionPolicyRules: {
           application: {

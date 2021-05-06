@@ -1,6 +1,7 @@
 // Test suite for the createUser Action -- just confirms that users are written to database.
 
 import DBConnect from '../../../src/components/databaseConnect'
+import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { action as createOrg } from './index'
 
 const testOrg = {
@@ -22,7 +23,7 @@ const invalidOrg = {
 test('Test: add Org to database', () => {
   return createOrg({ parameters: testOrg, DBConnect }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         orgId: 5,
@@ -35,7 +36,7 @@ test('Test: add Org to database', () => {
 test('Test: add Org2 -- not all parameters provided', () => {
   return createOrg({ parameters: testOrg2, DBConnect }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         orgId: 6,
@@ -48,7 +49,7 @@ test('Test: add Org2 -- not all parameters provided', () => {
 test('Test: Invalid user (date_of_birth and username fields mis-named) -- should fail', () => {
   return createOrg({ parameters: invalidOrg, DBConnect }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'There was a problem creating new organisation.',
     })
   })

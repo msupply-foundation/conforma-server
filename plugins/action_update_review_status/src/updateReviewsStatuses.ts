@@ -1,7 +1,7 @@
-import { ActionPluginInput } from '../../types'
+import { ActionQueueStatus, ReviewStatus } from '../../../src/generated/graphql'
+import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 
-type ReviewStatus = 'Draft' | 'Submitted' | 'Changes Requested' | 'Pending' | 'Locked'
 interface Review {
   reviewId: number
   reviewAssignmentId: number
@@ -11,11 +11,11 @@ interface Review {
   reviewStatus: ReviewStatus
 }
 
-async function updateReviewsStatuses({
+const updateReviewsStatuses: ActionPluginType = async ({
   parameters,
   applicationData,
   DBConnect,
-}: ActionPluginInput) {
+}) => {
   const db = databaseMethods(DBConnect)
 
   console.log('Updating reviews status...')
@@ -34,15 +34,19 @@ async function updateReviewsStatuses({
     // Get reviews/review assignments (with status) matching application_id & current stage
     const reviews = (
       await db.getAssociatedReviews(applicationId, stageId, level)
-    ).filter((review: Review) => ['Submitted', 'Locked', 'Draft'].includes(review.reviewStatus))
+    ).filter((review: Review) =>
+      [ReviewStatus.Submitted, ReviewStatus.Locked, ReviewStatus.Draft].includes(
+        review.reviewStatus
+      )
+    )
     // Deduce which ones should be updated
     for (const review of reviews) {
       const { reviewAssignmentId, levelNumber, reviewStatus } = review
-      if (levelNumber > 1) reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
+      if (levelNumber > 1) reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
       else if (await haveAssignedResponsesChanged(reviewAssignmentId))
-        reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
-      else if (reviewStatus === 'Locked')
-        reviewsToUpdate.push({ ...review, reviewStatus: 'Pending' })
+        reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
+      else if (reviewStatus === ReviewStatus.Locked)
+        reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
     }
     console.log('reviewsToUpdate', reviewsToUpdate)
 
@@ -53,7 +57,7 @@ async function updateReviewsStatuses({
     }
 
     return {
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         updatedReviews: reviewsToUpdate,
@@ -62,7 +66,7 @@ async function updateReviewsStatuses({
   } catch (error) {
     console.log(error.message)
     return {
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'There was a problem updating review statuses.',
     }
   }

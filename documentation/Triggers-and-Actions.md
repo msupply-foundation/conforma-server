@@ -21,7 +21,7 @@ An Application Template will specify:
 - Conditions (using [dynamic expression syntax](Query-Syntax.md)) under which the Action will run
 - And parameters (again, as dynamic expressions) that will be sent to the Action at runtime
 
-Most triggers are associated with events on the main database tables (Application, Review, etc.). Specifically, there is a field on these tables called `trigger` into which the "event" (e.g. "On Application Submit") is recorded. The database listens to this field, then notifies the server, which launches the appropriate Actions, using parameters from the current conditions.
+Most triggers are associated with events on the main database tables (Application, Review, etc.). Specifically, there is a field on these tables called `trigger` into which the "event" (e.g. "ON_APPLICATION_SUBMIT") is recorded. The database listens to this field, then notifies the server, which launches the appropriate Actions, using parameters from the current conditions.
 
 Actions can be defined as **Sequential** or **Async** (parallel). Async Actions are executed as soon as the server is notified that they are in the Action queue, whereas Sequential Actions have an additional `sequence` property, and are processed in the prescribed sequence once they've all been inserted into the Action queue.
 
@@ -33,18 +33,18 @@ Actions also return an **output** object (e.g. `createUser` Action returns user 
 
 ## List of available Triggers and the "listener" associated with it.
 
-| Trigger Name             | Listener                                                         |
-| ------------------------ | ---------------------------------------------------------------- |
-| `onApplicationCreate`    | Postgres trigger on `Application` table                          |
-| `onApplicationSubmit`    | Postgres trigger on `Application` table                          |
-| `onApplicationSave`      | Postgres trigger on `Application` table                          |
-| `onApplicationWithdrawn` | Postgres trigger on `Application` table                          |
-| `onReviewCreate`         | Postgres trigger on `Review` table                               |
-| `onReviewStart`          | Postgres trigger on `Review` table                               |
-| `onReviewSubmit`         | Postgres trigger on `Review` table                               |
-| `onReviewAssign`         | To be decided                                                    |
-| `onApprovalSubmit`       | To be decided                                                    |
-| `onScheduledTime`        | Server scheduled service (see [here](link to Scheduled actions)) |
+| Trigger Name               | Listener                                                         |
+| -------------------------- | ---------------------------------------------------------------- |
+| `ON_APPLICATION_CREATE`    | Postgres trigger on `Application` table                          |
+| `ON_APPLICATION_SUBMIT`    | Postgres trigger on `Application` table                          |
+| `ON_APPLICATION_SAVE`      | Postgres trigger on `Application` table                          |
+| `ON_APPLICATION_WITHDRAWn` | Postgres trigger on `Application` table                          |
+| `ON_REVIEW_CREATE`         | Postgres trigger on `Review` table                               |
+| `ON_REVIEW_START`          | Postgres trigger on `Review` table                               |
+| `ON_REVIEW_SUBMIT`         | Postgres trigger on `Review` table                               |
+| `ON_REVIEW_ASSIGN`         | To be decided                                                    |
+| `ON_APPROVAL_SUBMIT`       | To be decided                                                    |
+| `ON_SCHEDULE_TIME`         | Server scheduled service (see [here](link to Scheduled actions)) |
 
 ## Actions
 

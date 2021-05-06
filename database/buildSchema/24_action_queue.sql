@@ -1,11 +1,11 @@
 -- action queue
 CREATE TYPE public.action_queue_status AS ENUM (
-    'Scheduled',
-    'Queued',
-    'Processing',
-    'Success',
-    'Fail',
-    'Condition not met'
+    'SCHEDULED',
+    'QUEUED',
+    'PROCESSING',
+    'SUCCESS',
+    'FAIL',
+    'CONDITION_NOT_MET'
 );
 
 CREATE TABLE public.action_queue (
@@ -32,7 +32,7 @@ CREATE OR REPLACE FUNCTION public.notify_action_queue ()
     RETURNS TRIGGER
     AS $action_event$
 BEGIN
-    -- IF NEW.status = 'Queued' THEN
+    -- IF NEW.status = 'QUEUED' THEN
     PERFORM
         pg_notify('action_notifications', json_build_object('id', NEW.id, 'code', NEW.action_code, 'trigger_payload', NEW.trigger_payload, 'condition_expression', NEW.condition_expression, 'parameter_queries', NEW.parameter_queries)::text);
     -- END IF;
@@ -45,7 +45,7 @@ LANGUAGE plpgsql;
 CREATE TRIGGER action_queue
     AFTER INSERT ON public.action_queue
     FOR EACH ROW
-    WHEN (NEW.status <> 'Processing')
+    WHEN (NEW.status <> 'PROCESSING')
     EXECUTE FUNCTION public.notify_action_queue ();
 
 -- TRIGGER (Listener) on application table
@@ -53,6 +53,6 @@ CREATE TRIGGER action_queue
 CREATE TRIGGER application_trigger
     AFTER INSERT OR UPDATE OF trigger ON public.application
     FOR EACH ROW
-    WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'Processing' AND NEW.trigger <> 'Error')
+    WHEN (NEW.trigger IS NOT NULL AND NEW.trigger <> 'PROCESSING' AND NEW.trigger <> 'ERROR')
     EXECUTE FUNCTION public.add_event_to_trigger_queue ();
 

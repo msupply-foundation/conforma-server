@@ -34,12 +34,12 @@ const consoleLog = (parameters: any) => {
     console.log('\nThe Console Log action is running...')
     console.log(parameters.message)
     return {
-      status: 'Success',
+     status: ActionQueueStatus.Success,
       error_log: '',
     }
   } catch (error) {
     return {
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'There was a problem',
     }
   }

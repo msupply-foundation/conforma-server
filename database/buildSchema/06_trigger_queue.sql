@@ -1,27 +1,27 @@
 -- trigger queue
 CREATE TYPE public.trigger AS ENUM (
-    'onApplicationCreate',
-    'onApplicationRestart',
-    'onApplicationSubmit',
-    'onApplicationSave',
-    'onApplicationWithdraw',
-    'onReviewCreate',
-    'onReviewSubmit',
-    'onReviewRestart',
-    'onReviewStart',
-    'onReviewAssign',
-    'onReviewSelfAssign',
-    'onApprovalSubmit',
-    'devTest',
-    'onScheduleTime',
-    'Processing',
-    'Error'
+    'ON_APPLICATION_CREATE',
+    'ON_APPLICATION_RESTART',
+    'ON_APPLICATION_SUBMIT',
+    'ON_APPLICATION_SAVE',
+    'ON_APPLICATION_WITHDRAW',
+    'ON_REVIEW_CREATE',
+    'ON_REVIEW_SUBMIT',
+    'ON_REVIEW_RESTART',
+    'ON_REVIEW_START',
+    'ON_REVIEW_ASSIGN',
+    'ON_REVIEW_SELF_ASSIGN',
+    'ON_APPROVAL_SUBMIT',
+    'DEV_TEST',
+    'ON_SCHEDULE_TIME',
+    'PROCESSING',
+    'ERROR'
 );
 
 CREATE TYPE public.trigger_queue_status AS ENUM (
-    'Triggered',
-    'Actions Dispatched',
-    'Error'
+    'TRIGGERED',
+    'ACTIONS_DISPATCHED',
+    'ERROR'
 );
 
 CREATE TABLE public.trigger_queue (
@@ -40,8 +40,8 @@ CREATE OR REPLACE FUNCTION public.add_event_to_trigger_queue ()
     AS $trigger_queue$
 BEGIN
     INSERT INTO trigger_queue (trigger_type, "table", record_id, timestamp, status)
-        VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, CURRENT_TIMESTAMP, 'Triggered');
-    EXECUTE format('UPDATE %s SET trigger = ''Processing'' WHERE id = %s', TG_TABLE_NAME, NEW.id);
+        VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, CURRENT_TIMESTAMP, 'TRIGGERED');
+    EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
     RETURN NULL;
 END;
 $trigger_queue$

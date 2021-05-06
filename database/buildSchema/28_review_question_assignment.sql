@@ -16,11 +16,11 @@ CREATE FUNCTION public.assigned_questions_count (app application, stage_id int, 
         JOIN review_assignment ra ON rqa.review_assignment_id = ra.id
         JOIN template_element ON template_element.id = rqa.template_element_id
     WHERE
-        ra.status = 'Assigned'
+        ra.status = 'ASSIGNED'
         AND ra.stage_id = stage_id
         AND ra.level_number = level -- currently restrict partial assignment to level 1
         AND ra.application_id = app.id
-        AND template_element.category = 'Question'
+        AND template_element.category = 'QUESTION'
 $$
 LANGUAGE sql
 STABLE;
@@ -36,7 +36,7 @@ CREATE FUNCTION public.template_questions_count (app application)
         JOIN template_element ON template_element.section_id = template_section.id
     WHERE
         template_section.template_id = app.template_id
-        AND template_element.category = 'Question'
+        AND template_element.category = 'QUESTION'
 $$
 LANGUAGE sql
 STABLE;

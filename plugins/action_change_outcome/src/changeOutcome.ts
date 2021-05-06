@@ -1,6 +1,7 @@
-import { ActionPluginInput } from '../../types'
+import { ActionQueueStatus } from '../../../src/generated/graphql'
+import { ActionPluginType } from '../../types'
 
-async function changeOutcome({ parameters, applicationData, DBConnect }: ActionPluginInput) {
+const changeOutcome: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const newOutcome = parameters.newOutcome
   try {
@@ -8,7 +9,7 @@ async function changeOutcome({ parameters, applicationData, DBConnect }: ActionP
     const success = await DBConnect.setApplicationOutcome(applicationId, newOutcome)
     if (success)
       return {
-        status: 'Success',
+        status: ActionQueueStatus.Success,
         error_log: '',
         output: {
           applicationId,
@@ -17,12 +18,12 @@ async function changeOutcome({ parameters, applicationData, DBConnect }: ActionP
       }
     else
       return {
-        status: 'Fail',
+        status: ActionQueueStatus.Fail,
         error_log: 'There was a problem updating the application.',
       }
   } catch (error) {
     return {
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'There was a problem updating the application.',
     }
   }

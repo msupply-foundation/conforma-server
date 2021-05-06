@@ -3,7 +3,7 @@ CREATE TYPE public.decision AS ENUM (
     'List of questions',
     'Conform',
     'Non-conform',
-    'Changes Requested',
+    'CHANGES_REQUESTED',
     'No Decision'
 );
 

@@ -1,10 +1,10 @@
 -- review status history
 CREATE TYPE public.review_status AS ENUM (
-    'Draft',
-    'Submitted',
-    'Changes Requested',
-    'Pending',
-    'Locked'
+    'DRAFT',
+    'SUBMITTED',
+    'CHANGES_REQUESTED',
+    'PENDING',
+    'LOCKED'
 );
 
 CREATE TABLE public.review_status_history (
