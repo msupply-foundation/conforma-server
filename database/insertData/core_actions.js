@@ -105,21 +105,21 @@ exports.coreActions = `
             }
         }
     }
-  #  {
-  #      actionCode: "updateReviewsStatuses"
-  #      trigger: ON_REVIEW_SUBMIT
-  #      sequence: 3
-  #      parameterQueries: {
-  #        applicationId: {
-  #          operator: "objectProperties"
-  #          children: ["applicationData.applicationId"]
-  #        }
-  #        changedApplicationResponses: {
-  #          operator: "objectProperties"
-  #          children: ["output.updatedResponses"]
-  #        }
-  #      }
-  #  }
+   {
+        actionCode: "updateReviewsStatuses"
+        trigger: ON_REVIEW_SUBMIT
+        sequence: 3
+        parameterQueries: {
+          applicationId: {
+            operator: "objectProperties"
+            children: ["applicationData.applicationId"]
+          }
+          changedApplicationResponses: {
+            operator: "objectProperties"
+            children: ["output.updatedResponses"]
+          }
+        }
+    }
     # increment stage of application (ignored if last stage)
     # condition checks for latest review decison = CONFORM
     # AND review being isLastLevel

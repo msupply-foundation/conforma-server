@@ -24,7 +24,8 @@ const updateReviewsStatuses: ActionPluginType = async ({
 
   const { changedApplicationResponses = [] } = parameters
   const stageId = parameters?.stageId || applicationData?.stageId
-  const level = parameters?.level || applicationData?.reviewData?.levelNumber || 1
+  const currentReviewLevel = applicationData?.reviewData?.levelNumber || 0
+  const level = parameters?.level || currentReviewLevel + 1
 
   const reviewsToUpdate = []
 

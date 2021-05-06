@@ -46,9 +46,9 @@ BEGIN
                 review_response
             WHERE
                 id = NEW.review_response_link_id);
-        NEW.applcation_response_id = (
+        NEW.application_response_id = (
             SELECT
-                applcation_response_id
+                application_response_id
             FROM
                 review_response
             WHERE

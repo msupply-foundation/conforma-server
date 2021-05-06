@@ -9216,6 +9216,7 @@ export type NotificationReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -11049,6 +11050,7 @@ export type Query = Node & {
   reviewLevel?: Maybe<Scalars['Int']>;
   reviewList?: Maybe<ReviewListConnection>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
+  reviewStage?: Maybe<Scalars['Int']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
@@ -11936,6 +11938,12 @@ export type QueryReviewReviewerIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryReviewStageArgs = {
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryActionPluginByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -12136,6 +12144,7 @@ export type Review = Node & {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   /** Reads a single `ReviewAssignment` that is related to this `Review`. */
   reviewAssignment?: Maybe<ReviewAssignment>;
@@ -12278,6 +12287,7 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -13742,6 +13752,8 @@ export type ReviewCondition = {
   reviewerId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `levelNumber` field. */
   levelNumber?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `isLastLevel` field. */
   isLastLevel?: Maybe<Scalars['Boolean']>;
 };
@@ -13903,6 +13915,7 @@ export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -13975,6 +13988,8 @@ export type ReviewFilter = {
   reviewerId?: Maybe<IntFilter>;
   /** Filter by the object’s `levelNumber` field. */
   levelNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `isLastLevel` field. */
   isLastLevel?: Maybe<BooleanFilter>;
   /** Filter by the object’s `status` field. */
@@ -14025,6 +14040,7 @@ export type ReviewInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -14219,6 +14235,7 @@ export type ReviewPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -15114,6 +15131,7 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -15522,6 +15540,7 @@ export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -15583,6 +15602,7 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -15660,6 +15680,8 @@ export enum ReviewsOrderBy {
   ReviewerIdDesc = 'REVIEWER_ID_DESC',
   LevelNumberAsc = 'LEVEL_NUMBER_ASC',
   LevelNumberDesc = 'LEVEL_NUMBER_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
   IsLastLevelAsc = 'IS_LAST_LEVEL_ASC',
   IsLastLevelDesc = 'IS_LAST_LEVEL_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -15886,6 +15908,7 @@ export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -20755,6 +20778,7 @@ export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -20773,6 +20797,7 @@ export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -20790,6 +20815,7 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -20807,6 +20833,7 @@ export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -20824,6 +20851,7 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   trigger?: Maybe<Trigger>;
   applicationId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -20842,6 +20870,7 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -20860,6 +20889,7 @@ export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyP
   applicationId?: Maybe<Scalars['Int']>;
   reviewerId?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
   reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
   applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
@@ -27696,6 +27726,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewLevel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewLevelArgs, never>>;
   reviewList?: Resolver<Maybe<ResolversTypes['ReviewListConnection']>, ParentType, ContextType, RequireFields<QueryReviewListArgs, never>>;
   reviewReviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewReviewerIdArgs, never>>;
+  reviewStage?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewStageArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
   actionQueueByNodeId?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueByNodeIdArgs, 'nodeId'>>;
   applicationByNodeId?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationByNodeIdArgs, 'nodeId'>>;
@@ -27738,6 +27769,7 @@ export type ReviewResolvers<ContextType = any, ParentType extends ResolversParen
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   levelNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isLastLevel?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
