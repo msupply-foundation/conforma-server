@@ -930,6 +930,51 @@ exports.queries = [
                   ]
                 }
               }
+              {
+                code: "S3"
+                title: "Section 3"
+                index: 3
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "TextShowcase"
+                      index: 0
+                      title: "Text Showcase"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "## Many ways to deliver information!"
+                        text: "A text info box can be presented in a number of **styles**.\\n\\n\*Please select one below*"
+                        style: {
+                          operator: "objectProperties"
+                          children: ["responses.StyleChoice.text"]
+                        }
+                      }
+                    }
+                    {
+                      code: "StyleChoice"
+                      index: 1
+                      title: "Selector for TextInfo showcase"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select a style"
+                        placeholder: "Select"
+                        options: [
+                          "none"
+                          "basic"
+                          "info"
+                          "warning"
+                          "success"
+                          "error"
+                        ]
+                        default: "none"
+                      }
+                      isRequired: false
+                    }
+                  ]
+                }
+              }
             ]
           }
           templateStagesUsingId: {
