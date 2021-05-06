@@ -53,6 +53,7 @@ exports.queries = [
                       parameters: {
                         title: "**Create a user account**"
                         text: "Please fill in your details to **register** for a user account."
+                        style: "info"
                       }
                     }
                     {
@@ -143,6 +144,7 @@ exports.queries = [
                             }
                           ]
                         }
+                        style: "basic"
                       }
                     }
                     {
@@ -418,6 +420,7 @@ exports.queries = [
                             }
                           ]
                         }
+                        style: "success"
                       }
                     }
                     {
@@ -515,6 +518,7 @@ exports.queries = [
                       parameters: {
                         title: "## Checkbox demonstration"
                         text: "Different types and settings for Checkbox plugin"
+                        style: "basic"
                       }
                     }
                     {
@@ -724,6 +728,7 @@ exports.queries = [
                       parameters: {
                         title: "### This sections allows you to upload files"
                         text: "A demonstration of the File Upload plugin"
+                        style: "info"
                       }
                     }
                     {
