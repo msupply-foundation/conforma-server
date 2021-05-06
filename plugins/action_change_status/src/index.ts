@@ -1,1 +1,4 @@
-export { default as action } from './changeStatus'
+import { ActionPluginType } from '../../types'
+import changeStatus from './changeStatus'
+const action: ActionPluginType = changeStatus
+export { action }

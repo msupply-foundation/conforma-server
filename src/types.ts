@@ -1,5 +1,11 @@
 import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
-import { ApplicationOutcome, ApplicationStatus, Trigger } from './generated/graphql'
+import {
+  ActionQueueStatus,
+  ApplicationOutcome,
+  ApplicationStatus,
+  Trigger,
+  TriggerQueueStatus,
+} from './generated/graphql'
 
 export interface ActionInTemplate {
   code: string
@@ -18,7 +24,7 @@ export interface ActionSequential extends ActionInTemplate {
 
 export interface ActionInTemplateGetPayload {
   record_id: number
-  trigger: TriggerStatus
+  trigger: Trigger
 }
 
 export interface ActionLibrary {
@@ -35,15 +41,6 @@ export interface ActionQueue {
   parameters_evaluated: { [key: string]: any }
   time_completed: string
 }
-
-// TODO: Ideally this would be coming from postgraphile types, to be consistent with the types
-type ActionQueueStatus =
-  | 'Scheduled'
-  | 'Processing'
-  | 'Queued'
-  | 'Success'
-  | 'Fail'
-  | 'Condition not met'
 
 export interface ActionQueuePayload {
   trigger_event: number
@@ -161,9 +158,6 @@ export interface FileGetPayload {
 
 export type QueryParams = string[] | { [key: string]: any }
 
-// TODO: Ideally this would be coming from postgraphile types, to be consistent with the types
-type TriggerStatus = 'Triggered' | 'Actions Dispatched' | 'Error'
-
 export interface TriggerPayload {
   trigger_id: number
   trigger: Trigger
@@ -174,7 +168,7 @@ export interface TriggerPayload {
 
 export interface TriggerQueueUpdatePayload {
   id: number
-  status: TriggerStatus
+  status: TriggerQueueStatus
 }
 
 export interface User {

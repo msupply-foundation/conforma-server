@@ -1,9 +1,11 @@
+import { PermissionPolicyType } from '../../../src/generated/graphql'
+
 const databaseMethods = (DBConnect: any) => ({
   getPersonnelForApplicationStageLevel: async (
     templateId: number,
     stageNumber: number,
     reviewLevel: number,
-    type: 'Review' | 'Assign'
+    type: PermissionPolicyType
   ) => {
     const text = `
     SELECT

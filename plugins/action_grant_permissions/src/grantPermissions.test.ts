@@ -2,6 +2,7 @@
 // Ideally would verify that logic works by checking db (permission_join table) before and after
 
 import DBConnect from '../../../src/components/databaseConnect'
+import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { action as grantPermissions } from './index'
 
 const testParams = {
@@ -18,7 +19,7 @@ const testParams2 = {
 test('Test: Add permission to Valerio', () => {
   return grantPermissions({ parameters: testParams, DBConnect }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       output: {
         permissionJoinIds: [41],
         permissionNames: ['reviewOrgRego'],
@@ -32,7 +33,7 @@ test('Test: Add permission to Valerio', () => {
 test('Test: Add permission to Valerio, already exists', () => {
   return grantPermissions({ parameters: testParams, DBConnect }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       output: {
         permissionJoinIds: [41],
         permissionNames: ['reviewOrgRego'],
@@ -46,7 +47,7 @@ test('Test: Add permission to Valerio, already exists', () => {
 test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
   return grantPermissions({ parameters: testParams2, DBConnect }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       output: {
         permissionJoinIds: [43],
         permissionNames: ['reviewOrgRego'],
@@ -60,7 +61,7 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
 test('Test: Add permission to Carl and Medicinal Importers, Ltd., already exists', () => {
   return grantPermissions({ parameters: testParams2, DBConnect }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       output: {
         permissionJoinIds: [43],
         permissionNames: ['reviewOrgRego'],

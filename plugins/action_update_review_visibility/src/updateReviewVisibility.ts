@@ -1,11 +1,12 @@
 import databaseMethods from './databaseMethods'
-import { ActionPluginInput } from '../../types'
+import { ActionPluginType } from '../../types'
+import { ActionQueueStatus } from '../../../src/generated/graphql'
 
-async function updateReviewVisibility({
+const updateReviewVisibility: ActionPluginType = async ({
   parameters,
   applicationData,
   DBConnect,
-}: ActionPluginInput) {
+}) => {
   console.log('Updating review visibility...')
   const db = databaseMethods(DBConnect)
 
@@ -21,7 +22,7 @@ async function updateReviewVisibility({
       reviewResponsesWithUpdatedVisibility
     )
     return {
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         reviewResponsesWithUpdatedVisibility,
@@ -30,7 +31,7 @@ async function updateReviewVisibility({
   } catch (error) {
     console.log(error.message)
     return {
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'Problem updating review_visibility records.',
     }
   }

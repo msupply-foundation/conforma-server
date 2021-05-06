@@ -321,7 +321,7 @@ exports.queries = [
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "assignGeneral" }
                 }
-                stageNumber: 1
+                stageNumber: 2
                 levelNumber: 1
               }
               {

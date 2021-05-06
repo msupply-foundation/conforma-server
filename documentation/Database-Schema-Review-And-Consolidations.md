@@ -85,7 +85,7 @@ Pretty self explanatory but one thing to note, during consolidation, it's best t
 
 `Changes Required` -> This status is used to indicate to reviewer that changes are requested from consolidator. It would go to `Draft` when review is started (to make the required changes)
 
-`Pending` -> Indicates that lower level changes have been made which require re-start of review. For level 1 it indicates that Applicant has replied to LOQ and it needs to be re-review. For level > 1 indicates that a review/consolidation from lower level has been submitted. (in case multiple 'parallel' reviews are being done, for every review submission, consolidation status will change to 'Pending', thus allowing indication of additional reviews needing consolidation)
+`Pending` -> Indicates that lower level changes have been made which require re-start of review. For level 1 it indicates that Applicant has replied to LOQ and it needs to be re-review. For level > 1 indicates that a review/consolidation from lower level has been submitted. (in case multiple 'parallel' reviews are being done, for every review submission, consolidation status will change to 'PENDING', thus allowing indication of additional reviews needing consolidation)
 
 `Locked` -> Used for level one reviewer. Can edit review but cannot submit. This is needed when LOQ or Non Conformity is submitted by consolidator but some of the reviews are still in draft or pending stage. They will become locked, indicating that review should be stopped for the time being
 
@@ -116,7 +116,7 @@ AND
 
 ### Creating and editing review
 
-Whenever user starts a review (either first time or subsequent times that they can edit it after submissions), we would create all responses, or duplicate them from existing responses. Trimming is done for unchanged responses after submission via an action (above rules should take into account duplicates). Slight difference for consolidation is we only duplicate review_response that are not 'draft' and for reviews that are submitted
+Whenever user starts a review (either first time or subsequent times that they can edit it after submissions), we would create all responses, or duplicate them from existing responses. Trimming is done for unchanged responses after submission via an action (above rules should take into account duplicates). Slight difference for consolidation is we only duplicate review_response that are not 'DRAFT' and for reviews that are submitted
 
 ### Diagram
 

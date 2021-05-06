@@ -1,9 +1,4 @@
-export enum AssignmentStatus {
-  AVAILABLE = 'Available',
-  NOT_AVAILABLE = 'Not available',
-  ASSIGNED = 'Assigned',
-  SELF_ASSIGN = 'Available for self-assignment',
-}
+import { ReviewAssignmentStatus } from '../../../src/generated/graphql'
 
 export interface ApplicationData {
   applicationId: number
@@ -28,7 +23,7 @@ interface ReviewAssignment {
   orgId: number | null
   stageId: number
   stageNumber: number
-  status: AssignmentStatus
+  status: ReviewAssignmentStatus
   applicationId: number
   templateSectionRestrictions: string[] | null | undefined
   levelNumber: number

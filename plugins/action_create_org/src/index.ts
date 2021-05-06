@@ -1,1 +1,4 @@
-export { default as action } from './createOrg'
+import { ActionPluginType } from '../../types'
+import createOrg from './createOrg'
+const action: ActionPluginType = createOrg
+export { action }

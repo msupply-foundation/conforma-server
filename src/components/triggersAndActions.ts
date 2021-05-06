@@ -11,6 +11,7 @@ import DBConnect from './databaseConnect'
 import { actionLibrary } from './pluginsConnect'
 import { BasicObject, IParameters, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { getApplicationData } from './getApplicationData'
+import { ActionQueueStatus, TriggerQueueStatus } from '../generated/graphql'
 
 const schedule = require('node-schedule')
 
@@ -114,10 +115,16 @@ export async function processTrigger(payload: TriggerPayload) {
       parameter_queries: action.parameter_queries,
       parameters_evaluated: {},
       condition_expression: action.condition,
-      status: typeof action.sequence === 'number' ? 'Processing' : 'Queued',
+      status:
+        typeof action.sequence === 'number'
+          ? ActionQueueStatus.Processing
+          : ActionQueueStatus.Queued,
     })
   }
-  await DBConnect.updateTriggerQueueStatus({ status: 'Actions Dispatched', id: trigger_id })
+  await DBConnect.updateTriggerQueueStatus({
+    status: TriggerQueueStatus.ActionsDispatched,
+    id: trigger_id,
+  })
 
   // Get sequential Actions from database
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
@@ -129,7 +136,7 @@ export async function processTrigger(payload: TriggerPayload) {
   for (const action of actionsToExecute) {
     if (actionFailed) {
       await DBConnect.executedActionStatusUpdate({
-        status: 'Fail',
+        status: ActionQueueStatus.Fail,
         error_log: 'Action cancelled due to failure of previous sequential action ' + actionFailed,
         parameters_evaluated: null,
         output: null,
@@ -149,7 +156,7 @@ export async function processTrigger(payload: TriggerPayload) {
         outputCumulative,
       })
       outputCumulative = { ...outputCumulative, ...result.output }
-      if (result.status === 'Fail') console.log(result.error_log)
+      if (result.status === ActionQueueStatus.Fail) console.log(result.error_log)
     } catch (err) {
       actionFailed = action.action_code
     }
@@ -227,7 +234,7 @@ export async function executeAction(
     } catch (err) {
       console.error('>> Error executing action:', payload.code)
       await DBConnect.executedActionStatusUpdate({
-        status: 'Fail',
+        status: ActionQueueStatus.Fail,
         error_log: "Couldn't execute Action: " + err.message,
         parameters_evaluated: null,
         output: null,
@@ -238,7 +245,7 @@ export async function executeAction(
   } else {
     console.log(payload.code + ': Condition not met')
     return await DBConnect.executedActionStatusUpdate({
-      status: 'Condition not met',
+      status: ActionQueueStatus.ConditionNotMet,
       error_log: '',
       parameters_evaluated: null,
       output: null,

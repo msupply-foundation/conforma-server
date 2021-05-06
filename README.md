@@ -79,7 +79,7 @@ In order to see Triggers and Actions working, you'll need to run the `createSche
 The application with ID = 3 (Company registration: Company C) has one Action associated with it, the Console logger. All it does is write a message to the console, and you can see the details on the `template_action` table.
 
 To cause a Trigger to initiate the Action, change the `trigger` field on the application:  
-`UPDATE application SET trigger = 'onApplicationSubmit' WHERE id = 3`
+`UPDATE application SET trigger = 'ON_APPLICATION_SUBMIT' WHERE id = 3`
 
 You should see the message printed to the console.
 
