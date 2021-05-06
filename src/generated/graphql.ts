@@ -467,13 +467,19 @@ export type ActionQueueTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByCode?: Maybe<TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<ActionQueueOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -509,9 +515,12 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -3288,13 +3297,19 @@ export type ApplicationTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByCode?: Maybe<TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -3336,9 +3351,12 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -3967,6 +3985,39 @@ export type CreateFilePayloadFileEdgeArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
 };
 
+/** All input for the create `Filter` mutation. */
+export type CreateFilterInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Filter` to be created by this mutation. */
+  filter: FilterInput;
+};
+
+/** The output of our create `Filter` mutation. */
+export type CreateFilterPayload = {
+  __typename?: 'CreateFilterPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Filter` that was created by this mutation. */
+  filter?: Maybe<Filter>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Filter`. May be used by Relay 1. */
+  filterEdge?: Maybe<FiltersEdge>;
+};
+
+
+/** The output of our create `Filter` mutation. */
+export type CreateFilterPayloadFilterEdgeArgs = {
+  orderBy?: Maybe<Array<FiltersOrderBy>>;
+};
+
 /** All input for the create `LookupTable` mutation. */
 export type CreateLookupTableInput = {
   /**
@@ -4491,6 +4542,39 @@ export type CreateTemplateActionPayloadTemplateActionEdgeArgs = {
   orderBy?: Maybe<Array<TemplateActionsOrderBy>>;
 };
 
+/** All input for the create `TemplateCategory` mutation. */
+export type CreateTemplateCategoryInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateCategory` to be created by this mutation. */
+  templateCategory: TemplateCategoryInput;
+};
+
+/** The output of our create `TemplateCategory` mutation. */
+export type CreateTemplateCategoryPayload = {
+  __typename?: 'CreateTemplateCategoryPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateCategory` that was created by this mutation. */
+  templateCategory?: Maybe<TemplateCategory>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `TemplateCategory`. May be used by Relay 1. */
+  templateCategoryEdge?: Maybe<TemplateCategoriesEdge>;
+};
+
+
+/** The output of our create `TemplateCategory` mutation. */
+export type CreateTemplateCategoryPayloadTemplateCategoryEdgeArgs = {
+  orderBy?: Maybe<Array<TemplateCategoriesOrderBy>>;
+};
+
 /** All input for the create `TemplateElement` mutation. */
 export type CreateTemplateElementInput = {
   /**
@@ -4526,6 +4610,43 @@ export type CreateTemplateElementPayloadTemplateElementEdgeArgs = {
   orderBy?: Maybe<Array<TemplateElementsOrderBy>>;
 };
 
+/** All input for the create `TemplateFilterJoin` mutation. */
+export type CreateTemplateFilterJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateFilterJoin` to be created by this mutation. */
+  templateFilterJoin: TemplateFilterJoinInput;
+};
+
+/** The output of our create `TemplateFilterJoin` mutation. */
+export type CreateTemplateFilterJoinPayload = {
+  __typename?: 'CreateTemplateFilterJoinPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateFilterJoin` that was created by this mutation. */
+  templateFilterJoin?: Maybe<TemplateFilterJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
+  templateFilter?: Maybe<Filter>;
+  /** An edge for our `TemplateFilterJoin`. May be used by Relay 1. */
+  templateFilterJoinEdge?: Maybe<TemplateFilterJoinsEdge>;
+};
+
+
+/** The output of our create `TemplateFilterJoin` mutation. */
+export type CreateTemplateFilterJoinPayloadTemplateFilterJoinEdgeArgs = {
+  orderBy?: Maybe<Array<TemplateFilterJoinsOrderBy>>;
+};
+
 /** All input for the create `Template` mutation. */
 export type CreateTemplateInput = {
   /**
@@ -4549,6 +4670,8 @@ export type CreateTemplatePayload = {
   template?: Maybe<Template>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
+  /** Reads a single `TemplateCategory` that is related to this `Template`. */
+  templateCategory?: Maybe<TemplateCategory>;
   /** An edge for our `Template`. May be used by Relay 1. */
   templateEdge?: Maybe<TemplatesEdge>;
 };
@@ -5339,6 +5462,60 @@ export type DeleteFilePayloadFileEdgeArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
 };
 
+/** All input for the `deleteFilterByCode` mutation. */
+export type DeleteFilterByCodeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+};
+
+/** All input for the `deleteFilterByNodeId` mutation. */
+export type DeleteFilterByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Filter` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteFilter` mutation. */
+export type DeleteFilterInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `Filter` mutation. */
+export type DeleteFilterPayload = {
+  __typename?: 'DeleteFilterPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Filter` that was deleted by this mutation. */
+  filter?: Maybe<Filter>;
+  deletedFilterNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Filter`. May be used by Relay 1. */
+  filterEdge?: Maybe<FiltersEdge>;
+};
+
+
+/** The output of our delete `Filter` mutation. */
+export type DeleteFilterPayloadFilterEdgeArgs = {
+  orderBy?: Maybe<Array<FiltersOrderBy>>;
+};
+
 /** All input for the `deleteLookupTableByNodeId` mutation. */
 export type DeleteLookupTableByNodeIdInput = {
   /**
@@ -6057,6 +6234,16 @@ export type DeleteTemplateActionPayloadTemplateActionEdgeArgs = {
   orderBy?: Maybe<Array<TemplateActionsOrderBy>>;
 };
 
+/** All input for the `deleteTemplateByCode` mutation. */
+export type DeleteTemplateByCodeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+};
+
 /** All input for the `deleteTemplateByNodeId` mutation. */
 export type DeleteTemplateByNodeIdInput = {
   /**
@@ -6066,6 +6253,60 @@ export type DeleteTemplateByNodeIdInput = {
   clientMutationId?: Maybe<Scalars['String']>;
   /** The globally unique `ID` which will identify a single `Template` to be deleted. */
   nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteTemplateCategoryByCode` mutation. */
+export type DeleteTemplateCategoryByCodeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+};
+
+/** All input for the `deleteTemplateCategoryByNodeId` mutation. */
+export type DeleteTemplateCategoryByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `TemplateCategory` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteTemplateCategory` mutation. */
+export type DeleteTemplateCategoryInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `TemplateCategory` mutation. */
+export type DeleteTemplateCategoryPayload = {
+  __typename?: 'DeleteTemplateCategoryPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateCategory` that was deleted by this mutation. */
+  templateCategory?: Maybe<TemplateCategory>;
+  deletedTemplateCategoryNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `TemplateCategory`. May be used by Relay 1. */
+  templateCategoryEdge?: Maybe<TemplateCategoriesEdge>;
+};
+
+
+/** The output of our delete `TemplateCategory` mutation. */
+export type DeleteTemplateCategoryPayloadTemplateCategoryEdgeArgs = {
+  orderBy?: Maybe<Array<TemplateCategoriesOrderBy>>;
 };
 
 /** All input for the `deleteTemplateElementByNodeId` mutation. */
@@ -6125,6 +6366,54 @@ export type DeleteTemplateElementPayloadTemplateElementEdgeArgs = {
   orderBy?: Maybe<Array<TemplateElementsOrderBy>>;
 };
 
+/** All input for the `deleteTemplateFilterJoinByNodeId` mutation. */
+export type DeleteTemplateFilterJoinByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `TemplateFilterJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteTemplateFilterJoin` mutation. */
+export type DeleteTemplateFilterJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `TemplateFilterJoin` mutation. */
+export type DeleteTemplateFilterJoinPayload = {
+  __typename?: 'DeleteTemplateFilterJoinPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateFilterJoin` that was deleted by this mutation. */
+  templateFilterJoin?: Maybe<TemplateFilterJoin>;
+  deletedTemplateFilterJoinNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
+  templateFilter?: Maybe<Filter>;
+  /** An edge for our `TemplateFilterJoin`. May be used by Relay 1. */
+  templateFilterJoinEdge?: Maybe<TemplateFilterJoinsEdge>;
+};
+
+
+/** The output of our delete `TemplateFilterJoin` mutation. */
+export type DeleteTemplateFilterJoinPayloadTemplateFilterJoinEdgeArgs = {
+  orderBy?: Maybe<Array<TemplateFilterJoinsOrderBy>>;
+};
+
 /** All input for the `deleteTemplate` mutation. */
 export type DeleteTemplateInput = {
   /**
@@ -6148,6 +6437,8 @@ export type DeleteTemplatePayload = {
   deletedTemplateNodeId?: Maybe<Scalars['ID']>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
+  /** Reads a single `TemplateCategory` that is related to this `Template`. */
+  templateCategory?: Maybe<TemplateCategory>;
   /** An edge for our `Template`. May be used by Relay 1. */
   templateEdge?: Maybe<TemplatesEdge>;
 };
@@ -7208,6 +7499,210 @@ export type FileUserIdFkeyUserCreateInput = {
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
 
+export type Filter = Node & {
+  __typename?: 'Filter';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  code: Scalars['String'];
+  iconColor?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  /** Reads and enables pagination through a set of `TemplateFilterJoin`. */
+  templateFilterJoinsByTemplateFilterId: TemplateFilterJoinsConnection;
+};
+
+
+export type FilterTemplateFilterJoinsByTemplateFilterIdArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TemplateFilterJoinsOrderBy>>;
+  condition?: Maybe<TemplateFilterJoinCondition>;
+  filter?: Maybe<TemplateFilterJoinFilter>;
+};
+
+/** A condition to be used against `Filter` object types. All fields are tested for equality and combined with a logical ‘and.’ */
+export type FilterCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `iconColor` field. */
+  iconColor?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `icon` field. */
+  icon?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `query` field. */
+  query?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `userRole` field. */
+  userRole?: Maybe<PermissionPolicyType>;
+};
+
+/** A filter to be used against `Filter` object types. All fields are combined with a logical ‘and.’ */
+export type FilterFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `iconColor` field. */
+  iconColor?: Maybe<StringFilter>;
+  /** Filter by the object’s `icon` field. */
+  icon?: Maybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: Maybe<StringFilter>;
+  /** Filter by the object’s `query` field. */
+  query?: Maybe<JsonFilter>;
+  /** Filter by the object’s `userRole` field. */
+  userRole?: Maybe<PermissionPolicyTypeFilter>;
+  /** Filter by the object’s `templateFilterJoinsByTemplateFilterId` relation. */
+  templateFilterJoinsByTemplateFilterId?: Maybe<FilterToManyTemplateFilterJoinFilter>;
+  /** Some related `templateFilterJoinsByTemplateFilterId` exist. */
+  templateFilterJoinsByTemplateFilterIdExist?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<FilterFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<FilterFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<FilterFilter>;
+};
+
+/** The fields on `filter` to look up the row to connect. */
+export type FilterFilterCodeKeyConnect = {
+  code: Scalars['String'];
+};
+
+/** The fields on `filter` to look up the row to delete. */
+export type FilterFilterCodeKeyDelete = {
+  code: Scalars['String'];
+};
+
+/** The fields on `filter` to look up the row to connect. */
+export type FilterFilterPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `filter` to look up the row to delete. */
+export type FilterFilterPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** An input for mutations affecting `Filter` */
+export type FilterInput = {
+  id?: Maybe<Scalars['Int']>;
+  code: Scalars['String'];
+  iconColor?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type FilterNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `filter` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type FilterNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `filter` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateFilterJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
+  patch: TemplateFilterJoinPatch;
+};
+
+/** The fields on `filter` to look up the row to update. */
+export type FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The fields on `filter` to look up the row to update. */
+export type FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterPkeyUpdate = {
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `Filter`. Fields that are set will be updated. */
+export type FilterPatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  iconColor?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInverseInput>;
+};
+
+/** A connection to a list of `Filter` values. */
+export type FiltersConnection = {
+  __typename?: 'FiltersConnection';
+  /** A list of `Filter` objects. */
+  nodes: Array<Maybe<Filter>>;
+  /** A list of edges which contains the `Filter` and cursor to aid in pagination. */
+  edges: Array<FiltersEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Filter` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Filter` edge in the connection. */
+export type FiltersEdge = {
+  __typename?: 'FiltersEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Filter` at the end of the edge. */
+  node?: Maybe<Filter>;
+};
+
+/** Methods to use when ordering `Filter`. */
+export enum FiltersOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  IconColorAsc = 'ICON_COLOR_ASC',
+  IconColorDesc = 'ICON_COLOR_DESC',
+  IconAsc = 'ICON_ASC',
+  IconDesc = 'ICON_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  QueryAsc = 'QUERY_ASC',
+  QueryDesc = 'QUERY_DESC',
+  UserRoleAsc = 'USER_ROLE_ASC',
+  UserRoleDesc = 'USER_ROLE_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** A filter to be used against many `TemplateFilterJoin` object types. All fields are combined with a logical ‘and.’ */
+export type FilterToManyTemplateFilterJoinFilter = {
+  /** Every related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<TemplateFilterJoinFilter>;
+  /** Some related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<TemplateFilterJoinFilter>;
+  /** No related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<TemplateFilterJoinFilter>;
+};
+
 /** A filter to be used against Int fields. All fields are combined with a logical ‘and.’ */
 export type IntFilter = {
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
@@ -7390,6 +7885,8 @@ export type Mutation = {
   createElementTypePlugin?: Maybe<CreateElementTypePluginPayload>;
   /** Creates a single `File`. */
   createFile?: Maybe<CreateFilePayload>;
+  /** Creates a single `Filter`. */
+  createFilter?: Maybe<CreateFilterPayload>;
   /** Creates a single `LookupTable`. */
   createLookupTable?: Maybe<CreateLookupTablePayload>;
   /** Creates a single `Notification`. */
@@ -7420,8 +7917,12 @@ export type Mutation = {
   createTemplate?: Maybe<CreateTemplatePayload>;
   /** Creates a single `TemplateAction`. */
   createTemplateAction?: Maybe<CreateTemplateActionPayload>;
+  /** Creates a single `TemplateCategory`. */
+  createTemplateCategory?: Maybe<CreateTemplateCategoryPayload>;
   /** Creates a single `TemplateElement`. */
   createTemplateElement?: Maybe<CreateTemplateElementPayload>;
+  /** Creates a single `TemplateFilterJoin`. */
+  createTemplateFilterJoin?: Maybe<CreateTemplateFilterJoinPayload>;
   /** Creates a single `TemplatePermission`. */
   createTemplatePermission?: Maybe<CreateTemplatePermissionPayload>;
   /** Creates a single `TemplateSection`. */
@@ -7476,6 +7977,12 @@ export type Mutation = {
   updateFile?: Maybe<UpdateFilePayload>;
   /** Updates a single `File` using a unique key and a patch. */
   updateFileByUniqueId?: Maybe<UpdateFilePayload>;
+  /** Updates a single `Filter` using its globally unique id and a patch. */
+  updateFilterByNodeId?: Maybe<UpdateFilterPayload>;
+  /** Updates a single `Filter` using a unique key and a patch. */
+  updateFilter?: Maybe<UpdateFilterPayload>;
+  /** Updates a single `Filter` using a unique key and a patch. */
+  updateFilterByCode?: Maybe<UpdateFilterPayload>;
   /** Updates a single `LookupTable` using its globally unique id and a patch. */
   updateLookupTableByNodeId?: Maybe<UpdateLookupTablePayload>;
   /** Updates a single `LookupTable` using a unique key and a patch. */
@@ -7540,16 +8047,28 @@ export type Mutation = {
   updateTemplateByNodeId?: Maybe<UpdateTemplatePayload>;
   /** Updates a single `Template` using a unique key and a patch. */
   updateTemplate?: Maybe<UpdateTemplatePayload>;
+  /** Updates a single `Template` using a unique key and a patch. */
+  updateTemplateByCode?: Maybe<UpdateTemplatePayload>;
   /** Updates a single `TemplateAction` using its globally unique id and a patch. */
   updateTemplateActionByNodeId?: Maybe<UpdateTemplateActionPayload>;
   /** Updates a single `TemplateAction` using a unique key and a patch. */
   updateTemplateAction?: Maybe<UpdateTemplateActionPayload>;
+  /** Updates a single `TemplateCategory` using its globally unique id and a patch. */
+  updateTemplateCategoryByNodeId?: Maybe<UpdateTemplateCategoryPayload>;
+  /** Updates a single `TemplateCategory` using a unique key and a patch. */
+  updateTemplateCategory?: Maybe<UpdateTemplateCategoryPayload>;
+  /** Updates a single `TemplateCategory` using a unique key and a patch. */
+  updateTemplateCategoryByCode?: Maybe<UpdateTemplateCategoryPayload>;
   /** Updates a single `TemplateElement` using its globally unique id and a patch. */
   updateTemplateElementByNodeId?: Maybe<UpdateTemplateElementPayload>;
   /** Updates a single `TemplateElement` using a unique key and a patch. */
   updateTemplateElement?: Maybe<UpdateTemplateElementPayload>;
   /** Updates a single `TemplateElement` using a unique key and a patch. */
   updateTemplateElementByTemplateCodeAndCode?: Maybe<UpdateTemplateElementPayload>;
+  /** Updates a single `TemplateFilterJoin` using its globally unique id and a patch. */
+  updateTemplateFilterJoinByNodeId?: Maybe<UpdateTemplateFilterJoinPayload>;
+  /** Updates a single `TemplateFilterJoin` using a unique key and a patch. */
+  updateTemplateFilterJoin?: Maybe<UpdateTemplateFilterJoinPayload>;
   /** Updates a single `TemplatePermission` using its globally unique id and a patch. */
   updateTemplatePermissionByNodeId?: Maybe<UpdateTemplatePermissionPayload>;
   /** Updates a single `TemplatePermission` using a unique key and a patch. */
@@ -7620,6 +8139,12 @@ export type Mutation = {
   deleteFile?: Maybe<DeleteFilePayload>;
   /** Deletes a single `File` using a unique key. */
   deleteFileByUniqueId?: Maybe<DeleteFilePayload>;
+  /** Deletes a single `Filter` using its globally unique id. */
+  deleteFilterByNodeId?: Maybe<DeleteFilterPayload>;
+  /** Deletes a single `Filter` using a unique key. */
+  deleteFilter?: Maybe<DeleteFilterPayload>;
+  /** Deletes a single `Filter` using a unique key. */
+  deleteFilterByCode?: Maybe<DeleteFilterPayload>;
   /** Deletes a single `LookupTable` using its globally unique id. */
   deleteLookupTableByNodeId?: Maybe<DeleteLookupTablePayload>;
   /** Deletes a single `LookupTable` using a unique key. */
@@ -7684,16 +8209,28 @@ export type Mutation = {
   deleteTemplateByNodeId?: Maybe<DeleteTemplatePayload>;
   /** Deletes a single `Template` using a unique key. */
   deleteTemplate?: Maybe<DeleteTemplatePayload>;
+  /** Deletes a single `Template` using a unique key. */
+  deleteTemplateByCode?: Maybe<DeleteTemplatePayload>;
   /** Deletes a single `TemplateAction` using its globally unique id. */
   deleteTemplateActionByNodeId?: Maybe<DeleteTemplateActionPayload>;
   /** Deletes a single `TemplateAction` using a unique key. */
   deleteTemplateAction?: Maybe<DeleteTemplateActionPayload>;
+  /** Deletes a single `TemplateCategory` using its globally unique id. */
+  deleteTemplateCategoryByNodeId?: Maybe<DeleteTemplateCategoryPayload>;
+  /** Deletes a single `TemplateCategory` using a unique key. */
+  deleteTemplateCategory?: Maybe<DeleteTemplateCategoryPayload>;
+  /** Deletes a single `TemplateCategory` using a unique key. */
+  deleteTemplateCategoryByCode?: Maybe<DeleteTemplateCategoryPayload>;
   /** Deletes a single `TemplateElement` using its globally unique id. */
   deleteTemplateElementByNodeId?: Maybe<DeleteTemplateElementPayload>;
   /** Deletes a single `TemplateElement` using a unique key. */
   deleteTemplateElement?: Maybe<DeleteTemplateElementPayload>;
   /** Deletes a single `TemplateElement` using a unique key. */
   deleteTemplateElementByTemplateCodeAndCode?: Maybe<DeleteTemplateElementPayload>;
+  /** Deletes a single `TemplateFilterJoin` using its globally unique id. */
+  deleteTemplateFilterJoinByNodeId?: Maybe<DeleteTemplateFilterJoinPayload>;
+  /** Deletes a single `TemplateFilterJoin` using a unique key. */
+  deleteTemplateFilterJoin?: Maybe<DeleteTemplateFilterJoinPayload>;
   /** Deletes a single `TemplatePermission` using its globally unique id. */
   deleteTemplatePermissionByNodeId?: Maybe<DeleteTemplatePermissionPayload>;
   /** Deletes a single `TemplatePermission` using a unique key. */
@@ -7788,6 +8325,12 @@ export type MutationCreateFileArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateFilterArgs = {
+  input: CreateFilterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateLookupTableArgs = {
   input: CreateLookupTableInput;
 };
@@ -7878,8 +8421,20 @@ export type MutationCreateTemplateActionArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateTemplateCategoryArgs = {
+  input: CreateTemplateCategoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateTemplateElementArgs = {
   input: CreateTemplateElementInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateTemplateFilterJoinArgs = {
+  input: CreateTemplateFilterJoinInput;
 };
 
 
@@ -8042,6 +8597,24 @@ export type MutationUpdateFileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateFileByUniqueIdArgs = {
   input: UpdateFileByUniqueIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateFilterByNodeIdArgs = {
+  input: UpdateFilterByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateFilterArgs = {
+  input: UpdateFilterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateFilterByCodeArgs = {
+  input: UpdateFilterByCodeInput;
 };
 
 
@@ -8238,6 +8811,12 @@ export type MutationUpdateTemplateArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateByCodeArgs = {
+  input: UpdateTemplateByCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTemplateActionByNodeIdArgs = {
   input: UpdateTemplateActionByNodeIdInput;
 };
@@ -8246,6 +8825,24 @@ export type MutationUpdateTemplateActionByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTemplateActionArgs = {
   input: UpdateTemplateActionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateCategoryByNodeIdArgs = {
+  input: UpdateTemplateCategoryByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateCategoryArgs = {
+  input: UpdateTemplateCategoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateCategoryByCodeArgs = {
+  input: UpdateTemplateCategoryByCodeInput;
 };
 
 
@@ -8264,6 +8861,18 @@ export type MutationUpdateTemplateElementArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateTemplateElementByTemplateCodeAndCodeArgs = {
   input: UpdateTemplateElementByTemplateCodeAndCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateFilterJoinByNodeIdArgs = {
+  input: UpdateTemplateFilterJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTemplateFilterJoinArgs = {
+  input: UpdateTemplateFilterJoinInput;
 };
 
 
@@ -8478,6 +9087,24 @@ export type MutationDeleteFileByUniqueIdArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteFilterByNodeIdArgs = {
+  input: DeleteFilterByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteFilterArgs = {
+  input: DeleteFilterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteFilterByCodeArgs = {
+  input: DeleteFilterByCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteLookupTableByNodeIdArgs = {
   input: DeleteLookupTableByNodeIdInput;
 };
@@ -8670,6 +9297,12 @@ export type MutationDeleteTemplateArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateByCodeArgs = {
+  input: DeleteTemplateByCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTemplateActionByNodeIdArgs = {
   input: DeleteTemplateActionByNodeIdInput;
 };
@@ -8678,6 +9311,24 @@ export type MutationDeleteTemplateActionByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTemplateActionArgs = {
   input: DeleteTemplateActionInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateCategoryByNodeIdArgs = {
+  input: DeleteTemplateCategoryByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateCategoryArgs = {
+  input: DeleteTemplateCategoryInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateCategoryByCodeArgs = {
+  input: DeleteTemplateCategoryByCodeInput;
 };
 
 
@@ -8696,6 +9347,18 @@ export type MutationDeleteTemplateElementArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteTemplateElementByTemplateCodeAndCodeArgs = {
   input: DeleteTemplateElementByTemplateCodeAndCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateFilterJoinByNodeIdArgs = {
+  input: DeleteTemplateFilterJoinByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTemplateFilterJoinArgs = {
+  input: DeleteTemplateFilterJoinInput;
 };
 
 
@@ -10946,6 +11609,8 @@ export type Query = Node & {
   elementTypePlugins?: Maybe<ElementTypePluginsConnection>;
   /** Reads and enables pagination through a set of `File`. */
   files?: Maybe<FilesConnection>;
+  /** Reads and enables pagination through a set of `Filter`. */
+  filters?: Maybe<FiltersConnection>;
   /** Reads and enables pagination through a set of `LookupTable`. */
   lookupTables?: Maybe<LookupTablesConnection>;
   /** Reads and enables pagination through a set of `Notification`. */
@@ -10978,8 +11643,12 @@ export type Query = Node & {
   templates?: Maybe<TemplatesConnection>;
   /** Reads and enables pagination through a set of `TemplateAction`. */
   templateActions?: Maybe<TemplateActionsConnection>;
+  /** Reads and enables pagination through a set of `TemplateCategory`. */
+  templateCategories?: Maybe<TemplateCategoriesConnection>;
   /** Reads and enables pagination through a set of `TemplateElement`. */
   templateElements?: Maybe<TemplateElementsConnection>;
+  /** Reads and enables pagination through a set of `TemplateFilterJoin`. */
+  templateFilterJoins?: Maybe<TemplateFilterJoinsConnection>;
   /** Reads and enables pagination through a set of `TemplatePermission`. */
   templatePermissions?: Maybe<TemplatePermissionsConnection>;
   /** Reads and enables pagination through a set of `TemplateSection`. */
@@ -11007,6 +11676,8 @@ export type Query = Node & {
   elementTypePlugin?: Maybe<ElementTypePlugin>;
   file?: Maybe<File>;
   fileByUniqueId?: Maybe<File>;
+  filter?: Maybe<Filter>;
+  filterByCode?: Maybe<Filter>;
   lookupTable?: Maybe<LookupTable>;
   notification?: Maybe<Notification>;
   organisation?: Maybe<Organisation>;
@@ -11025,9 +11696,13 @@ export type Query = Node & {
   reviewResponse?: Maybe<ReviewResponse>;
   reviewStatusHistory?: Maybe<ReviewStatusHistory>;
   template?: Maybe<Template>;
+  templateByCode?: Maybe<Template>;
   templateAction?: Maybe<TemplateAction>;
+  templateCategory?: Maybe<TemplateCategory>;
+  templateCategoryByCode?: Maybe<TemplateCategory>;
   templateElement?: Maybe<TemplateElement>;
   templateElementByTemplateCodeAndCode?: Maybe<TemplateElement>;
+  templateFilterJoin?: Maybe<TemplateFilterJoin>;
   templatePermission?: Maybe<TemplatePermission>;
   templateSection?: Maybe<TemplateSection>;
   templateStage?: Maybe<TemplateStage>;
@@ -11067,6 +11742,8 @@ export type Query = Node & {
   elementTypePluginByNodeId?: Maybe<ElementTypePlugin>;
   /** Reads a single `File` using its globally unique `ID`. */
   fileByNodeId?: Maybe<File>;
+  /** Reads a single `Filter` using its globally unique `ID`. */
+  filterByNodeId?: Maybe<Filter>;
   /** Reads a single `LookupTable` using its globally unique `ID`. */
   lookupTableByNodeId?: Maybe<LookupTable>;
   /** Reads a single `Notification` using its globally unique `ID`. */
@@ -11097,8 +11774,12 @@ export type Query = Node & {
   templateByNodeId?: Maybe<Template>;
   /** Reads a single `TemplateAction` using its globally unique `ID`. */
   templateActionByNodeId?: Maybe<TemplateAction>;
+  /** Reads a single `TemplateCategory` using its globally unique `ID`. */
+  templateCategoryByNodeId?: Maybe<TemplateCategory>;
   /** Reads a single `TemplateElement` using its globally unique `ID`. */
   templateElementByNodeId?: Maybe<TemplateElement>;
+  /** Reads a single `TemplateFilterJoin` using its globally unique `ID`. */
+  templateFilterJoinByNodeId?: Maybe<TemplateFilterJoin>;
   /** Reads a single `TemplatePermission` using its globally unique `ID`. */
   templatePermissionByNodeId?: Maybe<TemplatePermission>;
   /** Reads a single `TemplateSection` using its globally unique `ID`. */
@@ -11275,6 +11956,19 @@ export type QueryFilesArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
   condition?: Maybe<FileCondition>;
   filter?: Maybe<FileFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFiltersArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<FiltersOrderBy>>;
+  condition?: Maybe<FilterCondition>;
+  filter?: Maybe<FilterFilter>;
 };
 
 
@@ -11487,6 +12181,19 @@ export type QueryTemplateActionsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryTemplateCategoriesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TemplateCategoriesOrderBy>>;
+  condition?: Maybe<TemplateCategoryCondition>;
+  filter?: Maybe<TemplateCategoryFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryTemplateElementsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -11496,6 +12203,19 @@ export type QueryTemplateElementsArgs = {
   orderBy?: Maybe<Array<TemplateElementsOrderBy>>;
   condition?: Maybe<TemplateElementCondition>;
   filter?: Maybe<TemplateElementFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateFilterJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TemplateFilterJoinsOrderBy>>;
+  condition?: Maybe<TemplateFilterJoinCondition>;
+  filter?: Maybe<TemplateFilterJoinFilter>;
 };
 
 
@@ -11670,6 +12390,18 @@ export type QueryFileByUniqueIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryFilterArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryFilterByCodeArgs = {
+  code: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryLookupTableArgs = {
   id: Scalars['Int'];
 };
@@ -11778,8 +12510,26 @@ export type QueryTemplateArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryTemplateByCodeArgs = {
+  code: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryTemplateActionArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateCategoryArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateCategoryByCodeArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -11793,6 +12543,12 @@ export type QueryTemplateElementArgs = {
 export type QueryTemplateElementByTemplateCodeAndCodeArgs = {
   templateCode: Scalars['String'];
   code: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateFilterJoinArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -11990,6 +12746,12 @@ export type QueryFileByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryFilterByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryLookupTableByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -12080,7 +12842,19 @@ export type QueryTemplateActionByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryTemplateCategoryByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryTemplateElementByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryTemplateFilterJoinByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -16098,11 +16872,16 @@ export type Template = Node & {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  /** Reads a single `TemplateCategory` that is related to this `Template`. */
+  templateCategory?: Maybe<TemplateCategory>;
   /** Reads and enables pagination through a set of `TemplateStage`. */
   templateStages: TemplateStagesConnection;
   /** Reads and enables pagination through a set of `TemplateSection`. */
   templateSections: TemplateSectionsConnection;
+  /** Reads and enables pagination through a set of `TemplateFilterJoin`. */
+  templateFilterJoins: TemplateFilterJoinsConnection;
   /** Reads and enables pagination through a set of `TemplatePermission`. */
   templatePermissions: TemplatePermissionsConnection;
   /** Reads and enables pagination through a set of `Application`. */
@@ -16135,6 +16914,18 @@ export type TemplateTemplateSectionsArgs = {
   orderBy?: Maybe<Array<TemplateSectionsOrderBy>>;
   condition?: Maybe<TemplateSectionCondition>;
   filter?: Maybe<TemplateSectionFilter>;
+};
+
+
+export type TemplateTemplateFilterJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TemplateFilterJoinsOrderBy>>;
+  condition?: Maybe<TemplateFilterJoinCondition>;
+  filter?: Maybe<TemplateFilterJoinFilter>;
 };
 
 
@@ -16358,13 +17149,19 @@ export type TemplateActionTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByCode?: Maybe<TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -16411,13 +17208,196 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+};
+
+/** A connection to a list of `TemplateCategory` values. */
+export type TemplateCategoriesConnection = {
+  __typename?: 'TemplateCategoriesConnection';
+  /** A list of `TemplateCategory` objects. */
+  nodes: Array<Maybe<TemplateCategory>>;
+  /** A list of edges which contains the `TemplateCategory` and cursor to aid in pagination. */
+  edges: Array<TemplateCategoriesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TemplateCategory` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `TemplateCategory` edge in the connection. */
+export type TemplateCategoriesEdge = {
+  __typename?: 'TemplateCategoriesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `TemplateCategory` at the end of the edge. */
+  node?: Maybe<TemplateCategory>;
+};
+
+/** Methods to use when ordering `TemplateCategory`. */
+export enum TemplateCategoriesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  TitleAsc = 'TITLE_ASC',
+  TitleDesc = 'TITLE_DESC',
+  IconAsc = 'ICON_ASC',
+  IconDesc = 'ICON_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+export type TemplateCategory = Node & {
+  __typename?: 'TemplateCategory';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  code: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  /** Reads and enables pagination through a set of `Template`. */
+  templates: TemplatesConnection;
+};
+
+
+export type TemplateCategoryTemplatesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TemplatesOrderBy>>;
+  condition?: Maybe<TemplateCondition>;
+  filter?: Maybe<TemplateFilter>;
+};
+
+/**
+ * A condition to be used against `TemplateCategory` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type TemplateCategoryCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `title` field. */
+  title?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `icon` field. */
+  icon?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `TemplateCategory` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateCategoryFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `title` field. */
+  title?: Maybe<StringFilter>;
+  /** Filter by the object’s `icon` field. */
+  icon?: Maybe<StringFilter>;
+  /** Filter by the object’s `templates` relation. */
+  templates?: Maybe<TemplateCategoryToManyTemplateFilter>;
+  /** Some related `templates` exist. */
+  templatesExist?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<TemplateCategoryFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<TemplateCategoryFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<TemplateCategoryFilter>;
+};
+
+/** An input for mutations affecting `TemplateCategory` */
+export type TemplateCategoryInput = {
+  id?: Maybe<Scalars['Int']>;
+  code: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type TemplateCategoryNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `templateCategory` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type TemplateCategoryNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `templateCategory` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `template` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: TemplatePatch;
+};
+
+/** The fields on `templateCategory` to look up the row to update. */
+export type TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `templateCategory` being updated. */
+  patch: UpdateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The fields on `templateCategory` to look up the row to update. */
+export type TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryPkeyUpdate = {
+  /** An object where the defined keys will be set on the `templateCategory` being updated. */
+  patch: UpdateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `TemplateCategory`. Fields that are set will be updated. */
+export type TemplateCategoryPatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
+};
+
+/** The fields on `templateCategory` to look up the row to connect. */
+export type TemplateCategoryTemplateCategoryCodeKeyConnect = {
+  code: Scalars['String'];
+};
+
+/** The fields on `templateCategory` to look up the row to delete. */
+export type TemplateCategoryTemplateCategoryCodeKeyDelete = {
+  code: Scalars['String'];
+};
+
+/** The fields on `templateCategory` to look up the row to connect. */
+export type TemplateCategoryTemplateCategoryPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `templateCategory` to look up the row to delete. */
+export type TemplateCategoryTemplateCategoryPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** A filter to be used against many `Template` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateCategoryToManyTemplateFilter = {
+  /** Every related `Template` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<TemplateFilter>;
+  /** Some related `Template` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<TemplateFilter>;
+  /** No related `Template` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<TemplateFilter>;
 };
 
 /**
@@ -16439,6 +17419,8 @@ export type TemplateCondition = {
   status?: Maybe<TemplateStatus>;
   /** Checks for equality with the object’s `submissionMessage` field. */
   submissionMessage?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `templateCategoryId` field. */
+  templateCategoryId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `versionTimestamp` field. */
   versionTimestamp?: Maybe<Scalars['Datetime']>;
 };
@@ -16977,6 +17959,8 @@ export type TemplateFilter = {
   status?: Maybe<TemplateStatusFilter>;
   /** Filter by the object’s `submissionMessage` field. */
   submissionMessage?: Maybe<JsonFilter>;
+  /** Filter by the object’s `templateCategoryId` field. */
+  templateCategoryId?: Maybe<IntFilter>;
   /** Filter by the object’s `versionTimestamp` field. */
   versionTimestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `templateStages` relation. */
@@ -16987,6 +17971,10 @@ export type TemplateFilter = {
   templateSections?: Maybe<TemplateToManyTemplateSectionFilter>;
   /** Some related `templateSections` exist. */
   templateSectionsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `templateFilterJoins` relation. */
+  templateFilterJoins?: Maybe<TemplateToManyTemplateFilterJoinFilter>;
+  /** Some related `templateFilterJoins` exist. */
+  templateFilterJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templatePermissions` relation. */
   templatePermissions?: Maybe<TemplateToManyTemplatePermissionFilter>;
   /** Some related `templatePermissions` exist. */
@@ -17003,12 +17991,308 @@ export type TemplateFilter = {
   templateActions?: Maybe<TemplateToManyTemplateActionFilter>;
   /** Some related `templateActions` exist. */
   templateActionsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `templateCategory` relation. */
+  templateCategory?: Maybe<TemplateCategoryFilter>;
+  /** A related `templateCategory` exists. */
+  templateCategoryExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateFilter>>;
   /** Checks for any expressions in this list. */
   or?: Maybe<Array<TemplateFilter>>;
   /** Negates the expression. */
   not?: Maybe<TemplateFilter>;
+};
+
+export type TemplateFilterJoin = Node & {
+  __typename?: 'TemplateFilterJoin';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  templateId?: Maybe<Scalars['Int']>;
+  templateFilterId?: Maybe<Scalars['Int']>;
+  /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
+  templateFilter?: Maybe<Filter>;
+};
+
+/**
+ * A condition to be used against `TemplateFilterJoin` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type TemplateFilterJoinCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateFilterId` field. */
+  templateFilterId?: Maybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `TemplateFilterJoin` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateFilterJoinFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateFilterId` field. */
+  templateFilterId?: Maybe<IntFilter>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** A related `template` exists. */
+  templateExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `templateFilter` relation. */
+  templateFilter?: Maybe<FilterFilter>;
+  /** A related `templateFilter` exists. */
+  templateFilterExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<TemplateFilterJoinFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<TemplateFilterJoinFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<TemplateFilterJoinFilter>;
+};
+
+/** An input for mutations affecting `TemplateFilterJoin` */
+export type TemplateFilterJoinInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateFilterId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
+  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type TemplateFilterJoinNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `templateFilterJoin` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type TemplateFilterJoinNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `templateFilterJoin` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `filter` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: FilterPatch;
+};
+
+/** The fields on `templateFilterJoin` to look up the row to update. */
+export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
+  patch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `template` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: TemplatePatch;
+};
+
+/** The fields on `templateFilterJoin` to look up the row to update. */
+export type TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateFilterJoinPkeyUpdate = {
+  /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
+  patch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `TemplateFilterJoin`. Fields that are set will be updated. */
+export type TemplateFilterJoinPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateFilterId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
+  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
+};
+
+/** A connection to a list of `TemplateFilterJoin` values. */
+export type TemplateFilterJoinsConnection = {
+  __typename?: 'TemplateFilterJoinsConnection';
+  /** A list of `TemplateFilterJoin` objects. */
+  nodes: Array<Maybe<TemplateFilterJoin>>;
+  /** A list of edges which contains the `TemplateFilterJoin` and cursor to aid in pagination. */
+  edges: Array<TemplateFilterJoinsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TemplateFilterJoin` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `TemplateFilterJoin` edge in the connection. */
+export type TemplateFilterJoinsEdge = {
+  __typename?: 'TemplateFilterJoinsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `TemplateFilterJoin` at the end of the edge. */
+  node?: Maybe<TemplateFilterJoin>;
+};
+
+/** Methods to use when ordering `TemplateFilterJoin`. */
+export enum TemplateFilterJoinsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  TemplateFilterIdAsc = 'TEMPLATE_FILTER_ID_ASC',
+  TemplateFilterIdDesc = 'TEMPLATE_FILTER_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** The `filter` to be created by this mutation. */
+export type TemplateFilterJoinTemplateFilterIdFkeyFilterCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  code: Scalars['String'];
+  iconColor?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `filter` in the `TemplateFilterJoinInput` mutation. */
+export type TemplateFilterJoinTemplateFilterIdFkeyInput = {
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectById?: Maybe<FilterFilterPkeyConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectByCode?: Maybe<FilterFilterCodeKeyConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectByNodeId?: Maybe<FilterNodeIdConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteById?: Maybe<FilterFilterPkeyDelete>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteByCode?: Maybe<FilterFilterCodeKeyDelete>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<FilterNodeIdDelete>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateById?: Maybe<FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterPkeyUpdate>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateByCode?: Maybe<FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateByNodeId?: Maybe<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate>;
+  /** A `FilterInput` object that will be created and connected to this object. */
+  create?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyFilterCreateInput>;
+};
+
+/** Input for the nested mutation of `templateFilterJoin` in the `FilterInput` mutation. */
+export type TemplateFilterJoinTemplateFilterIdFkeyInverseInput = {
+  /** Flag indicating whether all other `templateFilterJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<TemplateFilterJoinTemplateFilterJoinPkeyConnect>>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<TemplateFilterJoinNodeIdConnect>>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<TemplateFilterJoinTemplateFilterJoinPkeyDelete>>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<TemplateFilterJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `templateFilterJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `templateFilterJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate>>;
+  /** A `TemplateFilterJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<TemplateFilterJoinTemplateFilterIdFkeyTemplateFilterJoinCreateInput>>;
+};
+
+/** The `templateFilterJoin` to be created by this mutation. */
+export type TemplateFilterJoinTemplateFilterIdFkeyTemplateFilterJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
+  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
+};
+
+/** The fields on `templateFilterJoin` to look up the row to connect. */
+export type TemplateFilterJoinTemplateFilterJoinPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `templateFilterJoin` to look up the row to delete. */
+export type TemplateFilterJoinTemplateFilterJoinPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** Input for the nested mutation of `template` in the `TemplateFilterJoinInput` mutation. */
+export type TemplateFilterJoinTemplateIdFkeyInput = {
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectById?: Maybe<TemplateTemplatePkeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateNodeIdConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateTemplatePkeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateById?: Maybe<TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByCode?: Maybe<TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByNodeId?: Maybe<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate>;
+  /** A `TemplateInput` object that will be created and connected to this object. */
+  create?: Maybe<TemplateFilterJoinTemplateIdFkeyTemplateCreateInput>;
+};
+
+/** Input for the nested mutation of `templateFilterJoin` in the `TemplateInput` mutation. */
+export type TemplateFilterJoinTemplateIdFkeyInverseInput = {
+  /** Flag indicating whether all other `templateFilterJoin` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  connectById?: Maybe<Array<TemplateFilterJoinTemplateFilterJoinPkeyConnect>>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<TemplateFilterJoinNodeIdConnect>>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  deleteById?: Maybe<Array<TemplateFilterJoinTemplateFilterJoinPkeyDelete>>;
+  /** The primary key(s) for `templateFilterJoin` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<TemplateFilterJoinNodeIdDelete>>;
+  /** The primary key(s) and patch data for `templateFilterJoin` for the far side of the relationship. */
+  updateById?: Maybe<Array<TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateFilterJoinPkeyUpdate>>;
+  /** The primary key(s) and patch data for `templateFilterJoin` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate>>;
+  /** A `TemplateFilterJoinInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput>>;
+};
+
+/** The `template` to be created by this mutation. */
+export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+};
+
+/** The `templateFilterJoin` to be created by this mutation. */
+export type TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateFilterId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
+  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
 };
 
 /** An input for mutations affecting `Template` */
@@ -17020,9 +18304,12 @@ export type TemplateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -17050,6 +18337,13 @@ export type TemplateOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate = {
 };
 
 /** The fields on `template` to look up the row to update. */
+export type TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The fields on `template` to look up the row to update. */
 export type TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplatePkeyUpdate = {
   /** An object where the defined keys will be set on the `template` being updated. */
   patch: UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch;
@@ -17062,6 +18356,13 @@ export type TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate = {
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: ApplicationPatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch;
+  code: Scalars['String'];
 };
 
 /** The fields on `template` to look up the row to update. */
@@ -17080,9 +18381,60 @@ export type TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate 
 };
 
 /** The fields on `template` to look up the row to update. */
+export type TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The fields on `template` to look up the row to update. */
 export type TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate = {
   /** An object where the defined keys will be set on the `template` being updated. */
   patch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateFilterJoin` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
+  patch: TemplateFilterJoinPatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `templateCategory` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `templateCategory` being updated. */
+  patch: TemplateCategoryPatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -17092,6 +18444,13 @@ export type TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeI
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `templatePermission` being updated. */
   patch: TemplatePermissionPatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch;
+  code: Scalars['String'];
 };
 
 /** The fields on `template` to look up the row to update. */
@@ -17110,6 +18469,13 @@ export type TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdat
 };
 
 /** The fields on `template` to look up the row to update. */
+export type TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The fields on `template` to look up the row to update. */
 export type TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplatePkeyUpdate = {
   /** An object where the defined keys will be set on the `template` being updated. */
   patch: UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch;
@@ -17122,6 +18488,13 @@ export type TemplateOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate = 
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `templateStage` being updated. */
   patch: TemplateStagePatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplateCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch;
+  code: Scalars['String'];
 };
 
 /** The fields on `template` to look up the row to update. */
@@ -17140,9 +18513,12 @@ export type TemplatePatch = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -17391,13 +18767,19 @@ export type TemplatePermissionTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByCode?: Maybe<TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -17433,9 +18815,12 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -17691,13 +19076,19 @@ export type TemplateSectionTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByCode?: Maybe<TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<TemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -17733,9 +19124,12 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -17809,6 +19203,8 @@ export enum TemplatesOrderBy {
   StatusDesc = 'STATUS_DESC',
   SubmissionMessageAsc = 'SUBMISSION_MESSAGE_ASC',
   SubmissionMessageDesc = 'SUBMISSION_MESSAGE_DESC',
+  TemplateCategoryIdAsc = 'TEMPLATE_CATEGORY_ID_ASC',
+  TemplateCategoryIdDesc = 'TEMPLATE_CATEGORY_ID_DESC',
   VersionTimestampAsc = 'VERSION_TIMESTAMP_ASC',
   VersionTimestampDesc = 'VERSION_TIMESTAMP_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -18331,13 +19727,19 @@ export type TemplateStageTemplateIdFkeyInput = {
   /** The primary key(s) for `template` for the far side of the relationship. */
   connectById?: Maybe<TemplateTemplatePkeyConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByCode?: Maybe<TemplateTemplateCodeKeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   connectByNodeId?: Maybe<TemplateNodeIdConnect>;
   /** The primary key(s) for `template` for the far side of the relationship. */
   deleteById?: Maybe<TemplateTemplatePkeyDelete>;
   /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByCode?: Maybe<TemplateTemplateCodeKeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
   deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateById?: Maybe<TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByCode?: Maybe<TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplateCodeKeyUpdate>;
   /** The primary key(s) and patch data for `template` for the far side of the relationship. */
   updateByNodeId?: Maybe<TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate>;
   /** A `TemplateInput` object that will be created and connected to this object. */
@@ -18373,9 +19775,12 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -18467,6 +19872,95 @@ export type TemplateStatusFilter = {
   greaterThanOrEqualTo?: Maybe<TemplateStatus>;
 };
 
+/** Input for the nested mutation of `templateCategory` in the `TemplateInput` mutation. */
+export type TemplateTemplateCategoryIdFkeyInput = {
+  /** The primary key(s) for `templateCategory` for the far side of the relationship. */
+  connectById?: Maybe<TemplateCategoryTemplateCategoryPkeyConnect>;
+  /** The primary key(s) for `templateCategory` for the far side of the relationship. */
+  connectByCode?: Maybe<TemplateCategoryTemplateCategoryCodeKeyConnect>;
+  /** The primary key(s) for `templateCategory` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateCategoryNodeIdConnect>;
+  /** The primary key(s) for `templateCategory` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateCategoryTemplateCategoryPkeyDelete>;
+  /** The primary key(s) for `templateCategory` for the far side of the relationship. */
+  deleteByCode?: Maybe<TemplateCategoryTemplateCategoryCodeKeyDelete>;
+  /** The primary key(s) for `templateCategory` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateCategoryNodeIdDelete>;
+  /** The primary key(s) and patch data for `templateCategory` for the far side of the relationship. */
+  updateById?: Maybe<TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryPkeyUpdate>;
+  /** The primary key(s) and patch data for `templateCategory` for the far side of the relationship. */
+  updateByCode?: Maybe<TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `templateCategory` for the far side of the relationship. */
+  updateByNodeId?: Maybe<TemplateOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate>;
+  /** A `TemplateCategoryInput` object that will be created and connected to this object. */
+  create?: Maybe<TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput>;
+};
+
+/** Input for the nested mutation of `template` in the `TemplateCategoryInput` mutation. */
+export type TemplateTemplateCategoryIdFkeyInverseInput = {
+  /** Flag indicating whether all other `template` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectById?: Maybe<Array<TemplateTemplatePkeyConnect>>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByCode?: Maybe<Array<TemplateTemplateCodeKeyConnect>>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<TemplateNodeIdConnect>>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteById?: Maybe<Array<TemplateTemplatePkeyDelete>>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByCode?: Maybe<Array<TemplateTemplateCodeKeyDelete>>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<TemplateNodeIdDelete>>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateById?: Maybe<Array<TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplatePkeyUpdate>>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByCode?: Maybe<Array<TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCodeKeyUpdate>>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate>>;
+  /** A `TemplateInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<TemplateTemplateCategoryIdFkeyTemplateCreateInput>>;
+};
+
+/** The `templateCategory` to be created by this mutation. */
+export type TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  code: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
+};
+
+/** The `template` to be created by this mutation. */
+export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+};
+
+/** The fields on `template` to look up the row to connect. */
+export type TemplateTemplateCodeKeyConnect = {
+  code: Scalars['String'];
+};
+
+/** The fields on `template` to look up the row to delete. */
+export type TemplateTemplateCodeKeyDelete = {
+  code: Scalars['String'];
+};
+
 /** The fields on `template` to look up the row to connect. */
 export type TemplateTemplatePkeyConnect = {
   id: Scalars['Int'];
@@ -18505,6 +19999,16 @@ export type TemplateToManyTemplateActionFilter = {
   some?: Maybe<TemplateActionFilter>;
   /** No related `TemplateAction` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<TemplateActionFilter>;
+};
+
+/** A filter to be used against many `TemplateFilterJoin` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateToManyTemplateFilterJoinFilter = {
+  /** Every related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<TemplateFilterJoinFilter>;
+  /** Some related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<TemplateFilterJoinFilter>;
+  /** No related `TemplateFilterJoin` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<TemplateFilterJoinFilter>;
 };
 
 /** A filter to be used against many `TemplatePermission` object types. All fields are combined with a logical ‘and.’ */
@@ -19737,6 +21241,77 @@ export type UpdateFilePayload = {
 /** The output of our update `File` mutation. */
 export type UpdateFilePayloadFileEdgeArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
+};
+
+/** All input for the `updateFilterByCode` mutation. */
+export type UpdateFilterByCodeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Filter` being updated. */
+  patch: FilterPatch;
+  code: Scalars['String'];
+};
+
+/** All input for the `updateFilterByNodeId` mutation. */
+export type UpdateFilterByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Filter` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Filter` being updated. */
+  patch: FilterPatch;
+};
+
+/** All input for the `updateFilter` mutation. */
+export type UpdateFilterInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Filter` being updated. */
+  patch: FilterPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `filter` being updated. */
+export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  iconColor?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInverseInput>;
+};
+
+/** The output of our update `Filter` mutation. */
+export type UpdateFilterPayload = {
+  __typename?: 'UpdateFilterPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Filter` that was updated by this mutation. */
+  filter?: Maybe<Filter>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Filter`. May be used by Relay 1. */
+  filterEdge?: Maybe<FiltersEdge>;
+};
+
+
+/** The output of our update `Filter` mutation. */
+export type UpdateFilterPayloadFilterEdgeArgs = {
+  orderBy?: Maybe<Array<FiltersOrderBy>>;
 };
 
 /** All input for the `updateLookupTableByNodeId` mutation. */
@@ -21286,6 +22861,18 @@ export type UpdateTemplateActionPayloadTemplateActionEdgeArgs = {
   orderBy?: Maybe<Array<TemplateActionsOrderBy>>;
 };
 
+/** All input for the `updateTemplateByCode` mutation. */
+export type UpdateTemplateByCodeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Template` being updated. */
+  patch: TemplatePatch;
+  code: Scalars['String'];
+};
+
 /** All input for the `updateTemplateByNodeId` mutation. */
 export type UpdateTemplateByNodeIdInput = {
   /**
@@ -21297,6 +22884,74 @@ export type UpdateTemplateByNodeIdInput = {
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `Template` being updated. */
   patch: TemplatePatch;
+};
+
+/** All input for the `updateTemplateCategoryByCode` mutation. */
+export type UpdateTemplateCategoryByCodeInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `TemplateCategory` being updated. */
+  patch: TemplateCategoryPatch;
+  code: Scalars['String'];
+};
+
+/** All input for the `updateTemplateCategoryByNodeId` mutation. */
+export type UpdateTemplateCategoryByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `TemplateCategory` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `TemplateCategory` being updated. */
+  patch: TemplateCategoryPatch;
+};
+
+/** All input for the `updateTemplateCategory` mutation. */
+export type UpdateTemplateCategoryInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `TemplateCategory` being updated. */
+  patch: TemplateCategoryPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `templateCategory` being updated. */
+export type UpdateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  icon?: Maybe<Scalars['String']>;
+  templatesUsingId?: Maybe<TemplateTemplateCategoryIdFkeyInverseInput>;
+};
+
+/** The output of our update `TemplateCategory` mutation. */
+export type UpdateTemplateCategoryPayload = {
+  __typename?: 'UpdateTemplateCategoryPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateCategory` that was updated by this mutation. */
+  templateCategory?: Maybe<TemplateCategory>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `TemplateCategory`. May be used by Relay 1. */
+  templateCategoryEdge?: Maybe<TemplateCategoriesEdge>;
+};
+
+
+/** The output of our update `TemplateCategory` mutation. */
+export type UpdateTemplateCategoryPayloadTemplateCategoryEdgeArgs = {
+  orderBy?: Maybe<Array<TemplateCategoriesOrderBy>>;
 };
 
 /** All input for the `updateTemplateElementByNodeId` mutation. */
@@ -21448,6 +23103,73 @@ export type UpdateTemplateElementPayloadTemplateElementEdgeArgs = {
   orderBy?: Maybe<Array<TemplateElementsOrderBy>>;
 };
 
+/** All input for the `updateTemplateFilterJoinByNodeId` mutation. */
+export type UpdateTemplateFilterJoinByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `TemplateFilterJoin` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `TemplateFilterJoin` being updated. */
+  patch: TemplateFilterJoinPatch;
+};
+
+/** All input for the `updateTemplateFilterJoin` mutation. */
+export type UpdateTemplateFilterJoinInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `TemplateFilterJoin` being updated. */
+  patch: TemplateFilterJoinPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
+export type UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
+  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `templateFilterJoin` being updated. */
+export type UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateFilterId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<TemplateFilterJoinTemplateIdFkeyInput>;
+  filterToTemplateFilterId?: Maybe<TemplateFilterJoinTemplateFilterIdFkeyInput>;
+};
+
+/** The output of our update `TemplateFilterJoin` mutation. */
+export type UpdateTemplateFilterJoinPayload = {
+  __typename?: 'UpdateTemplateFilterJoinPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TemplateFilterJoin` that was updated by this mutation. */
+  templateFilterJoin?: Maybe<TemplateFilterJoin>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
+  templateFilter?: Maybe<Filter>;
+  /** An edge for our `TemplateFilterJoin`. May be used by Relay 1. */
+  templateFilterJoinEdge?: Maybe<TemplateFilterJoinsEdge>;
+};
+
+
+/** The output of our update `TemplateFilterJoin` mutation. */
+export type UpdateTemplateFilterJoinPayloadTemplateFilterJoinEdgeArgs = {
+  orderBy?: Maybe<Array<TemplateFilterJoinsOrderBy>>;
+};
+
 /** All input for the `updateTemplate` mutation. */
 export type UpdateTemplateInput = {
   /**
@@ -21469,9 +23191,12 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -21487,9 +23212,12 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -21505,9 +23233,53 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `template` being updated. */
+export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `template` being updated. */
+export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -21523,9 +23295,12 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -21541,9 +23316,12 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -21559,9 +23337,12 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
@@ -21580,6 +23361,8 @@ export type UpdateTemplatePayload = {
   template?: Maybe<Template>;
   /** Our root query field type. Allows us to run any query from our mutation payload. */
   query?: Maybe<Query>;
+  /** Reads a single `TemplateCategory` that is related to this `Template`. */
+  templateCategory?: Maybe<TemplateCategory>;
   /** An edge for our `Template`. May be used by Relay 1. */
   templateEdge?: Maybe<TemplatesEdge>;
 };
@@ -23426,7 +25209,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -23557,15 +25340,26 @@ export type ResolversTypes = {
   TemplateStageToManyApplicationStageHistoryFilter: TemplateStageToManyApplicationStageHistoryFilter;
   TemplateStageToManyReviewAssignmentFilter: TemplateStageToManyReviewAssignmentFilter;
   TemplateToManyTemplateSectionFilter: TemplateToManyTemplateSectionFilter;
+  TemplateToManyTemplateFilterJoinFilter: TemplateToManyTemplateFilterJoinFilter;
+  TemplateFilterJoinFilter: TemplateFilterJoinFilter;
+  FilterFilter: FilterFilter;
+  FilterToManyTemplateFilterJoinFilter: FilterToManyTemplateFilterJoinFilter;
   TemplateToManyTemplatePermissionFilter: TemplateToManyTemplatePermissionFilter;
   TemplateToManyApplicationFilter: TemplateToManyApplicationFilter;
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateActionFilter: TemplateActionFilter;
+  TemplateCategoryFilter: TemplateCategoryFilter;
+  TemplateCategoryToManyTemplateFilter: TemplateCategoryToManyTemplateFilter;
   ActionQueuesConnection: ResolverTypeWrapper<ActionQueuesConnection>;
   ActionQueue: ResolverTypeWrapper<ActionQueue>;
   TriggerQueue: ResolverTypeWrapper<TriggerQueue>;
   Template: ResolverTypeWrapper<Template>;
+  TemplateCategory: ResolverTypeWrapper<TemplateCategory>;
+  TemplatesOrderBy: TemplatesOrderBy;
+  TemplateCondition: TemplateCondition;
+  TemplatesConnection: ResolverTypeWrapper<TemplatesConnection>;
+  TemplatesEdge: ResolverTypeWrapper<TemplatesEdge>;
   TemplateStagesOrderBy: TemplateStagesOrderBy;
   TemplateStageCondition: TemplateStageCondition;
   TemplateStagesConnection: ResolverTypeWrapper<TemplateStagesConnection>;
@@ -23679,6 +25473,12 @@ export type ResolversTypes = {
   TemplateSectionCondition: TemplateSectionCondition;
   TemplateSectionsConnection: ResolverTypeWrapper<TemplateSectionsConnection>;
   TemplateSectionsEdge: ResolverTypeWrapper<TemplateSectionsEdge>;
+  TemplateFilterJoinsOrderBy: TemplateFilterJoinsOrderBy;
+  TemplateFilterJoinCondition: TemplateFilterJoinCondition;
+  TemplateFilterJoinsConnection: ResolverTypeWrapper<TemplateFilterJoinsConnection>;
+  TemplateFilterJoin: ResolverTypeWrapper<TemplateFilterJoin>;
+  Filter: ResolverTypeWrapper<Filter>;
+  TemplateFilterJoinsEdge: ResolverTypeWrapper<TemplateFilterJoinsEdge>;
   TemplateActionsOrderBy: TemplateActionsOrderBy;
   TemplateActionCondition: TemplateActionCondition;
   TemplateActionsConnection: ResolverTypeWrapper<TemplateActionsConnection>;
@@ -23711,6 +25511,10 @@ export type ResolversTypes = {
   ElementTypePluginsConnection: ResolverTypeWrapper<ElementTypePluginsConnection>;
   ElementTypePlugin: ResolverTypeWrapper<ElementTypePlugin>;
   ElementTypePluginsEdge: ResolverTypeWrapper<ElementTypePluginsEdge>;
+  FiltersOrderBy: FiltersOrderBy;
+  FilterCondition: FilterCondition;
+  FiltersConnection: ResolverTypeWrapper<FiltersConnection>;
+  FiltersEdge: ResolverTypeWrapper<FiltersEdge>;
   LookupTablesOrderBy: LookupTablesOrderBy;
   LookupTableCondition: LookupTableCondition;
   LookupTableFilter: LookupTableFilter;
@@ -23731,10 +25535,10 @@ export type ResolversTypes = {
   PermissionsAllsConnection: ResolverTypeWrapper<PermissionsAllsConnection>;
   PermissionsAll: ResolverTypeWrapper<PermissionsAll>;
   PermissionsAllsEdge: ResolverTypeWrapper<PermissionsAllsEdge>;
-  TemplatesOrderBy: TemplatesOrderBy;
-  TemplateCondition: TemplateCondition;
-  TemplatesConnection: ResolverTypeWrapper<TemplatesConnection>;
-  TemplatesEdge: ResolverTypeWrapper<TemplatesEdge>;
+  TemplateCategoriesOrderBy: TemplateCategoriesOrderBy;
+  TemplateCategoryCondition: TemplateCategoryCondition;
+  TemplateCategoriesConnection: ResolverTypeWrapper<TemplateCategoriesConnection>;
+  TemplateCategoriesEdge: ResolverTypeWrapper<TemplateCategoriesEdge>;
   TriggerQueuesOrderBy: TriggerQueuesOrderBy;
   TriggerQueueCondition: TriggerQueueCondition;
   TriggerQueuesConnection: ResolverTypeWrapper<TriggerQueuesConnection>;
@@ -23779,11 +25583,25 @@ export type ResolversTypes = {
   updateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch: UpdateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch;
   ActionQueueTemplateIdFkeyInput: ActionQueueTemplateIdFkeyInput;
   TemplateTemplatePkeyConnect: TemplateTemplatePkeyConnect;
+  TemplateTemplateCodeKeyConnect: TemplateTemplateCodeKeyConnect;
   TemplateNodeIdConnect: TemplateNodeIdConnect;
   TemplateTemplatePkeyDelete: TemplateTemplatePkeyDelete;
+  TemplateTemplateCodeKeyDelete: TemplateTemplateCodeKeyDelete;
   TemplateNodeIdDelete: TemplateNodeIdDelete;
   TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch: UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch;
+  TemplateTemplateCategoryIdFkeyInput: TemplateTemplateCategoryIdFkeyInput;
+  TemplateCategoryTemplateCategoryPkeyConnect: TemplateCategoryTemplateCategoryPkeyConnect;
+  TemplateCategoryTemplateCategoryCodeKeyConnect: TemplateCategoryTemplateCategoryCodeKeyConnect;
+  TemplateCategoryNodeIdConnect: TemplateCategoryNodeIdConnect;
+  TemplateCategoryTemplateCategoryPkeyDelete: TemplateCategoryTemplateCategoryPkeyDelete;
+  TemplateCategoryTemplateCategoryCodeKeyDelete: TemplateCategoryTemplateCategoryCodeKeyDelete;
+  TemplateCategoryNodeIdDelete: TemplateCategoryNodeIdDelete;
+  TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryPkeyUpdate: TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryPkeyUpdate;
+  updateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPatch: UpdateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
+  TemplateTemplateCategoryIdFkeyInverseInput: TemplateTemplateCategoryIdFkeyInverseInput;
+  TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch: UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
   TemplateStageTemplateIdFkeyInverseInput: TemplateStageTemplateIdFkeyInverseInput;
   TemplateStageTemplateStagePkeyConnect: TemplateStageTemplateStagePkeyConnect;
   TemplateStageNodeIdConnect: TemplateStageNodeIdConnect;
@@ -23804,6 +25622,16 @@ export type ResolversTypes = {
   TemplateSectionTemplateIdFkeyInput: TemplateSectionTemplateIdFkeyInput;
   TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch: UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch;
+  TemplateFilterJoinTemplateIdFkeyInverseInput: TemplateFilterJoinTemplateIdFkeyInverseInput;
+  TemplateFilterJoinTemplateFilterJoinPkeyConnect: TemplateFilterJoinTemplateFilterJoinPkeyConnect;
+  TemplateFilterJoinNodeIdConnect: TemplateFilterJoinNodeIdConnect;
+  TemplateFilterJoinTemplateFilterJoinPkeyDelete: TemplateFilterJoinTemplateFilterJoinPkeyDelete;
+  TemplateFilterJoinNodeIdDelete: TemplateFilterJoinNodeIdDelete;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateFilterJoinPkeyUpdate;
+  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch;
+  TemplateFilterJoinTemplateIdFkeyInput: TemplateFilterJoinTemplateIdFkeyInput;
+  TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch: UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch;
   TemplatePermissionTemplateIdFkeyInverseInput: TemplatePermissionTemplateIdFkeyInverseInput;
   TemplatePermissionTemplatePermissionPkeyConnect: TemplatePermissionTemplatePermissionPkeyConnect;
   TemplatePermissionNodeIdConnect: TemplatePermissionNodeIdConnect;
@@ -23918,12 +25746,14 @@ export type ResolversTypes = {
   TemplateActionTemplateIdFkeyInput: TemplateActionTemplateIdFkeyInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
+  TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
   TemplatePatch: TemplatePatch;
   TemplateActionTemplateIdFkeyTemplateCreateInput: TemplateActionTemplateIdFkeyTemplateCreateInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
   TemplateActionPatch: TemplateActionPatch;
   TemplateActionTemplateIdFkeyTemplateActionCreateInput: TemplateActionTemplateIdFkeyTemplateActionCreateInput;
+  TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate;
   ApplicationTemplateIdFkeyTemplateCreateInput: ApplicationTemplateIdFkeyTemplateCreateInput;
   ApplicationUserIdFkeyInput: ApplicationUserIdFkeyInput;
@@ -24433,6 +26263,7 @@ export type ResolversTypes = {
   ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate;
   TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate: TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate;
   ApplicationTemplateIdFkeyApplicationCreateInput: ApplicationTemplateIdFkeyApplicationCreateInput;
+  TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate: TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate;
   TemplatePermissionTemplateIdFkeyTemplateCreateInput: TemplatePermissionTemplateIdFkeyTemplateCreateInput;
   PermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyNodeIdUpdate;
@@ -24480,14 +26311,48 @@ export type ResolversTypes = {
   TemplatePermissionPermissionNameIdFkeyPermissionNameCreateInput: TemplatePermissionPermissionNameIdFkeyPermissionNameCreateInput;
   TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate;
   TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput: TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput;
+  TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateCodeKeyUpdate;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
+  TemplateFilterJoinTemplateIdFkeyTemplateCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateCreateInput;
+  TemplateFilterJoinTemplateFilterIdFkeyInput: TemplateFilterJoinTemplateFilterIdFkeyInput;
+  FilterFilterPkeyConnect: FilterFilterPkeyConnect;
+  FilterFilterCodeKeyConnect: FilterFilterCodeKeyConnect;
+  FilterNodeIdConnect: FilterNodeIdConnect;
+  FilterFilterPkeyDelete: FilterFilterPkeyDelete;
+  FilterFilterCodeKeyDelete: FilterFilterCodeKeyDelete;
+  FilterNodeIdDelete: FilterNodeIdDelete;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterPkeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterPkeyUpdate;
+  updateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch;
+  TemplateFilterJoinTemplateFilterIdFkeyInverseInput: TemplateFilterJoinTemplateFilterIdFkeyInverseInput;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate;
+  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate;
+  TemplateFilterJoinPatch: TemplateFilterJoinPatch;
+  TemplateFilterJoinTemplateFilterIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinTemplateFilterIdFkeyTemplateFilterJoinCreateInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterCodeKeyUpdate;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate;
+  FilterPatch: FilterPatch;
+  TemplateFilterJoinTemplateFilterIdFkeyFilterCreateInput: TemplateFilterJoinTemplateFilterIdFkeyFilterCreateInput;
+  TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
+  TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput;
+  TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   TemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate: TemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate;
   TemplateSectionTemplateIdFkeyTemplateCreateInput: TemplateSectionTemplateIdFkeyTemplateCreateInput;
   TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate;
   TemplateSectionTemplateIdFkeyTemplateSectionCreateInput: TemplateSectionTemplateIdFkeyTemplateSectionCreateInput;
+  TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate;
   TemplateStageTemplateIdFkeyTemplateCreateInput: TemplateStageTemplateIdFkeyTemplateCreateInput;
   TemplateOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate;
   TemplateStageTemplateIdFkeyTemplateStageCreateInput: TemplateStageTemplateIdFkeyTemplateStageCreateInput;
+  TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCodeKeyUpdate;
+  TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate: TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate;
+  TemplateTemplateCategoryIdFkeyTemplateCreateInput: TemplateTemplateCategoryIdFkeyTemplateCreateInput;
+  TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryCodeKeyUpdate: TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryCodeKeyUpdate;
+  TemplateOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate: TemplateOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate;
+  TemplateCategoryPatch: TemplateCategoryPatch;
+  TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput: TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput;
+  TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   ActionQueueOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate: ActionQueueOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate;
   ActionQueueTemplateIdFkeyTemplateCreateInput: ActionQueueTemplateIdFkeyTemplateCreateInput;
   TriggerQueueOnActionQueueForActionQueueTriggerEventFkeyNodeIdUpdate: TriggerQueueOnActionQueueForActionQueueTriggerEventFkeyNodeIdUpdate;
@@ -24520,6 +26385,9 @@ export type ResolversTypes = {
   CreateFileInput: CreateFileInput;
   FileInput: FileInput;
   CreateFilePayload: ResolverTypeWrapper<CreateFilePayload>;
+  CreateFilterInput: CreateFilterInput;
+  FilterInput: FilterInput;
+  CreateFilterPayload: ResolverTypeWrapper<CreateFilterPayload>;
   CreateLookupTableInput: CreateLookupTableInput;
   LookupTableInput: LookupTableInput;
   CreateLookupTablePayload: ResolverTypeWrapper<CreateLookupTablePayload>;
@@ -24565,9 +26433,15 @@ export type ResolversTypes = {
   CreateTemplateActionInput: CreateTemplateActionInput;
   TemplateActionInput: TemplateActionInput;
   CreateTemplateActionPayload: ResolverTypeWrapper<CreateTemplateActionPayload>;
+  CreateTemplateCategoryInput: CreateTemplateCategoryInput;
+  TemplateCategoryInput: TemplateCategoryInput;
+  CreateTemplateCategoryPayload: ResolverTypeWrapper<CreateTemplateCategoryPayload>;
   CreateTemplateElementInput: CreateTemplateElementInput;
   TemplateElementInput: TemplateElementInput;
   CreateTemplateElementPayload: ResolverTypeWrapper<CreateTemplateElementPayload>;
+  CreateTemplateFilterJoinInput: CreateTemplateFilterJoinInput;
+  TemplateFilterJoinInput: TemplateFilterJoinInput;
+  CreateTemplateFilterJoinPayload: ResolverTypeWrapper<CreateTemplateFilterJoinPayload>;
   CreateTemplatePermissionInput: CreateTemplatePermissionInput;
   TemplatePermissionInput: TemplatePermissionInput;
   CreateTemplatePermissionPayload: ResolverTypeWrapper<CreateTemplatePermissionPayload>;
@@ -24620,6 +26494,10 @@ export type ResolversTypes = {
   UpdateFilePayload: ResolverTypeWrapper<UpdateFilePayload>;
   UpdateFileInput: UpdateFileInput;
   UpdateFileByUniqueIdInput: UpdateFileByUniqueIdInput;
+  UpdateFilterByNodeIdInput: UpdateFilterByNodeIdInput;
+  UpdateFilterPayload: ResolverTypeWrapper<UpdateFilterPayload>;
+  UpdateFilterInput: UpdateFilterInput;
+  UpdateFilterByCodeInput: UpdateFilterByCodeInput;
   UpdateLookupTableByNodeIdInput: UpdateLookupTableByNodeIdInput;
   LookupTablePatch: LookupTablePatch;
   UpdateLookupTablePayload: ResolverTypeWrapper<UpdateLookupTablePayload>;
@@ -24667,13 +26545,21 @@ export type ResolversTypes = {
   UpdateTemplateByNodeIdInput: UpdateTemplateByNodeIdInput;
   UpdateTemplatePayload: ResolverTypeWrapper<UpdateTemplatePayload>;
   UpdateTemplateInput: UpdateTemplateInput;
+  UpdateTemplateByCodeInput: UpdateTemplateByCodeInput;
   UpdateTemplateActionByNodeIdInput: UpdateTemplateActionByNodeIdInput;
   UpdateTemplateActionPayload: ResolverTypeWrapper<UpdateTemplateActionPayload>;
   UpdateTemplateActionInput: UpdateTemplateActionInput;
+  UpdateTemplateCategoryByNodeIdInput: UpdateTemplateCategoryByNodeIdInput;
+  UpdateTemplateCategoryPayload: ResolverTypeWrapper<UpdateTemplateCategoryPayload>;
+  UpdateTemplateCategoryInput: UpdateTemplateCategoryInput;
+  UpdateTemplateCategoryByCodeInput: UpdateTemplateCategoryByCodeInput;
   UpdateTemplateElementByNodeIdInput: UpdateTemplateElementByNodeIdInput;
   UpdateTemplateElementPayload: ResolverTypeWrapper<UpdateTemplateElementPayload>;
   UpdateTemplateElementInput: UpdateTemplateElementInput;
   UpdateTemplateElementByTemplateCodeAndCodeInput: UpdateTemplateElementByTemplateCodeAndCodeInput;
+  UpdateTemplateFilterJoinByNodeIdInput: UpdateTemplateFilterJoinByNodeIdInput;
+  UpdateTemplateFilterJoinPayload: ResolverTypeWrapper<UpdateTemplateFilterJoinPayload>;
+  UpdateTemplateFilterJoinInput: UpdateTemplateFilterJoinInput;
   UpdateTemplatePermissionByNodeIdInput: UpdateTemplatePermissionByNodeIdInput;
   UpdateTemplatePermissionPayload: ResolverTypeWrapper<UpdateTemplatePermissionPayload>;
   UpdateTemplatePermissionInput: UpdateTemplatePermissionInput;
@@ -24725,6 +26611,10 @@ export type ResolversTypes = {
   DeleteFilePayload: ResolverTypeWrapper<DeleteFilePayload>;
   DeleteFileInput: DeleteFileInput;
   DeleteFileByUniqueIdInput: DeleteFileByUniqueIdInput;
+  DeleteFilterByNodeIdInput: DeleteFilterByNodeIdInput;
+  DeleteFilterPayload: ResolverTypeWrapper<DeleteFilterPayload>;
+  DeleteFilterInput: DeleteFilterInput;
+  DeleteFilterByCodeInput: DeleteFilterByCodeInput;
   DeleteLookupTableByNodeIdInput: DeleteLookupTableByNodeIdInput;
   DeleteLookupTablePayload: ResolverTypeWrapper<DeleteLookupTablePayload>;
   DeleteLookupTableInput: DeleteLookupTableInput;
@@ -24771,13 +26661,21 @@ export type ResolversTypes = {
   DeleteTemplateByNodeIdInput: DeleteTemplateByNodeIdInput;
   DeleteTemplatePayload: ResolverTypeWrapper<DeleteTemplatePayload>;
   DeleteTemplateInput: DeleteTemplateInput;
+  DeleteTemplateByCodeInput: DeleteTemplateByCodeInput;
   DeleteTemplateActionByNodeIdInput: DeleteTemplateActionByNodeIdInput;
   DeleteTemplateActionPayload: ResolverTypeWrapper<DeleteTemplateActionPayload>;
   DeleteTemplateActionInput: DeleteTemplateActionInput;
+  DeleteTemplateCategoryByNodeIdInput: DeleteTemplateCategoryByNodeIdInput;
+  DeleteTemplateCategoryPayload: ResolverTypeWrapper<DeleteTemplateCategoryPayload>;
+  DeleteTemplateCategoryInput: DeleteTemplateCategoryInput;
+  DeleteTemplateCategoryByCodeInput: DeleteTemplateCategoryByCodeInput;
   DeleteTemplateElementByNodeIdInput: DeleteTemplateElementByNodeIdInput;
   DeleteTemplateElementPayload: ResolverTypeWrapper<DeleteTemplateElementPayload>;
   DeleteTemplateElementInput: DeleteTemplateElementInput;
   DeleteTemplateElementByTemplateCodeAndCodeInput: DeleteTemplateElementByTemplateCodeAndCodeInput;
+  DeleteTemplateFilterJoinByNodeIdInput: DeleteTemplateFilterJoinByNodeIdInput;
+  DeleteTemplateFilterJoinPayload: ResolverTypeWrapper<DeleteTemplateFilterJoinPayload>;
+  DeleteTemplateFilterJoinInput: DeleteTemplateFilterJoinInput;
   DeleteTemplatePermissionByNodeIdInput: DeleteTemplatePermissionByNodeIdInput;
   DeleteTemplatePermissionPayload: ResolverTypeWrapper<DeleteTemplatePermissionPayload>;
   DeleteTemplatePermissionInput: DeleteTemplatePermissionInput;
@@ -24805,7 +26703,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -24919,15 +26817,25 @@ export type ResolversParentTypes = {
   TemplateStageToManyApplicationStageHistoryFilter: TemplateStageToManyApplicationStageHistoryFilter;
   TemplateStageToManyReviewAssignmentFilter: TemplateStageToManyReviewAssignmentFilter;
   TemplateToManyTemplateSectionFilter: TemplateToManyTemplateSectionFilter;
+  TemplateToManyTemplateFilterJoinFilter: TemplateToManyTemplateFilterJoinFilter;
+  TemplateFilterJoinFilter: TemplateFilterJoinFilter;
+  FilterFilter: FilterFilter;
+  FilterToManyTemplateFilterJoinFilter: FilterToManyTemplateFilterJoinFilter;
   TemplateToManyTemplatePermissionFilter: TemplateToManyTemplatePermissionFilter;
   TemplateToManyApplicationFilter: TemplateToManyApplicationFilter;
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateActionFilter: TemplateActionFilter;
+  TemplateCategoryFilter: TemplateCategoryFilter;
+  TemplateCategoryToManyTemplateFilter: TemplateCategoryToManyTemplateFilter;
   ActionQueuesConnection: ActionQueuesConnection;
   ActionQueue: ActionQueue;
   TriggerQueue: TriggerQueue;
   Template: Template;
+  TemplateCategory: TemplateCategory;
+  TemplateCondition: TemplateCondition;
+  TemplatesConnection: TemplatesConnection;
+  TemplatesEdge: TemplatesEdge;
   TemplateStageCondition: TemplateStageCondition;
   TemplateStagesConnection: TemplateStagesConnection;
   TemplateStage: TemplateStage;
@@ -25019,6 +26927,11 @@ export type ResolversParentTypes = {
   TemplateSectionCondition: TemplateSectionCondition;
   TemplateSectionsConnection: TemplateSectionsConnection;
   TemplateSectionsEdge: TemplateSectionsEdge;
+  TemplateFilterJoinCondition: TemplateFilterJoinCondition;
+  TemplateFilterJoinsConnection: TemplateFilterJoinsConnection;
+  TemplateFilterJoin: TemplateFilterJoin;
+  Filter: Filter;
+  TemplateFilterJoinsEdge: TemplateFilterJoinsEdge;
   TemplateActionCondition: TemplateActionCondition;
   TemplateActionsConnection: TemplateActionsConnection;
   TemplateAction: TemplateAction;
@@ -25046,6 +26959,9 @@ export type ResolversParentTypes = {
   ElementTypePluginsConnection: ElementTypePluginsConnection;
   ElementTypePlugin: ElementTypePlugin;
   ElementTypePluginsEdge: ElementTypePluginsEdge;
+  FilterCondition: FilterCondition;
+  FiltersConnection: FiltersConnection;
+  FiltersEdge: FiltersEdge;
   LookupTableCondition: LookupTableCondition;
   LookupTableFilter: LookupTableFilter;
   LookupTablesConnection: LookupTablesConnection;
@@ -25062,9 +26978,9 @@ export type ResolversParentTypes = {
   PermissionsAllsConnection: PermissionsAllsConnection;
   PermissionsAll: PermissionsAll;
   PermissionsAllsEdge: PermissionsAllsEdge;
-  TemplateCondition: TemplateCondition;
-  TemplatesConnection: TemplatesConnection;
-  TemplatesEdge: TemplatesEdge;
+  TemplateCategoryCondition: TemplateCategoryCondition;
+  TemplateCategoriesConnection: TemplateCategoriesConnection;
+  TemplateCategoriesEdge: TemplateCategoriesEdge;
   TriggerQueueCondition: TriggerQueueCondition;
   TriggerQueuesConnection: TriggerQueuesConnection;
   TriggerQueuesEdge: TriggerQueuesEdge;
@@ -25106,11 +27022,25 @@ export type ResolversParentTypes = {
   updateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch: UpdateActionQueueOnActionQueueForActionQueueTriggerEventFkeyPatch;
   ActionQueueTemplateIdFkeyInput: ActionQueueTemplateIdFkeyInput;
   TemplateTemplatePkeyConnect: TemplateTemplatePkeyConnect;
+  TemplateTemplateCodeKeyConnect: TemplateTemplateCodeKeyConnect;
   TemplateNodeIdConnect: TemplateNodeIdConnect;
   TemplateTemplatePkeyDelete: TemplateTemplatePkeyDelete;
+  TemplateTemplateCodeKeyDelete: TemplateTemplateCodeKeyDelete;
   TemplateNodeIdDelete: TemplateNodeIdDelete;
   TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch: UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch;
+  TemplateTemplateCategoryIdFkeyInput: TemplateTemplateCategoryIdFkeyInput;
+  TemplateCategoryTemplateCategoryPkeyConnect: TemplateCategoryTemplateCategoryPkeyConnect;
+  TemplateCategoryTemplateCategoryCodeKeyConnect: TemplateCategoryTemplateCategoryCodeKeyConnect;
+  TemplateCategoryNodeIdConnect: TemplateCategoryNodeIdConnect;
+  TemplateCategoryTemplateCategoryPkeyDelete: TemplateCategoryTemplateCategoryPkeyDelete;
+  TemplateCategoryTemplateCategoryCodeKeyDelete: TemplateCategoryTemplateCategoryCodeKeyDelete;
+  TemplateCategoryNodeIdDelete: TemplateCategoryNodeIdDelete;
+  TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryPkeyUpdate: TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryPkeyUpdate;
+  updateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPatch: UpdateTemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
+  TemplateTemplateCategoryIdFkeyInverseInput: TemplateTemplateCategoryIdFkeyInverseInput;
+  TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch: UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch;
   TemplateStageTemplateIdFkeyInverseInput: TemplateStageTemplateIdFkeyInverseInput;
   TemplateStageTemplateStagePkeyConnect: TemplateStageTemplateStagePkeyConnect;
   TemplateStageNodeIdConnect: TemplateStageNodeIdConnect;
@@ -25131,6 +27061,16 @@ export type ResolversParentTypes = {
   TemplateSectionTemplateIdFkeyInput: TemplateSectionTemplateIdFkeyInput;
   TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch: UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch;
+  TemplateFilterJoinTemplateIdFkeyInverseInput: TemplateFilterJoinTemplateIdFkeyInverseInput;
+  TemplateFilterJoinTemplateFilterJoinPkeyConnect: TemplateFilterJoinTemplateFilterJoinPkeyConnect;
+  TemplateFilterJoinNodeIdConnect: TemplateFilterJoinNodeIdConnect;
+  TemplateFilterJoinTemplateFilterJoinPkeyDelete: TemplateFilterJoinTemplateFilterJoinPkeyDelete;
+  TemplateFilterJoinNodeIdDelete: TemplateFilterJoinNodeIdDelete;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateFilterJoinPkeyUpdate;
+  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch;
+  TemplateFilterJoinTemplateIdFkeyInput: TemplateFilterJoinTemplateIdFkeyInput;
+  TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch: UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch;
   TemplatePermissionTemplateIdFkeyInverseInput: TemplatePermissionTemplateIdFkeyInverseInput;
   TemplatePermissionTemplatePermissionPkeyConnect: TemplatePermissionTemplatePermissionPkeyConnect;
   TemplatePermissionNodeIdConnect: TemplatePermissionNodeIdConnect;
@@ -25245,12 +27185,14 @@ export type ResolversParentTypes = {
   TemplateActionTemplateIdFkeyInput: TemplateActionTemplateIdFkeyInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
+  TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
   TemplatePatch: TemplatePatch;
   TemplateActionTemplateIdFkeyTemplateCreateInput: TemplateActionTemplateIdFkeyTemplateCreateInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
   TemplateActionPatch: TemplateActionPatch;
   TemplateActionTemplateIdFkeyTemplateActionCreateInput: TemplateActionTemplateIdFkeyTemplateActionCreateInput;
+  TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate;
   ApplicationTemplateIdFkeyTemplateCreateInput: ApplicationTemplateIdFkeyTemplateCreateInput;
   ApplicationUserIdFkeyInput: ApplicationUserIdFkeyInput;
@@ -25760,6 +27702,7 @@ export type ResolversParentTypes = {
   ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate;
   TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate: TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate;
   ApplicationTemplateIdFkeyApplicationCreateInput: ApplicationTemplateIdFkeyApplicationCreateInput;
+  TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate: TemplatePermissionOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate;
   TemplatePermissionTemplateIdFkeyTemplateCreateInput: TemplatePermissionTemplateIdFkeyTemplateCreateInput;
   PermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnTemplatePermissionForTemplatePermissionPermissionNameIdFkeyNodeIdUpdate;
@@ -25807,14 +27750,48 @@ export type ResolversParentTypes = {
   TemplatePermissionPermissionNameIdFkeyPermissionNameCreateInput: TemplatePermissionPermissionNameIdFkeyPermissionNameCreateInput;
   TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyNodeIdUpdate;
   TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput: TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput;
+  TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyUsingTemplateCodeKeyUpdate;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
+  TemplateFilterJoinTemplateIdFkeyTemplateCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateCreateInput;
+  TemplateFilterJoinTemplateFilterIdFkeyInput: TemplateFilterJoinTemplateFilterIdFkeyInput;
+  FilterFilterPkeyConnect: FilterFilterPkeyConnect;
+  FilterFilterCodeKeyConnect: FilterFilterCodeKeyConnect;
+  FilterNodeIdConnect: FilterNodeIdConnect;
+  FilterFilterPkeyDelete: FilterFilterPkeyDelete;
+  FilterFilterCodeKeyDelete: FilterFilterCodeKeyDelete;
+  FilterNodeIdDelete: FilterNodeIdDelete;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterPkeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterPkeyUpdate;
+  updateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch;
+  TemplateFilterJoinTemplateFilterIdFkeyInverseInput: TemplateFilterJoinTemplateFilterIdFkeyInverseInput;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate;
+  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyPatch;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate;
+  TemplateFilterJoinPatch: TemplateFilterJoinPatch;
+  TemplateFilterJoinTemplateFilterIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinTemplateFilterIdFkeyTemplateFilterJoinCreateInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyUsingFilterCodeKeyUpdate;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateFilterIdFkeyNodeIdUpdate;
+  FilterPatch: FilterPatch;
+  TemplateFilterJoinTemplateFilterIdFkeyFilterCreateInput: TemplateFilterJoinTemplateFilterIdFkeyFilterCreateInput;
+  TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
+  TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput;
+  TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   TemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate: TemplateSectionOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate;
   TemplateSectionTemplateIdFkeyTemplateCreateInput: TemplateSectionTemplateIdFkeyTemplateCreateInput;
   TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyNodeIdUpdate;
   TemplateSectionTemplateIdFkeyTemplateSectionCreateInput: TemplateSectionTemplateIdFkeyTemplateSectionCreateInput;
+  TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate;
   TemplateStageTemplateIdFkeyTemplateCreateInput: TemplateStageTemplateIdFkeyTemplateCreateInput;
   TemplateOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate;
   TemplateStageTemplateIdFkeyTemplateStageCreateInput: TemplateStageTemplateIdFkeyTemplateStageCreateInput;
+  TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCodeKeyUpdate;
+  TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate: TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate;
+  TemplateTemplateCategoryIdFkeyTemplateCreateInput: TemplateTemplateCategoryIdFkeyTemplateCreateInput;
+  TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryCodeKeyUpdate: TemplateCategoryOnTemplateForTemplateTemplateCategoryIdFkeyUsingTemplateCategoryCodeKeyUpdate;
+  TemplateOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate: TemplateOnTemplateForTemplateTemplateCategoryIdFkeyNodeIdUpdate;
+  TemplateCategoryPatch: TemplateCategoryPatch;
+  TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput: TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput;
+  TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplateCodeKeyUpdate: TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplateCodeKeyUpdate;
   ActionQueueOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate: ActionQueueOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate;
   ActionQueueTemplateIdFkeyTemplateCreateInput: ActionQueueTemplateIdFkeyTemplateCreateInput;
   TriggerQueueOnActionQueueForActionQueueTriggerEventFkeyNodeIdUpdate: TriggerQueueOnActionQueueForActionQueueTriggerEventFkeyNodeIdUpdate;
@@ -25847,6 +27824,9 @@ export type ResolversParentTypes = {
   CreateFileInput: CreateFileInput;
   FileInput: FileInput;
   CreateFilePayload: CreateFilePayload;
+  CreateFilterInput: CreateFilterInput;
+  FilterInput: FilterInput;
+  CreateFilterPayload: CreateFilterPayload;
   CreateLookupTableInput: CreateLookupTableInput;
   LookupTableInput: LookupTableInput;
   CreateLookupTablePayload: CreateLookupTablePayload;
@@ -25892,9 +27872,15 @@ export type ResolversParentTypes = {
   CreateTemplateActionInput: CreateTemplateActionInput;
   TemplateActionInput: TemplateActionInput;
   CreateTemplateActionPayload: CreateTemplateActionPayload;
+  CreateTemplateCategoryInput: CreateTemplateCategoryInput;
+  TemplateCategoryInput: TemplateCategoryInput;
+  CreateTemplateCategoryPayload: CreateTemplateCategoryPayload;
   CreateTemplateElementInput: CreateTemplateElementInput;
   TemplateElementInput: TemplateElementInput;
   CreateTemplateElementPayload: CreateTemplateElementPayload;
+  CreateTemplateFilterJoinInput: CreateTemplateFilterJoinInput;
+  TemplateFilterJoinInput: TemplateFilterJoinInput;
+  CreateTemplateFilterJoinPayload: CreateTemplateFilterJoinPayload;
   CreateTemplatePermissionInput: CreateTemplatePermissionInput;
   TemplatePermissionInput: TemplatePermissionInput;
   CreateTemplatePermissionPayload: CreateTemplatePermissionPayload;
@@ -25947,6 +27933,10 @@ export type ResolversParentTypes = {
   UpdateFilePayload: UpdateFilePayload;
   UpdateFileInput: UpdateFileInput;
   UpdateFileByUniqueIdInput: UpdateFileByUniqueIdInput;
+  UpdateFilterByNodeIdInput: UpdateFilterByNodeIdInput;
+  UpdateFilterPayload: UpdateFilterPayload;
+  UpdateFilterInput: UpdateFilterInput;
+  UpdateFilterByCodeInput: UpdateFilterByCodeInput;
   UpdateLookupTableByNodeIdInput: UpdateLookupTableByNodeIdInput;
   LookupTablePatch: LookupTablePatch;
   UpdateLookupTablePayload: UpdateLookupTablePayload;
@@ -25994,13 +27984,21 @@ export type ResolversParentTypes = {
   UpdateTemplateByNodeIdInput: UpdateTemplateByNodeIdInput;
   UpdateTemplatePayload: UpdateTemplatePayload;
   UpdateTemplateInput: UpdateTemplateInput;
+  UpdateTemplateByCodeInput: UpdateTemplateByCodeInput;
   UpdateTemplateActionByNodeIdInput: UpdateTemplateActionByNodeIdInput;
   UpdateTemplateActionPayload: UpdateTemplateActionPayload;
   UpdateTemplateActionInput: UpdateTemplateActionInput;
+  UpdateTemplateCategoryByNodeIdInput: UpdateTemplateCategoryByNodeIdInput;
+  UpdateTemplateCategoryPayload: UpdateTemplateCategoryPayload;
+  UpdateTemplateCategoryInput: UpdateTemplateCategoryInput;
+  UpdateTemplateCategoryByCodeInput: UpdateTemplateCategoryByCodeInput;
   UpdateTemplateElementByNodeIdInput: UpdateTemplateElementByNodeIdInput;
   UpdateTemplateElementPayload: UpdateTemplateElementPayload;
   UpdateTemplateElementInput: UpdateTemplateElementInput;
   UpdateTemplateElementByTemplateCodeAndCodeInput: UpdateTemplateElementByTemplateCodeAndCodeInput;
+  UpdateTemplateFilterJoinByNodeIdInput: UpdateTemplateFilterJoinByNodeIdInput;
+  UpdateTemplateFilterJoinPayload: UpdateTemplateFilterJoinPayload;
+  UpdateTemplateFilterJoinInput: UpdateTemplateFilterJoinInput;
   UpdateTemplatePermissionByNodeIdInput: UpdateTemplatePermissionByNodeIdInput;
   UpdateTemplatePermissionPayload: UpdateTemplatePermissionPayload;
   UpdateTemplatePermissionInput: UpdateTemplatePermissionInput;
@@ -26052,6 +28050,10 @@ export type ResolversParentTypes = {
   DeleteFilePayload: DeleteFilePayload;
   DeleteFileInput: DeleteFileInput;
   DeleteFileByUniqueIdInput: DeleteFileByUniqueIdInput;
+  DeleteFilterByNodeIdInput: DeleteFilterByNodeIdInput;
+  DeleteFilterPayload: DeleteFilterPayload;
+  DeleteFilterInput: DeleteFilterInput;
+  DeleteFilterByCodeInput: DeleteFilterByCodeInput;
   DeleteLookupTableByNodeIdInput: DeleteLookupTableByNodeIdInput;
   DeleteLookupTablePayload: DeleteLookupTablePayload;
   DeleteLookupTableInput: DeleteLookupTableInput;
@@ -26098,13 +28100,21 @@ export type ResolversParentTypes = {
   DeleteTemplateByNodeIdInput: DeleteTemplateByNodeIdInput;
   DeleteTemplatePayload: DeleteTemplatePayload;
   DeleteTemplateInput: DeleteTemplateInput;
+  DeleteTemplateByCodeInput: DeleteTemplateByCodeInput;
   DeleteTemplateActionByNodeIdInput: DeleteTemplateActionByNodeIdInput;
   DeleteTemplateActionPayload: DeleteTemplateActionPayload;
   DeleteTemplateActionInput: DeleteTemplateActionInput;
+  DeleteTemplateCategoryByNodeIdInput: DeleteTemplateCategoryByNodeIdInput;
+  DeleteTemplateCategoryPayload: DeleteTemplateCategoryPayload;
+  DeleteTemplateCategoryInput: DeleteTemplateCategoryInput;
+  DeleteTemplateCategoryByCodeInput: DeleteTemplateCategoryByCodeInput;
   DeleteTemplateElementByNodeIdInput: DeleteTemplateElementByNodeIdInput;
   DeleteTemplateElementPayload: DeleteTemplateElementPayload;
   DeleteTemplateElementInput: DeleteTemplateElementInput;
   DeleteTemplateElementByTemplateCodeAndCodeInput: DeleteTemplateElementByTemplateCodeAndCodeInput;
+  DeleteTemplateFilterJoinByNodeIdInput: DeleteTemplateFilterJoinByNodeIdInput;
+  DeleteTemplateFilterJoinPayload: DeleteTemplateFilterJoinPayload;
+  DeleteTemplateFilterJoinInput: DeleteTemplateFilterJoinInput;
   DeleteTemplatePermissionByNodeIdInput: DeleteTemplatePermissionByNodeIdInput;
   DeleteTemplatePermissionPayload: DeleteTemplatePermissionPayload;
   DeleteTemplatePermissionInput: DeleteTemplatePermissionInput;
@@ -26575,6 +28585,14 @@ export type CreateFilePayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateFilterPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateFilterPayload'] = ResolversParentTypes['CreateFilterPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  filterEdge?: Resolver<Maybe<ResolversTypes['FiltersEdge']>, ParentType, ContextType, RequireFields<CreateFilterPayloadFilterEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateLookupTablePayload'] = ResolversParentTypes['CreateLookupTablePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType>;
@@ -26718,6 +28736,14 @@ export type CreateTemplateActionPayloadResolvers<ContextType = any, ParentType e
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateTemplateCategoryPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTemplateCategoryPayload'] = ResolversParentTypes['CreateTemplateCategoryPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  templateCategoryEdge?: Resolver<Maybe<ResolversTypes['TemplateCategoriesEdge']>, ParentType, ContextType, RequireFields<CreateTemplateCategoryPayloadTemplateCategoryEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateTemplateElementPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTemplateElementPayload'] = ResolversParentTypes['CreateTemplateElementPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
@@ -26727,10 +28753,21 @@ export type CreateTemplateElementPayloadResolvers<ContextType = any, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateTemplateFilterJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTemplateFilterJoinPayload'] = ResolversParentTypes['CreateTemplateFilterJoinPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateFilterJoin?: Resolver<Maybe<ResolversTypes['TemplateFilterJoin']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  templateFilter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  templateFilterJoinEdge?: Resolver<Maybe<ResolversTypes['TemplateFilterJoinsEdge']>, ParentType, ContextType, RequireFields<CreateTemplateFilterJoinPayloadTemplateFilterJoinEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateTemplatePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTemplatePayload'] = ResolversParentTypes['CreateTemplatePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
   templateEdge?: Resolver<Maybe<ResolversTypes['TemplatesEdge']>, ParentType, ContextType, RequireFields<CreateTemplatePayloadTemplateEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -26906,6 +28943,15 @@ export type DeleteFilePayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteFilterPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteFilterPayload'] = ResolversParentTypes['DeleteFilterPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  deletedFilterNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  filterEdge?: Resolver<Maybe<ResolversTypes['FiltersEdge']>, ParentType, ContextType, RequireFields<DeleteFilterPayloadFilterEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteLookupTablePayload'] = ResolversParentTypes['DeleteLookupTablePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType>;
@@ -27063,6 +29109,15 @@ export type DeleteTemplateActionPayloadResolvers<ContextType = any, ParentType e
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteTemplateCategoryPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteTemplateCategoryPayload'] = ResolversParentTypes['DeleteTemplateCategoryPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
+  deletedTemplateCategoryNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  templateCategoryEdge?: Resolver<Maybe<ResolversTypes['TemplateCategoriesEdge']>, ParentType, ContextType, RequireFields<DeleteTemplateCategoryPayloadTemplateCategoryEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteTemplateElementPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteTemplateElementPayload'] = ResolversParentTypes['DeleteTemplateElementPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
@@ -27073,11 +29128,23 @@ export type DeleteTemplateElementPayloadResolvers<ContextType = any, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteTemplateFilterJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteTemplateFilterJoinPayload'] = ResolversParentTypes['DeleteTemplateFilterJoinPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateFilterJoin?: Resolver<Maybe<ResolversTypes['TemplateFilterJoin']>, ParentType, ContextType>;
+  deletedTemplateFilterJoinNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  templateFilter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  templateFilterJoinEdge?: Resolver<Maybe<ResolversTypes['TemplateFilterJoinsEdge']>, ParentType, ContextType, RequireFields<DeleteTemplateFilterJoinPayloadTemplateFilterJoinEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteTemplatePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteTemplatePayload'] = ResolversParentTypes['DeleteTemplatePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   deletedTemplateNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
   templateEdge?: Resolver<Maybe<ResolversTypes['TemplatesEdge']>, ParentType, ContextType, RequireFields<DeleteTemplatePayloadTemplateEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -27213,6 +29280,33 @@ export type FilesEdgeResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type FilterResolvers<ContextType = any, ParentType extends ResolversParentTypes['Filter'] = ResolversParentTypes['Filter']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  iconColor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  userRole?: Resolver<Maybe<ResolversTypes['PermissionPolicyType']>, ParentType, ContextType>;
+  templateFilterJoinsByTemplateFilterId?: Resolver<ResolversTypes['TemplateFilterJoinsConnection'], ParentType, ContextType, RequireFields<FilterTemplateFilterJoinsByTemplateFilterIdArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FiltersConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['FiltersConnection'] = ResolversParentTypes['FiltersConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['Filter']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['FiltersEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type FiltersEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['FiltersEdge'] = ResolversParentTypes['FiltersEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
@@ -27251,6 +29345,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createApplicationStatusHistory?: Resolver<Maybe<ResolversTypes['CreateApplicationStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationStatusHistoryArgs, 'input'>>;
   createElementTypePlugin?: Resolver<Maybe<ResolversTypes['CreateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateElementTypePluginArgs, 'input'>>;
   createFile?: Resolver<Maybe<ResolversTypes['CreateFilePayload']>, ParentType, ContextType, RequireFields<MutationCreateFileArgs, 'input'>>;
+  createFilter?: Resolver<Maybe<ResolversTypes['CreateFilterPayload']>, ParentType, ContextType, RequireFields<MutationCreateFilterArgs, 'input'>>;
   createLookupTable?: Resolver<Maybe<ResolversTypes['CreateLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationCreateLookupTableArgs, 'input'>>;
   createNotification?: Resolver<Maybe<ResolversTypes['CreateNotificationPayload']>, ParentType, ContextType, RequireFields<MutationCreateNotificationArgs, 'input'>>;
   createOrganisation?: Resolver<Maybe<ResolversTypes['CreateOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationCreateOrganisationArgs, 'input'>>;
@@ -27266,7 +29361,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createReviewStatusHistory?: Resolver<Maybe<ResolversTypes['CreateReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateReviewStatusHistoryArgs, 'input'>>;
   createTemplate?: Resolver<Maybe<ResolversTypes['CreateTemplatePayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateArgs, 'input'>>;
   createTemplateAction?: Resolver<Maybe<ResolversTypes['CreateTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateActionArgs, 'input'>>;
+  createTemplateCategory?: Resolver<Maybe<ResolversTypes['CreateTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateCategoryArgs, 'input'>>;
   createTemplateElement?: Resolver<Maybe<ResolversTypes['CreateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateElementArgs, 'input'>>;
+  createTemplateFilterJoin?: Resolver<Maybe<ResolversTypes['CreateTemplateFilterJoinPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateFilterJoinArgs, 'input'>>;
   createTemplatePermission?: Resolver<Maybe<ResolversTypes['CreateTemplatePermissionPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplatePermissionArgs, 'input'>>;
   createTemplateSection?: Resolver<Maybe<ResolversTypes['CreateTemplateSectionPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateSectionArgs, 'input'>>;
   createTemplateStage?: Resolver<Maybe<ResolversTypes['CreateTemplateStagePayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateStageArgs, 'input'>>;
@@ -27294,6 +29391,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateFileByNodeId?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileByNodeIdArgs, 'input'>>;
   updateFile?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileArgs, 'input'>>;
   updateFileByUniqueId?: Resolver<Maybe<ResolversTypes['UpdateFilePayload']>, ParentType, ContextType, RequireFields<MutationUpdateFileByUniqueIdArgs, 'input'>>;
+  updateFilterByNodeId?: Resolver<Maybe<ResolversTypes['UpdateFilterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateFilterByNodeIdArgs, 'input'>>;
+  updateFilter?: Resolver<Maybe<ResolversTypes['UpdateFilterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateFilterArgs, 'input'>>;
+  updateFilterByCode?: Resolver<Maybe<ResolversTypes['UpdateFilterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateFilterByCodeArgs, 'input'>>;
   updateLookupTableByNodeId?: Resolver<Maybe<ResolversTypes['UpdateLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableByNodeIdArgs, 'input'>>;
   updateLookupTable?: Resolver<Maybe<ResolversTypes['UpdateLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableArgs, 'input'>>;
   updateNotificationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateNotificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateNotificationByNodeIdArgs, 'input'>>;
@@ -27326,11 +29426,17 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateReviewStatusHistory?: Resolver<Maybe<ResolversTypes['UpdateReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateReviewStatusHistoryArgs, 'input'>>;
   updateTemplateByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplatePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateByNodeIdArgs, 'input'>>;
   updateTemplate?: Resolver<Maybe<ResolversTypes['UpdateTemplatePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateArgs, 'input'>>;
+  updateTemplateByCode?: Resolver<Maybe<ResolversTypes['UpdateTemplatePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateByCodeArgs, 'input'>>;
   updateTemplateActionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateActionByNodeIdArgs, 'input'>>;
   updateTemplateAction?: Resolver<Maybe<ResolversTypes['UpdateTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateActionArgs, 'input'>>;
+  updateTemplateCategoryByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateCategoryByNodeIdArgs, 'input'>>;
+  updateTemplateCategory?: Resolver<Maybe<ResolversTypes['UpdateTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateCategoryArgs, 'input'>>;
+  updateTemplateCategoryByCode?: Resolver<Maybe<ResolversTypes['UpdateTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateCategoryByCodeArgs, 'input'>>;
   updateTemplateElementByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateElementByNodeIdArgs, 'input'>>;
   updateTemplateElement?: Resolver<Maybe<ResolversTypes['UpdateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateElementArgs, 'input'>>;
   updateTemplateElementByTemplateCodeAndCode?: Resolver<Maybe<ResolversTypes['UpdateTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateElementByTemplateCodeAndCodeArgs, 'input'>>;
+  updateTemplateFilterJoinByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateFilterJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateFilterJoinByNodeIdArgs, 'input'>>;
+  updateTemplateFilterJoin?: Resolver<Maybe<ResolversTypes['UpdateTemplateFilterJoinPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateFilterJoinArgs, 'input'>>;
   updateTemplatePermissionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplatePermissionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplatePermissionByNodeIdArgs, 'input'>>;
   updateTemplatePermission?: Resolver<Maybe<ResolversTypes['UpdateTemplatePermissionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplatePermissionArgs, 'input'>>;
   updateTemplateSectionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTemplateSectionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateSectionByNodeIdArgs, 'input'>>;
@@ -27366,6 +29472,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteFileByNodeId?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileByNodeIdArgs, 'input'>>;
   deleteFile?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileArgs, 'input'>>;
   deleteFileByUniqueId?: Resolver<Maybe<ResolversTypes['DeleteFilePayload']>, ParentType, ContextType, RequireFields<MutationDeleteFileByUniqueIdArgs, 'input'>>;
+  deleteFilterByNodeId?: Resolver<Maybe<ResolversTypes['DeleteFilterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteFilterByNodeIdArgs, 'input'>>;
+  deleteFilter?: Resolver<Maybe<ResolversTypes['DeleteFilterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteFilterArgs, 'input'>>;
+  deleteFilterByCode?: Resolver<Maybe<ResolversTypes['DeleteFilterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteFilterByCodeArgs, 'input'>>;
   deleteLookupTableByNodeId?: Resolver<Maybe<ResolversTypes['DeleteLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableByNodeIdArgs, 'input'>>;
   deleteLookupTable?: Resolver<Maybe<ResolversTypes['DeleteLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableArgs, 'input'>>;
   deleteNotificationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteNotificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteNotificationByNodeIdArgs, 'input'>>;
@@ -27398,11 +29507,17 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteReviewStatusHistory?: Resolver<Maybe<ResolversTypes['DeleteReviewStatusHistoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteReviewStatusHistoryArgs, 'input'>>;
   deleteTemplateByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplatePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateByNodeIdArgs, 'input'>>;
   deleteTemplate?: Resolver<Maybe<ResolversTypes['DeleteTemplatePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateArgs, 'input'>>;
+  deleteTemplateByCode?: Resolver<Maybe<ResolversTypes['DeleteTemplatePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateByCodeArgs, 'input'>>;
   deleteTemplateActionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateActionByNodeIdArgs, 'input'>>;
   deleteTemplateAction?: Resolver<Maybe<ResolversTypes['DeleteTemplateActionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateActionArgs, 'input'>>;
+  deleteTemplateCategoryByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateCategoryByNodeIdArgs, 'input'>>;
+  deleteTemplateCategory?: Resolver<Maybe<ResolversTypes['DeleteTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateCategoryArgs, 'input'>>;
+  deleteTemplateCategoryByCode?: Resolver<Maybe<ResolversTypes['DeleteTemplateCategoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateCategoryByCodeArgs, 'input'>>;
   deleteTemplateElementByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateElementByNodeIdArgs, 'input'>>;
   deleteTemplateElement?: Resolver<Maybe<ResolversTypes['DeleteTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateElementArgs, 'input'>>;
   deleteTemplateElementByTemplateCodeAndCode?: Resolver<Maybe<ResolversTypes['DeleteTemplateElementPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateElementByTemplateCodeAndCodeArgs, 'input'>>;
+  deleteTemplateFilterJoinByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateFilterJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateFilterJoinByNodeIdArgs, 'input'>>;
+  deleteTemplateFilterJoin?: Resolver<Maybe<ResolversTypes['DeleteTemplateFilterJoinPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateFilterJoinArgs, 'input'>>;
   deleteTemplatePermissionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplatePermissionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplatePermissionByNodeIdArgs, 'input'>>;
   deleteTemplatePermission?: Resolver<Maybe<ResolversTypes['DeleteTemplatePermissionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplatePermissionArgs, 'input'>>;
   deleteTemplateSectionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTemplateSectionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateSectionByNodeIdArgs, 'input'>>;
@@ -27421,7 +29536,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'TemplateAction' | 'ElementTypePlugin' | 'LookupTable', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'ElementTypePlugin' | 'LookupTable', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -27619,6 +29734,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStatusHistories?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoriesArgs, 'orderBy'>>;
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
   files?: Resolver<Maybe<ResolversTypes['FilesConnection']>, ParentType, ContextType, RequireFields<QueryFilesArgs, 'orderBy'>>;
+  filters?: Resolver<Maybe<ResolversTypes['FiltersConnection']>, ParentType, ContextType, RequireFields<QueryFiltersArgs, 'orderBy'>>;
   lookupTables?: Resolver<Maybe<ResolversTypes['LookupTablesConnection']>, ParentType, ContextType, RequireFields<QueryLookupTablesArgs, 'orderBy'>>;
   notifications?: Resolver<Maybe<ResolversTypes['NotificationsConnection']>, ParentType, ContextType, RequireFields<QueryNotificationsArgs, 'orderBy'>>;
   organisations?: Resolver<Maybe<ResolversTypes['OrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryOrganisationsArgs, 'orderBy'>>;
@@ -27635,7 +29751,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewStatusHistories?: Resolver<Maybe<ResolversTypes['ReviewStatusHistoriesConnection']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoriesArgs, 'orderBy'>>;
   templates?: Resolver<Maybe<ResolversTypes['TemplatesConnection']>, ParentType, ContextType, RequireFields<QueryTemplatesArgs, 'orderBy'>>;
   templateActions?: Resolver<Maybe<ResolversTypes['TemplateActionsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateActionsArgs, 'orderBy'>>;
+  templateCategories?: Resolver<Maybe<ResolversTypes['TemplateCategoriesConnection']>, ParentType, ContextType, RequireFields<QueryTemplateCategoriesArgs, 'orderBy'>>;
   templateElements?: Resolver<Maybe<ResolversTypes['TemplateElementsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateElementsArgs, 'orderBy'>>;
+  templateFilterJoins?: Resolver<Maybe<ResolversTypes['TemplateFilterJoinsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateFilterJoinsArgs, 'orderBy'>>;
   templatePermissions?: Resolver<Maybe<ResolversTypes['TemplatePermissionsConnection']>, ParentType, ContextType, RequireFields<QueryTemplatePermissionsArgs, 'orderBy'>>;
   templateSections?: Resolver<Maybe<ResolversTypes['TemplateSectionsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateSectionsArgs, 'orderBy'>>;
   templateStages?: Resolver<Maybe<ResolversTypes['TemplateStagesConnection']>, ParentType, ContextType, RequireFields<QueryTemplateStagesArgs, 'orderBy'>>;
@@ -27655,6 +29773,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   elementTypePlugin?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginArgs, 'code'>>;
   file?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileArgs, 'id'>>;
   fileByUniqueId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByUniqueIdArgs, 'uniqueId'>>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType, RequireFields<QueryFilterArgs, 'id'>>;
+  filterByCode?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType, RequireFields<QueryFilterByCodeArgs, 'code'>>;
   lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType, RequireFields<QueryLookupTableArgs, 'id'>>;
   notification?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<QueryNotificationArgs, 'id'>>;
   organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationArgs, 'id'>>;
@@ -27673,9 +29793,13 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewResponse?: Resolver<Maybe<ResolversTypes['ReviewResponse']>, ParentType, ContextType, RequireFields<QueryReviewResponseArgs, 'id'>>;
   reviewStatusHistory?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryArgs, 'id'>>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType, RequireFields<QueryTemplateArgs, 'id'>>;
+  templateByCode?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType, RequireFields<QueryTemplateByCodeArgs, 'code'>>;
   templateAction?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType, RequireFields<QueryTemplateActionArgs, 'id'>>;
+  templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType, RequireFields<QueryTemplateCategoryArgs, 'id'>>;
+  templateCategoryByCode?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType, RequireFields<QueryTemplateCategoryByCodeArgs, 'code'>>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType, RequireFields<QueryTemplateElementArgs, 'id'>>;
   templateElementByTemplateCodeAndCode?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType, RequireFields<QueryTemplateElementByTemplateCodeAndCodeArgs, 'templateCode' | 'code'>>;
+  templateFilterJoin?: Resolver<Maybe<ResolversTypes['TemplateFilterJoin']>, ParentType, ContextType, RequireFields<QueryTemplateFilterJoinArgs, 'id'>>;
   templatePermission?: Resolver<Maybe<ResolversTypes['TemplatePermission']>, ParentType, ContextType, RequireFields<QueryTemplatePermissionArgs, 'id'>>;
   templateSection?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType, RequireFields<QueryTemplateSectionArgs, 'id'>>;
   templateStage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType, RequireFields<QueryTemplateStageArgs, 'id'>>;
@@ -27705,6 +29829,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationStatusHistory']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryByNodeIdArgs, 'nodeId'>>;
   elementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginByNodeIdArgs, 'nodeId'>>;
   fileByNodeId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByNodeIdArgs, 'nodeId'>>;
+  filterByNodeId?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType, RequireFields<QueryFilterByNodeIdArgs, 'nodeId'>>;
   lookupTableByNodeId?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType, RequireFields<QueryLookupTableByNodeIdArgs, 'nodeId'>>;
   notificationByNodeId?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<QueryNotificationByNodeIdArgs, 'nodeId'>>;
   organisationByNodeId?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationByNodeIdArgs, 'nodeId'>>;
@@ -27720,7 +29845,9 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewStatusHistoryByNodeId?: Resolver<Maybe<ResolversTypes['ReviewStatusHistory']>, ParentType, ContextType, RequireFields<QueryReviewStatusHistoryByNodeIdArgs, 'nodeId'>>;
   templateByNodeId?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType, RequireFields<QueryTemplateByNodeIdArgs, 'nodeId'>>;
   templateActionByNodeId?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType, RequireFields<QueryTemplateActionByNodeIdArgs, 'nodeId'>>;
+  templateCategoryByNodeId?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType, RequireFields<QueryTemplateCategoryByNodeIdArgs, 'nodeId'>>;
   templateElementByNodeId?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType, RequireFields<QueryTemplateElementByNodeIdArgs, 'nodeId'>>;
+  templateFilterJoinByNodeId?: Resolver<Maybe<ResolversTypes['TemplateFilterJoin']>, ParentType, ContextType, RequireFields<QueryTemplateFilterJoinByNodeIdArgs, 'nodeId'>>;
   templatePermissionByNodeId?: Resolver<Maybe<ResolversTypes['TemplatePermission']>, ParentType, ContextType, RequireFields<QueryTemplatePermissionByNodeIdArgs, 'nodeId'>>;
   templateSectionByNodeId?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType, RequireFields<QueryTemplateSectionByNodeIdArgs, 'nodeId'>>;
   templateStageByNodeId?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType, RequireFields<QueryTemplateStageByNodeIdArgs, 'nodeId'>>;
@@ -27983,9 +30110,12 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   startMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['TemplateStatus']>, ParentType, ContextType>;
   submissionMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  templateCategoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   versionTimestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
   templateStages?: Resolver<ResolversTypes['TemplateStagesConnection'], ParentType, ContextType, RequireFields<TemplateTemplateStagesArgs, 'orderBy'>>;
   templateSections?: Resolver<ResolversTypes['TemplateSectionsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateSectionsArgs, 'orderBy'>>;
+  templateFilterJoins?: Resolver<ResolversTypes['TemplateFilterJoinsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateFilterJoinsArgs, 'orderBy'>>;
   templatePermissions?: Resolver<ResolversTypes['TemplatePermissionsConnection'], ParentType, ContextType, RequireFields<TemplateTemplatePermissionsArgs, 'orderBy'>>;
   applications?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<TemplateApplicationsArgs, 'orderBy'>>;
   actionQueues?: Resolver<ResolversTypes['ActionQueuesConnection'], ParentType, ContextType, RequireFields<TemplateActionQueuesArgs, 'orderBy'>>;
@@ -28017,6 +30147,30 @@ export type TemplateActionsConnectionResolvers<ContextType = any, ParentType ext
 export type TemplateActionsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateActionsEdge'] = ResolversParentTypes['TemplateActionsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['TemplateAction']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateCategoriesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateCategoriesConnection'] = ResolversParentTypes['TemplateCategoriesConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['TemplateCategory']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['TemplateCategoriesEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateCategoriesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateCategoriesEdge'] = ResolversParentTypes['TemplateCategoriesEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateCategoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateCategory'] = ResolversParentTypes['TemplateCategory']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templates?: Resolver<ResolversTypes['TemplatesConnection'], ParentType, ContextType, RequireFields<TemplateCategoryTemplatesArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -28054,6 +30208,30 @@ export type TemplateElementsConnectionResolvers<ContextType = any, ParentType ex
 export type TemplateElementsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateElementsEdge'] = ResolversParentTypes['TemplateElementsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateFilterJoinResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateFilterJoin'] = ResolversParentTypes['TemplateFilterJoin']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateFilterId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  templateFilter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateFilterJoinsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateFilterJoinsConnection'] = ResolversParentTypes['TemplateFilterJoinsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['TemplateFilterJoin']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['TemplateFilterJoinsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TemplateFilterJoinsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateFilterJoinsEdge'] = ResolversParentTypes['TemplateFilterJoinsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['TemplateFilterJoin']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -28294,6 +30472,14 @@ export type UpdateFilePayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateFilterPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateFilterPayload'] = ResolversParentTypes['UpdateFilterPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  filterEdge?: Resolver<Maybe<ResolversTypes['FiltersEdge']>, ParentType, ContextType, RequireFields<UpdateFilterPayloadFilterEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateLookupTablePayload'] = ResolversParentTypes['UpdateLookupTablePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType>;
@@ -28437,6 +30623,14 @@ export type UpdateTemplateActionPayloadResolvers<ContextType = any, ParentType e
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateTemplateCategoryPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTemplateCategoryPayload'] = ResolversParentTypes['UpdateTemplateCategoryPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  templateCategoryEdge?: Resolver<Maybe<ResolversTypes['TemplateCategoriesEdge']>, ParentType, ContextType, RequireFields<UpdateTemplateCategoryPayloadTemplateCategoryEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateTemplateElementPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTemplateElementPayload'] = ResolversParentTypes['UpdateTemplateElementPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
@@ -28446,10 +30640,21 @@ export type UpdateTemplateElementPayloadResolvers<ContextType = any, ParentType 
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateTemplateFilterJoinPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTemplateFilterJoinPayload'] = ResolversParentTypes['UpdateTemplateFilterJoinPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateFilterJoin?: Resolver<Maybe<ResolversTypes['TemplateFilterJoin']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  templateFilter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  templateFilterJoinEdge?: Resolver<Maybe<ResolversTypes['TemplateFilterJoinsEdge']>, ParentType, ContextType, RequireFields<UpdateTemplateFilterJoinPayloadTemplateFilterJoinEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateTemplatePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTemplatePayload'] = ResolversParentTypes['UpdateTemplatePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
   templateEdge?: Resolver<Maybe<ResolversTypes['TemplatesEdge']>, ParentType, ContextType, RequireFields<UpdateTemplatePayloadTemplateEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -28653,6 +30858,7 @@ export type Resolvers<ContextType = any> = {
   CreateApplicationStatusHistoryPayload?: CreateApplicationStatusHistoryPayloadResolvers<ContextType>;
   CreateElementTypePluginPayload?: CreateElementTypePluginPayloadResolvers<ContextType>;
   CreateFilePayload?: CreateFilePayloadResolvers<ContextType>;
+  CreateFilterPayload?: CreateFilterPayloadResolvers<ContextType>;
   CreateLookupTablePayload?: CreateLookupTablePayloadResolvers<ContextType>;
   CreateNotificationPayload?: CreateNotificationPayloadResolvers<ContextType>;
   CreateOrganisationPayload?: CreateOrganisationPayloadResolvers<ContextType>;
@@ -28667,7 +30873,9 @@ export type Resolvers<ContextType = any> = {
   CreateReviewResponsePayload?: CreateReviewResponsePayloadResolvers<ContextType>;
   CreateReviewStatusHistoryPayload?: CreateReviewStatusHistoryPayloadResolvers<ContextType>;
   CreateTemplateActionPayload?: CreateTemplateActionPayloadResolvers<ContextType>;
+  CreateTemplateCategoryPayload?: CreateTemplateCategoryPayloadResolvers<ContextType>;
   CreateTemplateElementPayload?: CreateTemplateElementPayloadResolvers<ContextType>;
+  CreateTemplateFilterJoinPayload?: CreateTemplateFilterJoinPayloadResolvers<ContextType>;
   CreateTemplatePayload?: CreateTemplatePayloadResolvers<ContextType>;
   CreateTemplatePermissionPayload?: CreateTemplatePermissionPayloadResolvers<ContextType>;
   CreateTemplateSectionPayload?: CreateTemplateSectionPayloadResolvers<ContextType>;
@@ -28688,6 +30896,7 @@ export type Resolvers<ContextType = any> = {
   DeleteApplicationStatusHistoryPayload?: DeleteApplicationStatusHistoryPayloadResolvers<ContextType>;
   DeleteElementTypePluginPayload?: DeleteElementTypePluginPayloadResolvers<ContextType>;
   DeleteFilePayload?: DeleteFilePayloadResolvers<ContextType>;
+  DeleteFilterPayload?: DeleteFilterPayloadResolvers<ContextType>;
   DeleteLookupTablePayload?: DeleteLookupTablePayloadResolvers<ContextType>;
   DeleteNotificationPayload?: DeleteNotificationPayloadResolvers<ContextType>;
   DeleteOrganisationPayload?: DeleteOrganisationPayloadResolvers<ContextType>;
@@ -28702,7 +30911,9 @@ export type Resolvers<ContextType = any> = {
   DeleteReviewResponsePayload?: DeleteReviewResponsePayloadResolvers<ContextType>;
   DeleteReviewStatusHistoryPayload?: DeleteReviewStatusHistoryPayloadResolvers<ContextType>;
   DeleteTemplateActionPayload?: DeleteTemplateActionPayloadResolvers<ContextType>;
+  DeleteTemplateCategoryPayload?: DeleteTemplateCategoryPayloadResolvers<ContextType>;
   DeleteTemplateElementPayload?: DeleteTemplateElementPayloadResolvers<ContextType>;
+  DeleteTemplateFilterJoinPayload?: DeleteTemplateFilterJoinPayloadResolvers<ContextType>;
   DeleteTemplatePayload?: DeleteTemplatePayloadResolvers<ContextType>;
   DeleteTemplatePermissionPayload?: DeleteTemplatePermissionPayloadResolvers<ContextType>;
   DeleteTemplateSectionPayload?: DeleteTemplateSectionPayloadResolvers<ContextType>;
@@ -28717,6 +30928,9 @@ export type Resolvers<ContextType = any> = {
   File?: FileResolvers<ContextType>;
   FilesConnection?: FilesConnectionResolvers<ContextType>;
   FilesEdge?: FilesEdgeResolvers<ContextType>;
+  Filter?: FilterResolvers<ContextType>;
+  FiltersConnection?: FiltersConnectionResolvers<ContextType>;
+  FiltersEdge?: FiltersEdgeResolvers<ContextType>;
   JSON?: GraphQLScalarType;
   LookupTable?: LookupTableResolvers<ContextType>;
   LookupTablesConnection?: LookupTablesConnectionResolvers<ContextType>;
@@ -28771,9 +30985,15 @@ export type Resolvers<ContextType = any> = {
   TemplateAction?: TemplateActionResolvers<ContextType>;
   TemplateActionsConnection?: TemplateActionsConnectionResolvers<ContextType>;
   TemplateActionsEdge?: TemplateActionsEdgeResolvers<ContextType>;
+  TemplateCategoriesConnection?: TemplateCategoriesConnectionResolvers<ContextType>;
+  TemplateCategoriesEdge?: TemplateCategoriesEdgeResolvers<ContextType>;
+  TemplateCategory?: TemplateCategoryResolvers<ContextType>;
   TemplateElement?: TemplateElementResolvers<ContextType>;
   TemplateElementsConnection?: TemplateElementsConnectionResolvers<ContextType>;
   TemplateElementsEdge?: TemplateElementsEdgeResolvers<ContextType>;
+  TemplateFilterJoin?: TemplateFilterJoinResolvers<ContextType>;
+  TemplateFilterJoinsConnection?: TemplateFilterJoinsConnectionResolvers<ContextType>;
+  TemplateFilterJoinsEdge?: TemplateFilterJoinsEdgeResolvers<ContextType>;
   TemplatePermission?: TemplatePermissionResolvers<ContextType>;
   TemplatePermissionsConnection?: TemplatePermissionsConnectionResolvers<ContextType>;
   TemplatePermissionsEdge?: TemplatePermissionsEdgeResolvers<ContextType>;
@@ -28800,6 +31020,7 @@ export type Resolvers<ContextType = any> = {
   UpdateApplicationStatusHistoryPayload?: UpdateApplicationStatusHistoryPayloadResolvers<ContextType>;
   UpdateElementTypePluginPayload?: UpdateElementTypePluginPayloadResolvers<ContextType>;
   UpdateFilePayload?: UpdateFilePayloadResolvers<ContextType>;
+  UpdateFilterPayload?: UpdateFilterPayloadResolvers<ContextType>;
   UpdateLookupTablePayload?: UpdateLookupTablePayloadResolvers<ContextType>;
   UpdateNotificationPayload?: UpdateNotificationPayloadResolvers<ContextType>;
   UpdateOrganisationPayload?: UpdateOrganisationPayloadResolvers<ContextType>;
@@ -28814,7 +31035,9 @@ export type Resolvers<ContextType = any> = {
   UpdateReviewResponsePayload?: UpdateReviewResponsePayloadResolvers<ContextType>;
   UpdateReviewStatusHistoryPayload?: UpdateReviewStatusHistoryPayloadResolvers<ContextType>;
   UpdateTemplateActionPayload?: UpdateTemplateActionPayloadResolvers<ContextType>;
+  UpdateTemplateCategoryPayload?: UpdateTemplateCategoryPayloadResolvers<ContextType>;
   UpdateTemplateElementPayload?: UpdateTemplateElementPayloadResolvers<ContextType>;
+  UpdateTemplateFilterJoinPayload?: UpdateTemplateFilterJoinPayloadResolvers<ContextType>;
   UpdateTemplatePayload?: UpdateTemplatePayloadResolvers<ContextType>;
   UpdateTemplatePermissionPayload?: UpdateTemplatePermissionPayloadResolvers<ContextType>;
   UpdateTemplateSectionPayload?: UpdateTemplateSectionPayloadResolvers<ContextType>;
