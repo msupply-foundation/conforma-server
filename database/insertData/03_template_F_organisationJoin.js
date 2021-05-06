@@ -178,7 +178,7 @@ exports.queries = [
                   ]
                 }
                 parameterQueries: {
-                  newOutcome: "Approved"
+                  newOutcome: "APPROVED"
                 }
               }
               {
@@ -194,7 +194,7 @@ exports.queries = [
                         "applicationData.outcome"
                       ]
                     }
-                    "Approved"
+                    "APPROVED"
                   ]
                 }
                 parameterQueries: {
@@ -221,7 +221,7 @@ exports.queries = [
                         "applicationData.outcome"
                       ]
                     }
-                    "Approved"
+                    "APPROVED"
                   ]
                 }
                 parameterQueries: {
@@ -249,11 +249,11 @@ exports.queries = [
                         "applicationData.outcome"
                       ]
                     }
-                    "Approved"
+                    "APPROVED"
                   ]
                 }
                 parameterQueries: {
-                  newStatus: "Completed"
+                  newStatus: "COMPLETED"
                 }
               }
             ]

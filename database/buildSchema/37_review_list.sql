@@ -13,14 +13,14 @@ CREATE FUNCTION review_list (reviewerid int)
     AS $$
     SELECT
         review_assignment.application_id AS application_id,
-        COUNT(*) FILTER (WHERE review_assignment.status = 'Available for self-assignment') AS review_available_for_self_assignment_count,
-        COUNT(*) FILTER (WHERE review_assignment.status = 'Assigned') AS review_assigned_count,
-        COUNT(*) FILTER (WHERE review_assignment.status = 'Assigned'
+        COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE_FOR_SELF_ASSIGNMENT') AS review_available_for_self_assignment_count,
+        COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED') AS review_assigned_count,
+        COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED'
             AND review.id IS NULL) AS review_assigned_not_started_count,
-        COUNT(*) FILTER (WHERE review_status_history.status = 'Draft') AS review_draft_count,
-        COUNT(*) FILTER (WHERE review_status_history.status = 'Submitted') AS review_submitted_count,
-        COUNT(*) FILTER (WHERE review_status_history.status = 'Changes Requested') AS review_change_request_count,
-        COUNT(*) FILTER (WHERE review_status_history.status = 'Pending') AS review_pending_count
+        COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT') AS review_draft_count,
+        COUNT(*) FILTER (WHERE review_status_history.status = 'SUBMITTED') AS review_submitted_count,
+        COUNT(*) FILTER (WHERE review_status_history.status = 'CHANGES_REQUESTED') AS review_change_request_count,
+        COUNT(*) FILTER (WHERE review_status_history.status = 'PENDING') AS review_pending_count
     FROM
         review_assignment
     LEFT JOIN review ON review.review_assignment_id = review_assignment.id
@@ -34,3 +34,4 @@ GROUP BY
 $$
 LANGUAGE sql
 STABLE;
+

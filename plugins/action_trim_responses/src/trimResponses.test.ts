@@ -1,6 +1,7 @@
 // Test suite for the testResponses Action.
 
 import DBConnect from '../../../src/components/databaseConnect'
+import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { action as trimResponses } from './index'
 
 // Setup database
@@ -20,11 +21,11 @@ beforeAll(async (done) => {
   // Duplicate review responses, with some modifications
   await DBConnect.query({
     text: `
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'Approve', 1015, 4024, NULL, 5, 'NOW()', 'Submitted');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'Approve', 1014, 4023, NULL, 5, 'NOW()', 'Submitted');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'Approve', 1013, 4022, NULL, 5, 'NOW()', 'Submitted');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, 'This is still not right', 'Decline', 1012, 4021, NULL, 5, 'NOW()', 'Submitted');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'Approve', 1011, 4020, NULL, 5, 'NOW()', 'Submitted');`,
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'APPROVE', 1015, 4024, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'APPROVE', 1014, 4023, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'APPROVE', 1013, 4022, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, 'This is still not right', 'DECLINE', 1012, 4021, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_updated, status) VALUES (DEFAULT, NULL, 'APPROVE', 1011, 4020, NULL, 5, 'NOW()', 'SUBMITTED');`,
     values: [],
   })
   done()
@@ -33,7 +34,7 @@ beforeAll(async (done) => {
 test('Test: remove unchanged application_response duplicates', () => {
   return trimResponses({ parameters: { applicationId: 1000 }, DBConnect }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         deletedResponses: [
@@ -58,7 +59,7 @@ test('Test: remove unchanged review_response duplicates, with custom timestamp',
     DBConnect,
   }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         deletedResponses: [

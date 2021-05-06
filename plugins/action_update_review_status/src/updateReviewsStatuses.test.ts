@@ -1,6 +1,7 @@
 // Test suite for the updateReviews Action.
 
 import DBConnect from '../../../src/components/databaseConnect'
+import { ActionQueueStatus, ReviewStatus } from '../../../src/generated/graphql'
 import { action as updateReviewsStatuses } from './index'
 
 // Setup database
@@ -33,11 +34,12 @@ test('Test: Should update 2 reviews', () => {
         { applicationResponseId: 9, templateElementId: 4002 },
       ],
     },
+    // @ts-ignore
     applicationData: { stageId: 6 },
     DBConnect,
   }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         updatedReviews: [
@@ -47,7 +49,7 @@ test('Test: Should update 2 reviews', () => {
             applicationId: 4000,
             reviewer_id: 6,
             levelNumber: 1,
-            reviewStatus: 'Pending',
+            reviewStatus: ReviewStatus.Pending,
           },
         ],
       },

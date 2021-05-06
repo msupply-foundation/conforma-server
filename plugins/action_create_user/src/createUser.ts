@@ -1,13 +1,14 @@
-import { ActionPluginInput } from '../../types'
+import { ActionQueueStatus } from '../../../src/generated/graphql'
+import { ActionPluginType } from '../../types'
 
-async function createUser({ parameters, DBConnect }: ActionPluginInput) {
+const createUser: ActionPluginType = async ({ parameters, DBConnect }) => {
   const user = parameters
   try {
     console.log(`\nAdding new user: ${user.username}`)
     const result = await DBConnect.createUser(user)
     if (result.success)
       return {
-        status: 'Success',
+        status: ActionQueueStatus.Success,
         error_log: '',
         output: {
           userId: result.userId,
@@ -19,13 +20,13 @@ async function createUser({ parameters, DBConnect }: ActionPluginInput) {
       }
     else
       return {
-        status: 'Fail',
+        status: ActionQueueStatus.Fail,
         error_log: 'There was a problem creating new user.',
       }
   } catch (error) {
     console.log(error.message)
     return {
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'There was a problem creating new user.',
     }
   }

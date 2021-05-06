@@ -27,6 +27,7 @@ const buildPlugins = async () => {
     let pluginBuiltFolder
     try {
       pluginBuiltFolder = await buildPlugin(pluginName)
+      if (!pluginBuiltFolder) continue
     } catch (e) {
       console.log('!!!! error while building plugin: ' + pluginName)
       console.log('run tsc command manually from root to see full log')

@@ -75,3 +75,4 @@ STABLE;
 
 -- (https://github.com/graphile/graphile-engine/pull/378)
 COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';
+

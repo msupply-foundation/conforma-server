@@ -14,7 +14,7 @@ Representation of the application template. All nested elements are accessible v
 
 Whenever a template is modified, the new version is saved as a new template record with a new `version_timestamp`. Different versions of the same base template are connected with the same `code`. The `status` field is used to indicate which version is the current available one.
 
-The `status` can be `'Draft'`, `'Available'` or `'Disabled'`. The version currently active in the system is the one (and only one) marked `'Available'`.
+The `status` can be `'DRAFT'`, `'AVAILABLE'` or `'DISABLED'`. The version currently active in the system is the one (and only one) marked `'AVAILABLE'`.
 
 The `name` is what users of the system will see as the "Application Type" -- e.g. "Drug Registration".
 

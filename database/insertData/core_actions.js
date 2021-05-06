@@ -4,43 +4,43 @@ GraphQL Fragment - CORE ACTIONS
 */
 exports.coreActions = `
     # ON_APPLICATION_CREATE
-    # change status to draft
+    # change status to DRAFT
     {
         actionCode: "incrementStage"
         sequence: 1
         trigger: ON_APPLICATION_CREATE
     }
     # ON_APPLICATION_RESTART
-    # change status to draft
+    # change status to DRAFT
     {
       actionCode: "changeStatus"
       trigger: ON_APPLICATION_RESTART
       sequence: 1
       parameterQueries: {
-        newStatus: "Draft"
+        newStatus: "DRAFT"
       }
     }
     # ON_REVIEW_RESTART
-    # change status to draft
+    # change status to DRAFT
     {
       actionCode: "changeStatus"
       trigger: ON_REVIEW_RESTART
       sequence: 1
       parameterQueries: {
-        newStatus: "Draft"
+        newStatus: "DRAFT"
       }
     }
     # ON_REVIEW_CREATE
-    # change status to draft
+    # change status to DRAFT
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_CREATE
         parameterQueries: {
-          newStatus: "Draft"
+          newStatus: "DRAFT"
         }
     }
     # ON_APPLICATION_SUBMIT
-    # 1 - change status to submitted
+    # 1 - change status to SUBMITTED
     # 2 - trim responses
     # 3 - generate review assignments
     # 4 - update review statuses
@@ -49,7 +49,7 @@ exports.coreActions = `
         trigger: ON_APPLICATION_SUBMIT
         sequence: 1
         parameterQueries: {
-          newStatus: "Submitted"
+          newStatus: "SUBMITTED"
         }
     }
     {
@@ -63,7 +63,7 @@ exports.coreActions = `
       sequence: 3
     }
     {
-      actionCode: "updateReviews"
+      actionCode: "updateReviewsStatuses"
       trigger: ON_APPLICATION_SUBMIT
       sequence: 4
       parameterQueries: {
@@ -80,7 +80,7 @@ exports.coreActions = `
     }
     # -------------------------------------------
     # ON_REVIEW_SUBMIT
-    # 1 - change status to submitted
+    # 1 - change status to SUBMITTED
     # 2 - trim responses
     # 3 - increment application stage (after last level reviewer conforms)
     # 4 - generate review assignments
@@ -91,7 +91,7 @@ exports.coreActions = `
         trigger: ON_REVIEW_SUBMIT
         sequence: 1
         parameterQueries: {
-          newStatus: "Submitted"
+          newStatus: "SUBMITTED"
         }
     }
     {
@@ -105,21 +105,21 @@ exports.coreActions = `
             }
         }
     }
-  #  {
-  #      actionCode: "updateReviews"
-  #      trigger: ON_REVIEW_SUBMIT
-  #      sequence: 3
-  #      parameterQueries: {
-  #        applicationId: {
-  #          operator: "objectProperties"
-  #          children: ["applicationData.applicationId"]
-  #        }
-  #        changedApplicationResponses: {
-  #          operator: "objectProperties"
-  #          children: ["output.updatedResponses"]
-  #        }
-  #      }
-  #  }
+   {
+        actionCode: "updateReviewsStatuses"
+        trigger: ON_REVIEW_SUBMIT
+        sequence: 3
+        parameterQueries: {
+          applicationId: {
+            operator: "objectProperties"
+            children: ["applicationData.applicationId"]
+          }
+          changedApplicationResponses: {
+            operator: "objectProperties"
+            children: ["output.updatedResponses"]
+          }
+        }
+    }
     # increment stage of application (ignored if last stage)
     # condition checks for latest review decison = CONFORM
     # AND review being isLastLevel
@@ -150,7 +150,7 @@ exports.coreActions = `
       }
     }
     # generates next review assignments
-    # condition checks current review stage and level in review submitted
+    # condition checks current review stage and level in review SUBMITTED
     # only create next level (or next stage) review assignments 
     {
       actionCode: "generateReviewAssignments"
@@ -215,7 +215,7 @@ exports.coreActions = `
         ]
       }
       parameterQueries: {
-        newStatus: "Changes Required"
+        newStatus: "CHANGES_REQUIRED"
         isReview: false #Required since we're updating an application status
       }
     }

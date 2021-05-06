@@ -183,7 +183,7 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: {
-                  newStatus: { value: "Completed" }
+                  newStatus: { value: "COMPLETED" }
                 }
               }
               {
@@ -191,7 +191,7 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
                 parameterQueries: {
-                  newOutcome: { value: "Approved" }
+                  newOutcome: { value: "APPROVED" }
                 }
               }
             ]
