@@ -51,7 +51,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Create a user account"
+                        title: "**Create a user account**"
                         text: "Please fill in your details to **register** for a user account."
                       }
                     }
@@ -118,7 +118,7 @@ exports.queries = [
                         title: {
                           operator: "stringSubstitution"
                           children: [
-                            "Current User: %1 %2"
+                            "**Current User: %1 %2**"
                             {
                               operator: "objectProperties"
                               children: ["applicationData.user.firstName"]
@@ -403,7 +403,7 @@ exports.queries = [
                         ]
                       }
                       parameters: {
-                        title: "This has appeared because you typed 'magicword' above."
+                        title: "This has appeared because you typed \\"magicword\\" above."
                         text: {
                           operator: "stringSubstitution"
                           children: [
@@ -513,7 +513,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Checkbox demonstration"
+                        title: "## Checkbox demonstration"
                         text: "Different types and settings for Checkbox plugin"
                       }
                     }
@@ -722,7 +722,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "This sections allows you to upload files"
+                        title: "### This sections allows you to upload files"
                         text: "A demonstration of the File Upload plugin"
                       }
                     }
