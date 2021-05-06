@@ -1,8 +1,7 @@
-import { ActionQueueStatus } from '../../../src/generated/graphql'
-import { ActionPluginInput, ActionPluginType } from '../../types'
+import { ActionQueueStatus, ReviewStatus } from '../../../src/generated/graphql'
+import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 
-type ReviewStatus = 'DRAFT' | 'SUBMITTED' | 'CHANGES_REQUESTED' | 'PENDING' | 'LOCKED'
 interface Review {
   reviewId: number
   reviewAssignmentId: number
@@ -35,15 +34,19 @@ const updateReviewsStatuses: ActionPluginType = async ({
     // Get reviews/review assignments (with status) matching application_id & current stage
     const reviews = (
       await db.getAssociatedReviews(applicationId, stageId, level)
-    ).filter((review: Review) => ['SUBMITTED', 'LOCKED', 'DRAFT'].includes(review.reviewStatus))
+    ).filter((review: Review) =>
+      [ReviewStatus.Submitted, ReviewStatus.Locked, ReviewStatus.Draft].includes(
+        review.reviewStatus
+      )
+    )
     // Deduce which ones should be updated
     for (const review of reviews) {
       const { reviewAssignmentId, levelNumber, reviewStatus } = review
-      if (levelNumber > 1) reviewsToUpdate.push({ ...review, reviewStatus: 'PENDING' })
+      if (levelNumber > 1) reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
       else if (await haveAssignedResponsesChanged(reviewAssignmentId))
-        reviewsToUpdate.push({ ...review, reviewStatus: 'PENDING' })
-      else if (reviewStatus === 'LOCKED')
-        reviewsToUpdate.push({ ...review, reviewStatus: 'PENDING' })
+        reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
+      else if (reviewStatus === ReviewStatus.Locked)
+        reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
     }
     console.log('reviewsToUpdate', reviewsToUpdate)
 

@@ -86,7 +86,7 @@ function App() {
       })
       .catch((error) => {
         setResult(error.message)
-        setResultType('ERROR')
+        setResultType('error')
       })
     localStorage.setItem('inputText', input)
   }, [input, objectsInput, objects, evaluatorSelection])
@@ -297,7 +297,7 @@ function App() {
             <Typography variant="body1" component="p">
               {resultType === 'object' && <pre>{result}</pre>}
               {resultType === 'other' && <span className="result-text">{result}</span>}
-              {resultType === 'ERROR' && <span className="error-text">{result}</span>}
+              {resultType === 'error' && <span className="error-text">{result}</span>}
             </Typography>
           </CardContent>
         </Card>

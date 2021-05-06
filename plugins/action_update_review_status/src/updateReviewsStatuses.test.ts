@@ -1,7 +1,7 @@
 // Test suite for the updateReviews Action.
 
 import DBConnect from '../../../src/components/databaseConnect'
-import { ActionQueueStatus } from '../../../src/generated/graphql'
+import { ActionQueueStatus, ReviewStatus } from '../../../src/generated/graphql'
 import { action as updateReviewsStatuses } from './index'
 
 // Setup database
@@ -49,7 +49,7 @@ test('Test: Should update 2 reviews', () => {
             applicationId: 4000,
             reviewer_id: 6,
             levelNumber: 1,
-            reviewStatus: 'PENDING',
+            reviewStatus: ReviewStatus.Pending,
           },
         ],
       },

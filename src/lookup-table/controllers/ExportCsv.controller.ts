@@ -17,7 +17,7 @@ const ExportCsv = async (request: any, reply: any) => {
       .header('content-type', 'text/csv')
       .send(csvStream)
   } catch (error) {
-    reply.status(422).send({ status: 'ERROR', name: error.name, message: error.message })
+    reply.status(422).send({ status: 'error', name: error.name, message: error.message })
   }
 }
 

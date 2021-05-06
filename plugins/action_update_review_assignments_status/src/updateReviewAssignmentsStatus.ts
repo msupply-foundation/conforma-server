@@ -14,7 +14,7 @@ async function updateReviewAssignmentsStatus({
     const trigger = parameters?.trigger ?? applicationData?.action_payload?.trigger_payload?.trigger
     const { reviewAssignmentId } = parameters
     // NB: reviewAssignmentId comes from record_id on TriggerPayload when
-    // TRIGGERED from review_assignment table
+    // triggered from review_assignment table
     const {
       application_id: applicationId,
       stage_number: stageNumber,
@@ -34,7 +34,7 @@ async function updateReviewAssignmentsStatus({
         return {
           id,
           status:
-            trigger === Trigger.OnReviewAssign
+            trigger === Trigger.OnReviewSelfAssign
               ? ReviewAssignmentStatus.SelfAssignedByAnother
               : status,
         }
