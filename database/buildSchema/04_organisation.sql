@@ -1,9 +1,9 @@
 -- organisation table
-
 CREATE TABLE public.organisation (
-    id serial primary key,
+    id serial PRIMARY KEY,
     name varchar UNIQUE,
     registration varchar UNIQUE,
     address varchar,
     logo_url varchar
 );
+
