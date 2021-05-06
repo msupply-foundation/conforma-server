@@ -966,7 +966,9 @@ exports.queries = [
                           "info"
                           "warning"
                           "success"
+                          "positive"
                           "error"
+                          "negative"
                         ]
                         default: "none"
                       }
