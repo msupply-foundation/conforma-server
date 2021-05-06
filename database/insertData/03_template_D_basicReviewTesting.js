@@ -34,6 +34,7 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         text: "In this section, we require your **personal information**"
+                        style: "basic"
                       }
                     }
                     {
@@ -136,6 +137,7 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         text: "In this section, we require your **PRODUCT information**"
+                        style: "basic"
                       }
                     }
                     {

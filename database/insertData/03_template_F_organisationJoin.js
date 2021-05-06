@@ -44,6 +44,7 @@ exports.queries = [
                             }
                           ]
                         }
+                        style: "basic"
                       }
                     }
                     {
@@ -91,7 +92,7 @@ exports.queries = [
                       title: "Documentation Info"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "### Documentation" }
+                      parameters: { title: "### Documentation", style: "basic" }
                     }
                     {
                       code: "IDUpload"

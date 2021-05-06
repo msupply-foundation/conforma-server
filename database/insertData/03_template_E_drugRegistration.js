@@ -37,6 +37,7 @@ exports.queries = [
                       parameters: {
                         title: "#### Page 1"
                         text: "Start application by providing the product **NAME** and **ORIGIN**"
+                        style: "info"
                       }
                     }
                     {
@@ -145,6 +146,7 @@ exports.queries = [
                       parameters: {
                         title: "#### Page 2"
                         text: "In this section, we require information about **PRODUCT**"
+                        style: "info"
                       }
                     }
                     {
@@ -256,6 +258,7 @@ exports.queries = [
                       parameters: {
                         title: "#### Page 3"
                         text: "In this section, we require information about **PRESCRIPTION**"
+                        style: "info"
                       }
                     }
                     {
@@ -443,6 +446,7 @@ exports.queries = [
                       parameters: {
                         title: "#### Page 4"
                         text: "In this section, we require information about **CONTAINER**"
+                        style: "info"
                       }
                     }
                     {
@@ -536,6 +540,7 @@ exports.queries = [
                       parameters: {
                         title: "#### Page 5"
                         text: "In this section, we require information about **DOSAGE**"
+                        style: "info"
                       }
                     }
                     {
@@ -782,6 +787,7 @@ exports.queries = [
                       parameters: {
                         title: "#### Page 6"
                         text: "Optional information"
+                        style: "info"
                       }
                     }
                     {
@@ -834,6 +840,7 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         text: "In this section, we require the INGREDIENTS for **Drug registered**"
+                        style: "info"
                       }
                     }
                     {

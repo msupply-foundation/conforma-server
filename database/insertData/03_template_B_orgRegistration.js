@@ -34,6 +34,7 @@ exports.queries = [
                       parameters: {
                         title: "## Organisation details"
                         text: "The details entered should match with your registered organisation documents. You will attach these in Section 2."
+                        style: "info"
                       }
                     }
                     {
@@ -217,6 +218,7 @@ exports.queries = [
                             }
                           ]
                         }
+                        style: "basic"
                       }
                     }
                     {
