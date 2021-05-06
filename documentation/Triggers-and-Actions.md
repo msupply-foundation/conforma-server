@@ -21,7 +21,7 @@ An Application Template will specify:
 - Conditions (using [dynamic expression syntax](Query-Syntax.md)) under which the Action will run
 - And parameters (again, as dynamic expressions) that will be sent to the Action at runtime
 
-Most triggers are associated with events on the main database tables (Application, Review, etc.). Specifically, there is a field on these tables called `trigger` into which the "event" (e.g. "On Application Submit") is recorded. The database listens to this field, then notifies the server, which launches the appropriate Actions, using parameters from the current conditions.
+Most triggers are associated with events on the main database tables (Application, Review, etc.). Specifically, there is a field on these tables called `trigger` into which the "event" (e.g. "ON_APPLICATION_SUBMIT") is recorded. The database listens to this field, then notifies the server, which launches the appropriate Actions, using parameters from the current conditions.
 
 Actions can be defined as **Sequential** or **Async** (parallel). Async Actions are executed as soon as the server is notified that they are in the Action queue, whereas Sequential Actions have an additional `sequence` property, and are processed in the prescribed sequence once they've all been inserted into the Action queue.
 

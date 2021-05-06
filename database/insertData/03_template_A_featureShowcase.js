@@ -1004,7 +1004,7 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 103
                 parameterQueries: {
-                  newStatus: { value: "Completed" }
+                  newStatus: { value: "COMPLETED" }
                 }
               }
               {
@@ -1012,7 +1012,7 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 104
                 parameterQueries: {
-                  newOutcome: { value: "Approved" }
+                  newOutcome: { value: "APPROVED" }
                 }
               }
               {

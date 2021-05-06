@@ -16,7 +16,7 @@ exports.devActions = `
           trigger: DEV_TEST
           sequence: 2
           parameterQueries: {
-            newStatus: { value: "Draft" }
+            newStatus: { value: "DRAFT" }
           }
         }
    # {
