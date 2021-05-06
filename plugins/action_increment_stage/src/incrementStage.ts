@@ -1,3 +1,4 @@
+import { ActionQueueStatus, ApplicationStatus } from '../../../src/generated/graphql'
 import { ActionPluginOutput, ActionPluginInput } from '../../types'
 
 async function incrementStage({
@@ -6,7 +7,10 @@ async function incrementStage({
   DBConnect,
 }: ActionPluginInput): Promise<ActionPluginOutput> {
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
-  const returnObject: ActionPluginOutput = { status: null, error_log: '' }
+  const returnObject: ActionPluginOutput = {
+    status: ActionQueueStatus.Fail,
+    error_log: 'unknown error',
+  }
   console.log(`Incrementing the Stage for Application ${applicationId}...`)
 
   try {
@@ -27,7 +31,7 @@ async function incrementStage({
 
     if (!nextStage) {
       console.log('WARNING: Application is already at final stage. No changes made.')
-      returnObject.status = 'Success'
+      returnObject.status = ActionQueueStatus.Success
       returnObject.error_log = 'Warning: No changes made'
       return returnObject
     }
@@ -36,10 +40,10 @@ async function incrementStage({
       // Make a "Completed" status_history for existing stage_history
       const result = await DBConnect.addNewApplicationStatusHistory(
         currentStageHistoryId,
-        'Completed'
+        ApplicationStatus.Completed
       )
       if (!result) {
-        returnObject.status = 'Fail'
+        returnObject.status = ActionQueueStatus.Fail
         returnObject.error_log = "Couldn't create new status"
         return returnObject
       }
@@ -51,16 +55,16 @@ async function incrementStage({
     // Create new status_history
     const newStatusHistory = await DBConnect.addNewApplicationStatusHistory(
       newStageHistoryId,
-      currentStatus ? currentStatus : 'Draft'
+      currentStatus ? currentStatus : ApplicationStatus.Draft
     )
 
     if (!newStageHistoryId || !newStatusHistory) {
-      returnObject.status = 'Fail'
+      returnObject.status = ActionQueueStatus.Fail
       returnObject.error_log = 'Problem creating new stage_history or status_history'
       return returnObject
     }
 
-    returnObject.status = 'Success'
+    returnObject.status = ActionQueueStatus.Success
     returnObject.output = {
       applicationId,
       stageNumber: nextStage.stage_number,
@@ -75,7 +79,7 @@ async function incrementStage({
     return returnObject
   } catch (err) {
     console.log(err.message)
-    returnObject.status = 'Fail'
+    returnObject.status = ActionQueueStatus.Fail
     returnObject.error_log = 'Unable to increment Stage'
     return returnObject
   }

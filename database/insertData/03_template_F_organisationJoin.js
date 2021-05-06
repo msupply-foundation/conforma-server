@@ -37,13 +37,14 @@ exports.queries = [
                         title: {
                           operator: "stringSubstitution"
                           children: [
-                            "Welcome, %1."
+                            "### Welcome, **%1**."
                             {
                               operator: "objectProperties"
                               children: ["applicationData.user.firstName"]
                             }
                           ]
                         }
+                        style: "basic"
                       }
                     }
                     {
@@ -59,6 +60,7 @@ exports.queries = [
                           operator: "graphQL"
                           children: [
                             "query getOrgs {organisations {nodes {name, id}}}"
+                            ""
                             []
                             "organisations.nodes"
                           ]
@@ -90,7 +92,7 @@ exports.queries = [
                       title: "Documentation Info"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "Documentation" }
+                      parameters: { title: "### Documentation", style: "basic" }
                     }
                     {
                       code: "IDUpload"
@@ -176,7 +178,7 @@ exports.queries = [
                   ]
                 }
                 parameterQueries: {
-                  newOutcome: "Approved"
+                  newOutcome: "APPROVED"
                 }
               }
               {
@@ -192,7 +194,7 @@ exports.queries = [
                         "applicationData.outcome"
                       ]
                     }
-                    "Approved"
+                    "APPROVED"
                   ]
                 }
                 parameterQueries: {
@@ -219,7 +221,7 @@ exports.queries = [
                         "applicationData.outcome"
                       ]
                     }
-                    "Approved"
+                    "APPROVED"
                   ]
                 }
                 parameterQueries: {
@@ -247,11 +249,11 @@ exports.queries = [
                         "applicationData.outcome"
                       ]
                     }
-                    "Approved"
+                    "APPROVED"
                   ]
                 }
                 parameterQueries: {
-                  newStatus: "Completed"
+                  newStatus: "COMPLETED"
                 }
               }
             ]

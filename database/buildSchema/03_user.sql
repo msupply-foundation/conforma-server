@@ -1,7 +1,6 @@
 -- user table
-
 CREATE TABLE public.user (
-    id serial primary key,
+    id serial PRIMARY KEY,
     first_name varchar,
     last_name varchar,
     username varchar UNIQUE,
@@ -9,3 +8,4 @@ CREATE TABLE public.user (
     date_of_birth date,
     password_hash varchar
 );
+

@@ -26,7 +26,7 @@ Access to the database is restricted using PostGres row-level security policies,
 
 The `name` and `description` of the policy helps the Admin users identify the policy details.
 
-The `type` is the action type, that should be one of the options: `'Apply'`, `'Review'`, `'Assign'`, ...(few more to be added).
+The `type` is the action type, that should be one of the options: `'APPLY'`, `'REVIEW'`, `'ASSIGN'`, ...(few more to be added).
 
 The `rules` will define the list of when the user is allowed to be acting on the linked application. For example, the policy to Apply for an application is that the associated User ID is the same as the logged-in user and the current status set as "Draft" or "Changes required". Rules will link directly to row level permissions in postgres; to make admin task easier, we are using JSON SQL format for this field (`json-sql-builder2`). When permission policies are edited, the JSON SQL will be converted to SQL and row permissions will be edited and/or added to respective tables. We use mechanism provided by **[Graphile](https://graphile.org/postgraphile/security/)** to expose JWT parameters to be used in SQL queries inside row level permissions. As per below diagrams:
 

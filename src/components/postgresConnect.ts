@@ -7,17 +7,21 @@ import {
   ActionQueue,
   ActionPlugin,
   FileDownloadInfo,
-  ActionInTemplateGetPayload,
   ActionQueueExecutePayload,
   ActionQueueGetPayload,
   ActionQueuePayload,
   FilePayload,
-  FileGetPayload,
   TriggerQueueUpdatePayload,
-  ActionSequential,
-  TriggerPayload,
 } from '../types'
-import { ApplicationOutcome, Organisation, Trigger, User } from '../generated/graphql'
+import {
+  ActionQueueStatus,
+  ApplicationOutcome,
+  ApplicationStatus,
+  Organisation,
+  ReviewStatus,
+  Trigger,
+  User,
+} from '../generated/graphql'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -116,7 +120,7 @@ class PostgresDB {
   }
 
   public getActionsScheduled = async (
-    payload: ActionQueueGetPayload = { status: 'Scheduled' }
+    payload: ActionQueueGetPayload = { status: ActionQueueStatus.Scheduled }
   ): Promise<ActionQueue[]> => {
     const text =
       'SELECT id, action_code, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
@@ -133,7 +137,7 @@ class PostgresDB {
 
   public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
     const text =
-      "SELECT id, action_code, trigger_payload, condition_expression, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'Processing' ORDER BY sequence"
+      "SELECT id, action_code, trigger_payload, condition_expression, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'PROCESSING' ORDER BY sequence"
     try {
       const result = await this.query({
         text,
@@ -163,7 +167,7 @@ class PostgresDB {
     record_id: number,
     fail = false
   ): Promise<boolean> => {
-    const triggerStatus = fail ? 'Error' : null
+    const triggerStatus = fail ? Trigger.Error : null
     const text = `UPDATE ${table} SET trigger = $1 WHERE id = $2`
     try {
       const result = await this.query({
@@ -453,7 +457,7 @@ class PostgresDB {
     appId: number,
     outcome: ApplicationOutcome
   ): Promise<boolean> => {
-    // Note: There is a trigger in Postgres DB that automatically updates the `is_active` field to False when outcome is set to "Approved" or "Rejected"
+    // Note: There is a trigger in Postgres DB that automatically updates the `is_active` field to False when outcome is set to "APPROVED" or "REJECTED"
     const text = 'UPDATE application SET outcome = $1  WHERE id = $2'
     try {
       await this.query({ text, values: [outcome, appId] })
@@ -526,7 +530,10 @@ class PostgresDB {
     }
   }
 
-  public addNewApplicationStatusHistory = async (stageHistoryId: number, status = 'Draft') => {
+  public addNewApplicationStatusHistory = async (
+    stageHistoryId: number,
+    status: ApplicationStatus = ApplicationStatus.Draft
+  ) => {
     // Note: switching is_current of previous status_histories to False is done automatically by a Postgres trigger function
     const text =
       'INSERT into application_status_history (application_stage_history_id, status, time_created) VALUES ($1, $2, CURRENT_TIMESTAMP) RETURNING id, status, time_created'
@@ -552,7 +559,10 @@ class PostgresDB {
     }
   }
 
-  public addNewReviewStatusHistory = async (reviewId: number, status = 'Draft') => {
+  public addNewReviewStatusHistory = async (
+    reviewId: number,
+    status: ReviewStatus = ReviewStatus.Draft
+  ) => {
     // Note: switching is_current of previous status_histories to False is done automatically by a Postgres trigger function
     const text =
       'INSERT into review_status_history (review_id, status) VALUES ($1, $2) RETURNING id, status, time_created'
@@ -684,11 +694,8 @@ class PostgresDB {
   }
   public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
-      SELECT review.level_number AS "levelNumber",
-      stage_number as "stageNumber"
-      FROM review JOIN review_assignment ra
-      ON review.review_assignment_id = ra.id
-      WHERE review.id = $1
+      SELECT review.level_number AS "levelNumber", stage_number as "stageNumber"
+      FROM review WHERE review.id = $1
     `
     try {
       const result = await this.query({ text, values: [reviewId] })

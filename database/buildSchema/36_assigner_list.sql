@@ -9,7 +9,7 @@ CREATE FUNCTION assigner_list (assignerid int)
     AS $$
     SELECT
         review_assignment.application_id AS application_id,
-        COUNT(DISTINCT (review_assignment.reviewer_id)) FILTER (WHERE review_assignment.status = 'Assigned') AS assign_reviewer_assigned_count,
+        COUNT(DISTINCT (review_assignment.reviewer_id)) FILTER (WHERE review_assignment.status = 'ASSIGNED') AS assign_reviewer_assigned_count,
         COUNT(DISTINCT (review_assignment.reviewer_id)) AS assign_reviewers_count,
         COUNT(DISTINCT (review_assignment.id)) AS assign_count
     FROM
@@ -23,3 +23,4 @@ GROUP BY
 $$
 LANGUAGE sql
 STABLE;
+

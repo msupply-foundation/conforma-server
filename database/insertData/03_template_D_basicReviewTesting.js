@@ -34,6 +34,7 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         text: "In this section, we require your **personal information**"
+                        style: "basic"
                       }
                     }
                     {
@@ -136,6 +137,7 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         text: "In this section, we require your **PRODUCT information**"
+                        style: "basic"
                       }
                     }
                     {
@@ -221,7 +223,6 @@ exports.queries = [
           templateStagesUsingId: {
             create: [
               {
-                id: 5
                 number: 1
                 title: "Screening"
                 description: "This application will go through the Screening stage before it can be accessed."
@@ -231,7 +232,6 @@ exports.queries = [
                 }
               }
               {
-                id: 6
                 number: 2
                 title: "Assessment"
                 description: "This phase is where your documents will be revised before the application can get the final approval."
@@ -244,7 +244,6 @@ exports.queries = [
                 }
               }
               {
-                id: 7
                 number: 3
                 title: "Final Decision"
                 description: "This is the final step and will change the outcome of this applications."
@@ -324,7 +323,7 @@ exports.queries = [
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "assignGeneral" }
                 }
-                stageNumber: 1
+                stageNumber: 2
                 levelNumber: 1
               }
             ]

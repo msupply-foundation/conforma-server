@@ -29,8 +29,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Create a user account"
+                        title: "## Welcome to IRIMS Application Manager"
                         text: "Please fill in your details to **register** for a user account."
+                        style: "info"
                       }
                     }
                     {
@@ -133,7 +134,15 @@ exports.queries = [
               }
             ]
           }
-          templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
+          templateStagesUsingId: { 
+            create: [
+              { 
+                number: 1, 
+                title: "Automatic", 
+                colour: "#1E14DB" #dark blue 
+              }
+            ] 
+          }
           templateActionsUsingId: {
             create: [
               # No Core Actions for this one
@@ -174,7 +183,7 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: {
-                  newStatus: { value: "Completed" }
+                  newStatus: { value: "COMPLETED" }
                 }
               }
               {
@@ -182,7 +191,7 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
                 parameterQueries: {
-                  newOutcome: { value: "Approved" }
+                  newOutcome: { value: "APPROVED" }
                 }
               }
             ]
