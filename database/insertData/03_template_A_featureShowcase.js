@@ -55,6 +55,7 @@ exports.queries = [
                         text: "Please fill in your details to **register** for a user account."
                         style: "info"
                       }
+                      helpText: "We need this **information** so you can do stuff"
                     }
                     {
                       code: "Q1"
@@ -62,7 +63,7 @@ exports.queries = [
                       title: "First Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "First Name", help: "Just enter your first name here" }
+                      parameters: { label: "First Name" }
                     }
                     {
                       code: "Q2"
