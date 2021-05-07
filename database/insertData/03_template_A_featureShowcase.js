@@ -55,7 +55,7 @@ exports.queries = [
                         text: "Please fill in your details to **register** for a user account."
                         style: "info"
                       }
-                      helpText: "We need this **information** so you can do stuff"
+                      helpText: "Please fill in these details to the best of your ability, with as much accuracy as possible."
                     }
                     {
                       code: "Q1"
