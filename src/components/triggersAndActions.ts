@@ -26,9 +26,7 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
 
     result.forEach((row) => {
       // This should import action from index.js (entry point of plugin)
-      console.log('row', row)
       actionLibrary[row.code] = require(path.join(getAppEntryPointDir(), row.path)).action
-      // actionLibrary[row.code] = require(row.path).action
       console.log('Action loaded: ' + row.code)
     })
 

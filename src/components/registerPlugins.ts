@@ -17,32 +17,36 @@ const pluginsFolderFull = path.join(getAppEntryPointDir(), config.pluginsFolder)
 const pluginsFolder = config.pluginsFolder
 const pluginJsonFilename = 'plugin.json'
 const getPluginIndexPath = (pluginFolderPath: string) =>
-  fs.existsSync(path.join(pluginFolderPath, 'src', 'index.js'))
-    ? path.join(pluginsFolder, 'src', 'index.js') // in production use index.js
-    : path.join(pluginsFolder, 'src', 'index.ts') // otherwise use index.ts
+  fs.existsSync(path.join(pluginsFolderFull, pluginFolderPath, 'src', 'index.js'))
+    ? path.join(pluginsFolder, pluginFolderPath, 'src', 'index.js') // in production use index.js
+    : path.join(pluginsFolder, pluginFolderPath, 'src', 'index.ts') // otherwise use index.ts
 
 export default async function registerPlugins() {
   // Load plugin info from files
   console.log('Scanning plugins folder...')
   const plugins = fs
     .readdirSync(pluginsFolderFull)
-    .map((pluginFolder) => path.join(pluginsFolderFull, pluginFolder))
-    .filter((pluginPath) => fs.statSync(pluginPath).isDirectory())
-    .filter((pluginPath) => fs.existsSync(path.join(pluginPath, pluginJsonFilename)))
+    .filter((pluginPath) => fs.statSync(path.join(pluginsFolderFull, pluginPath)).isDirectory())
+    .filter((pluginPath) =>
+      fs.existsSync(path.join(pluginsFolderFull, pluginPath, pluginJsonFilename))
+    )
     .map((pluginPath) => {
-      const pluginJsonContent = fs.readFileSync(path.join(pluginPath, pluginJsonFilename), 'utf8')
+      const pluginJsonContent = fs.readFileSync(
+        path.join(pluginsFolderFull, pluginPath, pluginJsonFilename),
+        'utf8'
+      )
       let pluginJson
       try {
         pluginJson = JSON.parse(pluginJsonContent)
       } catch (e) {
-        console.log('Failed to prase plugin.json in: ' + pluginPath)
+        console.log('Failed to parse plugin.json in: ' + pluginPath)
         throw e
       }
+      // console.log('pluginDirName', pluginDirName)
       const pluginObject = {
         ...pluginJson,
         path: getPluginIndexPath(pluginPath),
       }
-      console.log('pluginPath', pluginPath)
       return pluginObject
     })
 
