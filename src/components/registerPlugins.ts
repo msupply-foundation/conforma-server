@@ -13,21 +13,20 @@ import * as config from '../config.json'
 import DBConnect from './databaseConnect'
 import { ActionPlugin } from '../types'
 
-const pluginsFolder = path.join(getAppEntryPointDir(), config.pluginsFolder)
+const pluginsFolderFull = path.join(getAppEntryPointDir(), config.pluginsFolder)
+const pluginsFolder = config.pluginsFolder
 const pluginJsonFilename = 'plugin.json'
 const getPluginIndexPath = (pluginFolderPath: string) =>
   fs.existsSync(path.join(pluginFolderPath, 'src', 'index.js'))
-    ? path.join(pluginFolderPath, 'src', 'index.js') // in production use index.js
-    : path.join(pluginFolderPath, 'src', 'index.ts') // otherwoise use index.ts
+    ? path.join(pluginsFolder, 'src', 'index.js') // in production use index.js
+    : path.join(pluginsFolder, 'src', 'index.ts') // otherwise use index.ts
 
 export default async function registerPlugins() {
   // Load plugin info from files
   console.log('Scanning plugins folder...')
   const plugins = fs
-    .readdirSync(pluginsFolder)
-    .map((pluginFolder) => {
-      return path.join(pluginsFolder, pluginFolder)
-    })
+    .readdirSync(pluginsFolderFull)
+    .map((pluginFolder) => path.join(pluginsFolderFull, pluginFolder))
     .filter((pluginPath) => fs.statSync(pluginPath).isDirectory())
     .filter((pluginPath) => fs.existsSync(path.join(pluginPath, pluginJsonFilename)))
     .map((pluginPath) => {
@@ -43,6 +42,7 @@ export default async function registerPlugins() {
         ...pluginJson,
         path: getPluginIndexPath(pluginPath),
       }
+      console.log('pluginPath', pluginPath)
       return pluginObject
     })
 
