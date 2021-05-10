@@ -68,7 +68,7 @@ class PostgresDB {
     })
   }
 
-  private getValuesPlaceholders = (object: { [key: string]: any }) =>
+  public getValuesPlaceholders = (object: { [key: string]: any }) =>
     Object.keys(object).map((key, index) => `$${index + 1}`)
 
   public static get Instance() {

@@ -4,6 +4,8 @@ TEMPLATE C -- User Registration
     account in the system
 */
 // const { coreActions } = require('./core_actions')
+const { devActions } = require('./dev_actions')
+
 exports.queries = [
   `mutation {
     createTemplate(
@@ -145,6 +147,7 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               # No Core Actions for this one
+              ${devActions}
               {
                 actionCode: "incrementStage"
                 sequence: 1

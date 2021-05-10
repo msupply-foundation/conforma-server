@@ -3,22 +3,22 @@ GraphQL Fragment - DEVELOPMENT Actions
   - Use this to test arbitrary Actions -- but only use the trigger "DEV_TEST"
 \*/
 exports.devActions = `
-      {
-              actionCode: "incrementStage"
-              sequence: 1
-              trigger: DEV_TEST
-          #    parameterQueries: {
-          #      message: "This is a console log"
-          #  }
+    # Create a user
+    {
+      actionCode: "modifyEntity"
+      trigger: DEV_TEST
+      sequence: 1
+      parameterQueries: {
+        user: {
+          id: 18
+          first_name: "Boba"
+          last_name: "Fett"
+          username: "mandalorian"
+          email: "nowhere@outerrim.space"
+          password_hash: "123456"
         }
-        {
-          actionCode: "changeStatus"
-          trigger: DEV_TEST
-          sequence: 2
-          parameterQueries: {
-            newStatus: { value: "DRAFT" }
-          }
-        }
+      }
+    }
    # {
    # Add more Actions
    # }   

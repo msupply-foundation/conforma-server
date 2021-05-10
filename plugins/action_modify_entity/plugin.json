@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "modifyEntity",
+  "name": "Modify Entity",
+  "description": "Inserts or updates a record in database, e.g. User, Org",
+  "required_parameters": ["[entity]"],
+  "optional_parameters": [],
+  "output_properties": ["[entity]"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-05-10"
+  }
+}
