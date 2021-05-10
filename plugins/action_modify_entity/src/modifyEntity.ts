@@ -31,7 +31,7 @@ const modifyEntity: ActionPluginType = async ({ parameters, DBConnect }) => {
       return {
         status: ActionQueueStatus.Success,
         error_log: '',
-        output: result, // FIX THIS
+        output: { [tableName]: result[tableName] },
       }
     } else {
       console.log('Problem creating or updating record')
