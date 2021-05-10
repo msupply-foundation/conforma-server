@@ -35,8 +35,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 1"
+                        title: "#### Page 1"
                         text: "Start application by providing the product **NAME** and **ORIGIN**"
+                        style: "info"
                       }
                     }
                     {
@@ -109,7 +110,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Country name"
+                        title: "**Country name**"
                         text: {
                           operator: "objectProperties"
                           children: [
@@ -143,8 +144,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 2"
+                        title: "#### Page 2"
                         text: "In this section, we require information about **PRODUCT**"
+                        style: "info"
                       }
                     }
                     {
@@ -176,7 +178,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "mSupply UC - code"
+                        title: "**mSupply UC - code**"
                         text: {
                           operator: "objectProperties"
                           children: [
@@ -203,7 +205,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Product type"
+                        title: "**Product type**"
                         text: {
                           operator: "objectProperties"
                           children: [
@@ -254,8 +256,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 3"
+                        title: "#### Page 3"
                         text: "In this section, we require information about **PRESCRIPTION**"
+                        style: "info"
                       }
                     }
                     {
@@ -441,8 +444,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 4"
+                        title: "#### Page 4"
                         text: "In this section, we require information about **CONTAINER**"
+                        style: "info"
                       }
                     }
                     {
@@ -534,8 +538,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 5"
+                        title: "#### Page 5"
                         text: "In this section, we require information about **DOSAGE**"
+                        style: "info"
                       }
                     }
                     {
@@ -780,8 +785,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 6"
+                        title: "#### Page 6"
                         text: "Optional information"
+                        style: "info"
                       }
                     }
                     {
@@ -834,6 +840,7 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         text: "In this section, we require the INGREDIENTS for **Drug registered**"
+                        style: "info"
                       }
                     }
                     {

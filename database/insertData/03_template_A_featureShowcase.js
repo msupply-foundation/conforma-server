@@ -51,8 +51,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Create a user account"
+                        title: "**Create a user account**"
                         text: "Please fill in your details to **register** for a user account."
+                        style: "info"
                       }
                     }
                     {
@@ -118,7 +119,7 @@ exports.queries = [
                         title: {
                           operator: "stringSubstitution"
                           children: [
-                            "Current User: %1 %2"
+                            "**Current User: %1 %2**"
                             {
                               operator: "objectProperties"
                               children: ["applicationData.user.firstName"]
@@ -143,6 +144,7 @@ exports.queries = [
                             }
                           ]
                         }
+                        style: "basic"
                       }
                     }
                     {
@@ -403,7 +405,7 @@ exports.queries = [
                         ]
                       }
                       parameters: {
-                        title: "This has appeared because you typed 'magicword' above."
+                        title: "This has appeared because you typed \\"magicword\\" above."
                         text: {
                           operator: "stringSubstitution"
                           children: [
@@ -418,6 +420,7 @@ exports.queries = [
                             }
                           ]
                         }
+                        style: "success"
                       }
                     }
                     {
@@ -513,8 +516,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Checkbox demonstration"
+                        title: "## Checkbox demonstration"
                         text: "Different types and settings for Checkbox plugin"
+                        style: "basic"
                       }
                     }
                     {
@@ -722,8 +726,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "This sections allows you to upload files"
+                        title: "### This sections allows you to upload files"
                         text: "A demonstration of the File Upload plugin"
+                        style: "info"
                       }
                     }
                     {
@@ -926,6 +931,53 @@ exports.queries = [
                         ]
                       }
                       validationMessage: "Response must be less than 100 characters"
+                    }
+                  ]
+                }
+              }
+              {
+                code: "S3"
+                title: "Section 3"
+                index: 3
+                templateElementsUsingId: {
+                  create: [
+                    {
+                      code: "TextShowcase"
+                      index: 0
+                      title: "Text Showcase"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "## Many ways to deliver information!"
+                        text: "A text info box can be presented in a number of **styles**.\\n\\n\*Please select one below*"
+                        style: {
+                          operator: "objectProperties"
+                          children: ["responses.StyleChoice.text"]
+                        }
+                      }
+                    }
+                    {
+                      code: "StyleChoice"
+                      index: 1
+                      title: "Selector for TextInfo showcase"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select a style"
+                        placeholder: "Select"
+                        options: [
+                          "none"
+                          "basic"
+                          "info"
+                          "warning"
+                          "success"
+                          "positive"
+                          "error"
+                          "negative"
+                        ]
+                        default: "none"
+                      }
+                      isRequired: false
                     }
                   ]
                 }

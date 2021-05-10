@@ -37,13 +37,14 @@ exports.queries = [
                         title: {
                           operator: "stringSubstitution"
                           children: [
-                            "Welcome, %1."
+                            "### Welcome, **%1**."
                             {
                               operator: "objectProperties"
                               children: ["applicationData.user.firstName"]
                             }
                           ]
                         }
+                        style: "basic"
                       }
                     }
                     {
@@ -91,7 +92,7 @@ exports.queries = [
                       title: "Documentation Info"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "Documentation" }
+                      parameters: { title: "### Documentation", style: "basic" }
                     }
                     {
                       code: "IDUpload"
