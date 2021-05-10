@@ -2,17 +2,24 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 
+// If field contains this value, it will not be updated in database
+const SKIP_KEYWORD = 'SKIP'
+
 const modifyEntity: ActionPluginType = async ({ parameters, DBConnect }) => {
   const db = databaseMethods(DBConnect)
   const { tableName, ...entity } = parameters
+  for (const key in entity) {
+    if (entity[key] === SKIP_KEYWORD) delete entity[key]
+  }
+
   let result: any = {}
   try {
     if (entity?.id) {
-      // Update
+      // UPDATE
       console.log(`Updating ${tableName} record: ${JSON.stringify(entity, null, 2)}`)
       result = await db.updateEntity(tableName, entity)
     } else {
-      // Create new
+      // CREATE NEW
       console.log(`Creating ${tableName} record: ${JSON.stringify(entity, null, 2)}`)
       result = await db.createEntity(tableName, entity)
     }

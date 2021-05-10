@@ -154,15 +154,42 @@ exports.queries = [
                         checkboxes: ["Yes"]
                       }
                     }
+                    
                     # TO-DO: Need a field for existing password check
                     # (validate against login endpoint)
                     # and only then will the "New password" entry appear
                     # ---
+                    # TO-DO: Need a field for existing password check
+                    # (validate against login endpoint)
+                    # and only then will the "New password" entry appear
+                    # ---
+                    # {
+                    #   code: "currentPassword"
+                    #   index: 5
+                    #   title: "Current Password"
+                    #   elementTypePluginCode: "shortText"
+                    #   category: QUESTION
+                    #   visibilityCondition: {
+                    #     operator: "="
+                    #     children: [
+                    #       {
+                    #         operator: "objectProperties"
+                    #         children: [
+                    #           "responses.passwordCheckbox.values.0.selected"
+                    #         ]
+                    #       }
+                    #       true
+                    #     ]
+                    #   }
+                    #   parameters: { label: "Current password", maskedInput: true }
+                    #   validation: true
+                    #   validationMessage: "Password incorrect"
+                    # }
                     {
-                      code: "currentPassword"
+                      code: "Q5"
                       index: 5
-                      title: "Current Password"
-                      elementTypePluginCode: "shortText"
+                      title: "Password"
+                      elementTypePluginCode: "password"
                       category: QUESTION
                       visibilityCondition: {
                         operator: "="
@@ -176,9 +203,24 @@ exports.queries = [
                           true
                         ]
                       }
-                      parameters: { label: "Current password", maskedInput: true }
-                      validation: true
-                      validationMessage: "Password incorrect"
+                      parameters: {
+                        label: "Password"
+                        description: "Please select a new password"
+                        maskedInput: true
+                        placeholder: "Password must be at least 8 chars long"
+                        validationInternal: {
+                          operator: "REGEX"
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.thisResponse"]
+                            }
+                            { value: "^[\\\\S]{8,}$" }
+                          ]
+                        }
+                        # Validation:Currently just checks 8 chars, needs more complexity
+                        validationMessageInternal: "Password must be at least 8 characters"
+                      }
                     }
                     # TO-DO: Add Date of birth question once we have DatePicker element type
                   ]
@@ -201,6 +243,10 @@ exports.queries = [
                 sequence: 1
                 parameterQueries: {
                   tableName: "user"
+                  id: {
+                    operator: "objectProperties"
+                    children: ["applicationData.userId"]
+                  }
                   first_name: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q1.text"]
@@ -218,8 +264,20 @@ exports.queries = [
                     children: ["applicationData.responses.Q4.text"]
                   }
                   password_hash: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.hash"]
+                    operator: "?"
+                    children: [
+                      {
+                        operator: "objectProperties"
+                        children: [
+                          "applicationData.responses.passwordCheckbox.values.0.selected"
+                        ]
+                      }
+                      {
+                        operator: "objectProperties"
+                        children: ["applicationData.responses.Q5.hash"]
+                      }
+                      "SKIP"
+                    ]
                   }
                 }
               }
