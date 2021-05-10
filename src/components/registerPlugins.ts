@@ -42,7 +42,6 @@ export default async function registerPlugins() {
         console.log('Failed to parse plugin.json in: ' + pluginPath)
         throw e
       }
-      // console.log('pluginDirName', pluginDirName)
       const pluginObject = {
         ...pluginJson,
         path: getPluginIndexPath(pluginPath),
