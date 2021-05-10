@@ -195,47 +195,45 @@ exports.queries = [
                 sequence: 1
                 trigger: ON_APPLICATION_CREATE
               }
-              #
-              # TO-DO: Create an UpdateUser / Update Entity Action
-              #
-              # {
-              #   actionCode: "updateUser"
-              #   trigger: ON_APPLICATION_SUBMIT
-              #   sequence: 1
-              #   parameterQueries: {
-              #     first_name: {
-              #       operator: "objectProperties"
-              #       children: ["applicationData.responses.Q1.text"]
-              #     }
-              #     last_name: {
-              #       operator: "objectProperties"
-              #       children: ["applicationData.responses.Q2.text"]
-              #     }
-              #     username: {
-              #       operator: "objectProperties"
-              #       children: ["applicationData.responses.Q3.text"]
-              #     }
-              #     email: {
-              #       operator: "objectProperties"
-              #       children: ["applicationData.responses.Q4.text"]
-              #     }
-              #     password_hash: {
-              #       operator: "objectProperties"
-              #       children: ["applicationData.responses.Q5.hash"]
-              #     }
-              #   }
-              # }
+              {
+                actionCode: "modifyEntity"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 1
+                parameterQueries: {
+                  tableName: "user"
+                  first_name: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q1.text"]
+                  }
+                  last_name: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q2.text"]
+                  }
+                  username: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q3.text"]
+                  }
+                  email: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q4.text"]
+                  }
+                  password_hash: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q5.hash"]
+                  }
+                }
+              }
               {
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
-                parameterQueries: { newStatus: { value: "Completed" } }
+                parameterQueries: { newStatus: { value: "COMPLETED" } }
               }
               {
                 actionCode: "changeOutcome"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
-                parameterQueries: { newOutcome: { value: "Approved" } }
+                parameterQueries: { newOutcome: { value: "APPROVED" } }
               }
             ]
           }

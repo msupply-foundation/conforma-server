@@ -4,8 +4,7 @@ import databaseMethods from './databaseMethods'
 
 const modifyEntity: ActionPluginType = async ({ parameters, DBConnect }) => {
   const db = databaseMethods(DBConnect)
-  const tableName = Object.keys(parameters)[0]
-  const entity = parameters[tableName]
+  const { tableName, ...entity } = parameters
   let result: any = {}
   try {
     if (entity?.id) {
@@ -19,7 +18,7 @@ const modifyEntity: ActionPluginType = async ({ parameters, DBConnect }) => {
     }
     if (result.success) {
       console.log(
-        `${entity?.id ? 'Created' : 'Updated'} ${tableName} record, ID: `,
+        `${entity?.id ? 'Updated' : 'Created'} ${tableName} record, ID: `,
         result[tableName].id
       )
       return {

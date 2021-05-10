@@ -154,10 +154,11 @@ exports.queries = [
                 trigger: ON_APPLICATION_CREATE
               }
               {
-                actionCode: "createUser"
+                actionCode: "modifyEntity"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
                 parameterQueries: {
+                  tableName: "user"
                   first_name: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q1.text"]
