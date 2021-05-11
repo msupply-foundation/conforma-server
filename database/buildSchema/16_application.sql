@@ -10,6 +10,7 @@ CREATE TABLE public.application (
     template_id integer REFERENCES public.template (id),
     user_id integer REFERENCES public.user (id),
     org_id integer REFERENCES public.organisation (id),
+    restriction_id jsonb,
     serial varchar UNIQUE,
     name varchar,
     outcome public.application_outcome,
