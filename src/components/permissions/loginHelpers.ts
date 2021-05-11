@@ -52,7 +52,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       return { orgId, orgName, userRole, registration, address, logoUrl }
     })
 
-  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(newUsername)
+  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(newUsername, orgId || null)
 
   const selectedOrg = orgId ? orgList.filter((org) => org.orgId === orgId) : undefined
 
