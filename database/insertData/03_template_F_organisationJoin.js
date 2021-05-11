@@ -72,7 +72,7 @@ exports.queries = [
                       code: "S1Q2"
                       index: 2
                       title: "Reason"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "longText"
                       category: QUESTION
                       parameters: {
                         label: "Reason for joining"

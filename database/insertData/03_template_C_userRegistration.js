@@ -30,7 +30,6 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         title: "## Welcome to IRIMS Application Manager"
-                        text: "Please fill in your details to **register** for a user account."
                         style: "info"
                       }
                     }
@@ -40,6 +39,7 @@ exports.queries = [
                       title: "First Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      helpText: "### User Registration\\n\\nPlease provide accurate details to **register** for a user account on our system."
                       validation: {
                         operator: "REGEX"
                         children: [
@@ -58,6 +58,7 @@ exports.queries = [
                       index: 2
                       title: "Last Name"
                       elementTypePluginCode: "shortText"
+                      isRequired: false
                       category: QUESTION
                       parameters: { label: "Last Name" }
                     }

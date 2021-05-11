@@ -36,8 +36,6 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         title: "#### Page 1"
-                        text: "Start application by providing the product **NAME** and **ORIGIN**"
-                        style: "info"
                       }
                     }
                     {
@@ -46,6 +44,7 @@ exports.queries = [
                       title: "Product name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      helpText: "Start application by providing the product **NAME** and **ORIGIN**"
                       parameters: { label: "Product name" }
                       validation: {
                         operator: "!="
@@ -145,8 +144,6 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         title: "#### Page 2"
-                        text: "In this section, we require information about **PRODUCT**"
-                        style: "info"
                       }
                     }
                     {
@@ -155,6 +152,7 @@ exports.queries = [
                       title: "UC Selector"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
+                      helpText: "In this section, we require information about the **PRODUCT**"
                       parameters: {
                         label: "ATC Code"
                         options: {
@@ -257,8 +255,6 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         title: "#### Page 3"
-                        text: "In this section, we require information about **PRESCRIPTION**"
-                        style: "info"
                       }
                     }
                     {
@@ -266,6 +262,7 @@ exports.queries = [
                       index: 100
                       title: "Formulations"
                       elementTypePluginCode: "radioChoice"
+                      helpText:  "In this section, we require information about the **PRESCRIPTION**"
                       category: QUESTION
                       parameters: {
                         label: "Formulations"
@@ -445,8 +442,6 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         title: "#### Page 4"
-                        text: "In this section, we require information about **CONTAINER**"
-                        style: "info"
                       }
                     }
                     {
@@ -454,6 +449,7 @@ exports.queries = [
                       index: 160
                       title: "Primary container"
                       elementTypePluginCode: "dropdownChoice"
+                      helpText: "In this section, we require information about the **CONTAINER**"
                       category: QUESTION
                       parameters: {
                         label: "Primary container"
@@ -539,8 +535,6 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         title: "#### Page 5"
-                        text: "In this section, we require information about **DOSAGE**"
-                        style: "info"
                       }
                     }
                     {
@@ -549,6 +543,7 @@ exports.queries = [
                       title: "Administration unit"
                       elementTypePluginCode: "radioChoice"
                       category: QUESTION
+                      helpText: "In this section, we require information about **DOSAGE**"
                       parameters: {
                         label: "Administration unit"
                         options: [
@@ -786,8 +781,7 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         title: "#### Page 6"
-                        text: "Optional information"
-                        style: "info"
+                        text: "### Optional information"
                       }
                     }
                     {
@@ -796,6 +790,7 @@ exports.queries = [
                       title: "Shelf life (months)"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      helpText: ""
                       parameters: {
                         label: "Shelf life (months)"
                       }
