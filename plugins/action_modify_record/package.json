@@ -1,5 +1,5 @@
 {
-  "name": "modify_entity_action",
+  "name": "modify_record_action",
   "version": "0.1",
   "description": "Inserts or updates a record in database, e.g. User, Org",
   "author": "The mSupplyFoundation",

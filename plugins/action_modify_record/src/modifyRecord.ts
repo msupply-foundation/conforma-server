@@ -5,27 +5,27 @@ import databaseMethods from './databaseMethods'
 // If field contains this value, it will not be updated in database
 const SKIP_KEYWORD = 'SKIP'
 
-const modifyEntity: ActionPluginType = async ({ parameters, DBConnect }) => {
+const modifyRecord: ActionPluginType = async ({ parameters, DBConnect }) => {
   const db = databaseMethods(DBConnect)
-  const { tableName, ...entity } = parameters
-  for (const key in entity) {
-    if (entity[key] === SKIP_KEYWORD) delete entity[key]
+  const { tableName, ...record } = parameters
+  for (const key in record) {
+    if (record[key] === SKIP_KEYWORD) delete record[key]
   }
 
   let result: any = {}
   try {
-    if (entity?.id) {
+    if (record?.id) {
       // UPDATE
-      console.log(`Updating ${tableName} record: ${JSON.stringify(entity, null, 2)}`)
-      result = await db.updateEntity(tableName, entity)
+      console.log(`Updating ${tableName} record: ${JSON.stringify(record, null, 2)}`)
+      result = await db.updateEntity(tableName, record)
     } else {
       // CREATE NEW
-      console.log(`Creating ${tableName} record: ${JSON.stringify(entity, null, 2)}`)
-      result = await db.createEntity(tableName, entity)
+      console.log(`Creating ${tableName} record: ${JSON.stringify(record, null, 2)}`)
+      result = await db.createEntity(tableName, record)
     }
     if (result.success) {
       console.log(
-        `${entity?.id ? 'Updated' : 'Created'} ${tableName} record, ID: `,
+        `${record?.id ? 'Updated' : 'Created'} ${tableName} record, ID: `,
         result[tableName].id
       )
       return {
@@ -49,4 +49,4 @@ const modifyEntity: ActionPluginType = async ({ parameters, DBConnect }) => {
   }
 }
 
-export default modifyEntity
+export default modifyRecord

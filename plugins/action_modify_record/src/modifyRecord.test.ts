@@ -2,7 +2,7 @@
 
 import DBConnect from '../../../src/components/databaseConnect'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
-import { action as modifyEntity } from './index'
+import { action as modifyRecord } from './index'
 
 // User tests
 
@@ -30,7 +30,7 @@ const updatedUser = {
 }
 
 test('Test: add User to database', () => {
-  return modifyEntity({
+  return modifyRecord({
     parameters: { tableName: 'user', ...testUser },
     DBConnect,
   }).then((result: any) => {
@@ -53,7 +53,7 @@ test('Test: add User to database', () => {
 })
 
 test('Test: Invalid user (date_of_birth and username fields mis-named) -- should fail', () => {
-  return modifyEntity({ parameters: { tableName: 'user', ...invalidUser }, DBConnect }).then(
+  return modifyRecord({ parameters: { tableName: 'user', ...invalidUser }, DBConnect }).then(
     (result: any) => {
       expect(result).toEqual({
         status: ActionQueueStatus.Fail,
@@ -64,7 +64,7 @@ test('Test: Invalid user (date_of_birth and username fields mis-named) -- should
 })
 
 test('Test: Modify existing user', () => {
-  return modifyEntity({
+  return modifyRecord({
     parameters: { tableName: 'user', ...updatedUser },
     DBConnect,
   }).then((result: any) => {
@@ -99,7 +99,7 @@ const testOrg2 = {
 }
 
 test('Test: add Org to database', () => {
-  return modifyEntity({ parameters: { tableName: 'organisation', ...testOrg }, DBConnect }).then(
+  return modifyRecord({ parameters: { tableName: 'organisation', ...testOrg }, DBConnect }).then(
     (result: any) => {
       expect(result).toEqual({
         status: ActionQueueStatus.Success,
@@ -119,7 +119,7 @@ test('Test: add Org to database', () => {
 })
 
 test('Test: add Org2 -- not all parameters provided', () => {
-  return modifyEntity({ parameters: { tableName: 'organisation', ...testOrg2 }, DBConnect }).then(
+  return modifyRecord({ parameters: { tableName: 'organisation', ...testOrg2 }, DBConnect }).then(
     (result: any) => {
       expect(result).toEqual({
         status: ActionQueueStatus.Success,
@@ -139,7 +139,7 @@ test('Test: add Org2 -- not all parameters provided', () => {
 })
 
 test('Test: Update existing organisation', () => {
-  return modifyEntity({
+  return modifyRecord({
     parameters: { tableName: 'organisation', id: 1, registration: '123456789' },
     DBConnect,
   }).then((result: any) => {
