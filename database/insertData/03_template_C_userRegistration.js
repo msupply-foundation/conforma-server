@@ -154,7 +154,7 @@ exports.queries = [
                 trigger: ON_APPLICATION_CREATE
               }
               {
-                actionCode: "modifyEntity"
+                actionCode: "modifyRecord"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
                 parameterQueries: {
