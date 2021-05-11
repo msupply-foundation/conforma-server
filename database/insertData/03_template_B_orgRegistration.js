@@ -336,7 +336,7 @@ exports.queries = [
                 }
               }
               {
-                actionCode: "createOrg"
+                actionCode: "modifyRecord"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 101
                 condition: {
@@ -352,6 +352,7 @@ exports.queries = [
                   ]
                 }
                 parameterQueries: {
+                  tableName: "organisation"
                   name: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.name.text"]

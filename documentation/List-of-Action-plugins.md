@@ -12,23 +12,6 @@ _Action Code:_ **`cLog`**
 
 ---
 
-### **Create User**:
-
-Creates a new User in the database based on user input parameters.
-
-- _Action Code:_ **`createUser`**
-
-| Input parameters<br />(\*required) <br/> | Output properties |
-| ---------------------------------------- | ----------------- |
-| `first_name`\*                           | `userId`          |
-| `last_name`                              | `username`        |
-| `username`\*                             | `firstName`       |
-| `date_of_birth`                          | `lastName`        |
-| `password_hash`\*                        | `email`           |
-| `email`\*                                |                   |
-
----
-
 ### **Change Outcome**:
 
 Set the Outcome of an application to the input parameter ("Pending", "Approved", "Rejected")
@@ -133,20 +116,6 @@ This will look for a user record with `username = "js"` and update it with the _
 **Note:**
 
 - fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.
-
----
-
-### **Create Organisation**
-
-Creates a new Organisation in the database based on user input parameters.
-
-- _Action Code:_ **`createOrg`**
-
-| Input parameters<br />(\*required) <br/> | Output properties |
-| ---------------------------------------- | ----------------- |
-| `name`\*                                 | `orgId`           |
-| `registration`\*                         | `orgName`         |
-| `address`                                |                   |
 
 ---
 

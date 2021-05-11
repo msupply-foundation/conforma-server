@@ -1,4 +1,4 @@
-// Test suite for the createUser Action -- just confirms that users are written to database.
+// Test suite for the modifyRecord Action -- just confirms that users are written to database.
 
 import DBConnect from '../../../src/components/databaseConnect'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
