@@ -84,6 +84,25 @@ If we are wanting to change the status of a **review**, the parameter `isReview`
 
 ---
 
+### **Modify Record**
+
+Creates or updates a database record on any table. Used for creating updating/users and organisations currently.
+
+- _Action Code:_ **`modifyRecord`**
+
+| Input parameters<br />(\*required) <br/> | Output properties    |
+| ---------------------------------------- | -------------------- |
+| `tableName`\*                            | `<tableName>` object |
+| `id`                                     |                      |
+| `...fields for database record`          |                      |
+
+**Note:**
+
+- If no `id` is provided, a new record will be **created**. If an `id` _is_ provided, the record with that ID will **updated**.
+- fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.
+
+---
+
 ### **Create Organisation**
 
 Creates a new Organisation in the database based on user input parameters.

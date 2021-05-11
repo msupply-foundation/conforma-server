@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "modifyRecord",
+  "name": "Modify Record",
+  "description": "Inserts or updates a record in database, e.g. User, Org",
+  "required_parameters": ["tableName"],
+  "optional_parameters": ["id", "<other record fields>"],
+  "output_properties": ["[record]"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-05-10"
+  }
+}
