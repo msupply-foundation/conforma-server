@@ -2,9 +2,6 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 
-// If field contains this value, it will not be updated in database
-// const SKIP_KEYWORD = 'SKIP'
-
 const modifyRecord: ActionPluginType = async ({ parameters, DBConnect }) => {
   const db = databaseMethods(DBConnect)
   const { tableName, ...record } = parameters
