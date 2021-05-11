@@ -45,23 +45,12 @@ exports.queries = [
                 templateElementsUsingId: {
                   create: [
                     {
-                      code: "Text1"
-                      index: 0
-                      title: "Intro"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
-                      parameters: {
-                        title: "**Create a user account**"
-                        text: "Please fill in your details to **register** for a user account."
-                        style: "info"
-                      }
-                    }
-                    {
                       code: "Q1"
                       index: 1
                       title: "First Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      helpText: "Please fill in these **details** to the best of your ability, with as much **accuracy** as possible.\\n\\nThis application will be thoroughly **reviewed** before approval."
                       parameters: { label: "First Name" }
                     }
                     {
@@ -270,6 +259,7 @@ exports.queries = [
                       title: "Organisation Category"
                       elementTypePluginCode: "radioChoice"
                       category: QUESTION
+                      helpText: "This page demonstrates some of the selectors available, and shows that both the **options** and what shows as a result of your **selection** can be **dynamically defined**"
                       parameters: {
                         label: "Organisation Type"
                         description: "_Select which type of organisation you belong to._"
@@ -528,6 +518,7 @@ exports.queries = [
                       isRequired: false
                       elementTypePluginCode: "checkbox"
                       category: QUESTION
+                      helpText: ""
                       parameters: {
                         label: "This is a single checkbox"
                         checkboxes: ["Tick me"]
@@ -725,6 +716,7 @@ exports.queries = [
                       title: "Document Intro"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
+                      helpText: "This section provides a demonstration of the different ways the file upload element can be used"
                       parameters: {
                         title: "### This sections allows you to upload files"
                         text: "A demonstration of the File Upload plugin"
