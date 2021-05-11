@@ -128,6 +128,8 @@ Wheras:
 }
 ```
 
+This will look for a user record with `username = "js"` and update it with the _new_ username of `john`.
+
 **Note:**
 
 - fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.
