@@ -86,19 +86,50 @@ If we are wanting to change the status of a **review**, the parameter `isReview`
 
 ### **Modify Record**
 
-Creates or updates a database record on any table. Used for creating updating/users and organisations currently.
+Creates or updates a database record on any table. Currently used for creating updating/users and organisations.
 
 - _Action Code:_ **`modifyRecord`**
 
 | Input parameters<br />(\*required) <br/> | Output properties    |
 | ---------------------------------------- | -------------------- |
 | `tableName`\*                            | `<tableName>` object |
-| `id`                                     |                      |
+| `matchField`                             |                      |
+| `matchValue`                             |                      |
 | `...fields for database record`          |                      |
+
+The Action first checks if a record exists, based on the `matchField` (e.g. `username`) and `matchValue` (e.g. the value of `username` to check). If it exists, the record will be updated, otherwise a new record is created.
+
+If `matchField` is not provided, it will default to `id`.
+
+If `matchValue` is not provided, it will use the value supplied with the record for that field. So you only really need to provide `matchValue` if you're changing the value of `matchField`
+
+For example:
+
+```
+{
+  tableName: 'user',
+  matchField: 'username',
+  username: 'js',
+  email: 'john@msupply.foundation'
+}
+```
+
+This will look for a user record with `username = "js"` and update it if found.
+
+Wheras:
+
+```
+{
+  tableName: 'user',
+  matchField: 'username'
+  matchValue: 'js',
+  username: 'john',
+  email: 'john@msupply.foundation'
+}
+```
 
 **Note:**
 
-- If no `id` is provided, a new record will be **created**. If an `id` _is_ provided, the record with that ID will **updated**.
 - fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.
 
 ---
