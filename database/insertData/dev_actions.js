@@ -5,18 +5,16 @@ GraphQL Fragment - DEVELOPMENT Actions
 exports.devActions = `
     # Create a user
     {
-      actionCode: "modifyEntity"
+      actionCode: "modifyRecord"
       trigger: DEV_TEST
       sequence: 1
       parameterQueries: {
-        user: {
-          id: 18
-          first_name: "Boba"
-          last_name: "Fett"
-          username: "mandalorian"
-          email: "nowhere@outerrim.space"
-          password_hash: "123456"
-        }
+        tableName: "user"
+        matchField: "username"
+        first_name: "Boba"
+        last_name: "Fett"
+        username: "js"
+        email: "nowhere@outerrim.space"
       }
     }
    # {
