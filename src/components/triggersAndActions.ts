@@ -11,6 +11,8 @@ import DBConnect from './databaseConnect'
 import { actionLibrary } from './pluginsConnect'
 import { BasicObject, IParameters, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
 import { getApplicationData } from './getApplicationData'
+import { getAppEntryPointDir } from './utilityFunctions'
+import path from 'path'
 import { ActionQueueStatus, TriggerQueueStatus } from '../generated/graphql'
 
 const schedule = require('node-schedule')
@@ -24,7 +26,7 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
 
     result.forEach((row) => {
       // This should import action from index.js (entry point of plugin)
-      actionLibrary[row.code] = require(row.path).action
+      actionLibrary[row.code] = require(path.join(getAppEntryPointDir(), row.path)).action
       console.log('Action loaded: ' + row.code)
     })
 

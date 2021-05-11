@@ -33,6 +33,7 @@ exports.queries = [
                       parameters: {
                         title: "## Welcome to IRIMS Application Manager"
                         text: "Please fill in your details to **register** for a user account."
+                        style: "info"
                       }
                     }
                     {
