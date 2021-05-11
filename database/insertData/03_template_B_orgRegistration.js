@@ -32,8 +32,9 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Organisation details"
+                        title: "## Organisation details"
                         text: "The details entered should match with your registered organisation documents. You will attach these in Section 2."
+                        style: "info"
                       }
                     }
                     {
@@ -200,7 +201,7 @@ exports.queries = [
                         title: {
                           operator: "stringSubstitution"
                           children: [
-                            "Documentation for Organisation: %1"
+                            "**Documentation for Organisation: %1**"
                             {
                               operator: "objectProperties"
                               children: ["responses.name.text"]
@@ -217,6 +218,7 @@ exports.queries = [
                             }
                           ]
                         }
+                        style: "basic"
                       }
                     }
                     {
