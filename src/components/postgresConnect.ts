@@ -575,10 +575,15 @@ class PostgresDB {
     }
   }
 
-  public getUserTemplatePermissions = async (username: string) => {
-    const text = 'select * from permissions_all where username = $1'
+  public getUserTemplatePermissions = async (username: string, orgId: number |null) => {
+    const text = `SELECT * FROM permissions_all
+      WHERE username = $1
+      AND "orgId" ${orgId === null ? "IS NULL" : "= $2"}
+      `
+      const values:(string|number)[] = [username]
+      if (orgId) values.push(orgId)
     try {
-      const result = await this.query({ text, values: [username] })
+      const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
       console.log(err.message)
