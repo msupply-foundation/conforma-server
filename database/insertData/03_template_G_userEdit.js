@@ -159,10 +159,6 @@ exports.queries = [
                     # (validate against login endpoint)
                     # and only then will the "New password" entry appear
                     # ---
-                    # TO-DO: Need a field for existing password check
-                    # (validate against login endpoint)
-                    # and only then will the "New password" entry appear
-                    # ---
                     # {
                     #   code: "currentPassword"
                     #   index: 5
@@ -206,7 +202,6 @@ exports.queries = [
                       parameters: {
                         label: "Password"
                         description: "Please select a new password"
-                        maskedInput: true
                         placeholder: "Password must be at least 8 chars long"
                         validationInternal: {
                           operator: "REGEX"
@@ -238,7 +233,7 @@ exports.queries = [
                 trigger: ON_APPLICATION_CREATE
               }
               {
-                actionCode: "modifyEntity"
+                actionCode: "modifyRecord"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
                 parameterQueries: {
@@ -276,7 +271,7 @@ exports.queries = [
                         operator: "objectProperties"
                         children: ["applicationData.responses.Q5.hash"]
                       }
-                      "SKIP"
+                      null
                     ]
                   }
                 }

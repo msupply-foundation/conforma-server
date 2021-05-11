@@ -3,13 +3,13 @@ import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 
 // If field contains this value, it will not be updated in database
-const SKIP_KEYWORD = 'SKIP'
+// const SKIP_KEYWORD = 'SKIP'
 
 const modifyRecord: ActionPluginType = async ({ parameters, DBConnect }) => {
   const db = databaseMethods(DBConnect)
   const { tableName, ...record } = parameters
   for (const key in record) {
-    if (record[key] === SKIP_KEYWORD) delete record[key]
+    if (record[key] === null) delete record[key]
   }
 
   let result: any = {}
