@@ -10,11 +10,6 @@ testData.basicStringLiteral = {
   value: 'First Name',
 }
 
-testData.stringifiedBasicStringLiteral = `{
-    "type": "string",
-    "value": "First Name"
-}`
-
 testData.basicStringLiteralNoType = {
   value: 'First Name',
 }
@@ -23,14 +18,10 @@ testData.basicBoolean = {
   value: true,
 }
 
-testData.stringifiedBasicBoolean = `{"value":true}`
-
 testData.basicArray = {
   type: 'array',
   value: ['Pharmaceutical', 'Natural Product', 'Other'],
 }
-
-testData.stringifiedBasicArray = '{"value":["Pharmaceutical","Natural Product","Other"]}'
 
 testData.continentsResult = [
   'Africa',
@@ -909,7 +900,7 @@ testData.GraphQL_GetCountryByCode_ExternalAPI = {
     }`,
     'https://countries.trevorblades.com',
     ['code'],
-    '"NZ"',
+    'NZ',
     'country.continent',
   ],
 }

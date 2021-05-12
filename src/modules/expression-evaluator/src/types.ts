@@ -26,25 +26,26 @@ export interface IParameters {
 }
 
 export interface IQueryNode {
-  value?: string | number | boolean | object
+  value?: any
   type?: NodeType
-  operator?: Operator
-  children?: Array<IQueryNode | string | boolean | number | null | undefined>
+  operator: Operator
+  children: Array<IQueryNode | string | boolean | number | null | object | undefined>
 }
 
-type NodeType = 'string' | 'number' | 'boolean' | 'array'
+export type NodeType = 'string' | 'number' | 'boolean' | 'array'
 
 type Operator =
   | 'AND'
   | 'OR'
   | 'CONCAT'
   | '='
-  | '!= '
+  | '!='
   | '+'
   | '?'
   | 'REGEX'
   | 'objectProperties'
   | 'stringSubstitution'
-  | 'API'
+  | 'GET'
+  | 'POST'
   | 'pgSQL'
   | 'graphQL'

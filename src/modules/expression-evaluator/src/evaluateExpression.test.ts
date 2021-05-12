@@ -23,12 +23,6 @@ test('Testing basic string literal', () => {
   })
 })
 
-test('Testing basic string literal (Stringified)', () => {
-  return evaluateExpression(testData.stringifiedBasicStringLiteral).then((result: any) => {
-    expect(result).toBe('First Name')
-  })
-})
-
 test('Testing basic string literal - no type', () => {
   return evaluateExpression(testData.basicStringLiteralNoType).then((result: any) => {
     expect(result).toBe('First Name')
@@ -41,20 +35,8 @@ test('Testing basic boolean', () => {
   })
 })
 
-test('Testing basic boolean (Stringified)', () => {
-  return evaluateExpression(testData.stringifiedBasicBoolean).then((result: any) => {
-    expect(result).toBe(true)
-  })
-})
-
 test('Testing basic Array', () => {
   return evaluateExpression(testData.basicArray).then((result: any) => {
-    expect(result).toEqual(['Pharmaceutical', 'Natural Product', 'Other'])
-  })
-})
-
-test('Testing basic Array (Stringified)', () => {
-  return evaluateExpression(testData.stringifiedBasicArray).then((result: any) => {
     expect(result).toEqual(['Pharmaceutical', 'Natural Product', 'Other'])
   })
 })
@@ -691,14 +673,6 @@ test('Test visibility condition -- Answer to Q1 is Drug Registration and user be
 
 // test('Test Trigger condition -- Stage = 1 (Screening) and All Questions are approved', () => {
 //   return evaluateExpression(testData.complex2, {
-//     application: testData.application,
-//   }).then((result: any) => {
-//     expect(result).toBe(true);
-//   });
-// });
-
-// test('Test Trigger condition -- Stage = 1 (Screening) and All Questions are approved -- input as Stringified JSON', () => {
-//   return evaluateExpression(testData.complex2_asString, {
 //     application: testData.application,
 //   }).then((result: any) => {
 //     expect(result).toBe(true);
