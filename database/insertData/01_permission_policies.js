@@ -2,27 +2,6 @@
 Basic Permission Policies 
 */
 exports.queries = [
-  // grant create privileges to all (temporarily)
-  `mutation createPolicy {
-    createPermissionPolicy(
-      input: {
-        permissionPolicy: {
-          name: "unlimitedCreate"
-          rules: {
-            application: {
-              create: {
-              }
-            }
-          }
-          type: APPLY
-        }
-      }
-    ) {
-      permissionPolicy {
-        name
-      }
-    }
-  }`,
   // nonRegisteredApply -- used for UserRegistration
   `mutation createPolicy {
     createPermissionPolicy(

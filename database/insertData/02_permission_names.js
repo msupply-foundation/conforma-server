@@ -7,23 +7,6 @@ exports.queries = [
     createPermissionName(
       input: {
         permissionName: {
-          name: "unlimitedInsert"
-          permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "nonRegisteredApply" }
-          }
-        }
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  // applyUserRegistration
-  `mutation createPermissionName {
-    createPermissionName(
-      input: {
-        permissionName: {
           name: "applyUserRegistration"
           permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "nonRegisteredApply" }
