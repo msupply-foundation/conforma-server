@@ -2,6 +2,7 @@ import databaseConnect from '../databaseConnect'
 import config from '../../config.json'
 import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
+import { nanoid } from 'nanoid'
 import { PermissionRow, TemplatePermissions } from './types'
 import { compileJWT } from './rowLevelPolicyHelpers'
 import { Organisation, UserOrg } from '../../types'
@@ -56,12 +57,15 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const selectedOrg = orgId ? orgList.filter((org) => org.orgId === orgId) : undefined
 
+  const sessionId = nanoid(16)
+
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getSignedJWT({
       userId: userId || newUserId,
       orgId,
       templatePermissionRows,
+      sessionId
     }),
     user: {
       userId: userId || newUserId,
@@ -71,6 +75,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       email,
       dateOfBirth,
       organisation: selectedOrg?.[0],
+      sessionId
     },
     orgList,
   }
