@@ -32,8 +32,8 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Organisation details"
-                        text: "The details entered should match with your registered organisation documents. You will attach these in Section 2."
+                        title: "## Organisation details"
+                        style: "info"
                       }
                     }
                     {
@@ -72,6 +72,7 @@ exports.queries = [
                       index: 30
                       title: "Registration"
                       elementTypePluginCode: "shortText"
+                      helpText: "The details entered here should match with the documents issued by the governing body in your jurisdiction. You will attach evidence of these documents in the following section."
                       category: QUESTION
                       validation: {
                         operator: "API"
@@ -200,7 +201,7 @@ exports.queries = [
                         title: {
                           operator: "stringSubstitution"
                           children: [
-                            "Documentation for Organisation: %1"
+                            "**Documentation for Organisation: %1**"
                             {
                               operator: "objectProperties"
                               children: ["responses.name.text"]
@@ -217,6 +218,7 @@ exports.queries = [
                             }
                           ]
                         }
+                        style: "basic"
                       }
                     }
                     {
@@ -249,11 +251,12 @@ exports.queries = [
                       index: 30
                       title: "Registration upload"
                       elementTypePluginCode: "fileUpload"
+                      helpText: "Certification from your country's registration body is required."
                       category: QUESTION
                       isRequired: true
                       parameters: {
                         label: "Please provide proof of your organisation registration"
-                        description: "A certificate from your country's registration body will be required.  \\nAllowed formats: .pdf, .doc, .jpg, .png"
+                        description: "Allowed formats: .pdf, .doc, .jpg, .png"
                         fileCountLimit: 1
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc", "docx"]
                         fileSizeLimit: 5000
@@ -264,11 +267,12 @@ exports.queries = [
                       index: 40
                       title: "Other documentation upload"
                       elementTypePluginCode: "fileUpload"
+                      helpText: "Examples might include import permits."
                       category: QUESTION
                       isRequired: false
                       parameters: {
                         label: "Please provide any other documentation pertinent to your organisation's activities"
-                        description: "For example: import permits  \\nAllowed formats: .pdf, .doc, .jpg, .png"
+                        description: "Allowed formats: .pdf, .doc, .jpg, .png"
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc", "docx"]
                         fileSizeLimit: 5000
                       }
@@ -328,7 +332,7 @@ exports.queries = [
                   ]
                 }
                 parameterQueries: {
-                  newOutcome: { value: "Approved" }
+                  newOutcome: { value: "APPROVED" }
                 }
               }
               {
@@ -344,7 +348,7 @@ exports.queries = [
                         "applicationData.outcome"
                       ]
                     }
-                    "Approved"
+                    "APPROVED"
                   ]
                 }
                 parameterQueries: {
@@ -390,7 +394,7 @@ exports.queries = [
                         "applicationData.outcome"
                       ]
                     }
-                    "Approved"
+                    "APPROVED"
                   ]
                 }
                 parameterQueries: {
@@ -420,7 +424,7 @@ exports.queries = [
                         "applicationData.outcome"
                       ]
                     }
-                    "Approved"
+                    "APPROVED"
                   ]
                 }
                 parameterQueries: {

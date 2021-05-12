@@ -1,1 +1,4 @@
-export { default as action } from './updateReviewsStatuses'
+import { ActionPluginType } from '../../types'
+import updateReviewsStatuses from './updateReviewsStatuses'
+const action: ActionPluginType = updateReviewsStatuses
+export { action }

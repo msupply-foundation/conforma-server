@@ -68,7 +68,14 @@ const graphQLdefinition = [
   },
   {
     table: 'review',
-    generatedColumns: ['applicationId', 'reviewerId', 'level', 'isLastLevel'],
+    generatedColumns: [
+      'applicationId',
+      'reviewerId',
+      'level',
+      'isLastLevel',
+      'levelNumber',
+      'stageNumber',
+    ],
   },
   {
     table: 'reviewStatusHistory',

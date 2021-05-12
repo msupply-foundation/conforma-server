@@ -13,30 +13,33 @@ import * as config from '../config.json'
 import DBConnect from './databaseConnect'
 import { ActionPlugin } from '../types'
 
-const pluginsFolder = path.join(getAppEntryPointDir(), config.pluginsFolder)
+const pluginsFolderFull = path.join(getAppEntryPointDir(), config.pluginsFolder)
+const pluginsFolder = config.pluginsFolder
 const pluginJsonFilename = 'plugin.json'
 const getPluginIndexPath = (pluginFolderPath: string) =>
-  fs.existsSync(path.join(pluginFolderPath, 'src', 'index.js'))
-    ? path.join(pluginFolderPath, 'src', 'index.js') // in production use index.js
-    : path.join(pluginFolderPath, 'src', 'index.ts') // otherwoise use index.ts
+  fs.existsSync(path.join(pluginsFolderFull, pluginFolderPath, 'src', 'index.js'))
+    ? path.join(pluginsFolder, pluginFolderPath, 'src', 'index.js') // in production use index.js
+    : path.join(pluginsFolder, pluginFolderPath, 'src', 'index.ts') // otherwise use index.ts
 
 export default async function registerPlugins() {
   // Load plugin info from files
   console.log('Scanning plugins folder...')
   const plugins = fs
-    .readdirSync(pluginsFolder)
-    .map((pluginFolder) => {
-      return path.join(pluginsFolder, pluginFolder)
-    })
-    .filter((pluginPath) => fs.statSync(pluginPath).isDirectory())
-    .filter((pluginPath) => fs.existsSync(path.join(pluginPath, pluginJsonFilename)))
+    .readdirSync(pluginsFolderFull)
+    .filter((pluginPath) => fs.statSync(path.join(pluginsFolderFull, pluginPath)).isDirectory())
+    .filter((pluginPath) =>
+      fs.existsSync(path.join(pluginsFolderFull, pluginPath, pluginJsonFilename))
+    )
     .map((pluginPath) => {
-      const pluginJsonContent = fs.readFileSync(path.join(pluginPath, pluginJsonFilename), 'utf8')
+      const pluginJsonContent = fs.readFileSync(
+        path.join(pluginsFolderFull, pluginPath, pluginJsonFilename),
+        'utf8'
+      )
       let pluginJson
       try {
         pluginJson = JSON.parse(pluginJsonContent)
       } catch (e) {
-        console.log('Failed to prase plugin.json in: ' + pluginPath)
+        console.log('Failed to parse plugin.json in: ' + pluginPath)
         throw e
       }
       const pluginObject = {

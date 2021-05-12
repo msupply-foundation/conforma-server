@@ -1,6 +1,11 @@
 import { ActionPluginInput } from '../../types'
-import { Reviewer, ReviewAssignmentObject, AssignmentStatus } from './types'
+import { Reviewer, ReviewAssignmentObject } from './types'
 import databaseMethods from './databaseMethods'
+import {
+  ActionQueueStatus,
+  PermissionPolicyType,
+  ReviewAssignmentStatus,
+} from '../../../src/generated/graphql'
 
 async function generateReviewAssignments({
   parameters,
@@ -35,7 +40,7 @@ async function generateReviewAssignments({
           'No reviewer with level associated to first stage, no review assignments to generate.'
         )
         return {
-          status: 'Success',
+          status: ActionQueueStatus.Success,
           error_log: '',
           output: {},
         }
@@ -55,7 +60,7 @@ async function generateReviewAssignments({
             `No reviewer with level associated to stageNumber ${stageNumber}, no review assignments to generate.`
           )
           return {
-            status: 'Success',
+            status: ActionQueueStatus.Success,
             error_log: '',
             output: {},
           }
@@ -70,7 +75,7 @@ async function generateReviewAssignments({
             'Final review level reached for current stage, no later review assignments to generate.'
           )
           return {
-            status: 'Success',
+            status: ActionQueueStatus.Success,
             error_log: '',
             output: {},
           }
@@ -91,7 +96,7 @@ async function generateReviewAssignments({
   } catch (error) {
     console.log(error.message)
     return {
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'Problem creating review_assignment records: ' + error.message,
     }
   }
@@ -120,7 +125,7 @@ const generateNextReviewAssignments = async ({
     templateId,
     nextStageNumber,
     nextReviewLevel,
-    'Review'
+    PermissionPolicyType.Review
   )
   console.log('Next level reviewers', nextLevelReviewers)
   const reviewAssignments: ReviewAssignmentObject = {}
@@ -136,8 +141,8 @@ const generateNextReviewAssignments = async ({
 
     const status =
       restrictions?.canSelfAssign || nextReviewLevel > 1
-        ? AssignmentStatus.SELF_ASSIGN
-        : AssignmentStatus.AVAILABLE
+        ? ReviewAssignmentStatus.AvailableForSelfAssignment
+        : ReviewAssignmentStatus.Available
 
     const userOrgKey = `${userId}_${orgId ? orgId : 0}`
     if (reviewAssignments[userOrgKey])
@@ -169,7 +174,7 @@ const generateNextReviewAssignments = async ({
     templateId,
     nextStageNumber,
     nextReviewLevel,
-    'Assign'
+    PermissionPolicyType.Assign
   )
   const reviewAssignmentAssignerJoins = []
   for (const reviewAssignmentId of reviewAssignmentIds) {
@@ -188,7 +193,7 @@ const generateNextReviewAssignments = async ({
   console.log('ReviewAssignmentAssignerJoinIds', reviewAssignmentAssignerJoinIds)
 
   return {
-    status: 'Success',
+    status: ActionQueueStatus.Success,
     error_log: '',
     output: {
       reviewAssignments: Object.values(reviewAssignments),

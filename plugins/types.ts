@@ -1,6 +1,5 @@
+import { ActionQueueStatus } from '../src/generated/graphql'
 import { ActionApplicationData } from '../src/types'
-
-type ActionQueueStatus = 'Success' | 'Fail' | 'Processing' | 'Queued' | 'Scheduled' | null
 
 export interface ActionPluginInput {
   parameters: { [key: string]: any }
@@ -14,11 +13,4 @@ export interface ActionPluginOutput {
   output?: { [key: string]: any }
 }
 
-export type Status =
-  | 'Draft'
-  | 'Withdrawn'
-  | 'Submitted'
-  | 'Changes Required'
-  | 'Re-submitted'
-  | 'Completed'
-  | 'Expired'
+export type ActionPluginType = (props: ActionPluginInput) => Promise<ActionPluginOutput>

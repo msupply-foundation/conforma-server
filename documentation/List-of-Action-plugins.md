@@ -162,10 +162,10 @@ When a reviewer self-assigns themselves to a review_assignment (i.e. its status 
 
 - _Action Code:_ **`updateReviewAssignmentsStatus`**
 
-| Input parameters<br />(\*required) <br/>          | Output properties                                     |
-| ------------------------------------------------- | ----------------------------------------------------- |
-| `reviewAssignmentId`\*                            | `reviewAssignmentUpdates` (`array` of `{id, status}`) |
-| `trigger` (only executes on `onReviewSelfAssign`) |                                                       |
+| Input parameters<br />(\*required) <br/>             | Output properties                                     |
+| ---------------------------------------------------- | ----------------------------------------------------- |
+| `reviewAssignmentId`\*                               | `reviewAssignmentUpdates` (`array` of `{id, status}`) |
+| `trigger` (only executes on `ON_REVIEW_SELF_ASSIGN`) |                                                       |
 
 **Note:** If `trigger` is not supplied, the plugin will try to infer it from `applicationData`
 

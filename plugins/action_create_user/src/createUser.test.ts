@@ -1,6 +1,7 @@
 // Test suite for the createUser Action -- just confirms that users are written to database.
 
 import DBConnect from '../../../src/components/databaseConnect'
+import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { action as createUser } from './index'
 
 const testUser = {
@@ -27,7 +28,7 @@ test('Test: add User to database', () => {
     DBConnect,
   }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         email: 'test@sussol.net',
@@ -43,7 +44,7 @@ test('Test: add User to database', () => {
 test('Test: Invalid user (date_of_birth and username fields mis-named) -- should fail', () => {
   return createUser({ parameters: invalidUser, DBConnect }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Fail',
+      status: ActionQueueStatus.Fail,
       error_log: 'There was a problem creating new user.',
     })
   })

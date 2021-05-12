@@ -1,4 +1,5 @@
-import { ActionPluginOutput, Status, ActionPluginInput } from '../../types'
+import { ActionQueueStatus } from '../../../src/generated/graphql'
+import { ActionPluginOutput, ActionPluginInput } from '../../types'
 
 async function changeStatus({
   parameters,
@@ -26,7 +27,7 @@ async function changeStatus({
   }
 
   return {
-    status: 'Fail',
+    status: ActionQueueStatus.Fail,
     error_log: `Neither applicationId or reviewId is provided, cannot run action`,
   }
 }
@@ -37,7 +38,10 @@ const changeApplicationStatus = async (
   newStatus: string,
   DBConnect: any
 ): Promise<ActionPluginOutput> => {
-  const returnObject: ActionPluginOutput = { status: null, error_log: '' }
+  const returnObject: ActionPluginOutput = {
+    status: ActionQueueStatus.Fail,
+    error_log: 'uknown error',
+  }
   console.log(`Changing the Status of Application ${applicationId}...`)
 
   try {
@@ -51,7 +55,7 @@ const changeApplicationStatus = async (
       console.log(
         `WARNING: Application ${applicationId} already has status: ${newStatus}. No changes were made.`
       )
-      returnObject.status = 'Success'
+      returnObject.status = ActionQueueStatus.Success
       returnObject.error_log = 'Status not changed'
       returnObject.output = {
         status: newStatus,
@@ -62,7 +66,7 @@ const changeApplicationStatus = async (
     }
 
     if (!current?.status) {
-      returnObject.status = 'Fail'
+      returnObject.status = ActionQueueStatus.Fail
       returnObject.error_log =
         "No stage defined for this Application. Can't create a status_history record."
       return returnObject
@@ -73,7 +77,7 @@ const changeApplicationStatus = async (
     // Create a new application_status_history record
     const result = await DBConnect.addNewApplicationStatusHistory(currentStageHistoryId, newStatus)
     if (result.id) {
-      returnObject.status = 'Success'
+      returnObject.status = ActionQueueStatus.Success
       returnObject.output = {
         status: newStatus,
         statusId: result.id,
@@ -81,7 +85,7 @@ const changeApplicationStatus = async (
       }
       console.log(`New status_history created: ${newStatus}`)
     } else {
-      returnObject.status = 'Fail'
+      returnObject.status = ActionQueueStatus.Fail
       returnObject.error_log = "Couldn't create new application_status_history"
       return returnObject
     }
@@ -90,7 +94,7 @@ const changeApplicationStatus = async (
     returnObject.output = { ...returnObject.output, applicationId }
     return returnObject
   } catch (err) {
-    returnObject.status = 'Fail'
+    returnObject.status = ActionQueueStatus.Fail
     returnObject.error_log = 'Unable to change Status'
     return returnObject
   }
@@ -101,7 +105,10 @@ const changeReviewStatus = async (
   newStatus: string,
   DBConnect: any
 ): Promise<ActionPluginOutput> => {
-  const returnObject: ActionPluginOutput = { status: null, error_log: '' }
+  const returnObject: ActionPluginOutput = {
+    status: ActionQueueStatus.Fail,
+    error_log: 'uknown error',
+  }
   console.log(`Changing the Status of Review ${reviewId}...`)
 
   try {
@@ -112,7 +119,7 @@ const changeReviewStatus = async (
       console.log(
         `WARNING: Review ${reviewId} already has status: ${newStatus}. No changes were made.`
       )
-      returnObject.status = 'Success'
+      returnObject.status = ActionQueueStatus.Success
       returnObject.error_log = 'Status not changed'
       returnObject.output = {
         status: newStatus,
@@ -125,7 +132,7 @@ const changeReviewStatus = async (
     // Create a new review_status_history record
     const result = await DBConnect.addNewReviewStatusHistory(reviewId, newStatus)
     if (result.id) {
-      returnObject.status = 'Success'
+      returnObject.status = ActionQueueStatus.Success
       returnObject.output = {
         status: newStatus,
         statusId: result.id,
@@ -133,7 +140,7 @@ const changeReviewStatus = async (
       }
       console.log(`New review_status_history created: ${newStatus}`)
     } else {
-      returnObject.status = 'Fail'
+      returnObject.status = ActionQueueStatus.Fail
       returnObject.error_log = "Couldn't create new review_status_history"
       return returnObject
     }
@@ -142,7 +149,7 @@ const changeReviewStatus = async (
     returnObject.output = { ...returnObject.output, reviewId }
     return returnObject
   } catch (err) {
-    returnObject.status = 'Fail'
+    returnObject.status = ActionQueueStatus.Fail
     returnObject.error_log = 'Unable to change Status'
     return returnObject
   }

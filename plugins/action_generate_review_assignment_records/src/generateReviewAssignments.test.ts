@@ -4,6 +4,7 @@
 // database has entered correct information
 
 import DBConnect from '../../../src/components/databaseConnect'
+import { ActionQueueStatus, ReviewAssignmentStatus } from '../../../src/generated/graphql'
 import { action as generateReviewAssignments } from './index'
 
 // Simulate application submission:
@@ -15,7 +16,7 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
     DBConnect,
   }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         reviewAssignments: [
@@ -24,7 +25,7 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
             orgId: null,
             stageId: 5,
             stageNumber: 1,
-            status: 'Available for self-assignment',
+            status: ReviewAssignmentStatus.AvailableForSelfAssignment,
             applicationId: 4001,
             templateSectionRestrictions: undefined,
             levelNumber: 1,
@@ -35,7 +36,7 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
             orgId: null,
             stageId: 5,
             stageNumber: 1,
-            status: 'Available for self-assignment',
+            status: ReviewAssignmentStatus.AvailableForSelfAssignment,
             applicationId: 4001,
             templateSectionRestrictions: undefined,
             levelNumber: 1,
@@ -46,7 +47,7 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
             orgId: null,
             stageId: 5,
             stageNumber: 1,
-            status: 'Available for self-assignment',
+            status: ReviewAssignmentStatus.AvailableForSelfAssignment,
             applicationId: 4001,
             templateSectionRestrictions: undefined,
             levelNumber: 1,
@@ -57,7 +58,7 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
             orgId: null,
             stageId: 5,
             stageNumber: 1,
-            status: 'Available for self-assignment',
+            status: ReviewAssignmentStatus.AvailableForSelfAssignment,
             applicationId: 4001,
             templateSectionRestrictions: undefined,
             levelNumber: 1,
@@ -68,7 +69,7 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
             orgId: null,
             stageId: 5,
             stageNumber: 1,
-            status: 'Available',
+            status: ReviewAssignmentStatus.Available,
             applicationId: 4001,
             templateSectionRestrictions: ['S1'],
             levelNumber: 1,
@@ -79,7 +80,7 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
             orgId: null,
             stageId: 5,
             stageNumber: 1,
-            status: 'Available',
+            status: ReviewAssignmentStatus.Available,
             applicationId: 4001,
             templateSectionRestrictions: ['S1', 'S2'],
             levelNumber: 1,
@@ -90,7 +91,7 @@ test('Test: Submit Application ID#4001 - Stage 1', () => {
             orgId: null,
             stageId: 5,
             stageNumber: 1,
-            status: 'Available',
+            status: ReviewAssignmentStatus.Available,
             applicationId: 4001,
             templateSectionRestrictions: ['S2'],
             levelNumber: 1,
@@ -128,7 +129,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
     DBConnect,
   }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         reviewAssignments: [
@@ -137,7 +138,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
             orgId: null,
             stageId: 6,
             stageNumber: 2,
-            status: 'Available',
+            status: ReviewAssignmentStatus.Available,
             applicationId: 4002,
             templateSectionRestrictions: null,
             levelNumber: 1,
@@ -148,7 +149,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
             orgId: null,
             stageId: 6,
             stageNumber: 2,
-            status: 'Available',
+            status: ReviewAssignmentStatus.Available,
             applicationId: 4002,
             templateSectionRestrictions: null,
             levelNumber: 1,
@@ -173,7 +174,7 @@ test('Test: Submit Review (Stage 1) for Application ID#4000 - Stage 2 Lvl 1', ()
     DBConnect,
   }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         reviewAssignments: [
@@ -182,7 +183,7 @@ test('Test: Submit Review (Stage 1) for Application ID#4000 - Stage 2 Lvl 1', ()
             orgId: null,
             stageId: 6,
             stageNumber: 2,
-            status: 'Available',
+            status: ReviewAssignmentStatus.Available,
             applicationId: 4000,
             templateSectionRestrictions: null,
             levelNumber: 1,
@@ -193,7 +194,7 @@ test('Test: Submit Review (Stage 1) for Application ID#4000 - Stage 2 Lvl 1', ()
             orgId: null,
             stageId: 6,
             stageNumber: 2,
-            status: 'Available',
+            status: ReviewAssignmentStatus.Available,
             applicationId: 4000,
             templateSectionRestrictions: null,
             levelNumber: 1,
@@ -216,7 +217,7 @@ test('Test: Submit Review  (Stage 2) for Application ID#4002, S2 Lvl2', () => {
     DBConnect,
   }).then((result: any) => {
     expect(result).toEqual({
-      status: 'Success',
+      status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         reviewAssignments: [
@@ -225,7 +226,7 @@ test('Test: Submit Review  (Stage 2) for Application ID#4002, S2 Lvl2', () => {
             orgId: null,
             stageId: 6,
             stageNumber: 2,
-            status: 'Available for self-assignment',
+            status: ReviewAssignmentStatus.AvailableForSelfAssignment,
             applicationId: 4002,
             templateSectionRestrictions: null,
             levelNumber: 2,
@@ -236,7 +237,7 @@ test('Test: Submit Review  (Stage 2) for Application ID#4002, S2 Lvl2', () => {
             orgId: null,
             stageId: 6,
             stageNumber: 2,
-            status: 'Available for self-assignment',
+            status: ReviewAssignmentStatus.AvailableForSelfAssignment,
             applicationId: 4002,
             templateSectionRestrictions: null,
             levelNumber: 2,

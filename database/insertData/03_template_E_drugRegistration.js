@@ -35,8 +35,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 1"
-                        text: "Start application by providing the product **NAME** and **ORIGIN**"
+                        title: "#### Page 1"
                       }
                     }
                     {
@@ -45,6 +44,7 @@ exports.queries = [
                       title: "Product name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      helpText: "Start application by providing the product **NAME** and **ORIGIN**"
                       parameters: { label: "Product name" }
                       validation: {
                         operator: "!="
@@ -109,7 +109,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Country name"
+                        title: "**Country name**"
                         text: {
                           operator: "objectProperties"
                           children: [
@@ -143,8 +143,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 2"
-                        text: "In this section, we require information about **PRODUCT**"
+                        title: "#### Page 2"
                       }
                     }
                     {
@@ -153,6 +152,7 @@ exports.queries = [
                       title: "UC Selector"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
+                      helpText: "In this section, we require information about the **PRODUCT**"
                       parameters: {
                         label: "ATC Code"
                         options: {
@@ -176,7 +176,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "mSupply UC - code"
+                        title: "**mSupply UC - code**"
                         text: {
                           operator: "objectProperties"
                           children: [
@@ -203,7 +203,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Product type"
+                        title: "**Product type**"
                         text: {
                           operator: "objectProperties"
                           children: [
@@ -254,8 +254,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 3"
-                        text: "In this section, we require information about **PRESCRIPTION**"
+                        title: "#### Page 3"
                       }
                     }
                     {
@@ -263,6 +262,7 @@ exports.queries = [
                       index: 100
                       title: "Formulations"
                       elementTypePluginCode: "radioChoice"
+                      helpText:  "In this section, we require information about the **PRESCRIPTION**"
                       category: QUESTION
                       parameters: {
                         label: "Formulations"
@@ -441,8 +441,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 4"
-                        text: "In this section, we require information about **CONTAINER**"
+                        title: "#### Page 4"
                       }
                     }
                     {
@@ -450,6 +449,7 @@ exports.queries = [
                       index: 160
                       title: "Primary container"
                       elementTypePluginCode: "dropdownChoice"
+                      helpText: "In this section, we require information about the **CONTAINER**"
                       category: QUESTION
                       parameters: {
                         label: "Primary container"
@@ -534,8 +534,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 5"
-                        text: "In this section, we require information about **DOSAGE**"
+                        title: "#### Page 5"
                       }
                     }
                     {
@@ -544,6 +543,7 @@ exports.queries = [
                       title: "Administration unit"
                       elementTypePluginCode: "radioChoice"
                       category: QUESTION
+                      helpText: "In this section, we require information about **DOSAGE**"
                       parameters: {
                         label: "Administration unit"
                         options: [
@@ -780,8 +780,8 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "Page 6"
-                        text: "Optional information"
+                        title: "#### Page 6"
+                        text: "### Optional information"
                       }
                     }
                     {
@@ -790,6 +790,7 @@ exports.queries = [
                       title: "Shelf life (months)"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      helpText: ""
                       parameters: {
                         label: "Shelf life (months)"
                       }
@@ -834,6 +835,7 @@ exports.queries = [
                       category: INFORMATION
                       parameters: {
                         text: "In this section, we require the INGREDIENTS for **Drug registered**"
+                        style: "info"
                       }
                     }
                     {
