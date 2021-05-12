@@ -6,6 +6,8 @@ The current build of the module is published to Github packages so it can be eas
 
 Run `yarn test` to see it in action.
 
+## Contents
+
 ---
 
 **The problem**: the highly configurable Template system in mSupply Application Manager requires many values to be stored as dynamic queries to either local state or the database, and perform basic operations (logic, concatenation, etc.) on them. We need a way to represent these potentially complex “expressions” in the database so they can be evaluated at runtime (both in the front and back-end), but without resorting to using `eval()` to evaluate javascript code directly.
@@ -14,15 +16,19 @@ Run `yarn test` to see it in action.
 
 Any value that could possibly be a dynamic query should be stored in this format. This would include:
 
-**Question**:
+**Form Questions**:
 
 - Parameters (Option lists, Labels, Placeholder text, etc.)
 - Visibility conditions
 - Validation criteria
 
-**Trigger**:
+**Triggers**:
 
 - Conditions
+
+**Actions**:
+
+- input parameters
 
 For more complex lookups, we would hide the complexity from the user in the Template builder, and just present a set of pre-defined “queries” in the UI, which map to a pre-written query with perhaps a selectable parameter or two. (However, we should also provide a JSON editor as an alternative if an advanced user wishes to manually create more complex queries.)
 
@@ -30,8 +36,8 @@ For more complex lookups, we would hide the complexity from the user in the Temp
 
 Each node in the tree is an either:
 
-- a simple type value (e.g. `string`, `number`, `array`) (the leaf nodes)
-- an "operator" node, which is an object with the following properties:
+- a simple type value (e.g. `string`, `number`, `boolean`, `array`) (the leaf nodes)
+- an **operator** node, which is an object with the following properties:
 
 ```
 {
@@ -41,7 +47,7 @@ Each node in the tree is an either:
 }
 ```
 
-`children` is an array of similar nodes, which are, in turn, either values or operator nodes. The values returned from these child nodes provide the values on which the "operator" acts For example:
+`children` is an array of similar nodes, which are, in turn, either values or operator nodes themselves. The values returned from these child nodes provide the values on which the "operator" acts For example:
 
 ```
 {
@@ -50,7 +56,7 @@ Each node in the tree is an either:
 }
 ```
 
-This expression would return the number **8** when evaluated. If `children` are themselves operator nodes, then they will be evaluated first before its result is evaluated by the parent operator. The number of child nodes required and type of values returned by them depends on the requirements of the parent operator (see below for details).
+This expression would return the number **8** when evaluated. If `children` are themselves operator nodes, then they will be evaluated first (and recursively down through their child nodes) before its result is evaluated by the parent operator. The number of child nodes required and type of values returned by them depends on the requirements of the parent operator (see below for details).
 
 ## type
 
@@ -150,7 +156,7 @@ The `evaluateExpression` function expects each expression to be passed along wit
 evaluateExpression(
     {
       operator: 'objectProperties',
-      children: [ { value: 'application.questions.q1' } ]
+      children: [ 'application.responses.q1' ]
     },
     { objects: { application } } )
 ```
@@ -163,7 +169,7 @@ application = {
   name: 'Drug Registration',
   status: 'DRAFT',
   stage: 1,
-  questions: { q1: 'What is the answer?', q2: 'Enter your name' },
+  responses: { q1: 'What is the answer?', q2: 'Enter your name' },
 }
 ```
 
@@ -249,7 +255,7 @@ Performs queries on connected GraphQL interface.
   ] }
 ```
 
-**Note**: To use the GraphQL straight away from what is in the graphil (json like), use it wrapper by \` and \`, otherwise it needs to be all in the same line.
+**Note**: To use the GraphQL straight away from what is in the graphil (json like), use it wrapped with \`backticks\`, otherwise it needs to be all in the same line.
 
 ## GET
 
@@ -326,38 +332,10 @@ The query evaluator is implemented in the `evaluateExpression` function:
 
 There is a **jest** test suite contained with this module’s repo which demonstrates a range of test cases. Here are a few:
 
-### Simple (non-dynamic) examples
-
-**Example 0**: A literal string Label of “First Name”:
-
-```
-{
-   type: "string", // This is optional
-   value: "First Name"
-}
-```
-
-**Example 00**: Visibility condition for a question that should always be visible:
-
-```
-{ value: true }
-```
-
-**Example 000:** Array of options for a Dropdown list:
-
-```
-{
-   type: "array",
-   value: ["Pharmaceutical", "Natural Product", "Other"]
-}
-```
-
-### Dynamic examples
-
 **Example 1**: Concatenation of user’s first and last names
 
-\_Note: <code>user</code> object is passed to <code>evaluateExpression</code> function in the 2nd parameter, \
-i.e<code> {user: "user"}</code></em>
+Note: `user` object is passed to `evaluateExpression` function in the 2nd parameter, \
+i.e `{user: "user"}`
 
 Tree structure:
 
@@ -370,12 +348,12 @@ Tree structure:
  children: [
    {
      operator: "objectProperties",
-     children: [{ value: { object: "user", property: "firstName" } }],
+     children: [ "user.firstName" ],
    },
-   { value: " " },
+   " ",
    {
      operator: "objectProperties",
-     children: [{ value: { object: "user", property: "lastName" } }],
+     children: [ "user.lastName" ],
    },
  ],
 }
@@ -398,15 +376,9 @@ Tree structure:
      children: [
        {
          operator: "objectProperties",
-         children: [
-           {
-             value: { object: "form", property: "q1" },
-           },
-         ],
+         children: [ "form.q1" ],
        },
-       {
-         value: "Drug Registration",
-       },
+       "Drug Registration",
      ],
    },
    {
@@ -416,17 +388,14 @@ Tree structure:
          type: "number",
          operator: "pgSQL",
          children: [
-           { value: "SELECT COUNT(*) FROM user_organisation WHERE user_id = $1" },
+           "SELECT COUNT(*) FROM user_organisation WHERE user_id = $1",
            {
              operator: "objectProperties",
-             children: [{ value: { object: "user", property: "id" } }],
+             children: [ "user.id" ],
            },
          ],
        },
-       {
-         type: "number",
-         value: 0,
-       },
+       0,
      ],
    },
  ],
@@ -446,8 +415,7 @@ Tree structure:
     {
       operator: 'graphQL',
       children: [
-        {
-          value: `query Orgs($orgName: String) {
+        `query Orgs($orgName: String) {
             organisations(condition: {name: $orgName}) {
               totalCount
               nodes {
@@ -456,23 +424,15 @@ Tree structure:
               }
             }
           }`,
-        },
-        { value: ['orgName'] },
+        ['orgName'],
         {
           operator: 'objectProperties',
-          children: [
-            {
-              value: {
-                object: 'form2',
-                property: 'q2',
-              },
-            },
-          ],
+          children: [ "form2.q2" ],
         },
-        { value: 'organisations.totalCount' },
+        "organisations.totalCount"
       ],
     },
-    { value: 0 },
+    0,
   ],
 }
 ```
@@ -521,10 +481,6 @@ Tree structure:
 ```
 
 -->
-
-# Additional Comments
-
-- The `evaluateExpression` function can take either a javascript object or a stringified JSON as its argument, just in case the JSON blob is extracted from the database as a string.
 
 # To Do
 
