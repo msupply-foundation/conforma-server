@@ -405,7 +405,7 @@ exports.queries = [
                   }
                   organisation_id: {
                     operator: "objectProperties"
-                    children: ["outputCumulative.orgId"]
+                    children: ["outputCumulative.organisation.id"]
                   }
                   user_role: "Owner"
                 }
@@ -435,7 +435,7 @@ exports.queries = [
                   }
                   orgName: {
                     operator: "objectProperties"
-                    children: ["outputCumulative.orgName"]
+                    children: ["outputCumulative.organisation.name"]
                   }
                   permissionNames: ["reviewJoinOrg"]
                 }
