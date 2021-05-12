@@ -15,15 +15,8 @@ export default async function evaluateExpression(
 ): Promise<string | number | boolean | BasicObject | any[]> {
   // Base cases -- leaves get returned unmodified
   if (!(inputQuery instanceof Object)) return inputQuery
-  if ('value' in inputQuery) return inputQuery.value
-  if (
-    !('children' in inputQuery) ||
-    !('operator' in inputQuery)
-    // !inputQuery?.children ||
-    // !inputQuery?.operator
-    // !Array.isArray(inputQuery.children)
-  )
-    return inputQuery
+  if ('value' in inputQuery) return inputQuery.value // Deprecate this soon
+  if (!('children' in inputQuery) || !('operator' in inputQuery)) return inputQuery
 
   // Recursive case
   const childrenResolved: any[] = await Promise.all(
@@ -312,20 +305,3 @@ const fetchAPIrequest = async ({ url, APIfetch, method = 'GET', body }: APIreque
   })
   return await result.json()
 }
-
-// export async function postRequest(body: object, endpointUrl: string, headers: object = {}) {
-//   try {
-//     const response = await fetch(endpointUrl, {
-//       method: 'POST',
-//       cache: 'no-cache',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         ...headers,
-//       },
-//       body: JSON.stringify(body),
-//     })
-//     return response.json()
-//   } catch (err) {
-//     throw err
-//   }
-// }
