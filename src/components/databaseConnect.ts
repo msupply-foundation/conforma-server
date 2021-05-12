@@ -44,10 +44,6 @@ class DBConnect {
 
   public updateTriggerQueueStatus = PostgresDB.updateTriggerQueueStatus
 
-  public createUser = PostgresDB.createUser
-
-  public createOrg = PostgresDB.createOrg
-
   public addUserOrg = PostgresDB.addUserOrg
 
   public isUnique = PostgresDB.isUnique

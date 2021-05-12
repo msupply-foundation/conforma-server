@@ -362,30 +362,6 @@ class PostgresDB {
     }
   }
 
-  public createUser = async (user: User): Promise<object> => {
-    const text = `INSERT INTO "user" (${Object.keys(user)}) 
-      VALUES (${this.getValuesPlaceholders(user)})
-      RETURNING id`
-    try {
-      const result = await this.query({ text, values: Object.values(user) })
-      return { userId: result.rows[0].id, success: true }
-    } catch (err) {
-      throw err
-    }
-  }
-
-  public createOrg = async (org: Organisation): Promise<object> => {
-    const text = `INSERT INTO organisation (${Object.keys(org)}) 
-      VALUES (${this.getValuesPlaceholders(org)})
-      RETURNING id`
-    try {
-      const result = await this.query({ text, values: Object.values(org) })
-      return { orgId: result.rows[0].id, success: true }
-    } catch (err) {
-      throw err
-    }
-  }
-
   // Join a user to an org in user_organisation table
   public addUserOrg = async (userOrg: any): Promise<object> => {
     const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 

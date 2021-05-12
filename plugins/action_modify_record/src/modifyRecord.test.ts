@@ -1,4 +1,4 @@
-// Test suite for the createUser Action -- just confirms that users are written to database.
+// Test suite for the modifyRecord Action -- just confirms that users are written to database.
 
 import DBConnect from '../../../src/components/databaseConnect'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
@@ -27,6 +27,16 @@ const invalidUser = {
 const updatedUser = {
   id: 2,
   email: 'carl@msupply.foundation',
+}
+
+const updatedUserByUsername = {
+  username: 'js',
+  email: 'john@msupply.foundation',
+}
+
+const updatedUserByUsername2 = {
+  username: 'johnny_smith',
+  first_name: 'Johnny',
 }
 
 test('Test: add User to database', () => {
@@ -79,6 +89,57 @@ test('Test: Modify existing user', () => {
           last_name: 'Smith',
           username: 'carl',
           password_hash: '$2a$10$3Z1cXVI.GzE9F2QYePzbMOg5CGtf6VnNKRiaiRGkzlBXJ0aiMN4JG',
+          date_of_birth: null,
+        },
+      },
+    })
+  })
+})
+
+test('Test: Modify existing user using username', () => {
+  return modifyRecord({
+    parameters: { tableName: 'user', matchField: 'username', ...updatedUserByUsername },
+    DBConnect,
+  }).then((result: any) => {
+    expect(result).toEqual({
+      status: ActionQueueStatus.Success,
+      error_log: '',
+      output: {
+        user: {
+          id: 5,
+          email: 'john@msupply.foundation',
+          first_name: 'John',
+          last_name: 'Smith',
+          username: 'js',
+          password_hash: '$2a$10$WQ5VMHB6bOVwjyE8Vhh64.TLQKcUOeJpfU6ZUSqYq3tlts3vCN2mG',
+          date_of_birth: null,
+        },
+      },
+    })
+  })
+})
+
+test('Test: Change username by matching username', () => {
+  return modifyRecord({
+    parameters: {
+      tableName: 'user',
+      matchField: 'username',
+      matchValue: 'js',
+      ...updatedUserByUsername2,
+    },
+    DBConnect,
+  }).then((result: any) => {
+    expect(result).toEqual({
+      status: ActionQueueStatus.Success,
+      error_log: '',
+      output: {
+        user: {
+          id: 5,
+          email: 'john@msupply.foundation',
+          first_name: 'Johnny',
+          last_name: 'Smith',
+          username: 'johnny_smith',
+          password_hash: '$2a$10$WQ5VMHB6bOVwjyE8Vhh64.TLQKcUOeJpfU6ZUSqYq3tlts3vCN2mG',
           date_of_birth: null,
         },
       },

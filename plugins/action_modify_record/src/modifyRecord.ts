@@ -4,25 +4,32 @@ import databaseMethods from './databaseMethods'
 
 const modifyRecord: ActionPluginType = async ({ parameters, DBConnect }) => {
   const db = databaseMethods(DBConnect)
-  const { tableName, ...record } = parameters
+  const { tableName, matchField, matchValue, ...record } = parameters
+
+  const fieldToMatch = matchField ?? 'id'
+  const valueToMatch = matchValue ?? record[fieldToMatch]
+
+  // Don't update fields with NULL
   for (const key in record) {
     if (record[key] === null) delete record[key]
   }
 
+  const isUpdate = await db.doesRecordExist(tableName, fieldToMatch, valueToMatch)
+
   let result: any = {}
   try {
-    if (record?.id) {
+    if (isUpdate) {
       // UPDATE
       console.log(`Updating ${tableName} record: ${JSON.stringify(record, null, 2)}`)
-      result = await db.updateEntity(tableName, record)
+      result = await db.updateRecord(tableName, fieldToMatch, valueToMatch, record)
     } else {
       // CREATE NEW
       console.log(`Creating ${tableName} record: ${JSON.stringify(record, null, 2)}`)
-      result = await db.createEntity(tableName, record)
+      result = await db.createRecord(tableName, record)
     }
     if (result.success) {
       console.log(
-        `${record?.id ? 'Updated' : 'Created'} ${tableName} record, ID: `,
+        `${isUpdate ? 'Updated' : 'Created'} ${tableName} record, ID: `,
         result[tableName].id
       )
       return {

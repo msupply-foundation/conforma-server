@@ -4,7 +4,7 @@
   "name": "Modify Record",
   "description": "Inserts or updates a record in database, e.g. User, Org",
   "required_parameters": ["tableName"],
-  "optional_parameters": ["id", "<other record fields>"],
+  "optional_parameters": ["matchField", "matchValue", "<other record fields>"],
   "output_properties": ["[record]"],
   "info": {
     "author": {

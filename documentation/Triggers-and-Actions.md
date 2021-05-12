@@ -25,7 +25,7 @@ Most triggers are associated with events on the main database tables (Applicatio
 
 Actions can be defined as **Sequential** or **Async** (parallel). Async Actions are executed as soon as the server is notified that they are in the Action queue, whereas Sequential Actions have an additional `sequence` property, and are processed in the prescribed sequence once they've all been inserted into the Action queue.
 
-Actions also return an **output** object (e.g. `createUser` Action returns user details). For sequential Actions, the output properties are collected into a `cumulativeOutput` object which is passed to the parameter evaluator (along with the **application_data\*** object -- see "Action Parameters" below), so subsequent Actions can access any of the output properties of any previous Action in the sequence.
+Actions also return an **output** object (e.g. `changeStatus` Action returns the new status details). For sequential Actions, the output properties are collected into a `cumulativeOutput` object which is passed to the parameter evaluator (along with the **application_data\*** object -- see "Action Parameters" below), so subsequent Actions can access any of the output properties of any previous Action in the sequence.
 
 ## Overview of Trigger and Action system
 
