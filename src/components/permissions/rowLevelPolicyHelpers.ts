@@ -70,6 +70,7 @@ const updateRowPolicies = async () => {
   // this will get all of the policies from pg_policies table that start with (view_ or update_ or delete_ or create_)
   const existingPolicies = await databaseConnect.getAllGeneratedRowPolicies()
   // returns an array of 'CREATE POLICY' strings
+  console.log('existingPolicies', existingPolicies)
   const newPolicies = generateRowLevelPolicies(permissionRows)
 
   // Deleting existing policies
@@ -84,6 +85,13 @@ const updateRowPolicies = async () => {
 
   await databaseConnect.query({
     text: newPolicies.join(';'),
+  })
+
+  // Temporarily hard-code create/update permissions on application table
+  await databaseConnect.query({
+    text: `
+    CREATE POLICY "create_all" ON application FOR INSERT WITH CHECK (true);
+    CREATE POLICY "update_all" ON application FOR UPDATE USING(true) WITH CHECK (true);`,
   })
 
   return newPolicies
