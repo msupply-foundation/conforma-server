@@ -13,6 +13,7 @@ exports.queries = [
               view: {
                 template_id: "jwtPermission_bigint_templateId"
                 session_id: "jwtUserDetails_text_sessionId"
+                user_id: 1
               }
               # TO-DO: Add CREATE and UPDATE restrictions
             }
