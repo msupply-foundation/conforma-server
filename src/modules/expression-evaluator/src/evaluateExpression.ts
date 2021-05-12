@@ -104,11 +104,11 @@ export default async function evaluateExpression(
           return outputString.replace(param, replacements[i] !== undefined ? replacements[i++] : '')
         }, origString)
 
-      case 'API':
+      case 'GET':
         let urlWithQuery, returnedProperty
         try {
           const { url, fieldNames, values, returnProperty } = assignChildNodesToQuery([
-            '', // Extra unused field for API (query)
+            '', // Extra unused field for GET (query)
             ...childrenResolved,
           ])
           returnedProperty = returnProperty
@@ -119,7 +119,7 @@ export default async function evaluateExpression(
                   .join('&')}`
               : url
         } catch {
-          throw new Error('Invalid API query')
+          throw new Error('Invalid GET query')
         }
         let data
         try {

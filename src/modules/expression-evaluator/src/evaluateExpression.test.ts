@@ -392,8 +392,8 @@ test('String substitution - some parameters empty strings', () => {
   )
 })
 
-// API operator
-test('API: Check username is unique', () => {
+// GET operator
+test('GET: Check username is unique', () => {
   return evaluateExpression(testData.APIisUnique, {
     APIfetch: fetch,
   }).then((result: any) => {
@@ -401,7 +401,7 @@ test('API: Check username is unique', () => {
   })
 })
 
-test('API: Lookup ToDo in online testing API', () => {
+test('GET: Lookup ToDo in online testing API', () => {
   return evaluateExpression(testData.onlineTestAPI, {
     APIfetch: fetch,
   }).then((result: any) => {
@@ -409,7 +409,7 @@ test('API: Lookup ToDo in online testing API', () => {
   })
 })
 
-test('API: Return an array from online API', () => {
+test('GET: Return an array from online API', () => {
   return evaluateExpression(testData.onlineArrayReturn, {
     APIfetch: fetch,
   }).then((result: any) => {
@@ -417,7 +417,7 @@ test('API: Return an array from online API', () => {
   })
 })
 
-test('API: Return an array of titles plucked from inside array of objects', () => {
+test('GET: Return an array of titles plucked from inside array of objects', () => {
   return evaluateExpression(testData.onlineArrayNodes, {
     APIfetch: fetch,
   }).then((result: any) => {
@@ -445,6 +445,7 @@ test('Test Postgres get array of template names', () => {
         'Test -- Review Process',
         'Drug Registration - General Medicines Procedure',
         'Join Organisation',
+        'Edit User Details',
       ])
     }
   )
@@ -453,7 +454,7 @@ test('Test Postgres get array of template names', () => {
 test('Test Postgres get Count of templates', () => {
   return evaluateExpression(testData.countTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual(6)
+      expect(result).toEqual(7)
     }
   )
 })
@@ -468,6 +469,7 @@ test('Test Postgres get template names -- no type', () => {
         { name: 'Test -- Review Process' },
         { name: 'Drug Registration - General Medicines Procedure' },
         { name: 'Join Organisation' },
+        { name: 'Edit User Details' },
       ])
     }
   )
@@ -559,6 +561,7 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
           { node: { name: 'Test -- Review Process' } },
           { node: { name: 'Drug Registration - General Medicines Procedure' } },
           { node: { name: 'Join Organisation' } },
+          { node: { name: 'Edit User Details' } },
         ],
       },
     })
@@ -572,7 +575,7 @@ test('Test GraphQL -- Count templates -- passing params as object option', () =>
       endpoint: graphQLendpoint,
     },
   }).then((result: any) => {
-    expect(result).toEqual(6)
+    expect(result).toEqual(7)
   })
 })
 
