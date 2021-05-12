@@ -6,8 +6,6 @@ The current build of the module is published to Github packages so it can be eas
 
 Run `yarn test` to see it in action.
 
-## Contents
-
 ---
 
 **The problem**: the highly configurable Template system in mSupply Application Manager requires many values to be stored as dynamic queries to either local state or the database, and perform basic operations (logic, concatenation, etc.) on them. We need a way to represent these potentially complex “expressions” in the database so they can be evaluated at runtime (both in the front and back-end), but without resorting to using `eval()` to evaluate javascript code directly.
@@ -31,6 +29,37 @@ Any value that could possibly be a dynamic query should be stored in this format
 - input parameters
 
 For more complex lookups, we would hide the complexity from the user in the Template builder, and just present a set of pre-defined “queries” in the UI, which map to a pre-written query with perhaps a selectable parameter or two. (However, we should also provide a JSON editor as an alternative if an advanced user wishes to manually create more complex queries.)
+
+## Contents
+
+<!-- toc -->
+<!-- generated with markdown-toc -->
+
+- [Structure](#structure)
+- [Operators](#operators)
+  - [AND](#and)
+  - [OR](#or)
+  - [CONCAT](#concat)
+  - [= (Equals)](#-equals)
+  - [!= (Not equal)](#-not-equal)
+  - [+ (Plus)](#-plus)
+  - [? (Conditional)](#-conditional)
+  - [REGEX](#regex)
+  - [objectProperties](#objectproperties)
+  - [stringSubstitution](#stringsubstitution)
+  - [pgSQL](#pgsql)
+  - [graphQL](#graphql)
+  - [GET](#get)
+  - [POST](#post)
+- [Usage](#usage)
+- [Examples](#examples)
+- [To Do](#to-do)
+- [Installation](#installation)
+- [Development](#development)
+  - [Publishing a new version of the package](#publishing-a-new-version-of-the-package)
+  - [GUI expression builder](#gui-expression-builder)
+
+<!-- tocstop -->
 
 # Structure
 
