@@ -2,15 +2,18 @@
 Basic Permission Policies 
 */
 exports.queries = [
-  // oneTimeApply -- used for UserRegistration
+  // nonRegisteredApply -- used for UserRegistration
   `mutation createPolicy {
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          name: "oneTimeApply"
+          name: "nonRegisteredApply"
           rules: {
             application: {
-              view: { template_id: "jwtPermission_bigint_templateId" }
+              view: {
+                template_id: "jwtPermission_bigint_templateId"
+                session_id: "jwtUserDetails_text_sessionId"
+              }
             }
           }
           type: APPLY

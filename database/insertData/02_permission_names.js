@@ -9,7 +9,7 @@ exports.queries = [
         permissionName: {
           name: "applyUserRegistration"
           permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "oneTimeApply" }
+            connectByName: { name: "nonRegisteredApply" }
           }
         }
       }
