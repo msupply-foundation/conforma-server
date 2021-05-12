@@ -33,6 +33,7 @@ CREATE TABLE public.template_element (
     is_editable jsonb DEFAULT '{"value":true}' ::jsonb,
     validation jsonb DEFAULT '{"value":true}' ::jsonb,
     validation_message varchar,
+    help_text varchar,
     parameters jsonb,
     template_code varchar GENERATED ALWAYS AS (public.get_template_code (section_id)) STORED,
     UNIQUE (template_code, code)
