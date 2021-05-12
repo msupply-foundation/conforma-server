@@ -157,21 +157,6 @@ exports.queries = [
               }
               {
                 actionCode: "modifyRecord"
-                sequence: 2
-                trigger: ON_APPLICATION_CREATE
-                parameterQueries: {
-                  tableName: "application"
-                  id: {
-                    operator: "objectProperties"
-                    children: ["applicationData.applicationId"]
-                  }
-                  restriction_id: {
-                    id: 12345
-                  }
-                }
-              }
-              {
-                actionCode: "modifyRecord"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
                 parameterQueries: {
