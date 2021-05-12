@@ -28,35 +28,29 @@ For more complex lookups, we would hide the complexity from the user in the Temp
 
 # Structure
 
-Each node in the tree is an object with the following properties:
+Each node in the tree is an either:
+
+- a simple type value (e.g. `string`, `number`, `array`) (the leaf nodes)
+- an "operator" node, which is an object with the following properties:
 
 ```
 {
-  value: <optional>
   type: <optional>
-  operator: <optional>
+  operator: <string>
   children: [ <optional> ]
 }
 ```
 
-At a minimum, a single `value` must be provided:
-
-```
-{ value: "Enter your first name" }
-```
-
-If a dynamic result is required, an `operator` is provided instead of a `value`, which is a pre-defined function that returns a value. If an `operator` is used, then also required is a `children` array, which contains child nodes, each with the same structure, which return the parameters for the `operator` to act on. For example:
+`children` is an array of similar nodes, which are, in turn, either values or operator nodes. The values returned from these child nodes provide the values on which the "operator" acts For example:
 
 ```
 {
   operator: "+"
-  children: [ {value: 5}, {value: 3} ]
+  children: [ 5, 3 ]
 }
 ```
 
-This expression would return the number **8** when evaluated.
-
-Note that any child node can, in turn, be an operator node with its own children, allowing for expressions of arbitrary complexity. (See examples below)
+This expression would return the number **8** when evaluated. If `children` are themselves operator nodes, then they will be evaluated first before its result is evaluated by the parent operator. The number of child nodes required and type of values returned by them depends on the requirements of the parent operator (see below for details).
 
 ## type
 
@@ -257,9 +251,9 @@ Performs queries on connected GraphQL interface.
 
 **Note**: To use the GraphQL straight away from what is in the graphil (json like), use it wrapper by \` and \`, otherwise it needs to be all in the same line.
 
-## API
+## GET
 
-Performs GET requests to public API endpoints.
+Performs http GET requests to public API endpoints.
 
 - Input: _(note: basically the same as GraphQL)_
   - 1st child node returns a **string** containing the url of the API endpoint
@@ -271,17 +265,40 @@ Performs GET requests to public API endpoints.
 
 **Example**:
 
-This expression queries our `check-unique` to test if the username "druglord" is availabe. The full url would be:  
+This expression queries our `/check-unique` endpoint to test if the username "druglord" is availabe. The full url would be:  
 `http://localhost:8080/check-unique?type=username&value=druglord`
 
 ```
 {
-  operator: 'API',
+  operator: 'GET',
   children: [
     'http://localhost:8080/check-unique',
     ['type', 'value'],
     'username'
     'druglord',
+  ],
+}
+```
+
+## POST
+
+Performs http POST requests to public API endpoints.
+
+The input/output specifications are the same as for the GET operator, except the key-value pairs of properties will also be passed as an object in the body of the request.
+
+**Example**:
+
+This expression queries our `/login` endpoint to check a user's credentials, and returns a boolean value indicating success/failure:
+
+```
+{
+  operator: 'POST',
+  children: [
+    'http://localhost:8080/login',
+    ['username', 'password'],
+    'js'
+    '123456',
+    'success'
   ],
 }
 ```

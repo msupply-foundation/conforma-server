@@ -425,6 +425,15 @@ test('GET: Return an array of titles plucked from inside array of objects', () =
   })
 })
 
+// POST operator
+test('POST: Check user login credentials', () => {
+  return evaluateExpression(testData.APIlogin, {
+    APIfetch: fetch,
+  }).then((result: any) => {
+    expect(result).toEqual(true)
+  })
+})
+
 // SQL operator
 
 test('Test Postgres lookup single string', () => {

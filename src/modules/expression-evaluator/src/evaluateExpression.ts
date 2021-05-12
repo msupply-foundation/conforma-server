@@ -24,6 +24,7 @@ export default async function evaluateExpression(
   } else query = inputQuery
 
   // Base case
+  console.log('Query', query)
   if (!query.children) {
     return query.value !== undefined ? query.value : query
   }
@@ -104,11 +105,13 @@ export default async function evaluateExpression(
           return outputString.replace(param, replacements[i] !== undefined ? replacements[i++] : '')
         }, origString)
 
+      case 'POST':
       case 'GET':
-        let urlWithQuery, returnedProperty
+        const isPostRequest = query.operator === 'POST'
+        let urlWithQuery, returnedProperty, requestBody
         try {
           const { url, fieldNames, values, returnProperty } = assignChildNodesToQuery([
-            '', // Extra unused field for GET (query)
+            '', // Extra unused field for GET/POST (query)
             ...childrenResolved,
           ])
           returnedProperty = returnProperty
@@ -118,12 +121,20 @@ export default async function evaluateExpression(
                   .map((field: string, index: number) => field + '=' + values[index])
                   .join('&')}`
               : url
+          requestBody = isPostRequest ? zipArraysToObject(fieldNames, values) : null
         } catch {
-          throw new Error('Invalid GET query')
+          throw new Error('Invalid API query')
         }
         let data
         try {
-          data = await fetchAPIdata(urlWithQuery, params.APIfetch)
+          data = isPostRequest
+            ? await fetchAPIrequest({
+                url: urlWithQuery,
+                APIfetch: params.APIfetch,
+                method: 'POST',
+                body: requestBody,
+              })
+            : await fetchAPIrequest({ url: urlWithQuery, APIfetch: params.APIfetch })
         } catch {
           throw new Error('Problem with API call')
         }
@@ -290,9 +301,39 @@ const graphQLquery = async (
   return data.data
 }
 
-// GET request using fetch (node or browser variety)
-const fetchAPIdata = async (url: string, APIfetch: any) => {
-  const result = await APIfetch(url)
-  const data = await result.json()
-  return data
+interface APIrequestProps {
+  url: string
+  APIfetch: any
+  method?: 'GET' | 'POST'
+  body?: { [key: string]: string } | null
 }
+
+// GET/POST request using fetch (node or browser variety)
+const fetchAPIrequest = async ({ url, APIfetch, method = 'GET', body }: APIrequestProps) => {
+  console.log('Body', body)
+  const result = await APIfetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  return await result.json()
+}
+
+// export async function postRequest(body: object, endpointUrl: string, headers: object = {}) {
+//   try {
+//     const response = await fetch(endpointUrl, {
+//       method: 'POST',
+//       cache: 'no-cache',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         ...headers,
+//       },
+//       body: JSON.stringify(body),
+//     })
+//     return response.json()
+//   } catch (err) {
+//     throw err
+//   }
+// }
