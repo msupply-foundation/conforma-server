@@ -246,6 +246,11 @@ const replacePlaceholders = (sql: string, permissionAbbreviation: string) => {
       postfix: "')",
     },
     {
+      prefix: 'jwtUserDetails_text_',
+      prefixReplacement: "jwt_get_text('",
+      postfix: "')",
+    },
+    {
       prefix: 'jwtPermission_bigint_',
       prefixReplacement: `jwt_get_bigint('${permissionAbbreviation}_`,
       postfix: "')",
