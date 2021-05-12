@@ -215,7 +215,7 @@ testData.operatorOR_4values_false = {
 
 testData.CONCAT_2_Arrays = {
   type: 'array',
-  operator: 'CONCAT',
+  operator: '+',
   children: [
     {
       type: 'array',
@@ -229,7 +229,7 @@ testData.CONCAT_2_Arrays = {
 
 testData.CONCAT_4_Arrays = {
   type: 'array',
-  operator: 'CONCAT',
+  operator: '+',
   children: [
     {
       type: 'array',
@@ -249,7 +249,7 @@ testData.CONCAT_4_Arrays = {
 
 testData.CONCAT_3_Strings = {
   type: 'string',
-  operator: 'CONCAT',
+  operator: '+',
   children: [
     {
       type: 'string',
@@ -266,7 +266,7 @@ testData.CONCAT_3_Strings = {
 }
 
 testData.CONCAT_4_Unspecified = {
-  operator: 'CONCAT',
+  operator: '+',
   children: [
     {
       value: 'Carl',
@@ -285,7 +285,7 @@ testData.CONCAT_4_Unspecified = {
 }
 
 testData.CONCAT_strings_output_as_array = {
-  operator: 'CONCAT',
+  operator: '+',
   type: 'array',
   children: [
     {
@@ -919,7 +919,7 @@ testData.GraphQL_CheckDefaultResultIsNull = {
 
 testData.concatFirstAndLastNames = {
   type: 'string',
-  operator: 'CONCAT',
+  operator: '+',
   children: [
     {
       operator: 'objectProperties',

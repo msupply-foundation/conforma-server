@@ -1,3 +1,4 @@
+import { access } from 'fs/promises'
 import {
   IConnection,
   IQueryNode,
@@ -34,16 +35,6 @@ export default async function evaluateExpression(
         return acc || child
       }, false)
 
-    case 'CONCAT':
-      if (inputQuery?.type === 'array') {
-        return childrenResolved.reduce((acc: any, child: any) => {
-          return acc.concat(child) // .flat(1) doesn't work for some reason
-        }, [])
-      } else if (inputQuery?.type === 'string' || !inputQuery.type) {
-        return childrenResolved.join('')
-      }
-      break
-
     case 'REGEX':
       try {
         const str: string = childrenResolved[0]
@@ -60,9 +51,29 @@ export default async function evaluateExpression(
       return childrenResolved[0] != childrenResolved[1]
 
     case '+':
-      return childrenResolved.reduce((acc: number, child: number) => {
-        return acc + child
-      }, 0)
+      if (childrenResolved.length === 0) return childrenResolved
+
+      // Concatenate arrays/strings
+      if (childrenResolved.every((child) => typeof child === 'string' || Array.isArray(child))) {
+        if (!inputQuery.type) return childrenResolved.reduce((acc, child) => acc.concat(child))
+        else {
+          const initialAcc = inputQuery.type === 'array' ? [] : ''
+          const concatResult = childrenResolved.reduce(
+            (acc, child) => acc.concat(child),
+            initialAcc
+          )
+          return inputQuery.type === 'string' ? concatResult.toString() : concatResult
+        }
+      }
+
+      // Merge objects
+      else if (
+        childrenResolved.every((child) => child instanceof Object && !Array.isArray(child))
+      ) {
+        return childrenResolved.reduce((acc, child) => ({ ...acc, ...child }), {})
+      }
+      // Or just try to add all other types
+      else return childrenResolved.reduce((acc: number, child: number) => acc + child)
 
     case '?':
       return childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
