@@ -161,8 +161,9 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.applicationId"]
                   }
-                  restriction_id: {
-                    orgId: 12345
+                  org_id: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.S1Q1.selection.id"]
                   }
                 }
               }
