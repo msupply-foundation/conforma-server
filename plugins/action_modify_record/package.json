@@ -1,7 +1,7 @@
 {
-  "name": "create_user_action",
+  "name": "modify_record_action",
   "version": "0.1",
-  "description": "Inserts a new user in the database",
+  "description": "Inserts or updates a record in database, e.g. User, Org",
   "author": "The mSupplyFoundation",
   "license": "MIT",
   "scripts": {

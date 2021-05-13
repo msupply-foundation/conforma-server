@@ -4,6 +4,8 @@ TEMPLATE C -- User Registration
     account in the system
 */
 // const { coreActions } = require('./core_actions')
+const { devActions } = require('./dev_actions')
+
 exports.queries = [
   `mutation {
     createTemplate(
@@ -147,16 +149,18 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               # No Core Actions for this one
+              ${devActions}
               {
                 actionCode: "incrementStage"
                 sequence: 1
                 trigger: ON_APPLICATION_CREATE
               }
               {
-                actionCode: "createUser"
+                actionCode: "modifyRecord"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 1
                 parameterQueries: {
+                  tableName: "user"
                   first_name: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q1.text"]

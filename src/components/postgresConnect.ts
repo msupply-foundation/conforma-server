@@ -68,7 +68,7 @@ class PostgresDB {
     })
   }
 
-  private getValuesPlaceholders = (object: { [key: string]: any }) =>
+  public getValuesPlaceholders = (object: { [key: string]: any }) =>
     Object.keys(object).map((key, index) => `$${index + 1}`)
 
   public static get Instance() {
@@ -357,30 +357,6 @@ class PostgresDB {
     try {
       await this.query({ text, values: Object.values(payload) })
       return true
-    } catch (err) {
-      throw err
-    }
-  }
-
-  public createUser = async (user: User): Promise<object> => {
-    const text = `INSERT INTO "user" (${Object.keys(user)}) 
-      VALUES (${this.getValuesPlaceholders(user)})
-      RETURNING id`
-    try {
-      const result = await this.query({ text, values: Object.values(user) })
-      return { userId: result.rows[0].id, success: true }
-    } catch (err) {
-      throw err
-    }
-  }
-
-  public createOrg = async (org: Organisation): Promise<object> => {
-    const text = `INSERT INTO organisation (${Object.keys(org)}) 
-      VALUES (${this.getValuesPlaceholders(org)})
-      RETURNING id`
-    try {
-      const result = await this.query({ text, values: Object.values(org) })
-      return { orgId: result.rows[0].id, success: true }
     } catch (err) {
       throw err
     }
