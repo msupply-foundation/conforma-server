@@ -25,14 +25,16 @@ export interface IParameters {
   APIfetch?: Function
 }
 
-export interface IQueryNode {
-  value?: any
-  type?: NodeType
+export interface OperatorNode {
   operator: Operator
-  children: Array<IQueryNode | string | boolean | number | null | object | undefined>
+  type?: OutputType
+  children: Array<OperatorNode | ValueNode>
+  value?: ValueNode // deprecated
 }
 
-export type NodeType = 'string' | 'number' | 'boolean' | 'array'
+export type ValueNode = string | boolean | number | BasicObject | null | undefined | any[]
+
+export type OutputType = 'string' | 'number' | 'boolean' | 'array'
 
 type Operator =
   | 'AND'

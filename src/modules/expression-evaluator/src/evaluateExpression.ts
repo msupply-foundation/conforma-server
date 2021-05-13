@@ -1,18 +1,19 @@
 import {
   IConnection,
-  IQueryNode,
   IParameters,
   IGraphQLConnection,
-  NodeType,
+  OperatorNode,
+  ValueNode,
+  OutputType,
   BasicObject,
 } from './types'
 
 const defaultParameters: IParameters = {}
 
 export default async function evaluateExpression(
-  inputQuery: IQueryNode | string | number | boolean | any[],
+  inputQuery: OperatorNode | ValueNode,
   params: IParameters = defaultParameters
-): Promise<string | number | boolean | BasicObject | any[]> {
+): Promise<ValueNode> {
   // Base cases -- leaves get returned unmodified
   if (!(inputQuery instanceof Object)) return inputQuery
   if ('value' in inputQuery) return inputQuery.value // Deprecate this soon
@@ -133,7 +134,7 @@ export default async function evaluateExpression(
 
     case 'pgSQL':
       if (!params.pgConnection) throw new Error('No Postgres database connection provided')
-      return processPgSQL(childrenResolved, inputQuery?.type as NodeType, params.pgConnection)
+      return processPgSQL(childrenResolved, inputQuery?.type as OutputType, params.pgConnection)
 
     case 'graphQL':
       if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
