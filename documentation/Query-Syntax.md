@@ -14,49 +14,78 @@ Run `yarn test` to see it in action.
 
 Any value that could possibly be a dynamic query should be stored in this format. This would include:
 
-**Question**:
+**Form Questions**:
 
 - Parameters (Option lists, Labels, Placeholder text, etc.)
 - Visibility conditions
 - Validation criteria
 
-**Trigger**:
+**Triggers**:
 
 - Conditions
 
+**Actions**:
+
+- input parameters
+
 For more complex lookups, we would hide the complexity from the user in the Template builder, and just present a set of pre-defined “queries” in the UI, which map to a pre-written query with perhaps a selectable parameter or two. (However, we should also provide a JSON editor as an alternative if an advanced user wishes to manually create more complex queries.)
+
+## Contents
+
+<!-- toc -->
+<!-- generated with markdown-toc -->
+
+- [Structure](#structure)
+- [Operators](#operators)
+  - [AND](#and)
+  - [OR](#or)
+  - [CONCAT](#concat)
+  - [= (Equals)](#-equals)
+  - [!= (Not equal)](#-not-equal)
+  - [+ (Plus)](#-plus)
+  - [? (Conditional)](#-conditional)
+  - [REGEX](#regex)
+  - [objectProperties](#objectproperties)
+  - [stringSubstitution](#stringsubstitution)
+  - [pgSQL](#pgsql)
+  - [graphQL](#graphql)
+  - [GET](#get)
+  - [POST](#post)
+- [Usage](#usage)
+- [Examples](#examples)
+- [To Do](#to-do)
+- [Installation](#installation)
+- [Development](#development)
+  - [Publishing a new version of the package](#publishing-a-new-version-of-the-package)
+  - [GUI expression builder](#gui-expression-builder)
+
+<!-- tocstop -->
 
 # Structure
 
-Each node in the tree is an object with the following properties:
+Each node in the tree is an either:
+
+- a simple type value (e.g. `string`, `number`, `boolean`, `array`) (the leaf nodes)
+- an **operator** node, which is an object with the following properties:
 
 ```
 {
-  value: <optional>
   type: <optional>
-  operator: <optional>
+  operator: <string>
   children: [ <optional> ]
 }
 ```
 
-At a minimum, a single `value` must be provided:
-
-```
-{ value: "Enter your first name" }
-```
-
-If a dynamic result is required, an `operator` is provided instead of a `value`, which is a pre-defined function that returns a value. If an `operator` is used, then also required is a `children` array, which contains child nodes, each with the same structure, which return the parameters for the `operator` to act on. For example:
+`children` is an array of similar nodes, which are, in turn, either values or operator nodes themselves. The values returned from these child nodes provide the values on which the "operator" acts For example:
 
 ```
 {
   operator: "+"
-  children: [ {value: 5}, {value: 3} ]
+  children: [ 5, 3 ]
 }
 ```
 
-This expression would return the number **8** when evaluated.
-
-Note that any child node can, in turn, be an operator node with its own children, allowing for expressions of arbitrary complexity. (See examples below)
+This expression would return the number **8** when evaluated. If `children` are themselves operator nodes, then they will be evaluated first (and recursively down through their child nodes) before its result is evaluated by the parent operator. The number of child nodes required and type of values returned by them depends on the requirements of the parent operator (see below for details).
 
 ## type
 
@@ -156,7 +185,7 @@ The `evaluateExpression` function expects each expression to be passed along wit
 evaluateExpression(
     {
       operator: 'objectProperties',
-      children: [ { value: 'application.questions.q1' } ]
+      children: [ 'application.responses.q1' ]
     },
     { objects: { application } } )
 ```
@@ -169,7 +198,7 @@ application = {
   name: 'Drug Registration',
   status: 'DRAFT',
   stage: 1,
-  questions: { q1: 'What is the answer?', q2: 'Enter your name' },
+  responses: { q1: 'What is the answer?', q2: 'Enter your name' },
 }
 ```
 
@@ -255,11 +284,11 @@ Performs queries on connected GraphQL interface.
   ] }
 ```
 
-**Note**: To use the GraphQL straight away from what is in the graphil (json like), use it wrapper by \` and \`, otherwise it needs to be all in the same line.
+**Note**: To use the GraphQL straight away from what is in the graphil (json like), use it wrapped with \`backticks\`, otherwise it needs to be all in the same line.
 
-## API
+## GET
 
-Performs GET requests to public API endpoints.
+Performs http GET requests to public API endpoints.
 
 - Input: _(note: basically the same as GraphQL)_
   - 1st child node returns a **string** containing the url of the API endpoint
@@ -271,17 +300,40 @@ Performs GET requests to public API endpoints.
 
 **Example**:
 
-This expression queries our `check-unique` to test if the username "druglord" is availabe. The full url would be:  
+This expression queries our `/check-unique` endpoint to test if the username "druglord" is availabe. The full url would be:  
 `http://localhost:8080/check-unique?type=username&value=druglord`
 
 ```
 {
-  operator: 'API',
+  operator: 'GET',
   children: [
     'http://localhost:8080/check-unique',
     ['type', 'value'],
     'username'
     'druglord',
+  ],
+}
+```
+
+## POST
+
+Performs http POST requests to public API endpoints.
+
+The input/output specifications are the same as for the GET operator, except the key-value pairs of properties will also be passed as an object in the body of the request.
+
+**Example**:
+
+This expression queries our `/login` endpoint to check a user's credentials, and returns a boolean value indicating success/failure:
+
+```
+{
+  operator: 'POST',
+  children: [
+    'http://localhost:8080/login',
+    ['username', 'password'],
+    'js'
+    '123456',
+    'success'
   ],
 }
 ```
@@ -309,38 +361,10 @@ The query evaluator is implemented in the `evaluateExpression` function:
 
 There is a **jest** test suite contained with this module’s repo which demonstrates a range of test cases. Here are a few:
 
-### Simple (non-dynamic) examples
-
-**Example 0**: A literal string Label of “First Name”:
-
-```
-{
-   type: "string", // This is optional
-   value: "First Name"
-}
-```
-
-**Example 00**: Visibility condition for a question that should always be visible:
-
-```
-{ value: true }
-```
-
-**Example 000:** Array of options for a Dropdown list:
-
-```
-{
-   type: "array",
-   value: ["Pharmaceutical", "Natural Product", "Other"]
-}
-```
-
-### Dynamic examples
-
 **Example 1**: Concatenation of user’s first and last names
 
-\_Note: <code>user</code> object is passed to <code>evaluateExpression</code> function in the 2nd parameter, \
-i.e<code> {user: "user"}</code></em>
+Note: `user` object is passed to `evaluateExpression` function in the 2nd parameter, \
+i.e `{user: "user"}`
 
 Tree structure:
 
@@ -353,12 +377,12 @@ Tree structure:
  children: [
    {
      operator: "objectProperties",
-     children: [{ value: { object: "user", property: "firstName" } }],
+     children: [ "user.firstName" ],
    },
-   { value: " " },
+   " ",
    {
      operator: "objectProperties",
-     children: [{ value: { object: "user", property: "lastName" } }],
+     children: [ "user.lastName" ],
    },
  ],
 }
@@ -381,15 +405,9 @@ Tree structure:
      children: [
        {
          operator: "objectProperties",
-         children: [
-           {
-             value: { object: "form", property: "q1" },
-           },
-         ],
+         children: [ "form.q1" ],
        },
-       {
-         value: "Drug Registration",
-       },
+       "Drug Registration",
      ],
    },
    {
@@ -399,17 +417,14 @@ Tree structure:
          type: "number",
          operator: "pgSQL",
          children: [
-           { value: "SELECT COUNT(*) FROM user_organisation WHERE user_id = $1" },
+           "SELECT COUNT(*) FROM user_organisation WHERE user_id = $1",
            {
              operator: "objectProperties",
-             children: [{ value: { object: "user", property: "id" } }],
+             children: [ "user.id" ],
            },
          ],
        },
-       {
-         type: "number",
-         value: 0,
-       },
+       0,
      ],
    },
  ],
@@ -429,8 +444,7 @@ Tree structure:
     {
       operator: 'graphQL',
       children: [
-        {
-          value: `query Orgs($orgName: String) {
+        `query Orgs($orgName: String) {
             organisations(condition: {name: $orgName}) {
               totalCount
               nodes {
@@ -439,23 +453,15 @@ Tree structure:
               }
             }
           }`,
-        },
-        { value: ['orgName'] },
+        ['orgName'],
         {
           operator: 'objectProperties',
-          children: [
-            {
-              value: {
-                object: 'form2',
-                property: 'q2',
-              },
-            },
-          ],
+          children: [ "form2.q2" ],
         },
-        { value: 'organisations.totalCount' },
+        "organisations.totalCount"
       ],
     },
-    { value: 0 },
+    0,
   ],
 }
 ```
@@ -504,10 +510,6 @@ Tree structure:
 ```
 
 -->
-
-# Additional Comments
-
-- The `evaluateExpression` function can take either a javascript object or a stringified JSON as its argument, just in case the JSON blob is extracted from the database as a string.
 
 # To Do
 
