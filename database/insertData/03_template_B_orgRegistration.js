@@ -450,6 +450,12 @@ exports.queries = [
                   connectByName: { name: "applyGeneral" }
                 }
               }
+              # Apply OrgRegistration
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyOrgRego" }
+                }
+              }
               # Review Org rego
               {
                 permissionNameToPermissionNameId: {
