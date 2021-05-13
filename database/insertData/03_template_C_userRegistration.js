@@ -199,6 +199,18 @@ exports.queries = [
                   newOutcome: { value: "APPROVED" }
                 }
               }
+              {
+                actionCode: "grantPermissions"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 4
+                parameterQueries: {
+                  username: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q3.text"]
+                  }
+                  permissionNames: [ "applyOrgRego" ]
+                }
+              }
             ]
           }
           templatePermissionsUsingId: {

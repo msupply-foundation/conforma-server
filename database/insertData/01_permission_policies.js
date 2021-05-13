@@ -90,14 +90,12 @@ exports.queries = [
             }
             review: {
               view: {
-                template_id: "jwtPermission_bigint_templateId"
-                org_id: "jwtUserDetails_bigint_orgId"
+                reviewer_id: "jwtUserDetails_bigint_userId"
               }
             }
             review_assignment: {
               view: {
-                template_id: "jwtPermission_bigint_templateId"
-                org_id: "jwtUserDetails_bigint_orgId"
+                reviewer_id: "jwtUserDetails_bigint_userId"
               }
             }
           }
