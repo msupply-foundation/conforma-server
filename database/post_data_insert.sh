@@ -3,7 +3,7 @@
 PID=$!
 wait $PID
 
-echo "\nGenerating types file..."
+echo -e "\nGenerating types file..."
 yarn generate
 
 # This forces server to restart

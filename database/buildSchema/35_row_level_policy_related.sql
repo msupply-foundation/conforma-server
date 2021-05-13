@@ -1,6 +1,7 @@
 -- Row level policy
-ALTER TABLE public.application ENABLE ROW LEVEL SECURITY;
-
+-- ALTER TABLE public.application ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE public.review ENABLE ROW LEVEL SECURITY;
+-- ALTER TABLE public.review_assignment ENABLE ROW LEVEL SECURITY;
 CREATE ROLE graphile_user WITH NOLOGIN;
 
 ALTER ROLE graphile_user WITH LOGIN;
