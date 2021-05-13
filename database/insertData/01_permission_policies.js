@@ -2,18 +2,20 @@
 Basic Permission Policies 
 */
 exports.queries = [
-  // nonRegisteredApply -- used for UserRegistration
+  // applyNonRegistered -- used for UserRegistration
   `mutation createPolicy {
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          name: "nonRegisteredApply"
+          name: "applyNonRegistered"
           rules: {
             application: {
               view: {
                 template_id: "jwtPermission_bigint_templateId"
                 session_id: "jwtUserDetails_text_sessionId"
+                user_id: 1
               }
+              # TO-DO: Add CREATE and UPDATE restrictions
             }
           }
           type: APPLY
@@ -25,18 +27,43 @@ exports.queries = [
       }
     }
   }`,
-  // basicApply
+  // applyUserRestricted
   `mutation createPolicy {
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          name: "basicApply"
+          name: "applyUserRestricted"
           rules: {
             application: {
               view: {
                 template_id: "jwtPermission_bigint_templateId"
                 user_id: "jwtUserDetails_bigint_userId"
               }
+              # TO-DO: Add CREATE and UPDATE restrictions
+            }
+          }
+          type: APPLY
+        }
+      }
+    ) {
+      permissionPolicy {
+        name
+      }
+    }
+  }`,
+  // applyOrgRestricted
+  `mutation createPolicy {
+    createPermissionPolicy(
+      input: {
+        permissionPolicy: {
+          name: "applyOrgRestricted"
+          rules: {
+            application: {
+              view: {
+                template_id: "jwtPermission_bigint_templateId"
+                org_id: "jwtUserDetails_bigint_orgId"
+              }
+              # TO-DO: Add CREATE and UPDATE restrictions
             }
           }
           type: APPLY

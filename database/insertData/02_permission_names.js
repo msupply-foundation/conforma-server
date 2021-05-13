@@ -9,7 +9,7 @@ exports.queries = [
         permissionName: {
           name: "applyUserRegistration"
           permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "nonRegisteredApply" }
+            connectByName: { name: "applyNonRegistered" }
           }
         }
       }
@@ -26,7 +26,7 @@ exports.queries = [
         permissionName: {
           name: "applyOrgRego"
           permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicApply" }
+            connectByName: { name: "applyUserRestricted" }
           }
         }
       }
@@ -43,7 +43,7 @@ exports.queries = [
         permissionName: {
           name: "applyReviewTest"
           permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicApply" }
+            connectByName: { name: "applyUserRestricted" }
           }
         }
       }
@@ -60,7 +60,7 @@ exports.queries = [
         permissionName: {
           name: "reviewOrgRego"
           permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
+            connectByName: { name: "applyOrgRestricted" }
           }
         }
       }
@@ -200,7 +200,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "applyGeneral",  permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicApply" }
+            connectByName: { name: "applyUserRestricted" }
           }
         }
       }

@@ -10933,6 +10933,7 @@ export type PermissionPolicyTypeFilter = {
 export type PermissionsAll = {
   __typename?: 'PermissionsAll';
   permissionType?: Maybe<PermissionPolicyType>;
+  policyName?: Maybe<Scalars['String']>;
   permissionPolicyId?: Maybe<Scalars['Int']>;
   permissionPolicyRules?: Maybe<Scalars['JSON']>;
   permissionNameId?: Maybe<Scalars['Int']>;
@@ -10956,6 +10957,8 @@ export type PermissionsAll = {
 export type PermissionsAllCondition = {
   /** Checks for equality with the object’s `permissionType` field. */
   permissionType?: Maybe<PermissionPolicyType>;
+  /** Checks for equality with the object’s `policyName` field. */
+  policyName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `permissionPolicyId` field. */
   permissionPolicyId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `permissionPolicyRules` field. */
@@ -10990,6 +10993,8 @@ export type PermissionsAllCondition = {
 export type PermissionsAllFilter = {
   /** Filter by the object’s `permissionType` field. */
   permissionType?: Maybe<PermissionPolicyTypeFilter>;
+  /** Filter by the object’s `policyName` field. */
+  policyName?: Maybe<StringFilter>;
   /** Filter by the object’s `permissionPolicyId` field. */
   permissionPolicyId?: Maybe<IntFilter>;
   /** Filter by the object’s `permissionPolicyRules` field. */
@@ -11053,6 +11058,8 @@ export enum PermissionsAllsOrderBy {
   Natural = 'NATURAL',
   PermissionTypeAsc = 'PERMISSION_TYPE_ASC',
   PermissionTypeDesc = 'PERMISSION_TYPE_DESC',
+  PolicyNameAsc = 'POLICY_NAME_ASC',
+  PolicyNameDesc = 'POLICY_NAME_DESC',
   PermissionPolicyIdAsc = 'PERMISSION_POLICY_ID_ASC',
   PermissionPolicyIdDesc = 'PERMISSION_POLICY_ID_DESC',
   PermissionPolicyRulesAsc = 'PERMISSION_POLICY_RULES_ASC',
@@ -27864,6 +27871,7 @@ export type PermissionPolicyResolvers<ContextType = any, ParentType extends Reso
 
 export type PermissionsAllResolvers<ContextType = any, ParentType extends ResolversParentTypes['PermissionsAll'] = ResolversParentTypes['PermissionsAll']> = {
   permissionType?: Resolver<Maybe<ResolversTypes['PermissionPolicyType']>, ParentType, ContextType>;
+  policyName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   permissionPolicyId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   permissionPolicyRules?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;

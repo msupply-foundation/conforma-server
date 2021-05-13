@@ -298,15 +298,6 @@ exports.queries = [
                 levelNumber: 1
                 restrictions: { canSelfAssign: true }
               }
-              # reviewGeneral
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewGeneral" }
-                }
-                stageNumber: 1
-                levelNumber: 1
-                restrictions: { canSelfAssign: true }
-              }
             ]
           }
         }

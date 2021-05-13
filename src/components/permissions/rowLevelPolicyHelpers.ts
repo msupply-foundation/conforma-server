@@ -86,6 +86,13 @@ const updateRowPolicies = async () => {
     text: newPolicies.join(';'),
   })
 
+  // Temporarily hard-code create/update permissions on application table
+  await databaseConnect.query({
+    text: `
+    CREATE POLICY "create_all" ON application FOR INSERT WITH CHECK (true);
+    CREATE POLICY "update_all" ON application FOR UPDATE USING(true) WITH CHECK (true);`,
+  })
+
   return newPolicies
 }
 
