@@ -39,7 +39,6 @@ For more complex lookups, we would hide the complexity from the user in the Temp
 - [Operators](#operators)
   - [AND](#and)
   - [OR](#or)
-  - [CONCAT](#concat)
   - [= (Equals)](#-equals)
   - [!= (Not equal)](#-not-equal)
   - [+ (Plus)](#-plus)
@@ -115,13 +114,6 @@ Implements logical OR on the returned values of its child nodes.
 - Input: 1 or more nodes that return a **boolean** value
 - Output: **boolean**
 
-## CONCAT
-
-Concatenates the values of the child nodes, which can be either strings or arrays.
-
-- Input: 1 or more **string** or **array** nodes
-- Output: Either **string** or **array**, depending on the `type` specified (defaults to “**string**” if unspecified)
-
 ## = (Equals)
 
 Equality test for child nodes
@@ -140,10 +132,17 @@ Inequality test for child nodes
 
 ## + (Plus)
 
-Adds any number of number nodes together
+Can also use: `CONCAT`
 
-- Input: 1 or more nodes of **number** type.
-- Output: **number**
+Either adds, concatenates or merges child nodes, depending on data type and the "type" property.
+
+- Input: 1 or more nodes of any type
+- Output: depends on the following rules (in order of priority):
+  - if `type: "array"` is specfied, nodes will be concatenated into a single array e.g. `[1, 2, 3] + "four" => [1, 2, 3, "four"]`
+  - if `type: "string"` is specified, nodes will be concatenated into a single string e.g. `[1, 2, 3] + "four" => "1,2,3four"`
+  - if ALL children are either arrays or strings, they will be concatenated into whichever type is the first node
+  - if ALL children are Objects, they will be merged into a single object will all properties e.g. `{ one: 1, two: 2 } + { three: 3 } => { one: 1, two: 2, three: 3 }`
+  - in all other cases, the children will be combined using the standard javascript `+` operator, which is either "add" or "concatenate" depending on type (e.g. `2 + 2 => 4` ; `"2" + "two" => "2two"`)
 
 ## ? (Conditional)
 
