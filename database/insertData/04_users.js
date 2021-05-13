@@ -224,12 +224,12 @@ exports.queries = [
             create: [
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestScreeningSection1" }
+                  connectByName: { name: "reviewSelfAssignable" }
                 }
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestAssessmentLvl1" }
+                  connectByName: { name: "reviewReviewTestAssessmentLvl1Section1" }
                 }
               }
             ]
@@ -254,17 +254,12 @@ exports.queries = [
             create: [
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestScreeningSection1" }
+                  connectByName: { name: "reviewSelfAssignable" }
                 }
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestScreeningSection2" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestAssessmentLvl1" }
+                  connectByName: { name: "reviewReviewTestAssessmentLvl1Section2" }
                 }
               }
             ]
@@ -289,7 +284,7 @@ exports.queries = [
             create: [
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestScreeningSection2" }
+                  connectByName: { name: "reviewSelfAssignable" }
                 }
               }
               {
