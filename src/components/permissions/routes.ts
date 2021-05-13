@@ -68,10 +68,10 @@ template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
   const token = extractJWTfromHeader(request)
-  const { userId, orgId, error } = await getTokenData(token)
+  const { userId, orgId, sessionId, error } = await getTokenData(token)
   if (error) return reply.send({ success: false, message: error })
 
-  return reply.send({ success: true, ...(await getUserInfo({ userId, orgId })) })
+  return reply.send({ success: true, ...(await getUserInfo({ userId, orgId, sessionId })) })
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
