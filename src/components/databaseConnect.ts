@@ -14,6 +14,8 @@ class DBConnect {
 
   public end = PostgresDB.end
 
+  public getValuesPlaceholders = PostgresDB.getValuesPlaceholders
+
   public addActionQueue = PostgresDB.addActionQueue
 
   public executedActionStatusUpdate = PostgresDB.executedActionStatusUpdate
@@ -41,10 +43,6 @@ class DBConnect {
   public updateActionPlugin = PostgresDB.updateActionPlugin
 
   public updateTriggerQueueStatus = PostgresDB.updateTriggerQueueStatus
-
-  public createUser = PostgresDB.createUser
-
-  public createOrg = PostgresDB.createOrg
 
   public addUserOrg = PostgresDB.addUserOrg
 

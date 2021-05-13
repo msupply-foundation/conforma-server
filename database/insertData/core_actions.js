@@ -117,7 +117,7 @@ exports.coreActions = `
           }
           changedApplicationResponses: {
             operator: "objectProperties"
-            children: ["output.updatedResponses"]
+            children: ["outputCumulative.updatedResponses"]
           }
         }
     }

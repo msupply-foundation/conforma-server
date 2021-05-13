@@ -158,6 +158,8 @@ export async function processTrigger(payload: TriggerPayload) {
         outputCumulative,
       })
       outputCumulative = { ...outputCumulative, ...result.output }
+      // Enable next line to inspect outputCumulative:
+      // console.log('outputCumulative: ', outputCumulative)
       if (result.status === ActionQueueStatus.Fail) console.log(result.error_log)
     } catch (err) {
       actionFailed = action.action_code
