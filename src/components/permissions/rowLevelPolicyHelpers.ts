@@ -33,9 +33,9 @@ import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
   }
 */
 const compileJWT = (JWTelements: any) => {
-  const { userId, orgId, templatePermissionRows } = JWTelements
+  const { userId, orgId, templatePermissionRows, sessionId } = JWTelements
 
-  let JWT = { userId, orgId, aud: 'postgraphile' }
+  let JWT = { userId, orgId, aud: 'postgraphile', sessionId }
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
     const { templatePermissionRestrictions, templateId, templatePermissionId } = permissionRow
@@ -243,6 +243,11 @@ const replacePlaceholders = (sql: string, permissionAbbreviation: string) => {
     {
       prefix: 'jwtUserDetails_bigint_',
       prefixReplacement: "jwt_get_bigint('",
+      postfix: "')",
+    },
+    {
+      prefix: 'jwtUserDetails_text_',
+      prefixReplacement: "jwt_get_text('",
       postfix: "')",
     },
     {

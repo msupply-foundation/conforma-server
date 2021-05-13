@@ -596,6 +596,7 @@ export type Application = Node & {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -730,6 +731,16 @@ export type ApplicationApplicationSerialKeyDelete = {
   serial: Scalars['String'];
 };
 
+/** The fields on `application` to look up the row to connect. */
+export type ApplicationApplicationSessionIdKeyConnect = {
+  sessionId: Scalars['String'];
+};
+
+/** The fields on `application` to look up the row to delete. */
+export type ApplicationApplicationSessionIdKeyDelete = {
+  sessionId: Scalars['String'];
+};
+
 /**
  * A condition to be used against `Application` object types. All fields are tested
  * for equality and combined with a logical ‘and.’
@@ -743,6 +754,8 @@ export type ApplicationCondition = {
   userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `orgId` field. */
   orgId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `sessionId` field. */
+  sessionId?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `serial` field. */
   serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
@@ -765,6 +778,8 @@ export type ApplicationFilter = {
   userId?: Maybe<IntFilter>;
   /** Filter by the object’s `orgId` field. */
   orgId?: Maybe<IntFilter>;
+  /** Filter by the object’s `sessionId` field. */
+  sessionId?: Maybe<StringFilter>;
   /** Filter by the object’s `serial` field. */
   serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
@@ -835,6 +850,7 @@ export type ApplicationInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -1146,6 +1162,13 @@ export type ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSeria
   serial: Scalars['String'];
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch;
+  sessionId: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `template` to be connected. */
@@ -1166,6 +1189,13 @@ export type ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplication
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch;
   serial: Scalars['String'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch;
+  sessionId: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -1190,6 +1220,13 @@ export type ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSeri
   serial: Scalars['String'];
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch;
+  sessionId: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `applicationResponse` to be connected. */
@@ -1210,6 +1247,13 @@ export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdF
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
   serial: Scalars['String'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
+  sessionId: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -1234,6 +1278,13 @@ export type ApplicationOnApplicationSectionForApplicationSectionApplicationIdFke
   serial: Scalars['String'];
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch;
+  sessionId: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `applicationStageHistory` to be connected. */
@@ -1254,6 +1305,13 @@ export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplic
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
   serial: Scalars['String'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
+  sessionId: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -1278,6 +1336,13 @@ export type ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialK
   serial: Scalars['String'];
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
+  sessionId: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `notification` to be connected. */
@@ -1298,6 +1363,13 @@ export type ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplic
   /** An object where the defined keys will be set on the `application` being updated. */
   patch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
   serial: Scalars['String'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
+  sessionId: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -1322,6 +1394,13 @@ export type ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsi
   serial: Scalars['String'];
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
+  sessionId: Scalars['String'];
+};
+
 /** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `review` to be connected. */
@@ -1344,11 +1423,19 @@ export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialK
   serial: Scalars['String'];
 };
 
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSessionIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
+  sessionId: Scalars['String'];
+};
+
 /** The `application` to be created by this mutation. */
 export type ApplicationOrgIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -1403,17 +1490,23 @@ export type ApplicationOrgIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyConnect>>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyDelete>>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySessionId?: Maybe<Array<ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSessionIdKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -1474,6 +1567,7 @@ export type ApplicationPatch = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -1542,6 +1636,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -1578,17 +1673,23 @@ export type ApplicationResponseApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySessionId?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -1997,6 +2098,7 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -2027,17 +2129,23 @@ export type ApplicationSectionApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySessionId?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -2286,6 +2394,8 @@ export enum ApplicationsOrderBy {
   UserIdDesc = 'USER_ID_DESC',
   OrgIdAsc = 'ORG_ID_ASC',
   OrgIdDesc = 'ORG_ID_DESC',
+  SessionIdAsc = 'SESSION_ID_ASC',
+  SessionIdDesc = 'SESSION_ID_DESC',
   SerialAsc = 'SERIAL_ASC',
   SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
@@ -2374,6 +2484,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -2407,17 +2518,23 @@ export type ApplicationStageHistoryApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySessionId?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -3267,6 +3384,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -3309,17 +3427,23 @@ export type ApplicationTemplateIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyConnect>>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyDelete>>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySessionId?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSessionIdKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -3421,6 +3545,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -3469,17 +3594,23 @@ export type ApplicationUserIdFkeyInverseInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<Array<ApplicationApplicationPkeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyConnect>>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<Array<ApplicationApplicationSerialKeyConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<Array<ApplicationNodeIdConnect>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<Array<ApplicationApplicationPkeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySessionId?: Maybe<Array<ApplicationApplicationSessionIdKeyDelete>>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<Array<ApplicationApplicationSerialKeyDelete>>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<Array<ApplicationNodeIdDelete>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySessionId?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSessionIdKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<Array<ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate>>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -5005,6 +5136,16 @@ export type DeleteApplicationBySerialInput = {
    */
   clientMutationId?: Maybe<Scalars['String']>;
   serial: Scalars['String'];
+};
+
+/** All input for the `deleteApplicationBySessionId` mutation. */
+export type DeleteApplicationBySessionIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  sessionId: Scalars['String'];
 };
 
 /** All input for the `deleteApplication` mutation. */
@@ -6743,6 +6884,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -6783,17 +6925,23 @@ export type FileApplicationSerialFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySessionId?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -7450,6 +7598,8 @@ export type Mutation = {
   /** Updates a single `Application` using a unique key and a patch. */
   updateApplication?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `Application` using a unique key and a patch. */
+  updateApplicationBySessionId?: Maybe<UpdateApplicationPayload>;
+  /** Updates a single `Application` using a unique key and a patch. */
   updateApplicationBySerial?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `ApplicationResponse` using its globally unique id and a patch. */
   updateApplicationResponseByNodeId?: Maybe<UpdateApplicationResponsePayload>;
@@ -7593,6 +7743,8 @@ export type Mutation = {
   deleteApplicationByNodeId?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `Application` using a unique key. */
   deleteApplication?: Maybe<DeleteApplicationPayload>;
+  /** Deletes a single `Application` using a unique key. */
+  deleteApplicationBySessionId?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `Application` using a unique key. */
   deleteApplicationBySerial?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `ApplicationResponse` using its globally unique id. */
@@ -7959,6 +8111,12 @@ export type MutationUpdateApplicationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateApplicationArgs = {
   input: UpdateApplicationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateApplicationBySessionIdArgs = {
+  input: UpdateApplicationBySessionIdInput;
 };
 
 
@@ -8395,6 +8553,12 @@ export type MutationDeleteApplicationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteApplicationBySessionIdArgs = {
+  input: DeleteApplicationBySessionIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteApplicationBySerialArgs = {
   input: DeleteApplicationBySerialInput;
 };
@@ -8823,6 +8987,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -8845,17 +9010,23 @@ export type NotificationApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySessionId?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -11001,6 +11172,7 @@ export type Query = Node & {
   actionPlugin?: Maybe<ActionPlugin>;
   actionQueue?: Maybe<ActionQueue>;
   application?: Maybe<Application>;
+  applicationBySessionId?: Maybe<Application>;
   applicationBySerial?: Maybe<Application>;
   applicationResponse?: Maybe<ApplicationResponse>;
   applicationSection?: Maybe<ApplicationSection>;
@@ -11625,6 +11797,12 @@ export type QueryApplicationArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryApplicationBySessionIdArgs = {
+  sessionId: Scalars['String'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryApplicationBySerialArgs = {
   serial: Scalars['String'];
 };
@@ -12220,6 +12398,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -12242,17 +12421,23 @@ export type ReviewApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySessionId?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -12379,6 +12564,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -12401,17 +12587,23 @@ export type ReviewAssignmentApplicationIdFkeyInput = {
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectById?: Maybe<ApplicationApplicationPkeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySessionId?: Maybe<ApplicationApplicationSessionIdKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySessionId?: Maybe<ApplicationApplicationSessionIdKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
   deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
   /** The primary key(s) for `application` for the far side of the relationship. */
   deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateById?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySessionId?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSessionIdKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
   updateBySerial?: Maybe<ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
   /** The primary key(s) and patch data for `application` for the far side of the relationship. */
@@ -19003,6 +19195,18 @@ export type UpdateApplicationBySerialInput = {
   serial: Scalars['String'];
 };
 
+/** All input for the `updateApplicationBySessionId` mutation. */
+export type UpdateApplicationBySessionIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Application` being updated. */
+  patch: ApplicationPatch;
+  sessionId: Scalars['String'];
+};
+
 /** All input for the `updateApplication` mutation. */
 export type UpdateApplicationInput = {
   /**
@@ -19020,6 +19224,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -19042,6 +19247,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -19064,6 +19270,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -19087,6 +19294,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -19110,6 +19318,7 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -19133,6 +19342,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -19156,6 +19366,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -19179,6 +19390,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -19202,6 +19414,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -19225,6 +19438,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
@@ -23939,9 +24153,11 @@ export type ResolversTypes = {
   updateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch: UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch;
   ApplicationTemplateIdFkeyInverseInput: ApplicationTemplateIdFkeyInverseInput;
   ApplicationApplicationPkeyConnect: ApplicationApplicationPkeyConnect;
+  ApplicationApplicationSessionIdKeyConnect: ApplicationApplicationSessionIdKeyConnect;
   ApplicationApplicationSerialKeyConnect: ApplicationApplicationSerialKeyConnect;
   ApplicationNodeIdConnect: ApplicationNodeIdConnect;
   ApplicationApplicationPkeyDelete: ApplicationApplicationPkeyDelete;
+  ApplicationApplicationSessionIdKeyDelete: ApplicationApplicationSessionIdKeyDelete;
   ApplicationApplicationSerialKeyDelete: ApplicationApplicationSerialKeyDelete;
   ApplicationNodeIdDelete: ApplicationNodeIdDelete;
   ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationPkeyUpdate;
@@ -24183,6 +24399,7 @@ export type ResolversTypes = {
   NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
   ApplicationPatch: ApplicationPatch;
@@ -24319,6 +24536,7 @@ export type ResolversTypes = {
   NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
   NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
   FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
   FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
@@ -24336,6 +24554,7 @@ export type ResolversTypes = {
   FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
   ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
   FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
+  ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyApplicationCreateInput: ReviewApplicationIdFkeyApplicationCreateInput;
@@ -24377,6 +24596,7 @@ export type ResolversTypes = {
   ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput;
   ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyReviewCreateInput: ReviewApplicationIdFkeyReviewCreateInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
   ReviewAssignmentApplicationIdFkeyApplicationCreateInput: ReviewAssignmentApplicationIdFkeyApplicationCreateInput;
@@ -24427,6 +24647,7 @@ export type ResolversTypes = {
   ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
   ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
   ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput;
+  ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationCreateInput: ApplicationResponseApplicationIdFkeyApplicationCreateInput;
@@ -24454,16 +24675,19 @@ export type ResolversTypes = {
   ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput: ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput: ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput;
+  ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate;
   ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput: ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput;
   ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate;
   ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreateInput;
+  ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationSectionOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate: ApplicationSectionOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate;
   ApplicationSectionApplicationIdFkeyApplicationCreateInput: ApplicationSectionApplicationIdFkeyApplicationCreateInput;
   ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate;
   ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput: ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput;
+  ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate;
   OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate;
   ApplicationOrgIdFkeyApplicationCreateInput: ApplicationOrgIdFkeyApplicationCreateInput;
@@ -24471,12 +24695,14 @@ export type ResolversTypes = {
   OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationRegistrationKeyUpdate;
   ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate;
   ApplicationOrgIdFkeyOrganisationCreateInput: ApplicationOrgIdFkeyOrganisationCreateInput;
+  ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate;
   UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate: UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyApplicationCreateInput: ApplicationUserIdFkeyApplicationCreateInput;
   UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate;
   ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyUserCreateInput: ApplicationUserIdFkeyUserCreateInput;
+  ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate;
   TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate: TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate;
   ApplicationTemplateIdFkeyApplicationCreateInput: ApplicationTemplateIdFkeyApplicationCreateInput;
@@ -24646,6 +24872,7 @@ export type ResolversTypes = {
   UpdateApplicationByNodeIdInput: UpdateApplicationByNodeIdInput;
   UpdateApplicationPayload: ResolverTypeWrapper<UpdateApplicationPayload>;
   UpdateApplicationInput: UpdateApplicationInput;
+  UpdateApplicationBySessionIdInput: UpdateApplicationBySessionIdInput;
   UpdateApplicationBySerialInput: UpdateApplicationBySerialInput;
   UpdateApplicationResponseByNodeIdInput: UpdateApplicationResponseByNodeIdInput;
   UpdateApplicationResponsePayload: ResolverTypeWrapper<UpdateApplicationResponsePayload>;
@@ -24752,6 +24979,7 @@ export type ResolversTypes = {
   DeleteApplicationByNodeIdInput: DeleteApplicationByNodeIdInput;
   DeleteApplicationPayload: ResolverTypeWrapper<DeleteApplicationPayload>;
   DeleteApplicationInput: DeleteApplicationInput;
+  DeleteApplicationBySessionIdInput: DeleteApplicationBySessionIdInput;
   DeleteApplicationBySerialInput: DeleteApplicationBySerialInput;
   DeleteApplicationResponseByNodeIdInput: DeleteApplicationResponseByNodeIdInput;
   DeleteApplicationResponsePayload: ResolverTypeWrapper<DeleteApplicationResponsePayload>;
@@ -25266,9 +25494,11 @@ export type ResolversParentTypes = {
   updateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch: UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch;
   ApplicationTemplateIdFkeyInverseInput: ApplicationTemplateIdFkeyInverseInput;
   ApplicationApplicationPkeyConnect: ApplicationApplicationPkeyConnect;
+  ApplicationApplicationSessionIdKeyConnect: ApplicationApplicationSessionIdKeyConnect;
   ApplicationApplicationSerialKeyConnect: ApplicationApplicationSerialKeyConnect;
   ApplicationNodeIdConnect: ApplicationNodeIdConnect;
   ApplicationApplicationPkeyDelete: ApplicationApplicationPkeyDelete;
+  ApplicationApplicationSessionIdKeyDelete: ApplicationApplicationSessionIdKeyDelete;
   ApplicationApplicationSerialKeyDelete: ApplicationApplicationSerialKeyDelete;
   ApplicationNodeIdDelete: ApplicationNodeIdDelete;
   ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationPkeyUpdate;
@@ -25510,6 +25740,7 @@ export type ResolversParentTypes = {
   NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
   ApplicationPatch: ApplicationPatch;
@@ -25646,6 +25877,7 @@ export type ResolversParentTypes = {
   NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
   NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
   FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
   FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
@@ -25663,6 +25895,7 @@ export type ResolversParentTypes = {
   FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
   ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
   FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
+  ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ReviewOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyApplicationCreateInput: ReviewApplicationIdFkeyApplicationCreateInput;
@@ -25704,6 +25937,7 @@ export type ResolversParentTypes = {
   ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput;
   ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewForReviewApplicationIdFkeyNodeIdUpdate;
   ReviewApplicationIdFkeyReviewCreateInput: ReviewApplicationIdFkeyReviewCreateInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
   ReviewAssignmentApplicationIdFkeyApplicationCreateInput: ReviewAssignmentApplicationIdFkeyApplicationCreateInput;
@@ -25754,6 +25988,7 @@ export type ResolversParentTypes = {
   ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
   ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
   ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput;
+  ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationCreateInput: ApplicationResponseApplicationIdFkeyApplicationCreateInput;
@@ -25781,16 +26016,19 @@ export type ResolversParentTypes = {
   ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput: ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput: ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput;
+  ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate;
   ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput: ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput;
   ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate;
   ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreateInput;
+  ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationSectionOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate: ApplicationSectionOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate;
   ApplicationSectionApplicationIdFkeyApplicationCreateInput: ApplicationSectionApplicationIdFkeyApplicationCreateInput;
   ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate;
   ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput: ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput;
+  ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate;
   OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate;
   ApplicationOrgIdFkeyApplicationCreateInput: ApplicationOrgIdFkeyApplicationCreateInput;
@@ -25798,12 +26036,14 @@ export type ResolversParentTypes = {
   OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationRegistrationKeyUpdate;
   ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate;
   ApplicationOrgIdFkeyOrganisationCreateInput: ApplicationOrgIdFkeyOrganisationCreateInput;
+  ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate;
   UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate: UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyApplicationCreateInput: ApplicationUserIdFkeyApplicationCreateInput;
   UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate;
   ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyUserCreateInput: ApplicationUserIdFkeyUserCreateInput;
+  ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSessionIdKeyUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSessionIdKeyUpdate;
   ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationTemplateIdFkeyUsingApplicationSerialKeyUpdate;
   TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate: TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate;
   ApplicationTemplateIdFkeyApplicationCreateInput: ApplicationTemplateIdFkeyApplicationCreateInput;
@@ -25973,6 +26213,7 @@ export type ResolversParentTypes = {
   UpdateApplicationByNodeIdInput: UpdateApplicationByNodeIdInput;
   UpdateApplicationPayload: UpdateApplicationPayload;
   UpdateApplicationInput: UpdateApplicationInput;
+  UpdateApplicationBySessionIdInput: UpdateApplicationBySessionIdInput;
   UpdateApplicationBySerialInput: UpdateApplicationBySerialInput;
   UpdateApplicationResponseByNodeIdInput: UpdateApplicationResponseByNodeIdInput;
   UpdateApplicationResponsePayload: UpdateApplicationResponsePayload;
@@ -26079,6 +26320,7 @@ export type ResolversParentTypes = {
   DeleteApplicationByNodeIdInput: DeleteApplicationByNodeIdInput;
   DeleteApplicationPayload: DeleteApplicationPayload;
   DeleteApplicationInput: DeleteApplicationInput;
+  DeleteApplicationBySessionIdInput: DeleteApplicationBySessionIdInput;
   DeleteApplicationBySerialInput: DeleteApplicationBySerialInput;
   DeleteApplicationResponseByNodeIdInput: DeleteApplicationResponseByNodeIdInput;
   DeleteApplicationResponsePayload: DeleteApplicationResponsePayload;
@@ -26244,6 +26486,7 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  sessionId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
@@ -27327,6 +27570,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateActionQueue?: Resolver<Maybe<ResolversTypes['UpdateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionQueueArgs, 'input'>>;
   updateApplicationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationByNodeIdArgs, 'input'>>;
   updateApplication?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationArgs, 'input'>>;
+  updateApplicationBySessionId?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationBySessionIdArgs, 'input'>>;
   updateApplicationBySerial?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationBySerialArgs, 'input'>>;
   updateApplicationResponseByNodeId?: Resolver<Maybe<ResolversTypes['UpdateApplicationResponsePayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationResponseByNodeIdArgs, 'input'>>;
   updateApplicationResponse?: Resolver<Maybe<ResolversTypes['UpdateApplicationResponsePayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationResponseArgs, 'input'>>;
@@ -27399,6 +27643,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteActionQueue?: Resolver<Maybe<ResolversTypes['DeleteActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionQueueArgs, 'input'>>;
   deleteApplicationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationByNodeIdArgs, 'input'>>;
   deleteApplication?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationArgs, 'input'>>;
+  deleteApplicationBySessionId?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationBySessionIdArgs, 'input'>>;
   deleteApplicationBySerial?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationBySerialArgs, 'input'>>;
   deleteApplicationResponseByNodeId?: Resolver<Maybe<ResolversTypes['DeleteApplicationResponsePayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationResponseByNodeIdArgs, 'input'>>;
   deleteApplicationResponse?: Resolver<Maybe<ResolversTypes['DeleteApplicationResponsePayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationResponseArgs, 'input'>>;
@@ -27694,6 +27939,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginArgs, 'code'>>;
   actionQueue?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueArgs, 'id'>>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationArgs, 'id'>>;
+  applicationBySessionId?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationBySessionIdArgs, 'sessionId'>>;
   applicationBySerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationBySerialArgs, 'serial'>>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType, RequireFields<QueryApplicationResponseArgs, 'id'>>;
   applicationSection?: Resolver<Maybe<ResolversTypes['ApplicationSection']>, ParentType, ContextType, RequireFields<QueryApplicationSectionArgs, 'id'>>;
