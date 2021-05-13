@@ -1004,10 +1004,11 @@ exports.queries = [
                 }
               }
               {
-                actionCode: "createUser"
+                actionCode: "modifyRecord"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 101
                 parameterQueries: {
+                  tableName: "user"
                   first_name: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q1.text"]

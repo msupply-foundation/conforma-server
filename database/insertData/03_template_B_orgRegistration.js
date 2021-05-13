@@ -336,7 +336,7 @@ exports.queries = [
                 }
               }
               {
-                actionCode: "createOrg"
+                actionCode: "modifyRecord"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 101
                 condition: {
@@ -352,6 +352,7 @@ exports.queries = [
                   ]
                 }
                 parameterQueries: {
+                  tableName: "organisation"
                   name: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.name.text"]
@@ -404,7 +405,7 @@ exports.queries = [
                   }
                   organisation_id: {
                     operator: "objectProperties"
-                    children: ["outputCumulative.orgId"]
+                    children: ["outputCumulative.organisation.id"]
                   }
                   user_role: "Owner"
                 }
@@ -434,7 +435,7 @@ exports.queries = [
                   }
                   orgName: {
                     operator: "objectProperties"
-                    children: ["outputCumulative.orgName"]
+                    children: ["outputCumulative.organisation.name"]
                   }
                   permissionNames: ["reviewJoinOrg"]
                 }

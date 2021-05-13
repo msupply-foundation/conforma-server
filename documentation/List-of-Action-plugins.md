@@ -1,6 +1,27 @@
-## List of Action plugins created to-date:
+## Contents
 
-### **Console Log**
+<!-- toc -->
+
+- [Console Log](#console-log)
+- [Change Outcome](#change-outcome)
+- [Increment Stage](#increment-stage)
+- [Change Status](#change-status)
+- [Modify Record](#modify-record)
+- [Join User to Organsation](#join-user-to-organsation)
+- [Grant Permissions](#grant-permissions)
+- [Generate Review Assignments](#generate-review-assignments)
+- [Update Review Assignments](#update-review-assignments)
+- [Trim Responses](#trim-responses)
+- [Update Review Visibility](#update-review-visibility)
+- [Update Review Statuses](#update-review-statuses)
+
+* [Core Actions](#core-actions)
+
+<!-- tocstop -->
+
+---
+
+### Console Log
 
 Just prints a message to the console. For demo purposes only.
 
@@ -12,24 +33,7 @@ _Action Code:_ **`cLog`**
 
 ---
 
-### **Create User**:
-
-Creates a new User in the database based on user input parameters.
-
-- _Action Code:_ **`createUser`**
-
-| Input parameters<br />(\*required) <br/> | Output properties |
-| ---------------------------------------- | ----------------- |
-| `first_name`\*                           | `userId`          |
-| `last_name`                              | `username`        |
-| `username`\*                             | `firstName`       |
-| `date_of_birth`                          | `lastName`        |
-| `password_hash`\*                        | `email`           |
-| `email`\*                                |                   |
-
----
-
-### **Change Outcome**:
+### Change Outcome
 
 Set the Outcome of an application to the input parameter ("Pending", "Approved", "Rejected")
 
@@ -44,7 +48,7 @@ Set the Outcome of an application to the input parameter ("Pending", "Approved",
 
 ---
 
-### **Increment Stage**:
+### Increment Stage
 
 Changes the application Stage to the next in the sequence
 
@@ -66,7 +70,7 @@ Changes the application Stage to the next in the sequence
 
 ---
 
-### **Change Status**:
+### Change Status
 
 - Changes the application or review Status to the specifed input parameter
 
@@ -84,17 +88,55 @@ If we are wanting to change the status of a **review**, the parameter `isReview`
 
 ---
 
-### **Create Organisation**
+### Modify Record
 
-Creates a new Organisation in the database based on user input parameters.
+Creates or updates a database record on any table. Currently used for creating updating/users and organisations.
 
-- _Action Code:_ **`createOrg`**
+- _Action Code:_ **`modifyRecord`**
 
-| Input parameters<br />(\*required) <br/> | Output properties |
-| ---------------------------------------- | ----------------- |
-| `name`\*                                 | `orgId`           |
-| `registration`\*                         | `orgName`         |
-| `address`                                |                   |
+| Input parameters<br />(\*required) <br/> | Output properties    |
+| ---------------------------------------- | -------------------- |
+| `tableName`\*                            | `<tableName>` object |
+| `matchField`                             |                      |
+| `matchValue`                             |                      |
+| `...fields for database record`          |                      |
+
+The Action first checks if a record exists, based on the `matchField` (e.g. `username`) and `matchValue` (e.g. the value of `username` to check). If it exists, the record will be updated, otherwise a new record is created.
+
+If `matchField` is not provided, it will default to `id`.
+
+If `matchValue` is not provided, it will use the value supplied with the record for that field. So you only really need to provide `matchValue` if you're changing the value of `matchField`
+
+For example:
+
+```
+{
+  tableName: 'user',
+  matchField: 'username',
+  username: 'js',
+  email: 'john@msupply.foundation'
+}
+```
+
+This will look for a user record with `username = "js"` and update it if found.
+
+Wheras:
+
+```
+{
+  tableName: 'user',
+  matchField: 'username'
+  matchValue: 'js',
+  username: 'john',
+  email: 'john@msupply.foundation'
+}
+```
+
+This will look for a user record with `username = "js"` and update it with the _new_ username of `john`.
+
+**Note:**
+
+- fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.
 
 ---
 
