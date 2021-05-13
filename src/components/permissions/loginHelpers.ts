@@ -52,7 +52,10 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       return { orgId, orgName, userRole, registration, address, logoUrl }
     })
 
-  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(newUsername, orgId || null)
+  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(
+    newUsername,
+    orgId || null
+  )
 
   const selectedOrg = orgId ? orgList.filter((org) => org.orgId === orgId) : undefined
 
@@ -82,6 +85,7 @@ const buildTemplatePermissions = (templatePermissionRows: Array<PermissionRow>) 
   templatePermissionRows.forEach(({ permissionType, templateCode }: PermissionRow) => {
     if (!templateCode || !permissionType) return
     if (!templatePermissions[templateCode]) templatePermissions[templateCode] = []
+    if (templatePermissions[templateCode].includes(permissionType)) return
     templatePermissions[templateCode].push(permissionType)
   })
 
