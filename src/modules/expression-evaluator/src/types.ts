@@ -47,5 +47,6 @@ type Operator =
   | 'stringSubstitution'
   | 'GET'
   | 'POST'
+  | 'API'
   | 'pgSQL'
   | 'graphQL'

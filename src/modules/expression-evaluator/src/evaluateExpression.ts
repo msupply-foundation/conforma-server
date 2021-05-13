@@ -93,6 +93,7 @@ export default async function evaluateExpression(
 
     case 'POST':
     case 'GET':
+    case 'API':
       const isPostRequest = inputQuery.operator === 'POST'
       let urlWithQuery, returnedProperty, requestBody
       try {
