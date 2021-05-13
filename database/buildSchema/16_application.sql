@@ -10,7 +10,7 @@ CREATE TABLE public.application (
     template_id integer REFERENCES public.template (id),
     user_id integer REFERENCES public.user (id),
     org_id integer REFERENCES public.organisation (id),
-    session_id varchar UNIQUE,
+    session_id varchar,
     serial varchar UNIQUE,
     name varchar,
     outcome public.application_outcome,
