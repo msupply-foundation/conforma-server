@@ -58,7 +58,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const selectedOrg = orgId ? orgList.filter((org) => org.orgId === orgId) : undefined
 
-  const newSessionId = sessionId ?? nanoid(16)
+  const returnSessionId = sessionId ?? nanoid(16)
 
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
@@ -66,7 +66,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       userId: userId || newUserId,
       orgId,
       templatePermissionRows,
-      sessionId: newSessionId
+      sessionId: returnSessionId
     }),
     user: {
       userId: userId || newUserId,
@@ -76,7 +76,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       email,
       dateOfBirth,
       organisation: selectedOrg?.[0],
-      sessionId: newSessionId
+      sessionId: returnSessionId
     },
     orgList,
   }
