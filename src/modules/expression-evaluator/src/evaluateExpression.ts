@@ -73,7 +73,7 @@ export default async function evaluateExpression(
       ) {
         return childrenResolved.reduce((acc, child) => ({ ...acc, ...child }), {})
       }
-      // Or just try to add all other types
+      // Or just try to add any other types
       else return childrenResolved.reduce((acc: number, child: number) => acc + child)
 
     case '?':
