@@ -4,6 +4,32 @@ Insert USERS (and some basic permission)
   -- Hashes generated with https://www.browserling.com/tools/bcrypt 
 */
 exports.queries = [
+  // Non Registered User with Permissions for UserRegistration only
+  // Password is blank
+  // Add nonRegisterd first, so it always gets ID 1
+  `mutation {
+    createUser(
+      input: {
+        user: {
+          email: ""
+          passwordHash: "$2a$10$UIfa3GTUbOS92Ygy/UpqheTngGo3O54Q5UOnJ5CBlra9LYCcr4IGq"
+          username: "nonRegistered"
+          permissionJoinsUsingId: {
+            create: {
+              # Apply UserRego
+              permissionNameToPermissionNameId: {
+                connectByName: { name: "applyUserRegistration" }
+              }
+            }
+          }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
   `mutation {
     createUser(
       input: {
@@ -494,31 +520,6 @@ exports.queries = [
     }
   }`,
   //
-  // Non Registered User with Permissions for UserRegistration only
-  // Password is blank
-  `mutation {
-    createUser(
-      input: {
-        user: {
-          email: ""
-          passwordHash: "$2a$10$UIfa3GTUbOS92Ygy/UpqheTngGo3O54Q5UOnJ5CBlra9LYCcr4IGq"
-          username: "nonRegistered"
-          permissionJoinsUsingId: {
-            create: {
-              # Apply UserRego
-              permissionNameToPermissionNameId: {
-                connectByName: { name: "applyUserRegistration" }
-              }
-            }
-          }
-        }
-      }
-    ) {
-      user {
-        username
-      }
-    }
-  }`,
   // Extra user with multiple permissions (apply org rego, review org rego and apply user rego) -- password is "123456"
   `mutation {
     createUser(

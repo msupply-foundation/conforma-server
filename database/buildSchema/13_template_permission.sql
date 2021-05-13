@@ -12,6 +12,7 @@ CREATE TABLE public.template_permission (
 CREATE VIEW permissions_all AS (
     SELECT
         permission_policy.type AS "permissionType",
+        permission_policy.name AS "policyName",
         permission_policy.id AS "permissionPolicyId",
         permission_policy.rules AS "permissionPolicyRules",
         permission_name.id AS "permissionNameId",

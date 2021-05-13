@@ -33,9 +33,9 @@ import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
   }
 */
 const compileJWT = (JWTelements: any) => {
-  const { userId, orgId, templatePermissionRows } = JWTelements
+  const { userId, orgId, templatePermissionRows, sessionId } = JWTelements
 
-  let JWT = { userId, orgId, aud: 'postgraphile' }
+  let JWT = { userId, orgId, aud: 'postgraphile', sessionId }
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
     const { templatePermissionRestrictions, templateId, templatePermissionId } = permissionRow
@@ -84,6 +84,13 @@ const updateRowPolicies = async () => {
 
   await databaseConnect.query({
     text: newPolicies.join(';'),
+  })
+
+  // Temporarily hard-code create/update permissions on application table
+  await databaseConnect.query({
+    text: `
+    CREATE POLICY "create_all" ON application FOR INSERT WITH CHECK (true);
+    CREATE POLICY "update_all" ON application FOR UPDATE USING(true) WITH CHECK (true);`,
   })
 
   return newPolicies
@@ -243,6 +250,11 @@ const replacePlaceholders = (sql: string, permissionAbbreviation: string) => {
     {
       prefix: 'jwtUserDetails_bigint_',
       prefixReplacement: "jwt_get_bigint('",
+      postfix: "')",
+    },
+    {
+      prefix: 'jwtUserDetails_text_',
+      prefixReplacement: "jwt_get_text('",
       postfix: "')",
     },
     {

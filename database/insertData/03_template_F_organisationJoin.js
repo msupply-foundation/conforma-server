@@ -153,6 +153,21 @@ exports.queries = [
                 }
               }
               {
+                actionCode: "modifyRecord"
+                trigger: ON_APPLICATION_SUBMIT
+                parameterQueries: {
+                  tableName: "application"
+                  id: {
+                    operator: "objectProperties"
+                    children: ["applicationData.applicationId"]
+                  }
+                  org_id: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.S1Q1.selection.id"]
+                  }
+                }
+              }
+              {
                 actionCode: "changeOutcome"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 100
@@ -278,15 +293,6 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "reviewJoinOrg" }
-                }
-                stageNumber: 1
-                levelNumber: 1
-                restrictions: { canSelfAssign: true }
-              }
-              # reviewGeneral
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewGeneral" }
                 }
                 stageNumber: 1
                 levelNumber: 1
