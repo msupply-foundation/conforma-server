@@ -12,6 +12,6 @@ CREATE TABLE public.filter (
 CREATE TABLE public.template_filter_join (
     id serial PRIMARY KEY,
     template_id integer REFERENCES public.template (id),
-    template_filter_id integer REFERENCES public.filter (id)
+    filter_id integer REFERENCES public.filter (id)
 );
 
