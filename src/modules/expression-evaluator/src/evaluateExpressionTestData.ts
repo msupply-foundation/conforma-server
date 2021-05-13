@@ -211,91 +211,6 @@ testData.operatorOR_4values_false = {
   ],
 }
 
-// CONCAT
-
-testData.CONCAT_2_Arrays = {
-  type: 'array',
-  operator: '+',
-  children: [
-    {
-      type: 'array',
-      value: [1, 2, 3],
-    },
-    {
-      value: ['Four', 'Five', 'Six'],
-    },
-  ],
-}
-
-testData.CONCAT_4_Arrays = {
-  type: 'array',
-  operator: '+',
-  children: [
-    {
-      type: 'array',
-      value: [1, 2, 3],
-    },
-    {
-      value: ['Four', 'Five', 'Six'],
-    },
-    {
-      value: [7, 8, 'Nine'],
-    },
-    {
-      value: [['Four', 'Five', 'Six'], 'The', 'End'],
-    },
-  ],
-}
-
-testData.CONCAT_3_Strings = {
-  type: 'string',
-  operator: '+',
-  children: [
-    {
-      type: 'string',
-      value: 'Carl',
-    },
-    {
-      type: 'string',
-      value: ' ',
-    },
-    {
-      value: 'Smith',
-    },
-  ],
-}
-
-testData.CONCAT_4_Unspecified = {
-  operator: '+',
-  children: [
-    {
-      value: 'Carl',
-    },
-    {
-      type: 'string',
-      value: ' ',
-    },
-    {
-      value: 'Smith',
-    },
-    {
-      value: '--XXX',
-    },
-  ],
-}
-
-testData.CONCAT_strings_output_as_array = {
-  operator: '+',
-  type: 'array',
-  children: [
-    {
-      value: 'One',
-    },
-    'Two',
-    'Three',
-  ],
-}
-
 // Equal
 
 testData.EQUAL_Numbers = {
@@ -452,6 +367,108 @@ testData.PLUS_4Nums = {
     {
       value: 6,
     },
+  ],
+}
+
+// CONCAT
+
+testData.CONCAT_2_Arrays = {
+  type: 'array',
+  operator: '+',
+  children: [
+    {
+      type: 'array',
+      value: [1, 2, 3],
+    },
+    {
+      value: ['Four', 'Five', 'Six'],
+    },
+  ],
+}
+
+testData.CONCAT_4_Arrays = {
+  type: 'array',
+  operator: '+',
+  children: [
+    {
+      type: 'array',
+      value: [1, 2, 3],
+    },
+    {
+      value: ['Four', 'Five', 'Six'],
+    },
+    {
+      value: [7, 8, 'Nine'],
+    },
+    {
+      value: [['Four', 'Five', 'Six'], 'The', 'End'],
+    },
+  ],
+}
+
+testData.CONCAT_3_Strings = {
+  type: 'string',
+  operator: '+',
+  children: [
+    {
+      type: 'string',
+      value: 'Carl',
+    },
+    {
+      type: 'string',
+      value: ' ',
+    },
+    {
+      value: 'Smith',
+    },
+  ],
+}
+
+testData.CONCAT_4_Unspecified = {
+  operator: '+',
+  children: [
+    {
+      value: 'Carl',
+    },
+    {
+      type: 'string',
+      value: ' ',
+    },
+    {
+      value: 'Smith',
+    },
+    {
+      value: '--XXX',
+    },
+  ],
+}
+
+testData.CONCAT_strings_output_as_array = {
+  operator: '+',
+  type: 'array',
+  children: [
+    {
+      value: 'One',
+    },
+    'Two',
+    'Three',
+  ],
+}
+
+testData.MERGE_2Objects = {
+  operator: '+',
+  children: [
+    { one: 1, two: '2', three: false },
+    { four: [1, 2, 3], five: true },
+  ],
+}
+
+testData.MERGE_3Objects = {
+  operator: '+',
+  children: [
+    { one: 1, two: '2', three: undefined },
+    { four: [1, 2, 3], five: true },
+    { 1: null, 2: 'TRUE' },
   ],
 }
 

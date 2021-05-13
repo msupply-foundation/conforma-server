@@ -51,6 +51,7 @@ export default async function evaluateExpression(
     case '!=':
       return childrenResolved[0] != childrenResolved[1]
 
+    case 'CONCAT':
     case '+':
       if (childrenResolved.length === 0) return childrenResolved
 
