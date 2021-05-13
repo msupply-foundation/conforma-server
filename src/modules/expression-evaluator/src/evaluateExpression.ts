@@ -54,27 +54,23 @@ export default async function evaluateExpression(
     case '+':
       if (childrenResolved.length === 0) return childrenResolved
 
+      // Reduce based on "type" if specified
+      if (inputQuery?.type === 'string')
+        return childrenResolved.reduce((acc, child) => acc.concat(child), '')
+      if (inputQuery?.type === 'array')
+        return childrenResolved.reduce((acc, child) => acc.concat(child), [])
+
       // Concatenate arrays/strings
-      if (childrenResolved.every((child) => typeof child === 'string' || Array.isArray(child))) {
-        if (!inputQuery.type) return childrenResolved.reduce((acc, child) => acc.concat(child))
-        else {
-          const initialAcc = inputQuery.type === 'array' ? [] : ''
-          const concatResult = childrenResolved.reduce(
-            (acc, child) => acc.concat(child),
-            initialAcc
-          )
-          return inputQuery.type === 'string' ? concatResult.toString() : concatResult
-        }
-      }
+      if (childrenResolved.every((child) => typeof child === 'string' || Array.isArray(child)))
+        return childrenResolved.reduce((acc, child) => acc.concat(child))
 
       // Merge objects
-      else if (
-        childrenResolved.every((child) => child instanceof Object && !Array.isArray(child))
-      ) {
+      if (childrenResolved.every((child) => child instanceof Object && !Array.isArray(child))) {
         return childrenResolved.reduce((acc, child) => ({ ...acc, ...child }), {})
       }
+
       // Or just try to add any other types
-      else return childrenResolved.reduce((acc: number, child: number) => acc + child)
+      return childrenResolved.reduce((acc: number, child: number) => acc + child)
 
     case '?':
       return childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
