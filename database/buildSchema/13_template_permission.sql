@@ -3,8 +3,9 @@ CREATE TABLE public.template_permission (
     id serial PRIMARY KEY,
     permission_name_id integer REFERENCES public.permission_name (id),
     template_id integer REFERENCES public.template (id),
+    allowed_sections varchar[] DEFAULT NULL,
+    can_self_assign boolean NOT NULL DEFAULT false,
     stage_number integer,
-    --     template_section_id integer references public.template_section(id),
     level_number integer,
     restrictions jsonb
 );
@@ -20,7 +21,9 @@ CREATE VIEW permissions_all AS (
         template_permission.id AS "templatePermissionId",
         template_permission.stage_number AS "stageNumber",
         template_permission.level_number AS "reviewLevel",
-        template_permission.restrictions AS "templatePermissionRestrictions",
+        template_permission.restrictions AS "restrictions",
+        template_permission.allowed_sections AS "allowedSections",
+        template_permission.can_self_assign AS "canSelfAssign",
         "template".id AS "templateId",
         "template".code AS "templateCode",
         "user".id AS "userId",

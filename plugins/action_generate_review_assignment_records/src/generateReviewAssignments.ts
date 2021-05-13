@@ -48,10 +48,8 @@ async function generateReviewAssignments({
     }
     // For level 1+ or next stages review assignment
     else {
-      const {
-        stageNumber: previousStage,
-        levelNumber: previousLevel,
-      } = await DBConnect.getReviewStageAndLevel(reviewId)
+      const { stageNumber: previousStage, levelNumber: previousLevel } =
+        await DBConnect.getReviewStageAndLevel(reviewId)
       console.log('Review existing', previousStage, previousLevel)
       // Review in new stage - first level
       if (previousStage !== stageNumber) {
@@ -133,23 +131,20 @@ const generateNextReviewAssignments = async ({
   // Build reviewers into object map so we can combine duplicate user_orgs
   // and merge their section code restrictions
   nextLevelReviewers.forEach((reviewer: Reviewer) => {
-    const { userId, orgId, restrictions } = reviewer
-
-    const templateSectionRestrictions = restrictions
-      ? restrictions?.templateSectionRestrictions
-      : null
+    const { userId, orgId, allowedSections, canSelfAssign } = reviewer
 
     const status =
-      restrictions?.canSelfAssign || nextReviewLevel > 1
+      canSelfAssign || nextReviewLevel > 1
         ? ReviewAssignmentStatus.AvailableForSelfAssignment
         : ReviewAssignmentStatus.Available
 
     const userOrgKey = `${userId}_${orgId ? orgId : 0}`
     if (reviewAssignments[userOrgKey])
-      reviewAssignments[userOrgKey].templateSectionRestrictions = mergeSectionRestrictions(
-        reviewAssignments[userOrgKey].templateSectionRestrictions,
-        templateSectionRestrictions
-      )
+      reviewAssignments[userOrgKey].allowedSections =
+        mergeAllowedSections(
+          reviewAssignments[userOrgKey].allowedSections,
+          allowedSections || null
+        ) || null
     else
       reviewAssignments[userOrgKey] = {
         reviewerId: userId,
@@ -159,7 +154,7 @@ const generateNextReviewAssignments = async ({
         // TO-DO: allow STATUS to be configurable in template
         status,
         applicationId,
-        templateSectionRestrictions,
+        allowedSections: allowedSections || null,
         levelNumber: nextReviewLevel,
         isLastLevel,
       }
@@ -208,13 +203,9 @@ const generateNextReviewAssignments = async ({
 
 // Helper function -- concatenates two arrays, but handles case
 // when either or both are null/undefined
-const mergeSectionRestrictions = (
-  prevArray: string[] | null | undefined,
-  newArray: string[] | null | undefined
-) => {
-  if (!prevArray) return newArray
-  else if (!newArray) return prevArray
-  else return Array.from(new Set([...prevArray, ...newArray]))
+const mergeAllowedSections = (prevArray?: string[] | null, newArray?: string[] | null) => {
+  if (!prevArray || prevArray === null) return newArray
+  else if (!newArray || newArray === null) return prevArray
 }
 
 export default generateReviewAssignments

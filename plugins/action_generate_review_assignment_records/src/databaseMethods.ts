@@ -9,8 +9,7 @@ const databaseMethods = (DBConnect: any) => ({
   ) => {
     const text = `
     SELECT
-      "userId", "orgId",
-      "templatePermissionRestrictions" AS restrictions
+      "userId", "orgId", "restrictions", "allowedSections", "canSelfAssign"
       FROM permissions_all
       WHERE "templateId" = $1
       AND "stageNumber" = $2
@@ -38,7 +37,7 @@ const databaseMethods = (DBConnect: any) => ({
         stageNumber,
         status,
         applicationId,
-        templateSectionRestrictions,
+        allowedSections,
         levelNumber,
         isLastLevel,
       } = reviewAssignment
@@ -48,10 +47,9 @@ const databaseMethods = (DBConnect: any) => ({
       // but assignment status remains unchanged.
       const text = `
         INSERT INTO review_assignment (
-          reviewer_id, stage_id,
-          stage_number, status, application_id,
-          template_section_restrictions, level_number, is_last_level,
-          organisation_id
+          reviewer_id, stage_id, stage_number,
+          status, organisation_id, application_id,
+          allowed_sections, level_number, is_last_level
           )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         ON CONFLICT (reviewer_id,${
@@ -59,7 +57,7 @@ const databaseMethods = (DBConnect: any) => ({
         } stage_number, application_id, level_number)
           WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
         DO
-          UPDATE SET template_section_restrictions = $6
+          UPDATE SET allowed_sections = $7
         RETURNING id`
 
       try {
@@ -70,11 +68,11 @@ const databaseMethods = (DBConnect: any) => ({
             stageId,
             stageNumber,
             status,
+            orgId,
             applicationId,
-            templateSectionRestrictions,
+            allowedSections,
             levelNumber,
             isLastLevel,
-            orgId,
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
