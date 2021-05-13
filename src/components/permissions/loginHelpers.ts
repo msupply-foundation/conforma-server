@@ -27,10 +27,11 @@ type UserOrgParameters = {
   username?: string
   userId?: number
   orgId?: number
+  sessionId?: string
 }
 
 const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
-  const { username, userId, orgId } = userOrgParameters
+  const { username, userId, orgId, sessionId } = userOrgParameters
 
   const userOrgData: UserOrg[] = await databaseConnect.getUserOrgData({
     userId,
@@ -57,7 +58,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const selectedOrg = orgId ? orgList.filter((org) => org.orgId === orgId) : undefined
 
-  const sessionId = nanoid(16)
+  const newSessionId = sessionId ?? nanoid(16)
 
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
@@ -65,7 +66,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       userId: userId || newUserId,
       orgId,
       templatePermissionRows,
-      sessionId
+      sessionId: newSessionId
     }),
     user: {
       userId: userId || newUserId,
@@ -75,7 +76,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       email,
       dateOfBirth,
       organisation: selectedOrg?.[0],
-      sessionId
+      sessionId: newSessionId
     },
     orgList,
   }
