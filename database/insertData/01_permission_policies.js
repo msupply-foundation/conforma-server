@@ -75,6 +75,41 @@ exports.queries = [
       }
     }
   }`,
+  // reviewOrgRestricted
+  `mutation createPolicy {
+    createPermissionPolicy(
+      input: {
+        permissionPolicy: {
+          name: "reviewOrgRestricted"
+          rules: {
+            application: {
+              view: {
+                template_id: "jwtPermission_bigint_templateId"
+                org_id: "jwtUserDetails_bigint_orgId"
+              }
+            }
+            review: {
+              view: {
+                template_id: "jwtPermission_bigint_templateId"
+                org_id: "jwtUserDetails_bigint_orgId"
+              }
+            }
+            review_assignment: {
+              view: {
+                template_id: "jwtPermission_bigint_templateId"
+                org_id: "jwtUserDetails_bigint_orgId"
+              }
+            }
+          }
+          type: REVIEW
+        }
+      }
+    ) {
+      permissionPolicy {
+        name
+      }
+    }
+  }`,
   // basicReview
   `mutation createPolicy {
     createPermissionPolicy(
