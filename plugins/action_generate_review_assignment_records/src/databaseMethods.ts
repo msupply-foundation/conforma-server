@@ -48,8 +48,8 @@ const databaseMethods = (DBConnect: any) => ({
       const text = `
         INSERT INTO review_assignment (
           reviewer_id, stage_id, stage_number,
-          status, organisation_id, application_id,
-          allowed_sections, level_number, is_last_level
+          status, application_id, allowed_sections,
+          level_number, is_last_level, organisation_id
           )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
         ON CONFLICT (reviewer_id,${
@@ -57,7 +57,7 @@ const databaseMethods = (DBConnect: any) => ({
         } stage_number, application_id, level_number)
           WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
         DO
-          UPDATE SET allowed_sections = $7
+          UPDATE SET allowed_sections = $6
         RETURNING id`
 
       try {
@@ -68,11 +68,11 @@ const databaseMethods = (DBConnect: any) => ({
             stageId,
             stageNumber,
             status,
-            orgId,
             applicationId,
             allowedSections,
             levelNumber,
             isLastLevel,
+            orgId,
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
