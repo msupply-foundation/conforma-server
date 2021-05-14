@@ -563,9 +563,8 @@ From within the expression-evaluator module's folder:
   `yarn test`
 - Build the package:  
   `yarn build` (outputs to `/lib` folder)
-- Bump the version:  
-  `yarn version patch | minor | major --new-version [version]` (updates `package.json` following [semantic versioning](https://www.geeksforgeeks.org/introduction-semantic-versioning/))
 - Publish to Github packages:  
+  (will prompt you for a new version number -- please follow [semantic versioning](https://www.geeksforgeeks.org/introduction-semantic-versioning/))  
   `yarn publish`
 
 Then you can bump the minimum version of the package in the dependent projects (front- and back-end in this case, or upgrade as above.)
