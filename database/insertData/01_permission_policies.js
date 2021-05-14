@@ -108,15 +108,25 @@ exports.queries = [
       }
     }
   }`,
-  // basicReview
+  // reviewBasic
   `mutation createPolicy {
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          name: "basicReview"
+          name: "reviewBasic"
           rules: {
             application: {
               view: { template_id: "jwtPermission_bigint_templateId" }
+            }
+            review: {
+              view: {
+                reviewer_id: "jwtUserDetails_bigint_userId"
+              }
+            }
+            review_assignment: {
+              view: {
+                reviewer_id: "jwtUserDetails_bigint_userId"
+              }
             }
           }
           type: REVIEW
@@ -128,15 +138,25 @@ exports.queries = [
       }
     }
   }`,
-  // basicAssign
+  // assignBasic
   `mutation createPolicy {
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          name: "basicAssign"
+          name: "assignBasic"
           rules: {
             application: {
               view: { template_id: "jwtPermission_bigint_templateId" }
+            }
+            review: {
+              view: {
+                reviewer_id: "jwtUserDetails_bigint_userId"
+              }
+            }
+            review_assignment: {
+              view: {
+                reviewer_id: "jwtUserDetails_bigint_userId"
+              }
             }
           }
           type: ASSIGN
