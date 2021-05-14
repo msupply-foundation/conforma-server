@@ -5,11 +5,12 @@ import {
   ActionPayload,
   ActionSequential,
   ActionQueueExecutePayload,
+  EvaluatorNode,
 } from '../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import DBConnect from './databaseConnect'
 import { actionLibrary } from './pluginsConnect'
-import { BasicObject, IParameters, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject, IParameters } from '@openmsupply/expression-evaluator/lib/types'
 import { getApplicationData } from './getApplicationData'
 import { getAppEntryPointDir } from './utilityFunctions'
 import path from 'path'
@@ -58,7 +59,7 @@ export const loadScheduledActions = async function (
             {
               id: scheduledAction.id,
               code: scheduledAction.action_code,
-              condition_expression: scheduledAction.condition_expression as IQueryNode,
+              condition_expression: scheduledAction.condition_expression as EvaluatorNode,
               parameter_queries: scheduledAction.parameter_queries,
             },
             actionLibrary
@@ -77,7 +78,7 @@ export const loadScheduledActions = async function (
           {
             id: scheduledAction.id,
             code: scheduledAction.action_code,
-            condition_expression: scheduledAction.condition_expression as IQueryNode,
+            condition_expression: scheduledAction.condition_expression as EvaluatorNode,
             parameter_queries: scheduledAction.parameter_queries,
           },
           actionLibrary
@@ -150,7 +151,7 @@ export async function processTrigger(payload: TriggerPayload) {
       const actionPayload = {
         id: action.id,
         code: action.action_code,
-        condition_expression: action.condition_expression as IQueryNode,
+        condition_expression: action.condition_expression as EvaluatorNode,
         parameter_queries: action.parameter_queries,
         trigger_payload: action.trigger_payload,
       }
@@ -205,7 +206,7 @@ export async function executeAction(
 
   // Evaluate condition
   const condition = await evaluateExpression(
-    payload.condition_expression as IQueryNode,
+    payload.condition_expression as EvaluatorNode,
     evaluatorParams
   )
   if (condition) {
