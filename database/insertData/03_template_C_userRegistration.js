@@ -3,7 +3,7 @@ TEMPLATE C -- User Registration
   - the form filled in by an unregistered user to create an 
     account in the system
 */
-// const { coreActions } = require('./core_actions')
+// const { coreActions, joinFilters } = require('./core_mutations')
 const { devActions } = require('./dev_actions')
 
 exports.queries = [

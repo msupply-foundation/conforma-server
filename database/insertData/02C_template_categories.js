@@ -8,7 +8,6 @@ exports.queries = [
       templateCategory: {
         code: "dev"
         icon: "code"
-        templatesUsingId: { connectByCode: [{ code: "Demo" }, { code: "ReviewTest" }, ] }
         title: "Dev"
       }
     }
@@ -23,7 +22,6 @@ exports.queries = [
       templateCategory: {
         code: "org"
         icon: "building"
-        templatesUsingId: { connectByCode: [{ code: "OrgRegistration" }, { code: "OrgJoin" }, ] }
         title: "Organisation"
       }
     }
@@ -38,7 +36,6 @@ exports.queries = [
       templateCategory: {
         code: "drugRego"
         icon: "pills"
-        templatesUsingId: { connectByCode: [{ code: "DrugRegoGen" } ] }
         title: "Drug Registration"
       }
     }
@@ -52,7 +49,6 @@ exports.queries = [
       templateCategory: {
         code: "user"
         icon: "user"
-        templatesUsingId: { connectByCode: [{ code: "UserEdit" } ] }
         title: "Drug Registration"
       }
     }
