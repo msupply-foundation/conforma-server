@@ -9,7 +9,7 @@ import { action as generateReviewAssignments } from './index'
 
 // Simulate application submission:
 
-test('Test: Submit Application ID#4001 - Stage 1', () => {
+test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
   //stageNumber: 1, stageId: 4, levels: 1
   return generateReviewAssignments({
     parameters: { applicationId: 4001 },
@@ -174,7 +174,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
 
 // Simulate review submission:
 
-test('Test: Submit Review (Stage 1) for Application ID#4000 => Stage 2 Lvl 1', () => {
+test('Test: Submit Review ID#1000 for Application ID#4000 - Stage 2 Lvl 1', () => {
   return generateReviewAssignments({
     parameters: { templateId: 4, applicationId: 4000, reviewId: 1000 }, // stageNumber: 2, stageId: 5, levels: 2
     DBConnect,
@@ -238,7 +238,7 @@ test('Test: Submit Review (Stage 1) for Application ID#4000 => Stage 2 Lvl 1', (
   })
 })
 
-test('Test: Submit Review (Lvl 1 in Stage 2) for Application ID#4002 => Stage 2 Lvl2', () => {
+test('Test: Submit Review ID#4000 for Application ID#4002 - Stage 2 Lvl2 (Last level)', () => {
   return generateReviewAssignments({
     parameters: { templateId: 4, applicationId: 4002, reviewId: 4000 }, // stageNumber: 2, stageId: 5, levels: 2
     DBConnect,
