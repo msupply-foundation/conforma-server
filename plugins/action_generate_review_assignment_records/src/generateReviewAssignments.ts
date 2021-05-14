@@ -145,10 +145,7 @@ const generateNextReviewAssignments = async ({
     const userOrgKey = `${userId}_${orgId ? orgId : 0}`
     if (reviewAssignments[userOrgKey])
       reviewAssignments[userOrgKey].allowedSections =
-        mergeAllowedSections(
-          reviewAssignments[userOrgKey].allowedSections,
-          allowedSections || null
-        ) || null
+        mergeAllowedSections(reviewAssignments[userOrgKey].allowedSections, allowedSections) || null
     else
       reviewAssignments[userOrgKey] = {
         reviewerId: userId,
