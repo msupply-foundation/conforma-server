@@ -1,149 +1,148 @@
-import { IConnection, IQueryNode, IParameters, IGraphQLConnection, BasicObject } from './types'
+import {
+  IConnection,
+  IParameters,
+  IGraphQLConnection,
+  OperatorNode,
+  ValueNode,
+  OutputType,
+  BasicObject,
+} from './types'
 
 const defaultParameters: IParameters = {}
 
 export default async function evaluateExpression(
-  inputQuery: IQueryNode | string | number | boolean | any[],
+  inputQuery: OperatorNode | ValueNode,
   params: IParameters = defaultParameters
-): Promise<string | number | boolean | BasicObject | any[]> {
-  // If input is not object, try and parse it as a JSON string. If that fails, return the input without any processing.
-  let query
-  if (
-    !(inputQuery instanceof Object) ||
-    Array.isArray(inputQuery) ||
-    inputQuery === null ||
-    inputQuery === undefined
-  ) {
-    if (typeof inputQuery === 'string') {
-      try {
-        query = JSON.parse(inputQuery)
-      } catch {
-        return inputQuery
-      }
-    } else return inputQuery
-  } else query = inputQuery
-
-  // Base case
-  if (!query.children) {
-    return query.value !== undefined ? query.value : query
-  }
+): Promise<ValueNode> {
+  // Base cases -- leaves get returned unmodified
+  if (!(inputQuery instanceof Object)) return inputQuery
+  if ('value' in inputQuery) return inputQuery.value // Deprecate this soon
+  if (!('children' in inputQuery) || !('operator' in inputQuery)) return inputQuery
 
   // Recursive case
-  else {
-    const childrenResolved: any[] = await Promise.all(
-      query.children.map((child: IQueryNode) => evaluateExpression(child, params))
-    )
+  const childrenResolved: any[] = await Promise.all(
+    inputQuery.children.map((child: any) => evaluateExpression(child, params))
+  )
 
-    switch (query.operator) {
-      case 'AND':
-        return childrenResolved.reduce((acc: boolean, child: boolean) => {
-          return acc && child
-        }, true)
+  switch (inputQuery.operator) {
+    case 'AND':
+      return childrenResolved.reduce((acc: boolean, child: boolean) => {
+        return acc && child
+      }, true)
 
-      case 'OR':
-        return childrenResolved.reduce((acc: boolean, child: boolean) => {
-          return acc || child
-        }, false)
+    case 'OR':
+      return childrenResolved.reduce((acc: boolean, child: boolean) => {
+        return acc || child
+      }, false)
 
-      case 'CONCAT':
-        if (query.type === 'array') {
-          return childrenResolved.reduce((acc: any, child: any) => {
-            return acc.concat(child) // .flat(1) doesn't work for some reason
-          }, [])
-        } else if (query.type === 'string' || !query.type) {
-          return childrenResolved.join('')
-        }
-        break
+    case 'CONCAT':
+      if (inputQuery?.type === 'array') {
+        return childrenResolved.reduce((acc: any, child: any) => {
+          return acc.concat(child) // .flat(1) doesn't work for some reason
+        }, [])
+      } else if (inputQuery?.type === 'string' || !inputQuery.type) {
+        return childrenResolved.join('')
+      }
+      break
 
-      case 'REGEX':
-        try {
-          const str: string = childrenResolved[0]
-          const re: RegExp = new RegExp(childrenResolved[1])
-          return re.test(str)
-        } catch {
-          throw new Error('Problem with REGEX')
-        }
+    case 'REGEX':
+      try {
+        const str: string = childrenResolved[0]
+        const re: RegExp = new RegExp(childrenResolved[1])
+        return re.test(str)
+      } catch {
+        throw new Error('Problem with REGEX')
+      }
 
-      case '=':
-        // eslint-disable-next-line
-        return childrenResolved.every((child) => child == childrenResolved[0])
+    case '=':
+      return childrenResolved.every((child) => child == childrenResolved[0])
 
-      case '!=':
-        // eslint-disable-next-line
-        return childrenResolved[0] != childrenResolved[1]
+    case '!=':
+      return childrenResolved[0] != childrenResolved[1]
 
-      case '+':
-        return childrenResolved.reduce((acc: number, child: number) => {
-          return acc + child
-        }, 0)
+    case '+':
+      return childrenResolved.reduce((acc: number, child: number) => {
+        return acc + child
+      }, 0)
 
-      case '?':
-        return childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
+    case '?':
+      return childrenResolved[0] ? childrenResolved[1] : childrenResolved[2]
 
-      case 'objectProperties':
-        if (Object.entries(params).length === 0)
-          return 'No parameters received for objectProperties node'
-        try {
-          const inputObject = params?.objects ? params.objects : {}
-          const property = childrenResolved[0]
-          const fallback = childrenResolved?.[1]
-          return extractProperty(inputObject, property, fallback)
-        } catch {
-          throw new Error('Problem evaluating object')
-        }
+    case 'objectProperties':
+      if (Object.entries(params).length === 0)
+        return 'No parameters received for objectProperties node'
+      try {
+        const inputObject = params?.objects ? params.objects : {}
+        const property = childrenResolved[0]
+        const fallback = childrenResolved?.[1]
+        return extractProperty(inputObject, property, fallback)
+      } catch {
+        throw new Error('Problem evaluating object')
+      }
 
-      case 'stringSubstitution':
-        const origString: string = childrenResolved[0]
-        const replacements = childrenResolved.slice(1)
-        const regex = /%([\d]+)/g // To-Do: handle escaping literal values
-        const parameters = (origString.match(regex) || []).sort(
-          (a, b) => Number(a.slice(1)) - Number(b.slice(1))
-        )
-        let i = 0
-        return parameters.reduce((outputString, param) => {
-          return outputString.replace(param, replacements[i] !== undefined ? replacements[i++] : '')
-        }, origString)
+    case 'stringSubstitution':
+      const origString: string = childrenResolved[0]
+      const replacements = childrenResolved.slice(1)
+      const regex = /%([\d]+)/g // To-Do: handle escaping literal values
+      const parameters = (origString.match(regex) || []).sort(
+        (a, b) => Number(a.slice(1)) - Number(b.slice(1))
+      )
+      let i = 0
+      return parameters.reduce((outputString, param) => {
+        return outputString.replace(param, replacements[i] !== undefined ? replacements[i++] : '')
+      }, origString)
 
-      case 'API':
-        let urlWithQuery, returnedProperty
-        try {
-          const { url, fieldNames, values, returnProperty } = assignChildNodesToQuery([
-            '', // Extra unused field for API (query)
-            ...childrenResolved,
-          ])
-          returnedProperty = returnProperty
-          urlWithQuery =
-            fieldNames.length > 0
-              ? `${url}?${fieldNames
-                  .map((field: string, index: number) => field + '=' + values[index])
-                  .join('&')}`
-              : url
-        } catch {
-          throw new Error('Invalid API query')
-        }
-        let data
-        try {
-          data = await fetchAPIdata(urlWithQuery, params.APIfetch)
-        } catch {
-          throw new Error('Problem with API call')
-        }
-        try {
-          return extractAndSimplify(data, returnedProperty, "API - Can't resolve property")
-        } catch {
-          throw new Error('Problem parsing requested node from API result')
-        }
+    case 'POST':
+    case 'GET':
+    case 'API':
+      const isPostRequest = inputQuery.operator === 'POST'
+      let urlWithQuery, returnedProperty, requestBody
+      try {
+        const { url, fieldNames, values, returnProperty } = assignChildNodesToQuery([
+          '', // Extra unused field for GET/POST (query)
+          ...childrenResolved,
+        ])
+        returnedProperty = returnProperty
+        urlWithQuery =
+          fieldNames.length > 0
+            ? `${url}?${fieldNames
+                .map((field: string, index: number) => field + '=' + values[index])
+                .join('&')}`
+            : url
+        requestBody = isPostRequest ? zipArraysToObject(fieldNames, values) : null
+      } catch {
+        throw new Error('Invalid API query')
+      }
+      let data
+      try {
+        data = isPostRequest
+          ? await fetchAPIrequest({
+              url: urlWithQuery,
+              APIfetch: params.APIfetch,
+              method: 'POST',
+              body: requestBody,
+            })
+          : await fetchAPIrequest({ url: urlWithQuery, APIfetch: params.APIfetch })
+      } catch {
+        throw new Error('Problem with API call')
+      }
+      try {
+        return extractAndSimplify(data, returnedProperty, "API - Can't resolve property")
+      } catch {
+        throw new Error('Problem parsing requested node from API result')
+      }
 
-      case 'pgSQL':
-        if (!params.pgConnection) throw new Error('No Postgres database connection provided')
-        return processPgSQL(childrenResolved, query.type, params.pgConnection)
+    case 'pgSQL':
+      if (!params.pgConnection) throw new Error('No Postgres database connection provided')
+      return processPgSQL(childrenResolved, inputQuery?.type as OutputType, params.pgConnection)
 
-      case 'graphQL':
-        if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
-        return processGraphQL(childrenResolved, params.graphQLConnection)
+    case 'graphQL':
+      if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
+      return processGraphQL(childrenResolved, params.graphQLConnection)
 
-      // etc. for as many other operators as we want/need.
-    }
+    // etc. for as many other operators as we want/need.
   }
+
   return 'No matching operators'
 }
 
@@ -290,9 +289,21 @@ const graphQLquery = async (
   return data.data
 }
 
-// GET request using fetch (node or browser variety)
-const fetchAPIdata = async (url: string, APIfetch: any) => {
-  const result = await APIfetch(url)
-  const data = await result.json()
-  return data
+interface APIrequestProps {
+  url: string
+  APIfetch: any
+  method?: 'GET' | 'POST'
+  body?: { [key: string]: string } | null
+}
+
+// GET/POST request using fetch (node or browser variety)
+const fetchAPIrequest = async ({ url, APIfetch, method = 'GET', body }: APIrequestProps) => {
+  const result = await APIfetch(url, {
+    method,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  })
+  return await result.json()
 }

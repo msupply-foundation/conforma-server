@@ -2,6 +2,7 @@ import databaseConnect from '../databaseConnect'
 import config from '../../config.json'
 import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
+import { nanoid } from 'nanoid'
 import { PermissionRow, TemplatePermissions } from './types'
 import { compileJWT } from './rowLevelPolicyHelpers'
 import { Organisation, UserOrg } from '../../types'
@@ -26,10 +27,11 @@ type UserOrgParameters = {
   username?: string
   userId?: number
   orgId?: number
+  sessionId?: string
 }
 
 const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
-  const { username, userId, orgId } = userOrgParameters
+  const { username, userId, orgId, sessionId } = userOrgParameters
 
   const userOrgData: UserOrg[] = await databaseConnect.getUserOrgData({
     userId,
@@ -59,12 +61,15 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const selectedOrg = orgId ? orgList.filter((org) => org.orgId === orgId) : undefined
 
+  const returnSessionId = sessionId ?? nanoid(16)
+
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getSignedJWT({
       userId: userId || newUserId,
       orgId,
       templatePermissionRows,
+      sessionId: returnSessionId
     }),
     user: {
       userId: userId || newUserId,
@@ -74,6 +79,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       email,
       dateOfBirth,
       organisation: selectedOrg?.[0],
+      sessionId: returnSessionId
     },
     orgList,
   }

@@ -23,12 +23,6 @@ test('Testing basic string literal', () => {
   })
 })
 
-test('Testing basic string literal (Stringified)', () => {
-  return evaluateExpression(testData.stringifiedBasicStringLiteral).then((result: any) => {
-    expect(result).toBe('First Name')
-  })
-})
-
 test('Testing basic string literal - no type', () => {
   return evaluateExpression(testData.basicStringLiteralNoType).then((result: any) => {
     expect(result).toBe('First Name')
@@ -41,20 +35,8 @@ test('Testing basic boolean', () => {
   })
 })
 
-test('Testing basic boolean (Stringified)', () => {
-  return evaluateExpression(testData.stringifiedBasicBoolean).then((result: any) => {
-    expect(result).toBe(true)
-  })
-})
-
 test('Testing basic Array', () => {
   return evaluateExpression(testData.basicArray).then((result: any) => {
-    expect(result).toEqual(['Pharmaceutical', 'Natural Product', 'Other'])
-  })
-})
-
-test('Testing basic Array (Stringified)', () => {
-  return evaluateExpression(testData.stringifiedBasicArray).then((result: any) => {
     expect(result).toEqual(['Pharmaceutical', 'Natural Product', 'Other'])
   })
 })
@@ -392,8 +374,8 @@ test('String substitution - some parameters empty strings', () => {
   )
 })
 
-// API operator
-test('API: Check username is unique', () => {
+// GET operator
+test('GET: Check username is unique', () => {
   return evaluateExpression(testData.APIisUnique, {
     APIfetch: fetch,
   }).then((result: any) => {
@@ -401,7 +383,7 @@ test('API: Check username is unique', () => {
   })
 })
 
-test('API: Lookup ToDo in online testing API', () => {
+test('GET: Lookup ToDo in online testing API', () => {
   return evaluateExpression(testData.onlineTestAPI, {
     APIfetch: fetch,
   }).then((result: any) => {
@@ -409,7 +391,7 @@ test('API: Lookup ToDo in online testing API', () => {
   })
 })
 
-test('API: Return an array from online API', () => {
+test('GET: Return an array from online API', () => {
   return evaluateExpression(testData.onlineArrayReturn, {
     APIfetch: fetch,
   }).then((result: any) => {
@@ -417,11 +399,20 @@ test('API: Return an array from online API', () => {
   })
 })
 
-test('API: Return an array of titles plucked from inside array of objects', () => {
+test('GET: Return an array of titles plucked from inside array of objects', () => {
   return evaluateExpression(testData.onlineArrayNodes, {
     APIfetch: fetch,
   }).then((result: any) => {
     expect(result).toEqual(testData.onlineArrayNodesResult)
+  })
+})
+
+// POST operator
+test('POST: Check user login credentials', () => {
+  return evaluateExpression(testData.APIlogin, {
+    APIfetch: fetch,
+  }).then((result: any) => {
+    expect(result).toEqual(true)
   })
 })
 
@@ -445,6 +436,7 @@ test('Test Postgres get array of template names', () => {
         'Test -- Review Process',
         'Drug Registration - General Medicines Procedure',
         'Join Organisation',
+        'Edit User Details',
       ])
     }
   )
@@ -453,7 +445,7 @@ test('Test Postgres get array of template names', () => {
 test('Test Postgres get Count of templates', () => {
   return evaluateExpression(testData.countTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual(6)
+      expect(result).toEqual(7)
     }
   )
 })
@@ -468,6 +460,7 @@ test('Test Postgres get template names -- no type', () => {
         { name: 'Test -- Review Process' },
         { name: 'Drug Registration - General Medicines Procedure' },
         { name: 'Join Organisation' },
+        { name: 'Edit User Details' },
       ])
     }
   )
@@ -559,6 +552,7 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
           { node: { name: 'Test -- Review Process' } },
           { node: { name: 'Drug Registration - General Medicines Procedure' } },
           { node: { name: 'Join Organisation' } },
+          { node: { name: 'Edit User Details' } },
         ],
       },
     })
@@ -572,7 +566,7 @@ test('Test GraphQL -- Count templates -- passing params as object option', () =>
       endpoint: graphQLendpoint,
     },
   }).then((result: any) => {
-    expect(result).toEqual(6)
+    expect(result).toEqual(7)
   })
 })
 
@@ -679,14 +673,6 @@ test('Test visibility condition -- Answer to Q1 is Drug Registration and user be
 
 // test('Test Trigger condition -- Stage = 1 (Screening) and All Questions are approved', () => {
 //   return evaluateExpression(testData.complex2, {
-//     application: testData.application,
-//   }).then((result: any) => {
-//     expect(result).toBe(true);
-//   });
-// });
-
-// test('Test Trigger condition -- Stage = 1 (Screening) and All Questions are approved -- input as Stringified JSON', () => {
-//   return evaluateExpression(testData.complex2_asString, {
 //     application: testData.application,
 //   }).then((result: any) => {
 //     expect(result).toBe(true);

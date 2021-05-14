@@ -25,26 +25,30 @@ export interface IParameters {
   APIfetch?: Function
 }
 
-export interface IQueryNode {
-  value?: string | number | boolean | object
-  type?: NodeType
-  operator?: Operator
-  children?: Array<IQueryNode | string | boolean | number | null | undefined>
+export interface OperatorNode {
+  operator: Operator
+  type?: OutputType
+  children: Array<OperatorNode | ValueNode>
+  value?: ValueNode // deprecated
 }
 
-type NodeType = 'string' | 'number' | 'boolean' | 'array'
+export type ValueNode = string | boolean | number | BasicObject | null | undefined | any[]
+
+export type OutputType = 'string' | 'number' | 'boolean' | 'array'
 
 type Operator =
   | 'AND'
   | 'OR'
   | 'CONCAT'
   | '='
-  | '!= '
+  | '!='
   | '+'
   | '?'
   | 'REGEX'
   | 'objectProperties'
   | 'stringSubstitution'
+  | 'GET'
+  | 'POST'
   | 'API'
   | 'pgSQL'
   | 'graphQL'
