@@ -130,7 +130,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 1 in Stage 2 (section 1) = APPROVED
+  // -- Reviewer 1 in Stage 2, Lvl 1 (section 1) = APPROVED
   `mutation {
     createReviewAssignment(
       input: {
@@ -222,7 +222,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2 (section 2) = DECLINED
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = DECLINED
   `mutation {
     createReviewAssignment(
       input: {
@@ -571,7 +571,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 1 in Stage 2 (section 1) = DECLINED
+  // -- Reviewer 1 in Stage 2, Lvl 1 (section 1) = DECLINED
   `mutation {
     createReviewAssignment(
       input: {
@@ -672,7 +672,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2 (section 2) = NOT AVAILABLE (locked for this reviewer to submit)
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = NOT AVAILABLE (locked for this reviewer to submit)
   `mutation {
     createReviewAssignment(
       input: {

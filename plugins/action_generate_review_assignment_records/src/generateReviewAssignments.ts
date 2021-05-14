@@ -17,10 +17,14 @@ async function generateReviewAssignments({
   // Get application/reviewId from applicationData if not provided in parameters
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
-  const isReview =
-    parameters?.isReview === false
-      ? false
-      : parameters?.isReview || applicationData?.action_payload?.trigger_payload?.table === 'review'
+  // Check if "isReview = false" to overwreite having received reviewId - used when need to process an upgrade on same review levels
+  const overwriteIsReview = parameters?.isReview
+
+  // Set "isReview = true" when receiving reviewId (and isReview != false) OR triggered from table 'review'
+  // Even if "isReview === true" is received, but no reviewId it will be considered "isReview = false"
+  const isReview = !!overwriteIsReview
+    ? overwriteIsReview && reviewId !== undefined
+    : reviewId !== undefined || applicationData?.action_payload?.trigger_payload?.table === 'review'
 
   console.log('Generating review assignment records...')
   try {
