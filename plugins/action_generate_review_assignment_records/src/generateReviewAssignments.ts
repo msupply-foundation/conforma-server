@@ -205,8 +205,9 @@ const generateNextReviewAssignments = async ({
 // Helper function -- concatenates two arrays, but handles case
 // when either or both are null/undefined
 const mergeAllowedSections = (prevArray?: string[] | null, newArray?: string[] | null) => {
-  if (!prevArray || prevArray === null) return newArray
-  else if (!newArray || newArray === null) return prevArray
+  if (!prevArray) return newArray
+  else if (!newArray) return prevArray
+  else return Array.from(new Set([...prevArray, ...newArray]))
 }
 
 export default generateReviewAssignments
