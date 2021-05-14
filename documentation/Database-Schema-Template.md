@@ -60,13 +60,15 @@ For example an **Applicant user** would be required to be associated with a temp
 
 ### template permission
 
-The template permission is the link between users and templates. Each one can be for the entire application template with `template_id` and no `template_section_id` or have it the section defined for more specific permissions related to a section.
+The template permission is the link between `templates` and `policies` (linked by permission_name) in a given `stage`, then users with the same permission_name will be allowed to act on the previously linked template. Each one can be for the entire template in `template_id` or specific sections when `allowed_sections` array has some section(s) defined for more specific permissions related to a section in the application.
 
-The `permission_policy_id` link to the actual permission policy to describe what are the policies associated to this template permission.
-
-The `permission_join_id` links this permission to a user/organisation and `restrictions` would add more specific rules.
-
-More detailed description of template permissions coming soon: `restrictions`.
+- `template_id` link to the actual template associated with a policy which will give permissions to users later.
+- `permission_name_id` links this permission to a user/organisation.
+- `allowed_sections` [**Default**: `NULL`] Array of sections allowed (when using only to allow the permission on specific sections in the application)
+- `can_self_assign` [**Default**: `false`] Option only for Reviewer permission `true` if the user associated can self-assign to review applications of this template.
+- `stage_number` specify stage associated for this permission.
+- `level_number` specify the review level for this permission.
+- `restrictions` would add more specific rules. More details and examples to be added later.
 
 ## Triggered actions
 
