@@ -144,7 +144,7 @@ exports.queries = [
                     }
                     {
                       code: "passwordCheckbox"
-                      index: 4
+                      index: 5
                       title: "Password Change Check"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -152,41 +152,16 @@ exports.queries = [
                       parameters: {
                         label: "Do you wish to change your password?"
                         checkboxes: ["Yes"]
+                        type: "toggle"
                       }
                     }
-                    
-                    # TO-DO: Need a field for existing password check
-                    # (validate against login endpoint)
-                    # and only then will the "New password" entry appear
-                    # ---
-                    # {
-                    #   code: "currentPassword"
-                    #   index: 5
-                    #   title: "Current Password"
-                    #   elementTypePluginCode: "shortText"
-                    #   category: QUESTION
-                    #   visibilityCondition: {
-                    #     operator: "="
-                    #     children: [
-                    #       {
-                    #         operator: "objectProperties"
-                    #         children: [
-                    #           "responses.passwordCheckbox.values.0.selected"
-                    #         ]
-                    #       }
-                    #       true
-                    #     ]
-                    #   }
-                    #   parameters: { label: "Current password", maskedInput: true }
-                    #   validation: true
-                    #   validationMessage: "Password incorrect"
-                    # }
                     {
-                      code: "Q5"
-                      index: 5
-                      title: "Password"
+                      code: "currentPassword"
+                      index: 6
+                      title: "Current Password"
                       elementTypePluginCode: "password"
                       category: QUESTION
+                      helpText: "To change your password, you must first enter your current password correctly."
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -200,7 +175,49 @@ exports.queries = [
                         ]
                       }
                       parameters: {
-                        label: "Password"
+                        label: "Current Password"
+                        placeholder: "Current password"
+                        requireConfirmation: false
+                        validationInternal: {
+                          operator: "POST"
+                          children: [
+                            {
+                              operator: "+"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["applicationData.config.serverREST"]
+                                }
+                                "/login"
+                              ]
+                            }
+                            ["username", "password"]
+                            {
+                              operator: "objectProperties"
+                              children: ["currentUser.username"]
+                            }
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.thisResponse"]
+                            }
+                            "success"
+                          ]
+                        }
+                        validationMessageInternal: "Incorrect password"
+                      }
+                    }
+                    {
+                      code: "newPassword"
+                      index: 7
+                      title: "New Password"
+                      elementTypePluginCode: "password"
+                      category: QUESTION
+                      visibilityCondition: {
+                        operator: "objectProperties",
+                        children: ["responses.currentPassword.isValid"]
+                      }
+                      parameters: {
+                        label: "New Password"
                         description: "Please select a new password"
                         placeholder: "Password must be at least 8 chars long"
                         validationInternal: {
@@ -269,7 +286,7 @@ exports.queries = [
                       }
                       {
                         operator: "objectProperties"
-                        children: ["applicationData.responses.Q5.hash"]
+                        children: ["applicationData.responses.newPassword.hash"]
                       }
                       null
                     ]
