@@ -10,7 +10,7 @@ exports.queries = [
         template: {
           code: "UserEdit"
           name: "Edit User Details"
-          submissionMessage: "Thanks for updating your details"
+          submissionMessage: "Thanks for updating your details. You will need to log out and log back into the system for the changes to take effect."
           status: AVAILABLE
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
