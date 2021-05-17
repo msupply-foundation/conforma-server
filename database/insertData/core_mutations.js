@@ -240,3 +240,44 @@ exports.coreActions = `
     }   
     
     `
+
+/*
+Joins filters to tempaltes
+*/
+exports.joinFilters = `
+templateFilterJoinsUsingId: {
+  create: [
+    {
+      filterToFilterId: {
+        connectByCode: { code: "approveApplications" }
+      }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "submittedApplications" }
+      }
+    }
+    {
+      filterToFilterId: { connectByCode: { code: "draftApplications" } }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "changeRequestApplications" }
+      }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "availableForSelfAssignment" }
+      }
+    }
+    { filterToFilterId: { connectByCode: { code: "readyToReReview" } } }
+    { filterToFilterId: { connectByCode: { code: "draftReview" } } }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "awaitingAssignment" }
+      }
+    }
+    { filterToFilterId: { connectByCode: { code: "reAssign" } } }
+  ]
+}
+`

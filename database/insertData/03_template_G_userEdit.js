@@ -240,6 +240,7 @@ exports.queries = [
               }
             ]
           }
+          templateCategoryToTemplateCategoryId: { connectByCode: { code: "user" } }
           templateStagesUsingId: { create: [{ number: 1, title: "Automatic" }] }
           templateActionsUsingId: {
             create: [

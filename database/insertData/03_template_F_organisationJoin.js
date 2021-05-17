@@ -5,7 +5,7 @@ TEMPLATE F - Join Organisation
    - more specific policies to limit reviewers to their own organisation
    - Org selector needs a plugin that doesn't show all companies to user
 */
-const { coreActions } = require('./core_actions')
+const { coreActions, joinFilters } = require('./core_mutations')
 const { devActions } = require('./dev_actions')
 
 exports.queries = [
@@ -141,6 +141,8 @@ exports.queries = [
               }
             ]
           }
+          templateCategoryToTemplateCategoryId: { connectByCode: { code: "org" } }
+          ${joinFilters}
           templateActionsUsingId: {
             create: [
               ${coreActions}
