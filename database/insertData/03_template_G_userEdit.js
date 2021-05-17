@@ -213,7 +213,7 @@ exports.queries = [
                       elementTypePluginCode: "password"
                       category: QUESTION
                       visibilityCondition: {
-                        operator: "objectProperties",
+                        operator: "objectProperties"
                         children: ["responses.currentPassword.isValid"]
                       }
                       parameters: {
@@ -304,6 +304,16 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
                 parameterQueries: { newOutcome: { value: "APPROVED" } }
+              }
+            ]
+          }
+          templatePermissionsUsingId: {
+            create: [
+              # Apply User Edit
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
               }
             ]
           }
