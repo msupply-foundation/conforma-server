@@ -6,7 +6,7 @@ if (process.argv[2] === '--from_insert_data.sh') {
   const filesToProcess = fs
     .readdirSync('./database/insertData')
     .filter((file) => !file.match(/^\./)) // Ignore hidden files
-    .filter((file) => !['core_actions.js', 'dev_actions.js'].includes(file))
+    .filter((file) => !['core_mutations.js', 'dev_actions.js'].includes(file))
 
   processQueries(filesToProcess)
 }
