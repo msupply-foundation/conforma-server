@@ -91,11 +91,11 @@ const updateRowPolicies = async () => {
     text: `
     CREATE POLICY "create_all_application" ON application FOR INSERT WITH CHECK (true);
     CREATE POLICY "update_all_application" ON application FOR UPDATE USING(true) WITH CHECK (true);
-    CREATE POLICY "update_all_application_response" ON application_response FOR INSERT WITH CHECK (true);
+    CREATE POLICY "create_all_application_response" ON application_response FOR INSERT WITH CHECK (true);
     CREATE POLICY "update_all_application_response" ON application_response FOR UPDATE USING(true) WITH CHECK (true);
-    CREATE POLICY "update_all_review" ON review FOR INSERT WITH CHECK (true);
+    CREATE POLICY "create_all_review" ON review FOR INSERT WITH CHECK (true);
     CREATE POLICY "update_all_review" ON review FOR UPDATE USING(true) WITH CHECK (true);
-    CREATE POLICY "update_all_review_assignment" ON review_assignment FOR INSERT WITH CHECK (true);
+    CREATE POLICY "create_all_review_assignment" ON review_assignment FOR INSERT WITH CHECK (true);
     CREATE POLICY "update_all_review_assignment" ON review_assignment FOR UPDATE USING(true) WITH CHECK (true);
     `,
   })
