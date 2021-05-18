@@ -99,51 +99,6 @@ test('Testing OR operator with 4 children, all false', () => {
   })
 })
 
-// CONCAT operator
-
-test('Testing Array concatenation', () => {
-  return evaluateExpression(testData.CONCAT_2_Arrays).then((result: any) => {
-    expect(result).toEqual([1, 2, 3, 'Four', 'Five', 'Six'])
-  })
-})
-
-test('Testing Array concatenation with 4 children, including nested array', () => {
-  return evaluateExpression(testData.CONCAT_4_Arrays).then((result: any) => {
-    expect(result).toEqual([
-      1,
-      2,
-      3,
-      'Four',
-      'Five',
-      'Six',
-      7,
-      8,
-      'Nine',
-      ['Four', 'Five', 'Six'],
-      'The',
-      'End',
-    ])
-  })
-})
-
-test('Testing String concatenation', () => {
-  return evaluateExpression(testData.CONCAT_3_Strings).then((result: any) => {
-    expect(result).toBe('Carl Smith')
-  })
-})
-
-test('Testing String concatenation with type undefined', () => {
-  return evaluateExpression(testData.CONCAT_4_Unspecified).then((result: any) => {
-    expect(result).toBe('Carl Smith--XXX')
-  })
-})
-
-test('Testing String concatenation output as Array', () => {
-  return evaluateExpression(testData.CONCAT_strings_output_as_array).then((result: any) => {
-    expect(result).toEqual(['One', 'Two', 'Three'])
-  })
-})
-
 // Equal (=) operator
 
 test('Testing Equality (numbers)', () => {
@@ -219,6 +174,69 @@ test('Testing Adding 2 numbers', () => {
 test('Testing Adding 4 numbers', () => {
   return evaluateExpression(testData.PLUS_4Nums).then((result: any) => {
     expect(result).toBe(38.6)
+  })
+})
+
+test('Testing Array concatenation', () => {
+  return evaluateExpression(testData.CONCAT_2_Arrays).then((result: any) => {
+    expect(result).toEqual([1, 2, 3, 'Four', 'Five', 'Six'])
+  })
+})
+
+test('Testing Array concatenation with 4 children, including nested array', () => {
+  return evaluateExpression(testData.CONCAT_4_Arrays).then((result: any) => {
+    expect(result).toEqual([
+      1,
+      2,
+      3,
+      'Four',
+      'Five',
+      'Six',
+      7,
+      8,
+      'Nine',
+      ['Four', 'Five', 'Six'],
+      'The',
+      'End',
+    ])
+  })
+})
+
+test('Testing String concatenation', () => {
+  return evaluateExpression(testData.CONCAT_3_Strings).then((result: any) => {
+    expect(result).toBe('Carl Smith')
+  })
+})
+
+test('Testing String concatenation with type undefined', () => {
+  return evaluateExpression(testData.CONCAT_4_Unspecified).then((result: any) => {
+    expect(result).toBe('Carl Smith--XXX')
+  })
+})
+
+test('Testing String concatenation output as Array', () => {
+  return evaluateExpression(testData.CONCAT_strings_output_as_array).then((result: any) => {
+    expect(result).toEqual(['One', 'Two', 'Three'])
+  })
+})
+
+test('Testing Merge 2 objects', () => {
+  return evaluateExpression(testData.MERGE_2Objects).then((result: any) => {
+    expect(result).toEqual({ one: 1, two: '2', three: false, four: [1, 2, 3], five: true })
+  })
+})
+
+test('Testing Merge 3 objects', () => {
+  return evaluateExpression(testData.MERGE_3Objects).then((result: any) => {
+    expect(result).toEqual({
+      one: 1,
+      two: '2',
+      three: undefined,
+      four: [1, 2, 3],
+      five: true,
+      1: null,
+      2: 'TRUE',
+    })
   })
 })
 

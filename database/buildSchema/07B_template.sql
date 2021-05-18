@@ -12,7 +12,8 @@ CREATE TABLE public.template (
     is_linear boolean DEFAULT TRUE,
     start_message jsonb,
     status public.template_status,
-    submission_message jsonb DEFAULT '{"value": "Thank you! Your application has been submitted."}' ::jsonb,
+    submission_message jsonb DEFAULT '"Thank you! Your application has been submitted."' ::jsonb,
+    template_category_id integer REFERENCES public.template_category (id),
     version_timestamp timestamptz
 );
 

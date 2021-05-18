@@ -3,7 +3,7 @@ TEMPLATE E - Drug Resgistration (Generic Medicines Procedure - simple version)
   - a simple template with first page and upload documents to be used in demo
     for testing the main Drug registation application and review process
 */
-const { coreActions } = require('./core_actions')
+const { coreActions, joinFilters } = require('./core_mutations')
 const { devActions } = require('./dev_actions')
 
 exports.queries = [
@@ -17,9 +17,6 @@ exports.queries = [
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- Ingredients\\n- Samples\\n- Product images"
           versionTimestamp: "NOW()"
-          # templateCategoryToTemplateCategoryId: {
-          #  create: { icon: "pills", id: 5001, title: "Drug Registration" }
-          # }
           templateSectionsUsingId: {
             create: [
               {
@@ -932,6 +929,8 @@ exports.queries = [
               }
             ]
           }
+          templateCategoryToTemplateCategoryId: { connectByCode: { code: "drugRego" } }
+          ${joinFilters}
           templateActionsUsingId: {
             create: [
               ${coreActions}

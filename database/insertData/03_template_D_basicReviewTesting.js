@@ -3,7 +3,7 @@ TEMPLATE D - Review (testing)
   - a simple template with multiple pages in multiple sections to be used
     for testing the application review process
 */
-const { coreActions } = require('./core_actions')
+const { coreActions, joinFilters } = require('./core_mutations')
 const { devActions } = require('./dev_actions')
 
 exports.queries = [
@@ -254,6 +254,8 @@ exports.queries = [
               }
             ]
           }
+          templateCategoryToTemplateCategoryId: { connectByCode: { code: "dev" } }
+          ${joinFilters}
           templateActionsUsingId: {
             create: [
               ${coreActions}
