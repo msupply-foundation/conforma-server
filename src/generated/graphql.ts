@@ -880,6 +880,8 @@ export type ApplicationListShape = {
   lastActiveDate?: Maybe<Scalars['Datetime']>;
   assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  reviewerAction?: Maybe<ReviewerAction>;
+  assignerAction?: Maybe<AssignerAction>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   reviewAvailableForSelfAssignmentCount?: Maybe<Scalars['BigInt']>;
   reviewAssignedCount?: Maybe<Scalars['BigInt']>;
@@ -932,6 +934,10 @@ export type ApplicationListShapeCondition = {
   assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `reviewerUsernames` field. */
   reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `reviewerAction` field. */
+  reviewerAction?: Maybe<ReviewerAction>;
+  /** Checks for equality with the object’s `assignerAction` field. */
+  assignerAction?: Maybe<AssignerAction>;
   /** Checks for equality with the object’s `isFullyAssignedLevel1` field. */
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `reviewAvailableForSelfAssignmentCount` field. */
@@ -992,6 +998,10 @@ export type ApplicationListShapeFilter = {
   assignerUsernames?: Maybe<StringListFilter>;
   /** Filter by the object’s `reviewerUsernames` field. */
   reviewerUsernames?: Maybe<StringListFilter>;
+  /** Filter by the object’s `reviewerAction` field. */
+  reviewerAction?: Maybe<ReviewerActionFilter>;
+  /** Filter by the object’s `assignerAction` field. */
+  assignerAction?: Maybe<AssignerActionFilter>;
   /** Filter by the object’s `isFullyAssignedLevel1` field. */
   isFullyAssignedLevel1?: Maybe<BooleanFilter>;
   /** Filter by the object’s `reviewAvailableForSelfAssignmentCount` field. */
@@ -1041,6 +1051,8 @@ export type ApplicationListShapeInput = {
   lastActiveDate?: Maybe<Scalars['Datetime']>;
   assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  reviewerAction?: Maybe<ReviewerAction>;
+  assignerAction?: Maybe<AssignerAction>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   reviewAvailableForSelfAssignmentCount?: Maybe<Scalars['BigInt']>;
   reviewAssignedCount?: Maybe<Scalars['BigInt']>;
@@ -1113,6 +1125,10 @@ export enum ApplicationListShapesOrderBy {
   AssignerUsernamesDesc = 'ASSIGNER_USERNAMES_DESC',
   ReviewerUsernamesAsc = 'REVIEWER_USERNAMES_ASC',
   ReviewerUsernamesDesc = 'REVIEWER_USERNAMES_DESC',
+  ReviewerActionAsc = 'REVIEWER_ACTION_ASC',
+  ReviewerActionDesc = 'REVIEWER_ACTION_DESC',
+  AssignerActionAsc = 'ASSIGNER_ACTION_ASC',
+  AssignerActionDesc = 'ASSIGNER_ACTION_DESC',
   IsFullyAssignedLevel_1Asc = 'IS_FULLY_ASSIGNED_LEVEL_1_ASC',
   IsFullyAssignedLevel_1Desc = 'IS_FULLY_ASSIGNED_LEVEL_1_DESC',
   ReviewAvailableForSelfAssignmentCountAsc = 'REVIEW_AVAILABLE_FOR_SELF_ASSIGNMENT_COUNT_ASC',
@@ -3545,6 +3561,37 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   notificationsUsingId?: Maybe<NotificationUserIdFkeyInverseInput>;
 };
 
+export enum AssignerAction {
+  Assign = 'ASSIGN',
+  ReAssign = 'RE_ASSIGN'
+}
+
+/** A filter to be used against AssignerAction fields. All fields are combined with a logical ‘and.’ */
+export type AssignerActionFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<AssignerAction>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<AssignerAction>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<AssignerAction>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<AssignerAction>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<AssignerAction>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<AssignerAction>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<AssignerAction>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<AssignerAction>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<AssignerAction>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<AssignerAction>;
+};
+
 /** A connection to a list of `AssignerListRecord` values. */
 export type AssignerListConnection = {
   __typename?: 'AssignerListConnection';
@@ -3569,6 +3616,7 @@ export type AssignerListEdge = {
 export type AssignerListRecord = {
   __typename?: 'AssignerListRecord';
   applicationId?: Maybe<Scalars['Int']>;
+  assignerAction?: Maybe<AssignerAction>;
   assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
   assignReviewersCount?: Maybe<Scalars['BigInt']>;
   assignCount?: Maybe<Scalars['BigInt']>;
@@ -3578,6 +3626,8 @@ export type AssignerListRecord = {
 export type AssignerListRecordFilter = {
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `assignerAction` field. */
+  assignerAction?: Maybe<AssignerActionFilter>;
   /** Filter by the object’s `assignReviewerAssignedCount` field. */
   assignReviewerAssignedCount?: Maybe<BigIntFilter>;
   /** Filter by the object’s `assignReviewersCount` field. */
@@ -7784,6 +7834,53 @@ export type IntFilter = {
   greaterThanOrEqualTo?: Maybe<Scalars['Int']>;
 };
 
+/** A connection to a list of `IsFullyAssignedLevelRecord` values. */
+export type IsFullyAssignedLevelConnection = {
+  __typename?: 'IsFullyAssignedLevelConnection';
+  /** A list of `IsFullyAssignedLevelRecord` objects. */
+  nodes: Array<Maybe<IsFullyAssignedLevelRecord>>;
+  /** A list of edges which contains the `IsFullyAssignedLevelRecord` and cursor to aid in pagination. */
+  edges: Array<IsFullyAssignedLevelEdge>;
+  /** The count of *all* `IsFullyAssignedLevelRecord` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `IsFullyAssignedLevelRecord` edge in the connection. */
+export type IsFullyAssignedLevelEdge = {
+  __typename?: 'IsFullyAssignedLevelEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `IsFullyAssignedLevelRecord` at the end of the edge. */
+  node?: Maybe<IsFullyAssignedLevelRecord>;
+};
+
+/** The return type of our `isFullyAssignedLevel` query. */
+export type IsFullyAssignedLevelRecord = {
+  __typename?: 'IsFullyAssignedLevelRecord';
+  applicationId?: Maybe<Scalars['Int']>;
+  isFullyAssigned?: Maybe<Scalars['Boolean']>;
+  assignedQuestions?: Maybe<Scalars['BigInt']>;
+  totalQuestions?: Maybe<Scalars['BigInt']>;
+};
+
+/** A filter to be used against `IsFullyAssignedLevelRecord` object types. All fields are combined with a logical ‘and.’ */
+export type IsFullyAssignedLevelRecordFilter = {
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `isFullyAssigned` field. */
+  isFullyAssigned?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `assignedQuestions` field. */
+  assignedQuestions?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalQuestions` field. */
+  totalQuestions?: Maybe<BigIntFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<IsFullyAssignedLevelRecordFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<IsFullyAssignedLevelRecordFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<IsFullyAssignedLevelRecordFilter>;
+};
+
 
 /** A filter to be used against JSON fields. All fields are combined with a logical ‘and.’ */
 export type JsonFilter = {
@@ -11764,6 +11861,7 @@ export type Query = Node & {
   assignerList?: Maybe<AssignerListConnection>;
   assignmentList?: Maybe<AssignmentListConnection>;
   getTemplateCode?: Maybe<Scalars['String']>;
+  isFullyAssignedLevel?: Maybe<IsFullyAssignedLevelConnection>;
   jwtGetBigint?: Maybe<Scalars['BigInt']>;
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
   jwtGetText?: Maybe<Scalars['String']>;
@@ -12665,6 +12763,7 @@ export type QueryApplicationStatusHistoryApplicationIdArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryAssignerListArgs = {
   assignerid?: Maybe<Scalars['Int']>;
+  isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
@@ -12689,6 +12788,19 @@ export type QueryAssignmentListArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryGetTemplateCodeArgs = {
   sectionId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryIsFullyAssignedLevelArgs = {
+  stageId?: Maybe<Scalars['Int']>;
+  level?: Maybe<Scalars['Int']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<IsFullyAssignedLevelRecordFilter>;
 };
 
 
@@ -14803,6 +14915,41 @@ export enum ReviewDecisionsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export enum ReviewerAction {
+  SelfAssign = 'SELF_ASSIGN',
+  StartReview = 'START_REVIEW',
+  ViewReview = 'VIEW_REVIEW',
+  ContinueReview = 'CONTINUE_REVIEW',
+  RestartReview = 'RESTART_REVIEW',
+  UpdateReview = 'UPDATE_REVIEW'
+}
+
+/** A filter to be used against ReviewerAction fields. All fields are combined with a logical ‘and.’ */
+export type ReviewerActionFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<ReviewerAction>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<ReviewerAction>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<ReviewerAction>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<ReviewerAction>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<ReviewerAction>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<ReviewerAction>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<ReviewerAction>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<ReviewerAction>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<ReviewerAction>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<ReviewerAction>;
+};
+
 /** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
 export type ReviewFilter = {
   /** Filter by the object’s `id` field. */
@@ -14904,6 +15051,7 @@ export type ReviewListEdge = {
 export type ReviewListRecord = {
   __typename?: 'ReviewListRecord';
   applicationId?: Maybe<Scalars['Int']>;
+  reviewerAction?: Maybe<ReviewerAction>;
   reviewAvailableForSelfAssignmentCount?: Maybe<Scalars['BigInt']>;
   reviewAssignedCount?: Maybe<Scalars['BigInt']>;
   reviewAssignedNotStartedCount?: Maybe<Scalars['BigInt']>;
@@ -14917,6 +15065,8 @@ export type ReviewListRecord = {
 export type ReviewListRecordFilter = {
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerAction` field. */
+  reviewerAction?: Maybe<ReviewerActionFilter>;
   /** Filter by the object’s `reviewAvailableForSelfAssignmentCount` field. */
   reviewAvailableForSelfAssignmentCount?: Maybe<BigIntFilter>;
   /** Filter by the object’s `reviewAssignedCount` field. */
@@ -25484,8 +25634,12 @@ export type ResolversTypes = {
   ActionQueuesEdge: ResolverTypeWrapper<ActionQueuesEdge>;
   ApplicationListShapesOrderBy: ApplicationListShapesOrderBy;
   ApplicationListShapeCondition: ApplicationListShapeCondition;
+  ReviewerAction: ReviewerAction;
+  AssignerAction: AssignerAction;
   BigInt: ResolverTypeWrapper<Scalars['BigInt']>;
   ApplicationListShapeFilter: ApplicationListShapeFilter;
+  ReviewerActionFilter: ReviewerActionFilter;
+  AssignerActionFilter: AssignerActionFilter;
   BigIntFilter: BigIntFilter;
   ApplicationListShapesConnection: ResolverTypeWrapper<ApplicationListShapesConnection>;
   ApplicationListShape: ResolverTypeWrapper<ApplicationListShape>;
@@ -25558,6 +25712,10 @@ export type ResolversTypes = {
   AssignmentListConnection: ResolverTypeWrapper<AssignmentListConnection>;
   AssignmentListRecord: ResolverTypeWrapper<AssignmentListRecord>;
   AssignmentListEdge: ResolverTypeWrapper<AssignmentListEdge>;
+  IsFullyAssignedLevelRecordFilter: IsFullyAssignedLevelRecordFilter;
+  IsFullyAssignedLevelConnection: ResolverTypeWrapper<IsFullyAssignedLevelConnection>;
+  IsFullyAssignedLevelRecord: ResolverTypeWrapper<IsFullyAssignedLevelRecord>;
+  IsFullyAssignedLevelEdge: ResolverTypeWrapper<IsFullyAssignedLevelEdge>;
   ReviewListRecordFilter: ReviewListRecordFilter;
   ReviewListConnection: ResolverTypeWrapper<ReviewListConnection>;
   ReviewListRecord: ResolverTypeWrapper<ReviewListRecord>;
@@ -26929,6 +27087,8 @@ export type ResolversParentTypes = {
   ApplicationListShapeCondition: ApplicationListShapeCondition;
   BigInt: Scalars['BigInt'];
   ApplicationListShapeFilter: ApplicationListShapeFilter;
+  ReviewerActionFilter: ReviewerActionFilter;
+  AssignerActionFilter: AssignerActionFilter;
   BigIntFilter: BigIntFilter;
   ApplicationListShapesConnection: ApplicationListShapesConnection;
   ApplicationListShape: ApplicationListShape;
@@ -26989,6 +27149,10 @@ export type ResolversParentTypes = {
   AssignmentListConnection: AssignmentListConnection;
   AssignmentListRecord: AssignmentListRecord;
   AssignmentListEdge: AssignmentListEdge;
+  IsFullyAssignedLevelRecordFilter: IsFullyAssignedLevelRecordFilter;
+  IsFullyAssignedLevelConnection: IsFullyAssignedLevelConnection;
+  IsFullyAssignedLevelRecord: IsFullyAssignedLevelRecord;
+  IsFullyAssignedLevelEdge: IsFullyAssignedLevelEdge;
   ReviewListRecordFilter: ReviewListRecordFilter;
   ReviewListConnection: ReviewListConnection;
   ReviewListRecord: ReviewListRecord;
@@ -28228,6 +28392,8 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   lastActiveDate?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   assignerUsernames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   reviewerUsernames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
+  assignerAction?: Resolver<Maybe<ResolversTypes['AssignerAction']>, ParentType, ContextType>;
   isFullyAssignedLevel1?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   reviewAvailableForSelfAssignmentCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   reviewAssignedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
@@ -28464,6 +28630,7 @@ export type AssignerListEdgeResolvers<ContextType = any, ParentType extends Reso
 
 export type AssignerListRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignerListRecord'] = ResolversParentTypes['AssignerListRecord']> = {
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  assignerAction?: Resolver<Maybe<ResolversTypes['AssignerAction']>, ParentType, ContextType>;
   assignReviewerAssignedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   assignReviewersCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   assignCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
@@ -29311,6 +29478,27 @@ export type FiltersEdgeResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type IsFullyAssignedLevelConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['IsFullyAssignedLevelConnection'] = ResolversParentTypes['IsFullyAssignedLevelConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['IsFullyAssignedLevelRecord']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['IsFullyAssignedLevelEdge']>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IsFullyAssignedLevelEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['IsFullyAssignedLevelEdge'] = ResolversParentTypes['IsFullyAssignedLevelEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['IsFullyAssignedLevelRecord']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type IsFullyAssignedLevelRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['IsFullyAssignedLevelRecord'] = ResolversParentTypes['IsFullyAssignedLevelRecord']> = {
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  isFullyAssigned?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  assignedQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  totalQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
@@ -29815,6 +30003,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   assignerList?: Resolver<Maybe<ResolversTypes['AssignerListConnection']>, ParentType, ContextType, RequireFields<QueryAssignerListArgs, never>>;
   assignmentList?: Resolver<Maybe<ResolversTypes['AssignmentListConnection']>, ParentType, ContextType, RequireFields<QueryAssignmentListArgs, never>>;
   getTemplateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetTemplateCodeArgs, never>>;
+  isFullyAssignedLevel?: Resolver<Maybe<ResolversTypes['IsFullyAssignedLevelConnection']>, ParentType, ContextType, RequireFields<QueryIsFullyAssignedLevelArgs, never>>;
   jwtGetBigint?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryJwtGetBigintArgs, never>>;
   jwtGetBoolean?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryJwtGetBooleanArgs, never>>;
   jwtGetText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryJwtGetTextArgs, never>>;
@@ -29992,6 +30181,7 @@ export type ReviewListEdgeResolvers<ContextType = any, ParentType extends Resolv
 
 export type ReviewListRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewListRecord'] = ResolversParentTypes['ReviewListRecord']> = {
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
   reviewAvailableForSelfAssignmentCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   reviewAssignedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   reviewAssignedNotStartedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
@@ -30940,6 +31130,9 @@ export type Resolvers<ContextType = any> = {
   Filter?: FilterResolvers<ContextType>;
   FiltersConnection?: FiltersConnectionResolvers<ContextType>;
   FiltersEdge?: FiltersEdgeResolvers<ContextType>;
+  IsFullyAssignedLevelConnection?: IsFullyAssignedLevelConnectionResolvers<ContextType>;
+  IsFullyAssignedLevelEdge?: IsFullyAssignedLevelEdgeResolvers<ContextType>;
+  IsFullyAssignedLevelRecord?: IsFullyAssignedLevelRecordResolvers<ContextType>;
   JSON?: GraphQLScalarType;
   LookupTable?: LookupTableResolvers<ContextType>;
   LookupTablesConnection?: LookupTablesConnectionResolvers<ContextType>;
