@@ -12,7 +12,7 @@ CREATE TABLE public.template_permission (
 
 CREATE VIEW permissions_all AS (
     SELECT
-        "user"."username" AS "username",
+        "user".username AS "username",
         organisation.name AS "orgName",
         "template".code AS "templateCode",
         permission_name.name AS "permissionName",
