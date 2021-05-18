@@ -551,13 +551,13 @@ class PostgresDB {
     }
   }
 
-  public getUserTemplatePermissions = async (username: string, orgId: number |null) => {
+  public getUserTemplatePermissions = async (username: string, orgId: number | null) => {
     const text = `SELECT * FROM permissions_all
       WHERE username = $1
-      AND "orgId" ${orgId === null ? "IS NULL" : "= $2"}
+      AND "orgId" ${orgId === null ? 'IS NULL' : '= $2'}
       `
-      const values:(string|number)[] = [username]
-      if (orgId) values.push(orgId)
+    const values: (string | number)[] = [username]
+    if (orgId) values.push(orgId)
     try {
       const result = await this.query({ text, values })
       return result.rows
