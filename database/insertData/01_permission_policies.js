@@ -139,33 +139,50 @@ exports.queries = [
     }
   }`,
   // assignBasic
-  `mutation createPolicy {
-    createPermissionPolicy(
-      input: {
-        permissionPolicy: {
-          name: "assignBasic"
-          rules: {
-            application: {
-              view: { template_id: "jwtPermission_bigint_templateId" }
-            }
-            review: {
-              view: {
-                reviewer_id: "jwtUserDetails_bigint_userId"
-              }
-            }
-            review_assignment: {
-              view: {
-                reviewer_id: "jwtUserDetails_bigint_userId"
-              }
-            }
+  {
+    query: `mutation createPolicy($rules: JSON) {
+      createPermissionPolicy(
+        input: {
+          permissionPolicy: {
+            name: "assignBasic"
+            rules: $rules
+            type: ASSIGN
           }
-          type: ASSIGN
+        }
+      ) {
+        permissionPolicy {
+          name
         }
       }
-    ) {
-      permissionPolicy {
-        name
-      }
-    }
-  }`,
+    }`,
+    variables: {
+      rules: {
+        application: {
+          view: {
+            template_id: 'jwtPermission_bigint_templateId',
+          },
+        },
+        review: {
+          view: {
+            reviewer_id: {
+              $in: {
+                $select: {
+                  id: true,
+                  $from: 'application',
+                  $where: {
+                    template_id: 'jwtPermission_bigint_templateId',
+                  },
+                },
+              },
+            },
+          },
+        },
+        review_assignment: {
+          view: {
+            reviewer_id: 'jwtUserDetails_bigint_userId',
+          },
+        },
+      },
+    },
+  },
 ]

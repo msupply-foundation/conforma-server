@@ -16,12 +16,13 @@ async function processQueries(filesToProcess) {
     const { queries } = require(`./insertData/${file}`)
     console.log(`  -- ${file}`)
     for (const query of queries) {
-      await executeGraphQLQuery(query)
+      if (query instanceof Object) await executeGraphQLQuery(query.query, query.variables)
+      else await executeGraphQLQuery(query)
     }
   }
 }
 
-async function executeGraphQLQuery(query) {
+async function executeGraphQLQuery(query, variables = {}) {
   const res = await fetch(config.graphQLendpoint, {
     method: 'POST',
     headers: {
@@ -30,6 +31,7 @@ async function executeGraphQLQuery(query) {
     },
     body: JSON.stringify({
       query,
+      variables,
     }),
   })
   const response = await res.json()
