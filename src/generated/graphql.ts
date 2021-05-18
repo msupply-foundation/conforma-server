@@ -3592,48 +3592,48 @@ export type AssignerListRecordFilter = {
   not?: Maybe<AssignerListRecordFilter>;
 };
 
-/** A connection to a list of `AssignersListRecord` values. */
-export type AssignersListConnection = {
-  __typename?: 'AssignersListConnection';
-  /** A list of `AssignersListRecord` objects. */
-  nodes: Array<Maybe<AssignersListRecord>>;
-  /** A list of edges which contains the `AssignersListRecord` and cursor to aid in pagination. */
-  edges: Array<AssignersListEdge>;
-  /** The count of *all* `AssignersListRecord` you could get from the connection. */
+/** A connection to a list of `AssignmentListRecord` values. */
+export type AssignmentListConnection = {
+  __typename?: 'AssignmentListConnection';
+  /** A list of `AssignmentListRecord` objects. */
+  nodes: Array<Maybe<AssignmentListRecord>>;
+  /** A list of edges which contains the `AssignmentListRecord` and cursor to aid in pagination. */
+  edges: Array<AssignmentListEdge>;
+  /** The count of *all* `AssignmentListRecord` you could get from the connection. */
   totalCount: Scalars['Int'];
 };
 
-/** A `AssignersListRecord` edge in the connection. */
-export type AssignersListEdge = {
-  __typename?: 'AssignersListEdge';
+/** A `AssignmentListRecord` edge in the connection. */
+export type AssignmentListEdge = {
+  __typename?: 'AssignmentListEdge';
   /** A cursor for use in pagination. */
   cursor?: Maybe<Scalars['Cursor']>;
-  /** The `AssignersListRecord` at the end of the edge. */
-  node?: Maybe<AssignersListRecord>;
+  /** The `AssignmentListRecord` at the end of the edge. */
+  node?: Maybe<AssignmentListRecord>;
 };
 
-/** The return type of our `assignersList` query. */
-export type AssignersListRecord = {
-  __typename?: 'AssignersListRecord';
+/** The return type of our `assignmentList` query. */
+export type AssignmentListRecord = {
+  __typename?: 'AssignmentListRecord';
   applicationId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
+  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
   assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
-/** A filter to be used against `AssignersListRecord` object types. All fields are combined with a logical ‘and.’ */
-export type AssignersListRecordFilter = {
+/** A filter to be used against `AssignmentListRecord` object types. All fields are combined with a logical ‘and.’ */
+export type AssignmentListRecordFilter = {
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageId` field. */
-  stageId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewerUsernames` field. */
+  reviewerUsernames?: Maybe<StringListFilter>;
   /** Filter by the object’s `assignerUsernames` field. */
   assignerUsernames?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
-  and?: Maybe<Array<AssignersListRecordFilter>>;
+  and?: Maybe<Array<AssignmentListRecordFilter>>;
   /** Checks for any expressions in this list. */
-  or?: Maybe<Array<AssignersListRecordFilter>>;
+  or?: Maybe<Array<AssignmentListRecordFilter>>;
   /** Negates the expression. */
-  not?: Maybe<AssignersListRecordFilter>;
+  not?: Maybe<AssignmentListRecordFilter>;
 };
 
 
@@ -11762,7 +11762,7 @@ export type Query = Node & {
   applicationList?: Maybe<ApplicationListShapesConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   assignerList?: Maybe<AssignerListConnection>;
-  assignersList?: Maybe<AssignersListConnection>;
+  assignmentList?: Maybe<AssignmentListConnection>;
   getTemplateCode?: Maybe<Scalars['String']>;
   jwtGetBigint?: Maybe<Scalars['BigInt']>;
   jwtGetBoolean?: Maybe<Scalars['Boolean']>;
@@ -11773,7 +11773,6 @@ export type Query = Node & {
   reviewList?: Maybe<ReviewListConnection>;
   reviewReviewerId?: Maybe<Scalars['Int']>;
   reviewStage?: Maybe<Scalars['Int']>;
-  reviewersList?: Maybe<ReviewersListConnection>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
@@ -12676,13 +12675,14 @@ export type QueryAssignerListArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryAssignersListArgs = {
+export type QueryAssignmentListArgs = {
+  stageid?: Maybe<Scalars['Int']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  filter?: Maybe<AssignersListRecordFilter>;
+  filter?: Maybe<AssignmentListRecordFilter>;
 };
 
 
@@ -12749,17 +12749,6 @@ export type QueryReviewReviewerIdArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryReviewStageArgs = {
   reviewAssignmentId?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryReviewersListArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  filter?: Maybe<ReviewersListRecordFilter>;
 };
 
 
@@ -14813,53 +14802,6 @@ export enum ReviewDecisionsOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
-
-/** A connection to a list of `ReviewersListRecord` values. */
-export type ReviewersListConnection = {
-  __typename?: 'ReviewersListConnection';
-  /** A list of `ReviewersListRecord` objects. */
-  nodes: Array<Maybe<ReviewersListRecord>>;
-  /** A list of edges which contains the `ReviewersListRecord` and cursor to aid in pagination. */
-  edges: Array<ReviewersListEdge>;
-  /** The count of *all* `ReviewersListRecord` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `ReviewersListRecord` edge in the connection. */
-export type ReviewersListEdge = {
-  __typename?: 'ReviewersListEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ReviewersListRecord` at the end of the edge. */
-  node?: Maybe<ReviewersListRecord>;
-};
-
-/** The return type of our `reviewersList` query. */
-export type ReviewersListRecord = {
-  __typename?: 'ReviewersListRecord';
-  applicationId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
-  status?: Maybe<ReviewAssignmentStatus>;
-  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
-};
-
-/** A filter to be used against `ReviewersListRecord` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewersListRecordFilter = {
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `stageId` field. */
-  stageId?: Maybe<IntFilter>;
-  /** Filter by the object’s `status` field. */
-  status?: Maybe<ReviewAssignmentStatusFilter>;
-  /** Filter by the object’s `reviewerUsernames` field. */
-  reviewerUsernames?: Maybe<StringListFilter>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ReviewersListRecordFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ReviewersListRecordFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ReviewersListRecordFilter>;
-};
 
 /** A filter to be used against `Review` object types. All fields are combined with a logical ‘and.’ */
 export type ReviewFilter = {
@@ -25612,18 +25554,14 @@ export type ResolversTypes = {
   AssignerListConnection: ResolverTypeWrapper<AssignerListConnection>;
   AssignerListRecord: ResolverTypeWrapper<AssignerListRecord>;
   AssignerListEdge: ResolverTypeWrapper<AssignerListEdge>;
-  AssignersListRecordFilter: AssignersListRecordFilter;
-  AssignersListConnection: ResolverTypeWrapper<AssignersListConnection>;
-  AssignersListRecord: ResolverTypeWrapper<AssignersListRecord>;
-  AssignersListEdge: ResolverTypeWrapper<AssignersListEdge>;
+  AssignmentListRecordFilter: AssignmentListRecordFilter;
+  AssignmentListConnection: ResolverTypeWrapper<AssignmentListConnection>;
+  AssignmentListRecord: ResolverTypeWrapper<AssignmentListRecord>;
+  AssignmentListEdge: ResolverTypeWrapper<AssignmentListEdge>;
   ReviewListRecordFilter: ReviewListRecordFilter;
   ReviewListConnection: ResolverTypeWrapper<ReviewListConnection>;
   ReviewListRecord: ResolverTypeWrapper<ReviewListRecord>;
   ReviewListEdge: ResolverTypeWrapper<ReviewListEdge>;
-  ReviewersListRecordFilter: ReviewersListRecordFilter;
-  ReviewersListConnection: ResolverTypeWrapper<ReviewersListConnection>;
-  ReviewersListRecord: ResolverTypeWrapper<ReviewersListRecord>;
-  ReviewersListEdge: ResolverTypeWrapper<ReviewersListEdge>;
   Mutation: ResolverTypeWrapper<{}>;
   CreateActionPluginInput: CreateActionPluginInput;
   ActionPluginInput: ActionPluginInput;
@@ -27047,18 +26985,14 @@ export type ResolversParentTypes = {
   AssignerListConnection: AssignerListConnection;
   AssignerListRecord: AssignerListRecord;
   AssignerListEdge: AssignerListEdge;
-  AssignersListRecordFilter: AssignersListRecordFilter;
-  AssignersListConnection: AssignersListConnection;
-  AssignersListRecord: AssignersListRecord;
-  AssignersListEdge: AssignersListEdge;
+  AssignmentListRecordFilter: AssignmentListRecordFilter;
+  AssignmentListConnection: AssignmentListConnection;
+  AssignmentListRecord: AssignmentListRecord;
+  AssignmentListEdge: AssignmentListEdge;
   ReviewListRecordFilter: ReviewListRecordFilter;
   ReviewListConnection: ReviewListConnection;
   ReviewListRecord: ReviewListRecord;
   ReviewListEdge: ReviewListEdge;
-  ReviewersListRecordFilter: ReviewersListRecordFilter;
-  ReviewersListConnection: ReviewersListConnection;
-  ReviewersListRecord: ReviewersListRecord;
-  ReviewersListEdge: ReviewersListEdge;
   Mutation: {};
   CreateActionPluginInput: CreateActionPluginInput;
   ActionPluginInput: ActionPluginInput;
@@ -28536,22 +28470,22 @@ export type AssignerListRecordResolvers<ContextType = any, ParentType extends Re
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AssignersListConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignersListConnection'] = ResolversParentTypes['AssignersListConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['AssignersListRecord']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['AssignersListEdge']>, ParentType, ContextType>;
+export type AssignmentListConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignmentListConnection'] = ResolversParentTypes['AssignmentListConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['AssignmentListRecord']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['AssignmentListEdge']>, ParentType, ContextType>;
   totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AssignersListEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignersListEdge'] = ResolversParentTypes['AssignersListEdge']> = {
+export type AssignmentListEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignmentListEdge'] = ResolversParentTypes['AssignmentListEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['AssignersListRecord']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['AssignmentListRecord']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type AssignersListRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignersListRecord'] = ResolversParentTypes['AssignersListRecord']> = {
+export type AssignmentListRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignmentListRecord'] = ResolversParentTypes['AssignmentListRecord']> = {
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewerUsernames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   assignerUsernames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -29879,7 +29813,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationList?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListArgs, never>>;
   applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
   assignerList?: Resolver<Maybe<ResolversTypes['AssignerListConnection']>, ParentType, ContextType, RequireFields<QueryAssignerListArgs, never>>;
-  assignersList?: Resolver<Maybe<ResolversTypes['AssignersListConnection']>, ParentType, ContextType, RequireFields<QueryAssignersListArgs, never>>;
+  assignmentList?: Resolver<Maybe<ResolversTypes['AssignmentListConnection']>, ParentType, ContextType, RequireFields<QueryAssignmentListArgs, never>>;
   getTemplateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryGetTemplateCodeArgs, never>>;
   jwtGetBigint?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryJwtGetBigintArgs, never>>;
   jwtGetBoolean?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<QueryJwtGetBooleanArgs, never>>;
@@ -29890,7 +29824,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewList?: Resolver<Maybe<ResolversTypes['ReviewListConnection']>, ParentType, ContextType, RequireFields<QueryReviewListArgs, never>>;
   reviewReviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewReviewerIdArgs, never>>;
   reviewStage?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewStageArgs, never>>;
-  reviewersList?: Resolver<Maybe<ResolversTypes['ReviewersListConnection']>, ParentType, ContextType, RequireFields<QueryReviewersListArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
   actionQueueByNodeId?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueByNodeIdArgs, 'nodeId'>>;
   applicationByNodeId?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationByNodeIdArgs, 'nodeId'>>;
@@ -30041,27 +29974,6 @@ export type ReviewDecisionsConnectionResolvers<ContextType = any, ParentType ext
 export type ReviewDecisionsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewDecisionsEdge'] = ResolversParentTypes['ReviewDecisionsEdge']> = {
   cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
   node?: Resolver<Maybe<ResolversTypes['ReviewDecision']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewersListConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewersListConnection'] = ResolversParentTypes['ReviewersListConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['ReviewersListRecord']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['ReviewersListEdge']>, ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewersListEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewersListEdge'] = ResolversParentTypes['ReviewersListEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ReviewersListRecord']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ReviewersListRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewersListRecord'] = ResolversParentTypes['ReviewersListRecord']> = {
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  status?: Resolver<Maybe<ResolversTypes['ReviewAssignmentStatus']>, ParentType, ContextType>;
-  reviewerUsernames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -30941,9 +30853,9 @@ export type Resolvers<ContextType = any> = {
   AssignerListConnection?: AssignerListConnectionResolvers<ContextType>;
   AssignerListEdge?: AssignerListEdgeResolvers<ContextType>;
   AssignerListRecord?: AssignerListRecordResolvers<ContextType>;
-  AssignersListConnection?: AssignersListConnectionResolvers<ContextType>;
-  AssignersListEdge?: AssignersListEdgeResolvers<ContextType>;
-  AssignersListRecord?: AssignersListRecordResolvers<ContextType>;
+  AssignmentListConnection?: AssignmentListConnectionResolvers<ContextType>;
+  AssignmentListEdge?: AssignmentListEdgeResolvers<ContextType>;
+  AssignmentListRecord?: AssignmentListRecordResolvers<ContextType>;
   BigInt?: GraphQLScalarType;
   CreateActionPluginPayload?: CreateActionPluginPayloadResolvers<ContextType>;
   CreateActionQueuePayload?: CreateActionQueuePayloadResolvers<ContextType>;
@@ -31064,9 +30976,6 @@ export type Resolvers<ContextType = any> = {
   ReviewDecision?: ReviewDecisionResolvers<ContextType>;
   ReviewDecisionsConnection?: ReviewDecisionsConnectionResolvers<ContextType>;
   ReviewDecisionsEdge?: ReviewDecisionsEdgeResolvers<ContextType>;
-  ReviewersListConnection?: ReviewersListConnectionResolvers<ContextType>;
-  ReviewersListEdge?: ReviewersListEdgeResolvers<ContextType>;
-  ReviewersListRecord?: ReviewersListRecordResolvers<ContextType>;
   ReviewListConnection?: ReviewListConnectionResolvers<ContextType>;
   ReviewListEdge?: ReviewListEdgeResolvers<ContextType>;
   ReviewListRecord?: ReviewListRecordResolvers<ContextType>;

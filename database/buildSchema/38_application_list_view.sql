@@ -71,8 +71,7 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN "user" ON user_id = "user".id
     LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
     LEFT JOIN organisation org ON app.org_id = org.id
-    LEFT JOIN assigners_list() ON app.id = assigners_list.application_id AND stage_status.stage_id = assigners_list.stage_id
-    LEFT JOIN reviewers_list() ON app.id = reviewers_list.application_id AND stage_status.stage_id = reviewers_list.stage_id
+    LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
     LEFT JOIN review_list ($1) ON app.id = review_list.application_id
     LEFT JOIN assigner_list ($1) ON app.id = assigner_list.application_id
 $$
