@@ -77,8 +77,8 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN organisation org ON app.org_id = org.id
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
     LEFT JOIN is_fully_assigned_level (stage_status.stage_id, 1) ON app.id = is_fully_assigned_level.application_id
-    LEFT JOIN review_list ($1) ON app.id = review_list.application_id
-    LEFT JOIN assigner_list ($1, is_fully_assigned) ON app.id = assigner_list.application_id
+    LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
+    LEFT JOIN assigner_list (stage_status.stage_id, is_fully_assigned, $1) ON app.id = assigner_list.application_id
 $$
 LANGUAGE sql
 STABLE;

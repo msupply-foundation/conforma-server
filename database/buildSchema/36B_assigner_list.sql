@@ -5,7 +5,7 @@ CREATE TYPE public.assigner_action as ENUM (
     ''
 );
 
-CREATE FUNCTION assigner_list (assignerid int, is_fully_assigned_level_1 boolean)
+CREATE FUNCTION assigner_list (stageid int, is_fully_assigned_level_1 boolean, assignerid int)
     RETURNS TABLE (
         application_id int,
         assigner_action public.assigner_action,
@@ -28,8 +28,8 @@ CREATE FUNCTION assigner_list (assignerid int, is_fully_assigned_level_1 boolean
     FROM
         review_assignment
     LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
-WHERE
-    review_assignment_assigner_join.assigner_id = $1
+WHERE review_assignment.stage_id = $1
+    AND review_assignment_assigner_join.assigner_id = $3
 GROUP BY
     review_assignment.application_id;
 
