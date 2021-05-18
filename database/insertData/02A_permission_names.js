@@ -105,7 +105,22 @@ exports.queries = [
     createPermissionName(
       input: {
         permissionName: { 
-          name: "reviewReviewTestAssessmentLvl1", permissionPolicyToPermissionPolicyId: {
+          name: "reviewReviewTestAssessmentLvl1Section1", permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "reviewBasic" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: { 
+          name: "reviewReviewTestAssessmentLvl1Section2", permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "reviewBasic" }
           }
         }
