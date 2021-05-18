@@ -3,30 +3,33 @@ CREATE TABLE public.template_permission (
     id serial PRIMARY KEY,
     permission_name_id integer REFERENCES public.permission_name (id),
     template_id integer REFERENCES public.template (id),
+    allowed_sections varchar[] DEFAULT NULL,
+    can_self_assign boolean NOT NULL DEFAULT false,
     stage_number integer,
-    --     template_section_id integer references public.template_section(id),
     level_number integer,
     restrictions jsonb
 );
 
 CREATE VIEW permissions_all AS (
     SELECT
-        permission_policy.type AS "permissionType",
+        "user".username AS "username",
+        organisation.name AS "orgName",
+        "template".code AS "templateCode",
+        permission_name.name AS "permissionName",
+        template_permission.stage_number AS "stageNumber",
+        template_permission.level_number AS "reviewLevel", 
+        template_permission.allowed_sections AS "allowedSections",
+        template_permission.can_self_assign AS "canSelfAssign",
+        template_permission.restrictions AS "restrictions",
         permission_policy.name AS "policyName",
+        permission_policy.type AS "permissionType",
         permission_policy.id AS "permissionPolicyId",
         permission_policy.rules AS "permissionPolicyRules",
         permission_name.id AS "permissionNameId",
-        permission_name.name AS "permissionName",
         template_permission.id AS "templatePermissionId",
-        template_permission.stage_number AS "stageNumber",
-        template_permission.level_number AS "reviewLevel",
-        template_permission.restrictions AS "templatePermissionRestrictions",
         "template".id AS "templateId",
-        "template".code AS "templateCode",
         "user".id AS "userId",
-        "user"."username" AS "username",
-        permission_join.organisation_id AS "orgId",
-        organisation.name AS "orgName"
+        permission_join.organisation_id AS "orgId"
     FROM
         permission_name
         JOIN permission_join ON permission_join.permission_name_id = permission_name.id

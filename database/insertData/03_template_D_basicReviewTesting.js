@@ -277,34 +277,27 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestScreeningSection1" }
-                }
-                stageNumber: 1
-                levelNumber: 1
-                restrictions: { templateSectionRestrictions: ["S1"] }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestScreeningSection2" }
-                }
-                stageNumber: 1
-                levelNumber: 1
-                restrictions: { templateSectionRestrictions: ["S2"] }
-              }
-              {
-                permissionNameToPermissionNameId: {
                   connectByName: { name: "reviewSelfAssignable" }
                 }
-                restrictions: { canSelfAssign: true }
                 stageNumber: 1
                 levelNumber: 1
+                canSelfAssign: true
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestAssessmentLvl1" }
+                  connectByName: { name: "reviewReviewTestAssessmentLvl1Section1" }
                 }
                 stageNumber: 2
                 levelNumber: 1
+                allowedSections: ["S1"]
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewReviewTestAssessmentLvl1Section2" }
+                }
+                stageNumber: 2
+                levelNumber: 1
+                allowedSections: ["S2"]
               }
               {
                 permissionNameToPermissionNameId: {
