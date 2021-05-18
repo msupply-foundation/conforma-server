@@ -75,7 +75,7 @@ exports.queries = [
     createPermissionName(
       input: {
         permissionName: { 
-          name: "reviewReviewTestScreeningSection1", permissionPolicyToPermissionPolicyId: {
+          name: "reviewReviewTestAssessmentLvl1Section1", permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "reviewBasic" }
           }
         }
@@ -271,6 +271,7 @@ exports.queries = [
       }
     }
   }`,
+  // General Review no section restrictions and allowed self-assignment
   `mutation reviewSelfAssignable {
     createPermissionName(
       input: {

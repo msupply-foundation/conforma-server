@@ -7,15 +7,12 @@ export interface ApplicationData {
   stageNumber: number
 }
 
-interface Restrictions {
-  templateSectionRestrictions?: string[] | undefined
-  canSelfAssign?: boolean
-}
-
 export interface Reviewer {
   userId: number
   orgId: number | null
-  restrictions: Restrictions | null
+  restrictions: { [key: string]: object }
+  allowedSections: string[] | null
+  canSelfAssign: boolean
 }
 
 interface ReviewAssignment {
@@ -25,7 +22,7 @@ interface ReviewAssignment {
   stageNumber: number
   status: ReviewAssignmentStatus
   applicationId: number
-  templateSectionRestrictions: string[] | null | undefined
+  allowedSections: string[] | null
   levelNumber: number
   isLastLevel: boolean
 }

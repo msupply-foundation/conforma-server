@@ -18,7 +18,6 @@ exports.queries = [
             connectByUsername: { username: "testReviewer1" } 
           }
           status: ASSIGNED
-          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1000, templateElementId: 4001 }
@@ -131,7 +130,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 1 in Stage 2 (section 1) = APPROVED
+  // -- Reviewer 1 in Stage 2, Lvl 1 (section 1) = APPROVED
   `mutation {
     createReviewAssignment(
       input: {
@@ -146,7 +145,7 @@ exports.queries = [
             connectByUsername: { username: "testReviewer1" } 
           }
           status: ASSIGNED
-          templateSectionRestrictions: ["S1"]
+          allowedSections: ["S1"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1011, templateElementId: 4001 }
@@ -223,7 +222,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2 (section 2) = DECLINED
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = DECLINED
   `mutation {
     createReviewAssignment(
       input: {
@@ -238,7 +237,7 @@ exports.queries = [
             connectByUsername: { username: "testReviewer2" }
           }
           status: ASSIGNED
-          templateSectionRestrictions: ["S2"]
+          allowedSections: ["S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1017, templateElementId: 4008 }
@@ -334,7 +333,6 @@ exports.queries = [
             connectByUsername: { username: "testConsolidator1" }
           }
           status: AVAILABLE_FOR_SELF_ASSIGNMENT
-          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1022, templateElementId: 4001 }
@@ -377,7 +375,6 @@ exports.queries = [
             connectByUsername: { username: "testConsolidator2" }
           }
           status: AVAILABLE_FOR_SELF_ASSIGNMENT
-          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1033, templateElementId: 4001 }
@@ -419,7 +416,6 @@ exports.queries = [
           isLastLevel: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
-          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 2000, templateElementId: 4001 }
@@ -464,7 +460,6 @@ exports.queries = [
           isLastLevel: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
-          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3000, templateElementId: 4001 }
@@ -576,7 +571,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 1 in Stage 2 (section 1) = DECLINED
+  // -- Reviewer 1 in Stage 2, Lvl 1 (section 1) = DECLINED
   `mutation {
     createReviewAssignment(
       input: {
@@ -589,7 +584,7 @@ exports.queries = [
           isLastLevel: false
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
-          templateSectionRestrictions: ["S1"]
+          allowedSections: ["S1"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3010, templateElementId: 4001 }
@@ -677,7 +672,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2 (section 2) = NOT AVAILABLE (locked for this reviewer to submit)
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = NOT AVAILABLE (locked for this reviewer to submit)
   `mutation {
     createReviewAssignment(
       input: {
@@ -692,7 +687,7 @@ exports.queries = [
             connectByUsername: { username: "testReviewer2" }
           }
           status: ASSIGNED
-          templateSectionRestrictions: ["S2"]
+          allowedSections: ["S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3015, templateElementId: 4008 }
@@ -781,7 +776,6 @@ exports.queries = [
             connectByUsername: { username: "testConsolidator1" }
           }
           status: SELF_ASSIGNED_BY_ANOTHER
-          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3022, templateElementId: 4001 }
@@ -824,7 +818,6 @@ exports.queries = [
             connectByUsername: { username: "testConsolidator2" }
           }
           status: ASSIGNED
-          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3033, templateElementId: 4001 }
@@ -909,7 +902,7 @@ exports.queries = [
     }
   }`,
   // Assign test reviews of Application 4 (serial: ABC123) of Review Testing (template)
-  // Reviewer 2 in Stage 1 (section 1) = NOT STARTED
+  // Reviewer 1 in Stage 1 (All sectios) = NOT STARTED
   `mutation {
     createReviewAssignment(
       input: {
@@ -924,7 +917,6 @@ exports.queries = [
             connectByUsername: { username: "testReviewer1" } 
           }
           status: ASSIGNED
-          templateSectionRestrictions: ["S1", "S2"]
           reviewQuestionAssignmentsUsingId: {
             create: [
               { templateElementId: 4001 }
@@ -932,42 +924,6 @@ exports.queries = [
               { templateElementId: 4003 }
               { templateElementId: 4005 }
               { templateElementId: 4006 }
-            ]
-          }
-      }
-    }
-    ) {
-      reviewAssignment {
-        application {
-          name
-        }
-        stage {
-          id
-        }
-        reviewer{
-          username
-        }
-      }
-    }
-  }`,
-  // Reviewer 2 in Stage 1 (section 2) = NOT STARTED
-  `mutation {
-    createReviewAssignment(
-      input: {
-        reviewAssignment: {
-          id: 1021
-          applicationId: 4003
-          stageId: 4
-          stageNumber: 1
-          levelNumber: 1
-          isLastLevel: true
-          userToReviewerId: { 
-            connectByUsername: { username: "testReviewer2" } 
-          }
-          status: ASSIGNED
-          templateSectionRestrictions: ["S1", "S2"]
-          reviewQuestionAssignmentsUsingId: {
-            create: [
               { templateElementId: 4008 }
               { templateElementId: 4009 }
               { templateElementId: 4011 }

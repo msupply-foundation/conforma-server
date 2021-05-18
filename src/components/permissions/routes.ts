@@ -25,21 +25,26 @@ Authenticates login and returns:
   - JWT containing permissions and userId
 */
 const routeLogin = async (request: any, reply: any) => {
-  const { username, password } = request.body
-  if (password === undefined) return reply.send({ success: false })
+  try {
+    const { username, password } = request.body
+    if (password === undefined) return reply.send({ success: false })
 
-  const userOrgInfo: UserOrg[] = (await databaseConnect.getUserOrgData({ username })) || {}
+    const userOrgInfo: UserOrg[] = (await databaseConnect.getUserOrgData({ username })) || {}
+    if (userOrgInfo.length === 0) return reply.send({ success: false })
+    const { userId, passwordHash } = userOrgInfo?.[0]
+    if (!userId) return reply.send({ success: false })
 
-  const { userId, passwordHash } = userOrgInfo[0]
+    if (!(await bcrypt.compare(password, passwordHash as string)))
+      return reply.send({ success: false })
 
-  if (!(await bcrypt.compare(password, passwordHash as string)))
-    return reply.send({ success: false })
-
-  // Login successful
-  reply.send({
-    success: true,
-    ...(await getUserInfo({ userId })),
-  })
+    // Login successful
+    reply.send({
+      success: true,
+      ...(await getUserInfo({ userId })),
+    })
+  } catch (err) {
+    return reply.send({ success: false, error: err.message })
+  }
 }
 
 /*
