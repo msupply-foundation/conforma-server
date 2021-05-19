@@ -884,13 +884,6 @@ export type ApplicationListShape = {
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   totalQuestions?: Maybe<Scalars['BigInt']>;
   assignedQuestions?: Maybe<Scalars['BigInt']>;
-  reviewAvailableForSelfAssignmentCount?: Maybe<Scalars['BigInt']>;
-  reviewAssignedCount?: Maybe<Scalars['BigInt']>;
-  reviewAssignedNotStartedCount?: Maybe<Scalars['BigInt']>;
-  reviewDraftCount?: Maybe<Scalars['BigInt']>;
-  reviewSubmittedCount?: Maybe<Scalars['BigInt']>;
-  reviewChangeRequestCount?: Maybe<Scalars['BigInt']>;
-  reviewPendingCount?: Maybe<Scalars['BigInt']>;
   assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
   assignReviewersCount?: Maybe<Scalars['BigInt']>;
   assignCount?: Maybe<Scalars['BigInt']>;
@@ -943,20 +936,6 @@ export type ApplicationListShapeCondition = {
   totalQuestions?: Maybe<Scalars['BigInt']>;
   /** Checks for equality with the object’s `assignedQuestions` field. */
   assignedQuestions?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `reviewAvailableForSelfAssignmentCount` field. */
-  reviewAvailableForSelfAssignmentCount?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `reviewAssignedCount` field. */
-  reviewAssignedCount?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `reviewAssignedNotStartedCount` field. */
-  reviewAssignedNotStartedCount?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `reviewDraftCount` field. */
-  reviewDraftCount?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `reviewSubmittedCount` field. */
-  reviewSubmittedCount?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `reviewChangeRequestCount` field. */
-  reviewChangeRequestCount?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `reviewPendingCount` field. */
-  reviewPendingCount?: Maybe<Scalars['BigInt']>;
   /** Checks for equality with the object’s `assignReviewerAssignedCount` field. */
   assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
   /** Checks for equality with the object’s `assignReviewersCount` field. */
@@ -1009,20 +988,6 @@ export type ApplicationListShapeFilter = {
   totalQuestions?: Maybe<BigIntFilter>;
   /** Filter by the object’s `assignedQuestions` field. */
   assignedQuestions?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewAvailableForSelfAssignmentCount` field. */
-  reviewAvailableForSelfAssignmentCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewAssignedCount` field. */
-  reviewAssignedCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewAssignedNotStartedCount` field. */
-  reviewAssignedNotStartedCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewDraftCount` field. */
-  reviewDraftCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewSubmittedCount` field. */
-  reviewSubmittedCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewChangeRequestCount` field. */
-  reviewChangeRequestCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewPendingCount` field. */
-  reviewPendingCount?: Maybe<BigIntFilter>;
   /** Filter by the object’s `assignReviewerAssignedCount` field. */
   assignReviewerAssignedCount?: Maybe<BigIntFilter>;
   /** Filter by the object’s `assignReviewersCount` field. */
@@ -1060,13 +1025,6 @@ export type ApplicationListShapeInput = {
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   totalQuestions?: Maybe<Scalars['BigInt']>;
   assignedQuestions?: Maybe<Scalars['BigInt']>;
-  reviewAvailableForSelfAssignmentCount?: Maybe<Scalars['BigInt']>;
-  reviewAssignedCount?: Maybe<Scalars['BigInt']>;
-  reviewAssignedNotStartedCount?: Maybe<Scalars['BigInt']>;
-  reviewDraftCount?: Maybe<Scalars['BigInt']>;
-  reviewSubmittedCount?: Maybe<Scalars['BigInt']>;
-  reviewChangeRequestCount?: Maybe<Scalars['BigInt']>;
-  reviewPendingCount?: Maybe<Scalars['BigInt']>;
   assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
   assignReviewersCount?: Maybe<Scalars['BigInt']>;
   assignCount?: Maybe<Scalars['BigInt']>;
@@ -1139,20 +1097,6 @@ export enum ApplicationListShapesOrderBy {
   TotalQuestionsDesc = 'TOTAL_QUESTIONS_DESC',
   AssignedQuestionsAsc = 'ASSIGNED_QUESTIONS_ASC',
   AssignedQuestionsDesc = 'ASSIGNED_QUESTIONS_DESC',
-  ReviewAvailableForSelfAssignmentCountAsc = 'REVIEW_AVAILABLE_FOR_SELF_ASSIGNMENT_COUNT_ASC',
-  ReviewAvailableForSelfAssignmentCountDesc = 'REVIEW_AVAILABLE_FOR_SELF_ASSIGNMENT_COUNT_DESC',
-  ReviewAssignedCountAsc = 'REVIEW_ASSIGNED_COUNT_ASC',
-  ReviewAssignedCountDesc = 'REVIEW_ASSIGNED_COUNT_DESC',
-  ReviewAssignedNotStartedCountAsc = 'REVIEW_ASSIGNED_NOT_STARTED_COUNT_ASC',
-  ReviewAssignedNotStartedCountDesc = 'REVIEW_ASSIGNED_NOT_STARTED_COUNT_DESC',
-  ReviewDraftCountAsc = 'REVIEW_DRAFT_COUNT_ASC',
-  ReviewDraftCountDesc = 'REVIEW_DRAFT_COUNT_DESC',
-  ReviewSubmittedCountAsc = 'REVIEW_SUBMITTED_COUNT_ASC',
-  ReviewSubmittedCountDesc = 'REVIEW_SUBMITTED_COUNT_DESC',
-  ReviewChangeRequestCountAsc = 'REVIEW_CHANGE_REQUEST_COUNT_ASC',
-  ReviewChangeRequestCountDesc = 'REVIEW_CHANGE_REQUEST_COUNT_DESC',
-  ReviewPendingCountAsc = 'REVIEW_PENDING_COUNT_ASC',
-  ReviewPendingCountDesc = 'REVIEW_PENDING_COUNT_DESC',
   AssignReviewerAssignedCountAsc = 'ASSIGN_REVIEWER_ASSIGNED_COUNT_ASC',
   AssignReviewerAssignedCountDesc = 'ASSIGN_REVIEWER_ASSIGNED_COUNT_DESC',
   AssignReviewersCountAsc = 'ASSIGN_REVIEWERS_COUNT_ASC',
@@ -15028,13 +14972,6 @@ export type ReviewListRecord = {
   __typename?: 'ReviewListRecord';
   applicationId?: Maybe<Scalars['Int']>;
   reviewerAction?: Maybe<ReviewerAction>;
-  reviewAvailableForSelfAssignmentCount?: Maybe<Scalars['BigInt']>;
-  reviewAssignedCount?: Maybe<Scalars['BigInt']>;
-  reviewAssignedNotStartedCount?: Maybe<Scalars['BigInt']>;
-  reviewDraftCount?: Maybe<Scalars['BigInt']>;
-  reviewSubmittedCount?: Maybe<Scalars['BigInt']>;
-  reviewChangeRequestCount?: Maybe<Scalars['BigInt']>;
-  reviewPendingCount?: Maybe<Scalars['BigInt']>;
 };
 
 /** A filter to be used against `ReviewListRecord` object types. All fields are combined with a logical ‘and.’ */
@@ -15043,20 +14980,6 @@ export type ReviewListRecordFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `reviewerAction` field. */
   reviewerAction?: Maybe<ReviewerActionFilter>;
-  /** Filter by the object’s `reviewAvailableForSelfAssignmentCount` field. */
-  reviewAvailableForSelfAssignmentCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewAssignedCount` field. */
-  reviewAssignedCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewAssignedNotStartedCount` field. */
-  reviewAssignedNotStartedCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewDraftCount` field. */
-  reviewDraftCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewSubmittedCount` field. */
-  reviewSubmittedCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewChangeRequestCount` field. */
-  reviewChangeRequestCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `reviewPendingCount` field. */
-  reviewPendingCount?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewListRecordFilter>>;
   /** Checks for any expressions in this list. */
@@ -28369,13 +28292,6 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   isFullyAssignedLevel1?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   totalQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   assignedQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewAvailableForSelfAssignmentCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewAssignedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewAssignedNotStartedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewDraftCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewSubmittedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewChangeRequestCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewPendingCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   assignReviewerAssignedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   assignReviewersCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   assignCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
@@ -30155,13 +30071,6 @@ export type ReviewListEdgeResolvers<ContextType = any, ParentType extends Resolv
 export type ReviewListRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewListRecord'] = ResolversParentTypes['ReviewListRecord']> = {
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
-  reviewAvailableForSelfAssignmentCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewAssignedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewAssignedNotStartedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewDraftCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewSubmittedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewChangeRequestCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  reviewPendingCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
