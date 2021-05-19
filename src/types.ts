@@ -1,4 +1,4 @@
-import { BasicObject, IQueryNode } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject, OperatorNode, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
 import {
   ActionQueueStatus,
   ApplicationOutcome,
@@ -7,13 +7,14 @@ import {
   TriggerQueueStatus,
 } from './generated/graphql'
 
+export type EvaluatorNode = OperatorNode | ValueNode
 export interface ActionInTemplate {
   code: string
   path: string
   name: string
   trigger: string
   sequence: number | null
-  condition: IQueryNode
+  condition: EvaluatorNode
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
 }
@@ -36,7 +37,7 @@ export interface ActionQueue {
   status?: ActionQueueStatus
   action_code: string
   trigger_payload: TriggerPayload
-  condition_expression?: IQueryNode
+  condition_expression?: EvaluatorNode
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
   time_completed: string
@@ -48,7 +49,7 @@ export interface ActionQueuePayload {
   template_id: number
   action_code: string
   sequence: number | null
-  condition_expression: { [key: string]: any }
+  condition_expression: EvaluatorNode
   condition_evaluated?: boolean
   parameter_queries: { [key: string]: any }
   parameters_evaluated: { [key: string]: any }
@@ -111,7 +112,7 @@ export interface ActionPayload {
   id: number
   code: string
   parameter_queries: { [key: string]: any }
-  condition_expression: IQueryNode
+  condition_expression: EvaluatorNode
   trigger_payload?: TriggerPayload
 }
 

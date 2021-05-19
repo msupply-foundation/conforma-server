@@ -137,19 +137,19 @@ exports.queries = [
               }
             ]
           }
-          templateStagesUsingId: { 
+          templateStagesUsingId: {
             create: [
-              { 
-                number: 1, 
-                title: "Automatic", 
-                colour: "#1E14DB" #dark blue 
+              {
+                number: 1
+                title: "Automatic"
+                colour: "#1E14DB" #dark blue
               }
-            ] 
+            ]
           }
           templateActionsUsingId: {
             create: [
               # No Core Actions for this one
-              ${devActions}
+              # ${devActions}
               {
                 actionCode: "incrementStage"
                 sequence: 1
@@ -187,16 +187,24 @@ exports.queries = [
                 actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
-                parameterQueries: {
-                  newStatus: { value: "COMPLETED" }
-                }
+                parameterQueries: { newStatus: { value: "COMPLETED" } }
               }
               {
                 actionCode: "changeOutcome"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 3
+                parameterQueries: { newOutcome: { value: "APPROVED" } }
+              }
+              {
+                actionCode: "grantPermissions"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 103
                 parameterQueries: {
-                  newOutcome: { value: "APPROVED" }
+                  username: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q3.text"]
+                  }
+                  permissionNames: ["applyUserEdit"]
                 }
               }
             ]
@@ -204,8 +212,9 @@ exports.queries = [
           templatePermissionsUsingId: {
             create: [
               {
-              permissionNameToPermissionNameId: {
-              connectByName: { name: "applyUserRegistration" } }
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserRegistration" }
+                }
               }
             ]
           }
