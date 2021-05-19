@@ -2,13 +2,12 @@
 CREATE TYPE public.assigner_action as ENUM (
     'ASSIGN',
     'RE_ASSIGN'
-    ''
 );
 
 CREATE FUNCTION assigner_list (stageid int, is_fully_assigned_level_1 boolean, assignerid int)
     RETURNS TABLE (
         application_id int,
-        assigner_action public.assigner_action,
+        -- assigner_action public.assigner_action,
         -- TODO: Remove each following filters after replacing with assigner_action...
         assign_reviewer_assigned_count bigint,
         assign_reviewers_count bigint,
@@ -17,11 +16,11 @@ CREATE FUNCTION assigner_list (stageid int, is_fully_assigned_level_1 boolean, a
     AS $$
     SELECT
         review_assignment.application_id AS application_id,
-        CASE
-            WHEN COUNT(DISTINCT (review_assignment.id)) >= 1 AND is_fully_assigned_level_1 = false THEN 'ASSIGN'
-            WHEN COUNT(DISTINCT (review_assignment.id)) >= 1 AND is_fully_assigned_level_1 = true THEN 'RE-ASSIGN'
-            ELSE NULL
-        END::assigner_action,
+        -- CASE
+        --     WHEN COUNT(DISTINCT (review_assignment.id)) >= 1 AND is_fully_assigned_level_1 = false THEN 'ASSIGN'
+        --     WHEN COUNT(DISTINCT (review_assignment.id)) >= 1 AND is_fully_assigned_level_1 = true THEN 'RE-ASSIGN'
+        --     ELSE NULL
+        -- END::assigner_action,
         COUNT(DISTINCT (review_assignment.reviewer_id)) FILTER (WHERE review_assignment.status = 'ASSIGNED') AS assign_reviewer_assigned_count,
         COUNT(DISTINCT (review_assignment.reviewer_id)) AS assign_reviewers_count,
         COUNT(DISTINCT (review_assignment.id)) AS assign_count
