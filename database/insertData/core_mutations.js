@@ -247,56 +247,54 @@ Joins filters to tempaltes
 exports.joinFilters = `
 templateFilterJoinsUsingId: {
   create: [
-    create: [
-      {
-        filterToFilterId: {
-          connectByCode: { code: "approveApplications" }
-        }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "approveApplications" }
       }
-      {
-        filterToFilterId: {
-          connectByCode: { code: "submittedApplications" }
-        }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "submittedApplications" }
       }
-      {
-        filterToFilterId: { connectByCode: { code: "draftApplications" } }
+    }
+    {
+      filterToFilterId: { connectByCode: { code: "draftApplications" } }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "changeRequestApplications" }
       }
-      {
-        filterToFilterId: {
-          connectByCode: { code: "changeRequestApplications" }
-        }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "availableForSelfAssignmentReviews" }
       }
-      {
-        filterToFilterId: {
-          connectByCode: { code: "availableForSelfAssignmentReviews" }
-        }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "readyToStartReviews" }
       }
-      {
-        filterToFilterId: {
-          connectByCode: { code: "readyToStartReviews" }
-        }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "readyToRestartReviews" }
       }
-      {
-        filterToFilterId: {
-          connectByCode: { code: "readyToRestartReviews" }
-        }
+    }
+    { filterToFilterId: { connectByCode: { code: "draftReviews" } } }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "changeRequestReviews" }
       }
-      { filterToFilterId: { connectByCode: { code: "draftReviews" } } }
-      {
-        filterToFilterId: {
-          connectByCode: { code: "changeRequestReviews" }
-        }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "awaitingAssignments" }
       }
-      {
-        filterToFilterId: {
-          connectByCode: { code: "awaitingAssignments" }
-        }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "availableForReAssignments" }
       }
-      {
-        filterToFilterId: {
-          connectByCode: { code: "availableForReAssignments" }
-        }
-      }
+    }
   ]
-}
-`
+}`
