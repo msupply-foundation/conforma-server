@@ -139,7 +139,7 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "exchange"
+          icon: "redo"
           code: "changeRequestReviews"
           query: { reviewerAction: "UPDATE_REVIEW" }
           title: "Changes Required"
