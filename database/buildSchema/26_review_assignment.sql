@@ -15,7 +15,7 @@ CREATE TABLE public.review_assignment (
     stage_number integer,
     status public.review_assignment_status NOT NULL,
     application_id integer REFERENCES public.application (id),
-    template_section_restrictions varchar[],
+    allowed_sections varchar[] DEFAULT NULL,
     TRIGGER public.trigger,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     level_number integer,

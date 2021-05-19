@@ -36,6 +36,23 @@ exports.queries = [
       }
     }
   }`,
+  // applyUserEdit
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyUserEdit"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
   // applyReviewTest
   `mutation createPermissionName {
     createPermissionName(
@@ -75,7 +92,7 @@ exports.queries = [
     createPermissionName(
       input: {
         permissionName: { 
-          name: "reviewReviewTestScreeningSection1", permissionPolicyToPermissionPolicyId: {
+          name: "reviewReviewTestAssessmentLvl1Section1", permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "basicReview" }
           }
         }
@@ -90,22 +107,7 @@ exports.queries = [
     createPermissionName(
       input: {
         permissionName: { 
-          name: "reviewReviewTestScreeningSection2", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
-          }
-        }
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  `mutation createPermissionName {
-    createPermissionName(
-      input: {
-        permissionName: { 
-          name: "reviewReviewTestAssessmentLvl1", permissionPolicyToPermissionPolicyId: {
+          name: "reviewReviewTestAssessmentLvl1Section2", permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "basicReview" }
           }
         }
@@ -256,6 +258,7 @@ exports.queries = [
       }
     }
   }`,
+  // General Review no section restrictions and allowed self-assignment
   `mutation reviewSelfAssignable {
     createPermissionName(
       input: {

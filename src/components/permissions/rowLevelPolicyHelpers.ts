@@ -38,7 +38,7 @@ const compileJWT = (JWTelements: any) => {
   let JWT = { userId, orgId, aud: 'postgraphile', sessionId }
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
-    const { templatePermissionRestrictions, templateId, templatePermissionId } = permissionRow
+    const { restrictions, templateId, templatePermissionId } = permissionRow
 
     const permissionAbbreviation = getPermissionNameAbbreviation(permissionRow)
     // Add just the basic permission_policy -> permission_name key
@@ -54,7 +54,7 @@ const compileJWT = (JWTelements: any) => {
     JWT = {
       [templatePermissionAbbreviation]: true,
       ...remapObjectKeysWithPrefix(templatePermissionAbbreviation, {
-        ...templatePermissionRestrictions,
+        ...restrictions,
         templateId,
       }),
       ...JWT,

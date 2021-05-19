@@ -459,7 +459,7 @@ exports.queries = [
                 }
                 stageNumber: 1
                 levelNumber: 1
-                restrictions: { canSelfAssign: true }
+                canSelfAssign: true
               }
               # Assign General
               {
