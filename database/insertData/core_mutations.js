@@ -247,37 +247,56 @@ Joins filters to tempaltes
 exports.joinFilters = `
 templateFilterJoinsUsingId: {
   create: [
-    {
-      filterToFilterId: {
-        connectByCode: { code: "approveApplications" }
+    create: [
+      {
+        filterToFilterId: {
+          connectByCode: { code: "approveApplications" }
+        }
       }
-    }
-    {
-      filterToFilterId: {
-        connectByCode: { code: "submittedApplications" }
+      {
+        filterToFilterId: {
+          connectByCode: { code: "submittedApplications" }
+        }
       }
-    }
-    {
-      filterToFilterId: { connectByCode: { code: "draftApplications" } }
-    }
-    {
-      filterToFilterId: {
-        connectByCode: { code: "changeRequestApplications" }
+      {
+        filterToFilterId: { connectByCode: { code: "draftApplications" } }
       }
-    }
-    {
-      filterToFilterId: {
-        connectByCode: { code: "availableForSelfAssignment" }
+      {
+        filterToFilterId: {
+          connectByCode: { code: "changeRequestApplications" }
+        }
       }
-    }
-    { filterToFilterId: { connectByCode: { code: "readyToReReview" } } }
-    { filterToFilterId: { connectByCode: { code: "draftReview" } } }
-    {
-      filterToFilterId: {
-        connectByCode: { code: "awaitingAssignment" }
+      {
+        filterToFilterId: {
+          connectByCode: { code: "availableForSelfAssignmentReviews" }
+        }
       }
-    }
-    { filterToFilterId: { connectByCode: { code: "reAssign" } } }
+      {
+        filterToFilterId: {
+          connectByCode: { code: "readyToStartReviews" }
+        }
+      }
+      {
+        filterToFilterId: {
+          connectByCode: { code: "readyToRestartReviews" }
+        }
+      }
+      { filterToFilterId: { connectByCode: { code: "draftReviews" } } }
+      {
+        filterToFilterId: {
+          connectByCode: { code: "changeRequestReviews" }
+        }
+      }
+      {
+        filterToFilterId: {
+          connectByCode: { code: "awaitingAssignments" }
+        }
+      }
+      {
+        filterToFilterId: {
+          connectByCode: { code: "availableForReAssignments" }
+        }
+      }
   ]
 }
 `
