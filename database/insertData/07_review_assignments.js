@@ -32,6 +32,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 1000
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -110,7 +111,12 @@ exports.queries = [
                   }
                 ]
               }
-              reviewDecisionsUsingId: { create: { decision: CONFORM } }
+              reviewDecisionsUsingId: { 
+                create: { 
+                  id: 1000
+                  decision: CONFORM 
+                } 
+              }
             }
           }
         }
@@ -154,6 +160,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 1001
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -202,7 +209,12 @@ exports.queries = [
                   }
                 ]
               }
-              reviewDecisionsUsingId: { create: { decision: CONFORM } }
+              reviewDecisionsUsingId: { 
+                create: { 
+                  id: 1001
+                  decision: CONFORM 
+                } 
+              }
             }
           }
         }
@@ -246,6 +258,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 1002
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -297,6 +310,7 @@ exports.queries = [
               }
               reviewDecisionsUsingId: {
                 create: {
+                  id: 1002
                   decision: LIST_OF_QUESTIONS
                   comment: "Suggestion by Reviewer 2 to reply to applicant with LOQ"
                 }
@@ -350,6 +364,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 1003
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -472,7 +487,7 @@ exports.queries = [
     createReviewAssignment(
       input: {
         reviewAssignment: {
-          id: 1005
+          id: 2000
           applicationId: 4001
           stageId: 4
           stageNumber: 1
@@ -496,6 +511,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 2000
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -575,7 +591,12 @@ exports.queries = [
                   }
                 ]
               }
-              reviewDecisionsUsingId: { create: { decision: LIST_OF_QUESTIONS } }
+              reviewDecisionsUsingId: { 
+                create: { 
+                  id: 2000
+                  decision: LIST_OF_QUESTIONS 
+                } 
+              }
             }
           }
         }
@@ -600,7 +621,7 @@ exports.queries = [
     createReviewAssignment(
       input: {
         reviewAssignment: {
-          id: 1006
+          id: 3000
           applicationId: 4002
           stageId: 4
           stageNumber: 1
@@ -624,6 +645,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 3000
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -699,7 +721,10 @@ exports.queries = [
                 ]
               }
               reviewDecisionsUsingId: {
-                create: { decision: CONFORM }
+                create: { 
+                  id: 3000
+                  decision: CONFORM 
+                }
               }
             }
           }
@@ -724,7 +749,7 @@ exports.queries = [
     createReviewAssignment(
       input: {
         reviewAssignment: {
-          id: 1007
+          id: 3001
           applicationId: 4002
           stageId: 5
           stageNumber: 2
@@ -744,6 +769,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 3001
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -797,6 +823,7 @@ exports.queries = [
               }
               reviewDecisionsUsingId: {
                 create: { 
+                  id: 3001
                   decision: LIST_OF_QUESTIONS 
                   comment: "Suggestion by Reviewer 1 to reply to applicant with LOQ"
                 }
@@ -824,7 +851,7 @@ exports.queries = [
     createReviewAssignment(
       input: {
         reviewAssignment: {
-          id: 1008
+          id: 3002
           applicationId: 4002
           stageId: 5
           stageNumber: 2
@@ -846,6 +873,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 3002
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -913,7 +941,7 @@ exports.queries = [
     createReviewAssignment(
       input: {
         reviewAssignment: {
-          id: 1009
+          id: 3003
           applicationId: 4002
           stageId: 5
           stageNumber: 2
@@ -955,7 +983,7 @@ exports.queries = [
     createReviewAssignment(
       input: {
         reviewAssignment: {
-          id: 1010
+          id: 3004
           applicationId: 4002
           stageId: 5
           stageNumber: 2
@@ -976,6 +1004,7 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
+              id: 3004
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -1028,6 +1057,7 @@ exports.queries = [
               }
               reviewDecisionsUsingId: {
                 create: { 
+                  id: 3004
                   decision: NON_CONFORM 
                   comment: "Reviewer 1 required to update"
                 }
@@ -1053,7 +1083,7 @@ exports.queries = [
     createReviewAssignment(
       input: {
         reviewAssignment: {
-          id: 1020
+          id: 4000
           applicationId: 4003
           stageId: 4
           stageNumber: 1

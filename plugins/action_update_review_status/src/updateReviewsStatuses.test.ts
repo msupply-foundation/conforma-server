@@ -33,29 +33,29 @@ beforeAll(async (done) => {
     values: [],
   })
 
-  // Update review_response to required changes_requested by consolidator1 (Test 2)
+  // Update review_response with changes_requested by consolidator1 (Test 2)
   await DBConnect.query({
     text: `
     INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status) 
-      VALUES (DEFAULT, 4, 1022, 4001, 4000, 'DISAGREE', 'SUBMITTED');
-    INSERT INTO public.review_decision (id, decision, review_id) 
-      VALUES (DEFAULT, 'CHANGES_REQUESTED', 4);
+      VALUES (DEFAULT, 1003, 1022, 4001, 4000, 'DISAGREE', 'SUBMITTED');
+    INSERT INTO public.review_decision (id, review_id, decision) 
+      VALUES (DEFAULT, 1003, 'CHANGES_REQUESTED');
     INSERT INTO public.review_status_history (id, review_id, status)
-      VALUES (DEFAULT, 4, 'SUBMITTED');
+      VALUES (DEFAULT, 1003, 'SUBMITTED');
     `,
     values: [],
   })
 
-  // Update review_responses after updating changes_requested to reviewer1 (Test 3)
+  // Re-submitted review_responses after updating changes_requested by reviewer1 (Test 3)
   await DBConnect.query({
     text: `
     INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status) 
-      VALUES (DEFAULT, 7, 3010, 4001, 4020, 'APPROVE', 'SUBMITTED');
+      VALUES (DEFAULT, 3001, 3010, 4001, 4020, 'APPROVE', 'SUBMITTED');
     INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status) 
-      VALUES (DEFAULT, 7, 3011, 4002, 4021, 'APPROVE', 'SUBMITTED');
-    UPDATE public.review_decision SET decision = 'Conform', comment = NULL, time_updated = 'NOW()' WHERE id = 6;
+      VALUES (DEFAULT, 3001, 3011, 4002, 4021, 'APPROVE', 'SUBMITTED');
+    UPDATE public.review_decision SET decision = 'Conform', comment = NULL, time_updated = 'NOW()' WHERE id = 3001;
     INSERT INTO public.review_status_history (id, review_id, status)
-      VALUES (DEFAULT, 7, 'SUBMITTED');
+      VALUES (DEFAULT, 3001, 'SUBMITTED');
     `,
     values: [],
   })
@@ -82,10 +82,10 @@ test('Application resubmitted with changes => Update review status to PENDING', 
       output: {
         updatedReviews: [
           {
-            reviewId: 5,
-            reviewAssignmentId: 1005,
+            reviewId: 2000,
+            reviewAssignmentId: 2000,
             applicationId: 4001,
-            reviewer_id: 7,
+            reviewerId: 7,
             levelNumber: 1,
             reviewStatus: ReviewStatus.Pending,
           },
@@ -105,7 +105,7 @@ test('Review submitted to lower level with changes required => Update lower revi
     applicationData: {
       stageId: 5,
       reviewData: {
-        reviewId: 4,
+        reviewId: 1003,
         levelNumber: 2,
         latestDecision: { decision: Decision.ChangesRequested, comment: null },
       },
@@ -118,10 +118,10 @@ test('Review submitted to lower level with changes required => Update lower revi
       output: {
         updatedReviews: [
           {
-            reviewId: 2,
+            reviewId: 1001,
             reviewAssignmentId: 1001,
             applicationId: 4000,
-            reviewer_id: 7,
+            reviewerId: 7,
             levelNumber: 1,
             reviewStatus: ReviewStatus.ChangesRequested,
           },
@@ -144,7 +144,7 @@ test('Review resubmitted to upper level with updated changes => Update upper rev
     applicationData: {
       stageId: 5,
       reviewData: {
-        reviewId: 6,
+        reviewId: 3001,
         levelNumber: 1,
       },
     },
@@ -156,18 +156,18 @@ test('Review resubmitted to upper level with updated changes => Update upper rev
       output: {
         updatedReviews: [
           {
-            reviewId: 8,
-            reviewAssignmentId: 1008,
+            reviewId: 3002,
+            reviewAssignmentId: 3002,
             applicationId: 4002,
-            reviewer_id: 8,
+            reviewerId: 8,
             levelNumber: 1,
             reviewStatus: ReviewStatus.Draft,
           },
           {
-            reviewId: 9,
-            reviewAssignmentId: 1010,
+            reviewId: 3004,
+            reviewAssignmentId: 3004,
             applicationId: 4002,
-            reviewer_id: 10,
+            reviewerId: 10,
             levelNumber: 2,
             reviewStatus: ReviewStatus.Pending,
           },
