@@ -38,23 +38,19 @@ const updateReviewsStatuses: ActionPluginType = async ({
   const getReviewsByLevelAndStatus = async (
     level: number,
     statusToUpdate: ReviewStatus[]
-  ): Promise<Review[]> => {
-    const result = (await db.getAssociatedReviews(applicationId, stageId, level)).filter(
+  ): Promise<Review[]> =>
+    (await db.getAssociatedReviews(applicationId, stageId, level)).filter(
       (review: Review) =>
         review.reviewId !== reviewId && statusToUpdate.includes(review.reviewStatus)
     )
-    console.log('result', result)
-
-    return result
-  }
 
   console.log('Finding reviews to update status...')
 
   try {
     if (isReview) {
+      // Review submitted from upper level to lower level review
       if (decision === Decision.ChangesRequested) {
         const previousLevelReview = currentReviewLevel - 1
-        // Review submitted to upper level
         // Update lower level reviews with assigned responses on the array changed responses ...
         const reviewsSubmitted = await getReviewsByLevelAndStatus(previousLevelReview, [
           ReviewStatus.Submitted,
@@ -66,7 +62,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
             reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.ChangesRequested })
         }
       } else {
-        // Review submitted to upper level
+        // Review submitted from lower level to upper level
         // Update same level reviews as submitted if no other still have changes requested status...
         const othersChangeRequested = await getReviewsByLevelAndStatus(currentReviewLevel, [
           ReviewStatus.ChangesRequested,

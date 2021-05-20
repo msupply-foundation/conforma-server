@@ -1,7 +1,7 @@
 // Test suite for the updateReviews Action.
 
 import DBConnect from '../../../src/components/databaseConnect'
-import { ActionQueueStatus, ReviewStatus } from '../../../src/generated/graphql'
+import { ActionQueueStatus, Decision, ReviewStatus } from '../../../src/generated/graphql'
 import { action as updateReviewsStatuses } from './index'
 
 // Setup database
@@ -107,6 +107,7 @@ test('Review submitted to lower level with changes required => Update lower revi
       reviewData: {
         reviewId: 4,
         levelNumber: 2,
+        latestDecision: { decision: Decision.ChangesRequested, comment: null },
       },
     },
     DBConnect,
