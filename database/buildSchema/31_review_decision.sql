@@ -10,7 +10,7 @@ CREATE TYPE public.decision AS ENUM (
 CREATE TABLE public.review_decision (
     id serial PRIMARY KEY,
     review_id integer REFERENCES public.review (id),
-    decision public.decision DEFAULT 'No Decision',
+    decision public.decision DEFAULT 'No Decision', -- TODO: 'NO_DECISION'
     comment varchar,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP
 );
