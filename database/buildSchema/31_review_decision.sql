@@ -1,10 +1,10 @@
 -- review decision
 CREATE TYPE public.decision AS ENUM (
-    'List of questions',
-    'Conform',
-    'Non-conform',
-    'CHANGES_REQUESTED',
-    'No Decision'
+    'List of questions', -- TODO: 'LIST_OF_QUESTIONS'
+    'Conform', -- TODO: 'CONFORM'
+    'Non-conform', -- TODO: 'NON_CONFORM'
+    'CHANGES_REQUESTED', 
+    'No Decision' -- TODO: 'NO_DECISION'
 );
 
 CREATE TABLE public.review_decision (
