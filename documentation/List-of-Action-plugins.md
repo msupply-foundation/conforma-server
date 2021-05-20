@@ -292,10 +292,11 @@ Here is a summary of the core actions and the triggers that launch them:
 
 - Change Status (to "Submitted")
 - Trim Responses
+- Update Review Statuses (for other reviews related to this review submission)
+- Increment Stage (if last level reviewer approves)
 - Generate Review Assignments (for next level review)
 - Update review response visibility (for applicant)
 - Change Status (Application, conditional on the review decision)
-- Increment Stage (if last level reviewer approves)
 
 #### On Review Restart: (i.e. review making changes based on higher level requests)
 
