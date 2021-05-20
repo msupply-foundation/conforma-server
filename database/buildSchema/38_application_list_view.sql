@@ -19,7 +19,7 @@ CREATE TABLE application_list_shape (
     assigner_usernames varchar[],
     reviewer_usernames varchar[],
     reviewer_action public.reviewer_action,
-    -- assigner_action public.assigner_action,
+    assigner_action public.assigner_action,
     is_fully_assigned_level_1 boolean,
     total_questions bigint,
     assigned_questions bigint,
@@ -50,8 +50,8 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         assigner_usernames,
         reviewer_usernames,
         reviewer_action,
-        -- assigner_action,
-        is_fully_assigned AS is_fully_assigned_level_1,
+        assigner_action,
+        is_fully_assigned_level_1,
         total_questions,
         assigned_questions,
         assign_reviewer_assigned_count,
@@ -65,8 +65,7 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN organisation org ON app.org_id = org.id
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
     LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
-    LEFT JOIN review_is_fully_assigned_list (stage_status.stage_id, 1) AS assignment_status ON app.id = assignment_status.application_id
-    LEFT JOIN assigner_list (stage_status.stage_id, assignment_status.is_fully_assigned, $1) ON app.id = assigner_list.application_id
+    LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
 $$
 LANGUAGE sql
 STABLE;
