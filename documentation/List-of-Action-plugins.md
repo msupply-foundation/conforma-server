@@ -246,12 +246,17 @@ When an applicant re-submits an application after making changes, this Action up
 
 - _Action Code:_ **`updateReviewsStatuses`**
 
-| Input parameters<br />(\*required) <br/>                        | Output properties |
-| --------------------------------------------------------------- | ----------------- |
-| `applicationId`                                                 | `updatedReviews`  |
-| `changedApplicationResponses` [Array of applicationResponseIds] |                   |
+| Input parameters<br />(\*required) <br/>               | Output properties |
+| ------------------------------------------------------ | ----------------- |
+| `applicationId`                                        | `updatedReviews`  |
+| `reviewId`                                             |                   |
+| `changedResponses`\* [Array of applicationResponseIds] |                   |
 
-**Note:** If `applicationId` is not provided, the plugin will attempt to fetch it from `applicationData`
+**Note:** - If `applicationId` or `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`
+**Note 2:** - If `reviewId` is received, the Action will be updating status of related reviews of same stage in the current and next level reviews.
+
+- Else it will be updating only reviewes of current level/stage.
+  **Note 3**: In both cases: Review submitted or Application submitted the list of changed review/responses submitted is passed as `changedResponses` to the action, this will consider reviews that have these as assigned responses to update.
 
 ---
 

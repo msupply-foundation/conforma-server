@@ -68,7 +68,7 @@ exports.coreActions = `
       trigger: ON_APPLICATION_SUBMIT
       sequence: 4
       parameterQueries: {
-        changedApplicationResponses: {
+        changedResponses: {
           operator: "objectProperties"
           children: ["outputCumulative.updatedResponses"]
         }
@@ -116,7 +116,7 @@ exports.coreActions = `
             operator: "objectProperties"
             children: ["applicationData.applicationId"]
           }
-          changedApplicationResponses: {
+          changedResponses: {
             operator: "objectProperties"
             children: ["outputCumulative.updatedResponses"]
           }

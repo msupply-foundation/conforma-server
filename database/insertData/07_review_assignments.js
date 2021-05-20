@@ -319,7 +319,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 1 Lvl 2 - Stage 2 = NOT STARTED
+  // -- Consolidator 1 Lvl 2 - Stage 2 = ASSIGNED
   `mutation {
     createReviewAssignment(
       input: {
@@ -333,7 +333,7 @@ exports.queries = [
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
           }
-          status: AVAILABLE_FOR_SELF_ASSIGNMENT
+          status: ASSIGNED
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1022, templateElementId: 4001 }
@@ -348,6 +348,69 @@ exports.queries = [
               { id: 1031, templateElementId: 4013 }
             ]
           }
+          reviewsUsingId: {
+            create: {
+              reviewResponsesUsingId: {
+                create: [
+                  {
+                    applicationResponseId: 4000
+                    reviewQuestionAssignmentId: 1022
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4001
+                    reviewQuestionAssignmentId: 1023
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4002
+                    reviewQuestionAssignmentId: 1024
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4003
+                    reviewQuestionAssignmentId: 1025
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4004
+                    reviewQuestionAssignmentId: 1026
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4005
+                    reviewQuestionAssignmentId: 1027
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4006
+                    reviewQuestionAssignmentId: 1028
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4007
+                    reviewQuestionAssignmentId: 1029
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4008
+                    reviewQuestionAssignmentId: 1030
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4009
+                    reviewQuestionAssignmentId: 1031
+                    status: DRAFT
+                  }
+                ]
+              }
+              reviewStatusHistoriesUsingId: {
+                create: [
+                  { status: DRAFT, isCurrent: true, timeCreated: "2021-05-19T00:00:00Z" }
+                ]
+              }
+            }
+          }
         }
       }
     ) {
@@ -361,7 +424,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 2 Lvl 2 - Stage 2 = NOT STARTED (There are 2 possible consolidators...)
+  // -- Consolidator 2 Lvl 2 - Stage 2 = NOT AVAILABLE (not assignable for this consolidator)
   `mutation {
     createReviewAssignment(
       input: {
@@ -375,7 +438,7 @@ exports.queries = [
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
           }
-          status: AVAILABLE_FOR_SELF_ASSIGNMENT
+          status: SELF_ASSIGNED_BY_ANOTHER
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1033, templateElementId: 4001 }
@@ -756,7 +819,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = NOT AVAILABLE (locked for this reviewer to submit)
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = LOCKED (for this reviewer to submit)
   `mutation {
     createReviewAssignment(
       input: {
