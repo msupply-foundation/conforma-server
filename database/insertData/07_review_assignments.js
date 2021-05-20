@@ -14,9 +14,7 @@ exports.queries = [
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
-          userToReviewerId: { 
-            connectByUsername: { username: "testReviewer1" } 
-          }
+          userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
           reviewQuestionAssignmentsUsingId: {
             create: [
@@ -34,7 +32,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              id: 1000
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -101,7 +98,11 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "2021-01-31T00:00:00Z" }
+                  {
+                    status: DRAFT
+                    isCurrent: false
+                    timeCreated: "2021-01-31T00:00:00Z"
+                  }
                   {
                     status: SUBMITTED
                     isCurrent: true
@@ -109,9 +110,7 @@ exports.queries = [
                   }
                 ]
               }
-              reviewDecisionsUsingId: {
-                create: { decision: CONFORM }
-              }
+              reviewDecisionsUsingId: { create: { decision: CONFORM } }
             }
           }
         }
@@ -124,7 +123,7 @@ exports.queries = [
         stage {
           id
         }
-        reviewer{
+        reviewer {
           username
         }
       }
@@ -141,9 +140,7 @@ exports.queries = [
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
-          userToReviewerId: { 
-            connectByUsername: { username: "testReviewer1" } 
-          }
+          userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
           allowedSections: ["S1"]
           reviewQuestionAssignmentsUsingId: {
@@ -193,7 +190,11 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "2021-02-01T00:00:00Z" }
+                  {
+                    status: DRAFT
+                    isCurrent: false
+                    timeCreated: "2021-02-01T00:00:00Z"
+                  }
                   {
                     status: SUBMITTED
                     isCurrent: true
@@ -201,9 +202,7 @@ exports.queries = [
                   }
                 ]
               }
-              reviewDecisionsUsingId: {
-                create: { decision: CONFORM }
-              }
+              reviewDecisionsUsingId: { create: { decision: CONFORM } }
             }
           }
         }
@@ -233,9 +232,7 @@ exports.queries = [
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
-          userToReviewerId: {
-            connectByUsername: { username: "testReviewer2" }
-          }
+          userToReviewerId: { connectByUsername: { username: "testReviewer2" } }
           status: ASSIGNED
           allowedSections: ["S2"]
           reviewQuestionAssignmentsUsingId: {
@@ -249,33 +246,33 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              reviewResponsesUsingId: { 
+              reviewResponsesUsingId: {
                 create: [
-                  { 
+                  {
                     applicationResponseId: 4005
                     reviewQuestionAssignmentId: 1017
                     status: SUBMITTED
                     decision: APPROVE
                   }
-                  { 
+                  {
                     applicationResponseId: 4006
                     reviewQuestionAssignmentId: 1018
                     status: SUBMITTED
                     decision: APPROVE
                   }
-                  { 
+                  {
                     applicationResponseId: 4007
                     reviewQuestionAssignmentId: 1019
                     status: SUBMITTED
                     decision: APPROVE
                   }
-                  { 
+                  {
                     applicationResponseId: 4008
                     reviewQuestionAssignmentId: 1020
                     status: SUBMITTED
                     decision: APPROVE
                   }
-                  { 
+                  {
                     applicationResponseId: 4009
                     reviewQuestionAssignmentId: 1021
                     status: SUBMITTED
@@ -286,7 +283,11 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "2021-02-01T00:00:00Z" }
+                  {
+                    status: DRAFT
+                    isCurrent: false
+                    timeCreated: "2021-02-01T00:00:00Z"
+                  }
                   {
                     status: SUBMITTED
                     isCurrent: true
@@ -295,13 +296,13 @@ exports.queries = [
                 ]
               }
               reviewDecisionsUsingId: {
-                create: { 
+                create: {
                   decision: LIST_OF_QUESTIONS
                   comment: "Suggestion by Reviewer 2 to reply to applicant with LOQ"
                 }
               }
             }
-          }     
+          }
         }
       }
     ) {
@@ -403,7 +404,7 @@ exports.queries = [
     }
   }`,
   // Assign test reviews of Application 2 (serial: 23456) of Review Testing (template)
-  // -- Review Lvl 1 - Stage 1 (all sections) = NOT STARTED
+  // -- Review Lvl 1 - Stage 1 (all sections) = submitted LIST_OF_QUESTION to Applicant
   `mutation {
     createReviewAssignment(
       input: {
@@ -429,6 +430,90 @@ exports.queries = [
               { id: 2009, templateElementId: 4012 }
               { id: 2010, templateElementId: 4013 }
             ]
+          }
+          reviewsUsingId: {
+            create: {
+              reviewResponsesUsingId: {
+                create: [
+                  {
+                    applicationResponseId: 4000
+                    reviewQuestionAssignmentId: 2000
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4001
+                    reviewQuestionAssignmentId: 2001
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4002
+                    reviewQuestionAssignmentId: 2002
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4003
+                    reviewQuestionAssignmentId: 2003
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4004
+                    reviewQuestionAssignmentId: 2004
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4005
+                    reviewQuestionAssignmentId: 2006
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4006
+                    reviewQuestionAssignmentId: 2007
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4007
+                    reviewQuestionAssignmentId: 2008
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4008
+                    reviewQuestionAssignmentId: 2009
+                    status: SUBMITTED
+                    decision: APPROVE
+                  }
+                  {
+                    applicationResponseId: 4009
+                    reviewQuestionAssignmentId: 2010
+                    status: SUBMITTED
+                    decision: DECLINE
+                    comment: "List lighter effects"
+                  }
+                ]
+              }
+              reviewStatusHistoriesUsingId: {
+                create: [
+                  {
+                    status: DRAFT
+                    isCurrent: false
+                    timeCreated: "2021-05-19T00:00:00Z"
+                  }
+                  {
+                    status: SUBMITTED
+                    isCurrent: true
+                    timeCreated: "2021-05-19T10:00:00Z"
+                  }
+                ]
+              }
+              reviewDecisionsUsingId: { create: { decision: LIST_OF_QUESTIONS } }
+            }
           }
         }
       }
@@ -596,7 +681,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              id: 4000
               reviewResponsesUsingId: {
                 create: [
                   {
@@ -829,7 +913,6 @@ exports.queries = [
           }
           reviewsUsingId: {
             create: {
-              id: 5000
               reviewResponsesUsingId: {
                 create: [
                   {
