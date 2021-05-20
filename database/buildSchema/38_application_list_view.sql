@@ -21,11 +21,8 @@ CREATE TABLE application_list_shape (
     reviewer_action public.reviewer_action,
     assigner_action public.assigner_action,
     is_fully_assigned_level_1 boolean,
-    total_questions bigint,
-    assigned_questions bigint,
-    assign_reviewer_assigned_count bigint,
-    assign_reviewers_count bigint,
-    assign_count bigint
+    assigned_questions_level_1 bigint,
+    total_questions bigint
 );
 
 CREATE FUNCTION application_list (userid int DEFAULT 0)
@@ -52,11 +49,8 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         reviewer_action,
         assigner_action,
         is_fully_assigned_level_1,
-        total_questions,
-        assigned_questions,
-        assign_reviewer_assigned_count,
-        assign_reviewers_count,
-        assign_count
+        assigned_questions_level_1,
+        total_questions
     FROM
         application app
     LEFT JOIN TEMPLATE ON app.template_id = template.id

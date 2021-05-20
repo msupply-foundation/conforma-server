@@ -883,11 +883,8 @@ export type ApplicationListShape = {
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
+  assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   totalQuestions?: Maybe<Scalars['BigInt']>;
-  assignedQuestions?: Maybe<Scalars['BigInt']>;
-  assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
-  assignReviewersCount?: Maybe<Scalars['BigInt']>;
-  assignCount?: Maybe<Scalars['BigInt']>;
 };
 
 /**
@@ -935,16 +932,10 @@ export type ApplicationListShapeCondition = {
   assignerAction?: Maybe<AssignerAction>;
   /** Checks for equality with the object’s `isFullyAssignedLevel1` field. */
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `assignedQuestionsLevel1` field. */
+  assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   /** Checks for equality with the object’s `totalQuestions` field. */
   totalQuestions?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `assignedQuestions` field. */
-  assignedQuestions?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `assignReviewerAssignedCount` field. */
-  assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `assignReviewersCount` field. */
-  assignReviewersCount?: Maybe<Scalars['BigInt']>;
-  /** Checks for equality with the object’s `assignCount` field. */
-  assignCount?: Maybe<Scalars['BigInt']>;
 };
 
 /** A filter to be used against `ApplicationListShape` object types. All fields are combined with a logical ‘and.’ */
@@ -989,16 +980,10 @@ export type ApplicationListShapeFilter = {
   assignerAction?: Maybe<AssignerActionFilter>;
   /** Filter by the object’s `isFullyAssignedLevel1` field. */
   isFullyAssignedLevel1?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `assignedQuestionsLevel1` field. */
+  assignedQuestionsLevel1?: Maybe<BigIntFilter>;
   /** Filter by the object’s `totalQuestions` field. */
   totalQuestions?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `assignedQuestions` field. */
-  assignedQuestions?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `assignReviewerAssignedCount` field. */
-  assignReviewerAssignedCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `assignReviewersCount` field. */
-  assignReviewersCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `assignCount` field. */
-  assignCount?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListShapeFilter>>;
   /** Checks for any expressions in this list. */
@@ -1029,11 +1014,8 @@ export type ApplicationListShapeInput = {
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
+  assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   totalQuestions?: Maybe<Scalars['BigInt']>;
-  assignedQuestions?: Maybe<Scalars['BigInt']>;
-  assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
-  assignReviewersCount?: Maybe<Scalars['BigInt']>;
-  assignCount?: Maybe<Scalars['BigInt']>;
 };
 
 /** A connection to a list of `ApplicationListShape` values. */
@@ -1101,16 +1083,10 @@ export enum ApplicationListShapesOrderBy {
   AssignerActionDesc = 'ASSIGNER_ACTION_DESC',
   IsFullyAssignedLevel_1Asc = 'IS_FULLY_ASSIGNED_LEVEL_1_ASC',
   IsFullyAssignedLevel_1Desc = 'IS_FULLY_ASSIGNED_LEVEL_1_DESC',
+  AssignedQuestionsLevel_1Asc = 'ASSIGNED_QUESTIONS_LEVEL_1_ASC',
+  AssignedQuestionsLevel_1Desc = 'ASSIGNED_QUESTIONS_LEVEL_1_DESC',
   TotalQuestionsAsc = 'TOTAL_QUESTIONS_ASC',
-  TotalQuestionsDesc = 'TOTAL_QUESTIONS_DESC',
-  AssignedQuestionsAsc = 'ASSIGNED_QUESTIONS_ASC',
-  AssignedQuestionsDesc = 'ASSIGNED_QUESTIONS_DESC',
-  AssignReviewerAssignedCountAsc = 'ASSIGN_REVIEWER_ASSIGNED_COUNT_ASC',
-  AssignReviewerAssignedCountDesc = 'ASSIGN_REVIEWER_ASSIGNED_COUNT_DESC',
-  AssignReviewersCountAsc = 'ASSIGN_REVIEWERS_COUNT_ASC',
-  AssignReviewersCountDesc = 'ASSIGN_REVIEWERS_COUNT_DESC',
-  AssignCountAsc = 'ASSIGN_COUNT_ASC',
-  AssignCountDesc = 'ASSIGN_COUNT_DESC'
+  TotalQuestionsDesc = 'TOTAL_QUESTIONS_DESC'
 }
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -3577,12 +3553,9 @@ export type AssignerListRecord = {
   __typename?: 'AssignerListRecord';
   applicationId?: Maybe<Scalars['Int']>;
   assignerAction?: Maybe<AssignerAction>;
-  assignedQuestions?: Maybe<Scalars['BigInt']>;
-  totalQuestions?: Maybe<Scalars['BigInt']>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
-  assignReviewerAssignedCount?: Maybe<Scalars['BigInt']>;
-  assignReviewersCount?: Maybe<Scalars['BigInt']>;
-  assignCount?: Maybe<Scalars['BigInt']>;
+  assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
+  totalQuestions?: Maybe<Scalars['BigInt']>;
 };
 
 /** A filter to be used against `AssignerListRecord` object types. All fields are combined with a logical ‘and.’ */
@@ -3591,18 +3564,12 @@ export type AssignerListRecordFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `assignerAction` field. */
   assignerAction?: Maybe<AssignerActionFilter>;
-  /** Filter by the object’s `assignedQuestions` field. */
-  assignedQuestions?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `totalQuestions` field. */
-  totalQuestions?: Maybe<BigIntFilter>;
   /** Filter by the object’s `isFullyAssignedLevel1` field. */
   isFullyAssignedLevel1?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `assignReviewerAssignedCount` field. */
-  assignReviewerAssignedCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `assignReviewersCount` field. */
-  assignReviewersCount?: Maybe<BigIntFilter>;
-  /** Filter by the object’s `assignCount` field. */
-  assignCount?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `assignedQuestionsLevel1` field. */
+  assignedQuestionsLevel1?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalQuestions` field. */
+  totalQuestions?: Maybe<BigIntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<AssignerListRecordFilter>>;
   /** Checks for any expressions in this list. */
@@ -28331,11 +28298,8 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
   assignerAction?: Resolver<Maybe<ResolversTypes['AssignerAction']>, ParentType, ContextType>;
   isFullyAssignedLevel1?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  assignedQuestionsLevel1?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   totalQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  assignedQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  assignReviewerAssignedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  assignReviewersCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  assignCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -28562,12 +28526,9 @@ export type AssignerListEdgeResolvers<ContextType = any, ParentType extends Reso
 export type AssignerListRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignerListRecord'] = ResolversParentTypes['AssignerListRecord']> = {
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   assignerAction?: Resolver<Maybe<ResolversTypes['AssignerAction']>, ParentType, ContextType>;
-  assignedQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  totalQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   isFullyAssignedLevel1?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  assignReviewerAssignedCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  assignReviewersCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
-  assignCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  assignedQuestionsLevel1?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  totalQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
