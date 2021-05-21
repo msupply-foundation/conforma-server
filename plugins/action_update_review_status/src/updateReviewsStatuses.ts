@@ -28,10 +28,14 @@ const updateReviewsStatuses: ActionPluginType = async ({
   const stageId = parameters?.stageId || applicationData?.stageId
   const currentReviewLevel = parameters.level || applicationData?.reviewData?.levelNumber || 0
 
-  if (isReview) console.log('Review submitted id', reviewId, 'level ', currentReviewLevel)
-  else console.log('Application submitted id', applicationId)
+  console.log(
+    'Updating statuses of reviews associated with ' + isReview
+      ? 'review Id: ' + reviewId
+      : 'application Id: ' + applicationId
+  )
 
-  console.log('Changed responses', changedResponses)
+  console.log('Current review level:', currentReviewLevel)
+  console.log('Changed responses:', changedResponses)
 
   const reviewsToUpdate = []
 
