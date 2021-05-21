@@ -92,7 +92,9 @@ describe('Update review_response to required changes_requested by consolidator1'
     return updateReviewsStatuses({
       parameters: {
         triggeredBy: 'REVIEW',
-        changedResponses: [{ applicationResponseId: 4000, templateElementId: 4001 }],
+        changedResponses: [
+          { applicationResponseId: 4000, templateElementId: 4001, reviewDecision: 'DISAGREE' },
+        ],
       },
       // @ts-ignore
       applicationData: {

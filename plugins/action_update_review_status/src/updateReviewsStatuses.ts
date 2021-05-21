@@ -1,4 +1,9 @@
-import { ActionQueueStatus, Decision, ReviewStatus, Trigger } from '../../../src/generated/graphql'
+import {
+  ActionQueueStatus,
+  Decision,
+  ReviewResponseDecision,
+  ReviewStatus,
+} from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 
@@ -68,22 +73,17 @@ const updateReviewsStatuses: ActionPluginType = async ({
         }
       } else {
         // Review submitted from lower level to upper level
-        // Update same level reviews as submitted if no other still have changes requested status...
-        const othersChangeRequested = await getReviewsByLevelAndStatus(currentReviewLevel, [
-          ReviewStatus.ChangesRequested,
-        ])
-        if (othersChangeRequested.length === 0) {
-          // Get all Locked reviews matching application_id, current stage, current level and in Locked status
-          const reviewsLocked = await getReviewsByLevelAndStatus(currentReviewLevel, [
-            ReviewStatus.Locked,
-          ])
 
-          // Now previous locked  to be allowed to continue
-          // Locked -> to avoid other reviews submitted while awaiting changes requests
-          reviewsLocked.forEach((review) =>
-            reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Draft })
-          )
-        }
+        // Get all Locked reviews matching application_id, current stage, current level and in Locked status
+        const reviewsLocked = await getReviewsByLevelAndStatus(currentReviewLevel, [
+          ReviewStatus.Locked,
+        ])
+
+        // Now previous locked  to be allowed to continue
+        // Locked -> to avoid other reviews submitted while awaiting changes requests
+        reviewsLocked.forEach((review) =>
+          reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Draft })
+        )
 
         // Update upper level reviews submitted
         const nextReviewLevel = currentReviewLevel + 1
@@ -133,9 +133,19 @@ const updateReviewsStatuses: ActionPluginType = async ({
 
   async function haveAssignedResponsesChanged(reviewAssignmentId: number) {
     const questionAssignments = await db.getReviewAssignedElementIds(reviewAssignmentId)
-    return changedResponses.reduce((isInAssigned: boolean, { templateElementId }: any) => {
-      return isInAssigned || questionAssignments.includes(templateElementId)
-    }, false)
+
+    return changedResponses.reduce(
+      (isInAssigned: boolean, { templateElementId, reviewDecision }: any) => {
+        const assignedResponse = questionAssignments.includes(templateElementId)
+        if (triggeredBy === 'REVIEW')
+          return (
+            isInAssigned || (reviewDecision === ReviewResponseDecision.Disagree && assignedResponse)
+          )
+        // triggeredBy === 'APPLICATION'
+        return isInAssigned || assignedResponse
+      },
+      false
+    )
   }
 }
 
