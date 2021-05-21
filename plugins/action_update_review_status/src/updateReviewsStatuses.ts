@@ -41,11 +41,12 @@ const updateReviewsStatuses: ActionPluginType = async ({
 
   const getReviewsByLevelAndStatus = async (
     level: number,
-    statusToUpdate: ReviewStatus[]
+    statusToUpdate?: ReviewStatus[]
   ): Promise<Review[]> =>
     (await db.getAssociatedReviews(applicationId, stageId, level)).filter(
       (review: Review) =>
-        review.reviewId !== reviewId && statusToUpdate.includes(review.reviewStatus)
+        review.reviewId !== reviewId &&
+        (!statusToUpdate || statusToUpdate.includes(review.reviewStatus))
     )
 
   console.log('Finding reviews to update status...')
@@ -95,17 +96,13 @@ const updateReviewsStatuses: ActionPluginType = async ({
       }
     } else {
       // For Application submission
+      const level = 1
       // Get reviews/review assignments (with status) matching application_id & current stage
-      const reviews = await getReviewsByLevelAndStatus(currentReviewLevel || 1, [
-        ReviewStatus.Submitted,
-        ReviewStatus.Locked,
-        ReviewStatus.Draft,
-      ])
+      const reviews = await getReviewsByLevelAndStatus(level)
       // Deduce which ones should be updated to Pending
       for (const review of reviews) {
-        const { reviewAssignmentId, levelNumber, reviewStatus } = review
-        if (levelNumber > 1) reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
-        else if (await haveAssignedResponsesChanged(reviewAssignmentId))
+        const { reviewAssignmentId, reviewStatus } = review
+        if (await haveAssignedResponsesChanged(reviewAssignmentId))
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
         else if (reviewStatus === ReviewStatus.Locked)
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
