@@ -4,7 +4,7 @@
   "name": "Update Review Statuses",
   "description": "Updates status of associated reviews when application re-submitted",
   "required_parameters": ["changedResponses"],
-  "optional_parameters": ["applicationId", "reviewId", "stageId", "level"],
+  "optional_parameters": ["applicationId", "reviewId", "trigeredBy", "stageId", "level"],
   "output_properties": ["updatedReviews"],
   "info": {
     "author": {

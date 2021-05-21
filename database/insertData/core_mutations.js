@@ -116,6 +116,7 @@ exports.coreActions = `
             operator: "objectProperties"
             children: ["applicationData.applicationId"]
           }
+          triggeredBy: "REVIEW"
           changedResponses: {
             operator: "objectProperties"
             children: ["outputCumulative.updatedResponses"]

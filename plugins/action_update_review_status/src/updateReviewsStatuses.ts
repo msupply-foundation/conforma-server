@@ -1,7 +1,8 @@
-import { ActionQueueStatus, Decision, ReviewStatus } from '../../../src/generated/graphql'
+import { ActionQueueStatus, Decision, ReviewStatus, Trigger } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 
+type TriggeredBy = 'REVIEW' | 'APPLICATION'
 interface Review {
   reviewId: number
   reviewAssignmentId: number
@@ -22,14 +23,13 @@ const updateReviewsStatuses: ActionPluginType = async ({
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
   const decision = applicationData?.reviewData?.latestDecision?.decision || Decision.NoDecision
-
-  const isReview = !!reviewId
-  const changedResponses = parameters.changedResponses || []
   const stageId = parameters?.stageId || applicationData?.stageId
   const currentReviewLevel = parameters.level || applicationData?.reviewData?.levelNumber || 0
+  const changedResponses = parameters.changedResponses || []
+  const triggeredBy: TriggeredBy = parameters.triggeredBy || 'APPLICATION'
 
   console.log(
-    'Updating statuses of reviews associated with ' + isReview
+    'Updating statuses of reviews associated with ' + triggeredBy === 'REVIEW'
       ? 'review Id: ' + reviewId
       : 'application Id: ' + applicationId
   )
@@ -51,7 +51,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
   console.log('Finding reviews to update status...')
 
   try {
-    if (isReview) {
+    if (triggeredBy === 'REVIEW') {
       // Review submitted from upper level to lower level review
       if (decision === Decision.ChangesRequested) {
         const previousLevelReview = currentReviewLevel - 1
