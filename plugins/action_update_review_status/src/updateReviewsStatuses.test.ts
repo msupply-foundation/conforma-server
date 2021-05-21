@@ -186,3 +186,68 @@ describe('Update review_responses after updating changes_requested to reviewer1'
     })
   })
 })
+
+describe('Update review_responses for second review submission by reviewer2 when consolidation already in progress', () => {
+  // Setup database
+  beforeAll(async (done) => {
+    await DBConnect.query({
+      text: `
+  INSERT INTO public.review_status_history (id, review_id, status)
+    VALUES (DEFAULT, 9, 'DRAFT');
+  UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 56;
+  UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 57;
+  UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 58;
+  UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 59;
+  UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 60;
+  INSERT INTO public.review_decision (id, decision, review_id)
+    VALUES (DEFAULT, 'Conform', 8);
+  INSERT INTO public.review_status_history (id, review_id, status)
+    VALUES (DEFAULT, 8, 'SUBMITTED');
+  `,
+      values: [],
+    })
+
+    done()
+  })
+
+  test('Second review is resubmitted to upper level => Update upper review status to PENDING', () => {
+    return updateReviewsStatuses({
+      parameters: {
+        applicationId: 4002,
+        changedResponses: [
+          { applicationResponseId: 4025, templateElementId: 4008 },
+          { applicationResponseId: 4026, templateElementId: 4009 },
+          { applicationResponseId: 4027, templateElementId: 4010 },
+          { applicationResponseId: 4028, templateElementId: 4011 },
+          { applicationResponseId: 4029, templateElementId: 4012 },
+        ],
+      },
+      // @ts-ignore
+      applicationData: {
+        stageId: 5,
+        reviewData: {
+          reviewId: 3002,
+          levelNumber: 1,
+        },
+      },
+      DBConnect,
+    }).then((result: any) => {
+      expect(result).toEqual({
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: {
+          updatedReviews: [
+            {
+              reviewId: 9,
+              reviewAssignmentId: 1010,
+              applicationId: 4002,
+              reviewer_id: 10,
+              levelNumber: 2,
+              reviewStatus: ReviewStatus.Pending,
+            },
+          ],
+        },
+      })
+    })
+  })
+})
