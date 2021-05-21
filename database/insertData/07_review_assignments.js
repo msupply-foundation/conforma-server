@@ -1028,7 +1028,7 @@ exports.queries = [
               }
               reviewDecisionsUsingId: {
                 create: { 
-                  decision: NON_CONFORM 
+                  decision: CHANGES_REQUESTED 
                   comment: "Reviewer 1 required to update"
                 }
               }
