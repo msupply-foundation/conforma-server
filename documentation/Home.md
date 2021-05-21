@@ -19,7 +19,7 @@ Please see [ReadMe](__README.md) for information about maintaining this document
   - [Permissions](Database-Schema-Permission.md)
   - [Application Template](Database-Schema-Template.md)
   - [Application](Database-Schema-Application.md)
-  - [Reviews](Database-Schema-Reviews.md)
+  - [Reviews](Database-Schema-Review-And-Consolidation.md)
   - [Questions/Elements](Elements-Questions.md)
 
 **Modules**
