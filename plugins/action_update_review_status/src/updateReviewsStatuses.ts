@@ -74,16 +74,16 @@ const updateReviewsStatuses: ActionPluginType = async ({
       } else {
         // Review submitted from lower level to upper level
 
-        // Get all Locked reviews matching application_id, current stage, current level and in Locked status
-        const reviewsLocked = await getReviewsByLevelAndStatus(currentReviewLevel, [
-          ReviewStatus.Locked,
-        ])
+        // // Get all Locked reviews matching application_id, current stage, current level and in Locked status
+        // const reviewsLocked = await getReviewsByLevelAndStatus(currentReviewLevel, [
+        //   ReviewStatus.Locked,
+        // ])
 
-        // Now previous locked  to be allowed to continue
-        // Locked -> to avoid other reviews submitted while awaiting changes requests
-        reviewsLocked.forEach((review) =>
-          reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Draft })
-        )
+        // // Now previous locked  to be allowed to continue
+        // // Locked -> to avoid other reviews submitted while awaiting changes requests
+        // reviewsLocked.forEach((review) =>
+        //   reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Draft })
+        // )
 
         // Update upper level reviews submitted
         const nextReviewLevel = currentReviewLevel + 1

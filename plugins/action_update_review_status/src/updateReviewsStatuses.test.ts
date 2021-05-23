@@ -175,14 +175,14 @@ describe('Update review_responses after updating changes_requested to reviewer1'
         error_log: '',
         output: {
           updatedReviews: [
-            {
-              reviewId: 8,
-              reviewAssignmentId: 1008,
-              applicationId: 4002,
-              reviewer_id: 8,
-              levelNumber: 1,
-              reviewStatus: ReviewStatus.Draft,
-            },
+            // {
+            //   reviewId: 8,
+            //   reviewAssignmentId: 1008,
+            //   applicationId: 4002,
+            //   reviewer_id: 8,
+            //   levelNumber: 1,
+            //   reviewStatus: ReviewStatus.Draft,
+            // },
             {
               reviewId: 9,
               reviewAssignmentId: 1010,
