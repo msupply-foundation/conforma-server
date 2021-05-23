@@ -158,7 +158,7 @@ exports.queries = [
         filter: {
           icon: "user plus"
           code: "awaitingAssignments"
-          query: { assignCount: "1:1000", isFullyAssignedLevel1: false}
+          query: { assignerAction: "ASSIGN" }
           title: "Awaiting Assignment"
           userRole: ASSIGN
           
@@ -174,7 +174,7 @@ exports.queries = [
         filter: {
           icon: "remove user"
           code: "availableForReAssignments"
-          query: { assignCount: "1:1000", isFullyAssignedLevel1: true}
+          query: { assignerAction: "RE_ASSIGN" }
           title: "Re Assign"
           userRole: ASSIGN
         }
