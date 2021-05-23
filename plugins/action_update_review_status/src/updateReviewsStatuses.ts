@@ -134,18 +134,13 @@ const updateReviewsStatuses: ActionPluginType = async ({
   async function haveAssignedResponsesChanged(reviewAssignmentId: number) {
     const questionAssignments = await db.getReviewAssignedElementIds(reviewAssignmentId)
 
-    return changedResponses.reduce(
-      (isInAssigned: boolean, { templateElementId, reviewDecision }: any) => {
-        const assignedResponse = questionAssignments.includes(templateElementId)
-        if (triggeredBy === 'REVIEW')
-          return (
-            isInAssigned || (reviewDecision === ReviewResponseDecision.Disagree && assignedResponse)
-          )
-        // triggeredBy === 'APPLICATION'
-        return isInAssigned || assignedResponse
-      },
-      false
-    )
+    return changedResponses.some(({ templateElementId, reviewResponseDecision }: any) => {
+      const assignedResponse = questionAssignments.includes(templateElementId)
+      if (triggeredBy === 'REVIEW')
+        return reviewResponseDecision === ReviewResponseDecision.Disagree && assignedResponse
+      // triggeredBy === 'APPLICATION'
+      return assignedResponse
+    })
   }
 }
 
