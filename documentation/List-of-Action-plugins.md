@@ -246,14 +246,19 @@ When an applicant re-submits an application after making changes, this Action up
 
 - _Action Code:_ **`updateReviewsStatuses`**
 
-| Input parameters<br />(\*required) <br/>               | Output properties |
-| ------------------------------------------------------ | ----------------- |
-| `applicationId`                                        | `updatedReviews`  |
-| `reviewId`                                             |                   |
-| `changedResponses`\* [Array of applicationResponseIds] |                   |
+| Input parameters<br />(\*required) <br/>                                        | Output properties |
+| ------------------------------------------------------------------------------- | ----------------- |
+| `applicationId`                                                                 | `updatedReviews`  |
+| `reviewId`                                                                      |                   |
+| `triggeredBy` Enum: REVIEW or APPLICATION (Default)                             |                   |
+| `changedResponses`\* [Array of `applicationResponseIds` or `reviewReponsesIds`] |                   |
 
 **Note:** - If `applicationId` or `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`. In case the `reviewId` is received, this Action will be updating status of related reviews of same stage in the current and next level reviews. Otherwhise (for an application submit - without passing `reviewId` this Action will be updating only reviewes of current level/stage.
-In both cases: The list of changed review/responses submitted is passed as `changedResponses` to the action, and this will be considered _in some cases_ to update reviews only that have these as assigned responses to review.
+The list of changed review/responses submitted is passed as `changedResponses` to the action and will define which reviews statuses to update by:
+
+- For application submission all related reviews assigned to the same `templateIds` will have status updated to **PENDING**.
+- For review submission to lower level reviewer (when review decision is **CHANGES_REQUEST**) all related reviews assigned to the same `templateIds` and that have a `reviewResponseDecision` as **DISAGREE** will have status updated to **PENDING**. Other reviews in same level will have status updated to **LOCKED**.
+- For review submission to upper level reviewer (not **CHANGES_REQUEST** and not last-level review) all reviews with **SUBMITTED** status will be updated to **PENDING**.
 
 ---
 
