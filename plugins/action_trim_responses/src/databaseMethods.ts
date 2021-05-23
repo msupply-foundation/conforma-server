@@ -53,7 +53,7 @@ const databaseMethods = (DBConnect: any) => ({
       WHERE id = ANY ($2)
       RETURNING 
         id AS "reviewResponseId",
-        decision AS "reviewDecision",
+        decision AS "reviewResponseDecision",
         template_element_id AS "templateElementId"
       `
     try {

@@ -88,12 +88,16 @@ describe('Update review_response to required changes_requested by consolidator1'
     done()
   })
 
-  test('Review submitted to lower level with changes required => Update lower review status to CHANGES REQUIRED', () => {
+  test('Review submitted to lower level with changes required => Update lower review status to CHANGES_REQUESTED', () => {
     return updateReviewsStatuses({
       parameters: {
         triggeredBy: 'REVIEW',
         changedResponses: [
-          { applicationResponseId: 4000, templateElementId: 4001, reviewDecision: 'DISAGREE' },
+          {
+            applicationResponseId: 4000,
+            templateElementId: 4001,
+            reviewResponseDecision: 'DISAGREE',
+          },
         ],
       },
       // @ts-ignore
