@@ -99,7 +99,7 @@ export interface ActionApplicationData {
     status?: string
     latestDecision?: {
       decision: string
-      comment: string
+      comment: string | null
     }
   }
   environmentData: {

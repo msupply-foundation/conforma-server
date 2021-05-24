@@ -1,58 +1,199 @@
 // Test suite for the updateReviews Action.
 
 import DBConnect from '../../../src/components/databaseConnect'
-import { ActionQueueStatus, ReviewStatus } from '../../../src/generated/graphql'
+import { ActionQueueStatus, Decision, ReviewStatus } from '../../../src/generated/graphql'
 import { action as updateReviewsStatuses } from './index'
 
-// Setup database
-beforeAll(async (done) => {
-  // Duplicate application responses, with some modifications
-  await DBConnect.query({
-    text: `
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) VALUES (DEFAULT, 4013, 4000, '{"text": "Turning orange"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) VALUES (DEFAULT, 4012, 4000, '{"text": "100"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) VALUES (DEFAULT, 4011, 4000, '{"text": "50mg"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) VALUES (DEFAULT, 4009, 4000, '{"text": "Natural Product", "optionIndex": 1}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) VALUES (DEFAULT, 4008, 4000, '{"text": "Vitamin C"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) VALUES (DEFAULT, 4006, 4000, '{"text": "New Zealand"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) VALUES (DEFAULT, 4005, 4000, '{"text": "49"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) VALUES (DEFAULT, 4003, 4000, '{"text": "js@nowhere.com"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) VALUES (DEFAULT, 4002, 4000, '{"text": "Smithie"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) VALUES (DEFAULT, 4001, 4000, '{"text": "John"}', 'True', 'NOW()');
+describe('Duplicate application responses for re-submission with 2 modifications', () => {
+  // Setup database
+  beforeAll(async (done) => {
+    await DBConnect.query({
+      text: `
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) 
+      VALUES (DEFAULT, 4001, 4001, '{"text": "Valerio"}', 'True', 'NOW()');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) 
+      VALUES (DEFAULT, 4002, 4001, '{"text": "Red"}', 'True', 'NOW()');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) 
+      VALUES (DEFAULT, 4003, 4001, '{"text": "jj@nowhere.com"}', 'True', 'NOW()');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) 
+      VALUES (DEFAULT, 4005, 4001, '{"text": "42"}', 'True', 'NOW()');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) 
+      VALUES (DEFAULT, 4006, 4001, '{"text": "Tonga"}', 'True', 'NOW()');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) 
+      VALUES (DEFAULT, 4008, 4001, '{"text": "Vitamin B"}', 'True', 'NOW()');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) 
+      VALUES (DEFAULT, 4009, 4001, '{"text": "Natural Product", "optionIndex": 1}', 'True', 'NOW()');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) 
+      VALUES (DEFAULT, 4011, 4001, '{"text": "100mg"}', 'True', 'NOW()');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) 
+      VALUES (DEFAULT, 4012, 4001, '{"text": "250"}', 'True', 'NOW()');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated) 
+      VALUES (DEFAULT, 4013, 4001, '{"text": "Nausea"}', 'True', 'NOW()');
   `,
-    values: [],
+      values: [],
+    })
+    done()
   })
-  done()
+
+  test('Application resubmitted with changes => Update review status to PENDING', () => {
+    return updateReviewsStatuses({
+      parameters: {
+        // triggeredBy: 'APPLICATION',
+        changedResponses: [
+          { applicationResponseId: 4018, templateElementId: 4012 },
+          { applicationResponseId: 4019, templateElementId: 4013 },
+        ],
+      },
+      // @ts-ignore
+      applicationData: {
+        applicationId: 4001,
+        stageId: 4,
+      },
+      DBConnect,
+    }).then((result: any) => {
+      expect(result).toEqual({
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: {
+          updatedReviews: [
+            {
+              reviewId: 5,
+              reviewAssignmentId: 1005,
+              applicationId: 4001,
+              reviewer_id: 7,
+              levelNumber: 1,
+              reviewStatus: ReviewStatus.Pending,
+            },
+          ],
+        },
+      })
+    })
+  })
 })
 
-test('Test: Should update 2 reviews', () => {
-  return updateReviewsStatuses({
-    parameters: {
-      applicationId: 4000,
-      changedApplicationResponses: [
-        { applicationResponseId: 7, templateElementId: 4005 },
-        { applicationResponseId: 9, templateElementId: 4002 },
-      ],
-    },
-    // @ts-ignore
-    applicationData: { stageId: 6 },
-    DBConnect,
-  }).then((result: any) => {
-    expect(result).toEqual({
-      status: ActionQueueStatus.Success,
-      error_log: '',
-      output: {
-        updatedReviews: [
+describe('Update review_response to required changes_requested by consolidator1', () => {
+  // Setup database
+  beforeAll(async (done) => {
+    await DBConnect.query({
+      text: `
+      INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status) 
+        VALUES (DEFAULT, 4, 1022, 4001, 4000, 'DISAGREE', 'SUBMITTED');
+      INSERT INTO public.review_decision (id, decision, review_id) 
+        VALUES (DEFAULT, 'CHANGES_REQUESTED', 4);
+      INSERT INTO public.review_status_history (id, review_id, status)
+        VALUES (DEFAULT, 4, 'SUBMITTED');
+      `,
+      values: [],
+    })
+    done()
+  })
+
+  test('Review submitted to lower level with changes required => Update lower review status to CHANGES_REQUESTED', () => {
+    return updateReviewsStatuses({
+      parameters: {
+        triggeredBy: 'REVIEW',
+        changedResponses: [
           {
-            reviewId: 2,
-            reviewAssignmentId: 1001,
-            applicationId: 4000,
-            reviewer_id: 6,
-            levelNumber: 1,
-            reviewStatus: ReviewStatus.Pending,
+            applicationResponseId: 4000,
+            templateElementId: 4001,
+            reviewResponseDecision: 'DISAGREE',
           },
         ],
       },
+      // @ts-ignore
+      applicationData: {
+        applicationId: 4000,
+        stageId: 5,
+        reviewData: {
+          reviewId: 4,
+          levelNumber: 2,
+          latestDecision: { decision: Decision.ChangesRequested, comment: null },
+        },
+      },
+      DBConnect,
+    }).then((result: any) => {
+      expect(result).toEqual({
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: {
+          updatedReviews: [
+            {
+              reviewId: 2,
+              reviewAssignmentId: 1001,
+              applicationId: 4000,
+              reviewer_id: 7,
+              levelNumber: 1,
+              reviewStatus: ReviewStatus.ChangesRequested,
+            },
+          ],
+        },
+      })
+    })
+  })
+})
+
+describe('Update review_responses after updating changes_requested to reviewer1', () => {
+  // Setup database
+  beforeAll(async (done) => {
+    await DBConnect.query({
+      text: `
+    INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status) 
+      VALUES (DEFAULT, 7, 3010, 4001, 4020, 'APPROVE', 'SUBMITTED');
+    INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status) 
+      VALUES (DEFAULT, 7, 3011, 4002, 4021, 'APPROVE', 'SUBMITTED');
+    UPDATE public.review_decision SET decision = 'Conform', comment = NULL, time_updated = 'NOW()' WHERE id = 6;
+    INSERT INTO public.review_status_history (id, review_id, status)
+      VALUES (DEFAULT, 7, 'SUBMITTED');
+    `,
+      values: [],
+    })
+    done()
+  })
+
+  test('Review resubmitted to upper level with updated changes => Update upper review status to PENDING', () => {
+    return updateReviewsStatuses({
+      parameters: {
+        triggeredBy: 'REVIEW',
+        changedResponses: [
+          { applicationResponseId: 4020, templateElementId: 4001 },
+          { applicationResponseId: 4021, templateElementId: 4002 },
+        ],
+      },
+      // @ts-ignore
+      applicationData: {
+        applicationId: 4002,
+        stageId: 5,
+        reviewData: {
+          reviewId: 6,
+          levelNumber: 1,
+        },
+      },
+      DBConnect,
+    }).then((result: any) => {
+      expect(result).toEqual({
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: {
+          updatedReviews: [
+            // {
+            //   reviewId: 8,
+            //   reviewAssignmentId: 1008,
+            //   applicationId: 4002,
+            //   reviewer_id: 8,
+            //   levelNumber: 1,
+            //   reviewStatus: ReviewStatus.Draft,
+            // },
+            {
+              reviewId: 9,
+              reviewAssignmentId: 1010,
+              applicationId: 4002,
+              reviewer_id: 10,
+              levelNumber: 2,
+              reviewStatus: ReviewStatus.Pending,
+            },
+          ],
+        },
+      })
     })
   })
 })
