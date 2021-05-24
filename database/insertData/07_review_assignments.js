@@ -499,64 +499,65 @@ exports.queries = [
               reviewResponsesUsingId: {
                 create: [
                   {
-                    applicationResponseId: 4000
+                    applicationResponseId: 4010
                     reviewQuestionAssignmentId: 2000
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4001
+                    applicationResponseId: 4011
                     reviewQuestionAssignmentId: 2001
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4002
+                    applicationResponseId: 4012
                     reviewQuestionAssignmentId: 2002
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4003
+                    applicationResponseId: 4013
                     reviewQuestionAssignmentId: 2003
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4004
+                    applicationResponseId: 4014
                     reviewQuestionAssignmentId: 2004
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4005
+                    applicationResponseId: 4015
                     reviewQuestionAssignmentId: 2006
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4006
+                    applicationResponseId: 4016
                     reviewQuestionAssignmentId: 2007
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4007
+                    applicationResponseId: 4017
                     reviewQuestionAssignmentId: 2008
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4008
+                    applicationResponseId: 4018
                     reviewQuestionAssignmentId: 2009
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4009
+                    applicationResponseId: 4019
                     reviewQuestionAssignmentId: 2010
                     status: SUBMITTED
                     decision: DECLINE
+                    isVisibleToApplicant: true
                     comment: "List lighter effects"
                   }
                 ]
@@ -819,7 +820,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = LOCKED (for this reviewer to submit)
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = DRAFT (Partial stage 2 not submitted)
   `mutation {
     createReviewAssignment(
       input: {
@@ -982,33 +983,33 @@ exports.queries = [
                     applicationResponseId: 4020
                     reviewQuestionAssignmentId: 3033
                     status: SUBMITTED
-                    decision: DECLINE
+                    decision: DISAGREE
                     comment: "Please check again"
                   }
                   {
                     applicationResponseId: 4021
                     reviewQuestionAssignmentId: 3034
                     status: SUBMITTED
-                    decision: DECLINE
+                    decision: DISAGREE
                     comment: "Please check again"
                   }
                   {
                     applicationResponseId: 4022
                     reviewQuestionAssignmentId: 3035
                     status: SUBMITTED
-                    decision: APPROVE
+                    decision: AGREE
                   }
                   {
                     applicationResponseId: 4023
                     reviewQuestionAssignmentId: 3036
                     status: SUBMITTED
-                    decision: APPROVE
+                    decision: AGREE
                   }
                   {
                     applicationResponseId: 4024
                     reviewQuestionAssignmentId: 3037
                     status: SUBMITTED
-                    decision: APPROVE
+                    decision: AGREE
                   }
                 ]
               }

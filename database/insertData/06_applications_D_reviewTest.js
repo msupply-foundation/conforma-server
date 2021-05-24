@@ -192,7 +192,18 @@ exports.queries = [
               isCurrent: true
               templateStageToStageId: { connectById: { id: 4 } }
               applicationStatusHistoriesUsingId: {
-                create: { isCurrent: true, status: SUBMITTED }
+                create: [
+                  { 
+                    isCurrent: false, 
+                    status: SUBMITTED
+                    timeCreated: "2021-05-18T00:00:00Z"
+                  }
+                  { 
+                    isCurrent: true, 
+                    status: CHANGES_REQUIRED
+                    timeCreated: "2021-05-19T10:00:00Z" 
+                  }
+                ]
               }
             }
           }
