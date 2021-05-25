@@ -109,35 +109,53 @@ exports.queries = [
     }
   }`,
   // reviewBasic
-  `mutation createPolicy {
-    createPermissionPolicy(
-      input: {
-        permissionPolicy: {
-          name: "reviewBasic"
-          rules: {
-            application: {
-              view: { template_id: "jwtPermission_bigint_templateId" }
-            }
-            review: {
-              view: {
-                reviewer_id: "jwtUserDetails_bigint_userId"
-              }
-            }
-            review_assignment: {
-              view: {
-                reviewer_id: "jwtUserDetails_bigint_userId"
-              }
-            }
+  {
+    query: `mutation createPolicy($rules: JSON) {
+      createPermissionPolicy(
+        input: {
+          permissionPolicy: {
+            name: "reviewBasic"
+            rules: $rules
+            type: REVIEW
           }
-          type: REVIEW
+        }
+      ) {
+        permissionPolicy {
+          name
         }
       }
-    ) {
-      permissionPolicy {
-        name
-      }
-    }
-  }`,
+    }`,
+    variables: {
+      rules: {
+        application: {
+          view: {
+            template_id: 'jwtPermission_bigint_templateId',
+            id: {
+              $in: {
+                $select: {
+                  application_id: true,
+                  $from: 'review_assignment',
+                  $where: {
+                    reviewer_id: 'jwtUserDetails_bigint_userId',
+                  },
+                },
+              },
+            },
+          },
+        },
+        review: {
+          view: {
+            reviewer_id: 'jwtUserDetails_bigint_userId',
+          },
+        },
+        review_assignment: {
+          view: {
+            reviewer_id: 'jwtUserDetails_bigint_userId',
+          },
+        },
+      },
+    },
+  },
   // assignBasic
   {
     query: `mutation createPolicy($rules: JSON) {
