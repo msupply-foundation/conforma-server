@@ -203,6 +203,8 @@ describe('Update review_responses for second review submission by reviewer2 when
   beforeAll(async (done) => {
     await DBConnect.query({
       text: `
+  INSERT INTO public.review_status_history (id, review_id, status)
+  VALUES (DEFAULT, 9, 'DRAFT');
   UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 56;
   UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 57;
   UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 58;
