@@ -1,7 +1,13 @@
-import { ActionQueueStatus, Decision, ReviewStatus } from '../../../src/generated/graphql'
+import {
+  ActionQueueStatus,
+  Decision,
+  ReviewResponseDecision,
+  ReviewStatus,
+} from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 
+type TriggeredBy = 'REVIEW' | 'APPLICATION'
 interface Review {
   reviewId: number
   reviewAssignmentId: number
@@ -22,14 +28,13 @@ const updateReviewsStatuses: ActionPluginType = async ({
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
   const decision = applicationData?.reviewData?.latestDecision?.decision || Decision.NoDecision
-
-  const isReview = !!reviewId
-  const changedResponses = parameters.changedResponses || []
   const stageId = parameters?.stageId || applicationData?.stageId
   const currentReviewLevel = parameters.level || applicationData?.reviewData?.levelNumber || 0
+  const changedResponses = parameters.changedResponses || []
+  const triggeredBy: TriggeredBy = parameters.triggeredBy || 'APPLICATION'
 
   console.log(
-    'Updating statuses of reviews associated with ' + isReview
+    'Updating statuses of reviews associated with ' + triggeredBy === 'REVIEW'
       ? 'review Id: ' + reviewId
       : 'application Id: ' + applicationId
   )
@@ -41,17 +46,18 @@ const updateReviewsStatuses: ActionPluginType = async ({
 
   const getReviewsByLevelAndStatus = async (
     level: number,
-    statusToUpdate: ReviewStatus[]
+    statusToUpdate?: ReviewStatus[]
   ): Promise<Review[]> =>
     (await db.getAssociatedReviews(applicationId, stageId, level)).filter(
       (review: Review) =>
-        review.reviewId !== reviewId && statusToUpdate.includes(review.reviewStatus)
+        review.reviewId !== reviewId &&
+        (!statusToUpdate || statusToUpdate.includes(review.reviewStatus))
     )
 
   console.log('Finding reviews to update status...')
 
   try {
-    if (isReview) {
+    if (triggeredBy === 'REVIEW') {
       // Review submitted from upper level to lower level review
       if (decision === Decision.ChangesRequested) {
         const previousLevelReview = currentReviewLevel - 1
@@ -67,22 +73,17 @@ const updateReviewsStatuses: ActionPluginType = async ({
         }
       } else {
         // Review submitted from lower level to upper level
-        // Update same level reviews as submitted if no other still have changes requested status...
-        const othersChangeRequested = await getReviewsByLevelAndStatus(currentReviewLevel, [
-          ReviewStatus.ChangesRequested,
-        ])
-        if (othersChangeRequested.length === 0) {
-          // Get all Locked reviews matching application_id, current stage, current level and in Locked status
-          const reviewsLocked = await getReviewsByLevelAndStatus(currentReviewLevel, [
-            ReviewStatus.Locked,
-          ])
 
-          // Now previous locked  to be allowed to continue
-          // Locked -> to avoid other reviews submitted while awaiting changes requests
-          reviewsLocked.forEach((review) =>
-            reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Draft })
-          )
-        }
+        // // Get all Locked reviews matching application_id, current stage, current level and in Locked status
+        // const reviewsLocked = await getReviewsByLevelAndStatus(currentReviewLevel, [
+        //   ReviewStatus.Locked,
+        // ])
+
+        // // Now previous locked  to be allowed to continue
+        // // Locked -> to avoid other reviews submitted while awaiting changes requests
+        // reviewsLocked.forEach((review) =>
+        //   reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Draft })
+        // )
 
         // Update upper level reviews submitted
         const nextReviewLevel = currentReviewLevel + 1
@@ -98,17 +99,13 @@ const updateReviewsStatuses: ActionPluginType = async ({
       }
     } else {
       // For Application submission
+      const level = 1
       // Get reviews/review assignments (with status) matching application_id & current stage
-      const reviews = await getReviewsByLevelAndStatus(currentReviewLevel || 1, [
-        ReviewStatus.Submitted,
-        ReviewStatus.Locked,
-        ReviewStatus.Draft,
-      ])
+      const reviews = await getReviewsByLevelAndStatus(level)
       // Deduce which ones should be updated to Pending
       for (const review of reviews) {
-        const { reviewAssignmentId, levelNumber, reviewStatus } = review
-        if (levelNumber > 1) reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
-        else if (await haveAssignedResponsesChanged(reviewAssignmentId))
+        const { reviewAssignmentId, reviewStatus } = review
+        if (await haveAssignedResponsesChanged(reviewAssignmentId))
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
         else if (reviewStatus === ReviewStatus.Locked)
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
@@ -139,9 +136,14 @@ const updateReviewsStatuses: ActionPluginType = async ({
 
   async function haveAssignedResponsesChanged(reviewAssignmentId: number) {
     const questionAssignments = await db.getReviewAssignedElementIds(reviewAssignmentId)
-    return changedResponses.reduce((isInAssigned: boolean, { templateElementId }: any) => {
-      return isInAssigned || questionAssignments.includes(templateElementId)
-    }, false)
+
+    return changedResponses.some(({ templateElementId, reviewResponseDecision }: any) => {
+      const assignedResponse = questionAssignments.includes(templateElementId)
+      if (triggeredBy === 'REVIEW')
+        return reviewResponseDecision === ReviewResponseDecision.Disagree && assignedResponse
+      // triggeredBy === 'APPLICATION'
+      return assignedResponse
+    })
   }
 }
 

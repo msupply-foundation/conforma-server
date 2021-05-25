@@ -819,7 +819,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = LOCKED (for this reviewer to submit)
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = DRAFT (while the other reviewer has CHANGES_REQUESTED status)
   `mutation {
     createReviewAssignment(
       input: {
@@ -882,12 +882,7 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "2021-02-03T00:00:00Z" }
-                  {
-                    status: LOCKED
-                    isCurrent: true
-                    timeCreated: "2021-02-04T10:00:00Z"
-                  }
+                  { status: DRAFT, isCurrent: true, timeCreated: "2021-02-03T00:00:00Z" }
                 ]
               }
             }

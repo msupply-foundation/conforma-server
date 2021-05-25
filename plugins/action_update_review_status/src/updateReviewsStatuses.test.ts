@@ -38,14 +38,17 @@ describe('Duplicate application responses for re-submission with 2 modifications
   test('Application resubmitted with changes => Update review status to PENDING', () => {
     return updateReviewsStatuses({
       parameters: {
-        applicationId: 4001,
+        // triggeredBy: 'APPLICATION',
         changedResponses: [
           { applicationResponseId: 4018, templateElementId: 4012 },
           { applicationResponseId: 4019, templateElementId: 4013 },
         ],
       },
       // @ts-ignore
-      applicationData: { stageId: 4 },
+      applicationData: {
+        applicationId: 4001,
+        stageId: 4,
+      },
       DBConnect,
     }).then((result: any) => {
       expect(result).toEqual({
@@ -85,14 +88,21 @@ describe('Update review_response to required changes_requested by consolidator1'
     done()
   })
 
-  test('Review submitted to lower level with changes required => Update lower review status to CHANGES REQUIRED', () => {
+  test('Review submitted to lower level with changes required => Update lower review status to CHANGES_REQUESTED', () => {
     return updateReviewsStatuses({
       parameters: {
-        applicationId: 4000,
-        changedResponses: [{ applicationResponseId: 4000, templateElementId: 4001 }],
+        triggeredBy: 'REVIEW',
+        changedResponses: [
+          {
+            applicationResponseId: 4000,
+            templateElementId: 4001,
+            reviewResponseDecision: 'DISAGREE',
+          },
+        ],
       },
       // @ts-ignore
       applicationData: {
+        applicationId: 4000,
         stageId: 5,
         reviewData: {
           reviewId: 4,
@@ -143,7 +153,7 @@ describe('Update review_responses after updating changes_requested to reviewer1'
   test('Review resubmitted to upper level with updated changes => Update upper review status to PENDING', () => {
     return updateReviewsStatuses({
       parameters: {
-        applicationId: 4002,
+        triggeredBy: 'REVIEW',
         changedResponses: [
           { applicationResponseId: 4020, templateElementId: 4001 },
           { applicationResponseId: 4021, templateElementId: 4002 },
@@ -151,6 +161,7 @@ describe('Update review_responses after updating changes_requested to reviewer1'
       },
       // @ts-ignore
       applicationData: {
+        applicationId: 4002,
         stageId: 5,
         reviewData: {
           reviewId: 6,
@@ -164,14 +175,14 @@ describe('Update review_responses after updating changes_requested to reviewer1'
         error_log: '',
         output: {
           updatedReviews: [
-            {
-              reviewId: 8,
-              reviewAssignmentId: 1008,
-              applicationId: 4002,
-              reviewerId: 8,
-              levelNumber: 1,
-              reviewStatus: ReviewStatus.Draft,
-            },
+            // {
+            //   reviewId: 8,
+            //   reviewAssignmentId: 1008,
+            //   applicationId: 4002,
+            //   reviewer_id: 8,
+            //   levelNumber: 1,
+            //   reviewStatus: ReviewStatus.Draft,
+            // },
             {
               reviewId: 9,
               reviewAssignmentId: 1010,

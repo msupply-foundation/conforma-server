@@ -18,17 +18,11 @@ CREATE TABLE application_list_shape (
     last_active_date timestamptz,
     assigner_usernames varchar[],
     reviewer_usernames varchar[],
+    reviewer_action public.reviewer_action,
+    assigner_action public.assigner_action,
     is_fully_assigned_level_1 boolean,
-    review_available_for_self_assignment_count bigint,
-    review_assigned_count bigint,
-    review_assigned_not_started_count bigint,
-    review_draft_count bigint,
-    review_submitted_count bigint,
-    review_change_request_count bigint,
-    review_pending_count bigint,
-    assign_reviewer_assigned_count bigint,
-    assign_reviewers_count bigint,
-    assign_count bigint
+    assigned_questions_level_1 bigint,
+    total_questions bigint
 );
 
 CREATE FUNCTION application_list (userid int DEFAULT 0)
@@ -52,19 +46,11 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         status_history_time_created AS last_active_date,
         assigner_usernames,
         reviewer_usernames,
-        -- 	template_questions_count(app),
-        -- 	assigned_questions_count(app, stage_status.stage_id, 1),
-        assigned_questions_count (app, stage_status.stage_id, 1) >= template_questions_count (app) AS is_fully_assigned_level_1,
-        review_available_for_self_assignment_count,
-        review_assigned_count,
-        review_assigned_not_started_count,
-        review_draft_count,
-        review_submitted_count,
-        review_change_request_count,
-        review_pending_count,
-        assign_reviewer_assigned_count,
-        assign_reviewers_count,
-        assign_count
+        reviewer_action,
+        assigner_action,
+        is_fully_assigned_level_1,
+        assigned_questions_level_1,
+        total_questions
     FROM
         application app
     LEFT JOIN TEMPLATE ON app.template_id = template.id
@@ -72,8 +58,8 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
     LEFT JOIN organisation org ON app.org_id = org.id
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
-    LEFT JOIN review_list ($1) ON app.id = review_list.application_id
-    LEFT JOIN assigner_list ($1) ON app.id = assigner_list.application_id
+    LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
+    LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
 $$
 LANGUAGE sql
 STABLE;

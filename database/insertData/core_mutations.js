@@ -116,6 +116,7 @@ exports.coreActions = `
             operator: "objectProperties"
             children: ["applicationData.applicationId"]
           }
+          triggeredBy: "REVIEW"
           changedResponses: {
             operator: "objectProperties"
             children: ["outputCumulative.updatedResponses"]
@@ -267,17 +268,34 @@ templateFilterJoinsUsingId: {
     }
     {
       filterToFilterId: {
-        connectByCode: { code: "availableForSelfAssignment" }
+        connectByCode: { code: "availableForSelfAssignmentReviews" }
       }
     }
-    { filterToFilterId: { connectByCode: { code: "readyToReReview" } } }
-    { filterToFilterId: { connectByCode: { code: "draftReview" } } }
     {
       filterToFilterId: {
-        connectByCode: { code: "awaitingAssignment" }
+        connectByCode: { code: "readyToStartReviews" }
       }
     }
-    { filterToFilterId: { connectByCode: { code: "reAssign" } } }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "readyToRestartReviews" }
+      }
+    }
+    { filterToFilterId: { connectByCode: { code: "draftReviews" } } }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "changeRequestReviews" }
+      }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "awaitingAssignments" }
+      }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "availableForReAssignments" }
+      }
+    }
   ]
-}
-`
+}`
