@@ -129,7 +129,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 1 in Stage 2, Lvl 1 (section 1) = DRAFT
+  // -- Reviewer 1 in Stage 2, Lvl 1 (section 1) = APPROVED
   `mutation {
     createReviewAssignment(
       input: {
@@ -159,31 +159,31 @@ exports.queries = [
                   {
                     applicationResponseId: 4000
                     reviewQuestionAssignmentId: 1011
-                    status: DRAFT
+                    status: SUBMITTED
                     decision: APPROVE
                   }
                   {
                     applicationResponseId: 4001
                     reviewQuestionAssignmentId: 1012
-                    status: DRAFT
+                    status: SUBMITTED
                     decision: APPROVE
                   }
                   {
                     applicationResponseId: 4002
                     reviewQuestionAssignmentId: 1013
-                    status: DRAFT
+                    status: SUBMITTED
                     decision: APPROVE
                   }
                   {
                     applicationResponseId: 4003
                     reviewQuestionAssignmentId: 1014
-                    status: DRAFT
+                    status: SUBMITTED
                     decision: APPROVE
                   }
                   {
                     applicationResponseId: 4004
                     reviewQuestionAssignmentId: 1015
-                    status: DRAFT
+                    status: SUBMITTED
                     decision: APPROVE
                   }
                 ]
@@ -192,11 +192,17 @@ exports.queries = [
                 create: [
                   {
                     status: DRAFT
-                    isCurrent: true
+                    isCurrent: false
                     timeCreated: "2021-02-01T00:00:00Z"
+                  }
+                  {
+                    status: SUBMITTED
+                    isCurrent: true
+                    timeCreated: "2021-02-02T10:00:00Z"
                   }
                 ]
               }
+              reviewDecisionsUsingId: { create: { decision: CONFORM } }
             }
           }
         }
@@ -330,6 +336,11 @@ exports.queries = [
           status: ASSIGNED
           reviewQuestionAssignmentsUsingId: {
             create: [
+              { id: 1022, templateElementId: 4001 }
+              { id: 1023, templateElementId: 4002 }
+              { id: 1024, templateElementId: 4003 }
+              { id: 1025, templateElementId: 4005 }
+              { id: 1026, templateElementId: 4006 }
               { id: 1027, templateElementId: 4008 }
               { id: 1028, templateElementId: 4009 }
               { id: 1029, templateElementId: 4011 }
@@ -341,6 +352,31 @@ exports.queries = [
             create: {
               reviewResponsesUsingId: {
                 create: [
+                  {
+                    applicationResponseId: 4000
+                    reviewQuestionAssignmentId: 1022
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4001
+                    reviewQuestionAssignmentId: 1023
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4002
+                    reviewQuestionAssignmentId: 1024
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4003
+                    reviewQuestionAssignmentId: 1025
+                    status: DRAFT
+                  }
+                  {
+                    applicationResponseId: 4004
+                    reviewQuestionAssignmentId: 1026
+                    status: DRAFT
+                  }
                   {
                     applicationResponseId: 4005
                     reviewQuestionAssignmentId: 1027
