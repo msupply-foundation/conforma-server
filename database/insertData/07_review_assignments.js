@@ -977,33 +977,33 @@ exports.queries = [
                     applicationResponseId: 4020
                     reviewQuestionAssignmentId: 3033
                     status: SUBMITTED
-                    decision: DECLINE
+                    decision: DISAGREE
                     comment: "Please check again"
                   }
                   {
                     applicationResponseId: 4021
                     reviewQuestionAssignmentId: 3034
                     status: SUBMITTED
-                    decision: DECLINE
+                    decision: DISAGREE
                     comment: "Please check again"
                   }
                   {
                     applicationResponseId: 4022
                     reviewQuestionAssignmentId: 3035
                     status: SUBMITTED
-                    decision: APPROVE
+                    decision: AGREE
                   }
                   {
                     applicationResponseId: 4023
                     reviewQuestionAssignmentId: 3036
                     status: SUBMITTED
-                    decision: APPROVE
+                    decision: AGREE
                   }
                   {
                     applicationResponseId: 4024
                     reviewQuestionAssignmentId: 3037
                     status: SUBMITTED
-                    decision: APPROVE
+                    decision: AGREE
                   }
                 ]
               }
