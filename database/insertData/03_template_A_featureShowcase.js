@@ -1002,9 +1002,8 @@ exports.queries = [
                       isRequired: false
                       parameters: {
                         label: "Ingredients list"
-                        launchModalButtonText: "Add item"
+                        createModalButtonText: "Add ingredient"
                         modalText: "Please enter details for **one** ingredient"
-                        addButtonText: "Add"
                         displayType: {
                           operator: "objectProperties"
                           children: ["responses.listDisplay.text"]
@@ -1087,7 +1086,6 @@ exports.queries = [
                             }
                           }
                         ]
-                        displayString: "TBD"
                       }
                     }
                     {
