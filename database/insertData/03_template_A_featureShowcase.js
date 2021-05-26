@@ -1102,6 +1102,44 @@ exports.queries = [
                         default: "cards"
                       }
                     }
+                    {
+                      code: "PB14"
+                      index: 6
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "searchUsers"
+                      index: 7
+                      title: "Search Demo (users)"
+                      elementTypePluginCode: "search"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Search for users"
+                        description: "Start typing to search database for usernames"
+                        placeholder: "Search usernames"
+                        icon: "user"
+                        source: {
+                          operator: "graphQL",
+                          children: [
+                            "query GetUsers($user: String!) { users(filter: { username: {includesInsensitive: $user } }) {nodes { username, firstName, lastName }}}",
+                            "",
+                            [
+                              "user"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "search.text"
+                              ]
+                            },
+                            "users.nodes"
+                          ]
+                        }
+                      }
+                    }
                   ]
                 }
               }
