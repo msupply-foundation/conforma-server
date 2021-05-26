@@ -92,8 +92,23 @@ exports.queries = [
     createPermissionName(
       input: {
         permissionName: { 
+          name: "reviewReviewTestScreeningSection2", permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "reviewBasic" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: { 
           name: "reviewReviewTestAssessmentLvl1Section1", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
+            connectByName: { name: "reviewBasic" }
           }
         }
       }
@@ -108,7 +123,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "reviewReviewTestAssessmentLvl1Section2", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
+            connectByName: { name: "reviewBasic" }
           }
         }
       }
@@ -123,7 +138,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "reviewReviewTestAssessmentLvl2", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
+            connectByName: { name: "reviewBasic" }
           }
         }
       }
@@ -138,7 +153,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "reviewReviewTestApproval", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
+            connectByName: { name: "reviewBasic" }
           }
         }
       }
@@ -154,7 +169,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "reviewJoinOrg", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
+            connectByName: { name: "reviewOrgRestricted" }
           }
         }
       }
@@ -170,7 +185,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "assignGeneral", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicAssign" }
+            connectByName: { name: "assignBasic" }
           }
         }
       }
@@ -186,7 +201,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "reviewGeneral", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
+            connectByName: { name: "reviewBasic" }
           }
         }
       }
@@ -218,7 +233,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "canAssignDrugRego",  permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicAssign" }
+            connectByName: { name: "assignBasic" }
           }
         }
       }
@@ -233,7 +248,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "canScreenDrugRego",  permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
+            connectByName: { name: "reviewBasic" }
           }
         }
       }
@@ -248,7 +263,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "canAssessDrugRego",  permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
+            connectByName: { name: "reviewBasic" }
           }
         }
       }
@@ -264,7 +279,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "reviewSelfAssignable",  permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "basicReview" }
+            connectByName: { name: "reviewBasic" }
           }
         }
       }

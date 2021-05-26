@@ -75,15 +75,28 @@ exports.queries = [
       }
     }
   }`,
-  // basicReview
+  // reviewOrgRestricted
   `mutation createPolicy {
     createPermissionPolicy(
       input: {
         permissionPolicy: {
-          name: "basicReview"
+          name: "reviewOrgRestricted"
           rules: {
             application: {
-              view: { template_id: "jwtPermission_bigint_templateId" }
+              view: {
+                template_id: "jwtPermission_bigint_templateId"
+                org_id: "jwtUserDetails_bigint_orgId"
+              }
+            }
+            review: {
+              view: {
+                reviewer_id: "jwtUserDetails_bigint_userId"
+              }
+            }
+            review_assignment: {
+              view: {
+                reviewer_id: "jwtUserDetails_bigint_userId"
+              }
             }
           }
           type: REVIEW
@@ -95,24 +108,99 @@ exports.queries = [
       }
     }
   }`,
-  // basicAssign
-  `mutation createPolicy {
-    createPermissionPolicy(
-      input: {
-        permissionPolicy: {
-          name: "basicAssign"
-          rules: {
-            application: {
-              view: { template_id: "jwtPermission_bigint_templateId" }
-            }
+  // reviewBasic
+  {
+    query: `mutation createPolicy($rules: JSON) {
+      createPermissionPolicy(
+        input: {
+          permissionPolicy: {
+            name: "reviewBasic"
+            rules: $rules
+            type: REVIEW
           }
-          type: ASSIGN
+        }
+      ) {
+        permissionPolicy {
+          name
         }
       }
-    ) {
-      permissionPolicy {
-        name
+    }`,
+    variables: {
+      rules: {
+        application: {
+          view: {
+            template_id: 'jwtPermission_bigint_templateId',
+            id: {
+              $in: {
+                $select: {
+                  application_id: true,
+                  $from: 'review_assignment',
+                  $where: {
+                    reviewer_id: 'jwtUserDetails_bigint_userId',
+                  },
+                },
+              },
+            },
+          },
+        },
+        review: {
+          view: {
+            reviewer_id: 'jwtUserDetails_bigint_userId',
+          },
+        },
+        review_assignment: {
+          view: {
+            reviewer_id: 'jwtUserDetails_bigint_userId',
+          },
+        },
+      },
+    },
+  },
+  // assignBasic
+  {
+    query: `mutation createPolicy($rules: JSON) {
+      createPermissionPolicy(
+        input: {
+          permissionPolicy: {
+            name: "assignBasic"
+            rules: $rules
+            type: ASSIGN
+          }
+        }
+      ) {
+        permissionPolicy {
+          name
+        }
       }
-    }
-  }`,
+    }`,
+    variables: {
+      rules: {
+        application: {
+          view: {
+            template_id: 'jwtPermission_bigint_templateId',
+          },
+        },
+        review: {
+          view: {
+            review_assignment_id: {
+              $in: {
+                $select: {
+                  id: true,
+                  $from: 'review_assignment',
+                  $where: {
+                    template_id: 'jwtPermission_bigint_templateId',
+                  },
+                },
+              },
+            },
+          },
+        },
+        review_assignment: {
+          view: {
+            template_id: 'jwtPermission_bigint_templateId',
+          },
+        },
+      },
+    },
+  },
 ]
