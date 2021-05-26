@@ -182,11 +182,11 @@ exports.queries = [
         },
         review: {
           view: {
-            application_id: {
+            review_assignment_id: {
               $in: {
                 $select: {
                   id: true,
-                  $from: 'application',
+                  $from: 'review_assignment',
                   $where: {
                     template_id: 'jwtPermission_bigint_templateId',
                   },
