@@ -5,7 +5,7 @@ const databaseMethods = (DBConnect: any) => ({
       review.id AS "reviewId",
       review_assignment_id AS "reviewAssignmentId",
       review_assignment.application_id AS "applicationId",
-      review_assignment.reviewer_id,
+      review_assignment.reviewer_id AS "reviewerId",
       review_assignment.level_number AS "levelNumber",
       review_assignment.id AS "reviewAssignmentId",
       review_status_history.status AS "reviewStatus"
