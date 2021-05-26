@@ -51,8 +51,10 @@ const databaseMethods = (DBConnect: any) => ({
     const text = `UPDATE review_response
       SET time_updated = (select time_created from review_status_history where review_id = $1 and is_current = true)
       WHERE id = ANY ($2)
-      RETURNING id AS "reviewResponseId",
-      template_element_id AS "templateElementId"
+      RETURNING 
+        id AS "reviewResponseId",
+        decision AS "reviewResponseDecision",
+        template_element_id AS "templateElementId"
       `
     try {
       const result = await DBConnect.query({ text, values: [reviewId, responsesToUpdate] })

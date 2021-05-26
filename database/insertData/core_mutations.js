@@ -68,7 +68,7 @@ exports.coreActions = `
       trigger: ON_APPLICATION_SUBMIT
       sequence: 4
       parameterQueries: {
-        changedApplicationResponses: {
+        changedResponses: {
           operator: "objectProperties"
           children: ["outputCumulative.updatedResponses"]
         }
@@ -83,10 +83,11 @@ exports.coreActions = `
     # ON_REVIEW_SUBMIT
     # 1 - change status to SUBMITTED
     # 2 - trim responses
-    # 3 - increment application stage (after last level reviewer conforms)
-    # 4 - generate review assignments
-    # 5 - adjust visibility of review responses (for applicant - LOQ)
-    # 6 - change application status (for applicant - LOQ)
+    # 3 - update review statuses (for other reviews related to this review submission)
+    # 4 - increment application stage (after last level reviewer conforms)
+    # 5 - generate review assignments
+    # 6 - adjust visibility of review responses (for applicant - LOQ)
+    # 7 - change application status (for applicant - LOQ)
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_SUBMIT
@@ -115,7 +116,8 @@ exports.coreActions = `
             operator: "objectProperties"
             children: ["applicationData.applicationId"]
           }
-          changedApplicationResponses: {
+          triggeredBy: "REVIEW"
+          changedResponses: {
             operator: "objectProperties"
             children: ["outputCumulative.updatedResponses"]
           }
@@ -238,7 +240,6 @@ exports.coreActions = `
         }
         }
     }   
-    
     `
 
 /*
@@ -267,17 +268,34 @@ templateFilterJoinsUsingId: {
     }
     {
       filterToFilterId: {
-        connectByCode: { code: "availableForSelfAssignment" }
+        connectByCode: { code: "availableForSelfAssignmentReviews" }
       }
     }
-    { filterToFilterId: { connectByCode: { code: "readyToReReview" } } }
-    { filterToFilterId: { connectByCode: { code: "draftReview" } } }
     {
       filterToFilterId: {
-        connectByCode: { code: "awaitingAssignment" }
+        connectByCode: { code: "readyToStartReviews" }
       }
     }
-    { filterToFilterId: { connectByCode: { code: "reAssign" } } }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "readyToRestartReviews" }
+      }
+    }
+    { filterToFilterId: { connectByCode: { code: "draftReviews" } } }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "changeRequestReviews" }
+      }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "awaitingAssignments" }
+      }
+    }
+    {
+      filterToFilterId: {
+        connectByCode: { code: "availableForReAssignments" }
+      }
+    }
   ]
-}
-`
+}`

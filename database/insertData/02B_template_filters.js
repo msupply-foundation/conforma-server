@@ -2,7 +2,7 @@
 Template Filters, joined to templates in individual templates
 */
 exports.queries = [
-  // "Approved Applications" - APPLY
+  // "Approved status" applications - APPLY
   `mutation addFilter {
     createFilter(
       input: {
@@ -19,6 +19,7 @@ exports.queries = [
     }
   }`,
 
+  // "Submitted status" applications - APPLY
   `mutation addFilter {
     createFilter(
       input: {
@@ -35,6 +36,7 @@ exports.queries = [
     }
   }`,
 
+  // "Draf status" applications - APPLY
   `mutation addFilter {
     createFilter(
       input: {
@@ -51,6 +53,7 @@ exports.queries = [
     }
   }`,
 
+  // "Changes requested" applications - APPLY
   `mutation addFilter {
     createFilter(
       input: {
@@ -67,13 +70,14 @@ exports.queries = [
     }
   }`,
 
+  // "Reviewer actions" on applications - REVIEW
   `mutation addFilter {
     createFilter(
       input: {
         filter: {
           icon: "user plus"
-          code: "availableForSelfAssignment"
-          query: { reviewAvailableForSelfAssignmentCount: "1:1000" }
+          code: "availableForSelfAssignmentReviews"
+          query: { reviewerAction: "SELF_ASSIGN" }
           title: "Available For Self Assignment"
           userRole: REVIEW
         }
@@ -88,8 +92,8 @@ exports.queries = [
       input: {
         filter: {
           icon: "gavel"
-          code: "readyToReview"
-          query: { reviewAssignedNotStartedCount: "1:1000" }
+          code: "readyToStartReviews"
+          query: { reviewerAction: "START_REVIEW" }
           title: "Ready to Review"
           userRole: REVIEW
         }
@@ -104,8 +108,8 @@ exports.queries = [
       input: {
         filter: {
           icon: "exchange"
-          code: "readyToReReview"
-          query: { reviewPendingCount: "1:1000" }
+          code: "readyToRestartReviews"
+          query: { reviewerAction: "RESTART_REVIEW" }
           title: "Ready to Re-Review"
           userRole: REVIEW
         }
@@ -120,24 +124,41 @@ exports.queries = [
       input: {
         filter: {
           icon: "save"
-          code: "draftReview"
-          query: { reviewDraftCount: "1:1000" }
+          code: "draftReviews"
+          query: { reviewerAction: "CONTINUE_REVIEW" }
           title: "Draft Reviews"
           userRole: REVIEW
-          
         }
       }
     ) {
       clientMutationId
     }
   }`,
+
+  `mutation addFilter {
+    createFilter(
+      input: {
+        filter: {
+          icon: "redo"
+          code: "changeRequestReviews"
+          query: { reviewerAction: "UPDATE_REVIEW" }
+          title: "Changes Required"
+          userRole: REVIEW
+        }
+      }
+    ) {
+      clientMutationId
+    }
+  }`,
+
+  // "Assigner actions" on applications - ASSIGN
   `mutation addFilter {
     createFilter(
       input: {
         filter: {
           icon: "user plus"
-          code: "awaitingAssignment"
-          query: { assignCount: "1:1000", isFullyAssignedLevel1: false}
+          code: "awaitingAssignments"
+          query: { assignerAction: "ASSIGN" }
           title: "Awaiting Assignment"
           userRole: ASSIGN
           
@@ -152,8 +173,8 @@ exports.queries = [
       input: {
         filter: {
           icon: "remove user"
-          code: "reAssign"
-          query: { assignCount: "1:1000", isFullyAssignedLevel1: true}
+          code: "availableForReAssignments"
+          query: { assignerAction: "RE_ASSIGN" }
           title: "Re Assign"
           userRole: ASSIGN
         }
