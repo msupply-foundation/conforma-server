@@ -87,10 +87,13 @@ const updateReviewsStatuses: ActionPluginType = async ({
 
         // Update upper level reviews submitted
         const nextReviewLevel = currentReviewLevel + 1
-        const submittedReviews = await getReviewsByLevelAndStatus(nextReviewLevel, [
+        const upperLevelReviews = await getReviewsByLevelAndStatus(nextReviewLevel, [
           ReviewStatus.Submitted,
+          ReviewStatus.Draft,
         ])
-        submittedReviews.forEach((review) =>
+
+        // NOTE: Not checking if assigned questions since consolidation cannot be partial!
+        upperLevelReviews.forEach((review) =>
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
         )
       }
