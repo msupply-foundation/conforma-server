@@ -1138,6 +1138,10 @@ exports.queries = [
                             "users.nodes"
                           ]
                         }
+                        resultFormat: {
+                          title: "\${firstName} \${lastName}"
+                          description: "\${username}"
+                        }
                       }
                     }
                   ]
