@@ -157,30 +157,35 @@ exports.queries = [
               reviewResponsesUsingId: {
                 create: [
                   {
+                    id: 3000
                     applicationResponseId: 4000
                     reviewQuestionAssignmentId: 1011
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
+                    id: 3001
                     applicationResponseId: 4001
                     reviewQuestionAssignmentId: 1012
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
+                    id: 3002
                     applicationResponseId: 4002
                     reviewQuestionAssignmentId: 1013
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
+                    id: 3003
                     applicationResponseId: 4003
                     reviewQuestionAssignmentId: 1014
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
+                    id: 3004
                     applicationResponseId: 4004
                     reviewQuestionAssignmentId: 1015
                     status: SUBMITTED
@@ -249,30 +254,35 @@ exports.queries = [
               reviewResponsesUsingId: {
                 create: [
                   {
+                    id: 3005
                     applicationResponseId: 4005
                     reviewQuestionAssignmentId: 1017
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
+                    id: 3006
                     applicationResponseId: 4006
                     reviewQuestionAssignmentId: 1018
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
+                    id: 3007
                     applicationResponseId: 4007
                     reviewQuestionAssignmentId: 1019
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
+                    id: 3008
                     applicationResponseId: 4008
                     reviewQuestionAssignmentId: 1020
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
+                    id: 3009
                     applicationResponseId: 4009
                     reviewQuestionAssignmentId: 1021
                     status: SUBMITTED
@@ -355,51 +365,61 @@ exports.queries = [
                   {
                     applicationResponseId: 4000
                     reviewQuestionAssignmentId: 1022
+                    reviewResponseLinkId: 3000
                     status: DRAFT
                   }
                   {
                     applicationResponseId: 4001
                     reviewQuestionAssignmentId: 1023
+                    reviewResponseLinkId: 3001
                     status: DRAFT
                   }
                   {
                     applicationResponseId: 4002
                     reviewQuestionAssignmentId: 1024
+                    reviewResponseLinkId: 3002
                     status: DRAFT
                   }
                   {
                     applicationResponseId: 4003
                     reviewQuestionAssignmentId: 1025
+                    reviewResponseLinkId: 3003
                     status: DRAFT
                   }
                   {
                     applicationResponseId: 4004
                     reviewQuestionAssignmentId: 1026
+                    reviewResponseLinkId: 3004
                     status: DRAFT
                   }
                   {
                     applicationResponseId: 4005
                     reviewQuestionAssignmentId: 1027
+                    reviewResponseLinkId: 3005
                     status: DRAFT
                   }
                   {
                     applicationResponseId: 4006
                     reviewQuestionAssignmentId: 1028
+                    reviewResponseLinkId: 3006
                     status: DRAFT
                   }
                   {
                     applicationResponseId: 4007
                     reviewQuestionAssignmentId: 1029
+                    reviewResponseLinkId: 3007
                     status: DRAFT
                   }
                   {
                     applicationResponseId: 4008
                     reviewQuestionAssignmentId: 1030
+                    reviewResponseLinkId: 3008
                     status: DRAFT
                   }
                   {
                     applicationResponseId: 4009
                     reviewQuestionAssignmentId: 1031
+                    reviewResponseLinkId: 3009
                     status: DRAFT
                   }
                 ]
@@ -499,64 +519,65 @@ exports.queries = [
               reviewResponsesUsingId: {
                 create: [
                   {
-                    applicationResponseId: 4000
+                    applicationResponseId: 4010
                     reviewQuestionAssignmentId: 2000
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4001
+                    applicationResponseId: 4011
                     reviewQuestionAssignmentId: 2001
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4002
+                    applicationResponseId: 4012
                     reviewQuestionAssignmentId: 2002
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4003
+                    applicationResponseId: 4013
                     reviewQuestionAssignmentId: 2003
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4004
+                    applicationResponseId: 4014
                     reviewQuestionAssignmentId: 2004
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4005
+                    applicationResponseId: 4015
                     reviewQuestionAssignmentId: 2006
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4006
+                    applicationResponseId: 4016
                     reviewQuestionAssignmentId: 2007
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4007
+                    applicationResponseId: 4017
                     reviewQuestionAssignmentId: 2008
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4008
+                    applicationResponseId: 4018
                     reviewQuestionAssignmentId: 2009
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
-                    applicationResponseId: 4009
+                    applicationResponseId: 4019
                     reviewQuestionAssignmentId: 2010
                     status: SUBMITTED
                     decision: DECLINE
+                    isVisibleToApplicant: true
                     comment: "List lighter effects"
                   }
                 ]
@@ -747,6 +768,7 @@ exports.queries = [
               reviewResponsesUsingId: {
                 create: [
                   {
+                    id: 4000
                     applicationResponseId: 4020
                     reviewQuestionAssignmentId: 3010
                     status: SUBMITTED
@@ -754,6 +776,7 @@ exports.queries = [
                     comment: "Name not conform with uploaded proof of identity"
                   }
                   {
+                    id: 4001
                     applicationResponseId: 4021
                     reviewQuestionAssignmentId: 3011
                     status: SUBMITTED
@@ -761,18 +784,21 @@ exports.queries = [
                     comment: "Surname not conform with uploaded proof of identity"
                   }
                   {
+                    id: 4002
                     applicationResponseId: 4022
                     reviewQuestionAssignmentId: 3012
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
+                    id: 4003
                     applicationResponseId: 4023
                     reviewQuestionAssignmentId: 3013
                     status: SUBMITTED
                     decision: APPROVE
                   }
                   {
+                    id: 4004
                     applicationResponseId: 4024
                     reviewQuestionAssignmentId: 3014
                     status: SUBMITTED
@@ -819,7 +845,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = LOCKED (for this reviewer to submit)
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = DRAFT (Partial stage 2 not submitted)
   `mutation {
     createReviewAssignment(
       input: {
@@ -882,12 +908,7 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "2021-02-03T00:00:00Z" }
-                  {
-                    status: LOCKED
-                    isCurrent: true
-                    timeCreated: "2021-02-04T10:00:00Z"
-                  }
+                  { status: DRAFT, isCurrent: true, timeCreated: "2021-02-03T00:00:00Z" }
                 ]
               }
             }
@@ -981,34 +1002,39 @@ exports.queries = [
                   {
                     applicationResponseId: 4020
                     reviewQuestionAssignmentId: 3033
+                    reviewResponseLinkId: 4000
                     status: SUBMITTED
-                    decision: DECLINE
+                    decision: DISAGREE
                     comment: "Please check again"
                   }
                   {
                     applicationResponseId: 4021
                     reviewQuestionAssignmentId: 3034
+                    reviewResponseLinkId: 4001
                     status: SUBMITTED
-                    decision: DECLINE
+                    decision: DISAGREE
                     comment: "Please check again"
                   }
                   {
                     applicationResponseId: 4022
                     reviewQuestionAssignmentId: 3035
+                    reviewResponseLinkId: 4002
                     status: SUBMITTED
-                    decision: APPROVE
+                    decision: AGREE
                   }
                   {
                     applicationResponseId: 4023
                     reviewQuestionAssignmentId: 3036
+                    reviewResponseLinkId: 4003
                     status: SUBMITTED
-                    decision: APPROVE
+                    decision: AGREE
                   }
                   {
                     applicationResponseId: 4024
                     reviewQuestionAssignmentId: 3037
+                    reviewResponseLinkId: 4004
                     status: SUBMITTED
-                    decision: APPROVE
+                    decision: AGREE
                   }
                 ]
               }
