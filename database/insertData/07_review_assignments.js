@@ -908,12 +908,7 @@ exports.queries = [
               }
               reviewStatusHistoriesUsingId: {
                 create: [
-                  { status: DRAFT, isCurrent: false, timeCreated: "2021-02-03T00:00:00Z" }
-                  {
-                    status: LOCKED
-                    isCurrent: true
-                    timeCreated: "2021-02-04T10:00:00Z"
-                  }
+                  { status: DRAFT, isCurrent: true, timeCreated: "2021-02-03T00:00:00Z" }
                 ]
               }
             }

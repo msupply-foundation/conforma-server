@@ -86,11 +86,18 @@ const updateRowPolicies = async () => {
     text: newPolicies.join(';'),
   })
 
-  // Temporarily hard-code create/update permissions on application table
+  // Temporarily hard-code create/update permissions RLS-enabled tables
   await databaseConnect.query({
     text: `
-    CREATE POLICY "create_all" ON application FOR INSERT WITH CHECK (true);
-    CREATE POLICY "update_all" ON application FOR UPDATE USING(true) WITH CHECK (true);`,
+    CREATE POLICY "create_all_application" ON application FOR INSERT WITH CHECK (true);
+    CREATE POLICY "update_all_application" ON application FOR UPDATE USING(true) WITH CHECK (true);
+    CREATE POLICY "create_all_application_response" ON application_response FOR INSERT WITH CHECK (true);
+    CREATE POLICY "update_all_application_response" ON application_response FOR UPDATE USING(true) WITH CHECK (true);
+    CREATE POLICY "create_all_review" ON review FOR INSERT WITH CHECK (true);
+    CREATE POLICY "update_all_review" ON review FOR UPDATE USING(true) WITH CHECK (true);
+    CREATE POLICY "create_all_review_assignment" ON review_assignment FOR INSERT WITH CHECK (true);
+    CREATE POLICY "update_all_review_assignment" ON review_assignment FOR UPDATE USING(true) WITH CHECK (true);
+    `,
   })
 
   return newPolicies
