@@ -182,7 +182,7 @@ exports.queries = [
         },
         review: {
           view: {
-            reviewer_id: {
+            application_id: {
               $in: {
                 $select: {
                   id: true,
@@ -197,17 +197,7 @@ exports.queries = [
         },
         review_assignment: {
           view: {
-            reviewer_id: {
-              $in: {
-                $select: {
-                  id: true,
-                  $from: 'application',
-                  $where: {
-                    template_id: 'jwtPermission_bigint_templateId',
-                  },
-                },
-              },
-            },
+            template_id: 'jwtPermission_bigint_templateId',
           },
         },
       },
