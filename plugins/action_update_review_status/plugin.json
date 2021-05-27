@@ -5,7 +5,7 @@
   "description": "Updates status of associated reviews when application re-submitted",
   "required_parameters": ["changedResponses"],
   "optional_parameters": ["applicationId", "reviewId", "trigeredBy", "stageId", "level"],
-  "output_properties": ["updatedReviews"],
+  "output_properties": ["updatedReviews", "updatedReviewAssignments"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",
