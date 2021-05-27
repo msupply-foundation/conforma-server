@@ -670,7 +670,9 @@ exports.queries = [
                       title: "Country code"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
+                      isRequired: false
                       parameters: {
+                        label: "Country code"
                         search: true
                         options: {
                           operator: "graphQL",
@@ -970,6 +972,135 @@ exports.queries = [
                         default: "none"
                       }
                       isRequired: false
+                    }
+                    {
+                      code: "PB13"
+                      index: 2
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "IngredientsHeader"
+                      index: 3
+                      title: "Ingredients list demonstration"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      helpText: "Add items one by one to create an **Ingredients list**"
+                      parameters: {
+                        title: "## Ingredients list demonstration"
+                        text: "List items can be displayed in **Card** or **Table** form"
+                        style: "info"
+                      }
+                    }
+                    {
+                      code: "listDemo"
+                      index: 4
+                      title: "Ingredients List Demo"
+                      elementTypePluginCode: "listBuilder"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Ingredients list"
+                        createModalButtonText: "Add ingredient"
+                        modalText: "Please enter details for **one** ingredient"
+                        displayType: {
+                          operator: "objectProperties"
+                          children: ["responses.listDisplay.text"]
+                        }
+                        displayFormat: {
+                          title: "\${LB1}"
+                          subtitle: "\${LB2}"
+                          description: "**Quantity**: \${LB4} \${LB5}  \\n**Substance present?**: \${LB3}  \\n**Type**: \${LB6}"
+                        }
+                        inputFields: [
+                          {
+                            code: "LB1"
+                            title: "Substance Name"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: { label: "Substance name" }
+                            isRequired: true
+                          }
+                          {
+                            code: "LB2"
+                            title: "Complementary information"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: { label: "Complementary information" }
+                            isRequired: false
+                          }
+                          {
+                            code: "LB3"
+                            title: "Included"
+                            elementTypePluginCode: "checkbox"
+                            category: QUESTION
+                            parameters: {
+                              label: "Substance present in end product"
+                              checkboxes: [ "Yes" ]
+                            }
+                          }
+                          {
+                            code: "LB4"
+                            title: "Quantity"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            validation: {
+                              operator: "REGEX",
+                              children: [
+                                {
+                                  operator: "objectProperties",
+                                  children: [
+                                    "responses.thisResponse"
+                                  ]
+                                },
+                                "^[0-9.]+$"
+                              ]
+                            }
+                            validationMessage: "Must be a number"
+                            parameters: {
+                              label: "Quantity"
+                              description: "Enter a number and select units below"
+                            }
+                          }
+                          {
+                            code: "LB5"
+                            title: "Unit"
+                            elementTypePluginCode: "radioChoice"
+                            category: QUESTION
+                            parameters: {
+                              label: "Unit"
+                              options: ["Milligram", "Microgram", "International Unit"]
+                              hasOther: true
+                            }
+                          }
+                          {
+                            code: "LB6"
+                            title: "Type"
+                            elementTypePluginCode: "dropdownChoice"
+                            category: QUESTION
+                            parameters: {
+                              label: "Type"
+                              options: ["Active", "Inactive"]
+                              default: 0
+                            }
+                          }
+                        ]
+                      }
+                    }
+                    {
+                      code: "listDisplay"
+                      index: 5
+                      title: "List Display Selector"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Display style for Ingredients list"
+                        placeholder: "Select"
+                        options: ["cards", "table"]
+                        default: "cards"
+                      }
                     }
                   ]
                 }

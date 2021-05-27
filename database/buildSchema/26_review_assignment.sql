@@ -1,3 +1,18 @@
+-- FUNCTION to auto-add template_id to review_assignment
+CREATE OR REPLACE FUNCTION public.review_assignment_template_id (application_id int)
+    RETURNS int
+    AS $$
+    SELECT
+        template_id
+    FROM
+        application
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
 -- review assignment
 CREATE TYPE public.review_assignment_status AS ENUM (
     'AVAILABLE',
@@ -15,6 +30,7 @@ CREATE TABLE public.review_assignment (
     stage_number integer,
     status public.review_assignment_status NOT NULL,
     application_id integer REFERENCES public.application (id),
+    template_id integer GENERATED ALWAYS AS (public.review_assignment_template_id (application_id)) STORED REFERENCES public.template (id),
     allowed_sections varchar[] DEFAULT NULL,
     TRIGGER public.trigger,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
