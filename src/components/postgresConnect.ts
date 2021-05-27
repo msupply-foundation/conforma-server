@@ -535,34 +535,6 @@ class PostgresDB {
     }
   }
 
-  public addNewReviewStatusHistory = async (
-    reviewId: number,
-    status: ReviewStatus = ReviewStatus.Draft
-  ) => {
-    // Note: switching is_current of previous status_histories to False is done automatically by a Postgres trigger function
-    const text =
-      'INSERT into review_status_history (review_id, status) VALUES ($1, $2) RETURNING id, status, time_created'
-    try {
-      const result = await this.query({ text, values: [reviewId, status] })
-      return result.rows[0]
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  public setReviewAssignmentIsLocked = async (reviewAssignmnetId: number, isLocked: boolean) => {
-    const text =
-      'INSERT into review_assignment is_locked VALUES ($2) WHERE id = $1 RETURNING id, is_locked'
-    try {
-      const result = await this.query({ text, values: [reviewAssignmnetId, isLocked] })
-      return result.rows[0]
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
   public getUserTemplatePermissions = async (username: string, orgId: number | null) => {
     const text = `SELECT * FROM permissions_all
       WHERE username = $1

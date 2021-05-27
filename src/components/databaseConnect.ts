@@ -88,8 +88,6 @@ class DBConnect {
 
   public addNewApplicationStatusHistory = PostgresDB.addNewApplicationStatusHistory
 
-  public addNewReviewStatusHistory = PostgresDB.addNewReviewStatusHistory
-
   public getUserData = PostgresDB.getUserData
 
   public getUserOrgData = PostgresDB.getUserOrgData
