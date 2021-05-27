@@ -67,21 +67,6 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
-  addNewReviewStatusHistory: async (
-    reviewId: number,
-    status: ReviewStatus = ReviewStatus.Draft
-  ) => {
-    // Note: switching is_current of previous status_histories to False is done automatically by a Postgres trigger function
-    const text =
-      'INSERT into review_status_history (review_id, status) VALUES ($1, $2) RETURNING id, status, time_created'
-    try {
-      const result = await DBConnect.query({ text, values: [reviewId, status] })
-      return result.rows[0]
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  },
   setReviewAssignmentIsLocked: async (reviewAssignmnetId: number, isLocked: boolean) => {
     const text = 'UPDATE review_assignment SET is_locked = $1 WHERE id = $2'
     try {

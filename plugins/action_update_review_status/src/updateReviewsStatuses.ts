@@ -145,7 +145,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
     // Update review statuses
     for (const review of reviewsToUpdate) {
       const { reviewId, reviewStatus } = review
-      await db.addNewReviewStatusHistory(reviewId, reviewStatus)
+      await DBConnect.addNewReviewStatusHistory(reviewId, reviewStatus)
     }
 
     console.log('Resulted reviews assignments to update', reviewAssignmentsToUpdate)
