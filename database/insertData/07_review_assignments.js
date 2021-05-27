@@ -1336,7 +1336,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = DRAFT (Partial stage 2 not submitted)
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = ASSIGNED (Partial stage 2 not started)
   `mutation {
     createReviewAssignment(
       input: {
@@ -1359,43 +1359,6 @@ exports.queries = [
               { id: 5017, templateElementId: 4011 }
               { id: 5018, templateElementId: 4012 }
             ]
-          }
-          reviewsUsingId: {
-            create: {
-              reviewResponsesUsingId: {
-                create: [
-                  {
-                    applicationResponseId: 4155
-                    reviewQuestionAssignmentId: 5015
-                    status: DRAFT
-                    decision: APPROVE
-                  }
-                  {
-                    applicationResponseId: 4156
-                    reviewQuestionAssignmentId: 5016
-                    status: DRAFT
-                    decision: APPROVE
-                  }
-                  {
-                    applicationResponseId: 4157
-                    reviewQuestionAssignmentId: 5017
-                    status: DRAFT
-                    decision: APPROVE
-                  }
-                  {
-                    applicationResponseId: 4158
-                    reviewQuestionAssignmentId: 5018
-                    status: DRAFT
-                    decision: APPROVE
-                  }
-                ]
-              }
-              reviewStatusHistoriesUsingId: {
-                create: [
-                  { status: DRAFT, isCurrent: true, timeCreated: "2021-02-03T00:00:00Z" }
-                ]
-              }
-            }
           }
         }
       }
@@ -1483,6 +1446,7 @@ exports.queries = [
               reviewResponsesUsingId: {
                 create: [
                   {
+                    id: 5020
                     applicationResponseId: 4150
                     reviewQuestionAssignmentId: 5033
                     reviewResponseLinkId: 5000
@@ -1490,6 +1454,7 @@ exports.queries = [
                     decision: AGREE
                   }
                   {
+                    id: 5021
                     applicationResponseId: 4151
                     reviewQuestionAssignmentId: 5034
                     reviewResponseLinkId: 5001
@@ -1497,6 +1462,7 @@ exports.queries = [
                     decision: AGREE
                   }
                   {
+                    id: 5022
                     applicationResponseId: 4152
                     reviewQuestionAssignmentId: 5035
                     reviewResponseLinkId: 5002
@@ -1504,6 +1470,7 @@ exports.queries = [
                     decision: AGREE
                   }
                   {
+                    id: 5023
                     applicationResponseId: 4153
                     reviewQuestionAssignmentId: 5036
                     reviewResponseLinkId: 5003
@@ -1511,6 +1478,7 @@ exports.queries = [
                     decision: AGREE
                   }
                   {
+                    id: 5024
                     applicationResponseId: 4154
                     reviewQuestionAssignmentId: 5037
                     reviewResponseLinkId: 5004
