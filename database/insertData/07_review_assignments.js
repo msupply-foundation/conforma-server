@@ -1450,7 +1450,7 @@ exports.queries = [
                     applicationResponseId: 4150
                     reviewQuestionAssignmentId: 5033
                     reviewResponseLinkId: 5000
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: AGREE
                   }
                   {
@@ -1458,7 +1458,7 @@ exports.queries = [
                     applicationResponseId: 4151
                     reviewQuestionAssignmentId: 5034
                     reviewResponseLinkId: 5001
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: AGREE
                   }
                   {
@@ -1466,7 +1466,7 @@ exports.queries = [
                     applicationResponseId: 4152
                     reviewQuestionAssignmentId: 5035
                     reviewResponseLinkId: 5002
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: AGREE
                   }
                   {
@@ -1474,7 +1474,7 @@ exports.queries = [
                     applicationResponseId: 4153
                     reviewQuestionAssignmentId: 5036
                     reviewResponseLinkId: 5003
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: AGREE
                   }
                   {
@@ -1482,7 +1482,7 @@ exports.queries = [
                     applicationResponseId: 4154
                     reviewQuestionAssignmentId: 5037
                     reviewResponseLinkId: 5004
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: AGREE
                   }
                 ]
