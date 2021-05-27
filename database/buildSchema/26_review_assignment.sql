@@ -20,7 +20,8 @@ CREATE TABLE public.review_assignment (
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     level_number integer,
     level_id integer REFERENCES public.template_stage_review_level (id),
-    is_last_level boolean
+    is_last_level boolean,
+    is_locked boolean DEFAULT false
 );
 
 -- TRIGGER (Listener) on review_assignment table
