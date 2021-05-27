@@ -1009,8 +1009,8 @@ exports.queries = [
                           children: ["responses.listDisplay.text"]
                         }
                         displayFormat: {
-                          header: "\${LB1}"
-                          meta: "\${LB2}"
+                          title: "\${LB1}"
+                          subtitle: "\${LB2}"
                           description: "**Quantity**: \${LB4} \${LB5}  \\n**Substance present?**: \${LB3}  \\n**Type**: \${LB6}"
                         }
                         inputFields: [
