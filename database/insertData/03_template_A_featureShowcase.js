@@ -1138,7 +1138,7 @@ exports.queries = [
                             "users.nodes"
                           ]
                         }
-                        resultFormat: {
+                        displayFormat: {
                           title: "\${firstName} \${lastName}"
                           description: "\${username}"
                         }
@@ -1157,6 +1157,7 @@ exports.queries = [
                         placeholder: "Search countries"
                         icon: "world"
                         minCharacters: 2
+                        multiSelect: true
                         source: {
                           operator: "graphQL",
                           children: [
@@ -1174,9 +1175,46 @@ exports.queries = [
                             "country"
                           ]
                         }
-                        resultFormat: {
+                        displayFormat: {
                           title: "\${emoji} \${name}"
                           description: "Capital: \${capital}"
+                        }
+                      }
+                    }
+                    {
+                      code: "searchATC"
+                      index: 9
+                      title: "Search ATC Codes"
+                      elementTypePluginCode: "search"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Lookup ATC codes"
+                        description: "Start typing a drug name"
+                        placeholder: "Search codes..."
+                        icon: "pills"
+                        minCharacters: 3
+                        multiSelect: true
+                        source: {
+                          operator: "graphQL",
+                          children: [
+                            "query GetEntitiesByName($search: String!) {entities (filter: { code: \\"\\" description: $search type: \\"[drug]\\" match: \\"contains\\"},offset: 0,first: 25) {data {        code,     description,        type,        uid  }, totalLength }}",
+                            "https://codes.msupply.foundation:2048/graphql",
+                            [
+                              "search"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "search.text"
+                              ]
+                            },
+                            "entities.data"
+                          ]
+                        }
+                        displayFormat: {
+                          title: "\${description}",
+                          description: "\${code}"
                         }
                       }
                     }
