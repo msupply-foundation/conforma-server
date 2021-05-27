@@ -429,6 +429,9 @@ exports.queries = [
                   { status: DRAFT, isCurrent: true, timeCreated: "2021-05-19T00:00:00Z" }
                 ]
               }
+              reviewDecisionsUsingId: {
+                create: [{ decision: NO_DECISION }]
+              }
             }
           }
         }
@@ -910,6 +913,9 @@ exports.queries = [
                 create: [
                   { status: DRAFT, isCurrent: true, timeCreated: "2021-02-03T00:00:00Z" }
                 ]
+              }
+              reviewDecisionsUsingId: {
+                create: [{ decision: NO_DECISION }]
               }
             }
           }
@@ -1495,6 +1501,9 @@ exports.queries = [
                     timeCreated: "2021-02-04T00:00:00Z"
                   }
                 ]
+              }
+              reviewDecisionsUsingId: {
+                create: [{ decision: NO_DECISION }]
               }
             }
           }
