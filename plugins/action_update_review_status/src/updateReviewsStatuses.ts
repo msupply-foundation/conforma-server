@@ -33,11 +33,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
   const decision = applicationData?.reviewData?.latestDecision?.decision || Decision.NoDecision
-  console.log('Before')
-
   const isLastLevel = applicationData?.reviewData?.isLastLevel || false
-
-  console.log('After', isLastLevel)
 
   const stageId = parameters?.stageId || applicationData?.stageId
   const currentReviewLevel = parameters.level || applicationData?.reviewData?.levelNumber || 0
