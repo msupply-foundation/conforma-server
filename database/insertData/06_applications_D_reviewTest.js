@@ -561,4 +561,118 @@ exports.queries = [
       }
     }
   }`,
+  // Application 5 for Review Testing -- on Stage 2 with consolidation assigned
+  `mutation ReviewTestApplication4 {
+    createApplication(
+      input: {
+        application: {
+          id: 4004
+          serial: "45678"
+          applicationSectionsUsingId: {
+            create: [{ templateSectionId: 1005 }, { templateSectionId: 1006 }]
+          }
+          name: "Test Review -- Amoxicilin"
+          outcome: PENDING
+          isActive: true
+          templateId: 4
+          userId: 2
+          applicationStageHistoriesUsingId: {
+            create: [
+              {
+                isCurrent: false
+                templateStageToStageId: { connectById: { id: 4 } }
+                applicationStatusHistoriesUsingId: {
+                  create: [
+                    { isCurrent: false, status: SUBMITTED }
+                    { isCurrent: false, status: COMPLETED }
+                  ]
+                }
+              }
+              {
+                isCurrent: true
+                templateStageToStageId: { connectById: { id: 5 } }
+                applicationStatusHistoriesUsingId: {
+                  create: { isCurrent: true, status: SUBMITTED }
+                }
+              }
+            ]
+          }
+          applicationResponsesUsingId: {
+            create: [
+              {
+                id: 4150
+                isValid: true
+                templateElementId: 4001
+                status: SUBMITTED 
+                value: { text: "Another" }
+              }
+              {
+                id: 4151
+                isValid: true
+                templateElementId: 4002
+                status: SUBMITTED 
+                value: { text: "Test" }
+              }
+              {
+                id: 4152
+                isValid: true
+                templateElementId: 4003
+                status: SUBMITTED 
+                value: { text: "this@test.com" }
+              }
+              {
+                id: 4153
+                isValid: true
+                templateElementId: 4005
+                status: SUBMITTED 
+                value: { text: "18" }
+              }
+              {
+                id: 4154
+                isValid: true
+                templateElementId: 4006
+                status: SUBMITTED 
+                value: { text: "Brazil" }
+              }
+              {
+                id: 4155
+                isValid: true
+                templateElementId: 4008
+                status: SUBMITTED 
+                value: { text: "Amoxicilin" }
+              }
+              {
+                id: 4156
+                isValid: true
+                templateElementId: 4009
+                status: SUBMITTED 
+                value: { text: "Medicine", optionIndex: 2 }
+              }
+              {
+                id: 4157
+                isValid: true
+                templateElementId: 4011
+                status: SUBMITTED 
+                value: { text: "100g" }
+              }
+              {
+                id: 4158
+                isValid: true
+                templateElementId: 4012
+                status: SUBMITTED 
+                value: { text: "200" }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      application {
+        name
+        template {
+          name
+        }
+      }
+    }
+  }`,
 ]
