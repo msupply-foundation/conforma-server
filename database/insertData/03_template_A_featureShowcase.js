@@ -1144,6 +1144,42 @@ exports.queries = [
                         }
                       }
                     }
+                    {
+                      code: "searchCountries"
+                      index: 8
+                      title: "Search Demo (countries)"
+                      elementTypePluginCode: "search"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Search for countries"
+                        description: "Type the two-character country code (must be CAPS sorry)"
+                        placeholder: "Search countries"
+                        icon: "world"
+                        minCharacters: 2
+                        source: {
+                          operator: "graphQL",
+                          children: [
+                            "query countries($code: ID!) {country(code: $code) {name, capital, emoji, code}}",
+                            "https://countries.trevorblades.com",
+                            [
+                              "code"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "search.text"
+                              ]
+                            },
+                            "country"
+                          ]
+                        }
+                        resultFormat: {
+                          title: "\${emoji} \${name}"
+                          description: "Capital: \${capital}"
+                        }
+                      }
+                    }
                   ]
                 }
               }
