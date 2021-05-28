@@ -46,15 +46,9 @@ exports.coreActions = `
       trigger: ON_REVIEW_CREATE
       sequence: 2
       condition: {
-        operator: "="
+        operator: "objectProperties"
         children: [
-          {
-            operator: "objectProperties"
-            children: [
-              "applicationData.reviewData.reviewAssignment.isLocked"
-            ]
-          }
-          "true"
+          "applicationData.reviewData.reviewAssignment.isLocked"
         ]
       }
       parameterQueries: {
