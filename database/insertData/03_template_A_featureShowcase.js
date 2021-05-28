@@ -1116,7 +1116,7 @@ exports.queries = [
                       elementTypePluginCode: "search"
                       category: QUESTION
                       isRequired: false
-                      helpText: "The next two pages contain examples of the **Search** element. It can make API queries in response to user input and display the results, which can be selected."
+                      helpText: "This page contain examples of the **Search** element. It can make API queries in response to user input and display the results, which can be selected."
                       parameters: {
                         label: "Search for users"
                         description: "Start typing to search database for usernames"
@@ -1230,6 +1230,7 @@ exports.queries = [
                       elementTypePluginCode: "search"
                       category: QUESTION
                       isRequired: false
+                      helpText: "This one has no \`displayFormat\` prop, so it falls back to a generic \\"default\\" display"
                       parameters: {
                         label: "Search for an organisation"
                         description: "Please enter the organisation's registration code (min 6 chars)"
@@ -1253,10 +1254,7 @@ exports.queries = [
                             "organisations.nodes"
                           ]
                         }
-                        displayFormat: {
-                          title: "\${name}"
-                          description: "registration: \${registration}"
-                        }
+                        # no display format -- will use default 
                       }
                     }
                   ]
