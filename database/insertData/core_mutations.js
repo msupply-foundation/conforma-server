@@ -31,7 +31,8 @@ exports.coreActions = `
       }
     }
     # ON_REVIEW_CREATE
-    # change status to DRAFT
+    # 1 - change status to DRAFT
+    # 2 - lock review if assignment is locked
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_CREATE
@@ -40,6 +41,26 @@ exports.coreActions = `
           newStatus: "DRAFT"
         }
     }
+    {
+      actionCode: "changeStatus"
+      trigger: ON_REVIEW_CREATE
+      sequence: 2
+      condition: {
+        operator: "="
+        children: [
+          {
+            operator: "objectProperties"
+            children: [
+              "applicationData.reviewData.reviewAssignment.isLocked"
+            ]
+          }
+          "true"
+        ]
+      }
+      parameterQueries: {
+        newStatus: "LOCKED"
+      }
+  }
     # ON_APPLICATION_SUBMIT
     # 1 - change status to SUBMITTED
     # 2 - trim responses
