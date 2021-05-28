@@ -1116,6 +1116,7 @@ exports.queries = [
                       elementTypePluginCode: "search"
                       category: QUESTION
                       isRequired: false
+                      helpText: "The next two pages contain examples of the **Search** element. It can make API queries in response to user input and display the results, which can be selected."
                       parameters: {
                         label: "Search for users"
                         description: "Start typing to search database for usernames"
@@ -1191,7 +1192,7 @@ exports.queries = [
                       parameters: {
                         label: "Lookup ATC codes"
                         description: "Start typing a drug name"
-                        placeholder: "Search codes..."
+                        placeholder: "Search medicines"
                         icon: "pills"
                         minCharacters: 3
                         multiSelect: true
@@ -1214,7 +1215,47 @@ exports.queries = [
                         }
                         displayFormat: {
                           title: "\${description}",
+                          description: "ATC code: \${code}"
+                        }
+                        resultFormat: {
+                          title: "\${description}",
                           description: "\${code}"
+                        }
+                      }
+                    }
+                    {
+                      code: "searchOrg"
+                      index: 11
+                      title: "Search Demo (organisations)"
+                      elementTypePluginCode: "search"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Search for an organisation"
+                        description: "Please enter the organisation's registration code (min 6 chars)"
+                        placeholder: "Search organisations"
+                        icon: "building"
+                        minCharacters: 6
+                        source: {
+                          operator: "graphQL",
+                          children: [
+                            "query GetOrgs($registration: String!) { organisations(filter: {registration: {startsWithInsensitive: $registration}}) { nodes { name registration } } }",
+                            "",
+                            [
+                              "registration"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "search.text"
+                              ]
+                            },
+                            "organisations.nodes"
+                          ]
+                        }
+                        displayFormat: {
+                          title: "\${name}"
+                          description: "registration: \${registration}"
                         }
                       }
                     }
