@@ -1037,7 +1037,10 @@ exports.queries = [
                             category: QUESTION
                             parameters: {
                               label: "Substance present in end product"
-                              checkboxes: [ "Yes" ]
+                              checkboxes: [ {
+                                label: "Yes"
+                                textNegative: "No"
+                              } ]
                             }
                           }
                           {
