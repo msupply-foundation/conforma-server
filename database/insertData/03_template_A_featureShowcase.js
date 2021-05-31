@@ -1183,14 +1183,14 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "searchATC"
+                      code: "searchUC"
                       index: 9
-                      title: "Search ATC Codes"
+                      title: "Search Universal Codes"
                       elementTypePluginCode: "search"
                       category: QUESTION
                       isRequired: false
                       parameters: {
-                        label: "Lookup ATC codes"
+                        label: "Lookup mSupply Universal Codes"
                         description: "Start typing a drug name"
                         placeholder: "Search medicines"
                         icon: "pills"
@@ -1215,7 +1215,7 @@ exports.queries = [
                         }
                         displayFormat: {
                           title: "\${description}",
-                          description: "ATC code: \${code}"
+                          description: "Universal Code: \${code}"
                         }
                         resultFormat: {
                           title: "\${description}",
