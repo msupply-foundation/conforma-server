@@ -1126,7 +1126,7 @@ exports.queries = [
                           operator: "graphQL",
                           children: [
                             "query GetUsers($user: String!) { users(filter: { username: {includesInsensitive: $user } }) {nodes { username, firstName, lastName }}}",
-                            "",
+                            "graphQLEndpoint",
                             [
                               "user"
                             ],
@@ -1241,7 +1241,7 @@ exports.queries = [
                           operator: "graphQL",
                           children: [
                             "query GetOrgs($registration: String!) { organisations(filter: {registration: {startsWithInsensitive: $registration}}) { nodes { name registration } } }",
-                            "",
+                            "graphQLEndpoint",
                             [
                               "registration"
                             ],
