@@ -657,7 +657,11 @@ exports.queries = [
                 isValid: true
                 templateElementId: 4009
                 status: SUBMITTED 
-                value: { text: "Medicine", optionIndex: 2 }
+                value: { 
+                  text: "Medicine"
+                  selection: "Medicine"
+                  optionIndex: 0
+                }
               }
               {
                 id: 4157
