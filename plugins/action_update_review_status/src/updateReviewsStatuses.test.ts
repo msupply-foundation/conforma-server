@@ -141,7 +141,7 @@ describe('Update review_responses after updating changes_requested to reviewer1'
       VALUES (DEFAULT, 7, 3010, 4001, 4020, 'APPROVE', 'SUBMITTED');
     INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status)
       VALUES (DEFAULT, 7, 3011, 4002, 4021, 'APPROVE', 'SUBMITTED');
-    UPDATE public.review_decision SET decision = 'Conform', comment = NULL, time_updated = 'NOW()' WHERE id = 6;
+    UPDATE public.review_decision SET decision = 'CONFORM', comment = NULL, time_updated = 'NOW()' WHERE id = 6;
     INSERT INTO public.review_status_history (id, review_id, status)
       VALUES (DEFAULT, 7, 'SUBMITTED');
     `,
@@ -211,7 +211,7 @@ describe('Update review_responses for second review submission by reviewer2 when
   UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 59;
   UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 60;
   INSERT INTO public.review_decision (id, decision, review_id)
-    VALUES (DEFAULT, 'Conform', 8);
+    VALUES (DEFAULT, 'CONFORM', 8);
   INSERT INTO public.review_status_history (id, review_id, status)
     VALUES (DEFAULT, 8, 'SUBMITTED');
   `,
