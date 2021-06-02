@@ -15,21 +15,21 @@ exports.queries = [
           name: "Test Review -- Vitamin C"
           outcome: PENDING
           isActive: true
-          templateId: 4
+          templateId: 5
           userId: 5
           orgId: 3
           applicationStageHistoriesUsingId: {
             create: [
               {
                 isCurrent: false
-                templateStageToStageId: { connectById: { id: 4 } }
+                templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: false, status: COMPLETED }
                 }
               }
               {
                 isCurrent: true
-                templateStageToStageId: { connectById: { id: 5 } }
+                templateStageToStageId: { connectById: { id: 6 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: true, status: SUBMITTED }
                 }
@@ -184,13 +184,13 @@ exports.queries = [
           name: "Test Review -- Vitamin B"
           outcome: PENDING
           isActive: true
-          templateId: 4
+          templateId: 5
           userId: 4
           orgId: 3
           applicationStageHistoriesUsingId: {
             create: {
               isCurrent: true
-              templateStageToStageId: { connectById: { id: 4 } }
+              templateStageToStageId: { connectById: { id: 5 } }
               applicationStatusHistoriesUsingId: {
                 create: [
                   { 
@@ -355,21 +355,21 @@ exports.queries = [
           name: "Test Review -- Amoxicillin"
           outcome: PENDING
           isActive: true
-          templateId: 4
+          templateId: 5
           userId: 3
           orgId: 3
           applicationStageHistoriesUsingId: {
             create: [
               {
                 isCurrent: false
-                templateStageToStageId: { connectById: { id: 4 } }
+                templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: false, status: COMPLETED }
                 }
               }
               {
                 isCurrent: true
-                templateStageToStageId: { connectById: { id: 5 } }
+                templateStageToStageId: { connectById: { id: 6 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: true, status: SUBMITTED }
                 }
@@ -474,13 +474,13 @@ exports.queries = [
           name: "Test Review -- Paracetamol"
           outcome: PENDING
           isActive: true
-          templateId: 4
+          templateId: 5
           userId: 4
           applicationStageHistoriesUsingId: {
             create: [
               {
                 isCurrent: true
-                templateStageToStageId: { connectById: { id: 4 } }
+                templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: true, status: SUBMITTED }
                 }
@@ -585,13 +585,13 @@ exports.queries = [
           name: "Test Review -- Amoxicilin"
           outcome: PENDING
           isActive: true
-          templateId: 4
+          templateId: 5
           userId: 2
           applicationStageHistoriesUsingId: {
             create: [
               {
                 isCurrent: false
-                templateStageToStageId: { connectById: { id: 4 } }
+                templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: [
                     { isCurrent: false, status: SUBMITTED }
@@ -601,7 +601,7 @@ exports.queries = [
               }
               {
                 isCurrent: true
-                templateStageToStageId: { connectById: { id: 5 } }
+                templateStageToStageId: { connectById: { id: 6 } }
                 applicationStatusHistoriesUsingId: {
                   create: { isCurrent: true, status: SUBMITTED }
                 }
