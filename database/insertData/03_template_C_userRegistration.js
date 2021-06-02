@@ -181,6 +181,14 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q5.hash"]
                   }
+                  username_value: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q3"]
+                  }
+                  identification: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.identification"]
+                  }
                 }
               }
               {

@@ -380,6 +380,10 @@ exports.queries = [
                       }
                     ]
                   }
+                  logo: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.logo"]
+                  }
                 }
               }
               {
