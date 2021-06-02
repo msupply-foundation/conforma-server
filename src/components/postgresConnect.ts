@@ -425,6 +425,18 @@ class PostgresDB {
       const result = await this.query({ text, values: [value] })
       return !Boolean(Number(result.rows[0].count))
     } catch (err) {
+      // Check if table and field actually exist -- return true if not
+      const text = `
+        SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE table_name = $1
+        AND column_name = $2
+      `
+      try {
+        const result = await this.query({ text, values: [table, field] })
+        return !Boolean(Number(result.rows[0].count))
+      } catch {
+        throw err
+      }
       throw err
     }
   }
