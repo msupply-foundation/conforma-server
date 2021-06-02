@@ -1234,6 +1234,63 @@ exports.queries = [
                         # no display format -- will use default 
                       }
                     }
+                    {
+                      code: "PB15"
+                      index: 12
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "TXT_Date1"
+                      index: 13
+                      title: "Date Picker Info"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "### Date picker examples"
+                        style: "info"
+                      }
+                    }
+                    {
+                      code: "Date1"
+                      index: 14
+                      title: "Date Picker 1"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select a date _range_"
+                        allowRange: true                      
+                      }
+                    }
+                    {
+                      code: "Date2"
+                      index: 15
+                      title: "Date Picker 2"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      helpText: "Can be displayed with different locales, and with a limit on the date range -- this one allows 1 year either side of today"
+                      parameters: {
+                        label: "Français?"
+                        maxAge: 1
+                        minAge: 1                      
+                      }
+                    }
+                    {
+                      code: "Date3"
+                      index: 16
+                      title: "Date Picker 3"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      parameters: {
+                        label: "Different input format"
+                        description: "Output (Summary view) is different too  \\nThis also requires date to be at least 18 years ago (useful for Date of Birth restrictions)"
+                        allowRange: true
+                        minAge: 18 
+                        displayFormat: "full"
+                        entryFormat: "DD-MM-YYYY"                
+                      }
+                    }
                   ]
                 }
               }
