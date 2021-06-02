@@ -51,7 +51,7 @@ const databaseMethods = (DBConnect: any) => ({
   },
   createJoinTableAndRecord: async (tableName: string, applicationId: number, recordId: number) => {
     // Create join table if one doesn't exist
-    const joinTableName = `application_${tableName}_join`
+    const joinTableName = `${tableName}_application_join`
     const text = `CREATE TABLE IF NOT EXISTS ${joinTableName}( 
                   id serial PRIMARY KEY, 
                   application_id integer references application(id),
