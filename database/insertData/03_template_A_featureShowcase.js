@@ -190,8 +190,16 @@ exports.queries = [
                       parameters: { label: "Email" }
                     }
                     {
-                      code: "Q5"
+                      code: "DOB"
                       index: 6
+                      title: "Date of Birth"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      parameters: { label: "What is your date of birth?" }
+                    }
+                    {
+                      code: "Q5"
+                      index: 7
                       title: "Password"
                       elementTypePluginCode: "password"
                       category: QUESTION
@@ -211,40 +219,6 @@ exports.queries = [
                         }
                         validationMessageInternal: "Password must be at least 8 characters"
                       }
-                    }
-                    {
-                      code: "Q5B"
-                      index: 7
-                      title: "Dynamic Options demo"
-                      elementTypePluginCode: "dropdownChoice"
-                      category: QUESTION
-                      parameters: {
-                        label: "Which is your favourite response?"
-                        placeholder: "Select"
-                        options: {
-                          operator: "CONCAT"
-                          type: "array"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q1.text"]
-                            }
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q2.text"]
-                            }
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q3.text"]
-                            }
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q4.text"]
-                            }
-                          ]
-                        }
-                      }
-                      isRequired: false
                     }
                     {
                       code: "PB1"
