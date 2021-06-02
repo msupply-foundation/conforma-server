@@ -1,3 +1,5 @@
+import { ReviewStatus } from '../../../src/generated/graphql'
+
 const databaseMethods = (DBConnect: any) => ({
   getAssociatedReviews: async (applicationId: number, stageId: number, level: number) => {
     const text = `
@@ -60,6 +62,16 @@ const databaseMethods = (DBConnect: any) => ({
     try {
       const result = await DBConnect.query({ text, values: [reviewAssignmentId] })
       return result.rows.map(({ templateElementId }: any) => templateElementId)
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+  setReviewAssignmentIsLocked: async (reviewAssignmnetId: number, isLocked: boolean) => {
+    const text = 'UPDATE review_assignment SET is_locked = $1 WHERE id = $2'
+    try {
+      const result = await DBConnect.query({ text, values: [isLocked, reviewAssignmnetId] })
+      return result.rows[0]
     } catch (err) {
       console.log(err.message)
       throw err

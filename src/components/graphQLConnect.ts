@@ -40,6 +40,9 @@ class GraphQLdb {
               decision
               comment
           }
+          reviewAssignment {
+            isLocked
+          }
         }
       }
       `,
