@@ -12,7 +12,7 @@ if (process.argv[2] === '--from_insert_data.sh') {
     .filter((dirent) => dirent.isFile())
     .map((dirent) => dirent.name)
     .filter((file) => !file.match(/^\./)) // Ignore hidden files
-    .filter((file) => !['core_mutations.js', 'dev_actions.js'].includes(file))
+    .filter((file) => !sharedDataFiles.includes(file))
 
   // Add locale-specific files
   const localeFolder = process.argv[3]
