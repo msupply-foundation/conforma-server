@@ -46,7 +46,7 @@ const databaseMethods = (DBConnect: any) => ({
       })
     } catch (err) {
       console.log(err.message)
-      throw new Error(`Filed to create table: ${tableName}`)
+      throw new Error(`Failed to create table: ${tableName}`)
     }
   },
   createJoinTableAndRecord: async (tableName: string, applicationId: number, recordId: number) => {
@@ -62,7 +62,7 @@ const databaseMethods = (DBConnect: any) => ({
       await DBConnect.query({ text })
     } catch (err) {
       console.log(err.message)
-      throw new Error(`Filed to create join table: ${joinTableName}`)
+      throw new Error(`Failed to create join table: ${joinTableName}`)
     }
     // Create entry in the joiin table
     const joinTableRecord = { application_id: applicationId, [`${tableName}_id`]: recordId }
@@ -86,7 +86,7 @@ const databaseMethods = (DBConnect: any) => ({
     } catch (err) {
       console.log(err.message)
       throw new Error(
-        `Filed to create fields in table table: ${tableName} ${JSON.stringify(
+        `Failed to create fields in table table: ${tableName} ${JSON.stringify(
           fieldsToCreate,
           null,
           ' '
