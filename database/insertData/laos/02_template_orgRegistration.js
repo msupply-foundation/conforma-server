@@ -15,8 +15,7 @@ exports.queries = [
           name: "Company Registration"
           isLinear: true
           status: AVAILABLE
-          startMessage: "## Registering a company in the system\\n\\n        
-          You will be required to upload the following documents as part of this registration process:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
+          startMessage: "## Registering a company in the system\\n\\n        You will be required to upload the following documents as part of this registration process:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -32,6 +31,7 @@ exports.queries = [
                       title: "Intro Section 1"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
+                      helpText: "The following questions are about your **organisation**"
                       parameters: {
                         title: "## Organisation details"
                         style: "info"
@@ -47,7 +47,7 @@ exports.queries = [
                         operator: "API"
                         children: [
                           {
-                            operator: "CONCAT"
+                            operator: "+"
                             children: [
                               {
                                 operator: "objectProperties"
@@ -56,42 +56,9 @@ exports.queries = [
                               "/check-unique"
                             ]
                           }
-                          ["type", "value"]
+                          ["table", "field", "value"]
                           "organisation"
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          "unique"
-                        ]
-                      }
-                      validationMessage: "An organisation with that name already exists"
-                      parameters: {
-                        label: "Name of company/branch/wholesaler (in Lao)"
-                        maxLength: 120
-                      }
-                    }
-                    {
-                      code: "S1NameEng"
-                      index: 25
-                      title: "Organisation Name (English)"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
-                      validation: {
-                        operator: "API"
-                        children: [
-                          {
-                            operator: "CONCAT"
-                            children: [
-                              {
-                                operator: "objectProperties"
-                                children: ["applicationData.config.serverREST"]
-                              }
-                              "/check-unique"
-                            ]
-                          }
-                          ["type", "value"]
-                          "organisation"
+                          "name_lao"
                           {
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
