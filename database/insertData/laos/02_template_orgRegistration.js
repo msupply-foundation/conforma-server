@@ -1,8 +1,3 @@
-/*
-THIS IS JUST A PLACEHOLDER COPY OF THE DEV ORGREGO TEMPLATE. TO BE REPLACED
-WITH REAL ONE ONCE WE MAKE IT
-*/
-
 /* 
 TEMPLATE B - Organisation Registration
   - for creating a new Organisation in the system. Requires single review
@@ -16,22 +11,23 @@ exports.queries = [
     createTemplate(
       input: {
         template: {
-          code: "OrgRegistration"
-          name: "Organisation Registration"
+          code: "CompanyRego"
+          name: "Company Registration"
           isLinear: true
           status: AVAILABLE
-          startMessage: "## You will need the following documents ready for upload:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
+          startMessage: "## Registering a company in the system\\n\\n        
+          You will be required to upload the following documents as part of this registration process:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
               {
                 code: "S1"
-                title: "Section 1: Organisation Details"
+                title: "Organisation Details"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
-                      code: "S1T1"
+                      code: "S1Intro"
                       index: 10
                       title: "Intro Section 1"
                       elementTypePluginCode: "textInfo"
@@ -42,7 +38,7 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "name"
+                      code: "S1NameLao"
                       index: 20
                       title: "Organisation Name"
                       elementTypePluginCode: "shortText"
@@ -70,7 +66,44 @@ exports.queries = [
                         ]
                       }
                       validationMessage: "An organisation with that name already exists"
-                      parameters: { label: "What is the name of your organisation?" }
+                      parameters: {
+                        label: "Name of company/branch/wholesaler (in Lao)"
+                        maxLength: 120
+                      }
+                    }
+                    {
+                      code: "S1NameEng"
+                      index: 25
+                      title: "Organisation Name (English)"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      validation: {
+                        operator: "API"
+                        children: [
+                          {
+                            operator: "CONCAT"
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: ["applicationData.config.serverREST"]
+                              }
+                              "/check-unique"
+                            ]
+                          }
+                          ["type", "value"]
+                          "organisation"
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          "unique"
+                        ]
+                      }
+                      validationMessage: "An organisation with that name already exists"
+                      parameters: {
+                        label: "Name of company/branch/wholesaler (in Lao)"
+                        maxLength: 120
+                      }
                     }
                     {
                       code: "rego"
