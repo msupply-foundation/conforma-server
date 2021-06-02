@@ -140,7 +140,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
       }
     }
-    console.log('Resulted reviews to update', reviewsToUpdate)
+    console.log('Resulting reviews to update', reviewsToUpdate)
 
     // Update review statuses
     for (const review of reviewsToUpdate) {
@@ -148,7 +148,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
       await DBConnect.addNewReviewStatusHistory(reviewId, reviewStatus)
     }
 
-    console.log('Resulted reviews assignments to update', reviewAssignmentsToUpdate)
+    console.log('Resulting reviews assignments to update', reviewAssignmentsToUpdate)
 
     // Update review assignments locked/unlocked
     for (const reviewAssignment of reviewAssignmentsToUpdate) {
