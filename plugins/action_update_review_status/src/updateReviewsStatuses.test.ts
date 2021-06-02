@@ -44,7 +44,7 @@ describe('Duplicate application responses for re-submission with 2 modifications
           { applicationResponseId: 4019, templateElementId: 4013 },
         ],
       },
-      // @ts-ignore
+      // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4001,
         stageId: 4,
@@ -101,7 +101,7 @@ describe('Update review_response to required changes_requested by consolidator1'
           },
         ],
       },
-      // @ts-ignore
+      // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4000,
         stageId: 5,
@@ -162,7 +162,7 @@ describe('Update review_responses after updating changes_requested to reviewer1'
           { applicationResponseId: 4021, templateElementId: 4002 },
         ],
       },
-      // @ts-ignore
+      // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4002,
         stageId: 5,
@@ -230,7 +230,7 @@ describe('Update review_responses for second review submission by reviewer2 when
           { applicationResponseId: 4029, templateElementId: 4012 },
         ],
       },
-      // @ts-ignore
+      // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4002,
         stageId: 5,
@@ -316,7 +316,7 @@ describe('Update review_response to submit review with LOQ to applicant by conso
           },
         ],
       },
-      // @ts-ignore
+      // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4004,
         stageId: 5,
