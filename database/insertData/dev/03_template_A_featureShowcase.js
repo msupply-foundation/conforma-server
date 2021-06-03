@@ -1307,7 +1307,9 @@ exports.queries = [
                       parameters: {
                         label: "Français?"
                         maxAge: 1
-                        minAge: -1                      
+                        minAge: -1
+                        displayFormat: "huge" 
+                        locale: "fr"                 
                       }
                     }
                     {
@@ -1431,7 +1433,7 @@ exports.queries = [
                             "Selected date: %1"
                             {
                               operator: "objectProperties"
-                              children: ["responses.Date2.text", ""]
+                              children: ["responses.Date4.text", ""]
                             }
                           ]
                         }
@@ -1454,7 +1456,7 @@ exports.queries = [
                     {
                       code: "TextDate5"
                       index: 75
-                      title: "Date Display 1"
+                      title: "Date Display 5"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       visibilityCondition: {
