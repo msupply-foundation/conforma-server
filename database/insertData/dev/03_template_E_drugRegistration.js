@@ -3,8 +3,8 @@ TEMPLATE E - Drug Resgistration (Generic Medicines Procedure - simple version)
   - a simple template with first page and upload documents to be used in demo
     for testing the main Drug registation application and review process
 */
-const { coreActions, joinFilters } = require('./core_mutations')
-const { devActions } = require('./dev_actions')
+const { coreActions, joinFilters } = require('../_helpers/core_mutations')
+const { devActions } = require('../_helpers/dev_actions')
 
 exports.queries = [
   `mutation {
