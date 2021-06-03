@@ -81,11 +81,35 @@ exports.queries = [
                 title:  "Address"
               }
               {
-                columnName: "logo"
+                columnName: "logoUrl"
+                elementTypePluginCode: "imageDisplay"
+                isTextColumn: true
+                parameters: {
+                  url: {
+                    operator: "CONCAT"
+                    children: [
+                      {
+                        operator: "objectProperties"
+                        children: ["applicationData.config.serverREST"]
+                      }
+                      {
+                        operator: "objectProperties"
+                        children: ["responses.thisResponse"]
+                      }
+                    ]
+                  }
+                  size: "tiny"
+                  alignment: "center"
+                  altText: "Organisation logo"
+                }
+                title: "Logo"
+              }
+              {
+                columnName: "registrationDocumentation"
                 elementTypePluginCode: "fileUpload"
                 isTextColumn: false
-                parameters: { label: "Logo" }
-                title: "Logo"
+                parameters: { label: "Registration Documentation" }
+                title: "Registration Documentation"
               }
             ]
           }
