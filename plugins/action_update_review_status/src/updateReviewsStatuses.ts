@@ -34,6 +34,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
   const decision = applicationData?.reviewData?.latestDecision?.decision || Decision.NoDecision
   const isLastLevel = applicationData?.reviewData?.isLastLevel || false
+
   const stageId = parameters?.stageId || applicationData?.stageId
   const currentReviewLevel = parameters.level || applicationData?.reviewData?.levelNumber || 0
   const previousLevelReview = currentReviewLevel > 0 ? currentReviewLevel - 1 : 1
@@ -50,6 +51,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
   console.log('Changed responses:', changedResponses)
 
   const reviewsToUpdate = []
+  const reviewAssignmentsToUpdate: ReviewAssignment[] = []
 
   const getReviewsByLevelAndStatus = async (
     level: number,
@@ -97,12 +99,13 @@ const updateReviewsStatuses: ActionPluginType = async ({
         })
 
         // Get all reviewAssignments without review on previous level
-        const lockedAssignments = await getReviewAssignmentsWithoutReviewByLevel(
+        const assignmentsWithoutReviews = await getReviewAssignmentsWithoutReviewByLevel(
           previousLevelReview
         )
+
         // Lock reviewAssignment - which will still allow creating the review, but with status LOCKED
-        lockedAssignments.forEach(({ reviewAssignmentId, isLocked }) => {
-          if (!isLocked) DBConnect.setReviewAssignmentIsLocked(reviewAssignmentId, true)
+        assignmentsWithoutReviews.forEach(({ reviewAssignmentId, isLocked }) => {
+          if (!isLocked) reviewAssignmentsToUpdate.push({ reviewAssignmentId, isLocked: true })
         })
       } else {
         // Review submitted from lower level to upper level
@@ -137,12 +140,20 @@ const updateReviewsStatuses: ActionPluginType = async ({
           reviewsToUpdate.push({ ...review, reviewStatus: ReviewStatus.Pending })
       }
     }
-    console.log('Resulted reviews to update', reviewsToUpdate)
+    console.log('Resulting reviews to update', reviewsToUpdate)
 
     // Update review statuses
     for (const review of reviewsToUpdate) {
       const { reviewId, reviewStatus } = review
-      DBConnect.addNewReviewStatusHistory(reviewId, reviewStatus)
+      await DBConnect.addNewReviewStatusHistory(reviewId, reviewStatus)
+    }
+
+    console.log('Resulting reviews assignments to update', reviewAssignmentsToUpdate)
+
+    // Update review assignments locked/unlocked
+    for (const reviewAssignment of reviewAssignmentsToUpdate) {
+      const { reviewAssignmentId, isLocked } = reviewAssignment
+      await db.setReviewAssignmentIsLocked(reviewAssignmentId, isLocked)
     }
 
     return {
@@ -150,6 +161,7 @@ const updateReviewsStatuses: ActionPluginType = async ({
       error_log: '',
       output: {
         updatedReviews: reviewsToUpdate,
+        updatedReviewAssignments: reviewAssignmentsToUpdate,
       },
     }
   } catch (error) {

@@ -44,7 +44,7 @@ describe('Duplicate application responses for re-submission with 2 modifications
           { applicationResponseId: 4019, templateElementId: 4013 },
         ],
       },
-      // @ts-ignore
+      // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4001,
         stageId: 4,
@@ -65,6 +65,7 @@ describe('Duplicate application responses for re-submission with 2 modifications
               reviewStatus: ReviewStatus.Pending,
             },
           ],
+          updatedReviewAssignments: [],
         },
       })
     })
@@ -100,13 +101,14 @@ describe('Update review_response to required changes_requested by consolidator1'
           },
         ],
       },
-      // @ts-ignore
+      // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4000,
         stageId: 5,
         reviewData: {
           reviewId: 4,
           levelNumber: 2,
+          isLastLevel: true,
           latestDecision: { decision: Decision.ChangesRequested, comment: null },
         },
       },
@@ -126,6 +128,7 @@ describe('Update review_response to required changes_requested by consolidator1'
               reviewStatus: ReviewStatus.ChangesRequested,
             },
           ],
+          updatedReviewAssignments: [],
         },
       })
     })
@@ -159,13 +162,14 @@ describe('Update review_responses after updating changes_requested to reviewer1'
           { applicationResponseId: 4021, templateElementId: 4002 },
         ],
       },
-      // @ts-ignore
+      // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4002,
         stageId: 5,
         reviewData: {
           reviewId: 6,
           levelNumber: 1,
+          isLastLevel: false,
         },
       },
       DBConnect,
@@ -175,14 +179,6 @@ describe('Update review_responses after updating changes_requested to reviewer1'
         error_log: '',
         output: {
           updatedReviews: [
-            // {
-            //   reviewId: 8,
-            //   reviewAssignmentId: 1008,
-            //   applicationId: 4002,
-            //   reviewer_id: 8,
-            //   levelNumber: 1,
-            //   reviewStatus: ReviewStatus.Draft,
-            // },
             {
               reviewId: 9,
               reviewAssignmentId: 1010,
@@ -192,6 +188,7 @@ describe('Update review_responses after updating changes_requested to reviewer1'
               reviewStatus: ReviewStatus.Pending,
             },
           ],
+          updatedReviewAssignments: [],
         },
       })
     })
@@ -233,13 +230,14 @@ describe('Update review_responses for second review submission by reviewer2 when
           { applicationResponseId: 4029, templateElementId: 4012 },
         ],
       },
-      // @ts-ignore
+      // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4002,
         stageId: 5,
         reviewData: {
           reviewId: 3002,
           levelNumber: 1,
+          isLastLevel: false,
         },
       },
       DBConnect,
@@ -256,6 +254,90 @@ describe('Update review_responses for second review submission by reviewer2 when
               reviewerId: 10,
               levelNumber: 2,
               reviewStatus: ReviewStatus.Pending,
+            },
+          ],
+          updatedReviewAssignments: [],
+        },
+      })
+    })
+  })
+})
+
+describe('Update review_response to submit review with LOQ to applicant by consolidator2', () => {
+  // Setup database
+  beforeAll(async (done) => {
+    await DBConnect.query({
+      text: `
+      UPDATE public.review_response SET is_visible_to_applicant = true WHERE id = 5004;
+      UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5020;
+      UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5021;
+      UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5022;
+      UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5023;
+      UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5024;
+      INSERT INTO public.review_decision (id, decision, review_id)
+        VALUES (DEFAULT, 'LIST_OF_QUESTIONS', 12);
+      INSERT INTO public.review_status_history (id, review_id, status)
+        VALUES (DEFAULT, 12, 'SUBMITTED');
+      `,
+      values: [],
+    })
+    done()
+  })
+
+  test('Consolidation submitted to applicant with List of questions => Lock other lower review assignments', () => {
+    return updateReviewsStatuses({
+      parameters: {
+        triggeredBy: 'REVIEW',
+        changedResponses: [
+          {
+            applicationResponseId: 4150,
+            templateElementId: 4001,
+            reviewResponseDecision: 'APPROVED',
+          },
+          {
+            applicationResponseId: 4151,
+            templateElementId: 4002,
+            reviewResponseDecision: 'APPROVED',
+          },
+          {
+            applicationResponseId: 4152,
+            templateElementId: 4003,
+            reviewResponseDecision: 'APPROVED',
+          },
+          {
+            applicationResponseId: 4153,
+            templateElementId: 4004,
+            reviewResponseDecision: 'APPROVED',
+          },
+          {
+            applicationResponseId: 4154,
+            templateElementId: 4005,
+            reviewResponseDecision: 'DECLINED',
+          },
+        ],
+      },
+      // @ts-ignore -- ignore missing properties on applicationData
+      applicationData: {
+        applicationId: 4004,
+        stageId: 5,
+        reviewData: {
+          reviewId: 12,
+          levelNumber: 2,
+          isLastLevel: true,
+          latestDecision: { decision: Decision.ListOfQuestions, comment: null },
+        },
+      },
+      DBConnect,
+    }).then((result: any) => {
+      expect(result).toEqual({
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: {
+          updatedReviews: [],
+          updatedReviewAssignments: [
+            {
+              reviewAssignmentId: 1032,
+              isLocked: true,
             },
           ],
         },

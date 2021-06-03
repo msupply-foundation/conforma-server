@@ -10,7 +10,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1000
           applicationId: 4000
-          stageId: 4
+          stageId: 5
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
@@ -136,7 +136,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1001
           applicationId: 4000
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
@@ -233,7 +233,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1002
           applicationId: 4000
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
@@ -336,7 +336,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1003
           applicationId: 4000
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
@@ -429,6 +429,9 @@ exports.queries = [
                   { status: DRAFT, isCurrent: true, timeCreated: "2021-05-19T00:00:00Z" }
                 ]
               }
+              reviewDecisionsUsingId: {
+                create: [{ decision: NO_DECISION }]
+              }
             }
           }
         }
@@ -451,7 +454,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1004
           applicationId: 4000
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
@@ -494,7 +497,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1005
           applicationId: 4001
-          stageId: 4
+          stageId: 5
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
@@ -623,7 +626,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1006
           applicationId: 4002
-          stageId: 4
+          stageId: 5
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
@@ -747,7 +750,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1007
           applicationId: 4002
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
@@ -852,7 +855,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1008
           applicationId: 4002
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
@@ -911,6 +914,9 @@ exports.queries = [
                   { status: DRAFT, isCurrent: true, timeCreated: "2021-02-03T00:00:00Z" }
                 ]
               }
+              reviewDecisionsUsingId: {
+                create: [{ decision: NO_DECISION }]
+              }
             }
           }
         }
@@ -936,7 +942,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1009
           applicationId: 4002
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
@@ -978,7 +984,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1010
           applicationId: 4002
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
@@ -1081,7 +1087,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1020
           applicationId: 4003
-          stageId: 4
+          stageId: 5
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
@@ -1127,7 +1133,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1030
           applicationId: 4004
-          stageId: 4
+          stageId: 5
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
@@ -1244,7 +1250,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1031
           applicationId: 4004
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
@@ -1336,14 +1342,14 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = DRAFT (Partial stage 2 not submitted)
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = ASSIGNED (Partial stage 2 not started)
   `mutation {
     createReviewAssignment(
       input: {
         reviewAssignment: {
           id: 1032
           applicationId: 4004
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 1
           isLastLevel: false
@@ -1359,43 +1365,6 @@ exports.queries = [
               { id: 5017, templateElementId: 4011 }
               { id: 5018, templateElementId: 4012 }
             ]
-          }
-          reviewsUsingId: {
-            create: {
-              reviewResponsesUsingId: {
-                create: [
-                  {
-                    applicationResponseId: 4155
-                    reviewQuestionAssignmentId: 5015
-                    status: DRAFT
-                    decision: APPROVE
-                  }
-                  {
-                    applicationResponseId: 4156
-                    reviewQuestionAssignmentId: 5016
-                    status: DRAFT
-                    decision: APPROVE
-                  }
-                  {
-                    applicationResponseId: 4157
-                    reviewQuestionAssignmentId: 5017
-                    status: DRAFT
-                    decision: APPROVE
-                  }
-                  {
-                    applicationResponseId: 4158
-                    reviewQuestionAssignmentId: 5018
-                    status: DRAFT
-                    decision: APPROVE
-                  }
-                ]
-              }
-              reviewStatusHistoriesUsingId: {
-                create: [
-                  { status: DRAFT, isCurrent: true, timeCreated: "2021-02-03T00:00:00Z" }
-                ]
-              }
-            }
           }
         }
       }
@@ -1420,7 +1389,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1033
           applicationId: 4004
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
@@ -1461,7 +1430,7 @@ exports.queries = [
         reviewAssignment: {
           id: 1034
           applicationId: 4004
-          stageId: 5
+          stageId: 6
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
@@ -1483,38 +1452,43 @@ exports.queries = [
               reviewResponsesUsingId: {
                 create: [
                   {
+                    id: 5020
                     applicationResponseId: 4150
                     reviewQuestionAssignmentId: 5033
                     reviewResponseLinkId: 5000
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: AGREE
                   }
                   {
+                    id: 5021
                     applicationResponseId: 4151
                     reviewQuestionAssignmentId: 5034
                     reviewResponseLinkId: 5001
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: AGREE
                   }
                   {
+                    id: 5022
                     applicationResponseId: 4152
                     reviewQuestionAssignmentId: 5035
                     reviewResponseLinkId: 5002
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: AGREE
                   }
                   {
+                    id: 5023
                     applicationResponseId: 4153
                     reviewQuestionAssignmentId: 5036
                     reviewResponseLinkId: 5003
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: AGREE
                   }
                   {
+                    id: 5024
                     applicationResponseId: 4154
                     reviewQuestionAssignmentId: 5037
                     reviewResponseLinkId: 5004
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: AGREE
                   }
                 ]
@@ -1527,6 +1501,9 @@ exports.queries = [
                     timeCreated: "2021-02-04T00:00:00Z"
                   }
                 ]
+              }
+              reviewDecisionsUsingId: {
+                create: [{ decision: NO_DECISION }]
               }
             }
           }

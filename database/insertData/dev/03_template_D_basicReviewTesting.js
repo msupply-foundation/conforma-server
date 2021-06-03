@@ -3,8 +3,8 @@ TEMPLATE D - Review (testing)
   - a simple template with multiple pages in multiple sections to be used
     for testing the application review process
 */
-const { coreActions, joinFilters } = require('./core_mutations')
-const { devActions } = require('./dev_actions')
+const { coreActions, joinFilters } = require('../_helpers/core_mutations')
+const { devActions } = require('../_helpers/dev_actions')
 
 exports.queries = [
   `mutation {

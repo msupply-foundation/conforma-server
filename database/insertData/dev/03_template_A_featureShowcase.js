@@ -3,8 +3,8 @@ TEMPLATE A - General Registration (Feature showcase)
     - used to demonstrate and test features such as new plugins, actions,
       dynamic visibility, complex dynamic expressions, etc.
 */
-const { coreActions, joinFilters } = require('./core_mutations')
-const { devActions } = require('./dev_actions')
+const { coreActions, joinFilters } = require('../_helpers/core_mutations')
+const { devActions } = require('../_helpers/dev_actions')
 
 exports.queries = [
   `mutation {
@@ -1003,7 +1003,7 @@ exports.queries = [
                       parameters: {
                         label: "Ingredients list"
                         createModalButtonText: "Add ingredient"
-                        modalText: "Please enter details for **one** ingredient"
+                        modalText: "## Ingredient item \\n\\nPlease enter details for **one** ingredient"
                         displayType: {
                           operator: "objectProperties"
                           children: ["responses.listDisplay.text"]
@@ -1032,19 +1032,6 @@ exports.queries = [
                           }
                           {
                             code: "LB3"
-                            title: "Included"
-                            elementTypePluginCode: "checkbox"
-                            category: QUESTION
-                            parameters: {
-                              label: "Substance present in end product"
-                              checkboxes: [ {
-                                label: "Yes"
-                                textNegative: "No"
-                              } ]
-                            }
-                          }
-                          {
-                            code: "LB4"
                             title: "Quantity"
                             elementTypePluginCode: "shortText"
                             category: QUESTION
@@ -1064,10 +1051,11 @@ exports.queries = [
                             parameters: {
                               label: "Quantity"
                               description: "Enter a number and select units below"
+                              maxWidth: 130
                             }
                           }
                           {
-                            code: "LB5"
+                            code: "LB4"
                             title: "Unit"
                             elementTypePluginCode: "radioChoice"
                             category: QUESTION
@@ -1078,7 +1066,7 @@ exports.queries = [
                             }
                           }
                           {
-                            code: "LB6"
+                            code: "LB5"
                             title: "Type"
                             elementTypePluginCode: "dropdownChoice"
                             category: QUESTION
@@ -1086,6 +1074,17 @@ exports.queries = [
                               label: "Type"
                               options: ["Active", "Inactive"]
                               default: 0
+                            }
+                          }
+                          {
+                            code: "LB6"
+                            title: "Included"
+                            elementTypePluginCode: "radioChoice"
+                            category: QUESTION
+                            parameters: {
+                              label: "Substance present in end product"
+                              options: [ "Yes", "No" ]
+                              layout: "inline"
                             }
                           }
                         ]
@@ -1103,6 +1102,161 @@ exports.queries = [
                         placeholder: "Select"
                         options: ["cards", "table"]
                         default: "cards"
+                      }
+                    }
+                    {
+                      code: "PB14"
+                      index: 6
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "searchUsers"
+                      index: 7
+                      title: "Search Demo (users)"
+                      elementTypePluginCode: "search"
+                      category: QUESTION
+                      isRequired: false
+                      helpText: "This page contain examples of the **Search** element. It can make API queries in response to user input and display the results, which can be selected."
+                      parameters: {
+                        label: "Search for users"
+                        description: "Start typing to search database for usernames"
+                        placeholder: "Search usernames"
+                        icon: "user"
+                        source: {
+                          operator: "graphQL",
+                          children: [
+                            "query GetUsers($user: String!) { users(filter: { username: {includesInsensitive: $user } }) {nodes { username, firstName, lastName }}}",
+                            "graphQLEndpoint",
+                            [
+                              "user"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "search.text"
+                              ]
+                            },
+                            "users.nodes"
+                          ]
+                        }
+                        displayFormat: {
+                          title: "\${firstName} \${lastName}"
+                          description: "\${username}"
+                        }
+                      }
+                    }
+                    {
+                      code: "searchCountries"
+                      index: 8
+                      title: "Search Demo (countries)"
+                      elementTypePluginCode: "search"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Search for countries"
+                        description: "Type the two-character country code (must be CAPS sorry)"
+                        placeholder: "Search countries"
+                        icon: "world"
+                        minCharacters: 2
+                        multiSelect: true
+                        source: {
+                          operator: "graphQL",
+                          children: [
+                            "query countries($code: ID!) {country(code: $code) {name, capital, emoji, code}}",
+                            "https://countries.trevorblades.com",
+                            [
+                              "code"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "search.text"
+                              ]
+                            },
+                            "country"
+                          ]
+                        }
+                        displayFormat: {
+                          title: "\${emoji} \${name}"
+                          description: "Capital: \${capital}"
+                        }
+                      }
+                    }
+                    {
+                      code: "searchUC"
+                      index: 9
+                      title: "Search Universal Codes"
+                      elementTypePluginCode: "search"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Lookup mSupply Universal Codes"
+                        description: "Start typing a drug name"
+                        placeholder: "Search medicines"
+                        icon: "pills"
+                        minCharacters: 3
+                        multiSelect: true
+                        source: {
+                          operator: "graphQL",
+                          children: [
+                            "query GetEntitiesByName($search: String!) {entities (filter: { code: \\"\\" description: $search type: \\"[drug]\\" match: \\"contains\\"},offset: 0,first: 25) {data {        code,     description,        type,        uid  }, totalLength }}",
+                            "https://codes.msupply.foundation:2048/graphql",
+                            [
+                              "search"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "search.text"
+                              ]
+                            },
+                            "entities.data"
+                          ]
+                        }
+                        displayFormat: {
+                          title: "\${description}",
+                          description: "Universal Code: \${code}"
+                        }
+                        resultFormat: {
+                          title: "\${description}",
+                          description: "\${code}"
+                        }
+                      }
+                    }
+                    {
+                      code: "searchOrg"
+                      index: 11
+                      title: "Search Demo (organisations)"
+                      elementTypePluginCode: "search"
+                      category: QUESTION
+                      isRequired: false
+                      helpText: "This one has no \`displayFormat\` prop, so it falls back to a generic \\"default\\" display"
+                      parameters: {
+                        label: "Search for an organisation"
+                        description: "Please enter the organisation's registration code (min 6 chars)"
+                        placeholder: "Search organisations"
+                        icon: "building"
+                        minCharacters: 6
+                        source: {
+                          operator: "graphQL",
+                          children: [
+                            "query GetOrgs($registration: String!) { organisations(filter: {registration: {startsWithInsensitive: $registration}}) { nodes { name registration } } }",
+                            "graphQLEndpoint",
+                            [
+                              "registration"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "search.text"
+                              ]
+                            },
+                            "organisations.nodes"
+                          ]
+                        }
+                        # no display format -- will use default 
                       }
                     }
                   ]

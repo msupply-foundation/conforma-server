@@ -4,7 +4,7 @@ TEMPLATE C -- User Registration
     account in the system
 */
 // const { coreActions, joinFilters } = require('./core_mutations')
-const { devActions } = require('./dev_actions')
+const { devActions } = require('../_helpers/dev_actions')
 
 exports.queries = [
   `mutation {
