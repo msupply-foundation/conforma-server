@@ -1355,7 +1355,6 @@ exports.queries = [
                       parameters: {
                         label: "Different input format"
                         description: "Output (Summary view) is different too  \\nThis also requires date to be at least 18 years ago (useful for Date of Birth restrictions)"
-                        allowRange: true
                         minAge: 18 
                         displayFormat: "full"
                         entryFormat: "DD-MM-YYYY"                
