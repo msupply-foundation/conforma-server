@@ -161,30 +161,69 @@ exports.queries = [
                         label: "Phone number"
                         description: "Please include area code"
                       }
-                      validation:
+                      validation: {
+                        operator: "REGEX",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.thisResponse"
+                            ]
+                          },
+                          "^[0-9()-]+$"
+                        ]
+                      }
                       validationMessage: "Not a valid phone number"
                     }
                     {
-                      code: "postAdd"
-                      index: 60
-                      title: "Address"
-                      elementTypePluginCode: "longText"
+                      code: "fax"
+                      index: 41
+                      title: "Fax"
+                      elementTypePluginCode: "shortText"
                       category: QUESTION
-                      visibilityCondition: {
-                        operator: "="
+                      isRequired: false
+                      parameters: {
+                        label: "Fax number"
+                        description: "(if applicable)"
+                      }
+                      validation: {
+                        operator: "REGEX",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.thisResponse"
+                            ]
+                          },
+                          "^[0-9()-]+$"
+                        ]
+                      }
+                      validationMessage: "Not a valid fax number"
+                    }
+                    {
+                      code: "email"
+                      index: 45
+                      title: "Email"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Email"
+                      }
+                      validation: {
+                        operator: "REGEX"
                         children: [
                           {
                             operator: "objectProperties"
-                            children: ["responses.addressCheckbox.text"]
+                            children: ["responses.thisResponse"]
                           }
-                          "Yes"
+                          {
+                            value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                          }
                         ]
                       }
-                      parameters: {
-                        label: "Organisation **postal** address"
-                        description: "*Note: in the current schema only one address value is actually saved to the database. This is just for demonstration purposes.*"
-                      }
+                      validationMessage: "Not a valid email address"
                     }
+                    
                     {
                       code: "PB1"
                       index: 70
