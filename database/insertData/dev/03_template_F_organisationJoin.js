@@ -5,8 +5,8 @@ TEMPLATE F - Join Organisation
    - more specific policies to limit reviewers to their own organisation
    - Org selector needs a plugin that doesn't show all companies to user
 */
-const { coreActions, joinFilters } = require('./core_mutations')
-const { devActions } = require('./dev_actions')
+const { coreActions, joinFilters } = require('../_helpers/core_mutations')
+const { devActions } = require('../_helpers/dev_actions')
 
 exports.queries = [
   `mutation {

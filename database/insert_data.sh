@@ -2,7 +2,7 @@
 #insert data from
 echo -e "\nInserting data..."
 
-node ./database/insertData.js --from_insert_data.sh &
+node ./database/insertData.js --from_insert_data.sh $1 &
 
 # Makes script wait until async node script has completed
 PID=$!
