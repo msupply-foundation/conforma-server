@@ -1,12 +1,28 @@
 const fs = require('fs')
+const path = require('path')
 const fetch = require('node-fetch')
 const config = require('../src/config.json')
 
+const dataFolder = './database/insertData'
+// const sharedDataFiles = ['core_mutations.js', 'dev_actions.js']
+
 if (process.argv[2] === '--from_insert_data.sh') {
   const filesToProcess = fs
-    .readdirSync('./database/insertData')
+    .readdirSync(path.join(dataFolder, '_common'), { withFileTypes: true })
+    .filter((dirent) => dirent.isFile())
+    .map((dirent) => path.join('_common', dirent.name))
     .filter((file) => !file.match(/^\./)) // Ignore hidden files
-    .filter((file) => !['core_mutations.js', 'dev_actions.js'].includes(file))
+
+  console.log('filesToProcess', filesToProcess)
+  // Add locale-specific files
+  const localeFolder = process.argv[3] || 'dev'
+  console.log(`Locale: ${localeFolder}`)
+  const subfolderFilesToProcess = fs
+    .readdirSync(path.join(dataFolder, localeFolder))
+    .filter((file) => !file.match(/^\./)) // Ignore hidden files
+  filesToProcess.push(
+    ...subfolderFilesToProcess.map((filename) => path.join(localeFolder, filename))
+  )
 
   processQueries(filesToProcess)
 }

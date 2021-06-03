@@ -1,10 +1,15 @@
+/*
+THIS IS JUST A PLACEHOLDER COPY OF THE DEV ORGREGO TEMPLATE. TO BE REPLACED
+WITH REAL ONE ONCE WE MAKE IT
+*/
+
 /* 
 TEMPLATE B - Organisation Registration
   - for creating a new Organisation in the system. Requires single review
   by reviewer with "reviewOrgRego" permission
 */
-const { coreActions, joinFilters } = require('./core_mutations')
-const { devActions } = require('./dev_actions')
+const { coreActions, joinFilters } = require('../_helpers/core_mutations')
+const { devActions } = require('../_helpers/dev_actions')
 
 exports.queries = [
   `mutation {
@@ -379,10 +384,6 @@ exports.queries = [
                         ]
                       }
                     ]
-                  }
-                  logo: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.logo"]
                   }
                 }
               }
