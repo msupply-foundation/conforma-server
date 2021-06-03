@@ -1242,7 +1242,7 @@ exports.queries = [
                     }
                     {
                       code: "TXT_Date1"
-                      index: 13
+                      index: 20
                       title: "Date Picker Info"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -1253,34 +1253,103 @@ exports.queries = [
                     }
                     {
                       code: "Date1"
-                      index: 14
+                      index: 30
                       title: "Date Picker 1"
                       elementTypePluginCode: "datePicker"
                       category: QUESTION
+                      isRequired: false
                       parameters: {
                         label: "Select a date _range_"
                         allowRange: true                      
                       }
-                    }
+                    } 
+                    {
+                      code: "TextDate1"
+                      index: 35
+                      title: "Date Display 1"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!=",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.Date1.text",
+                              ""
+                            ]
+                          },
+                          ""
+                        ]
+                      }
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Selected date: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Date1.text", ""]
+                            }
+                          ]
+                        }
+                        style: "none"
+                      }
+                    }    
                     {
                       code: "Date2"
-                      index: 15
+                      index: 40
                       title: "Date Picker 2"
                       elementTypePluginCode: "datePicker"
                       category: QUESTION
+                      isRequired: false
                       helpText: "Can be displayed with different locales, and with a limit on the date range -- this one allows 1 year either side of today"
                       parameters: {
                         label: "Français?"
                         maxAge: 1
-                        minAge: 1                      
+                        minAge: -1                      
+                      }
+                    }
+                    {
+                      code: "TextDate2"
+                      index: 45
+                      title: "Date Display 1"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!=",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.Date2.text",
+                              ""
+                            ]
+                          },
+                          ""
+                        ]
+                      }
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Selected date: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Date2.text", ""]
+                            }
+                          ]
+                        }
+                        style: "none"
                       }
                     }
                     {
                       code: "Date3"
-                      index: 16
+                      index: 50
                       title: "Date Picker 3"
                       elementTypePluginCode: "datePicker"
                       category: QUESTION
+                      isRequired: false
                       parameters: {
                         label: "Different input format"
                         description: "Output (Summary view) is different too  \\nThis also requires date to be at least 18 years ago (useful for Date of Birth restrictions)"
@@ -1288,6 +1357,131 @@ exports.queries = [
                         minAge: 18 
                         displayFormat: "full"
                         entryFormat: "DD-MM-YYYY"                
+                      }
+                    }
+                    {
+                      code: "TextDate3"
+                      index: 55
+                      title: "Date Display 3"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!=",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.Date3.text",
+                              ""
+                            ]
+                          },
+                          ""
+                        ]
+                      }
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Selected date: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Date3.text", ""]
+                            }
+                          ]
+                        }
+                        style: "none"
+                      }
+                    }
+                    {
+                      code: "Date4"
+                      index: 60
+                      title: "Date Picker 4"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "This one has a default date"
+                        default: "1976-12-23"
+                        displayFormat: "med"                  
+                      }
+                    }
+                    {
+                      code: "TextDate4"
+                      index: 65
+                      title: "Date Display 4"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!=",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.Date4.text",
+                              ""
+                            ]
+                          },
+                          ""
+                        ]
+                      }
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Selected date: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Date2.text", ""]
+                            }
+                          ]
+                        }
+                        style: "none"
+                      }
+                    }
+                    {
+                      code: "Date5"
+                      index: 70
+                      title: "Date Picker 5"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "This one has a default range"
+                        default: ["1976-12-23", "1977-12-04"]
+                        displayFormat: "med"
+                      }
+                    }
+                    {
+                      code: "TextDate5"
+                      index: 75
+                      title: "Date Display 1"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!=",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.Date5.text",
+                              ""
+                            ]
+                          },
+                          ""
+                        ]
+                      }
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Selected date: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Date5.text", ""]
+                            }
+                          ]
+                        }
+                        style: "none"
                       }
                     }
                   ]
