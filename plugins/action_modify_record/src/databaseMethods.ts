@@ -17,8 +17,9 @@ const databaseMethods = (DBConnect: any) => ({
   updateRecord: async (tableName: string, id: string, record: { [key: string]: any }) => {
     const placeholders = DBConnect.getValuesPlaceholders(record)
     const matchValuePlaceholder = `$${placeholders.length + 1}`
+
     const text = `
-      UPDATE "${tableName}" SET (${Object.keys(record)})
+      UPDATE "${tableName}" SET (${getKeys(record)})
       = (${placeholders})
       WHERE id = ${matchValuePlaceholder}
       RETURNING *
@@ -96,13 +97,18 @@ const databaseMethods = (DBConnect: any) => ({
   },
 })
 
+const getKeys = (record: { [key: string]: { value: any } }) =>
+  Object.keys(record)
+    .map((key) => `"${key}"`)
+    .join(',')
+
 const createRecord = async (
   tableName: string,
   record: { [key: string]: any },
   DBConnect: DBConnectType
 ) => {
   const text = `
-    INSERT INTO "${tableName}" (${Object.keys(record)}) 
+    INSERT INTO "${tableName}" (${getKeys(record)}) 
     VALUES (${DBConnect.getValuesPlaceholders(record)})
     RETURNING *
     `
