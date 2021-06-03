@@ -13,10 +13,10 @@ exports.queries = [
       input: {
           template: {
             code: "CompanyLicense1"
-            name: "Company License: MMC, MMD, MDC, MDM, WSL or RIT"
+            name: "Company License for Modern medicines or Medical devices"
             isLinear: false # CHANGE THIS
             status: AVAILABLE
-            startMessage: "## Apply for a company license under one of the following options:\\n - MMC\\n - MMD\\n -MDC\\n - MDM\\n - WSL\\n - RIT\\n\\n### TODO: Update the following list:\\nYou will be required to upload the following documents as part of this  process:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
+            startMessage: "## Apply for a company license under one of the following options:\\n - MMC\\n - MMD\\n - MDC\\n - MDM\\n - WSL\\n - RIT\\n\\n**TODO**: Update the following list:\\nYou will be required to upload the following documents as part of this  process:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
             versionTimestamp: "NOW()"
             templateSectionsUsingId: {
               create: [
@@ -288,7 +288,7 @@ exports.queries = [
                         category: INFORMATION
                         helpText: "The following questions are automatically filled with existing information about **Company**"
                         parameters: {
-                          title: "## Professional details"
+                          title: "## Company details"
                           style: "basic"
                         }
                       }
@@ -307,14 +307,15 @@ exports.queries = [
                         title: "Intro Section 1"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        helpText: "Selectin the license to apply for will grat the specific license to this company an expiry date genrated on Approval"
                         parameters: { title: "## License details", style: "basic" }
                       }
                       {
                         code: "LicenseType"
+                        index: 20
                         title: "License type"
                         elementTypePluginCode: "radioChoice"
                         category: QUESTION
+                        helpText: "Selectin the license to apply for will grat the specific license to this company an expiry date genrated on Approval"
                         parameters: {
                           label: "Purpose of application"
                           options: [
