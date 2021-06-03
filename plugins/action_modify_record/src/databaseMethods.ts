@@ -19,7 +19,7 @@ const databaseMethods = (DBConnect: any) => ({
     const matchValuePlaceholder = `$${placeholders.length + 1}`
     const text = `
       UPDATE "${tableName}" SET (${Object.keys(record)})
-      = (${DBConnect.getValuesPlaceholders(record)})
+      = (${placeholders})
       WHERE id = ${matchValuePlaceholder}
       RETURNING *
       `
