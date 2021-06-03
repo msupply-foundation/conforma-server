@@ -15,7 +15,7 @@ exports.queries = [
           name: "Company Registration"
           isLinear: true
           status: AVAILABLE
-          startMessage: "## Registering a company in the system\\n\\n        You will be required to upload the following documents as part of this registration process:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
+          startMessage: "## Registering a company in the system\\n\\nYou will be required to upload the following documents as part of this registration process:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -40,7 +40,7 @@ exports.queries = [
                     {
                       code: "S1NameLao"
                       index: 20
-                      title: "Organisation Name"
+                      title: "Organisation Name (Lao)"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       validation: {
@@ -73,17 +73,16 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "rego"
-                      index: 30
-                      title: "Registration"
+                      code: "S1NameEng"
+                      index: 25
+                      title: "Organisation Name"
                       elementTypePluginCode: "shortText"
-                      helpText: "The details entered here should match with the documents issued by the governing body in your jurisdiction. You will attach evidence of these documents in the following section."
                       category: QUESTION
                       validation: {
                         operator: "API"
                         children: [
                           {
-                            operator: "CONCAT"
+                            operator: "+"
                             children: [
                               {
                                 operator: "objectProperties"
@@ -93,7 +92,7 @@ exports.queries = [
                             ]
                           }
                           ["type", "value"]
-                          "orgRegistration"
+                          "organisation"
                           {
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
@@ -101,37 +100,69 @@ exports.queries = [
                           "unique"
                         ]
                       }
-                      validationMessage: "An organisation with that registration code already exists"
+                      validationMessage: "An organisation with that name already exists"
                       parameters: {
-                        label: "Please enter your organisation registration code"
+                        label: "Name of company/branch/wholesaler (in English)"
+                        maxLength: 120
                       }
                     }
                     {
-                      code: "physAdd"
+                      code: "addressIntro"
+                      index: 30
+                      title: "Address Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "### Address"
+                        style: "basic"
+                      }
+                    }
+                    {
+                      code: "addressNear"
+                      index: 31
+                      title: "Address Near"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      required: false
+                      parameters: {
+                        label: "Near/by"
+                        maxLength: 150
+                      }
+                    }
+                    {
+                      code: "addressStreet"
+                      index: 32
+                      title: "Address Street"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "House number, street, village"
+                        maxLength: 150
+                      }
+                    }
+                    {
+                      code: "addressDistrict"
+                      index: 33
+                      title: "Address District"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "House number, street, village"
+                        description: "_TO-DO: Use look-up table"
+                      }
+                    }
+                    {
+                      code: "phone"
                       index: 40
-                      title: "Address"
-                      elementTypePluginCode: "longText"
+                      title: "Phone"
+                      elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
-                        label: "Organisation **physical** address"
+                        label: "Phone number"
+                        description: "Please include area code"
                       }
-                    }
-                    {
-                      code: "addressCheckbox"
-                      index: 50
-                      title: "Postal Address Checkbox"
-                      elementTypePluginCode: "checkbox"
-                      category: QUESTION
-                      parameters: {
-                        label: "Is the organisation **postal** address *different* to the physical address?"
-                      checkboxes: [
-                        {
-                          label: "Yes"
-                          key: "1"
-                          selected: false
-                        }
-                      ]
-                      }
+                      validation:
+                      validationMessage: "Not a valid phone number"
                     }
                     {
                       code: "postAdd"
