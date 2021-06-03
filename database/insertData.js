@@ -15,7 +15,7 @@ if (process.argv[2] === '--from_insert_data.sh') {
     .filter((file) => !sharedDataFiles.includes(file))
 
   // Add locale-specific files
-  const localeFolder = process.argv[3]
+  const localeFolder = process.argv[3] || 'dev'
   if (localeFolder) {
     console.log(`Locale: ${localeFolder}`)
     const subfolderFilesToProcess = fs
