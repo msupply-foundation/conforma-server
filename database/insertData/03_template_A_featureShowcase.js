@@ -977,7 +977,7 @@ exports.queries = [
                       parameters: {
                         label: "Ingredients list"
                         createModalButtonText: "Add ingredient"
-                        modalText: "Please enter details for **one** ingredient"
+                        modalText: "## Ingredient item \\n\\nPlease enter details for **one** ingredient"
                         displayType: {
                           operator: "objectProperties"
                           children: ["responses.listDisplay.text"]
@@ -1006,19 +1006,6 @@ exports.queries = [
                           }
                           {
                             code: "LB3"
-                            title: "Included"
-                            elementTypePluginCode: "checkbox"
-                            category: QUESTION
-                            parameters: {
-                              label: "Substance present in end product"
-                              checkboxes: [ {
-                                label: "Yes"
-                                textNegative: "No"
-                              } ]
-                            }
-                          }
-                          {
-                            code: "LB4"
                             title: "Quantity"
                             elementTypePluginCode: "shortText"
                             category: QUESTION
@@ -1038,10 +1025,11 @@ exports.queries = [
                             parameters: {
                               label: "Quantity"
                               description: "Enter a number and select units below"
+                              maxWidth: 130
                             }
                           }
                           {
-                            code: "LB5"
+                            code: "LB4"
                             title: "Unit"
                             elementTypePluginCode: "radioChoice"
                             category: QUESTION
@@ -1052,7 +1040,7 @@ exports.queries = [
                             }
                           }
                           {
-                            code: "LB6"
+                            code: "LB5"
                             title: "Type"
                             elementTypePluginCode: "dropdownChoice"
                             category: QUESTION
@@ -1060,6 +1048,17 @@ exports.queries = [
                               label: "Type"
                               options: ["Active", "Inactive"]
                               default: 0
+                            }
+                          }
+                          {
+                            code: "LB6"
+                            title: "Included"
+                            elementTypePluginCode: "radioChoice"
+                            category: QUESTION
+                            parameters: {
+                              label: "Substance present in end product"
+                              options: [ "Yes", "No" ]
+                              layout: "inline"
                             }
                           }
                         ]
