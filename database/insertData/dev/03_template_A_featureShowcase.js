@@ -3,8 +3,8 @@ TEMPLATE A - General Registration (Feature showcase)
     - used to demonstrate and test features such as new plugins, actions,
       dynamic visibility, complex dynamic expressions, etc.
 */
-const { coreActions, joinFilters } = require('./core_mutations')
-const { devActions } = require('./dev_actions')
+const { coreActions, joinFilters } = require('../_helpers/core_mutations')
+const { devActions } = require('../_helpers/dev_actions')
 
 exports.queries = [
   `mutation {
