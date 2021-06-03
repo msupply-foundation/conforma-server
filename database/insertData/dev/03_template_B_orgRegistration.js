@@ -380,9 +380,9 @@ exports.queries = [
                       }
                     ]
                   }
-                  logo: {
+                  registration_documentation: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.logo"]
+                    children: ["applicationData.responses.regoDoc"]
                   }
                 }
               }
