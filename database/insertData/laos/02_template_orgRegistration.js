@@ -208,6 +208,10 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Email"
+                        default: {
+                          operator: "objectProperties"
+                          children: ["currentUser.email"]
+                        }
                       }
                       validation: {
                         operator: "REGEX"
