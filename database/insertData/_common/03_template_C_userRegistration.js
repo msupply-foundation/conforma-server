@@ -601,7 +601,7 @@ exports.queries = [
                 parameterQueries: {
                   username: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q3.text"]
+                    children: ["applicationData.responses.Q3Username.text"]
                   }
                   permissionNames: ["applyUserEdit"]
                 }
@@ -613,7 +613,7 @@ exports.queries = [
                 parameterQueries: {
                   username: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q3.text"]
+                    children: ["applicationData.responses.Q3Username.text"]
                   }
                   permissionNames: [ "applyOrgRego" ]
                 }
