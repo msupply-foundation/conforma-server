@@ -75,7 +75,7 @@ exports.queries = [
                       validationMessage: "Last name must not be blank"
                     }
                     {
-                      code: "Q3UserName"
+                      code: "Q3Username"
                       index: 40
                       title: "Username"
                       elementTypePluginCode: "shortText"
@@ -173,7 +173,7 @@ exports.queries = [
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
                           }
-                          "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](19|20)\\d\\d$"
+                          "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|[12][0-9]|3[01])$"
                         ]
                       }
                       validationMessage: "Date should be in format dd/mm/yyy"
@@ -491,43 +491,85 @@ exports.queries = [
                   tableName: "user"
                   first_name: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q1.text"]
+                    children: ["applicationData.responses.Q1FirstName.text"]
                   }
                   last_name: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q2.text"]
+                    children: ["applicationData.responses.Q2LastName.text"]
                   }
                   username: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q3.text"]
+                    children: ["applicationData.responses.Q3Username.text"]
                   }
                   email: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q4.text"]
+                    children: ["applicationData.responses.Q4Email.text"]
                   }
                   password_hash: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.hash"]
+                    children: ["applicationData.responses.Q5Password.hash"]
                   }
                   date_of_birth: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q1.text"]
+                    children: ["applicationData.responses.Q6DOB.text"]
                   }
-                  last_name: {
+                  national_id: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q2.text"]
+                    children: ["applicationData.responses.Q7NationalID.text"]
                   }
-                  username: {
+                  national_id_issued_date: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q3.text"]
+                    children: ["applicationData.responses.Q8IssuedDate.text"]
                   }
-                  email: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q4.text"]
+                  # TODO: Create as one object with 3 fields (Nullable)
+                  bith_place: {
+                    vilage: {
+                      operator: "objectProperties"
+                      children: ["applicationData.responses.Q9Vilage.text"]
+                    }
+                    province: {
+                      operator: "objectProperties"
+                      children: ["applicationData.responses.Q10Province.text"]
+                    }
+                    district: {
+                      operator: "objectProperties"
+                      children: ["applicationData.responses.Q11District.text"]
+                    }
                   }
-                  password_hash: {
+                  # TODO: Create as one object with 3 fields (Nullable)
+                  address: {
+                    vilage: {
+                      operator: "objectProperties"
+                      children: ["applicationData.responses.Q12Vilage.text"]
+                    }
+                    province: {
+                      operator: "objectProperties"
+                      children: ["applicationData.responses.Q13Province.text"]
+                    }
+                    district: {
+                      operator: "objectProperties"
+                      children: ["applicationData.responses.Q14District.text"]
+                    }
+                  }
+                  education: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.hash"]
+                    children: ["applicationData.responses.Q1EducationLevel.text"]
+                  }
+                  secondary: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q2Secondary.text"]
+                  }
+                  university_name: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q3UniversityName.text"]
+                  }
+                  university_year: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q4UniversityYear.text"]
+                  }
+                  university_title: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q5UniversityTitle.text"]
                   }
                 }
               }
