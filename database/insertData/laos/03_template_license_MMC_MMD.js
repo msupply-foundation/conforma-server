@@ -33,7 +33,7 @@ exports.queries = [
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
                         helpText: "The following questions are automatically filled with existing information about **Applicant**"
-                        parameters: { title: "## Applicant details", style: "info" }
+                        parameters: { title: "## Applicant details", style: "basic" }
                       }
                       {
                         code: "Q1ApplicantName"
@@ -42,7 +42,22 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { label: "Name of applicant", maxLength: 120 }
+                        parameters: { 
+                          label: "Name of applicant"
+                          default: {
+                            operator: "+"
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: ["currentUser.firstName"]
+                              }
+                              {
+                                operator: "objectProperties"
+                                children: ["currentUser.lastName"]
+                              }
+                            ]
+                          }
+                        }
                       }
                       {
                         code: "Q2ApplicantDOB"
@@ -51,7 +66,13 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { label: "Date of Birth", maxLength: 120 }
+                        parameters: { 
+                          label: "Date of Birth"
+                          default: {
+                            operator: "objectProperties"
+                            children: ["currentUser.dateOfBirth", "Not available"]
+                          }
+                        }
                       }
                       {
                         code: "Q3NationalID"
@@ -60,18 +81,13 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { label: "National ID number", maxLength: 120 }
-                        validation: {
-                          operator: "REGEX"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.thisResponse"]
-                            }
-                            "^[0-9()-]+$"
-                          ]
+                        parameters: {
+                          label: "National ID number"
+                          default: {
+                            operator: "objectProperties"
+                            children: ["currentUser.nationalId", "Not available"]
+                          }
                         }
-                        validationMessage: "Must be a number"
                       }
                       {
                         code: "Q4IssuedDate"
@@ -80,7 +96,13 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { label: "Date issued", maxLength: 120 }
+                        parameters: {
+                          label: "Date issued"
+                          default: {
+                            operator: "objectProperties"
+                            children: ["currentUser.nationalIdIssuedDate", "Not available"]
+                          }
+                        }
                       }
                       {
                         code: "PB1"
