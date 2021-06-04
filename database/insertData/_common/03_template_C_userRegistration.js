@@ -92,6 +92,17 @@ exports.queries = [
                           }
                           "unique"
                         ]
+                        # TODO - Also check for valid username
+#                       {
+#                         operator: "REGEX"
+#                         children: [
+#                           {
+#                             operator: "objectProperties"
+#                             children: ["responses.thisResponse]
+#                           }
+#                           "^[a-zA-Z0-9_.-]*$"
+#                         ]
+#                       }
                       }
                       validationMessage: "Username already choosen"
                       parameters: { label: "Select a username" }
@@ -166,17 +177,18 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: { label: "Date of Birth", maxWidth: 120 }
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](0[1-9]|[12][0-9]|3[01])$"
-                        ]
-                      }
-                      validationMessage: "Date should be in format dd/mm/yyy"
+                      # TODO: Fix validation for birthdate
+#                     validation: {
+#                       operator: "REGEX"
+#                       children: [
+#                         {
+#                           operator: "objectProperties"
+#                           children: ["responses.thisResponse"]
+#                         }
+#                         "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](0[12]|[12][0-9]|3[01])$"
+#                       ]
+#                     }
+#                     validationMessage: "Date should be in format dd/mm/yyyy"
                       # TODO: Update to be using a DatePicker element type
                     }
                     {
@@ -363,7 +375,7 @@ exports.queries = [
                       title: "University year"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Year", maxWidth: 120 }
+                      parameters: { label: "Year", maxWidth: 120, maxLength: 5 }
                       visibilityCondition: {
                         operator: "="
                         children: [
@@ -381,10 +393,10 @@ exports.queries = [
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
                           }
-                          "^[0-9()-]+$"
+                          "^(?:(?:18|19|20|21)[0-9]{2})$"
                         ]
                       }
-                      validationMessage: "Must be a number"
+                      validationMessage: "Year between 1900-2100"
                     }
                     {
                       code: "Q5UniversityTitle"
@@ -509,6 +521,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q5Password.hash"]
                   }
+                  # TODO: Previously set as Date in db - changed to varchar
                   date_of_birth: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q6DOB.text"]
@@ -521,35 +534,31 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q8IssuedDate.text"]
                   }
-                  # TODO: Create as one object with 3 fields (Nullable)
-                  bith_place: {
-                    vilage: {
-                      operator: "objectProperties"
-                      children: ["applicationData.responses.Q9Vilage.text"]
-                    }
-                    province: {
-                      operator: "objectProperties"
-                      children: ["applicationData.responses.Q10Province.text"]
-                    }
-                    district: {
-                      operator: "objectProperties"
-                      children: ["applicationData.responses.Q11District.text"]
-                    }
+                  # TODO: Accept object (Query syntax to create jsonb)
+                  birth_place_vilage: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q9Vilage.text", null]
                   }
-                  # TODO: Create as one object with 3 fields (Nullable)
-                  address: {
-                    vilage: {
-                      operator: "objectProperties"
-                      children: ["applicationData.responses.Q12Vilage.text"]
-                    }
-                    province: {
-                      operator: "objectProperties"
-                      children: ["applicationData.responses.Q13Province.text"]
-                    }
-                    district: {
-                      operator: "objectProperties"
-                      children: ["applicationData.responses.Q14District.text"]
-                    }
+                  birth_place_province: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q10Province.text", null]
+                  }
+                  birth_place_district: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q11District.text", null]
+                  }
+                  # TODO: Accept object (Query syntax to create jsonb)
+                  current_address_vilage: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q12Vilage.text", null]
+                  }
+                  current_address_province: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q13Province.text", null]
+                  }
+                  current_address_district: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q14District.text", null]
                   }
                   education: {
                     operator: "objectProperties"
@@ -557,19 +566,19 @@ exports.queries = [
                   }
                   secondary: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q2Secondary.text"]
+                    children: ["applicationData.responses.Q2Secondary.text", null]
                   }
                   university_name: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q3UniversityName.text"]
+                    children: ["applicationData.responses.Q3UniversityName.text", null]
                   }
                   university_year: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q4UniversityYear.text"]
+                    children: ["applicationData.responses.Q4UniversityYear.text", null]
                   }
                   university_title: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q5UniversityTitle.text"]
+                    children: ["applicationData.responses.Q5UniversityTitle.text", null]
                   }
                 }
               }
