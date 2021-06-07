@@ -2,28 +2,39 @@ import {
   IConnection,
   IParameters,
   IGraphQLConnection,
-  OperatorNode,
-  ValueNode,
   OutputType,
   BasicObject,
+  EvaluateExpression,
+  EvaluateExpressionInstance,
+  IsEvaluationExpression,
 } from './types'
+
+import buildObject, { BuildObjectQuery } from './resolvers/buildObject'
 
 const defaultParameters: IParameters = {}
 
-export default async function evaluateExpression(
-  inputQuery: OperatorNode | ValueNode,
-  params: IParameters = defaultParameters
-): Promise<ValueNode> {
+export const isEvaluationExpression: IsEvaluationExpression = (expressionOrValue) =>
+  expressionOrValue instanceof Object &&
+  expressionOrValue !== null &&
+  !Array.isArray(expressionOrValue) &&
+  !!expressionOrValue.operator
+
+const evaluateExpression: EvaluateExpression = async (inputQuery, params = defaultParameters) => {
   // Base cases -- leaves get returned unmodified
   if (!(inputQuery instanceof Object)) return inputQuery
   if ('value' in inputQuery) return inputQuery.value // Deprecate this soon
-  if (!('children' in inputQuery) || !('operator' in inputQuery)) return inputQuery
+  if (!('operator' in inputQuery)) return inputQuery
 
+  const evaluationExpressionInstance: EvaluateExpressionInstance = (_inputQuery) =>
+    evaluateExpression(_inputQuery, params)
+
+  let childrenResolved: any[] = []
   // Recursive case
-  const childrenResolved: any[] = await Promise.all(
-    inputQuery.children.map((child: any) => evaluateExpression(child, params))
-  )
-
+  if ('children' in inputQuery) {
+    childrenResolved = await Promise.all(
+      inputQuery.children.map((child: any) => evaluationExpressionInstance(child))
+    )
+  }
   switch (inputQuery.operator) {
     case 'AND':
       return childrenResolved.reduce((acc: boolean, child: boolean) => {
@@ -147,6 +158,9 @@ export default async function evaluateExpression(
       if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
       return processGraphQL(childrenResolved, params.graphQLConnection)
 
+    case 'buildObject':
+      return buildObject(inputQuery as BuildObjectQuery, evaluationExpressionInstance)
+
     // etc. for as many other operators as we want/need.
   }
 
@@ -249,6 +263,7 @@ const extractProperty = (
   node: string | string[],
   fallback: any = "Can't resolve object"
 ): BasicObject | string | number | boolean | BasicObject[] => {
+  if (typeof data === 'undefined') return fallback
   const propertyPathArray = Array.isArray(node) ? node : node.split('.')
   // ie. "application.template.name" => ["applcation", "template", "name"]
   if (Array.isArray(data)) {
@@ -314,3 +329,5 @@ const fetchAPIrequest = async ({ url, APIfetch, method = 'GET', body }: APIreque
   })
   return await result.json()
 }
+
+export default evaluateExpression
