@@ -1,4 +1,4 @@
-import { BasicObject, OperatorNode, ValueNode } from '@openmsupply/expression-evaluator/lib/types'
+import { BasicObject, EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import {
   ActionQueueStatus,
   ApplicationOutcome,
@@ -7,7 +7,6 @@ import {
   TriggerQueueStatus,
 } from './generated/graphql'
 
-export type EvaluatorNode = OperatorNode | ValueNode
 export interface ActionInTemplate {
   code: string
   path: string
