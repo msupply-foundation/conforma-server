@@ -337,6 +337,78 @@ This expression queries our `/login` endpoint to check a user's credentials, and
 }
 ```
 
+## buildObject
+
+Build a key/value object with evaluatable keys and values
+
+Using custom object shape for configuration vs children array
+
+- Input format
+
+```
+properites: [{
+  key: {evaluation or value}
+  value: {evaluation or value}
+}, {more key values}
+```
+
+- Output evaluated object, empty object by default. If value or key evaluates to undefined it wont' be present in the output
+
+**See test in {evaluator module}/src/resolvers/buildObject.test.ts for further examples**
+
+**Example**:
+
+Input
+
+```
+{
+  operator: "buildObject",
+  properties: [{
+    key: "someKey",
+    value: true
+  }]
+}
+```
+
+Output
+
+```
+{
+  "someKey": true
+}
+```
+
+Input
+
+```
+{
+  operator: "buildObject",
+  properties: [{
+    key: "someKey",
+    value: "someValue"
+  },{
+    key: {
+      operator: "+",
+      children: ["evaluted", "key"]
+    },
+    value: {
+      operator: "AND",
+      children: [true, false]
+     },
+   }
+  ]
+}
+```
+
+Output
+
+```
+{
+  "someKey": "someValue",
+  "evaluatedKey": false
+}
+```
+
 # Usage
 
 The query evaluator is implemented in the `evaluateExpression` function:
