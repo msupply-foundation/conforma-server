@@ -355,7 +355,7 @@ properties: [{
 ]
 ```
 
-- Output evaluated object, empty object by default. If value or key evaluates to undefined it wont' be present in the output
+- Output evaluated object, empty object by default. If value or key evaluates to `undefined`, the property will be omitted from the output.
 
 **See test in {evaluator module}/src/resolvers/buildObject.test.ts for further examples**
 
