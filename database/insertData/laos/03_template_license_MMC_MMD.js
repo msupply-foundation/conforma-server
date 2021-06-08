@@ -16,7 +16,7 @@ exports.queries = [
             name: "Company License for Modern medicines or Medical devices"
             isLinear: false # CHANGE THIS
             status: AVAILABLE
-            startMessage: "## Apply for a company license under one of the following options:\\n - MMC\\n - MMD\\n - MDC\\n - MDM\\n - WSL\\n - RIT\\n\\n**TODO**: Update the following list:\\nYou will be required to upload the following documents as part of this  process:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
+            startMessage: "## Apply for a company license under one of the following options:\\n - MMC\\n - MMD\\n - MDC\\n - MDM\\n - WSL\\n - RIT\\n\\n**TODO**: Add description for each type of application \\nYou will be required to upload the following documents as part of this  process:\\n- LMMD01: Letter of request \\n- LMMD12: Letter from mother-company authorizing establishment of branch\\n- LMMD15: Site inspection report by F&D unit\\n- LMMD16: Company/manufacturer profile (including site master file and GMP certification where applicable)"
             versionTimestamp: "NOW()"
             templateSectionsUsingId: {
               create: [
@@ -485,18 +485,53 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "Q12EducationHistory"
+                        code: "Q13Secondary"
                         index: 180
+                        title: "Secondary"
+                        elementTypePluginCode: "longText"
+                        category: QUESTION
+                        isEditable: false
+                        parameters: { label: "Please enter details for secondary"}
+                        visibilityCondition: {
+                          operator: "="
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q12EducationLevel.text"]
+                            }
+                            "Secondary"
+                          ]
+                        }
+                        defaultValue: {
+                          operator: "graphQL",
+                          children: [
+                            "query getUser($id: Int!){user(id: $id) {secondary}}",
+                            "",
+                            [
+                              "id"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "currentUser.userId"
+                              ]
+                            },
+                            "user.secondary"
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q14EducationHistory"
+                        index: 7
                         title: "Education List"
                         elementTypePluginCode: "listBuilder"
                         category: QUESTION
                         isEditable: false
                         parameters: {
                           label: "Education history"
-                          createModalButtonText: "Add to education history"
-                          modalText: "## Education history entry \\n\\nPlease enter details for university"
+                          displayType: "list"
                           visibilityCondition: {
-                            operator: "!="
+                            operator: "=="
                             children: [
                               {
                                 operator: "objectProperties"
@@ -505,39 +540,23 @@ exports.queries = [
                               "University"
                             ]
                           }
-                          displayType: "card"
-                          inputFields: [
-                            {
-                              code: "LB1"
-                              title: "Name of institution"
-                              elementTypePluginCode: "shortText"
-                              category: QUESTION
-                              parameters: { label: "Name of institution" }
-                              isRequired: true
-                            }
-                            {
-                              code: "LB2"
-                              title: "year"
-                              elementTypePluginCode: "shortText"
-                              category: QUESTION
-                              parameters: {
-                                label: "Year of conclusion"
-                                maxWidth: 50
-                              }
-                              isRequired: false
-                            }
-                            {
-                              code: "LB3"
-                              title: "Title"
-                              elementTypePluginCode: "shortText"
-                              category: QUESTION
-                              parameters: {
-                                label: "Title"
-                                description: "Enter the title received by applicant"
-                                maxWidth: 130
-                              }
-                            }
-                          ]
+                          defaultValue: {
+                            operator: "graphQL",
+                            children: [
+                              "query getUser($id: Int!){user(id: $id) {universityHistory}}",
+                              "",
+                              [
+                                "id"
+                              ],
+                              {
+                                operator: "objectProperties",
+                                children: [
+                                  "currentUser.userId"
+                                ]
+                              },
+                              "user.universityHistory"
+                            ]
+                          }
                         }
                       }
                     ]
@@ -600,12 +619,12 @@ exports.queries = [
                         parameters: { title: "## License details", style: "basic" }
                       }
                       {
-                        code: "LicenseType"
+                        code: "Q1LicenseType"
                         index: 20
                         title: "License type"
                         elementTypePluginCode: "radioChoice"
                         category: QUESTION
-                        helpText: "Selectin the license to apply for will grat the specific license to this company an expiry date genrated on Approval"
+                        helpText: "Select the license to apply for will grat the specific license to this company an expiry date genrated on Approval"
                         parameters: {
                           label: "Purpose of application"
                           options: [
@@ -614,6 +633,113 @@ exports.queries = [
                             "wholesaler for medicines and medical devices"
                             "retail pharmacy"
                           ]
+                        }
+                      }
+                      {
+                        code: "Q2ProductType"
+                        index: 30
+                        title: "Product type"
+                        elementTypePluginCode: "radioChoice"
+                        category: QUESTION
+                        parameters: {
+                          label: "Type of product"
+                          layout: "inline"
+                          options: [
+                            "modern medicines"
+                            "medical devices"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+                {
+                  code: "S5"
+                  title: "Files updload"
+                  index: 4
+                  templateElementsUsingId: {
+                    create: [
+                      {
+                        code: "S5Intro"
+                        index: 10
+                        title: "Intro Section 5"
+                        elementTypePluginCode: "textInfo"
+                        category: INFORMATION
+                        parameters: { title: "## Files updloads", style: "basic" }
+                      }
+                      {
+                        code: "LMMD01"
+                        index: 20
+                        title: "File upload LMMD01"
+                        elementTypePluginCode: "fileUpload"
+                        category: QUESTION
+                        parameters: {
+                          label: "Letter of request"
+                          description: "The physical submission for this form is also required.\\nFile uploaded must be **image** files or **PDF** and under 5MB."
+                          fileCountLimit: 1
+                          fileExtensions: ["pdf", "png", "jpg"]
+                          fileSizeLimit: 5000
+                        }
+                      }
+                      {
+                        code: "S5PB1"
+                        index: 40
+                        title: "Page Break"
+                        elementTypePluginCode: "pageBreak"
+                        category: INFORMATION
+                      }
+                      {
+                        code: "LMMD12"
+                        index: 70
+                        title: "File upload LMMD01"
+                        elementTypePluginCode: "fileUpload"
+                        category: QUESTION
+                        parameters: {
+                          label: "Letter from mother-company authorizing establishment of branch"
+                          description: "File uploaded must be **image** files or **PDF** and under 5MB."
+                          fileCountLimit: 1
+                          fileExtensions: ["pdf", "png", "jpg"]
+                          fileSizeLimit: 5000
+                        }
+                      }
+                      {
+                        code: "S5PB2"
+                        index: 80
+                        title: "Page Break"
+                        elementTypePluginCode: "pageBreak"
+                        category: INFORMATION
+                      }
+                      {
+                        code: "LMMD15"
+                        index: 100
+                        title: "File upload LMMD15"
+                        elementTypePluginCode: "fileUpload"
+                        category: QUESTION
+                        parameters: {
+                          label: "Site inspection report by F&D unit"
+                          description: "File uploaded must be **image** files or **PDF** and under 5MB."
+                          fileExtensions: ["pdf", "png", "jpg"]
+                          fileSizeLimit: 5000
+                        }
+                      }
+                      {
+                        code: "S5PB3"
+                        index: 110
+                        title: "Page Break"
+                        elementTypePluginCode: "pageBreak"
+                        category: INFORMATION
+                      }
+                      {
+                        code: "LMMD16"
+                        index: 120
+                        title: "File upload LMMD15"
+                        elementTypePluginCode: "fileUpload"
+                        category: QUESTION
+                        parameters: {
+                          label: "Company/manufacturer profile (including site master file and GMP certification where applicable)"
+                          description: "describing origin of products, staff and qualifications, facilities and equipment, business experience, business development plan.\\nFile uploaded must be **image** files or **PDF** and under 5MB."
+                          fileExtensions: ["pdf", "png", "jpg"]
+                          fileSizeLimit: 5000
                         }
                       }
                     ]
@@ -658,6 +784,7 @@ exports.queries = [
                     message: { value: "Organisation Registration submission" }
                   }
                 }
+                # TODO - Check if this will set outcome on Stage 2 only!
                 {
                   actionCode: "changeOutcome"
                   trigger: ON_REVIEW_SUBMIT
@@ -724,34 +851,6 @@ exports.queries = [
                         }
                       ]
                     }
-                  }
-                }
-                {
-                  actionCode: "joinUserOrg"
-                  trigger: ON_REVIEW_SUBMIT
-                  sequence: 102
-                  # TO-DO -- update condition to just check Outcome
-                  # (from applicationData)
-                  condition: {
-                    operator: "="
-                    children: [
-                      {
-                        operator: "objectProperties"
-                        children: ["applicationData.outcome"]
-                      }
-                      "APPROVED"
-                    ]
-                  }
-                  parameterQueries: {
-                    user_id: {
-                      operator: "objectProperties"
-                      children: ["applicationData.userId"]
-                    }
-                    organisation_id: {
-                      operator: "objectProperties"
-                      children: ["outputCumulative.organisation.id"]
-                    }
-                    user_role: "Owner"
                   }
                 }
                 {
