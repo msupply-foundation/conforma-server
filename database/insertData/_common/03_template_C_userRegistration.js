@@ -355,9 +355,8 @@ exports.queries = [
                       code: "Q3UniversityHistory"
                       index: 40
                       title: "Education List"
-                      elementTypePluginCode: "shortText"
+                      elementTypePluginCode: "listBuilder"
                       category: QUESTION
-                      isRequired: false
                       parameters: {
                         label: "Education history"
                         createModalButtonText: "Add to education history"
