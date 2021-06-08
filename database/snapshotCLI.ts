@@ -32,7 +32,7 @@ const getParameter = (parameterName: string, isBooleanParameter = false) => {
 
 const getSnapshotName = (lastParameterAlreadyRead: boolean) => {
   if (lastParameterAlreadyRead) return undefined
-  if (process.argv.length <= 4) return undefined
+  if (process.argv.length <= 3) return undefined
 
   return process.argv[process.argv.length - 1]
 }
@@ -43,18 +43,19 @@ const doOperation = async () => {
   const isTake = process.argv[2] === 'take'
   const isUse = process.argv[2] === 'use'
 
-  const profilePrameterResult = getParameter('--profile')
+  const optionsParameterResult = getParameter('--options')
 
-  const snapshotName = getSnapshotName(profilePrameterResult.isLastParameter)
+  const snapshotName = getSnapshotName(optionsParameterResult.isLastParameter)
   console.log(process.argv.length)
   if (!isTake && !isUse) printUsageMessageAndQuit()
 
+  console.log(snapshotName, optionsParameterResult)
   if (isTake) {
-    console.log(await takeSnapshot({ snapshotName, optionsName: profilePrameterResult.value }))
+    console.log(await takeSnapshot({ snapshotName, optionsName: optionsParameterResult.value }))
   }
 
   if (isUse) {
-    console.log(await useSnapshot({ snapshotName, optionsName: profilePrameterResult.value }))
+    console.log(await useSnapshot({ snapshotName, optionsName: optionsParameterResult.value }))
   }
 
   process.exit(0)

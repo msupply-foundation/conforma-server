@@ -1,4 +1,5 @@
 import fs from 'fs/promises'
+import fsSync from 'fs'
 import { ExportAndImportOptions, SnapshotOperation } from './types'
 import importFromJson from './importFromJson'
 import config from '../../config.json'
@@ -104,10 +105,12 @@ const initiliseDatabase = async (
   execSync(`./database/initialise_database.sh ${databaseName}`, { cwd: rootFolder })
   console.log('initialising database ... done')
 
-  console.log('adding changes to schema ... ')
   const diffFile = path.join(snapshotFolder, `${PG_SCHEMA_DIFF_FILE_NAME}.sql`)
-  execSync(`psql -U postgres -q -b -d ${databaseName} -f "${diffFile}"`, { cwd: rootFolder })
-  console.log('adding changes to schema ... done')
+  if (fsSync.existsSync(diffFile)) {
+    console.log('adding changes to schema ... ')
+    execSync(`psql -U postgres -q -b -d ${databaseName} -f "${diffFile}"`, { cwd: rootFolder })
+    console.log('adding changes to schema ... done')
+  }
 
   console.log('inserting core data ... ')
   await insertData(insertScriptsLocale, includeInsertScripts, excludeInsertScripts)
