@@ -25,6 +25,14 @@ class GraphQLdb {
       }),
     })
     const data = await queryResult.json()
+    if (data.errors)
+      throw new Error(
+        `problem executing gql: ${query} variables: ${variables} errors: ${JSON.stringify(
+          data.errors,
+          null,
+          ' '
+        )}`
+      )
     return data.data
   }
 

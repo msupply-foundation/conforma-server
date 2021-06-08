@@ -1,0 +1,22 @@
+{
+  "filters": {},
+  "includeTables": [
+    "application",
+    "applicationSection",
+    "applicationResponse",
+    "applicationStageHistory",
+    "applicationStatusHistory",
+    "reviewAssignment",
+    "reviewAssignmentAssignerJoin",
+    "reviewQuestionAssignment",
+    "review",
+    "reviewStatusHistory",
+    "reviewDecision",
+    "reviewResponse"
+  ],
+  "excludeTables": [],
+  "shouldReInitilise": true,
+  "insertScriptsLocale": "dev",
+  "includeInsertScripts": [],
+  "excludeInsertScripts": ["07_review_assignments", "06_applications_D_reviewTest"]
+}

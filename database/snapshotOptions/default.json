@@ -1,0 +1,16 @@
+{
+  "filters": {},
+  "includeTables": [],
+  "excludeTables": [
+    "actionQueue",
+    "triggerQueue",
+    "applicationListShape",
+    "elementTypePlugin",
+    "notification",
+    "trigger_queue"
+  ],
+  "shouldReInitilise": true,
+  "insertScriptsLocale": "dev",
+  "includeInsertScripts": ["none"],
+  "excludeInsertScripts": []
+}

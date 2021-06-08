@@ -1,0 +1,8 @@
+export const DEFAULT_SNAPSHOT_NAME = 'current'
+export const DEFAULT_OPTIONS_NAME = 'default'
+export const SNAPSHOT_SUBFOLDER = 'snapshots'
+export const OPTIONS_SUBFOLDER = 'snapshotOptions'
+export const SNAPSHOT_FILE_NAME = 'snapshot'
+export const OPTIONS_FILE_NAME = 'options'
+export const PG_DIFF_CONFIG_FILE_NAME = 'pg-diff-config'
+export const PG_SCHEMA_DIFF_FILE_NAME = 'schema_diff'

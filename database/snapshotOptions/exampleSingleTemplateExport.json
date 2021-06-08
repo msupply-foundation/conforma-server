@@ -1,0 +1,9 @@
+{
+  "filters": { "template": { "id": { "in": [2, 8] } } },
+  "shouldReInitilise": false,
+  "includeTables": ["templateElement", "template", "templateSection"],
+  "excludeTables": [],
+  "insertScriptsLocale": "dev",
+  "includeInsertScripts": [],
+  "excludeInsertScripts": []
+}

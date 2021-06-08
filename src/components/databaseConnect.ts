@@ -118,6 +118,8 @@ class DBConnect {
 
   public getAllReviewResponses = PostgresDB.getAllReviewResponses
 
+  public getDatabaseInfo = PostgresDB.getDatabaseInfo
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
