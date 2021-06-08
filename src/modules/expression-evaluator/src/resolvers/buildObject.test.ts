@@ -5,20 +5,20 @@ test('Testing basic buildObject', () => {
     operator: 'buildObject',
     properties: [
       {
-        key: 'key',
-        value: 'value',
+        key: 'someKey',
+        value: 'someValue',
       },
     ],
   }
   const testOut = {
-    key: 'value',
+    someKey: 'someValue',
   }
   return evaluateExpression(testIn).then((result: any) => {
     expect(result).toEqual(testOut)
   })
 })
 
-test('Testing buildObject for handling erronouse input', () => {
+test('Testing buildObject for handling erroneous input', () => {
   const testIn = {
     operator: 'buildObject',
     properties: [
@@ -26,8 +26,8 @@ test('Testing buildObject for handling erronouse input', () => {
         value: 'missing key',
       },
       {
-        key: 'key',
-        value: 'value',
+        key: 'someKey',
+        value: 'someValue',
       },
       {},
       {
@@ -36,7 +36,7 @@ test('Testing buildObject for handling erronouse input', () => {
     ],
   }
   const testOut = {
-    key: 'value',
+    someKey: 'someValue',
   }
   return evaluateExpression(testIn).then((result: any) => {
     expect(result).toEqual(testOut)
@@ -48,8 +48,8 @@ test('Testing buildObject with evaluated key and value', () => {
     operator: 'buildObject',
     properties: [
       {
-        key: 'key',
-        value: 'value',
+        key: 'someKey',
+        value: 'someValue',
       },
       {
         key: {
@@ -65,7 +65,7 @@ test('Testing buildObject with evaluated key and value', () => {
   }
 
   const testOut = {
-    key: 'value',
+    someKey: 'someValue',
     keyFromObjects: 'valueFromObjects',
   }
 
@@ -83,8 +83,8 @@ test('Testing buildObject with evaluations and nesting', () => {
     operator: 'buildObject',
     properties: [
       {
-        key: 'key',
-        value: 'value',
+        key: 'someKey',
+        value: 'someValue',
       },
       {
         key: {
@@ -108,7 +108,7 @@ test('Testing buildObject with evaluations and nesting', () => {
   }
 
   const testOut = {
-    key: 'value',
+    someKey: 'someValue',
     keyFromObjects: { concatArray: ['one', 2] },
   }
 
