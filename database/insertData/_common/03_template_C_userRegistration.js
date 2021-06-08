@@ -352,126 +352,71 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "Q3UniversityName"
-                      index: 50
-                      title: "Name of institution"
+                      code: "Q3UniversityHistory"
+                      index: 40
+                      title: "Education List"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Name of institution"}
-                      visibilityCondition: {
-                        operator: "="
-                        children: [
+                      isRequired: false
+                      parameters: {
+                        label: "Education history"
+                        createModalButtonText: "Add to education history"
+                        modalText: "## Education history entry \\n\\nPlease enter details for university"
+                        visibilityCondition: {
+                          operator: "!="
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q1EducationLevel.text"]
+                            }
+                            "University"
+                          ]
+                        }
+                        displayType: "card"
+                        inputFields: [
                           {
-                            operator: "objectProperties"
-                            children: ["responses.Q1EducationLevel.text"]
+                            code: "LB1"
+                            title: "Name of institution"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: { label: "Name of institution" }
+                            isRequired: true
                           }
-                          "University"
+                          {
+                            code: "LB2"
+                            title: "University year"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "Year of conclusion"
+                              maxWidth: 50
+                            }
+                            validation: {
+                              operator: "REGEX"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.thisResponse"]
+                                }
+                                "^(?:(?:18|19|20|21)[0-9]{2})$"
+                              ]
+                            }
+                            validationMessage: "Year between 1900-2100"
+                          }
+                          {
+                            code: "LB3"
+                            title: "University title"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "Title"
+                              description: "Enter the title received by applicant"
+                              maxWidth: 130
+                            }
+                          }
                         ]
                       }
                     }
-                    {
-                      code: "Q4UniversityYear"
-                      index: 60
-                      title: "University year"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
-                      parameters: { label: "Year", maxWidth: 120, maxLength: 5 }
-                      visibilityCondition: {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.Q1EducationLevel.text"]
-                          }
-                          "University"
-                        ]
-                      }
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          "^(?:(?:18|19|20|21)[0-9]{2})$"
-                        ]
-                      }
-                      validationMessage: "Year between 1900-2100"
-                    }
-                    {
-                      code: "Q5UniversityTitle"
-                      index: 70
-                      title: "University title"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
-                      parameters: { label: "Title"}
-                      visibilityCondition: {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.Q1EducationLevel.text"]
-                          }
-                          "University"
-                        ]
-                      }
-                    }
-#                    {
-#                      code: "Q2EducationHistory"
-#                      index: 30
-#                      title: "Education List"
-#                      elementTypePluginCode: "shortText"
-#                      category: QUESTION
-#                      isRequired: false
-#                      parameters: {
-#                        label: "Education history"
-#                        createModalButtonText: "Add to education history"
-#                        modalText: "## Education history entry \\n\\nPlease enter details for university"
-#                        visibilityCondition: {
-#                          operator: "!="
-#                          children: [
-#                            {
-#                              operator: "objectProperties"
-#                              children: ["responses.Q1EducationLevel.text"]
-#                            }
-#                            "University"
-#                          ]
-#                        }
-#                        displayType: "card"
-#                        inputFields: [
-#                          {
-#                            code: "LB1"
-#                            title: "Name of institution"
-#                            elementTypePluginCode: "shortText"
-#                            category: QUESTION
-#                            parameters: { label: "Name of institution" }
-#                            isRequired: true
-#                          }
-#                          {
-#                            code: "LB2"
-#                            title: "year"
-#                            elementTypePluginCode: "shortText"
-#                            category: QUESTION
-#                            parameters: {
-#                              label: "Year of conclusion"
-#                              maxWidth: 50
-#                            }
-#                            isRequired: false
-#                          }
-#                          {
-#                            code: "LB3"
-#                            title: "Title"
-#                            elementTypePluginCode: "shortText"
-#                            category: QUESTION
-#                            parameters: {
-#                              label: "Title"
-#                              description: "Enter the title received by applicant"
-#                              maxWidth: 130
-#                            }
-#                          }
-#                        ]
-#                      }
-#                    }
                   ]
                 }
               }
@@ -562,23 +507,15 @@ exports.queries = [
                   }
                   education: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q1EducationLevel.text"]
+                    children: ["applicationData.responses.Q1EducationLevel"]
                   }
                   secondary: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q2Secondary.text", null]
                   }
-                  university_name: {
+                  university_history: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q3UniversityName.text", null]
-                  }
-                  university_year: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q4UniversityYear.text", null]
-                  }
-                  university_title: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q5UniversityTitle.text", null]
+                    children: ["applicationData.responses.Q3UniversityHistory", null]
                   }
                 }
               }
