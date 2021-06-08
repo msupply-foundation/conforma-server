@@ -386,19 +386,21 @@ Input
 ```
 {
   operator: "buildObject",
-  properties: [{
-    key: "someKey",
-    value: "someValue"
-  },{
-    key: {
-      operator: "+",
-      children: ["evaluted", "key"]
+  properties: [
+    {
+      key: "someKey",
+      value: "someValue"
     },
-    value: {
-      operator: "AND",
-      children: [true, false]
-     },
-   }
+    {
+      key: {
+        operator: "+",
+        children: ["evaluated", "key"]
+      },
+      value: {
+        operator: "AND",
+        children: [true, false]
+       },
+     }
   ]
 }
 ```
