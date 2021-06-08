@@ -347,7 +347,7 @@ Using custom object shape for configuration vs children array
 - Input format
 
 ```
-properites: [{
+properties: [{
   key: {evaluation or value}
   value: {evaluation or value}
 }, {more key values}
