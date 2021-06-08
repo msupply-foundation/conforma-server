@@ -28,7 +28,7 @@ exports.queries = [
                     create: [
                       {
                         code: "S1Intro"
-                        index: 10
+                        index: 0
                         title: "Intro Section 1"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
@@ -36,80 +36,173 @@ exports.queries = [
                         parameters: { title: "## Applicant details", style: "basic" }
                       }
                       {
-                        code: "Q1ApplicantName"
-                        index: 20
-                        title: "Applicant Name"
+                        code: "Q1ApplicantFirstName"
+                        index: 10
+                        title: "Applicant first name"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { 
-                          label: "Name of applicant"
-                          default: {
-                            operator: "+"
-                            children: [
-                              {
-                                operator: "objectProperties"
-                                children: ["currentUser.firstName"]
+                        parameters: { label: "First name" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {firstName}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.firstName"
+                                ]
                               }
-                              {
-                                operator: "objectProperties"
-                                children: ["currentUser.lastName"]
-                              }
-                            ]
-                          }
+                            }
+                          ]
                         }
                       }
                       {
-                        code: "Q2ApplicantDOB"
+                        code: "Q2ApplicantLasttName"
+                        index: 20
+                        title: "Applicant last name"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        isEditable: false
+                        parameters: { label: "Last name" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {lastName}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.lastName"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q3ApplicantDOB"
                         index: 30
                         title: "Applicant DOB"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        defaultValue: {
-                          operator: "graphQL"
-                          query: "query getUser($id: Int!){user(id: $id) {dateOfBirth}}"
-                          variables: [
-                              {
-                                  key: "id"
-                                  value: {
-                                      operator: "objectProperties", 
-                                      children: ["currentUser.id"]
-                                  }
-                              }
-                          ]
-                          extractor: "user.dateOfBirth"
-                        }
                         parameters: { label: "Date of Birth" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {dateOfBirth}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.dateOfBirth"
+                                ]
+                              }
+                            }
+                          ]
+                        }
                       }
                       {
-                        code: "Q3NationalID"
+                        code: "Q4NationalID"
                         index: 40
                         title: "National ID number"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: {
-                          label: "National ID number"
-                          default: {
-                            operator: "objectProperties"
-                            children: ["currentUser.nationalId", "Not available"]
-                          }
+                        parameters: { label: "National ID number" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {nationalId}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.nationalId"
+                                ]
+                              }
+                            }
+                          ]
                         }
                       }
                       {
-                        code: "Q4IssuedDate"
+                        code: "Q5IssuedDate"
                         index: 50
                         title: "Date issued"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: {
-                          label: "Date issued"
-                          default: {
-                            operator: "objectProperties"
-                            children: ["currentUser.nationalIdIssuedDate", "Not available"]
-                          }
+                        parameters: { label: "Date issued" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {nationalIdIssuedDate}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.nationalIdIssuedDate"
+                                ]
+                              }
+                            }
+                          ]
                         }
                       }
                       {
@@ -134,7 +227,32 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { label: "Vilage", maxLength: 120 }
+                        parameters: { label: "Vilage" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {birthPlaceVilage}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.birthPlaceVilage"
+                                ]
+                              }
+                            }
+                          ]
+                        }
                       }
                       {
                         code: "Q7Province"
@@ -143,7 +261,32 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { label: "Province", maxLength: 120 }
+                        parameters: { label: "Province" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {birthPlaceProvince}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.birthPlaceProvince"
+                                ]
+                              }
+                            }
+                          ]
+                        }
                       }
                       {
                         code: "Q8District"
@@ -152,7 +295,32 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { label: "District", maxLength: 120 }
+                        parameters: { label: "District" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {birthPlaceDistrict}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.birthPlaceDistrict"
+                                ]
+                              }
+                            }
+                          ]
+                        }
                       }
                       {
                         code: "PB2"
@@ -176,7 +344,32 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { label: "Vilage", maxLength: 120 }
+                        parameters: { label: "Vilage" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {currentAddressVilage}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.currentAddressVilage"
+                                ]
+                              }
+                            }
+                          ]
+                        }
                       }
                       {
                         code: "Q10Province"
@@ -185,7 +378,32 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { label: "Province", maxLength: 120 }
+                        parameters: { label: "Province" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {currentAddressProvince}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.currentAddressProvince"
+                                ]
+                              }
+                            }
+                          ]
+                        }
                       }
                       {
                         code: "Q11District"
@@ -194,7 +412,32 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { label: "District", maxLength: 120 }
+                        parameters: { label: "District" }
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {currentAddressDistrict}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.currentAddressDistrict"
+                                ]
+                              }
+                            }
+                          ]
+                        }
                       }
                       {
                         code: "PB3"
@@ -217,11 +460,28 @@ exports.queries = [
                         title: "Organisation Category"
                         elementTypePluginCode: "radioChoice"
                         category: QUESTION
-                        helpText: "TODO: This field should be consider as another  application related to applicant - and simply displayed in company license form"
+                        isEditable: false
                         parameters: {
                           label: "Education Level"
                           options: ["Secondary", "University"]
                           layout: "inline"
+                        }
+                        defaultValue: {
+                          operator: "graphQL",
+                          children: [
+                            "query getUser($id: Int!){user(id: $id) {education}}",
+                            "",
+                            [
+                              "id"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "currentUser.userId"
+                              ]
+                            },
+                            "user.education"
+                          ]
                         }
                       }
                       {
@@ -230,7 +490,7 @@ exports.queries = [
                         title: "Education List"
                         elementTypePluginCode: "listBuilder"
                         category: QUESTION
-                        isRequired: false
+                        isEditable: false
                         parameters: {
                           label: "Education history"
                           createModalButtonText: "Add to education history"
