@@ -350,7 +350,9 @@ Using custom object shape for configuration vs children array
 properties: [{
   key: {evaluation or value}
   value: {evaluation or value}
-}, {more key values}
+},
+  ... { more key-values }
+]
 ```
 
 - Output evaluated object, empty object by default. If value or key evaluates to undefined it wont' be present in the output
