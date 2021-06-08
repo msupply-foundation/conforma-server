@@ -50,6 +50,7 @@ For more complex lookups, we would hide the complexity from the user in the Temp
   - [graphQL](#graphql)
   - [GET](#get)
   - [POST](#post)
+  - [buildObject](#buildObject)
 - [Usage](#usage)
 - [Examples](#examples)
 - [To Do](#to-do)
