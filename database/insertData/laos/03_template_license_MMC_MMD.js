@@ -66,13 +66,21 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
-                        parameters: { 
-                          label: "Date of Birth"
-                          default: {
-                            operator: "objectProperties"
-                            children: ["currentUser.dateOfBirth", "Not available"]
-                          }
+                        defaultValue: {
+                          operator: "graphQL"
+                          query: "query getUser($id: Int!){user(id: $id) {dateOfBirth}}"
+                          variables: [
+                              {
+                                  key: "id"
+                                  value: {
+                                      operator: "objectProperties", 
+                                      children: ["currentUser.id"]
+                                  }
+                              }
+                          ]
+                          extractor: "user.dateOfBirth"
                         }
+                        parameters: { label: "Date of Birth" }
                       }
                       {
                         code: "Q3NationalID"
