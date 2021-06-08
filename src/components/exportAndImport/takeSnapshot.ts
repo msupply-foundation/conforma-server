@@ -121,7 +121,7 @@ const getScheamDiff = async (newSnapshotFolder: string) => {
   // Rename diff file
 
   const diffFile = fsSync.readdirSync(newSnapshotFolder).find((file) => file.endsWith('.sql'))
-  if (!diffFile) throw new Error('cannot find diff file in snapshot folder')
+  if (!diffFile) return
 
   fsSync.renameSync(
     path.join(newSnapshotFolder, diffFile),
