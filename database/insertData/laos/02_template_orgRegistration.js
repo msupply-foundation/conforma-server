@@ -107,8 +107,46 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "logo"
+                      code: "owner"
                       index: 30
+                      title: "Company Owver"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Full name of company owner"
+                        description: "TO-DO: Pre-populate"
+                        maxLength: 50 }
+                    }
+                    {
+                      code: "invHeader"
+                      index: 35
+                      title: "Investment Title"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "### Total Investment"
+                        style: "none"
+                      }
+                    }
+                    {
+                      code: "invDomestic"
+                      index: 40
+                      title: "Domestic Investment"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Domestic", maxLength: 50 }
+                    }
+                    {
+                      code: "invForeign"
+                      index: 45
+                      title: "Foreign Investment"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Foreign", maxLength: 50 }
+                    }
+                    {
+                      code: "logo"
+                      index: 50
                       title: "Logo upload"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
@@ -123,14 +161,14 @@ exports.queries = [
                     }
                     {
                       code: "PB1"
-                      index: 40
+                      index: 55
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
                       code: "addressIntro"
-                      index: 45
+                      index: 60
                       title: "Address Intro"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -138,7 +176,7 @@ exports.queries = [
                     }
                     {
                       code: "addressNear"
-                      index: 46
+                      index: 65
                       title: "Address Near"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -147,7 +185,7 @@ exports.queries = [
                     }
                     {
                       code: "addressStreet"
-                      index: 47
+                      index: 70
                       title: "Address Street"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -158,7 +196,7 @@ exports.queries = [
                     }
                     {
                       code: "addressDistrict"
-                      index: 48
+                      index: 75
                       title: "Address District"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -169,7 +207,7 @@ exports.queries = [
                     }
                     {
                       code: "phone"
-                      index: 50
+                      index: 80
                       title: "Phone"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -191,7 +229,7 @@ exports.queries = [
                     }
                     {
                       code: "fax"
-                      index: 51
+                      index: 85
                       title: "Fax"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -214,7 +252,7 @@ exports.queries = [
                     }
                     {
                       code: "email"
-                      index: 52
+                      index: 90
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -244,121 +282,184 @@ exports.queries = [
               }
               {
                 code: "S2"
-                title: "Documentation"
+                title: "Professional Details"
                 index: 1
                 templateElementsUsingId: {
                   create: [
                     {
-                      code: "orgHeader"
-                      elementTypePluginCode: "textInfo"
-                      index: 5
-                      title: "Organisation Header"
-                      category: INFORMATION
-                      parameters: {
-                        text: {
-                          operator: "stringSubstitution"
-                          children: [
-                            "### %1\\n\\n### %2"
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.S1NameLao.text"]
-                            }
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.S1NameEng.text"]
-                            }
-                          ]
-                        }
-                      }
-                    }
-                    {
-                      code: "logoShow"
-                      index: 6
-                      title: "Show uploaded logo"
-                      elementTypePluginCode: "imageDisplay"
-                      category: INFORMATION
-                      parameters: {
-                        url: {
-                          operator: "+"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: ["applicationData.config.serverREST"]
-                            }
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.logo.files.fileUrl"]
-                            }
-                          ]
-                        }
-                        size: "tiny"
-                        alignment: "center"
-                        altText: "Organisation logo"
-                      }
-                    }
-                    {
-                      code: "docsInfo"
+                      code: "S2Intro"
                       index: 10
-                      title: "Documentation Header"
+                      title: "Intro Section 2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
+                      helpText: "The following questions are regarding the professional qualifications and experience of the **individual** who will primarily act on the company's behalf"
                       parameters: {
-                        text: "In this section, you are required to upload documentation. The following items are required:\\n\\n  - **LMMD02** – CV of applicant with recent (max 1 year) photo\\n- **LMMD04** – Certificate of current residence with photo (max 3 months)\\n- **LMMD08** – Letter from previous employers documenting at least 3 years professional experience (for private sector must be certified by provincial or capital level)\\n- **LMMD09** – Documentation showing resignation from previous employment (for private sector must be certified by provincial or capital level)\\n- **LMMD10** – Map of location of company\\n- **LMMD14** – Copy of business licence issued by Ministry of Commerce\\n- **LMMD16** – Company/manufacturer profile (including site master file and GMP certification where applicable) describing origin of products, staff and qualifications, facilities and equipment, business experience, business development plan"
+                        title: "## Professional details"
+                        text: "To-do: show Users name here with look-up"
                         style: "info"
                       }
                     }
+                    {
+                      code: "profID"
+                      index: 20
+                      title: "Professional ID"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Professional ID number"
+                        description: "_TO-DO: Pre-populate with existing_"
+                      }
+                    }
+                    {
+                      code: "expList"
+                      index: 30
+                      title: "Experience list"
+                      elementTypePluginCode: "listBuilder"
+                      category: QUESTION
+                      parameters: {
+                        label: "Professional experience"
+                        description: "Please create a list outlining your professional experience"
+                        createModalButtonText: "Add role"
+                        modalText: "Please enter details for **one** previous role"
+                        displayType: {
+                          operator: "objectProperties"
+                          children: ["responses.listDisplay.text"]
+                        }
+                        displayFormat: {
+                          title: "\${PEname}"
+                          subtitle: "\${PEtype}  \\n\${PEorgTel} \${PEorgEmail}"
+                          description: "**Role**: \${PErole}  \\n\${PEfrom} – \${PEto}"
+                        }
+                        inputFields: [
+                          {
+                            code: "PEtype"
+                            title: "Type of role"
+                            elementTypePluginCode: "radioChoice"
+                            category: QUESTION
+                            parameters: {
+                              label: "Type of role"
+                              options: ["Government", "Private Sector"]
+                              display: "inline"
+                            }
+                          }
+                          {
+                            code: "PEname"
+                            title: "Org name"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "Name of institution or company"
+                              maxLength: 120
+                            }
+                          }
+                          {
+                            code: "PEorgTel"
+                            title: "Org telephone"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            isRequired: false
+                            parameters: {
+                              label: "Telephone"
+                              maxLength: 120
+                            }
+                            validation: {
+                              operator: "REGEX"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.thisResponse"]
+                                }
+                                "^[0-9()-]+$"
+                              ]
+                            }
+                            validationMessage: "Not a valid phone number"
+                          }
+                          {
+                            code: "PEorgEmail"
+                            title: "Org email"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            isRequired: false
+                            parameters: {
+                              label: "Email"
+                              maxLength: 120
+                            }
+                            validation: {
+                              operator: "REGEX"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.thisResponse"]
+                                }
+                                {
+                                  value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                                }
+                              ]
+                            }
+                            validationMessage: "Not a valid email address"
+                          }
+                          {
+                            code: "PErole"
+                            title: "Role"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "Your role"
+                              maxLength: 120
+                            }
+                          }
+                          {
+                            code: "PEfrom"
+                            title: "From"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "From"
+                              maxLength: 120
+                              maxWidth: 200
+                            }
+                          }
+                          {
+                            code: "PEto"
+                            title: "To"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "To"
+                              maxLength: 120
+                              maxWidth: 200
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+              {
+                code: "S3"
+                title: "Documentation"
+                index: 2
+                templateElementsUsingId: {
+                  create: [ 
+                    {
+                      code: "S3Intro"
+                      index: 10
+                      title: "Intro Section 3"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        text: "In this section, you are required to upload documentation. The following items are required:\\n\\n  - **LMMD02** – CV of applicant with recent (max 1 year) photo\\n- **LMMD03** – Medical Certificate (max 3 months)\\n- **LMMD04** – Certificate of current residence with photo (max 3 months)\\n- **LMMD05** – Recent (max 1 year) photo\\n- **LMMD06** – Certificate of education level\\n- **LMMD07** – Criminal record \\"number 3\\"\\n- **LMMD08** – Letter from previous employers documenting at least 3 years professional experience (for private sector must be certified by provincial or capital level)\\n- **LMMD09** – Documentation showing resignation from previous employment (for private sector must be certified by provincial or capital level)\\n- **LMMD10** – Map of location of company\\n- **LMMD14** – Copy of business licence issued by Ministry of Commerce\\n- **LMMD16** – Company/manufacturer profile (including site master file and GMP certification where applicable) describing origin of products, staff and qualifications, facilities and equipment, business experience, business development plan"
+                        style: "info"
+                      }
+                    }               
                     {
                       code: "PB2"
                       index: 20
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
-                    }
-                    {
-                      code: "regoDoc"
-                      index: 30
-                      title: "Registration upload"
-                      elementTypePluginCode: "fileUpload"
-                      helpText: "Certification from your country's registration body is required."
-                      category: QUESTION
-                      isRequired: true
-                      parameters: {
-                        label: "Please provide proof of your organisation registration"
-                        description: "Allowed formats: .pdf, .doc, .jpg, .png"
-                        fileCountLimit: 1
-                        fileExtensions: [
-                          "jpg"
-                          "jpeg"
-                          "png"
-                          "pdf"
-                          "doc"
-                          "docx"
-                        ]
-                        fileSizeLimit: 5000
-                      }
-                    }
-                    {
-                      code: "otherDoc"
-                      index: 40
-                      title: "Other documentation upload"
-                      elementTypePluginCode: "fileUpload"
-                      helpText: "Examples might include import permits."
-                      category: QUESTION
-                      isRequired: false
-                      parameters: {
-                        label: "Please provide any other documentation pertinent to your organisation's activities"
-                        description: "Allowed formats: .pdf, .doc, .jpg, .png"
-                        fileExtensions: [
-                          "jpg"
-                          "jpeg"
-                          "png"
-                          "pdf"
-                          "doc"
-                          "docx"
-                        ]
-                        fileSizeLimit: 5000
-                      }
-                    }
+                    }   
                   ]
                 }
               }
