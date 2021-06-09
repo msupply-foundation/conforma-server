@@ -743,7 +743,34 @@ class PostgresDB {
       throw err
     }
   }
+
+  public getDatabaseInfo: GetDatabaseInfo = async (tableName = '%') => {
+    try {
+      const result = await this.query({
+        text: 'SELECT * FROM schema_columns where table_name like $1',
+        values: [tableName],
+      })
+      const responses = result.rows as schema_column[]
+      return responses
+    } catch (err) {
+      console.log(err.message)
+      throw new Error('Problem getting database info')
+    }
+  }
 }
+
+type schema_column = {
+  table_name: string
+  table_type: 'BASE TABLE' | 'VIEW'
+  column_name: string
+  is_nullable: 'YES' | 'NO'
+  is_generated: 'ALWAYS' | 'NEVER'
+  data_type: 'USER-DEFINED' | 'jsonb' | string // only interested in USER-DEFINED (enum) and jsonb
+  constraint_type: 'PRIMARY KEY' | 'FOREIGN KEY' | 'UNIQUE' | null
+  fk_to_table_name: string | null
+  fk_to_column_name: string | null
+}
+type GetDatabaseInfo = (tableName?: string) => Promise<schema_column[]>
 
 const postgressDBInstance = PostgresDB.Instance
 export default postgressDBInstance
