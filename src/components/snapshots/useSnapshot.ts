@@ -1,13 +1,13 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
-import { ExportAndImportOptions, SnapshotOperation } from './types'
-import importFromJson from './importFromJson'
 import config from '../../config.json'
 import path from 'path'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
 import updateRowPolicies from '../../../database/updateRowPolicies'
+import { SnapshotOperation, ExportAndImportOptions } from '../exportAndImport/types'
+import importFromJson from '../exportAndImport/importFromJson'
 
 import {
   SNAPSHOT_SUBFOLDER,

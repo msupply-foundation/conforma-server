@@ -1,14 +1,15 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
-import { ExportAndImportOptions, SnapshotOperation } from './types'
+import { ExportAndImportOptions, SnapshotOperation } from '../exportAndImport/types'
 import config from '../../config.json'
 import path from 'path'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import { execSync } from 'child_process'
 import rimraf from 'rimraf'
-import getRecordsAsObject from './exportToJson'
+import getRecordsAsObject from '../exportAndImport/exportToJson'
 import { promisify } from 'util'
 import zipper from 'adm-zip'
+import pgDiffConfig from './pgDiffConfig.json'
 import {
   SNAPSHOT_SUBFOLDER,
   OPTIONS_SUBFOLDER,
@@ -99,14 +100,6 @@ const getScheamDiff = async (newSnapshotFolder: string) => {
   execSync('./database/initialise_database.sh tmf_app_manager_temp', { cwd: rootFolder })
 
   // Changing pgDiff configuration output to new snapshot directory
-  const pgDiffConfigRaw = await fs.readFile(
-    path.join(getAppEntryPointDir(), config.databaseFolder, `${PG_DIFF_CONFIG_FILE_NAME}.json`),
-    {
-      encoding: 'utf-8',
-    }
-  )
-
-  const pgDiffConfig = JSON.parse(pgDiffConfigRaw)
   pgDiffConfig.development.compareOptions.outputDirectory = newSnapshotFolder
 
   await fs.writeFile(
