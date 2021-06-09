@@ -46,12 +46,21 @@ exports.queries = [
                         ]
                       }
                       validationMessage: "First name must not be blank"
+                      defaultValue: {
+                        operator: "buildObject"
+                        properties: [
+                          {
+                            key: "text"
+                            value: {
+                              operator: "objectProperties"
+                              children: ["currentUser.firstName"]
+                            }
+                          }
+                        ]
+                      }
+      
                       parameters: {
                         label: "First Name"
-                        default: {
-                          operator: "objectProperties"
-                          children: ["currentUser.firstName"]
-                        }
                       }
                     }
                     {
@@ -60,12 +69,20 @@ exports.queries = [
                       title: "Last Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      defaultValue: {
+                        operator: "buildObject"
+                        properties: [
+                          {
+                            key: "text"
+                            value: {
+                              operator: "objectProperties"
+                              children: ["currentUser.lastName"]
+                            }
+                          }
+                        ]
+                      }
                       parameters: {
                         label: "Last Name"
-                        default: {
-                          operator: "objectProperties"
-                          children: ["currentUser.lastName"]
-                        }
                       }
                     }
                     {
@@ -74,6 +91,18 @@ exports.queries = [
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      defaultValue: {
+                        operator: "buildObject"
+                        properties: [
+                          {
+                            key: "text"
+                            value: {
+                              operator: "objectProperties"
+                              children: ["currentUser.username"]
+                            }
+                          }
+                        ]
+                      }
                       validation: {
                         # Must be unique OR same as current
                         operator: "OR"
@@ -109,10 +138,6 @@ exports.queries = [
                       validationMessage: "Username must be unique"
                       parameters: {
                         label: "Select a username"
-                        default: {
-                          operator: "objectProperties"
-                          children: ["currentUser.username"]
-                        }
                       }
                     }
                     {
@@ -121,6 +146,18 @@ exports.queries = [
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      defaultValue: {
+                        operator: "buildObject"
+                        properties: [
+                          {
+                            key: "text"
+                            value: {
+                              operator: "objectProperties"
+                              children: ["currentUser.email"]
+                            }
+                          }
+                        ]
+                      }
                       validation: {
                         operator: "REGEX"
                         children: [
@@ -136,10 +173,6 @@ exports.queries = [
                       validationMessage: "Not a valid email address"
                       parameters: {
                         label: "Email"
-                        default: {
-                          operator: "objectProperties"
-                          children: ["currentUser.email"]
-                        }
                       }
                     }
                     {
@@ -213,9 +246,16 @@ exports.queries = [
                       elementTypePluginCode: "password"
                       category: QUESTION
                       visibilityCondition: {
-                        operator: "objectProperties"
-                        children: ["responses.currentPassword.isValid"]
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.currentPassword.isValid", false]
+                          }
+                          true
+                        ]
                       }
+                      
                       parameters: {
                         label: "New Password"
                         description: "Please select a new password"

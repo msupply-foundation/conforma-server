@@ -314,6 +314,14 @@ test('Test unresolved object with Null fallback', () => {
   })
 })
 
+test('Test unresolved object with Null fallback, deep query', () => {
+  return evaluateExpression(testData.objectPropertyUnresolvedDeepWithNullFallback, {
+    objects: { application: testData.application },
+  }).then((result: any) => {
+    expect(result).toBe(null)
+  })
+})
+
 // String substitution
 
 test('Simple string substitution', () => {
