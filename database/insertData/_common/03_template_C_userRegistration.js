@@ -27,7 +27,7 @@ exports.queries = [
                     {
                       code: "S1Page1"
                       index: 10
-                      title: "Intro Section 1 - page 1"
+                      title: "Intro Section 1"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
@@ -43,17 +43,6 @@ exports.queries = [
                       category: QUESTION
                       helpText: "### User Registration\\n\\nPlease provide accurate details to **register** for a user account on our system."
                       parameters: { label: "First Name" }
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: ".+" }
-                        ]
-                      }
-                      validationMessage: "First name must not be blank"
                     }
                     {
                       code: "Q2LastName"
@@ -62,17 +51,6 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: { label: "Last Name" }
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: ".+" }
-                        ]
-                      }
-                      validationMessage: "Last name must not be blank"
                     }
                     {
                       code: "Q3Username"
@@ -81,30 +59,40 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       validation: {
-                        operator: "API"
+                        operator: "AND"
                         children: [
-                          "http://localhost:8080/check-unique"
-                          ["type", "value"]
-                          "username"
                           {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
+                            operator: "API"
+                            children: [
+                              "http://localhost:8080/check-unique"
+                              ["type", "value"]
+                              "username"
+                              {
+                                operator: "objectProperties"
+                                children: ["responses.thisResponse"]
+                              }
+                              "unique"
+                            ]
                           }
-                          "unique"
+                          {
+                            operator: "="
+                            children: [
+                              {
+                                operator: "REGEX"
+                                children: [
+                                  {
+                                    operator: "objectProperties"
+                                    children: ["responses.thisResponse"]
+                                  }
+                                  "^[a-zA-Z0-9_.-]{5,50}$"
+                                ]
+                              }
+                              true
+                            ]
+                          }
                         ]
-                        # TODO - Also check for valid username
-#                       {
-#                         operator: "REGEX"
-#                         children: [
-#                           {
-#                             operator: "objectProperties"
-#                             children: ["responses.thisResponse]
-#                           }
-#                           "^[a-zA-Z0-9_.-]*$"
-#                         ]
-#                       }
                       }
-                      validationMessage: "Username already choosen"
+                      validationMessage: "Username already choosen or invalid. Usernames should have no spaces and size 5-50 characters of letters, numbers and - . or _"
                       parameters: { label: "Select a username" }
                     }
                     {
