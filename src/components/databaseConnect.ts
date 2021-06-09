@@ -128,4 +128,6 @@ class DBConnect {
 }
 
 const dbConnectInstance = DBConnect.Instance
+
+export type DBConnectType = typeof DBConnect.Instance
 export default dbConnectInstance

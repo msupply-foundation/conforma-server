@@ -1,48 +1,48 @@
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
-import databaseMethods from './databaseMethods'
+import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
+import { DBConnectType } from '../../../src/components/databaseConnect'
 
-const modifyRecord: ActionPluginType = async ({ parameters, DBConnect }) => {
+const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
   const { tableName, matchField, matchValue, ...record } = parameters
 
   const fieldToMatch = matchField ?? 'id'
   const valueToMatch = matchValue ?? record[fieldToMatch]
+  const applicationId = applicationData?.applicationId || 0
 
   // Don't update fields with NULL
   for (const key in record) {
     if (record[key] === null) delete record[key]
   }
 
-  const isUpdate = await db.doesRecordExist(tableName, fieldToMatch, valueToMatch)
-
-  let result: any = {}
   try {
+    await createOrUpdateTable(DBConnect, db, tableName, record)
+
+    let recordId = await db.getRecordId(tableName, fieldToMatch, valueToMatch)
+    const isUpdate = recordId !== 0
+
+    let result: any = {}
     if (isUpdate) {
       // UPDATE
       console.log(`Updating ${tableName} record: ${JSON.stringify(record, null, 2)}`)
-      result = await db.updateRecord(tableName, fieldToMatch, valueToMatch, record)
+      result = await db.updateRecord(tableName, recordId, record)
     } else {
       // CREATE NEW
       console.log(`Creating ${tableName} record: ${JSON.stringify(record, null, 2)}`)
       result = await db.createRecord(tableName, record)
+      recordId = result.recordId
     }
-    if (result.success) {
-      console.log(
-        `${isUpdate ? 'Updated' : 'Created'} ${tableName} record, ID: `,
-        result[tableName].id
-      )
-      return {
-        status: ActionQueueStatus.Success,
-        error_log: '',
-        output: { [tableName]: result[tableName] },
-      }
-    } else {
-      console.log('Problem creating or updating record')
-      return {
-        status: ActionQueueStatus.Fail,
-        error_log: 'Problem creating or updating record',
-      }
+
+    await db.createJoinTableAndRecord(tableName, applicationId, recordId)
+
+    if (!result.success) throw new Error('Problem creating or updating record')
+
+    console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableName} record, ID: `, result.recordId)
+    return {
+      status: ActionQueueStatus.Success,
+      error_log: '',
+      output: { [tableName]: result[tableName] },
     }
   } catch (error) {
     console.log(error.message)
@@ -51,6 +51,23 @@ const modifyRecord: ActionPluginType = async ({ parameters, DBConnect }) => {
       error_log: error.message,
     }
   }
+}
+
+const createOrUpdateTable = async (
+  DBConnect: DBConnectType,
+  db: DatabaseMethodsType,
+  tableName: string,
+  record: { [key: string]: object | string }
+) => {
+  const tableAndFields = await DBConnect.getDatabaseInfo(tableName)
+
+  if (tableAndFields.length === 0) await db.createTable(tableName)
+
+  const fieldsToCreate = Object.entries(record)
+    .filter(([fieldName]) => !tableAndFields.find(({ column_name }) => column_name === fieldName))
+    .map(([fieldName, value]) => ({ fieldName, fieldType: typeof value }))
+
+  if (fieldsToCreate.length > 0) await db.createFields(tableName, fieldsToCreate)
 }
 
 export default modifyRecord
