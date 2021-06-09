@@ -86,7 +86,7 @@ exports.queries = [
                 isTextColumn: true
                 parameters: {
                   url: {
-                    operator: "CONCAT"
+                    operator: "+"
                     children: [
                       {
                         operator: "objectProperties"

@@ -347,13 +347,15 @@ Using custom object shape for configuration vs children array
 - Input format
 
 ```
-properites: [{
+properties: [{
   key: {evaluation or value}
   value: {evaluation or value}
-}, {more key values}
+},
+  ... { more key-values }
+]
 ```
 
-- Output evaluated object, empty object by default. If value or key evaluates to undefined it wont' be present in the output
+- Output evaluated object, empty object by default. If value or key evaluates to `undefined`, the property will be omitted from the output.
 
 **See test in {evaluator module}/src/resolvers/buildObject.test.ts for further examples**
 
@@ -384,19 +386,21 @@ Input
 ```
 {
   operator: "buildObject",
-  properties: [{
-    key: "someKey",
-    value: "someValue"
-  },{
-    key: {
-      operator: "+",
-      children: ["evaluted", "key"]
+  properties: [
+    {
+      key: "someKey",
+      value: "someValue"
     },
-    value: {
-      operator: "AND",
-      children: [true, false]
-     },
-   }
+    {
+      key: {
+        operator: "+",
+        children: ["evaluated", "key"]
+      },
+      value: {
+        operator: "AND",
+        children: [true, false]
+       },
+     }
   ]
 }
 ```
