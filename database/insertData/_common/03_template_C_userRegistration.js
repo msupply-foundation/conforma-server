@@ -280,7 +280,7 @@ exports.queries = [
                       parameters: { label: "Village" }
                     }
                     {
-                      code: "Q14District"
+                      code: "Q13District"
                       index: 200
                       title: "District"
                       elementTypePluginCode: "shortText"
@@ -471,7 +471,7 @@ exports.queries = [
                   }
                   current_address_district: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q14District.text", null]
+                    children: ["applicationData.responses.Q13District.text", null]
                   }
                   education: {
                     operator: "objectProperties"
