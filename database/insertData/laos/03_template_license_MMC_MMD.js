@@ -16,7 +16,7 @@ exports.queries = [
             name: "Company License for Modern medicines or Medical devices"
             isLinear: false # CHANGE THIS
             status: AVAILABLE
-            startMessage: "## Apply for a company license under one of the following options:\\n - MMC\\n - MMD\\n - MDC\\n - MDM\\n - WSL\\n - RIT\\n\\n**TODO**: Add description for each type of application \\nYou will be required to upload the following documents as part of this  process:\\n- LMMD01: Letter of request \\n- LMMD12: Letter from mother-company authorizing establishment of branch\\n- LMMD15: Site inspection report by F&D unit\\n- LMMD16: Company/manufacturer profile (including site master file and GMP certification where applicable)"
+            startMessage: "## Apply for a company license under one of the following options:\\n - MMC\\n - MMD\\n - MDC\\n - MDM\\n - WSL\\n - RIT\\n\\n**TODO**: Add description for each type of application\\n\\nYou will be required to upload the following documents as part of this  process:\\n- LMMD01: Letter of request \\n- LMMD12: Letter from mother-company authorizing establishment of branch\\n- LMMD15: Site inspection report by F&D unit\\n- LMMD16: Company/manufacturer profile (including site master file and GMP certification where applicable)"
             versionTimestamp: "NOW()"
             templateSectionsUsingId: {
               create: [
@@ -29,7 +29,7 @@ exports.queries = [
                       {
                         code: "S1Intro"
                         index: 0
-                        title: "Intro Section 1"
+                        title: "Section 1 - Applicant details"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
                         helpText: "The following questions are automatically filled with existing information about **Applicant**"
@@ -215,10 +215,10 @@ exports.queries = [
                       {
                         code: "S1Page2"
                         index: 70
-                        title: "Section 1 - page 2"
+                        title: "Section 1 - Place of birth"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        parameters: { title: "## Place of birth", style: "info" }
+                        parameters: { title: "## Place of birth", style: "basic" }
                       }
                       {
                         code: "Q6Vilage"
@@ -227,6 +227,7 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
+                        isRequired: false
                         parameters: { label: "Vilage" }
                         defaultValue: {
                           operator: "buildObject",
@@ -261,6 +262,7 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
+                        isRequired: false
                         parameters: { label: "Province" }
                         defaultValue: {
                           operator: "buildObject",
@@ -295,6 +297,7 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
+                        isRequired: false
                         parameters: { label: "District" }
                         defaultValue: {
                           operator: "buildObject",
@@ -332,10 +335,10 @@ exports.queries = [
                       {
                         code: "S1Page3"
                         index: 110
-                        title: "Section 1 - page 3"
+                        title: "Section 1 - Current address"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        parameters: { title: "## Current address", style: "info" }
+                        parameters: { title: "## Current address", style: "basic" }
                       }
                       {
                         code: "Q9Vilage"
@@ -344,6 +347,7 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
+                        isRequired: false
                         parameters: { label: "Vilage" }
                         defaultValue: {
                           operator: "buildObject",
@@ -378,6 +382,7 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
+                        isRequired: false
                         parameters: { label: "Province" }
                         defaultValue: {
                           operator: "buildObject",
@@ -412,6 +417,7 @@ exports.queries = [
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
+                        isRequired: false
                         parameters: { label: "District" }
                         defaultValue: {
                           operator: "buildObject",
@@ -449,10 +455,10 @@ exports.queries = [
                       {
                         code: "S1Page4"
                         index: 160
-                        title: "Section 1 - page 4"
+                        title: "Section 1 - Education"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        parameters: { title: "## Education", style: "info" }
+                        parameters: { title: "## Education", style: "basic" }
                       }
                       {
                         code: "Q12EducationLevel"
@@ -463,8 +469,8 @@ exports.queries = [
                         isEditable: false
                         parameters: {
                           label: "Education Level"
-                          options: ["Secondary", "University"]
                           layout: "inline"
+                          options: ["Secondary", "University"]
                         }
                         defaultValue: {
                           operator: "graphQL",
@@ -522,7 +528,7 @@ exports.queries = [
                       }
                       {
                         code: "Q14EducationHistory"
-                        index: 7
+                        index: 190
                         title: "Education List"
                         elementTypePluginCode: "listBuilder"
                         category: QUESTION
@@ -571,7 +577,7 @@ exports.queries = [
                       {
                         code: "S2Intro"
                         index: 10
-                        title: "Intro Section 1"
+                        title: "Section 2 - Professional details"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
                         helpText: "The following questions are automatically filled with existing information about **Applicant**"
@@ -580,7 +586,162 @@ exports.queries = [
                           style: "basic"
                         }
                       }
-                    ]
+                      {
+                        code: "Q1ProfessionalExperience"
+                        index: 20
+                        title: "Professional experience list"
+                        elementTypePluginCode: "listBuilder"
+                        category: QUESTION
+                        isEditable: false
+                        parameters: {
+                          label: "Professional experience"
+                          defaultValue: {
+                            operator: "graphQL",
+                            children: [
+                              "query getUser($id: Int!){user(id: $id) {professionalExperienceList}}",
+                              "",
+                              [
+                                "id"
+                              ],
+                              {
+                                operator: "objectProperties",
+                                children: [
+                                  "currentUser.userId"
+                                ]
+                              },
+                              "user.professionalExperienceList"
+                            ]
+                          }
+#                         createModalButtonText: "Add professional experience"
+#                         modalText: "## Professional experienve entry \\n\\nPlease enter details below:"
+#                         displayType: "list"
+#                         displayFormat: {
+#                           title: "\${LB2}"
+#                           subtitle: "**From**: \${LB3} **to**: \${LB4}"
+#                           description: "\${LB5}"
+#                         }
+#                         inputFields: [
+#                           {
+#                             code: "LB1"
+#                             title: "Type of institution"
+#                             elementTypePluginCode: "radioChoice"
+#                             category: QUESTION
+#                             parameters: { 
+#                               label: "Select type of institution"
+#                               layout: "inline"
+#                               options: ["Governament","Private sector"]
+#                             }
+#                             isRequired: true
+#                           }
+#                           {
+#                             code: "LB2"
+#                             title: "Name of institution"
+#                             elementTypePluginCode: "shortText"
+#                             category: QUESTION
+#                             parameters: { label: "Name of institution" }
+#                             isRequired: true
+#                           }
+#                           {
+#                             code: "LB3"
+#                             title: "Experience start date"
+#                             elementTypePluginCode: "shortText"
+#                             category: QUESTION
+#                             parameters: {
+#                               label: "From"
+#                               maxWidth: 150
+#                             }
+#                             isRequired: true
+#                             validation: {
+#                               operator: "REGEX"
+#                               children: [
+#                                 {
+#                                   operator: "objectProperties"
+#                                   children: ["responses.thisResponse"]
+#                                 }
+#                                 "^(0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$"
+#                               ]
+#                             }
+#                             validationMessage: "Format expected MM/YYYY"
+#                           }
+#                           {
+#                             code: "LB4"
+#                             title: "Experience finish date"
+#                             elementTypePluginCode: "shortText"
+#                             category: QUESTION
+#                             parameters: {
+#                               label: "To"
+#                               maxWidth: 150
+#                             }
+#                             isRequired: false
+#                             validation: {
+#                               operator: "REGEX"
+#                               children: [
+#                                 {
+#                                   operator: "objectProperties"
+#                                   children: ["responses.thisResponse"]
+#                                 }
+#                                 "^(0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$"
+#                               ]
+#                             }
+#                             validationMessage: "Format expected MM/YYYY. Can be left blank if current."
+#                           }
+#                           {
+#                             code: "LB5"
+#                             title: "Experience role"
+#                             elementTypePluginCode: "shortText"
+#                             category: QUESTION
+#                             parameters: { label: "Role" }
+#                             isRequired: true
+#                           }
+#                           {
+#                             code: "LB6"
+#                             title: "Telephone"
+#                             elementTypePluginCode: "shortText"
+#                             category: QUESTION
+#                             parameters: {
+#                               label: "Telephone"
+#                               maxWidth: 200
+#                             }
+#                             isRequired: true
+#                             validation: {
+#                               operator: "REGEX",
+#                               children: [
+#                                 {
+#                                   operator: "objectProperties",
+#                                   children: [
+#                                     "responses.thisResponse"
+#                                   ]
+#                                 },
+#                                 "^[0-9.]+$"
+#                               ]
+#                             }
+#                             validationMessage: "Must be a number"
+#                           }
+#                           {
+#                             code: "LB7"
+#                             title: "Email"
+#                             elementTypePluginCode: "shortText"
+#                             category: QUESTION
+#                             parameters: { label: "Email" }
+#                             isRequired: true
+#                             validation: {
+#                               operator: "REGEX"
+#                               children: [
+#                                 {
+#                                   operator: "objectProperties"
+#                                   children: ["responses.thisResponse"]
+#                                 }
+#                                 {
+#                                   value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+#                                 }
+#                               ]
+#                             }
+#                             validationMessage: "Not a valid email address"
+#                           }
+#                         ]
+                       }
+                     }
+                   ]
                   }
                 }
                 {
@@ -592,14 +753,11 @@ exports.queries = [
                       {
                         code: "S3Intro"
                         index: 10
-                        title: "Intro Section 1"
+                        title: "Section 3 - "
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
                         helpText: "The following questions are automatically filled with existing information about **Company**"
-                        parameters: {
-                          title: "## Company details"
-                          style: "basic"
-                        }
+                        parameters: { title: "## Company details", style: "basic" }
                       }
                     ]
                   }
@@ -613,14 +771,29 @@ exports.queries = [
                       {
                         code: "S4Intro"
                         index: 10
-                        title: "Intro Section 1"
+                        title: "Section 4"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
                         parameters: { title: "## License details", style: "basic" }
                       }
                       {
-                        code: "Q1LicenseType"
+                        code: "Q1ProductType"
                         index: 20
+                        title: "Product type"
+                        elementTypePluginCode: "radioChoice"
+                        category: QUESTION
+                        parameters: {
+                          label: "Type of product"
+                          layout: "inline"
+                          options: [
+                            "modern medicines"
+                            "medical devices"
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q2LicenseType"
+                        index: 30
                         title: "License type"
                         elementTypePluginCode: "radioChoice"
                         category: QUESTION
@@ -635,21 +808,6 @@ exports.queries = [
                           ]
                         }
                       }
-                      {
-                        code: "Q2ProductType"
-                        index: 30
-                        title: "Product type"
-                        elementTypePluginCode: "radioChoice"
-                        category: QUESTION
-                        parameters: {
-                          label: "Type of product"
-                          layout: "inline"
-                          options: [
-                            "modern medicines"
-                            "medical devices"
-                          ]
-                        }
-                      }
                     ]
                   }
                 }
@@ -660,16 +818,8 @@ exports.queries = [
                   templateElementsUsingId: {
                     create: [
                       {
-                        code: "S5Intro"
-                        index: 10
-                        title: "Intro Section 5"
-                        elementTypePluginCode: "textInfo"
-                        category: INFORMATION
-                        parameters: { title: "## Files updloads", style: "basic" }
-                      }
-                      {
                         code: "LMMD01"
-                        index: 20
+                        index: 10
                         title: "File upload LMMD01"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
@@ -683,14 +833,14 @@ exports.queries = [
                       }
                       {
                         code: "S5PB1"
-                        index: 40
+                        index: 20
                         title: "Page Break"
                         elementTypePluginCode: "pageBreak"
                         category: INFORMATION
                       }
                       {
                         code: "LMMD12"
-                        index: 70
+                        index: 30
                         title: "File upload LMMD01"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
@@ -704,14 +854,14 @@ exports.queries = [
                       }
                       {
                         code: "S5PB2"
-                        index: 80
+                        index: 40
                         title: "Page Break"
                         elementTypePluginCode: "pageBreak"
                         category: INFORMATION
                       }
                       {
                         code: "LMMD15"
-                        index: 100
+                        index: 50
                         title: "File upload LMMD15"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
@@ -724,14 +874,14 @@ exports.queries = [
                       }
                       {
                         code: "S5PB3"
-                        index: 110
+                        index: 60
                         title: "Page Break"
                         elementTypePluginCode: "pageBreak"
                         category: INFORMATION
                       }
                       {
                         code: "LMMD16"
-                        index: 120
+                        index: 70
                         title: "File upload LMMD15"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
