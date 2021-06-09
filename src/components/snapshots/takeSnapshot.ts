@@ -1,7 +1,7 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
 import { ExportAndImportOptions, SnapshotOperation } from '../exportAndImport/types'
-import config from '../../config.json'
+import config from '../../config'
 import path from 'path'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import { execSync } from 'child_process'

@@ -4,7 +4,7 @@ import util from 'util'
 import { pipeline } from 'stream'
 import { nanoid } from 'nanoid'
 import { getAppEntryPointDir } from '../utilityFunctions'
-import * as config from '../../config.json'
+import config from '../../config'
 import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
 

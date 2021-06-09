@@ -1,6 +1,6 @@
 import { processTrigger, executeAction } from './triggersAndActions'
 import { actionLibrary } from './pluginsConnect'
-import * as config from '../config.json'
+import config from '../config'
 import { Client, Pool, QueryResult } from 'pg'
 import {
   ActionInTemplate,

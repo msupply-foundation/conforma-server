@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import config from '../src/config.json'
+import config from '../src/config'
 
 async function updateRowPolicies() {
   console.log('updating row level policies ... ')

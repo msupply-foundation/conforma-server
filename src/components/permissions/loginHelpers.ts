@@ -1,5 +1,5 @@
 import databaseConnect from '../databaseConnect'
-import config from '../../config.json'
+import config from '../../config'
 import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
 import { nanoid } from 'nanoid'

@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
-import config from '../../config.json'
+import config from '../../config'
 import path from 'path'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import { execSync } from 'child_process'
