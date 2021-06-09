@@ -28,7 +28,7 @@ export interface IParameters {
 export interface OperatorNode {
   operator: Operator
   type?: OutputType
-  children: Array<OperatorNode | ValueNode>
+  children?: Array<EvaluatorNode>
   value?: ValueNode // deprecated
 }
 
@@ -52,3 +52,14 @@ type Operator =
   | 'API'
   | 'pgSQL'
   | 'graphQL'
+
+export type EvaluatorNode = OperatorNode | ValueNode
+
+export type EvaluateExpression = (
+  inputQuery: EvaluatorNode,
+  params?: IParameters
+) => Promise<ValueNode>
+
+export type EvaluateExpressionInstance = (inputQuery: EvaluatorNode) => Promise<ValueNode>
+
+export type IsEvaluationExpression = (expressionOrValue: EvaluatorNode) => boolean

@@ -50,6 +50,7 @@ For more complex lookups, we would hide the complexity from the user in the Temp
   - [graphQL](#graphql)
   - [GET](#get)
   - [POST](#post)
+  - [buildObject](#buildObject)
 - [Usage](#usage)
 - [Examples](#examples)
 - [To Do](#to-do)
@@ -334,6 +335,82 @@ This expression queries our `/login` endpoint to check a user's credentials, and
     '123456',
     'success'
   ],
+}
+```
+
+## buildObject
+
+Build a key/value object with evaluatable keys and values
+
+Using custom object shape for configuration vs children array
+
+- Input format
+
+```
+properties: [{
+  key: {evaluation or value}
+  value: {evaluation or value}
+},
+  ... { more key-values }
+]
+```
+
+- Output evaluated object, empty object by default. If value or key evaluates to `undefined`, the property will be omitted from the output.
+
+**See test in {evaluator module}/src/resolvers/buildObject.test.ts for further examples**
+
+**Example**:
+
+Input
+
+```
+{
+  operator: "buildObject",
+  properties: [{
+    key: "someKey",
+    value: true
+  }]
+}
+```
+
+Output
+
+```
+{
+  "someKey": true
+}
+```
+
+Input
+
+```
+{
+  operator: "buildObject",
+  properties: [
+    {
+      key: "someKey",
+      value: "someValue"
+    },
+    {
+      key: {
+        operator: "+",
+        children: ["evaluated", "key"]
+      },
+      value: {
+        operator: "AND",
+        children: [true, false]
+       },
+     }
+  ]
+}
+```
+
+Output
+
+```
+{
+  "someKey": "someValue",
+  "evaluatedKey": false
 }
 ```
 
