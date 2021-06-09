@@ -953,7 +953,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["outputCumulative.organisation.name"]
                   }
-                  permissionNames: ["reviewJoinOrg", "applyOrgLicence"]
+                  permissionNames: ["reviewJoinOrg", "applyOrgLicense"]
                 }
               }
             ]
