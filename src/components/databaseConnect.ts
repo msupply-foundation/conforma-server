@@ -118,6 +118,8 @@ class DBConnect {
 
   public getAllReviewResponses = PostgresDB.getAllReviewResponses
 
+  public getDatabaseInfo = PostgresDB.getDatabaseInfo
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
@@ -126,4 +128,6 @@ class DBConnect {
 }
 
 const dbConnectInstance = DBConnect.Instance
+
+export type DBConnectType = typeof DBConnect.Instance
 export default dbConnectInstance

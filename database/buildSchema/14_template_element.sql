@@ -32,6 +32,7 @@ CREATE TABLE public.template_element (
     is_required jsonb DEFAULT 'true' ::jsonb,
     is_editable jsonb DEFAULT 'true' ::jsonb,
     validation jsonb DEFAULT 'true' ::jsonb,
+    default_value jsonb,
     validation_message varchar,
     help_text varchar,
     parameters jsonb,
