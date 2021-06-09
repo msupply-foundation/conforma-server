@@ -1,9 +1,6 @@
-import takeSnapshot from '../src/components/exportAndImport/takeSnapshot'
-import useSnapshot from '../src/components/exportAndImport/useSnapshot'
-import {
-  DEFAULT_SNAPSHOT_NAME,
-  DEFAULT_OPTIONS_NAME,
-} from '../src/components/exportAndImport/constants'
+import takeSnapshot from '../src/components/snapshots/takeSnapshot'
+import useSnapshot from '../src/components/snapshots/useSnapshot'
+import { DEFAULT_SNAPSHOT_NAME, DEFAULT_OPTIONS_NAME } from '../src/components/snapshots/constants'
 
 /* Note: this file should have the same relative path route to `database` as server (i.e. ../database) */
 
