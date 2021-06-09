@@ -16,7 +16,7 @@ exports.queries = [
             name: "Company License for Modern medicines or Medical devices"
             isLinear: false # CHANGE THIS
             status: AVAILABLE
-            startMessage: "## Apply for a company license under one of the following options:\\n - MMC\\n - MMD\\n - MDC\\n - MDM\\n - WSL\\n - RIT\\n\\n**TODO**: Add description for each type of application\\n\\nYou will be required to upload the following documents as part of this  process:\\n- LMMD01: Letter of request \\n- LMMD12: Letter from mother-company authorizing establishment of branch\\n- LMMD15: Site inspection report by F&D unit\\n- LMMD16: Company/manufacturer profile (including site master file and GMP certification where applicable)"
+            startMessage: "## Apply for a company license for:\\n Modern medicines or Medical devices.\\n\\n**You will be required to upload the following documents:**\\n- LMMD01: Letter of request \\n- LMMD12: Letter from mother-company authorizing establishment of branch\\n- LMMD15: Site inspection report by F&D unit\\n- LMMD16: Company/manufacturer profile (including site master file and GMP certification where applicable)"
             versionTimestamp: "NOW()"
             templateSectionsUsingId: {
               create: [
@@ -535,17 +535,7 @@ exports.queries = [
                         isEditable: false
                         parameters: {
                           label: "Education history"
-                          displayType: "list"
-                          visibilityCondition: {
-                            operator: "=="
-                            children: [
-                              {
-                                operator: "objectProperties"
-                                children: ["responses.Q12EducationLevel.selected"]
-                              }
-                              "University"
-                            ]
-                          }
+                          displayType: "card"
                           defaultValue: {
                             operator: "graphQL",
                             children: [
@@ -563,6 +553,16 @@ exports.queries = [
                               "user.universityHistory"
                             ]
                           }
+                        }
+                        visibilityCondition: {
+                          operator: "="
+                          children: [
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Q12EducationLevel.text"]
+                            }
+                            "University"
+                          ]
                         }
                       }
                     ]
@@ -658,7 +658,7 @@ exports.queries = [
 #                                   operator: "objectProperties"
 #                                   children: ["responses.thisResponse"]
 #                                 }
-#                                 "^(0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$"
+#                                 "^([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$"
 #                               ]
 #                             }
 #                             validationMessage: "Format expected MM/YYYY"
@@ -680,7 +680,7 @@ exports.queries = [
 #                                   operator: "objectProperties"
 #                                   children: ["responses.thisResponse"]
 #                                 }
-#                                 "^(0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d$"
+#                                 "^([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$"
 #                               ]
 #                             }
 #                             validationMessage: "Format expected MM/YYYY. Can be left blank if current."
@@ -751,13 +751,216 @@ exports.queries = [
                   templateElementsUsingId: {
                     create: [
                       {
-                        code: "S3Intro"
+                        code: "S3Page1"
                         index: 10
-                        title: "Section 3 - "
+                        title: "Section 3 - Company info (Lao)"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        helpText: "The following questions are automatically filled with existing information about **Company**"
-                        parameters: { title: "## Company details", style: "basic" }
+                        parameters: { title: "Company details", style: "basic" }
+                      }
+                      {
+                        code: "Q1CompanyNameLao"
+                        index: 20
+                        title: "Company name (Lao)"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Company name (Lao)" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {companyNameLao}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.companyNameLao"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q2CompanyNameEnglish"
+                        index: 30
+                        title: "Company name (English)"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Company name (English)" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {companyNameEnglish}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.companyNameEnglish"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q3BranchNameLao"
+                        index: 40
+                        title: "Branch name (Lao)"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Branch name (Lao)" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {branchNameLao}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.branchNameLao"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q4BranchNameEnglish"
+                        index: 50
+                        title: "Branch name (English)"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Branch name (English)" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {branchNameEnglish}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.branchNameEnglish"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q5WholesalerNameLao"
+                        index: 60
+                        title: "Wholesaler name (Lao)"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Wholesaler name (Lao)" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {wholesalerNameLao}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.wholesalerNameLao"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q6WholesalerNameEnglish"
+                        index: 70
+                        title: "Wholesaler name (English)"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Wholesaler name (English)" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {wholesalerNameEnglish}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.wholesalerNameEnglish"
+                                ]
+                              }
+                            }
+                          ]
+                        }
                       }
                     ]
                   }
@@ -769,16 +972,8 @@ exports.queries = [
                   templateElementsUsingId: {
                     create: [
                       {
-                        code: "S4Intro"
-                        index: 10
-                        title: "Section 4"
-                        elementTypePluginCode: "textInfo"
-                        category: INFORMATION
-                        parameters: { title: "## License details", style: "basic" }
-                      }
-                      {
                         code: "Q1ProductType"
-                        index: 20
+                        index: 10
                         title: "Product type"
                         elementTypePluginCode: "radioChoice"
                         category: QUESTION
@@ -793,7 +988,7 @@ exports.queries = [
                       }
                       {
                         code: "Q2LicenseType"
-                        index: 30
+                        index: 20
                         title: "License type"
                         elementTypePluginCode: "radioChoice"
                         category: QUESTION
