@@ -802,7 +802,7 @@ exports.queries = [
                 }
                 parameterQueries: {
                   tableName: "organisation"
-                  name_lao: {
+                  name: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.S1NameLao.text"]
                   }
