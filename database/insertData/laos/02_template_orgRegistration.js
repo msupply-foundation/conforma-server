@@ -15,7 +15,7 @@ exports.queries = [
           name: "Company Registration"
           isLinear: false # CHANGE THIS 
           status: AVAILABLE
-          startMessage: "## Registering a company in the system\\n\\nYou will be required to upload the following documents as part of this registration process:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"
+          startMessage: "## Registering a company in the system\\n\\nAs well as providing information about your company, you will be required to supply the following documents as part of this registration process:\\n\\n- **LMMD02** – CV of applicant with recent (max 1 year) photo\\n- **LMMD03** – Medical Certificate (max 3 months)\\n- **LMMD04** – Certificate of current residence with photo (max 3 months)\\n- **LMMD05** – Recent (max 1 year) photo\\n- **LMMD06** – Certificate of education level\\n- **LMMD07** – Criminal record \\"number 3\\"\\n- **LMMD08** – Letter from previous employers documenting at least 3 years professional experience (for private sector must be certified by provincial or capital level)\\n- **LMMD09** – Documentation showing resignation from previous employment (for private sector must be certified by provincial or capital level)\\n- **LMMD10** – Map of location of company\\n- **LMMD11** – Layout of facilities\\n- **LMMD13** – Proof of ownership of facilities or contract of rent\\n- **LMMD14** – Copy of business licence issued by Ministry of Commerce"
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -449,7 +449,7 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        text: "In this section, you are required to upload documentation. The following items are required:\\n\\n  - **LMMD02** – CV of applicant with recent (max 1 year) photo\\n- **LMMD03** – Medical Certificate (max 3 months)\\n- **LMMD04** – Certificate of current residence with photo (max 3 months)\\n- **LMMD05** – Recent (max 1 year) photo\\n- **LMMD06** – Certificate of education level\\n- **LMMD07** – Criminal record \\"number 3\\"\\n- **LMMD08** – Letter from previous employers documenting at least 3 years professional experience (for private sector must be certified by provincial or capital level)\\n- **LMMD09** – Documentation showing resignation from previous employment (for private sector must be certified by provincial or capital level)\\n- **LMMD10** – Map of location of company\\n- **LMMD14** – Copy of business licence issued by Ministry of Commerce\\n- **LMMD16** – Company/manufacturer profile (including site master file and GMP certification where applicable) describing origin of products, staff and qualifications, facilities and equipment, business experience, business development plan"
+                        text: "In this section, you are required to upload documentation. The following items are required:\\n\\n  - **LMMD02** – CV of applicant with recent (max 1 year) photo\\n- **LMMD03** – Medical Certificate (max 3 months)\\n- **LMMD04** – Certificate of current residence with photo (max 3 months)\\n- **LMMD05** – Recent (max 1 year) photo\\n- **LMMD06** – Certificate of education level\\n- **LMMD07** – Criminal record \\"number 3\\"\\n- **LMMD08** – Letter from previous employers documenting at least 3 years professional experience (for private sector must be certified by provincial or capital level)\\n- **LMMD09** – Documentation showing resignation from previous employment (for private sector must be certified by provincial or capital level)\\n- **LMMD10** – Map of location of company\\n- **LMMD11** – Layout of facilities\\n- **LMMD13** – Proof of ownership of facilities or contract of rent\\n- **LMMD14** – Copy of business licence issued by Ministry of Commerce"
                         style: "info"
                       }
                     }               
@@ -459,7 +459,184 @@ exports.queries = [
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
+                    }
+                    {
+                      code: "fileLMMD02"
+                      index: 30
+                      title: "CV upload"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      helpText: "For all uploads, files must be in **pdf**, **doc** or an **image** format, and less than 10MB each"
+                      parameters: {
+                        label: "CV"
+                        description: "Must have recent (max 1 year) photo"
+                        fileCountLimit: 2
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
+                    }
+                    {
+                      code: "fileLMMD03"
+                      index: 31
+                      title: "Medical certificate upload"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Medical certificate"
+                        description: "QUESTION: Is this for individual?"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
                     }   
+                    {
+                      code: "fileLMMD04"
+                      index: 32
+                      title: "Current residence certificate"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Certificate of current residence"
+                        description: "Must include photo (max 3 months)"
+                        fileCountLimit: 2
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
+                    }   
+                    {
+                      code: "fileLMMD05"
+                      index: 33
+                      title: "Recent Photo"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Photo"
+                        description: "Max 1 year (used for printing licence)"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf"]
+                        fileSizeLimit: 10000
+                      }
+                    }
+                    {
+                      code: "PB3"
+                      index: 40
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "fileLMMD06"
+                      index: 41
+                      title: "Education Certificate"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Certificate of education level"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
+                    }
+                    {
+                      code: "fileLMMD07"
+                      index: 42
+                      title: "Criminal Record"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Criminal record (number 3)"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
+                    }
+                    {
+                      code: "fileLMMD08"
+                      index: 43
+                      title: "Recent Photo"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Letter from previous employers documenting at least 3 years professional experience"
+                        description: "(for private sector must be certified by provincial or capital level)"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
+                    }
+                    {
+                      code: "fileLMMD09"
+                      index: 44
+                      title: "Resignation document"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Documentation showing resignation from previous employment"
+                        description: "(for private sector must be certified by provincial or capital level)"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
+                    }
+                    {
+                      code: "PB4"
+                      index: 50
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "fileLMMD010"
+                      index: 51
+                      title: "Location map"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Map of location of company"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
+                    }
+                    {
+                      code: "fileLMMD011"
+                      index: 52
+                      title: "Layout of facilities"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Layout of facilities"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
+                    }
+                    {
+                      code: "fileLMMD013"
+                      index: 53
+                      title: "Proof of ownership"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Proof of ownership of facilities or contract of rent"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
+                    }
+                    {
+                      code: "fileLMMD014"
+                      index: 54
+                      title: "Business licence"
+                      elementTypePluginCode: "fileUpload"
+                      category: QUESTION
+                      parameters: {
+                        label: "Copy of business licence issued by Ministry of Commerce"
+                        fileCountLimit: 1
+                        fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
+                        fileSizeLimit: 10000
+                      }
+                    }
                   ]
                 }
               }
