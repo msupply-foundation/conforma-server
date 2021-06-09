@@ -69,7 +69,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       userId: userId || newUserId,
       orgId,
       templatePermissionRows,
-      sessionId: returnSessionId
+      sessionId: returnSessionId,
     }),
     user: {
       userId: userId || newUserId,
@@ -79,7 +79,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       email,
       dateOfBirth,
       organisation: selectedOrg?.[0],
-      sessionId: returnSessionId
+      sessionId: returnSessionId,
     },
     orgList,
   }

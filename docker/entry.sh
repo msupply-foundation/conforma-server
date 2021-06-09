@@ -6,6 +6,7 @@ echo '---'
 echo '---'
 service postgresql start
 service postgresql status
+
 echo '---'
 echo '---'
 echo '--- STARTING NGINX'
@@ -13,6 +14,7 @@ echo '---'
 echo '---'
 service nginx start
 service nginx status
+
 echo '---'
 echo '---'
 echo '--- STARTING POST-GRAPHILE (graphQL)'
@@ -26,17 +28,17 @@ yarn postgraphile \
    -q '/postgraphile/graphql' \
    -i '/postgraphile/graphiql' | tee /var/log/application_manager/graphile.log &
 sleep 3
+
 echo '---'
 echo '---'
 echo '--- STARTING SERVER'
 echo '---'
 echo '---'
-node ./build/src/server.js | tee /var/log/application_manager/server.log &
+NODE_ENV=production node ./build/src/server.js | tee /var/log/application_manager/server.log &
 
 echo '---'
 echo '---'
 echo '--- Ready to go -> http://localhost:3000'
 echo '---'
 echo '---'
-
 /bin/bash

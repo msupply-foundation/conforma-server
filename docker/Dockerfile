@@ -20,15 +20,19 @@ RUN apt-get install git -y
 # --- GOSU
 RUN apt-get install gosu -y
 
+# --- lsof
+RUN apt-get install lsof -y
+
 # --- NGINX
 RUN apt-get install nginx -y
 
-# --- NODE
+# --- NODE and NPX
 ARG NODE_VERSION=14
 # https://github.com/nodesource/distributions/blob/master/README.md -> Node.js LTS (v14.x): -> # Using Debian, as root
 RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash 
 RUN apt-get install -y nodejs
 RUN node -v
+RUN npx -v
 
 # --- POSTGRES 
 ARG POSTGRES_VERSION=12
@@ -55,7 +59,10 @@ RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/application-ma
 
 # --- BUILD SERVER
 WORKDIR /usr/src/application-manager-server
+RUN git fetch
+RUN git pull
 RUN cp .npmrc .npmrc_backup
+RUN echo "" >> .npmrc
 RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
 RUN yarn install
 RUN yarn build
@@ -63,9 +70,12 @@ RUN rm .npmrc && mv .npmrc_backup .npmrc
 
 # --- BUILD WEB APP
 WORKDIR /usr/src/application-manager-web-app
+RUN git fetch
+RUN git pull
 RUN cp .npmrc .npmrc_backup
+RUN echo "" >> .npmrc
 RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
-COPY web_app_config/config.json src/
+RUN sed -i "s/version: dev/front: ${SERVER_BRANCH} back: ${WEB_APP_BRANCH}/g" public/index.html 
 RUN yarn install
 RUN yarn build
 RUN rm .npmrc && mv .npmrc_backup .npmrc

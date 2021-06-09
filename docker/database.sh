@@ -6,7 +6,7 @@ service postgresql start
 cd /usr/src/application-manager-server
 
 echo '--- ADDING SCHEMA'
-gosu postgres ./database/initialise_database.sh
+./database/initialise_database.sh tmf_app_manager
 
 echo '--- STARTING SERVER'
 node ./build/src/server.js &
@@ -15,4 +15,4 @@ yarn postgraphile -c "postgres://postgres@localhost/tmf_app_manager" --watch --d
 sleep 3
 
 echo '--- ADDING DATA'
-./database/insert_data.sh
+node ./build/database/insertData.js

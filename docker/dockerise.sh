@@ -3,13 +3,24 @@
 # This command requires githubtoken.txt, in the repo root (it's git ingored btw). 
 # githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
 
+SERVER_BRANCH='b0-0-1' 
+WEB_APP_BRANCH='b0-0-1'  
+IMAGE_NAME='irims-demo'
+
+NODE_VERSION='14'
+POSTGRES_VERSION='12'
+
+IMAGE_TAG="front-${WEB_APP_BRANCH}_back-${SERVER_BRANCH}_pg-${POSTGRES_VERSION}_node-${NODE_VERSION}"
+
+echo "building image: ${IMAGE_TAG}"
+
 docker build \
    --progress plain \
-   -t testbuild \
-   --build-arg SERVER_BRANCH=309-Dockerise-local-build-of-combined-back-and-front-end \
-   --build-arg WEB_APP_BRANCH=master \
-   --build-arg NODE_VERSION=14 \
-   --build-arg POSTGRES_VERSION=12 \
+   -t "${IMAGE_NAME}:${IMAGE_TAG}" \
+   --build-arg SERVER_BRANCH="$SERVER_BRANCH"\
+   --build-arg WEB_APP_BRANCH="$WEB_APP_BRANCH" \
+   --build-arg NODE_VERSION="$NODE_VERSION" \
+   --build-arg POSTGRES_VERSION="$POSTGRES_VERSION" \
    --secret id=githubtoken,src=../githubtoken.txt \
    .
 
