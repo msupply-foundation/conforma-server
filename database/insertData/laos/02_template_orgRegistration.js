@@ -660,7 +660,6 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               ${coreActions}
-              ${devActions}
               {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
