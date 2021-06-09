@@ -447,43 +447,43 @@ exports.queries = [
                   # TODO: Previously set as Date in db - changed to varchar
                   date_of_birth: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q6DOB.text"]
+                    children: ["applicationData.responses.Q6DOB.text", ""]
                   }
                   national_id: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q7NationalID.text"]
+                    children: ["applicationData.responses.Q7NationalID.text", ""]
                   }
                   national_id_issued_date: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q8IssuedDate.text"]
+                    children: ["applicationData.responses.Q8IssuedDate.text", ""]
                   }
                   birth_place_village: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q9Village.text", null]
+                    children: ["applicationData.responses.Q9Village.text", ""]
                   }
                   birth_place_district: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q11District.text", null]
+                    children: ["applicationData.responses.Q11District.text", ""]
                   }
                   current_address_village: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q12Village.text", null]
+                    children: ["applicationData.responses.Q12Village.text", ""]
                   }
                   current_address_district: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q13District.text", null]
+                    children: ["applicationData.responses.Q13District.text", ""]
                   }
                   education: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q1EducationLevel"]
+                    children: ["applicationData.responses.Q1EducationLevel", ""]
                   }
                   secondary: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q2Secondary.text", null]
+                    children: ["applicationData.responses.Q2Secondary.text", ""]
                   }
                   university_history: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q3UniversityHistory", null]
+                    children: ["applicationData.responses.Q3UniversityHistory", ""]
                   }
                 }
               }
