@@ -160,13 +160,13 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      code: "S1Page2"
+                      code: "S1PersonalInfo"
                       index: 80
-                      title: "Section 1 - page 2"
+                      title: "Section 1 - Personal information"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "## Personal informatioin"
+                        title: "## Personal information"
                         style: "basic"
                       }
                     }
@@ -176,19 +176,18 @@ exports.queries = [
                       title: "DOB"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Date of Birth", maxWidth: 120 }
-                      # TODO: Fix validation for birthdate
-#                     validation: {
-#                       operator: "REGEX"
-#                       children: [
-#                         {
-#                           operator: "objectProperties"
-#                           children: ["responses.thisResponse"]
-#                         }
-#                         "^(0[1-9]|1[012])[-/.](0[1-9]|[12][0-9]|3[01])[-/.](0[12]|[12][0-9]|3[01])$"
-#                       ]
-#                     }
-#                     validationMessage: "Date should be in format dd/mm/yyyy"
+                      parameters: { label: "Date of Birth", maxWidth: 150 }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          "^([0]?[1-9]|[1|2][0-9]|[3][0|1])[./-]([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$"
+                        ]
+                      }
+                      validationMessage: "Format expected DD/MM/YYYY"
                       # TODO: Update to be using a DatePicker element type
                     }
                     {
@@ -216,7 +215,18 @@ exports.queries = [
                       title: "Date issued"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Date issued" }
+                      parameters: { label: "Date issued", maxWidth: 150 }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          "^([0]?[1-9]|[1|2][0-9]|[3][0|1])[./-]([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$"
+                        ]
+                      }
+                      validationMessage: "Format expected DD/MM/YYYY"
                       # TODO: Update to be using a DatePicker element type
                     }
                     {
@@ -227,30 +237,21 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      code: "S1Page3"
+                      code: "S1BirthAddress"
                       index: 120
-                      title: "Section 1 - page 3"
+                      title: "Section 1 - Place of birth"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: { title: "## Place of birth", style: "basic" }
                     }
                     {
-                      code: "Q9Vilage"
+                      code: "Q9Village"
                       index: 130
-                      title: "Vilage"
+                      title: "Village"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       isRequired: false
-                      parameters: { label: "Vilage" }
-                    }
-                    {
-                      code: "Q10Province"
-                      index: 140
-                      title: "Province"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
-                      isRequired: false
-                      parameters: { label: "Province" }
+                      parameters: { label: "Village" }
                     }
                     {
                       code: "Q11District"
@@ -259,40 +260,24 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       isRequired: false
-                      parameters: { label: "District" }
+                      parameters: { label: "District/Province" }
                     }
                     {
-                      code: "PB3"
-                      index: 160
-                      title: "Page Break"
-                      elementTypePluginCode: "pageBreak"
-                      category: INFORMATION
-                    }
-                    {
-                      code: "S1Page4"
+                      code: "S1CurrentAddress"
                       index: 170
-                      title: "Section 1 - page 4"
+                      title: "Section 1 - Current address"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: { title: "## Current address", style: "basic" }
                     }
                     {
-                      code: "Q12Vilage"
+                      code: "Q12Village"
                       index: 180
-                      title: "Vilage"
+                      title: "Village"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       isRequired: false
-                      parameters: { label: "Vilage" }
-                    }
-                    {
-                      code: "Q13Province"
-                      index: 190
-                      title: "Province"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
-                      isRequired: false
-                      parameters: { label: "Province" }
+                      parameters: { label: "Village" }
                     }
                     {
                       code: "Q14District"
@@ -301,7 +286,7 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       isRequired: false
-                      parameters: { label: "District" }
+                      parameters: { label: "District/Province" }
                     }
                   ]
                 }
@@ -361,16 +346,6 @@ exports.queries = [
                         label: "Education history"
                         createModalButtonText: "Add to education history"
                         modalText: "## Education history entry \\n\\nPlease enter details for university"
-                        visibilityCondition: {
-                          operator: "!="
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q1EducationLevel.text"]
-                            }
-                            "University"
-                          ]
-                        }
                         displayType: "card"
                         inputFields: [
                           {
@@ -388,7 +363,7 @@ exports.queries = [
                             category: QUESTION
                             parameters: {
                               label: "Year of conclusion"
-                              maxWidth: 50
+                              maxWidth: 150
                             }
                             validation: {
                               operator: "REGEX"
@@ -410,9 +385,18 @@ exports.queries = [
                             parameters: {
                               label: "Title"
                               description: "Enter the title received by applicant"
-                              maxWidth: 130
                             }
                           }
+                        ]
+                      }
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.Q1EducationLevel.text"]
+                          }
+                          "University"
                         ]
                       }
                     }
@@ -434,11 +418,6 @@ exports.queries = [
             create: [
               # No Core Actions for this one
               # ${devActions}
-              {
-                actionCode: "incrementStage"
-                sequence: 1
-                trigger: ON_APPLICATION_CREATE
-              }
               {
                 actionCode: "modifyRecord"
                 trigger: ON_APPLICATION_SUBMIT
@@ -478,27 +457,17 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q8IssuedDate.text"]
                   }
-                  # TODO: Accept object (Query syntax to create jsonb)
-                  birth_place_vilage: {
+                  birth_place_village: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q9Vilage.text", null]
-                  }
-                  birth_place_province: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q10Province.text", null]
+                    children: ["applicationData.responses.Q9Village.text", null]
                   }
                   birth_place_district: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q11District.text", null]
                   }
-                  # TODO: Accept object (Query syntax to create jsonb)
-                  current_address_vilage: {
+                  current_address_village: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q12Vilage.text", null]
-                  }
-                  current_address_province: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q13Province.text", null]
+                    children: ["applicationData.responses.Q12Village.text", null]
                   }
                   current_address_district: {
                     operator: "objectProperties"
@@ -517,6 +486,11 @@ exports.queries = [
                     children: ["applicationData.responses.Q3UniversityHistory", null]
                   }
                 }
+              }
+              {
+                actionCode: "incrementStage"
+                sequence: 1
+                trigger: ON_APPLICATION_CREATE
               }
               {
                 actionCode: "changeStatus"
