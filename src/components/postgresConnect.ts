@@ -17,8 +17,10 @@ import {
   ActionQueueStatus,
   ApplicationOutcome,
   ApplicationStatus,
+  Organisation,
   ReviewStatus,
   Trigger,
+  User,
 } from '../generated/graphql'
 
 class PostgresDB {
@@ -742,17 +744,21 @@ class PostgresDB {
     }
   }
 
-  public getDatabaseInfo: GetDatabaseInfo = async () => {
+  public getDatabaseInfo: GetDatabaseInfo = async (tableName = '%') => {
     try {
-      const result = await this.query({ text: 'SELECT * FROM schema_columns' })
+      const result = await this.query({
+        text: 'SELECT * FROM schema_columns where table_name like $1',
+        values: [tableName],
+      })
       const responses = result.rows as schema_column[]
       return responses
     } catch (err) {
       console.log(err.message)
-      throw err
+      throw new Error('Problem getting database info')
     }
   }
 }
+
 type schema_column = {
   table_name: string
   table_type: 'BASE TABLE' | 'VIEW'
@@ -764,7 +770,7 @@ type schema_column = {
   fk_to_table_name: string | null
   fk_to_column_name: string | null
 }
-type GetDatabaseInfo = () => Promise<schema_column[]>
+type GetDatabaseInfo = (tableName?: string) => Promise<schema_column[]>
 
 const postgressDBInstance = PostgresDB.Instance
 export default postgressDBInstance
