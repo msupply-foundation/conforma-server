@@ -92,7 +92,7 @@ exports.queries = [
                           }
                         ]
                       }
-                      validationMessage: "Username already choosen or invalid. Usernames should have no spaces and size 5-50 characters of letters, numbers and - . or _"
+                      validationMessage: "Username already in use or invalid. Usernames should have no spaces and size 5-50 characters of letters, numbers and - . or _"
                       parameters: { label: "Select a username" }
                     }
                     {
