@@ -1398,7 +1398,6 @@ exports.queries = [
                     message: { value: "Organisation Registration submission" }
                   }
                 }
-                # TODO - Check if this will set outcome on Stage 2 only!
                 {
                   actionCode: "changeOutcome"
                   trigger: ON_REVIEW_SUBMIT
@@ -1426,6 +1425,7 @@ exports.queries = [
                   }
                   parameterQueries: { newOutcome: { value: "APPROVED" } }
                 }
+                # TODO: Generate the expiry and serial before this
                 {
                   actionCode: "modifyRecord"
                   trigger: ON_REVIEW_SUBMIT
@@ -1441,29 +1441,37 @@ exports.queries = [
                     ]
                   }
                   parameterQueries: {
-                    tableName: "organisation"
-                    name: {
+                    tableName: "license"
+                    type: {
                       operator: "objectProperties"
-                      children: ["applicationData.responses.name.text"]
+                      children: ["applicationData.responses.Q2LicenseType.text"]
                     }
-                    registration: {
+                    expiry: {
                       operator: "objectProperties"
-                      children: ["applicationData.responses.rego.text"]
+                      children: ["31/01/2022"]
                     }
-                    address: {
+                    company_id: {
                       operator: "objectProperties"
-                      children: ["applicationData.responses.physAdd.text"]
+                      children: ["currentUser.orgId"]
                     }
-                    logo_url: {
+                    company_name: {
+                      operator: "objectProperties"
+                      children: ["applicationData.responses.Q2CompanyNameEnglish.text"]
+                    }
+                    serial: {
                       operator: "CONCAT"
                       children: [
-                        # This is a clunky hack to extract a value from an array
-                        ""
                         {
                           operator: "objectProperties"
-                          children: ["applicationData.responses.logo.files.fileUrl"]
+                          children: ["applicationData.responses.Q2CompanyNameEnglish.text"]
                         }
+                        ":"
+                        "1234"
                       ]
+                    }
+                    application_id: {
+                      operator: "objectProperties"
+                      children: ["applicationData.id"]
                     }
                   }
                 }
@@ -1505,10 +1513,10 @@ exports.queries = [
                     connectByName: { name: "applyUserEdit" }
                   }
                 }
-                # Apply OrgRegistration
+                # Apply Company license (granted on Company registration)
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "applyOrgRego" }
+                    connectByName: { name: "applyOrgLicense" }
                   }
                 }
                 # Review General - Stage 1
