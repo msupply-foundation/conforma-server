@@ -107,17 +107,6 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "owner"
-                      index: 30
-                      title: "Company Owver"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
-                      parameters: {
-                        label: "Full name of company owner"
-                        description: "TO-DO: Pre-populate"
-                        maxLength: 50 }
-                    }
-                    {
                       code: "invHeader"
                       index: 35
                       title: "Investment Title"
@@ -190,7 +179,20 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
-                        label: "House number, street, village"
+                        label: "House number & street"
+                        maxLength: 150
+                      }
+                    }
+                    {
+                      code: "addressVillage"
+                      index: 75
+                      title: "Village"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Village"
+                        description: "(if applicable)"
                         maxLength: 150
                       }
                     }
@@ -222,7 +224,7 @@ exports.queries = [
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
                           }
-                          "^[0-9()-]+$"
+                          "^[0-9()\\\\-\+]*$"
                         ]
                       }
                       validationMessage: "Not a valid phone number"
@@ -245,7 +247,7 @@ exports.queries = [
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
                           }
-                          "^[0-9()-]+$"
+                          "^[0-9()\\\\-\+]*$"
                         ]
                       }
                       validationMessage: "Not a valid fax number"
@@ -276,6 +278,92 @@ exports.queries = [
                         ]
                       }
                       validationMessage: "Not a valid email address"
+                    }
+                    {
+                      code: "PBOwner"
+                      index: 100
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "ownerIntro"
+                      index: 105
+                      title: "Owner Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      helpText: "This page requires information about the **owner** of the company, which will probably be the person filling in this application form"
+                      parameters: { title: "### Company Owner", style: "none" }
+                    }
+                    {
+                      code: "ownerName"
+                      index: 110
+                      title: "Company Owner"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Full name of company owner"
+                        description: "TO-DO: Pre-populate"
+                        maxLength: 150 }
+                    }
+                    {
+                      code: "ownerPhone"
+                      index: 120
+                      title: "Company Owner Phone"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Phone"
+                        description: "TO-DO: Pre-populate"
+                        maxLength: 50
+                      }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          "^[0-9()\\\\-\+]*$"
+                        ]
+                      }
+                      validationMessage: "Not a valid phone number"
+                    }
+                    {
+                      code: "ownerEmail"
+                      index: 120
+                      title: "Company Owner Email"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Email"
+                        description: "TO-DO: Pre-populate"
+                        maxLength: 150
+                      }
+                    }
+                    {
+                      code: "ownerFax"
+                      index: 130
+                      title: "Company Owner Fax"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Fax number"
+                        description: "(if applicable)"
+                        maxLength: 150
+                      }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          "^[0-9()\\\\-\+]*$"
+                        ]
+                      }
+                      validationMessage: "Not a valid fax number"
                     }
                   ]
                 }
@@ -369,7 +457,7 @@ exports.queries = [
                                   operator: "objectProperties"
                                   children: ["responses.thisResponse"]
                                 }
-                                "^[0-9()-]+$"
+                                "^[0-9()\\\\-\+]*$"
                               ]
                             }
                             validationMessage: "Not a valid phone number"
@@ -468,7 +556,7 @@ exports.queries = [
                       category: QUESTION
                       helpText: "For all uploads, files must be in **pdf**, **doc** or an **image** format, and less than 10MB each"
                       parameters: {
-                        label: "CV"
+                        label: "CV (LMMD02)"
                         description: "Must have recent (max 1 year) photo"
                         fileCountLimit: 2
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
@@ -482,7 +570,7 @@ exports.queries = [
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       parameters: {
-                        label: "Medical certificate"
+                        label: "Medical certificate  (LMMD03)"
                         description: "QUESTION: Is this for individual?"
                         fileCountLimit: 1
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
@@ -496,7 +584,7 @@ exports.queries = [
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       parameters: {
-                        label: "Certificate of current residence"
+                        label: "Certificate of current residence  (LMMD04)"
                         description: "Must include photo (max 3 months)"
                         fileCountLimit: 2
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
@@ -510,7 +598,7 @@ exports.queries = [
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       parameters: {
-                        label: "Photo"
+                        label: "Photo (LMMD05)"
                         description: "Max 1 year (used for printing licence)"
                         fileCountLimit: 1
                         fileExtensions: ["jpg", "jpeg", "png", "pdf"]
@@ -531,7 +619,7 @@ exports.queries = [
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       parameters: {
-                        label: "Certificate of education level"
+                        label: "Certificate of education level (LMMD06)"
                         fileCountLimit: 1
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
                         fileSizeLimit: 10000
@@ -544,7 +632,7 @@ exports.queries = [
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       parameters: {
-                        label: "Criminal record (number 3)"
+                        label: "Criminal record (number 3) (LMMD07)"
                         fileCountLimit: 1
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
                         fileSizeLimit: 10000
@@ -557,7 +645,7 @@ exports.queries = [
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       parameters: {
-                        label: "Letter from previous employers documenting at least 3 years professional experience"
+                        label: "Letter from previous employers documenting at least 3 years professional experience (LMMD08)"
                         description: "(for private sector must be certified by provincial or capital level)"
                         fileCountLimit: 1
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
@@ -571,7 +659,7 @@ exports.queries = [
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       parameters: {
-                        label: "Documentation showing resignation from previous employment"
+                        label: "Documentation showing resignation from previous employment (LMMD09)"
                         description: "(for private sector must be certified by provincial or capital level)"
                         fileCountLimit: 1
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
@@ -586,26 +674,26 @@ exports.queries = [
                       category: INFORMATION
                     }
                     {
-                      code: "fileLMMD010"
+                      code: "fileLMMD10"
                       index: 51
                       title: "Location map"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       parameters: {
-                        label: "Map of location of company"
+                        label: "Map of location of company (LMMD10)"
                         fileCountLimit: 1
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
                         fileSizeLimit: 10000
                       }
                     }
                     {
-                      code: "fileLMMD011"
+                      code: "fileLMMD11"
                       index: 52
                       title: "Layout of facilities"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       parameters: {
-                        label: "Layout of facilities"
+                        label: "Layout of facilities (LMMD11)"
                         fileCountLimit: 1
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
                         fileSizeLimit: 10000
@@ -625,13 +713,13 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "fileLMMD014"
+                      code: "fileLMMD14"
                       index: 54
                       title: "Business licence"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
                       parameters: {
-                        label: "Copy of business licence issued by Ministry of Commerce"
+                        label: "Copy of business licence issued by Ministry of Commerce (LMMD14)"
                         fileCountLimit: 1
                         fileExtensions: ["jpg", "jpeg", "png", "pdf", "doc"]
                         fileSizeLimit: 10000
@@ -714,20 +802,16 @@ exports.queries = [
                 }
                 parameterQueries: {
                   tableName: "organisation"
-                  name: {
+                  name_lao: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.name.text"]
+                    children: ["applicationData.responses.S1NameLao.text"]
                   }
-                  registration: {
+                  name_english: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.rego.text"]
-                  }
-                  address: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.physAdd.text"]
+                    children: ["applicationData.responses.S1NameEng.text"]
                   }
                   logo_url: {
-                    operator: "CONCAT",
+                    operator: "+",
                     children: [
                       # This is a clunky hack to extract a value from an array
                       "",
@@ -738,6 +822,66 @@ exports.queries = [
                         ]
                       }
                     ]
+                  }
+                  address_near_by: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.addressNear.text", ""]
+                  }
+                  address_street: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.addressStreet.text", ""]
+                  }
+                  address_village: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.addressVillage.text", ""]
+                  }
+                  address_district: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.addressDistrict.text", ""]
+                  }
+                  phone: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.phone.text", ""]
+                  }
+                  fax: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.fax.text", ""]
+                  }
+                  email: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.email.text", ""]
+                  }
+                  domestic_investment: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.invDomestic.text", ""]
+                  } 
+                  foreign_investment: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.invForeign.text", ""]
+                  } 
+                  owner_name: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.ownerName.text", ""]
+                  }
+                  owner_phone: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.ownerPhone.text", ""]
+                  }
+                  owner_email: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.ownerEmail.text", ""]
+                  }
+                  owner_fax: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.ownerFax.text", ""]
+                  }
+                  professional_id: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.profId.text", ""]
+                  }
+                  professional_experience: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.expList", ""]
                   }
                 }
               }
@@ -775,8 +919,6 @@ exports.queries = [
                 actionCode: "grantPermissions"
                 trigger: ON_REVIEW_SUBMIT
                 sequence: 103
-                # TO-DO -- update condition to just check Outcome
-                # (from applicationData)
                 condition: {
                   operator: "="
                   children: [
@@ -798,7 +940,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["outputCumulative.organisation.name"]
                   }
-                  permissionNames: ["reviewJoinOrg"]
+                  permissionNames: ["reviewJoinOrg", "applyOrgLicence"]
                 }
               }
             ]
