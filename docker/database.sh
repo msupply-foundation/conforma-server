@@ -15,4 +15,8 @@ yarn postgraphile -c "postgres://postgres@localhost/tmf_app_manager" --watch --d
 sleep 3
 
 echo '--- ADDING DATA'
-node ./build/database/insertData.js
+./database/insert_data.sh 
+
+echo '--- RUNING POST INSTALL'
+./database/turn_on_row_level_security.sh 
+./database/post_data_insert.sh 
