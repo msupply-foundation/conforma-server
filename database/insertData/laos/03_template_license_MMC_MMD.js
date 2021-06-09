@@ -206,14 +206,14 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "PB1"
+                        code: "S1PB1"
                         index: 60
                         title: "Page Break"
                         elementTypePluginCode: "pageBreak"
                         category: INFORMATION
                       }
                       {
-                        code: "S1Page2"
+                        code: "S1BirthAddress"
                         index: 70
                         title: "Section 1 - Place of birth"
                         elementTypePluginCode: "textInfo"
@@ -221,14 +221,14 @@ exports.queries = [
                         parameters: { title: "## Place of birth", style: "basic" }
                       }
                       {
-                        code: "Q6Vilage"
+                        code: "Q6Village"
                         index: 80
-                        title: "Vilage"
+                        title: "Village"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
                         isRequired: false
-                        parameters: { label: "Vilage" }
+                        parameters: { label: "Village" }
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -237,7 +237,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getUser($id: Int!){user(id: $id) {birthPlaceVilage}}",
+                                  "query getUser($id: Int!){user(id: $id) {birthPlaceVillage}}",
                                   "",
                                   [
                                     "id"
@@ -248,7 +248,7 @@ exports.queries = [
                                       "currentUser.userId"
                                     ]
                                   },
-                                  "user.birthPlaceVilage"
+                                  "user.birthPlaceVillage"
                                 ]
                               }
                             }
@@ -256,49 +256,14 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "Q7Province"
-                        index: 90
-                        title: "Province"
-                        elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
-                        isRequired: false
-                        parameters: { label: "Province" }
-                        defaultValue: {
-                          operator: "buildObject",
-                          properties: [
-                            {
-                              key: "text",
-                              value: {
-                                operator: "graphQL",
-                                children: [
-                                  "query getUser($id: Int!){user(id: $id) {birthPlaceProvince}}",
-                                  "",
-                                  [
-                                    "id"
-                                  ],
-                                  {
-                                    operator: "objectProperties",
-                                    children: [
-                                      "currentUser.userId"
-                                    ]
-                                  },
-                                  "user.birthPlaceProvince"
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      }
-                      {
-                        code: "Q8District"
+                        code: "Q7District"
                         index: 90
                         title: "District"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
                         isRequired: false
-                        parameters: { label: "District" }
+                        parameters: { label: "District/Province" }
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -326,14 +291,7 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "PB2"
-                        index: 100
-                        title: "Page Break"
-                        elementTypePluginCode: "pageBreak"
-                        category: INFORMATION
-                      }
-                      {
-                        code: "S1Page3"
+                        code: "S1CurrentAddress"
                         index: 110
                         title: "Section 1 - Current address"
                         elementTypePluginCode: "textInfo"
@@ -341,14 +299,14 @@ exports.queries = [
                         parameters: { title: "## Current address", style: "basic" }
                       }
                       {
-                        code: "Q9Vilage"
+                        code: "Q8Village"
                         index: 120
-                        title: "Vilage"
+                        title: "Village"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
                         isRequired: false
-                        parameters: { label: "Vilage" }
+                        parameters: { label: "Village" }
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -357,7 +315,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getUser($id: Int!){user(id: $id) {currentAddressVilage}}",
+                                  "query getUser($id: Int!){user(id: $id) {currentAddressVillage}}",
                                   "",
                                   [
                                     "id"
@@ -368,7 +326,7 @@ exports.queries = [
                                       "currentUser.userId"
                                     ]
                                   },
-                                  "user.currentAddressVilage"
+                                  "user.currentAddressVillage"
                                 ]
                               }
                             }
@@ -376,49 +334,14 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "Q10Province"
-                        index: 130
-                        title: "Province"
-                        elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
-                        isRequired: false
-                        parameters: { label: "Province" }
-                        defaultValue: {
-                          operator: "buildObject",
-                          properties: [
-                            {
-                              key: "text",
-                              value: {
-                                operator: "graphQL",
-                                children: [
-                                  "query getUser($id: Int!){user(id: $id) {currentAddressProvince}}",
-                                  "",
-                                  [
-                                    "id"
-                                  ],
-                                  {
-                                    operator: "objectProperties",
-                                    children: [
-                                      "currentUser.userId"
-                                    ]
-                                  },
-                                  "user.currentAddressProvince"
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      }
-                      {
-                        code: "Q11District"
+                        code: "Q9District"
                         index: 140
                         title: "District"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
                         isEditable: false
                         isRequired: false
-                        parameters: { label: "District" }
+                        parameters: { label: "District/Province" }
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -446,14 +369,14 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "PB3"
+                        code: "S1PB2"
                         index: 150
                         title: "Page Break"
                         elementTypePluginCode: "pageBreak"
                         category: INFORMATION
                       }
                       {
-                        code: "S1Page4"
+                        code: "S1Page3"
                         index: 160
                         title: "Section 1 - Education"
                         elementTypePluginCode: "textInfo"
@@ -461,7 +384,7 @@ exports.queries = [
                         parameters: { title: "## Education", style: "basic" }
                       }
                       {
-                        code: "Q12EducationLevel"
+                        code: "Q10EducationLevel"
                         index: 170
                         title: "Organisation Category"
                         elementTypePluginCode: "radioChoice"
@@ -491,7 +414,7 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "Q13Secondary"
+                        code: "Q11Secondary"
                         index: 180
                         title: "Secondary"
                         elementTypePluginCode: "longText"
@@ -503,7 +426,7 @@ exports.queries = [
                           children: [
                             {
                               operator: "objectProperties"
-                              children: ["responses.Q12EducationLevel.text"]
+                              children: ["responses.Q10EducationLevel.text"]
                             }
                             "Secondary"
                           ]
@@ -527,7 +450,7 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "Q14EducationHistory"
+                        code: "Q12EducationHistory"
                         index: 190
                         title: "Education List"
                         elementTypePluginCode: "listBuilder"
@@ -559,7 +482,7 @@ exports.queries = [
                           children: [
                             {
                               operator: "objectProperties"
-                              children: ["responses.Q12EducationLevel.text"]
+                              children: ["responses.Q10EducationLevel.text"]
                             }
                             "University"
                           ]
@@ -587,9 +510,37 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "Q1ProfessionalExperience"
+                        code: "Q1ProfessionalId"
                         index: 20
-                        title: "Professional experience list"
+                        title: "Professional ID"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        isEditable: false
+                        parameters: {
+                          label: "Professional ID"
+                          defaultValue: {
+                            operator: "graphQL",
+                            children: [
+                              "query getOrganisation($id: Int!){organisation(id: $id) {professionalId}}",
+                              "",
+                              [
+                                "id"
+                              ],
+                              {
+                                operator: "objectProperties",
+                                children: [
+                                  "currentUser.orgId"
+                                ]
+                              },
+                              "user.professionalId"
+                            ]
+                          }
+                        }
+                      }
+                      {
+                        code: "Q2ProfessionalExperience"
+                        index: 30
+                        title: "Professional experience"
                         elementTypePluginCode: "listBuilder"
                         category: QUESTION
                         isEditable: false
@@ -598,7 +549,7 @@ exports.queries = [
                           defaultValue: {
                             operator: "graphQL",
                             children: [
-                              "query getUser($id: Int!){user(id: $id) {professionalExperienceList}}",
+                              "query getOrganisation($id: Int!){organisation(id: $id) {professionalExperience}}",
                               "",
                               [
                                 "id"
@@ -606,10 +557,10 @@ exports.queries = [
                               {
                                 operator: "objectProperties",
                                 children: [
-                                  "currentUser.userId"
+                                  "currentUser.orgId"
                                 ]
                               },
-                              "user.professionalExperienceList"
+                              "user.professionalExperience"
                             ]
                           }
 #                         createModalButtonText: "Add professional experience"
@@ -751,7 +702,7 @@ exports.queries = [
                   templateElementsUsingId: {
                     create: [
                       {
-                        code: "S3Page1"
+                        code: "S3CompanyInfo"
                         index: 10
                         title: "Section 3 - Company info (Lao)"
                         elementTypePluginCode: "textInfo"
@@ -761,10 +712,10 @@ exports.queries = [
                       {
                         code: "Q1CompanyNameLao"
                         index: 20
-                        title: "Company name (Lao)"
+                        title: "Name of company/branch/wholesaler (in Lao) "
                         elementTypePluginCode: "shortText"
                         category: QUESTION
-                        parameters: { label: "Company name (Lao)" }
+                        parameters: { label: "Name of company/branch/wholesaler (in Lao) " }
                         isEditable: false
                         defaultValue: {
                           operator: "buildObject",
@@ -774,7 +725,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getOrganisation($id: Int!){organisation(id: $id) {companyNameLao}}",
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {nameLao}}",
                                   "",
                                   [
                                     "id"
@@ -785,7 +736,7 @@ exports.queries = [
                                       "currentUser.orgId"
                                     ]
                                   },
-                                  "organisation.companyNameLao"
+                                  "organisation.nameLao"
                                 ]
                               }
                             }
@@ -795,10 +746,10 @@ exports.queries = [
                       {
                         code: "Q2CompanyNameEnglish"
                         index: 30
-                        title: "Company name (English)"
+                        title: "Name of company/branch/wholesaler (in English)"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
-                        parameters: { label: "Company name (English)" }
+                        parameters: { label: "Name of company/branch/wholesaler (in English)" }
                         isEditable: false
                         defaultValue: {
                           operator: "buildObject",
@@ -808,7 +759,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getOrganisation($id: Int!){organisation(id: $id) {companyNameEnglish}}",
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {nameEnglish}}",
                                   "",
                                   [
                                     "id"
@@ -819,7 +770,7 @@ exports.queries = [
                                       "currentUser.orgId"
                                     ]
                                   },
-                                  "organisation.companyNameEnglish"
+                                  "organisation.nameEnglish"
                                 ]
                               }
                             }
@@ -827,12 +778,12 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "Q3BranchNameLao"
+                        code: "Q3CompanyAddressStreet"
                         index: 40
-                        title: "Branch name (Lao)"
+                        title: "Address street"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
-                        parameters: { label: "Branch name (Lao)" }
+                        parameters: { label: "Address" }
                         isEditable: false
                         defaultValue: {
                           operator: "buildObject",
@@ -842,7 +793,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getOrganisation($id: Int!){organisation(id: $id) {branchNameLao}}",
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {“addressStreet”}}",
                                   "",
                                   [
                                     "id"
@@ -853,7 +804,7 @@ exports.queries = [
                                       "currentUser.orgId"
                                     ]
                                   },
-                                  "organisation.branchNameLao"
+                                  "organisation.“addressStreet”"
                                 ]
                               }
                             }
@@ -861,13 +812,14 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "Q4BranchNameEnglish"
+                        code: "Q4CompanyAddressVillage"
                         index: 50
-                        title: "Branch name (English)"
+                        title: "Adress village"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
-                        parameters: { label: "Branch name (English)" }
+                        parameters: { label: "Village" }
                         isEditable: false
+                        isRequired: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -876,7 +828,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getOrganisation($id: Int!){organisation(id: $id) {branchNameEnglish}}",
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {addressVillage}}",
                                   "",
                                   [
                                     "id"
@@ -887,7 +839,7 @@ exports.queries = [
                                       "currentUser.orgId"
                                     ]
                                   },
-                                  "organisation.branchNameEnglish"
+                                  "organisation.addressVillage"
                                 ]
                               }
                             }
@@ -895,12 +847,12 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "Q5WholesalerNameLao"
+                        code: "Q5CompanyAddressDistrict"
                         index: 60
-                        title: "Wholesaler name (Lao)"
+                        title: "District"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
-                        parameters: { label: "Wholesaler name (Lao)" }
+                        parameters: { label: "District/Province" }
                         isEditable: false
                         defaultValue: {
                           operator: "buildObject",
@@ -910,7 +862,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getOrganisation($id: Int!){organisation(id: $id) {wholesalerNameLao}}",
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {addressDistrict}}",
                                   "",
                                   [
                                     "id"
@@ -921,7 +873,7 @@ exports.queries = [
                                       "currentUser.orgId"
                                     ]
                                   },
-                                  "organisation.wholesalerNameLao"
+                                  "organisation.addressDistrict"
                                 ]
                               }
                             }
@@ -929,12 +881,27 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "Q6WholesalerNameEnglish"
+                        code: "S3PB1"
                         index: 70
-                        title: "Wholesaler name (English)"
+                        title: "Page Break"
+                        elementTypePluginCode: "pageBreak"
+                        category: INFORMATION
+                      }
+                      {
+                        code: "S3CompanyContact"
+                        index: 80
+                        title: "Section 3 - Company contact"
+                        elementTypePluginCode: "textInfo"
+                        category: INFORMATION
+                        parameters: { title: "Company contact", style: "basic" }
+                      }
+                      {
+                        code: "Q6CompanyPhone"
+                        index: 90
+                        title: "Phone"
                         elementTypePluginCode: "shortText"
                         category: QUESTION
-                        parameters: { label: "Wholesaler name (English)" }
+                        parameters: { label: "Phone" }
                         isEditable: false
                         defaultValue: {
                           operator: "buildObject",
@@ -944,7 +911,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getOrganisation($id: Int!){organisation(id: $id) {wholesalerNameEnglish}}",
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {phone}}",
                                   "",
                                   [
                                     "id"
@@ -955,7 +922,307 @@ exports.queries = [
                                       "currentUser.orgId"
                                     ]
                                   },
-                                  "organisation.wholesalerNameEnglish"
+                                  "organisation.phone"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q7CompanyFax"
+                        index: 100
+                        title: "Fax"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Fax" }
+                        isEditable: false
+                        isRequired: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {fax}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.fax"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q8CompanyEmail"
+                        index: 110
+                        title: "Email"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Email" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {email}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.email"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "S3PB2"
+                        index: 120
+                        title: "Page Break"
+                        elementTypePluginCode: "pageBreak"
+                        category: INFORMATION
+                      }
+                      {
+                        code: "S3CompanyInvestment"
+                        index: 130
+                        title: "Section 3 - Company investment"
+                        elementTypePluginCode: "textInfo"
+                        category: INFORMATION
+                        parameters: { title: "Investment", style: "basic" }
+                      }
+                      {
+                        code: "Q9DomesticInvestment"
+                        index: 140
+                        title: "Domestic"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Domestic" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {domesticInvestment}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.domesticInvestment"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q9ForeignInvestment"
+                        index: 150
+                        title: "Foreign"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Foreign" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {foreignInvestment}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.foreignInvestment"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "S3Owner"
+                        index: 160
+                        title: "Section 3 - Owner details"
+                        elementTypePluginCode: "textInfo"
+                        category: INFORMATION
+                        parameters: { title: "Owner details", style: "basic" }
+                      }
+                      {
+                        code: "Q10CompanyOwnerName"
+                        index: 170
+                        title: "Owner name"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { 
+                          label: "Company owner"
+                          helpText: "Full name of company owner (as licensed at M. of Commerce)"
+                        }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {ownerName}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.ownerName"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q11CompanyOwnerPhone"
+                        index: 180
+                        title: "Owner phone"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Owner phone" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {ownerPhone}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.ownerPhone"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q12CompanyOwnerFax"
+                        index: 190
+                        title: "Owner fax"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Owner fax" }
+                        isEditable: false
+                        isRequired: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {ownerFax}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.ownerFax"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                      {
+                        code: "Q13CompanyOwnerEmail"
+                        index: 200
+                        title: "Owner email"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        parameters: { label: "Owner email" }
+                        isEditable: false
+                        defaultValue: {
+                          operator: "buildObject",
+                          properties: [
+                            {
+                              key: "text",
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {ownerEmail}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.orgId"
+                                    ]
+                                  },
+                                  "organisation.ownerEmail"
                                 ]
                               }
                             }
@@ -1096,22 +1363,24 @@ exports.queries = [
               create: [
                 {
                   number: 1
-                  title: "Screening"
-                  description: "This application will be screened one level Reviewer\\nAfter this stage the application will be acessed."
+                  title: "Review"
+                  description: "This application will be processed by one level Reviewer.\\nAfter this stage is approved a license is generated."
+#                 title: "Screening"
+#                 description: "This application will be screened one level Reviewer\\nAfter this stage the application will be acessed."
                   colour: "#24B5DF" #teal blue
                   templateStageReviewLevelsUsingId: {
                     create: [{ number: 1, name: "Screener" }]
                   }
                 }
-                {
-                  number: 2
-                  title: "Assessment"
-                  description: "This application will be acessed by one level Reviewer\\nAfter this stage, when approved a license is generated."
-                  colour: "#E17E48" #orange
-                  templateStageReviewLevelsUsingId: {
-                    create: [{ number: 1, name: "Assessor" }]
-                  }
-                }
+#               {
+#                 number: 2
+#                 title: "Assessment"
+#                 description: "This application will be acessed by one level Reviewer\\nAfter this stage, when approved a license is generated."
+#                 colour: "#E17E48" #orange
+#                 templateStageReviewLevelsUsingId: {
+#                   create: [{ number: 1, name: "Assessor" }]
+#                 }
+#               }
               ]
             }
             templateCategoryToTemplateCategoryId: {
@@ -1253,17 +1522,17 @@ exports.queries = [
                 # Assign General - Stage 1
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "applyGeneral" }
+                    connectByName: { name: "assignGeneral" }
                   }
                   stageNumber: 1
                   levelNumber: 1
                 }
-                # Review General - Stage 2
+                # Self assignable - Stage 1
                 {
                   permissionNameToPermissionNameId: {
                     connectByName: { name: "reviewSelfAssignable" }
                   }
-                  stageNumber: 2
+                  stageNumber: 1
                   levelNumber: 1
                   canSelfAssign: true
                 }
