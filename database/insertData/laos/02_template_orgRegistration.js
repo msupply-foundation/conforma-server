@@ -117,6 +117,7 @@ exports.queries = [
                         style: "none"
                       }
                     }
+                    # TO-DO: Turn these responses into numbers so can add together
                     {
                       code: "invDomestic"
                       index: 40
