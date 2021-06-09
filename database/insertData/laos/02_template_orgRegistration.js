@@ -4,7 +4,6 @@ TEMPLATE B - Organisation Registration
   by reviewer with "reviewOrgRego" permission
 */
 const { coreActions, joinFilters } = require('../_helpers/core_mutations')
-const { devActions } = require('../_helpers/dev_actions')
 
 exports.queries = [
   `mutation {
