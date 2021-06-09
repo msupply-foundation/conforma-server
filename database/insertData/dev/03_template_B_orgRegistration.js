@@ -380,6 +380,10 @@ exports.queries = [
                       }
                     ]
                   }
+                  registration_documentation: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.regoDoc"]
+                  }
                 }
               }
               {

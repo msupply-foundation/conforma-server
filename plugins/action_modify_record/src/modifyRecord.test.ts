@@ -2,6 +2,7 @@
 
 import DBConnect from '../../../src/components/databaseConnect'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
+import { ActionApplicationData } from '../../../src/types'
 import { action as modifyRecord } from './index'
 
 // User tests
@@ -9,13 +10,13 @@ import { action as modifyRecord } from './index'
 const testUser = {
   first_name: 'Carl',
   last_name: 'Smith',
-  username: 'ceejay',
+  username: 'ceejay2',
   date_of_birth: '1999-12-23',
   password_hash: 'XYZ1234',
   email: 'test@sussol.net',
 }
 
-const invalidUser = {
+const testUser2 = {
   first_name: 'Carl',
   last_name: 'Smith',
   user_name: 'ceejay',
@@ -25,7 +26,7 @@ const invalidUser = {
 }
 
 const updatedUser = {
-  id: 2,
+  id: 3,
   email: 'carl@msupply.foundation',
 }
 
@@ -39,10 +40,15 @@ const updatedUserByUsername2 = {
   first_name: 'Johnny',
 }
 
+const extraParameters = {
+  DBConnect,
+  applicationData: { applicationId: 4000 } as ActionApplicationData,
+}
+
 test('Test: add User to database', () => {
   return modifyRecord({
     parameters: { tableName: 'user', ...testUser },
-    DBConnect,
+    ...extraParameters,
   }).then((result: any) => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
@@ -53,7 +59,7 @@ test('Test: add User to database', () => {
           email: 'test@sussol.net',
           first_name: 'Carl',
           last_name: 'Smith',
-          username: 'ceejay',
+          username: 'ceejay2',
           password_hash: 'XYZ1234',
           date_of_birth: new Date('1999-12-22T11:00:00.000Z'),
         },
@@ -62,28 +68,17 @@ test('Test: add User to database', () => {
   })
 })
 
-test('Test: Invalid user (date_of_birth and username fields mis-named) -- should fail', () => {
-  return modifyRecord({ parameters: { tableName: 'user', ...invalidUser }, DBConnect }).then(
-    (result: any) => {
-      expect(result).toEqual({
-        status: ActionQueueStatus.Fail,
-        error_log: 'column "user_name" of relation "user" does not exist',
-      })
-    }
-  )
-})
-
 test('Test: Modify existing user', () => {
   return modifyRecord({
     parameters: { tableName: 'user', ...updatedUser },
-    DBConnect,
+    ...extraParameters,
   }).then((result: any) => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         user: {
-          id: 2,
+          id: 3,
           email: 'carl@msupply.foundation',
           first_name: 'Carl',
           last_name: 'Smith',
@@ -99,14 +94,14 @@ test('Test: Modify existing user', () => {
 test('Test: Modify existing user using username', () => {
   return modifyRecord({
     parameters: { tableName: 'user', matchField: 'username', ...updatedUserByUsername },
-    DBConnect,
+    ...extraParameters,
   }).then((result: any) => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         user: {
-          id: 5,
+          id: 6,
           email: 'john@msupply.foundation',
           first_name: 'John',
           last_name: 'Smith',
@@ -127,14 +122,14 @@ test('Test: Change username by matching username', () => {
       matchValue: 'js',
       ...updatedUserByUsername2,
     },
-    DBConnect,
+    ...extraParameters,
   }).then((result: any) => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         user: {
-          id: 5,
+          id: 6,
           email: 'john@msupply.foundation',
           first_name: 'Johnny',
           last_name: 'Smith',
@@ -143,6 +138,31 @@ test('Test: Change username by matching username', () => {
           date_of_birth: null,
         },
       },
+    })
+  })
+})
+
+test('Test: creating new field on user "dateOfBirth"', () => {
+  return modifyRecord({
+    parameters: { tableName: 'user', ...testUser2 },
+    ...extraParameters,
+  }).then((result: any) => {
+    expect(result).toEqual({
+      error_log: '',
+      output: {
+        user: {
+          dateOfBirth: '1999-12-23',
+          date_of_birth: null,
+          email: 'test@sussol.net',
+          first_name: 'Carl',
+          id: 19,
+          last_name: 'Smith',
+          password_hash: 'XYZ1234',
+          user_name: 'ceejay',
+          username: null,
+        },
+      },
+      status: ActionQueueStatus.Success,
     })
   })
 })
@@ -160,49 +180,51 @@ const testOrg2 = {
 }
 
 test('Test: add Org to database', () => {
-  return modifyRecord({ parameters: { tableName: 'organisation', ...testOrg }, DBConnect }).then(
-    (result: any) => {
-      expect(result).toEqual({
-        status: ActionQueueStatus.Success,
-        error_log: '',
-        output: {
-          organisation: {
-            id: 5,
-            name: 'PharmaFarm',
-            registration: 'AVC123',
-            address: '123 Uptown Drive\nAuckland',
-            logo_url: null,
-          },
+  return modifyRecord({
+    parameters: { tableName: 'organisation', ...testOrg },
+    ...extraParameters,
+  }).then((result: any) => {
+    expect(result).toEqual({
+      status: ActionQueueStatus.Success,
+      error_log: '',
+      output: {
+        organisation: {
+          id: 5,
+          name: 'PharmaFarm',
+          registration: 'AVC123',
+          address: '123 Uptown Drive\nAuckland',
+          logo_url: null,
         },
-      })
-    }
-  )
+      },
+    })
+  })
 })
 
 test('Test: add Org2 -- not all parameters provided', () => {
-  return modifyRecord({ parameters: { tableName: 'organisation', ...testOrg2 }, DBConnect }).then(
-    (result: any) => {
-      expect(result).toEqual({
-        status: ActionQueueStatus.Success,
-        error_log: '',
-        output: {
-          organisation: {
-            id: 6,
-            name: 'Import This!',
-            registration: null,
-            address: null,
-            logo_url: null,
-          },
+  return modifyRecord({
+    parameters: { tableName: 'organisation', ...testOrg2 },
+    ...extraParameters,
+  }).then((result: any) => {
+    expect(result).toEqual({
+      status: ActionQueueStatus.Success,
+      error_log: '',
+      output: {
+        organisation: {
+          id: 6,
+          name: 'Import This!',
+          registration: null,
+          address: null,
+          logo_url: null,
         },
-      })
-    }
-  )
+      },
+    })
+  })
 })
 
 test('Test: Update existing organisation', () => {
   return modifyRecord({
     parameters: { tableName: 'organisation', id: 1, registration: '123456789' },
-    DBConnect,
+    ...extraParameters,
   }).then((result: any) => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
@@ -217,5 +239,19 @@ test('Test: Update existing organisation', () => {
         },
       },
     })
+  })
+})
+
+test('Test: Check creating of application join record', () => {
+  return modifyRecord({
+    parameters: { tableName: 'user', username: 'new', email: 'new@new.com' },
+    ...extraParameters,
+  }).then(async (result: any) => {
+    const queryResult = await DBConnect.query({
+      text: 'SELECT * from user_application_join where user_id = $1',
+      values: [result.output.user.id],
+    })
+
+    expect(queryResult.rows).toEqual([{ application_id: 4000, id: 6, user_id: 20 }])
   })
 })

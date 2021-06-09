@@ -77,7 +77,7 @@ exports.queries = [
         permissionName: {
           name: "reviewOrgRego"
           permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "applyOrgRestricted" }
+            connectByName: { name: "reviewBasic" }
           }
         }
       }

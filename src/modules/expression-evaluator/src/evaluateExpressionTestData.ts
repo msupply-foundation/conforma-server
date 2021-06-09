@@ -603,6 +603,11 @@ testData.objectPropertyUnresolvedWithNullFallback = {
   children: ['application.querstions.q2', null],
 }
 
+testData.objectPropertyUnresolvedDeepWithNullFallback = {
+  operator: 'objectProperties',
+  children: ['application.querstions.q2.something.0.else.more', null],
+}
+
 // String substitution
 
 testData.stringSubstitutionSingle = {
