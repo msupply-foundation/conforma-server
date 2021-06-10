@@ -27,15 +27,6 @@ exports.queries = [
                   templateElementsUsingId: {
                     create: [
                       {
-                        code: "S1Intro"
-                        index: 0
-                        title: "Section 1 - Applicant details"
-                        elementTypePluginCode: "textInfo"
-                        category: INFORMATION
-                        helpText: "The following questions are automatically filled with existing information about **Applicant**"
-                        parameters: { title: "## Applicant details", style: "basic" }
-                      }
-                      {
                         code: "Q1ApplicantFirstName"
                         index: 10
                         title: "Applicant first name"
@@ -218,7 +209,10 @@ exports.queries = [
                         title: "Section 1 - Place of birth"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        parameters: { title: "## Place of birth", style: "basic" }
+                        parameters: { 
+                          title: "### Place of birth", 
+                          style: "none"
+                        }
                       }
                       {
                         code: "Q6Village"
@@ -296,7 +290,10 @@ exports.queries = [
                         title: "Section 1 - Current address"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        parameters: { title: "## Current address", style: "basic" }
+                        parameters: { 
+                          title: "### Current address"
+                          style: "none"
+                        }
                       }
                       {
                         code: "Q8Village"
@@ -381,7 +378,10 @@ exports.queries = [
                         title: "Section 1 - Education"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        parameters: { title: "## Education", style: "basic" }
+                        parameters: { 
+                          title: "### Education"
+                          style: "none"
+                        }
                       }
                       {
                         code: "Q10EducationLevel"
@@ -503,10 +503,10 @@ exports.queries = [
                         title: "Section 2 - Professional details"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        helpText: "The following questions are automatically filled with existing information about **Applicant**"
+                        helpText: "The following questions are automatically filled with existing information from **Company registration**"
                         parameters: {
-                          title: "## Professional details"
-                          style: "basic"
+                          title: "### Professional details"
+                          style: "none"
                         }
                       }
                       {
@@ -563,133 +563,6 @@ exports.queries = [
                               "user.professionalExperience"
                             ]
                           }
-#                         createModalButtonText: "Add professional experience"
-#                         modalText: "## Professional experienve entry \\n\\nPlease enter details below:"
-#                         displayType: "list"
-#                         displayFormat: {
-#                           title: "\${LB2}"
-#                           subtitle: "**From**: \${LB3} **to**: \${LB4}"
-#                           description: "\${LB5}"
-#                         }
-#                         inputFields: [
-#                           {
-#                             code: "LB1"
-#                             title: "Type of institution"
-#                             elementTypePluginCode: "radioChoice"
-#                             category: QUESTION
-#                             parameters: { 
-#                               label: "Select type of institution"
-#                               layout: "inline"
-#                               options: ["Governament","Private sector"]
-#                             }
-#                             isRequired: true
-#                           }
-#                           {
-#                             code: "LB2"
-#                             title: "Name of institution"
-#                             elementTypePluginCode: "shortText"
-#                             category: QUESTION
-#                             parameters: { label: "Name of institution" }
-#                             isRequired: true
-#                           }
-#                           {
-#                             code: "LB3"
-#                             title: "Experience start date"
-#                             elementTypePluginCode: "shortText"
-#                             category: QUESTION
-#                             parameters: {
-#                               label: "From"
-#                               maxWidth: 150
-#                             }
-#                             isRequired: true
-#                             validation: {
-#                               operator: "REGEX"
-#                               children: [
-#                                 {
-#                                   operator: "objectProperties"
-#                                   children: ["responses.thisResponse"]
-#                                 }
-#                                 "^([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$"
-#                               ]
-#                             }
-#                             validationMessage: "Format expected MM/YYYY"
-#                           }
-#                           {
-#                             code: "LB4"
-#                             title: "Experience finish date"
-#                             elementTypePluginCode: "shortText"
-#                             category: QUESTION
-#                             parameters: {
-#                               label: "To"
-#                               maxWidth: 150
-#                             }
-#                             isRequired: false
-#                             validation: {
-#                               operator: "REGEX"
-#                               children: [
-#                                 {
-#                                   operator: "objectProperties"
-#                                   children: ["responses.thisResponse"]
-#                                 }
-#                                 "^([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$"
-#                               ]
-#                             }
-#                             validationMessage: "Format expected MM/YYYY. Can be left blank if current."
-#                           }
-#                           {
-#                             code: "LB5"
-#                             title: "Experience role"
-#                             elementTypePluginCode: "shortText"
-#                             category: QUESTION
-#                             parameters: { label: "Role" }
-#                             isRequired: true
-#                           }
-#                           {
-#                             code: "LB6"
-#                             title: "Telephone"
-#                             elementTypePluginCode: "shortText"
-#                             category: QUESTION
-#                             parameters: {
-#                               label: "Telephone"
-#                               maxWidth: 200
-#                             }
-#                             isRequired: true
-#                             validation: {
-#                               operator: "REGEX",
-#                               children: [
-#                                 {
-#                                   operator: "objectProperties",
-#                                   children: [
-#                                     "responses.thisResponse"
-#                                   ]
-#                                 },
-#                                 "^[0-9.]+$"
-#                               ]
-#                             }
-#                             validationMessage: "Must be a number"
-#                           }
-#                           {
-#                             code: "LB7"
-#                             title: "Email"
-#                             elementTypePluginCode: "shortText"
-#                             category: QUESTION
-#                             parameters: { label: "Email" }
-#                             isRequired: true
-#                             validation: {
-#                               operator: "REGEX"
-#                               children: [
-#                                 {
-#                                   operator: "objectProperties"
-#                                   children: ["responses.thisResponse"]
-#                                 }
-#                                 {
-#                                   value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
-#                                 }
-#                               ]
-#                             }
-#                             validationMessage: "Not a valid email address"
-#                           }
-#                         ]
                        }
                      }
                    ]
@@ -701,14 +574,6 @@ exports.queries = [
                   index: 2
                   templateElementsUsingId: {
                     create: [
-                      {
-                        code: "S3CompanyInfo"
-                        index: 10
-                        title: "Section 3 - Company info (Lao)"
-                        elementTypePluginCode: "textInfo"
-                        category: INFORMATION
-                        parameters: { title: "Company details", style: "basic" }
-                      }
                       {
                         code: "Q1CompanyNameLao"
                         index: 20
@@ -893,7 +758,10 @@ exports.queries = [
                         title: "Section 3 - Company contact"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        parameters: { title: "Company contact", style: "basic" }
+                        parameters: { 
+                          title: "### Company contact"
+                          style: "none"
+                        }
                       }
                       {
                         code: "Q6CompanyPhone"
@@ -1011,7 +879,10 @@ exports.queries = [
                         title: "Section 3 - Company investment"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        parameters: { title: "Investment", style: "basic" }
+                        parameters: { 
+                          title: "### Investment"
+                          style: "none"
+                        }
                       }
                       {
                         code: "Q9DomesticInvestment"
@@ -1087,7 +958,10 @@ exports.queries = [
                         title: "Section 3 - Owner details"
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
-                        parameters: { title: "Owner details", style: "basic" }
+                        parameters: { 
+                          title: "Owner details"
+                          style: "none"
+                        }
                       }
                       {
                         code: "Q10CompanyOwnerName"
@@ -1390,7 +1264,6 @@ exports.queries = [
             templateActionsUsingId: {
               create: [
                 ${coreActions}
-                ${devActions}
                 {
                   actionCode: "cLog"
                   trigger: ON_APPLICATION_SUBMIT
