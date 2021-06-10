@@ -100,10 +100,6 @@ const startServer = async () => {
         tableName = 'organisation'
         fieldName = 'name'
         break
-      case 'orgRegistration':
-        tableName = 'organisation'
-        fieldName = 'registration'
-        break
       default:
         if (!table || !field) {
           reply.send({
