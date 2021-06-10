@@ -440,31 +440,38 @@ exports.queries = [
                         parameters: {
                           label: "Education history"
                           displayType: "table"
-                          defaultValue: {
-                            operator: "buildObject"
-                            properties: [
-                              {
-                                key: "text"
-                                value: {
-                                  operator: "graphQL",
-                                  children: [
-                                    "query getUser($id: Int!){user(id: $id) {universityHistory}}",
-                                    "",
-                                    [
-                                      "id"
-                                    ],
-                                    {
-                                      operator: "objectProperties",
-                                      children: [
-                                        "currentUser.userId"
-                                      ]
-                                    },
-                                    "user.universityHistory"
-                                  ]
-                                }
-                              }
-                            ]
-                          }
+                          displayOnly: true
+                          inputFields: [
+                            {
+                              code: "LB1"
+                              title: "Name of institution"
+                            }
+                            {
+                              code: "LB2"
+                              title: "University year"
+                            }
+                            {
+                              code: "LB3"
+                              title: "University title"
+                            }
+                          ]
+                        }
+                        defaultValue: {
+                          operator: "graphQL",
+                          children: [
+                            "query getUser($id: Int!){user(id: $id) {universityHistory}}",
+                            "",
+                            [
+                              "id"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "currentUser.userId"
+                              ]
+                            },
+                            "user.universityHistory"
+                          ]
                         }
                         visibilityCondition: {
                           operator: "="
@@ -1414,5 +1421,5 @@ exports.queries = [
         }
       }
     }
-  `
+  `,
 ]
