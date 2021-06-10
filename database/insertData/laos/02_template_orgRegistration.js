@@ -490,14 +490,13 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "profID"
+                      code: "profId"
                       index: 20
-                      title: "Professional ID"
+                      title: "Pofessional Id"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
                         label: "Professional ID number"
-                        description: "_TO-DO: Pre-populate with existing_"
                       }
                     }
                     {
@@ -657,7 +656,7 @@ exports.queries = [
                       title: "CV upload"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       helpText: "For all uploads, files must be in **pdf**, **doc** or an **image** format, and less than 10MB each"
                       parameters: {
                         label: "CV (LMMD02)"
@@ -673,7 +672,7 @@ exports.queries = [
                       title: "Medical certificate upload"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       parameters: {
                         label: "Medical certificate  (LMMD03)"
                         description: "QUESTION: Is this for individual?"
@@ -688,7 +687,7 @@ exports.queries = [
                       title: "Current residence certificate"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       parameters: {
                         label: "Certificate of current residence  (LMMD04)"
                         description: "Must include photo (max 3 months)"
@@ -703,7 +702,7 @@ exports.queries = [
                       title: "Recent Photo"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       parameters: {
                         label: "Photo (LMMD05)"
                         description: "Max 1 year (used for printing licence)"
@@ -725,7 +724,7 @@ exports.queries = [
                       title: "Education Certificate"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       parameters: {
                         label: "Certificate of education level (LMMD06)"
                         fileCountLimit: 1
@@ -739,7 +738,7 @@ exports.queries = [
                       title: "Criminal Record"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       parameters: {
                         label: "Criminal record (number 3) (LMMD07)"
                         fileCountLimit: 1
@@ -753,7 +752,7 @@ exports.queries = [
                       title: "Recent Photo"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       parameters: {
                         label: "Letter from previous employers documenting at least 3 years professional experience (LMMD08)"
                         description: "(for private sector must be certified by provincial or capital level)"
@@ -768,7 +767,7 @@ exports.queries = [
                       title: "Resignation document"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       parameters: {
                         label: "Documentation showing resignation from previous employment (LMMD09)"
                         description: "(for private sector must be certified by provincial or capital level)"
@@ -804,7 +803,7 @@ exports.queries = [
                       title: "Layout of facilities"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       parameters: {
                         label: "Layout of facilities (LMMD11)"
                         fileCountLimit: 1
@@ -818,7 +817,7 @@ exports.queries = [
                       title: "Proof of ownership"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       parameters: {
                         label: "Proof of ownership of facilities or contract of rent"
                         fileCountLimit: 1
@@ -832,7 +831,7 @@ exports.queries = [
                       title: "Business licence"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: false # TO-DO make required for production
+                      isRequired: true # TO-DO make required for production
                       parameters: {
                         label: "Copy of business licence issued by Ministry of Commerce (LMMD14)"
                         fileCountLimit: 1
@@ -1012,7 +1011,7 @@ exports.queries = [
                   }
                   professional_experience: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.expList", ""]
+                    children: ["applicationData.responses.expList", {}]
                   }
                 }
               }
@@ -1078,12 +1077,6 @@ exports.queries = [
           }
           templatePermissionsUsingId: {
             create: [
-              # Apply General
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyGeneral" }
-                }
-              }
               # Apply OrgRegistration
               {
                 permissionNameToPermissionNameId: {
@@ -1098,14 +1091,6 @@ exports.queries = [
                 stageNumber: 1
                 levelNumber: 1
                 canSelfAssign: true
-              }
-              # Assign General
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "assignGeneral" }
-                }
-                stageNumber: 1
-                levelNumber: 1
               }
             ]
           }
