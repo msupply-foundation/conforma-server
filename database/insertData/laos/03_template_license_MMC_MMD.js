@@ -405,20 +405,28 @@ exports.queries = [
                           ]
                         }
                         defaultValue: {
-                          operator: "graphQL",
-                          children: [
-                            "query getUser($id: Int!){user(id: $id) {secondary}}",
-                            "",
-                            [
-                              "id"
-                            ],
+                          operator: "buildObject"
+                          properties: [
                             {
-                              operator: "objectProperties",
-                              children: [
-                                "currentUser.userId"
-                              ]
-                            },
-                            "user.secondary"
+                              key: "text"
+                              value: {
+                                operator: "graphQL",
+                                children: [
+                                  "query getUser($id: Int!){user(id: $id) {secondary}}",
+                                  "",
+                                  [
+                                    "id"
+                                  ],
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.userId"
+                                    ]
+                                  },
+                                  "user.secondary"
+                                ]
+                              }
+                            }
                           ]
                         }
                       }
@@ -433,64 +441,30 @@ exports.queries = [
                           label: "Education history"
                           displayType: "table"
                           defaultValue: {
-                            operator: "graphQL",
-                            children: [
-                              "query getUser($id: Int!){user(id: $id) {universityHistory}}",
-                              "",
-                              [
-                                "id"
-                              ],
+                            operator: "buildObject"
+                            properties: [
                               {
-                                operator: "objectProperties",
-                                children: [
-                                  "currentUser.userId"
-                                ]
-                              },
-                              "user.universityHistory"
+                                key: "text"
+                                value: {
+                                  operator: "graphQL",
+                                  children: [
+                                    "query getUser($id: Int!){user(id: $id) {universityHistory}}",
+                                    "",
+                                    [
+                                      "id"
+                                    ],
+                                    {
+                                      operator: "objectProperties",
+                                      children: [
+                                        "currentUser.userId"
+                                      ]
+                                    },
+                                    "user.universityHistory"
+                                  ]
+                                }
+                              }
                             ]
                           }
-                          inputFields: [
-                            {
-                              code: "LB1"
-                              title: "Name of institution"
-                              elementTypePluginCode: "shortText"
-                              category: QUESTION
-                              parameters: { label: "Name of institution" }
-                              isRequired: true
-                            }
-                            {
-                              code: "LB2"
-                              title: "University year"
-                              elementTypePluginCode: "shortText"
-                              category: QUESTION
-                              parameters: {
-                                label: "Year of conclusion"
-                                description: "Format expected YYYY"
-                                maxWidth: 150
-                              }
-                              validation: {
-                                operator: "REGEX"
-                                children: [
-                                  {
-                                    operator: "objectProperties"
-                                    children: ["responses.thisResponse"]
-                                  }
-                                  "^(?:(?:18|19|20|21)[0-9]{2})$"
-                                ]
-                              }
-                              validationMessage: "Year not between 1900-2100"
-                            }
-                            {
-                              code: "LB3"
-                              title: "University title"
-                              elementTypePluginCode: "shortText"
-                              category: QUESTION
-                              parameters: {
-                                label: "Title"
-                                description: "Enter the title received by applicant"
-                              }
-                            }
-                          ]
                         }
                         visibilityCondition: {
                           operator: "="
@@ -974,7 +948,7 @@ exports.queries = [
                         elementTypePluginCode: "textInfo"
                         category: INFORMATION
                         parameters: { 
-                          title: "Owner details"
+                          title: "### Owner details"
                           style: "none"
                         }
                       }
