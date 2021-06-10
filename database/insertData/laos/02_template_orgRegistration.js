@@ -461,7 +461,7 @@ exports.queries = [
                             parameters: {
                               label: "Type of role"
                               options: ["Government", "Private Sector"]
-                              display: "inline"
+                              layout: "inline"
                             }
                           }
                           {
