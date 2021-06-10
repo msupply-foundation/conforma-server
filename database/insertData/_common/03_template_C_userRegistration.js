@@ -60,7 +60,7 @@ exports.queries = [
                       category: QUESTION
                       parameters: { 
                         label: "Select a username" 
-                        description: "Usernames should have no spaces and lenght of 3-50 using letters, numbers or - . _"
+                        description: "You can use letters, numbers and - . _ or @"
                       }
                       validation: {
                         operator: "AND"
@@ -88,7 +88,7 @@ exports.queries = [
                                     operator: "objectProperties"
                                     children: ["responses.thisResponse"]
                                   }
-                                  "^[a-zA-Z0-9_.-]{3,50}$"
+                                  "^[a-zA-Z0-9_.-@]{3,50}$"
                                 ]
                               }
                               true
