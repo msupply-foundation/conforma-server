@@ -351,6 +351,31 @@ exports.queries = [
                         label: "Phone"
                         maxLength: 50
                       }
+                      defaultValue: {
+                        operator: "buildObject",
+                        properties: [
+                          {
+                            key: "text",
+                            value: {
+                              operator: "graphQL",
+                              children: [
+                                "query getUser($id: Int!){user(id: $id) {phone}}",
+                                "",
+                                [
+                                  "id"
+                                ],
+                                {
+                                  operator: "objectProperties",
+                                  children: [
+                                    "currentUser.userId"
+                                  ]
+                                },
+                                "user.phone"
+                              ]
+                            }
+                          }
+                        ]
+                      }
                       validation: {
                         operator: "REGEX"
                         children: [
