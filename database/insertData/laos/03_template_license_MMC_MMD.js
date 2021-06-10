@@ -1309,29 +1309,29 @@ exports.queries = [
                       children: ["applicationData.responses.Q2LicenseType.text"]
                     }
                     expiry_date: "31/01/2022"
-                    company_id: {
-                      operator: "objectProperties"
-                      children: ["currentUser.organisation.orgId"]
-                    }
+#                   company_id: {
+#                     operator: "objectProperties"
+#                     children: ["currentUser.organisation.orgId"]
+#                   }
                     company_name: {
                       operator: "objectProperties"
-                      children: ["applicationData.responses.Q2CompanyNameEnglish.text"]
+                      children: ["applicationData.responses.Q1CompanyNameLao.text"]
                     }
                     serial: {
                       operator: "CONCAT"
                       children: [
                         {
                           operator: "objectProperties"
-                          children: ["applicationData.responses.Q2CompanyNameEnglish.text"]
+                          children: ["applicationData.responses.Q1CompanyNameLao.text"]
                         }
                         ":"
                         "1234"
                       ]
                     }
-                    application_id: {
-                      operator: "objectProperties"
-                      children: ["applicationData.id"]
-                    }
+#                   application_id: {
+#                     operator: "objectProperties"
+#                     children: ["applicationData.id"]
+#                   }
                   }
                 }
                 {
