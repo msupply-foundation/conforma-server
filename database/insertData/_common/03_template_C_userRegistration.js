@@ -27,7 +27,7 @@ exports.queries = [
                     {
                       code: "S1Page1"
                       index: 10
-                      title: "Intro Section 1 - page 1"
+                      title: "Intro Section 1"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
@@ -43,17 +43,6 @@ exports.queries = [
                       category: QUESTION
                       helpText: "### User Registration\\n\\nPlease provide accurate details to **register** for a user account on our system."
                       parameters: { label: "First Name" }
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: ".+" }
-                        ]
-                      }
-                      validationMessage: "First name must not be blank"
                     }
                     {
                       code: "Q2LastName"
@@ -62,17 +51,6 @@ exports.queries = [
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: { label: "Last Name" }
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: ".+" }
-                        ]
-                      }
-                      validationMessage: "Last name must not be blank"
                     }
                     {
                       code: "Q3Username"
@@ -80,32 +58,45 @@ exports.queries = [
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      validation: {
-                        operator: "API"
-                        children: [
-                          "http://localhost:8080/check-unique"
-                          ["type", "value"]
-                          "username"
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          "unique"
-                        ]
-                        # TODO - Also check for valid username
-#                       {
-#                         operator: "REGEX"
-#                         children: [
-#                           {
-#                             operator: "objectProperties"
-#                             children: ["responses.thisResponse]
-#                           }
-#                           "^[a-zA-Z0-9_.-]*$"
-#                         ]
-#                       }
+                      parameters: { 
+                        label: "Select a username" 
+                        description: "You can use letters, numbers and - . _ or @"
                       }
-                      validationMessage: "Username already choosen"
-                      parameters: { label: "Select a username" }
+                      validation: {
+                        operator: "AND"
+                        children: [
+                          {
+                            operator: "API"
+                            children: [
+                              "http://localhost:8080/check-unique"
+                              ["type", "value"]
+                              "username"
+                              {
+                                operator: "objectProperties"
+                                children: ["responses.thisResponse"]
+                              }
+                              "unique"
+                            ]
+                          }
+                          {
+                            operator: "="
+                            children: [
+                              {
+                                operator: "REGEX"
+                                children: [
+                                  {
+                                    operator: "objectProperties"
+                                    children: ["responses.thisResponse"]
+                                  }
+                                  "^[a-zA-Z0-9_.-@]{3,50}$"
+                                ]
+                              }
+                              true
+                            ]
+                          }
+                        ]
+                      }
+                      validationMessage: "Username already in use or invalid"
                     }
                     {
                       code: "Q4Email"
@@ -166,17 +157,22 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "## Personal information"
-                        style: "basic"
+                        title: "### Personal information"
+                        style: "none"
                       }
                     }
                     {
+                      # TODO: Update to be using a DatePicker element type
                       code: "Q6DOB"
                       index: 90
                       title: "DOB"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Date of Birth", maxWidth: 150 }
+                      parameters: { 
+                        label: "Date of Birth"
+                        description: "Format expected DD/MM/YYYY"
+                        maxWidth: 150
+                      }
                       validation: {
                         operator: "REGEX"
                         children: [
@@ -187,8 +183,7 @@ exports.queries = [
                           "^([0]?[1-9]|[1|2][0-9]|[3][0|1])[./-]([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$"
                         ]
                       }
-                      validationMessage: "Format expected DD/MM/YYYY"
-                      # TODO: Update to be using a DatePicker element type
+                      validationMessage: "Not a valid date"
                     }
                     {
                       code: "Q7NationalID"
@@ -210,12 +205,17 @@ exports.queries = [
                       validationMessage: "Must be a number"
                     }
                     {
+                      # TODO: Update to be using a DatePicker element type
                       code: "Q8IssuedDate"
                       index: 100
                       title: "Date issued"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Date issued", maxWidth: 150 }
+                      parameters: { 
+                        label: "Date issued"
+                        description: "Format expected DD/MM/YYYY"
+                        maxWidth: 150
+                      }
                       validation: {
                         operator: "REGEX"
                         children: [
@@ -226,8 +226,7 @@ exports.queries = [
                           "^([0]?[1-9]|[1|2][0-9]|[3][0|1])[./-]([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$"
                         ]
                       }
-                      validationMessage: "Format expected DD/MM/YYYY"
-                      # TODO: Update to be using a DatePicker element type
+                      validationMessage: "Not a valid date"
                     }
                     {
                       code: "PB2"
@@ -242,7 +241,10 @@ exports.queries = [
                       title: "Section 1 - Place of birth"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "## Place of birth", style: "basic" }
+                      parameters: { 
+                        title: "### Place of birth"
+                        style: "none" 
+                      }
                     }
                     {
                       code: "Q9Village"
@@ -268,7 +270,10 @@ exports.queries = [
                       title: "Section 1 - Current address"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "## Current address", style: "basic" }
+                      parameters: { 
+                        title: "### Current address"
+                        style: "none" 
+                      }
                     }
                     {
                       code: "Q12Village"
@@ -303,7 +308,10 @@ exports.queries = [
                       title: "Section 2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "## Education history", style: "basic" }
+                      parameters: { 
+                        title: "### Education history"
+                        style: "none" 
+                      }
                     }
                     {
                       code: "Q1EducationLevel"
@@ -311,7 +319,6 @@ exports.queries = [
                       title: "Organisation Category"
                       elementTypePluginCode: "radioChoice"
                       category: QUESTION
-                      helpText: "TODO: This field should be consider as another  application related to applicant - and simply displayed in company license form"
                       parameters: {
                         label: "Education Level"
                         options: ["Secondary", "University"]
@@ -346,7 +353,7 @@ exports.queries = [
                         label: "Education history"
                         createModalButtonText: "Add to education history"
                         modalText: "## Education history entry \\n\\nPlease enter details for university"
-                        displayType: "card"
+                        displayType: "table"
                         inputFields: [
                           {
                             code: "LB1"
@@ -363,6 +370,7 @@ exports.queries = [
                             category: QUESTION
                             parameters: {
                               label: "Year of conclusion"
+                              description: "Format expected YYYY"
                               maxWidth: 150
                             }
                             validation: {
@@ -375,7 +383,7 @@ exports.queries = [
                                 "^(?:(?:18|19|20|21)[0-9]{2})$"
                               ]
                             }
-                            validationMessage: "Year between 1900-2100"
+                            validationMessage: "Year not between 1900-2100"
                           }
                           {
                             code: "LB3"
@@ -417,7 +425,6 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               # No Core Actions for this one
-              # ${devActions}
               {
                 actionCode: "modifyRecord"
                 trigger: ON_APPLICATION_SUBMIT
