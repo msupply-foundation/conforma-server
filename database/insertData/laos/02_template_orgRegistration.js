@@ -840,6 +840,18 @@ exports.queries = [
                         fileSizeLimit: 10000
                       }
                     }
+                    {
+                      code: "registrationCode"
+                      index: 55
+                      title: "Company Registration"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: {
+                        label: "Please enter your company registration code"
+                        description: "As specified in **LMMD14**"
+                        maxLength: 50
+                      }
+                    }
                   ]
                 }
               }
@@ -924,6 +936,10 @@ exports.queries = [
                   name_english: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.S1NameEng.text"]
+                  }
+                  registration: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.registrationCode.text"]
                   }
                   logo_url: {
                     operator: "+",
