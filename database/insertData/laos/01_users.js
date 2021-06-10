@@ -25,11 +25,6 @@ exports.queries = [
                     connectByName: { name: "applyOrgRego" }
                   }
                 }
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewJoinOrg" }
-                  }
-                }
               ]
             }
           }
