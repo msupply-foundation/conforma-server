@@ -260,10 +260,18 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Email"
-                        default: {
-                          operator: "objectProperties"
-                          children: ["currentUser.email"]
-                        }
+                      }
+                      defaultValue: {
+                        operator: "buildObject"
+                        properties: [
+                          {
+                            key: "text"
+                            value: {
+                              operator: "objectProperties"
+                              children: ["currentUser.email"]
+                            }
+                          }
+                        ]
                       }
                       validation: {
                         operator: "REGEX"
@@ -301,9 +309,36 @@ exports.queries = [
                       title: "Company Owner"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      defaultValue: {
+                        operator: "buildObject",
+                        properties: [
+                          {
+                            key: "text",
+                            value: {
+                              operator: "stringSubstitution",
+                              children: [
+                                "%1 %2",
+                                {
+                                  operator: "objectProperties",
+                                  children: [
+                                    "currentUser.firstName",
+                                    ""
+                                  ]
+                                },
+                                {
+                                  operator: "objectProperties",
+                                  children: [
+                                    "currentUser.lastName",
+                                    ""
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        ]
+                      }
                       parameters: {
                         label: "Full name of company owner"
-                        description: "TO-DO: Pre-populate"
                         maxLength: 150 }
                     }
                     {
