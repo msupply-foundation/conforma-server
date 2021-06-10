@@ -166,7 +166,7 @@ exports.queries = [
           user: {
             email: "assigner@sussol.net"
             passwordHash: "$2a$10$DA4a1E2i3dfN5BrdmO6iX.EYt.ob0czyF1sQqNQxPMPrfEPsRCx2a"
-            username: "testAssigner"
+            username: "assigner"
             firstName: "Assigner"
             permissionJoinsUsingId: {
               create: [
