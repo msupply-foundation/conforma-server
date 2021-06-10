@@ -34,8 +34,16 @@ exports.queries = [
                         isEditable: false
                         parameters: { label: "First name" }
                         defaultValue: {
-                          operator: "objectProperties"
-                          children: ["currentUser.firstName"]
+                          operator: "buildObject"
+                          properties: [
+                            {
+                              key: "text"
+                              value: {
+                                operator: "objectProperties"
+                                children: ["currentUser.firstName"]
+                              }
+                            }
+                          ]
                         }
                       }
                       {
@@ -47,8 +55,16 @@ exports.queries = [
                         isEditable: false
                         parameters: { label: "Last name" }
                         defaultValue: {
-                          operator: "objectProperties"
-                          children: ["currentUser.lastName"]
+                          operator: "buildObject"
+                          properties: [
+                            {
+                              key: "text"
+                              value: {
+                                operator: "objectProperties"
+                                children: ["currentUser.lastName"]
+                              }
+                            }
+                          ]
                         }
                       }
                       {
