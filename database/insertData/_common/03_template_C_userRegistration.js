@@ -319,7 +319,6 @@ exports.queries = [
                       title: "Organisation Category"
                       elementTypePluginCode: "radioChoice"
                       category: QUESTION
-                      helpText: "TODO: This field should be consider as another  application related to applicant - and simply displayed in company license form"
                       parameters: {
                         label: "Education Level"
                         options: ["Secondary", "University"]
@@ -354,7 +353,7 @@ exports.queries = [
                         label: "Education history"
                         createModalButtonText: "Add to education history"
                         modalText: "## Education history entry \\n\\nPlease enter details for university"
-                        displayType: "card"
+                        displayType: "table"
                         inputFields: [
                           {
                             code: "LB1"
@@ -426,7 +425,6 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               # No Core Actions for this one
-              # ${devActions}
               {
                 actionCode: "modifyRecord"
                 trigger: ON_APPLICATION_SUBMIT
