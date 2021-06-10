@@ -257,6 +257,7 @@ exports.queries = [
                       title: "Email"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      isRequired: false
                       parameters: {
                         label: "Email"
                       }
