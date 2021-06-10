@@ -55,9 +55,8 @@ exports.queries = [
                               "/check-unique"
                             ]
                           }
-                          ["table", "field", "value"]
+                          ["type", "value"]
                           "organisation"
-                          "name_lao"
                           {
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
