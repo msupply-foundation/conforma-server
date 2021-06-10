@@ -49,7 +49,7 @@ exports.queries = [
       templateCategory: {
         code: "user"
         icon: "user"
-        title: "Drug Registration"
+        title: "User settings"
       }
     }
   ) {
