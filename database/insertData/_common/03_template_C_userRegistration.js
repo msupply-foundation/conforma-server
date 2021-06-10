@@ -480,7 +480,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q13District.text", ""]
                   }
-                  education: {
+                  education_level: {
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q1EducationLevel", ""]
                   }
