@@ -58,6 +58,10 @@ exports.queries = [
                       title: "Username"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
+                      parameters: { 
+                        label: "Select a username" 
+                        description: "Usernames should have no spaces and lenght of 3-50 using letters, numbers or - . _"
+                      }
                       validation: {
                         operator: "AND"
                         children: [
@@ -84,7 +88,7 @@ exports.queries = [
                                     operator: "objectProperties"
                                     children: ["responses.thisResponse"]
                                   }
-                                  "^[a-zA-Z0-9_.-]{5,50}$"
+                                  "^[a-zA-Z0-9_.-]{3,50}$"
                                 ]
                               }
                               true
@@ -92,8 +96,7 @@ exports.queries = [
                           }
                         ]
                       }
-                      validationMessage: "Username already in use or invalid. Usernames should have no spaces and size 5-50 characters of letters, numbers and - . or _"
-                      parameters: { label: "Select a username" }
+                      validationMessage: "Username already in use or invalid"
                     }
                     {
                       code: "Q4Email"
@@ -159,12 +162,17 @@ exports.queries = [
                       }
                     }
                     {
+                      # TODO: Update to be using a DatePicker element type
                       code: "Q6DOB"
                       index: 90
                       title: "DOB"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Date of Birth", maxWidth: 150 }
+                      parameters: { 
+                        label: "Date of Birth"
+                        description: "Format expected DD/MM/YYYY"
+                        maxWidth: 150
+                      }
                       validation: {
                         operator: "REGEX"
                         children: [
@@ -175,8 +183,7 @@ exports.queries = [
                           "^([0]?[1-9]|[1|2][0-9]|[3][0|1])[./-]([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$"
                         ]
                       }
-                      validationMessage: "Format expected DD/MM/YYYY"
-                      # TODO: Update to be using a DatePicker element type
+                      validationMessage: "Not a valid date"
                     }
                     {
                       code: "Q7NationalID"
@@ -198,12 +205,17 @@ exports.queries = [
                       validationMessage: "Must be a number"
                     }
                     {
+                      # TODO: Update to be using a DatePicker element type
                       code: "Q8IssuedDate"
                       index: 100
                       title: "Date issued"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      parameters: { label: "Date issued", maxWidth: 150 }
+                      parameters: { 
+                        label: "Date issued"
+                        description: "Format expected DD/MM/YYYY"
+                        maxWidth: 150
+                      }
                       validation: {
                         operator: "REGEX"
                         children: [
@@ -214,8 +226,7 @@ exports.queries = [
                           "^([0]?[1-9]|[1|2][0-9]|[3][0|1])[./-]([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$"
                         ]
                       }
-                      validationMessage: "Format expected DD/MM/YYYY"
-                      # TODO: Update to be using a DatePicker element type
+                      validationMessage: "Not a valid date"
                     }
                     {
                       code: "PB2"
@@ -360,6 +371,7 @@ exports.queries = [
                             category: QUESTION
                             parameters: {
                               label: "Year of conclusion"
+                              description: "Format expected YYYY"
                               maxWidth: 150
                             }
                             validation: {
@@ -372,7 +384,7 @@ exports.queries = [
                                 "^(?:(?:18|19|20|21)[0-9]{2})$"
                               ]
                             }
-                            validationMessage: "Year between 1900-2100"
+                            validationMessage: "Year not between 1900-2100"
                           }
                           {
                             code: "LB3"
