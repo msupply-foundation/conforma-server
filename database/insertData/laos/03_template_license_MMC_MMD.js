@@ -34,29 +34,8 @@ exports.queries = [
                         isEditable: false
                         parameters: { label: "First name" }
                         defaultValue: {
-                          operator: "buildObject",
-                          properties: [
-                            {
-                              key: "text",
-                              value: {
-                                operator: "graphQL",
-                                children: [
-                                  "query getUser($id: Int!){user(id: $id) {firstName}}",
-                                  "",
-                                  [
-                                    "id"
-                                  ],
-                                  {
-                                    operator: "objectProperties",
-                                    children: [
-                                      "currentUser.userId"
-                                    ]
-                                  },
-                                  "user.firstName"
-                                ]
-                              }
-                            }
-                          ]
+                          operator: "objectProperties",
+                          children: [ "currentUser.firstName" ]
                         }
                       }
                       {
@@ -68,29 +47,8 @@ exports.queries = [
                         isEditable: false
                         parameters: { label: "Last name" }
                         defaultValue: {
-                          operator: "buildObject",
-                          properties: [
-                            {
-                              key: "text",
-                              value: {
-                                operator: "graphQL",
-                                children: [
-                                  "query getUser($id: Int!){user(id: $id) {lastName}}",
-                                  "",
-                                  [
-                                    "id"
-                                  ],
-                                  {
-                                    operator: "objectProperties",
-                                    children: [
-                                      "currentUser.userId"
-                                    ]
-                                  },
-                                  "user.lastName"
-                                ]
-                              }
-                            }
-                          ]
+                          operator: "objectProperties",
+                          children: [ "currentUser.lastName" ]
                         }
                       }
                       {
@@ -457,7 +415,7 @@ exports.queries = [
                         isEditable: false
                         parameters: {
                           label: "Education history"
-                          displayType: "card"
+                          displayType: "table"
                           defaultValue: {
                             operator: "graphQL",
                             children: [
@@ -475,6 +433,20 @@ exports.queries = [
                               "user.universityHistory"
                             ]
                           }
+                          inputFields: [
+                            {
+                              code: "LB1"
+                              title: "Name of institution"
+                            }
+                            {
+                              code: "LB2"
+                              title: "University year"
+                            }
+                            {
+                              code: "LB3"
+                              title: "University title"
+                            }
+                          ]
                         }
                         visibilityCondition: {
                           operator: "="
