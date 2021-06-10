@@ -35,7 +35,7 @@ exports.queries = [
                         parameters: { label: "First name" }
                         defaultValue: {
                           operator: "objectProperties",
-                          children: [ "currentUser.firstName" ]
+                          children: ["currentUser.firstName"]
                         }
                       }
                       {
@@ -48,7 +48,7 @@ exports.queries = [
                         parameters: { label: "Last name" }
                         defaultValue: {
                           operator: "objectProperties",
-                          children: [ "currentUser.lastName" ]
+                          children: ["currentUser.lastName"]
                         }
                       }
                       {
@@ -500,7 +500,7 @@ exports.queries = [
                               {
                                 operator: "objectProperties",
                                 children: [
-                                  "currentUser.orgId"
+                                  "currentUser.organisation.orgId"
                                 ]
                               },
                               "user.professionalId"
@@ -528,7 +528,7 @@ exports.queries = [
                               {
                                 operator: "objectProperties",
                                 children: [
-                                  "currentUser.orgId"
+                                  "currentUser.organisation.orgId"
                                 ]
                               },
                               "user.professionalExperience"
@@ -561,7 +561,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getOrganisation($id: Int!){organisation(id: $id) {nameLao}}",
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {name}}",
                                   "",
                                   [
                                     "id"
@@ -569,10 +569,10 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
-                                  "organisation.nameLao"
+                                  "organisation.name"
                                 ]
                               }
                             }
@@ -603,7 +603,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.nameEnglish"
@@ -637,7 +637,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.“addressStreet”"
@@ -672,7 +672,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.addressVillage"
@@ -706,7 +706,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.addressDistrict"
@@ -758,7 +758,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.phone"
@@ -793,7 +793,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.fax"
@@ -827,7 +827,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.email"
@@ -879,7 +879,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.domesticInvestment"
@@ -913,7 +913,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.foreignInvestment"
@@ -961,7 +961,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.ownerName"
@@ -995,7 +995,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.ownerPhone"
@@ -1030,7 +1030,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.ownerFax"
@@ -1064,7 +1064,7 @@ exports.queries = [
                                   {
                                     operator: "objectProperties",
                                     children: [
-                                      "currentUser.orgId"
+                                      "currentUser.organisation.orgId"
                                     ]
                                   },
                                   "organisation.ownerEmail"
@@ -1296,7 +1296,7 @@ exports.queries = [
                     }
                     company_id: {
                       operator: "objectProperties"
-                      children: ["currentUser.orgId"]
+                      children: ["currentUser.organisation.orgId"]
                     }
                     company_name: {
                       operator: "objectProperties"
