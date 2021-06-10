@@ -156,7 +156,7 @@ exports.queries = [
                         operator: "API"
                         children: [
                           {
-                            operator: "CONCAT"
+                            operator: "+"
                             children: [
                               {
                                 operator: "objectProperties"
