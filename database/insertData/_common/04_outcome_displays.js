@@ -146,14 +146,14 @@ exports.queries = [
                 title: "License type"
               }
               {
-                columnName: "expiry_date"
+                columnName: "expiryDate"
                 elementTypePluginCode: "shortText"
                 isTextColumn: true
                 parameters: { label: "Expiry date" }
                 title:  "Expiry date"
               }
               {
-                columnName: "company"
+                columnName: "companyName"
                 elementTypePluginCode: "shortText"
                 isTextColumn: true
                 parameters: { label: "Company name" }
@@ -165,8 +165,8 @@ exports.queries = [
             create: [
               { columnName: "serial", title: "Serial", isTextColumn: true }
               { columnName: "type", title: "License type", isTextColumn: true }
-              { columnName: "expiry_date", title: "Expiry date", isTextColumn: true }
-              { columnName: "company", title: "Company name", isTextColumn: true }
+              { columnName: "expiryDate", title: "Expiry date", isTextColumn: true }
+              { columnName: "companyName", title: "Company name", isTextColumn: true }
             ]
           }
         }
