@@ -21,6 +21,7 @@ import { getAppEntryPointDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
+import snapshotRoutes from './components/snapshots/routes'
 
 // Bare-bones Fastify server
 
@@ -70,6 +71,9 @@ const startServer = async () => {
   })
 
   server.register(lookupTableRoutes, { prefix: '/lookup-table' })
+
+  // Snapshout routes
+  server.register(snapshotRoutes, { prefix: '/snapshot' })
 
   server.get('/', async (request, reply) => {
     console.log('Request made')

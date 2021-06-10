@@ -1,8 +1,6 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
-import config from '../../config'
 import path from 'path'
-import { getAppEntryPointDir } from '../utilityFunctions'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
 import updateRowPolicies from '../../../database/updateRowPolicies'
@@ -10,18 +8,15 @@ import { SnapshotOperation, ExportAndImportOptions } from '../exportAndImport/ty
 import importFromJson from '../exportAndImport/importFromJson'
 
 import {
-  SNAPSHOT_SUBFOLDER,
-  OPTIONS_SUBFOLDER,
   DEFAULT_SNAPSHOT_NAME,
   SNAPSHOT_FILE_NAME,
   OPTIONS_FILE_NAME,
   PG_SCHEMA_DIFF_FILE_NAME,
+  FILES_FOLDER,
+  ROOT_FOLDER,
+  SNAPSHOT_FOLDER,
+  SNAPSHOT_OPTOINS_FOLDER,
 } from './constants'
-
-const rootFolder = path.join(getAppEntryPointDir(), '../')
-const snapshotsFolder = path.join(getAppEntryPointDir(), config.databaseFolder, SNAPSHOT_SUBFOLDER)
-const optionsFolder = path.join(getAppEntryPointDir(), config.databaseFolder, OPTIONS_SUBFOLDER)
-const filesFolder = path.join(getAppEntryPointDir(), config.filesFolder)
 
 const useSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
@@ -31,7 +26,7 @@ const useSnapshot: SnapshotOperation = async ({
   try {
     console.log(`using snapshot, name: ${snapshotName}`)
 
-    const snapshotFolder = path.join(snapshotsFolder, snapshotName)
+    const snapshotFolder = path.join(SNAPSHOT_FOLDER, snapshotName)
 
     const options = await getOptions(snapshotFolder, optionsName, inOptions)
     const snapshotRaw = await fs.readFile(path.join(snapshotFolder, `${SNAPSHOT_FILE_NAME}.json`), {
@@ -51,7 +46,7 @@ const useSnapshot: SnapshotOperation = async ({
 
     // Update serials
     console.log('running serial update ... ')
-    execSync('./database/update_serials.sh', { cwd: rootFolder })
+    execSync('./database/update_serials.sh', { cwd: ROOT_FOLDER })
     console.log('running serial update ... done')
 
     // Regenerate row level policies
@@ -60,13 +55,13 @@ const useSnapshot: SnapshotOperation = async ({
     if (process.env.NODE_ENV !== 'production') {
       // Post data insert (restart server (for dev) )
       console.log('running post data insert ... ')
-      execSync('./database/post_data_insert.sh', { cwd: rootFolder })
+      execSync('./database/post_data_insert.sh', { cwd: ROOT_FOLDER })
       console.log('running post data insert ... done')
     }
 
     if (options.shouldReInitilise) {
       console.log('enable row level policies ... ')
-      execSync('./database/turn_on_row_level_security.sh', { cwd: rootFolder })
+      execSync('./database/turn_on_row_level_security.sh', { cwd: ROOT_FOLDER })
       console.log('enable row level policies ... done')
     }
 
@@ -86,7 +81,7 @@ const getOptions = async (
   }
   let optionsFile = path.join(snapshotFolder, `${OPTIONS_FILE_NAME}.json`)
 
-  if (optionsName) optionsFile = path.join(optionsFolder, `${optionsName}.json`)
+  if (optionsName) optionsFile = path.join(SNAPSHOT_OPTOINS_FOLDER, `${optionsName}.json`)
   console.log(`using options from: ${optionsFile}`)
   const optionsRaw = await fs.readFile(optionsFile, {
     encoding: 'utf-8',
@@ -102,13 +97,13 @@ const initiliseDatabase = async (
   const databaseName = 'tmf_app_manager'
 
   console.log('initialising database ... ')
-  execSync(`./database/initialise_database.sh ${databaseName}`, { cwd: rootFolder })
+  execSync(`./database/initialise_database.sh ${databaseName}`, { cwd: ROOT_FOLDER })
   console.log('initialising database ... done')
 
   const diffFile = path.join(snapshotFolder, `${PG_SCHEMA_DIFF_FILE_NAME}.sql`)
   if (fsSync.existsSync(diffFile)) {
     console.log('adding changes to schema ... ')
-    execSync(`psql -U postgres -q -b -d ${databaseName} -f "${diffFile}"`, { cwd: rootFolder })
+    execSync(`psql -U postgres -q -b -d ${databaseName} -f "${diffFile}"`, { cwd: ROOT_FOLDER })
     console.log('adding changes to schema ... done')
   }
 
@@ -129,7 +124,7 @@ const copyFiles = (
     try {
       execSync(`rm -rf filesFolder`)
     } catch (e) {}
-    execSync(`cp -R ${snapshotFolder}/files/* ${filesFolder}`)
+    execSync(`cp -R ${snapshotFolder}/files/* ${FILES_FOLDER}`)
     console.log('copying files ... done')
   }
 }
