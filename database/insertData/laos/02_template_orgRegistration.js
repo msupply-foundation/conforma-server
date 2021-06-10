@@ -184,7 +184,7 @@ exports.queries = [
                     }
                     {
                       code: "addressVillage"
-                      index: 75
+                      index: 72
                       title: "Village"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
