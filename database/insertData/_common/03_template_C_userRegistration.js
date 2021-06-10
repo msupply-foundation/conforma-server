@@ -154,8 +154,8 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "## Personal information"
-                        style: "basic"
+                        title: "### Personal information"
+                        style: "none"
                       }
                     }
                     {
@@ -230,7 +230,10 @@ exports.queries = [
                       title: "Section 1 - Place of birth"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "## Place of birth", style: "basic" }
+                      parameters: { 
+                        title: "### Place of birth"
+                        style: "none" 
+                      }
                     }
                     {
                       code: "Q9Village"
@@ -256,7 +259,10 @@ exports.queries = [
                       title: "Section 1 - Current address"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "## Current address", style: "basic" }
+                      parameters: { 
+                        title: "### Current address"
+                        style: "none" 
+                      }
                     }
                     {
                       code: "Q12Village"
@@ -291,7 +297,10 @@ exports.queries = [
                       title: "Section 2"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
-                      parameters: { title: "## Education history", style: "basic" }
+                      parameters: { 
+                        title: "### Education history"
+                        style: "none" 
+                      }
                     }
                     {
                       code: "Q1EducationLevel"
