@@ -348,7 +348,6 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Phone"
-                        description: "TO-DO: Pre-populate"
                         maxLength: 50
                       }
                       validation: {
@@ -371,9 +370,33 @@ exports.queries = [
                       category: QUESTION
                       parameters: {
                         label: "Email"
-                        description: "TO-DO: Pre-populate"
                         maxLength: 150
                       }
+                      defaultValue: {
+                        operator: "buildObject"
+                        properties: [
+                          {
+                            key: "text"
+                            value: {
+                              operator: "objectProperties"
+                              children: ["currentUser.email"]
+                            }
+                          }
+                        ]
+                      }
+                      validation: {
+                        operator: "REGEX"
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.thisResponse"]
+                          }
+                          {
+                            value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                          }
+                        ]
+                      }
+                      validationMessage: "Not a valid email address"
                     }
                     {
                       code: "ownerFax"
@@ -417,7 +440,26 @@ exports.queries = [
                       helpText: "The following questions are regarding the professional qualifications and experience of the **individual** who will primarily act on the company's behalf"
                       parameters: {
                         title: "## Professional details"
-                        text: "To-do: show Users name here with look-up"
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "for **%1 %2**"
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "currentUser.firstName",
+                                ""
+                              ]
+                            },
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "currentUser.lastName",
+                                ""
+                              ]
+                            }
+                          ]
+                        }
                         style: "info"
                       }
                     }
