@@ -1,11 +1,10 @@
 /*
 TEMPLATE C - Company license type MMC, MMD, MDC, MDM, WSL or RIT
   - for MMC => Modern Medicines
-  - for MDC => Medical Devices
+  - for MMD => Medical Devices
 */
 
 const { coreActions, joinFilters } = require('../_helpers/core_mutations')
-const { devActions } = require('../_helpers/dev_actions')
 
 exports.queries = [
   `mutation {
