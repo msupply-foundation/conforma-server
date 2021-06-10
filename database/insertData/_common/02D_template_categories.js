@@ -56,4 +56,17 @@ exports.queries = [
     clientMutationId
   }
 }`,
+`mutation licenseCategory {
+  createTemplateCategory(
+    input: {
+      templateCategory: {
+        code: "license"
+        icon: "certificate"
+        title: "Company license"
+      }
+    }
+  ) {
+    clientMutationId
+  }
+}`,
 ]
