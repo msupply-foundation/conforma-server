@@ -1164,7 +1164,7 @@ exports.queries = [
                 }
                 {
                   code: "S5"
-                  title: "Files updload"
+                  title: "Documentation"
                   index: 4
                   templateElementsUsingId: {
                     create: [
@@ -1334,10 +1334,7 @@ exports.queries = [
                       operator: "objectProperties"
                       children: ["applicationData.responses.Q2LicenseType.text"]
                     }
-                    expiry: {
-                      operator: "objectProperties"
-                      children: ["31/01/2022"]
-                    }
+                    expiry_date: "31/01/2022"
                     company_id: {
                       operator: "objectProperties"
                       children: ["currentUser.organisation.orgId"]
