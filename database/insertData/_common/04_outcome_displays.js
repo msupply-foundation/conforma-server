@@ -208,4 +208,53 @@ exports.queries = [
     }
   }
   `,
+  `mutation licenseOutcomes {
+    createOutcomeDisplay(
+      input: {
+        outcomeDisplay: {
+          code: "license"
+          detailColumnName: "serial"
+          tableName: "license"
+          pluralTableName: "licenses"
+          title: "Licenses"
+          outcomeDisplayDetailsUsingId: {
+            create: [
+              {
+                columnName: "type"
+                elementTypePluginCode: "shortText"
+                isTextColumn: true
+                parameters: { label: "License type" }
+                title: "License type"
+              }
+              {
+                columnName: "expiryDate"
+                elementTypePluginCode: "shortText"
+                isTextColumn: true
+                parameters: { label: "Expiry date" }
+                title:  "Expiry date"
+              }
+              {
+                columnName: "companyName"
+                elementTypePluginCode: "shortText"
+                isTextColumn: true
+                parameters: { label: "Company name" }
+                title:  "Company name"
+              }
+            ]
+          }
+          outcomeDisplayTablesUsingId: {
+            create: [
+              { columnName: "serial", title: "Serial", isTextColumn: true }
+              { columnName: "type", title: "License type", isTextColumn: true }
+              { columnName: "expiryDate", title: "Expiry date", isTextColumn: true }
+              { columnName: "companyName", title: "Company name", isTextColumn: true }
+            ]
+          }
+        }
+      }
+    ) {
+      clientMutationId
+    }
+  }
+  `,
 ]
