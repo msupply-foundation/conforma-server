@@ -342,7 +342,7 @@ exports.queries = [
                     }
                     {
                       code: "ownerPhone"
-                      index: 120
+                      index: 115
                       title: "Company Owner Phone"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
