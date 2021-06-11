@@ -1456,6 +1456,155 @@ exports.queries = [
                     permissionNames: ["reviewJoinOrg"]
                   }
                 }
+                {
+                  actionCode: "grantPermissions"
+                  trigger: ON_REVIEW_SUBMIT
+                  sequence: 104
+                  # TO-DO -- update condition to just check Outcome
+                  # (from applicationData)
+                  condition: {
+                    operator: "AND"
+                    children: [
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.outcome"]
+                          }
+                          "APPROVED"
+                        ]
+                      }
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q2LicenseType.text"]
+                          }
+                          "import/export medicines and medical devices"
+                        ]
+                      }
+                    ]
+                  }
+                  parameterQueries: {
+                    username: {
+                      operator: "objectProperties"
+                      children: ["applicationData.username"]
+                    }
+                    orgName: {
+                      operator: "objectProperties"
+                      children: ["outputCumulative.organisation.name"]
+                    }
+                    permissionNames: ["applyImportPermit"]
+                  }
+                }
+                {
+                  actionCode: "grantPermissions"
+                  trigger: ON_REVIEW_SUBMIT
+                  sequence: 105
+                  # TO-DO -- update condition to just check Outcome
+                  # (from applicationData)
+                  condition: {
+                    operator: "AND"
+                    children: [
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.outcome"]
+                          }
+                          "APPROVED"
+                        ]
+                      }
+                      {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q2LicenseType.text"]
+                          }
+                          "import/export medicines and medical devices"
+                        ]
+                      }
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q1ProductType.text"]
+                          }
+                          "modern medicines"
+                        ]
+                      }
+                    ]
+                  }
+                  parameterQueries: {
+                    username: {
+                      operator: "objectProperties"
+                      children: ["applicationData.username"]
+                    }
+                    orgName: {
+                      operator: "objectProperties"
+                      children: ["outputCumulative.organisation.name"]
+                    }
+                    permissionNames: ["applyDrugRegoMMC"]
+                  }
+                }
+                {
+                  actionCode: "grantPermissions"
+                  trigger: ON_REVIEW_SUBMIT
+                  sequence: 105
+                  # TO-DO -- update condition to just check Outcome
+                  # (from applicationData)
+                  condition: {
+                    operator: "AND"
+                    children: [
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.outcome"]
+                          }
+                          "APPROVED"
+                        ]
+                      }
+                      {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q2LicenseType.text"]
+                          }
+                          "import/export medicines and medical devices"
+                        ]
+                      }
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q1ProductType.text"]
+                          }
+                          "medical devices"
+                        ]
+                      }
+                    ]
+                  }
+                  parameterQueries: {
+                    username: {
+                      operator: "objectProperties"
+                      children: ["applicationData.username"]
+                    }
+                    orgName: {
+                      operator: "objectProperties"
+                      children: ["outputCumulative.organisation.name"]
+                    }
+                    permissionNames: ["applyDrugRegoMMD"]
+                  }
+                }
               ]
             }
             templatePermissionsUsingId: {
