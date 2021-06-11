@@ -11,7 +11,7 @@ exports.queries = [
     createTemplate(
       input: {
           template: {
-            code: "CompanyLicense1"
+            code: "CompanyLicense"
             name: "Company License for Modern medicines or Medical devices"
             isLinear: false # CHANGE THIS
             status: AVAILABLE
@@ -1351,7 +1351,7 @@ exports.queries = [
                   actionCode: "cLog"
                   trigger: ON_APPLICATION_SUBMIT
                   parameterQueries: {
-                    message: { value: "Organisation Registration submission" }
+                    message: { value: "Company License submission" }
                   }
                 }
                 {
