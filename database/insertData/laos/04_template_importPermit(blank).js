@@ -59,7 +59,7 @@ exports.queries = [
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
-                  message: { value: "Drug Registration (Modern Medicines) submission" }
+                  message: { value: "Import permit (Modern medicines or Medical devices) submission" }
                 }
               }
               {
