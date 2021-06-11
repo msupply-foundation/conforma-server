@@ -9,6 +9,8 @@ import {
 
 import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
 
+export const baseJWT = { aud: 'postgraphile' }
+
 /* Compiles JWT from userInfo and PerissionRows
   in { userId: 1, ... }, [
   {
@@ -35,7 +37,7 @@ import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
 const compileJWT = (JWTelements: any) => {
   const { userId, orgId, templatePermissionRows, sessionId } = JWTelements
 
-  let JWT = { userId, orgId, aud: 'postgraphile', sessionId }
+  let JWT = { ...baseJWT, userId, orgId, sessionId }
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
     const { restrictions, templateId, templatePermissionId } = permissionRow
