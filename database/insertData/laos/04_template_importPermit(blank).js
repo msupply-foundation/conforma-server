@@ -42,6 +42,15 @@ exports.queries = [
           templateCategoryToTemplateCategoryId: {
             connectByCode: { code: "license" }
           }
+          templateStagesUsingId: {
+            create: [
+              {
+                number: 1
+                title: "Automatic"
+                colour: "#1E14DB" #dark blue
+              }
+            ]
+          }
           ${joinFilters}
           templateActionsUsingId: {
             create: [
@@ -83,30 +92,14 @@ exports.queries = [
             ]
           }
           templatePermissionsUsingId: {
-                create: [
+            create: [
                 # Apply Company license (granted on Company registration)
                 {
                     permissionNameToPermissionNameId: {
                     connectByName: { name: "applyImportPermit" }
                     }
                 }
-                # Review General - Stage 1
-                {
-                    permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewGeneral" }
-                    }
-                    stageNumber: 1
-                    levelNumber: 1
-                }
-                # Assign General - Stage 1
-                {
-                    permissionNameToPermissionNameId: {
-                    connectByName: { name: "assignGeneral" }
-                    }
-                    stageNumber: 1
-                    levelNumber: 1
-                }
-                ]
+              ]
             }
         }
       }

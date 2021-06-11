@@ -31,8 +31,17 @@ exports.queries = [
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        title: "### Place holder - fields to be created soon!"
+                        title: "### Fields to be created soon!"
                       }
+                    }
+                    {
+                        code: "Q1"
+                        index: 20
+                        title: "Blank"
+                        elementTypePluginCode: "shortText"
+                        category: QUESTION
+                        isRequired: false
+                        parameters: { label: "Place holder" }
                     }
                   ]
                 }
@@ -41,6 +50,15 @@ exports.queries = [
           }
           templateCategoryToTemplateCategoryId: {
             connectByCode: { code: "drugRego" }
+          }
+          templateStagesUsingId: {
+            create: [
+              {
+                number: 1
+                title: "Automatic"
+                colour: "#1E14DB" #dark blue
+              }
+            ]
           }
           ${joinFilters}
           templateActionsUsingId: {
@@ -83,31 +101,15 @@ exports.queries = [
             ]
           }
           templatePermissionsUsingId: {
-                create: [
+            create: [
                 # Apply Company license (granted on Company registration)
                 {
                     permissionNameToPermissionNameId: {
                     connectByName: { name: "applyDrugRegoMMC" }
                     }
                 }
-                # Review General - Stage 1
-                {
-                    permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewGeneral" }
-                    }
-                    stageNumber: 1
-                    levelNumber: 1
-                }
-                # Assign General - Stage 1
-                {
-                    permissionNameToPermissionNameId: {
-                    connectByName: { name: "canAssignDrugRego" }
-                    }
-                    stageNumber: 1
-                    levelNumber: 1
-                }
-                ]
-            }
+            ]
+          }
         }
       }
     ) {
