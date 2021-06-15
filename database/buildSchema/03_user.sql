@@ -5,7 +5,7 @@ CREATE TABLE public.user (
     last_name varchar,
     username varchar UNIQUE,
     email varchar,
-    date_of_birth date,
+    date_of_birth varchar,
     password_hash varchar
 );
 

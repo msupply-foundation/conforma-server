@@ -36,6 +36,23 @@ exports.queries = [
       }
     }
   }`,
+  // applyOrgLicense
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyOrgLicense"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
   // applyUserEdit
   `mutation createPermissionName {
     createPermissionName(
