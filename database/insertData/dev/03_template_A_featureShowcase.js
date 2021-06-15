@@ -1528,9 +1528,29 @@ exports.queries = [
                       parameters: {
                         label: "Enter a real number between –10,000,000 and 10,000,000"
                         description: "Locale is set to \\"fr-FR\\" (French)"
-                        locale: "fr-FR"
+                        locale: {
+                          operator: "objectProperties"
+                          children: [ "responses.localeSelect.text", "" ]
+                        }
                         minValue: -10000000
                         maxValue: 10000000                  
+                      }
+                    }
+                    {
+                      code: "localeSelect"
+                      index: 92
+                      title: "Locale selector"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select locale for previous number input"
+                        default: 0
+                        options: [
+                          "en-US"
+                          "fr-FR"
+                          "hi-IN"
+                          "ja-JP"
+                        ]
                       }
                     } 
                   ]
