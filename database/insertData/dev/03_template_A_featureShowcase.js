@@ -1485,6 +1485,54 @@ exports.queries = [
                         style: "none"
                       }
                     }
+                    {
+                      code: "PB16"
+                      index: 80
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "TXT_Number_1"
+                      index: 85
+                      title: "Number example 1"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "### Number Input examples"
+                        style: "info"
+                      }
+                    }
+                    {
+                      code: "num1"
+                      index: 90
+                      title: "Number Input 1"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Enter an integer"
+                        description: "Must be a **positive** number less than 10 million"
+                        type: "integer"
+                        minValue: 0
+                        maxValue: 10000000                  
+                      }
+                    } 
+                    {
+                      code: "num2"
+                      index: 91
+                      title: "Number Input French"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Enter a real number between –10,000,000 and 10,000,000"
+                        description: "Locale is set to \\"fr-FR\\" (French)"
+                        locale: "fr-FR"
+                        minValue: -10000000
+                        maxValue: 10000000                  
+                      }
+                    } 
                   ]
                 }
               }
