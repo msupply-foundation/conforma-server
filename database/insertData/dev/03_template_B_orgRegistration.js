@@ -87,8 +87,9 @@ exports.queries = [
                               "/check-unique"
                             ]
                           }
-                          ["type", "value"]
-                          "orgRegistration"
+                          ["table", "field", "value"]
+                          "organisation"
+                          "registration"
                           {
                             operator: "objectProperties"
                             children: ["responses.thisResponse"]
