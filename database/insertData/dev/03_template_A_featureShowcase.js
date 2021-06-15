@@ -1527,7 +1527,7 @@ exports.queries = [
                       isRequired: false
                       parameters: {
                         label: "Enter a real number between –10,000,000 and 10,000,000"
-                        description: "Locale is set to \\"fr-FR\\" (French)"
+                        description: "Switch locale in the subsequent dropdown"
                         locale: {
                           operator: "objectProperties"
                           children: [ "responses.localeSelect.text", "" ]
