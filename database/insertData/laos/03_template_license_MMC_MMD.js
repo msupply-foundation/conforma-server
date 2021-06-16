@@ -763,7 +763,7 @@ exports.queries = [
                                       "currentUser.organisation.orgId"
                                     ]
                                   },
-                                  "organisation.“addressStreet”"
+                                  "organisation.addressStreet"
                                 ]
                               }
                             }
