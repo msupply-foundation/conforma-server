@@ -938,7 +938,7 @@ exports.queries = [
                   }
                   registration: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.registrationCode.text"]
+                    children: ["applicationData.responses.registrationCode.text", ""]
                   }
                   logo_url: {
                     operator: "+",
