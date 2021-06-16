@@ -1490,11 +1490,11 @@ exports.queries = [
                   parameterQueries: {
                     username: {
                       operator: "objectProperties"
-                      children: ["applicationData.username"]
+                      children: ["currentUser.username"]
                     }
                     orgName: {
                       operator: "objectProperties"
-                      children: ["outputCumulative.organisation.name"]
+                      children: ["currentUser.organisation.orgName"]
                     }
                     permissionNames: ["applyImportPermit"]
                   }
@@ -1543,11 +1543,11 @@ exports.queries = [
                   parameterQueries: {
                     username: {
                       operator: "objectProperties"
-                      children: ["applicationData.username"]
+                      children: ["currentUser.username"]
                     }
                     orgName: {
                       operator: "objectProperties"
-                      children: ["outputCumulative.organisation.name"]
+                      children: ["currentUser.organisation.orgName"]
                     }
                     permissionNames: ["applyDrugRegoMMC"]
                   }
@@ -1596,11 +1596,11 @@ exports.queries = [
                   parameterQueries: {
                     username: {
                       operator: "objectProperties"
-                      children: ["applicationData.username"]
+                      children: ["currentUser.username"]
                     }
                     orgName: {
                       operator: "objectProperties"
-                      children: ["outputCumulative.organisation.name"]
+                      children: ["currentUser.organisation.orgName"]
                     }
                     permissionNames: ["applyDrugRegoMMD"]
                   }
