@@ -648,10 +648,19 @@ class PostgresDB {
 
   public joinPermissionNameToUserOrg = async (
     username: string,
-    orgName: string,
+    org: string | number,
     permissionName: string
   ) => {
-    const text = `
+    const text =
+      typeof org === 'number'
+        ? `
+      INSERT INTO permission_join (user_id, organisation_id, permission_name_id)
+      VALUES (
+        (select id from "user" where username = $1),
+        $2,
+        (select id from permission_name where name = $3)
+      ) RETURNING id`
+        : `
     insert into permission_join (user_id, organisation_id, permission_name_id) 
     values (
         (select id from "user" where username = $1),
@@ -664,7 +673,7 @@ class PostgresDB {
     returning id
     `
     try {
-      const result = await this.query({ text, values: [username, orgName, permissionName] })
+      const result = await this.query({ text, values: [username, org, permissionName] })
       return result.rows[0].id
     } catch (err) {
       console.log(err.message)
