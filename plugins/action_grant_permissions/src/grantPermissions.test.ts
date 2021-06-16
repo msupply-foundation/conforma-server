@@ -16,12 +16,18 @@ const testParams2 = {
   permissionNames: ['reviewOrgRego'],
 }
 
+const testParams3 = {
+  username: 'nmadruga',
+  orgId: 1, // "Drugs-R-Us"
+  permissionNames: ['reviewOrgRego'],
+}
+
 test('Test: Add permission to Valerio', () => {
   return grantPermissions({ parameters: testParams, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       output: {
-        permissionJoinIds: [41],
+        permissionJoinIds: [40],
         permissionNames: ['reviewOrgRego'],
       },
       error_log: '',
@@ -35,7 +41,7 @@ test('Test: Add permission to Valerio, already exists', () => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       output: {
-        permissionJoinIds: [41],
+        permissionJoinIds: [40],
         permissionNames: ['reviewOrgRego'],
       },
       error_log: '',
@@ -49,7 +55,7 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd.', () => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       output: {
-        permissionJoinIds: [43],
+        permissionJoinIds: [42],
         permissionNames: ['reviewOrgRego'],
       },
       error_log: '',
@@ -63,7 +69,20 @@ test('Test: Add permission to Carl and Medicinal Importers, Ltd., already exists
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       output: {
-        permissionJoinIds: [43],
+        permissionJoinIds: [42],
+        permissionNames: ['reviewOrgRego'],
+      },
+      error_log: '',
+    })
+  })
+})
+
+test('Test: Add permission to Nicole and "Drugs-R-Us" using orgId', () => {
+  return grantPermissions({ parameters: testParams3, DBConnect }).then((result: any) => {
+    expect(result).toEqual({
+      status: ActionQueueStatus.Success,
+      output: {
+        permissionJoinIds: [44],
         permissionNames: ['reviewOrgRego'],
       },
       error_log: '',

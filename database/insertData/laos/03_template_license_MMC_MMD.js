@@ -1449,9 +1449,9 @@ exports.queries = [
                       operator: "objectProperties"
                       children: ["applicationData.username"]
                     }
-                    orgName: {
+                    orgId: {
                       operator: "objectProperties"
-                      children: ["outputCumulative.organisation.name"]
+                      children: ["applicationData.orgId"]
                     }
                     permissionNames: ["reviewJoinOrg"]
                   }
@@ -1490,11 +1490,11 @@ exports.queries = [
                   parameterQueries: {
                     username: {
                       operator: "objectProperties"
-                      children: ["currentUser.username"]
+                      children: ["applicationData.username"]
                     }
-                    orgName: {
+                    orgId: {
                       operator: "objectProperties"
-                      children: ["currentUser.organisation.orgName"]
+                      children: ["applicationData.orgId"]
                     }
                     permissionNames: ["applyImportPermit"]
                   }
@@ -1543,11 +1543,11 @@ exports.queries = [
                   parameterQueries: {
                     username: {
                       operator: "objectProperties"
-                      children: ["currentUser.username"]
+                      children: ["applicationData.username"]
                     }
-                    orgName: {
+                    orgId: {
                       operator: "objectProperties"
-                      children: ["currentUser.organisation.orgName"]
+                      children: ["applicationData.orgId"]
                     }
                     permissionNames: ["applyDrugRegoMMC"]
                   }
@@ -1596,11 +1596,11 @@ exports.queries = [
                   parameterQueries: {
                     username: {
                       operator: "objectProperties"
-                      children: ["currentUser.username"]
+                      children: ["applicationData.username"]
                     }
-                    orgName: {
+                    orgId: {
                       operator: "objectProperties"
-                      children: ["currentUser.organisation.orgName"]
+                      children: ["applicationData.orgId"]
                     }
                     permissionNames: ["applyDrugRegoMMD"]
                   }
