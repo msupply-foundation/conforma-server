@@ -1073,6 +1073,24 @@ exports.queries = [
                   permissionNames: ["reviewJoinOrg", "applyOrgLicense"]
                 }
               }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 104
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: [
+                        "applicationData.outcome"
+                      ]
+                    }
+                    "APPROVED"
+                  ]
+                }
+                parameterQueries: { newStatus: { value: "COMPLETED" } }
+              }
             ]
           }
           templatePermissionsUsingId: {

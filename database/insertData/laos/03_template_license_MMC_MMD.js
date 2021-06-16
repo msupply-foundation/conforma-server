@@ -838,6 +838,34 @@ exports.queries = [
                         }
                       }
                       {
+                        code: "S3applicationLink"
+                        index: 65
+                        title: "Link to Company Registration application"
+                        elementTypePluginCode: "textInfo"
+                        category: INFORMATION
+                        parameters: { 
+                          text: {
+                            operator: "stringSubstitution",
+                            children: [
+                              "Original company application, with supplied documents: [click here](/application/%2)",
+                              {
+                                operator: "graphQL",
+                                children: [
+                                  "query getApplication($id: Int!) {organisationApplicationJoin(id: $id) {id,    application {id, name, serial}}}",
+                                  "graphQLEndpoint",
+                                  [
+                                    "id"
+                                  ],
+                                  1,
+                                  "organisationApplicationJoin.application.serial"
+                                ]
+                              }
+                            ]
+                          }
+                          style: "basic"
+                        }
+                      }
+                      {
                         code: "S3PB1"
                         index: 70
                         title: "Page Break"
