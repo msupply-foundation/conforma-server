@@ -182,7 +182,7 @@ exports.queries = [
                         maxLength: 150
                       }
                     }
-                    { 1
+                    {
                       code: "addressVillage"
                       index: 72
                       title: "Village"
@@ -492,7 +492,7 @@ exports.queries = [
                     {
                       code: "profId"
                       index: 20
-                      title: "Pofessional Id"
+                      title: "Professional ID"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
                       parameters: {
