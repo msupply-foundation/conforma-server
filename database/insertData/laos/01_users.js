@@ -17,12 +17,12 @@ exports.queries = [
               create: [
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "applyGeneral" }
+                    connectByName: { name: "applyOrgRego" }
                   }
                 }
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "applyOrgRego" }
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]
@@ -41,18 +41,18 @@ exports.queries = [
           user: {
             email: "reviewer1@sussol.net"
             passwordHash: "$2a$10$r8XTfUWIzrSaDfn0rxbIlei0kFHitJMI4W3g59w/94/9VopxNB4w."
-            username: "testReviewer1"
-            firstName: "Reviewer1"
+            username: "orgRegoReviewer1"
+            firstName: "OrgRegoReviewer1"
             permissionJoinsUsingId: {
               create: [
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewSelfAssignable" }
+                    connectByName: { name: "reviewOrgRego" }
                   }
                 }
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewReviewTestAssessmentLvl1Section1" }
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]
@@ -71,18 +71,18 @@ exports.queries = [
           user: {
             email: "reviewer2@sussol.net"
             passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
-            username: "testReviewer2"
-            firstName: "Reviewer2"
+            username: "orgRegoReviewer2"
+            firstName: "OrgRegoReviewer2"
             permissionJoinsUsingId: {
               create: [
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewSelfAssignable" }
+                    connectByName: { name: "reviewOrgRego" }
                   }
                 }
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewReviewTestAssessmentLvl1Section2" }
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]
@@ -99,25 +99,25 @@ exports.queries = [
       createUser(
         input: {
           user: {
-            email: "consolidator1@sussol.net"
+            email: "allreviewer1@sussol.net"
             passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
-            username: "testConsolidator1"
-            firstName: "Consolidator1"
+            username: "allReviewer"
+            firstName: "AllReviewer"
             permissionJoinsUsingId: {
               create: [
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewSelfAssignable" }
+                    connectByName: { name: "reviewOrgRego" }
                   }
                 }
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewReviewTestAssessmentLvl2" }
+                    connectByName: { name: "reviewOrgLicence" }
                   }
                 }
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewReviewTestApproval" }
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]
@@ -134,15 +134,20 @@ exports.queries = [
       createUser(
         input: {
           user: {
-            email: "consolidator2@sussol.net"
+            email: "reviewOrgLicence1@sussol.net"
             passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
-            username: "testConsolidator2"
-            firstName: "Consolidator2"
+            username: "reviewOrgLicence1"
+            firstName: "Company Licence Reviewer1"
             permissionJoinsUsingId: {
               create: [
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewReviewTestAssessmentLvl2" }
+                    connectByName: { name: "reviewOrgLicence" }
+                  }
+                }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]
@@ -159,22 +164,20 @@ exports.queries = [
       createUser(
         input: {
           user: {
-            email: "assigner1@sussol.net"
+            email: "reviewOrgLicence2"
             passwordHash: "$2a$10$Kk4m2yhfFC5GqX2mJsXTtO.GLq6zNbezYnI8ix09h/MfNNy6AW7Ne"
-            username: "testAssigner1"
-            firstName: "Assigner1"
+            username: "reviewOrgLicence2"
+            firstName: "Company Licence Reviewer2"
             permissionJoinsUsingId: {
               create: [
-                # Assign General
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "assignGeneral" }
+                    connectByName: { name: "reviewOrgLicence" }
                   }
                 }
-                # Assign DrugRegoGen
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "canAssignDrugRego" }
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]
@@ -191,10 +194,10 @@ exports.queries = [
       createUser(
         input: {
           user: {
-            email: "assigner2@sussol.net"
+            email: "assigner@sussol.net"
             passwordHash: "$2a$10$DA4a1E2i3dfN5BrdmO6iX.EYt.ob0czyF1sQqNQxPMPrfEPsRCx2a"
-            username: "testAssigner2"
-            firstName: "Assigner2"
+            username: "assigner"
+            firstName: "Assigner"
             permissionJoinsUsingId: {
               create: [
                 # Assign General
@@ -203,35 +206,9 @@ exports.queries = [
                     connectByName: { name: "assignGeneral" }
                   }
                 }
-              ]
-            }
-          }
-        }
-      ) {
-        user {
-          username
-        }
-      }
-    }`,
-  `mutation {
-      createUser(
-        input: {
-          user: {
-            username: "screener1"
-            firstName: "Screener1"
-            passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
-            permissionJoinsUsingId: {
-              create: [
-                # Review General
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewGeneral" }
-                  }
-                }
-                # Review DrugRego Screening (Stage 1)
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "canScreenDrugRego" }
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]
@@ -244,115 +221,17 @@ exports.queries = [
         }
       }
     }`,
-  `mutation {
-      createUser(
-        input: {
-          user: {
-            username: "screener2"
-            firstName: "Screener2"
-            passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
-            permissionJoinsUsingId: {
-              create: [
-                # Review General
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewGeneral" }
-                  }
-                }
-                # Review DrugRego Screening (Stage 1)
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "canScreenDrugRego" }
-                  }
-                }
-              ]
-            }
-          }
-        }
-      ) {
-        user {
-          username
-        }
-      }
-    }`,
-  `mutation {
-      createUser(
-        input: {
-          user: {
-            username: "assessor1"
-            firstName: "assessor1"
-            passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
-            permissionJoinsUsingId: {
-              create: [
-                # Review General
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewGeneral" }
-                  }
-                }
-                # Review DrugRego Assessment (Stage 2)
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "canAssessDrugRego" }
-                  }
-                }
-              ]
-            }
-          }
-        }
-      ) {
-        user {
-          username
-        }
-      }
-    }`,
-  `mutation {
-      createUser(
-        input: {
-          user: {
-            username: "assessor2"
-            firstName: "assessor2"
-            passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
-            permissionJoinsUsingId: {
-              create: [
-                # Review General
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewGeneral" }
-                  }
-                }
-                # Review DrugRego Assessment (Stage 2)
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "canAssessDrugRego" }
-                  }
-                }
-              ]
-            }
-          }
-        }
-      ) {
-        user {
-          username
-        }
-      }
-    }`,
-  //
   // Extra user with multiple permissions (apply org rego, review org rego and apply user rego) -- password is "123456"
   `mutation {
       createUser(
         input: {
           user: {
-            username: "userWithMultiplePermissions"
+            email: "admin@sussol.net"
+            username: "admin"
             firstName: "Admin"
             passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
             permissionJoinsUsingId: {
               create: [
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "applyUserRegistration" }
-                  }
-                }
                 {
                   permissionNameToPermissionNameId: {
                     connectByName: { name: "applyOrgRego" }
@@ -360,7 +239,27 @@ exports.queries = [
                 }
                 {
                   permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyOrgLicense" }
+                  }
+                }
+                {
+                  permissionNameToPermissionNameId: {
                     connectByName: { name: "reviewOrgRego" }
+                  }
+                }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "reviewOrgLicence" }
+                  }
+                }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "assignGeneral" }
+                  }
+                }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]

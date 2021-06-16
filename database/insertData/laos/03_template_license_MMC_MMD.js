@@ -30,8 +30,7 @@ exports.queries = [
                         index: 10
                         title: "Applicant first name"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "First name" }
                         defaultValue: {
                           operator: "buildObject"
@@ -51,8 +50,7 @@ exports.queries = [
                         index: 20
                         title: "Applicant last name"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "Last name" }
                         defaultValue: {
                           operator: "buildObject"
@@ -72,8 +70,7 @@ exports.queries = [
                         index: 30
                         title: "Applicant DOB"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "Date of Birth" }
                         defaultValue: {
                           operator: "buildObject",
@@ -106,8 +103,7 @@ exports.queries = [
                         index: 40
                         title: "National ID number"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "National ID number" }
                         defaultValue: {
                           operator: "buildObject",
@@ -140,8 +136,7 @@ exports.queries = [
                         index: 50
                         title: "Date issued"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "Date issued" }
                         defaultValue: {
                           operator: "buildObject",
@@ -192,8 +187,7 @@ exports.queries = [
                         index: 80
                         title: "Village"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "Village" }
                         defaultValue: {
@@ -227,8 +221,7 @@ exports.queries = [
                         index: 90
                         title: "District"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "District/Province" }
                         defaultValue: {
@@ -273,8 +266,7 @@ exports.queries = [
                         index: 120
                         title: "Village"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "Village" }
                         defaultValue: {
@@ -308,8 +300,7 @@ exports.queries = [
                         index: 140
                         title: "District"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "District/Province" }
                         defaultValue: {
@@ -361,8 +352,7 @@ exports.queries = [
                         index: 170
                         title: "Organisation Category"
                         elementTypePluginCode: "radioChoice"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: {
                           label: "Education Level"
                           layout: "inline"
@@ -391,8 +381,7 @@ exports.queries = [
                         index: 180
                         title: "Secondary"
                         elementTypePluginCode: "longText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "Please enter details for secondary"}
                         visibilityCondition: {
                           operator: "="
@@ -435,8 +424,7 @@ exports.queries = [
                         index: 190
                         title: "Education List"
                         elementTypePluginCode: "listBuilder"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: {
                           label: "Education history"
                           displayType: "table"
@@ -510,27 +498,27 @@ exports.queries = [
                         index: 20
                         title: "Professional ID"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        defaultValue: {
+                          operator: "graphQL",
+                          children: [
+                            "query getOrganisation($id: Int!){organisation(id: $id) {professionalId}}",
+                            "",
+                            [
+                              "id"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "currentUser.organisation.orgId"
+                              ]
+                            },
+                            "organisation.professionalId"
+                          ]
+                        }
+                        category: INFORMATION
                         parameters: {
                           label: "Professional ID"
-                          defaultValue: {
-                            operator: "graphQL",
-                            children: [
-                              "query getOrganisation($id: Int!){organisation(id: $id) {professionalId}}",
-                              "",
-                              [
-                                "id"
-                              ],
-                              {
-                                operator: "objectProperties",
-                                children: [
-                                  "currentUser.organisation.orgId"
-                                ]
-                              },
-                              "user.professionalId"
-                            ]
-                          }
+                          
                         }
                       }
                       {
@@ -538,28 +526,141 @@ exports.queries = [
                         index: 30
                         title: "Professional experience"
                         elementTypePluginCode: "listBuilder"
-                        category: QUESTION
-                        isEditable: false
+                        defaultValue: {
+                          operator: "graphQL",
+                          children: [
+                            "query getOrganisation($id: Int!){organisation(id: $id) {professionalExperience}}",
+                            "",
+                            [
+                              "id"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "currentUser.organisation.orgId"
+                              ]
+                            },
+                            "organisation.professionalExperience"
+                          ]
+                        }
+                        category: INFORMATION
                         parameters: {
-                          label: "Professional experience"
-                          defaultValue: {
-                            operator: "graphQL",
-                            children: [
-                              "query getOrganisation($id: Int!){organisation(id: $id) {professionalExperience}}",
-                              "",
-                              [
-                                "id"
-                              ],
-                              {
-                                operator: "objectProperties",
-                                children: [
-                                  "currentUser.organisation.orgId"
-                                ]
-                              },
-                              "user.professionalExperience"
-                            ]
+                        label: "Professional experience"
+                        description: "Please create a list outlining your professional experience"
+                        createModalButtonText: "Add role"
+                        modalText: "Please enter details for **one** previous role"
+                        displayType: {
+                          operator: "objectProperties"
+                          children: ["responses.listDisplay.text"]
+                        }
+                        displayFormat: {
+                          title: "\${PEname}"
+                          subtitle: "\${PEtype}  \\n\${PEorgTel} \${PEorgEmail}"
+                          description: "**Role**: \${PErole}  \\n\${PEfrom} – \${PEto}"
+                        }
+                        inputFields: [
+                          {
+                            code: "PEtype"
+                            title: "Type of role"
+                            elementTypePluginCode: "radioChoice"
+                            category: QUESTION
+                            parameters: {
+                              label: "Type of role"
+                              options: ["Government", "Private Sector"]
+                              layout: "inline"
+                            }
                           }
-                       }
+                          {
+                            code: "PEname"
+                            title: "Org name"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "Name of institution or company"
+                              maxLength: 120
+                            }
+                          }
+                          {
+                            code: "PEorgTel"
+                            title: "Org telephone"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            isRequired: false
+                            parameters: {
+                              label: "Telephone"
+                              maxLength: 120
+                            }
+                            validation: {
+                              operator: "REGEX"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.thisResponse"]
+                                }
+                                "^[0-9()\\\\-\+]*$"
+                              ]
+                            }
+                            validationMessage: "Not a valid phone number"
+                          }
+                          {
+                            code: "PEorgEmail"
+                            title: "Org email"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            isRequired: false
+                            parameters: {
+                              label: "Email"
+                              maxLength: 120
+                            }
+                            validation: {
+                              operator: "REGEX"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.thisResponse"]
+                                }
+                                {
+                                  value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                                }
+                              ]
+                            }
+                            validationMessage: "Not a valid email address"
+                          }
+                          {
+                            code: "PErole"
+                            title: "Role"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "Your role"
+                              maxLength: 120
+                            }
+                          }
+                          {
+                            code: "PEfrom"
+                            title: "From"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "From"
+                              maxLength: 120
+                              maxWidth: 200
+                            }
+                          }
+                          {
+                            code: "PEto"
+                            title: "To"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            isRequired: false
+                            parameters: {
+                              label: "To"
+                              maxLength: 120
+                              maxWidth: 200
+                            }
+                          }
+                        ]
+                      }
                      }
                    ]
                   }
@@ -575,9 +676,8 @@ exports.queries = [
                         index: 20
                         title: "Name of company/branch/wholesaler (in Lao) "
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Name of company/branch/wholesaler (in Lao) " }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -609,9 +709,8 @@ exports.queries = [
                         index: 30
                         title: "Name of company/branch/wholesaler (in English)"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Name of company/branch/wholesaler (in English)" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -643,9 +742,8 @@ exports.queries = [
                         index: 40
                         title: "Address street"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Address" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -654,7 +752,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getOrganisation($id: Int!){organisation(id: $id) {“addressStreet”}}",
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {addressStreet}}",
                                   "",
                                   [
                                     "id"
@@ -665,7 +763,7 @@ exports.queries = [
                                       "currentUser.organisation.orgId"
                                     ]
                                   },
-                                  "organisation.“addressStreet”"
+                                  "organisation.addressStreet"
                                 ]
                               }
                             }
@@ -677,9 +775,8 @@ exports.queries = [
                         index: 50
                         title: "Adress village"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Village" }
-                        isEditable: false
                         isRequired: false
                         defaultValue: {
                           operator: "buildObject",
@@ -712,9 +809,8 @@ exports.queries = [
                         index: 60
                         title: "District"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "District/Province" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -764,9 +860,8 @@ exports.queries = [
                         index: 90
                         title: "Phone"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Phone" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -798,9 +893,8 @@ exports.queries = [
                         index: 100
                         title: "Fax"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Fax" }
-                        isEditable: false
                         isRequired: false
                         defaultValue: {
                           operator: "buildObject",
@@ -833,9 +927,8 @@ exports.queries = [
                         index: 110
                         title: "Email"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Email" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -885,9 +978,8 @@ exports.queries = [
                         index: 140
                         title: "Domestic"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Domestic" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -919,9 +1011,8 @@ exports.queries = [
                         index: 150
                         title: "Foreign"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Foreign" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -964,12 +1055,11 @@ exports.queries = [
                         index: 170
                         title: "Owner name"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { 
                           label: "Company owner"
                           helpText: "Full name of company owner (as licensed at M. of Commerce)"
                         }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -1001,9 +1091,8 @@ exports.queries = [
                         index: 180
                         title: "Owner phone"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Owner phone" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -1035,9 +1124,8 @@ exports.queries = [
                         index: 190
                         title: "Owner fax"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Owner fax" }
-                        isEditable: false
                         isRequired: false
                         defaultValue: {
                           operator: "buildObject",
@@ -1070,9 +1158,8 @@ exports.queries = [
                         index: 200
                         title: "Owner email"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Owner email" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -1373,12 +1460,6 @@ exports.queries = [
             }
             templatePermissionsUsingId: {
               create: [
-                # TODO: Remove this - used to allow new user to apply
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "applyUserEdit" }
-                  }
-                }
                 # Apply Company license (granted on Company registration)
                 {
                   permissionNameToPermissionNameId: {
@@ -1388,7 +1469,7 @@ exports.queries = [
                 # Review General - Stage 1
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewSelfAssignable" }
+                    connectByName: { name: "reviewOrgLicence" }
                   }
                   stageNumber: 1
                   levelNumber: 1
@@ -1400,15 +1481,6 @@ exports.queries = [
                   }
                   stageNumber: 1
                   levelNumber: 1
-                }
-                # Self assignable - Stage 1
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewSelfAssignable" }
-                  }
-                  stageNumber: 1
-                  levelNumber: 1
-                  canSelfAssign: true
                 }
               ]
             }

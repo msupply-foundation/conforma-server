@@ -306,4 +306,19 @@ exports.queries = [
       }
     }
   }`,
+  `mutation reviewOrgLicence {
+      createPermissionName(
+        input: {
+          permissionName: { 
+            name: "reviewOrgLicence",  permissionPolicyToPermissionPolicyId: {
+              connectByName: { name: "reviewBasic" }
+            }
+          }
+        }
+      ) {
+        permissionName {
+          name
+        }
+      }
+    }`,
 ]
