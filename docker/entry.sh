@@ -23,6 +23,7 @@ yarn postgraphile \
    -c "postgres://postgres@localhost/tmf_app_manager" \
    --watch \
    --disable-query-log \
+   -r graphile_user \
    -q '/postgraphile/graphql' \
    -i '/postgraphile/graphiql' | tee /var/log/application_manager/graphile.log &
 sleep 3
