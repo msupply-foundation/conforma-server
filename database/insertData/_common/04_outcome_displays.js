@@ -141,13 +141,6 @@ exports.queries = [
                 title: "Logo"
               }
               {
-                columnName: "registrationDocumentation"
-                elementTypePluginCode: "fileUpload"
-                isTextColumn: false
-                parameters: { label: "Registration Documentation" }
-                title: "Registration Documentation"
-              }
-              {
                 columnName: "professionalExperience"
                 elementTypePluginCode: "fileUpload"
                 isTextColumn: false
@@ -190,7 +183,7 @@ exports.queries = [
                     }
                   ]
                 }
-                title: "Registration Documentation"
+                title:  "Owner professional experience"
               }
             ]
           }

@@ -520,19 +520,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3Username.text"]
                   }
-                  permissionNames: ["applyUserEdit"]
-                }
-              }
-              {
-                actionCode: "grantPermissions"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 4
-                parameterQueries: {
-                  username: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q3Username.text"]
-                  }
-                  permissionNames: [ "applyOrgRego" ]
+                  permissionNames: ["applyUserEdit", "applyOrgRego"  ]
                 }
               }
             ]

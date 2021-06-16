@@ -20,6 +20,11 @@ exports.queries = [
                     connectByName: { name: "applyOrgRego" }
                   }
                 }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyUserEdit" }
+                  }
+                }
               ]
             }
           }
@@ -45,6 +50,11 @@ exports.queries = [
                     connectByName: { name: "reviewOrgRego" }
                   }
                 }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyUserEdit" }
+                  }
+                }
               ]
             }
           }
@@ -68,6 +78,11 @@ exports.queries = [
                 {
                   permissionNameToPermissionNameId: {
                     connectByName: { name: "reviewOrgRego" }
+                  }
+                }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]
@@ -100,6 +115,11 @@ exports.queries = [
                     connectByName: { name: "reviewOrgLicence" }
                   }
                 }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyUserEdit" }
+                  }
+                }
               ]
             }
           }
@@ -123,6 +143,11 @@ exports.queries = [
                 {
                   permissionNameToPermissionNameId: {
                     connectByName: { name: "reviewOrgLicence" }
+                  }
+                }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]
@@ -150,6 +175,11 @@ exports.queries = [
                     connectByName: { name: "reviewOrgLicence" }
                   }
                 }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyUserEdit" }
+                  }
+                }
               ]
             }
           }
@@ -174,6 +204,11 @@ exports.queries = [
                 {
                   permissionNameToPermissionNameId: {
                     connectByName: { name: "assignGeneral" }
+                  }
+                }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]
@@ -220,6 +255,11 @@ exports.queries = [
                 {
                   permissionNameToPermissionNameId: {
                     connectByName: { name: "assignGeneral" }
+                  }
+                }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyUserEdit" }
                   }
                 }
               ]

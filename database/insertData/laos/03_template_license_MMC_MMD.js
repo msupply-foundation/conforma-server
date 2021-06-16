@@ -30,7 +30,7 @@ exports.queries = [
                         index: 10
                         title: "Applicant first name"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "First name" }
                         defaultValue: {
                           operator: "buildObject"
@@ -50,7 +50,7 @@ exports.queries = [
                         index: 20
                         title: "Applicant last name"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Last name" }
                         defaultValue: {
                           operator: "buildObject"
@@ -70,7 +70,7 @@ exports.queries = [
                         index: 30
                         title: "Applicant DOB"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Date of Birth" }
                         defaultValue: {
                           operator: "buildObject",
@@ -103,7 +103,7 @@ exports.queries = [
                         index: 40
                         title: "National ID number"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "National ID number" }
                         defaultValue: {
                           operator: "buildObject",
@@ -136,7 +136,7 @@ exports.queries = [
                         index: 50
                         title: "Date issued"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Date issued" }
                         defaultValue: {
                           operator: "buildObject",
@@ -187,7 +187,7 @@ exports.queries = [
                         index: 80
                         title: "Village"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "Village" }
                         defaultValue: {
@@ -221,7 +221,7 @@ exports.queries = [
                         index: 90
                         title: "District"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "District/Province" }
                         defaultValue: {
@@ -266,7 +266,7 @@ exports.queries = [
                         index: 120
                         title: "Village"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "Village" }
                         defaultValue: {
@@ -300,7 +300,7 @@ exports.queries = [
                         index: 140
                         title: "District"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "District/Province" }
                         defaultValue: {
@@ -352,7 +352,7 @@ exports.queries = [
                         index: 170
                         title: "Organisation Category"
                         elementTypePluginCode: "radioChoice"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: {
                           label: "Education Level"
                           layout: "inline"
@@ -381,7 +381,7 @@ exports.queries = [
                         index: 180
                         title: "Secondary"
                         elementTypePluginCode: "longText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Please enter details for secondary"}
                         visibilityCondition: {
                           operator: "="
@@ -424,7 +424,7 @@ exports.queries = [
                         index: 190
                         title: "Education List"
                         elementTypePluginCode: "listBuilder"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: {
                           label: "Education history"
                           displayType: "table"
@@ -515,7 +515,7 @@ exports.queries = [
                             "organisation.professionalId"
                           ]
                         }
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: {
                           label: "Professional ID"
                           
@@ -543,7 +543,7 @@ exports.queries = [
                             "organisation.professionalExperience"
                           ]
                         }
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: {
                         label: "Professional experience"
                         description: "Please create a list outlining your professional experience"
@@ -676,7 +676,7 @@ exports.queries = [
                         index: 20
                         title: "Name of company/branch/wholesaler (in Lao) "
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Name of company/branch/wholesaler (in Lao) " }
                         defaultValue: {
                           operator: "buildObject",
@@ -709,7 +709,7 @@ exports.queries = [
                         index: 30
                         title: "Name of company/branch/wholesaler (in English)"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Name of company/branch/wholesaler (in English)" }
                         defaultValue: {
                           operator: "buildObject",
@@ -742,7 +742,7 @@ exports.queries = [
                         index: 40
                         title: "Address street"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Address" }
                         defaultValue: {
                           operator: "buildObject",
@@ -752,7 +752,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getOrganisation($id: Int!){organisation(id: $id) {“addressStreet”}}",
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {addressStreet}}",
                                   "",
                                   [
                                     "id"
@@ -763,7 +763,7 @@ exports.queries = [
                                       "currentUser.organisation.orgId"
                                     ]
                                   },
-                                  "organisation.“addressStreet”"
+                                  "organisation.addressStreet"
                                 ]
                               }
                             }
@@ -775,7 +775,7 @@ exports.queries = [
                         index: 50
                         title: "Adress village"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Village" }
                         isRequired: false
                         defaultValue: {
@@ -809,7 +809,7 @@ exports.queries = [
                         index: 60
                         title: "District"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "District/Province" }
                         defaultValue: {
                           operator: "buildObject",
@@ -860,7 +860,7 @@ exports.queries = [
                         index: 90
                         title: "Phone"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Phone" }
                         defaultValue: {
                           operator: "buildObject",
@@ -893,7 +893,7 @@ exports.queries = [
                         index: 100
                         title: "Fax"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Fax" }
                         isRequired: false
                         defaultValue: {
@@ -927,7 +927,7 @@ exports.queries = [
                         index: 110
                         title: "Email"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Email" }
                         defaultValue: {
                           operator: "buildObject",
@@ -978,7 +978,7 @@ exports.queries = [
                         index: 140
                         title: "Domestic"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Domestic" }
                         defaultValue: {
                           operator: "buildObject",
@@ -1011,7 +1011,7 @@ exports.queries = [
                         index: 150
                         title: "Foreign"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Foreign" }
                         defaultValue: {
                           operator: "buildObject",
@@ -1055,7 +1055,7 @@ exports.queries = [
                         index: 170
                         title: "Owner name"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { 
                           label: "Company owner"
                           helpText: "Full name of company owner (as licensed at M. of Commerce)"
@@ -1091,7 +1091,7 @@ exports.queries = [
                         index: 180
                         title: "Owner phone"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Owner phone" }
                         defaultValue: {
                           operator: "buildObject",
@@ -1124,7 +1124,7 @@ exports.queries = [
                         index: 190
                         title: "Owner fax"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Owner fax" }
                         isRequired: false
                         defaultValue: {
@@ -1158,7 +1158,7 @@ exports.queries = [
                         index: 200
                         title: "Owner email"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Owner email" }
                         defaultValue: {
                           operator: "buildObject",
