@@ -1431,34 +1431,6 @@ exports.queries = [
                 {
                   actionCode: "grantPermissions"
                   trigger: ON_REVIEW_SUBMIT
-                  sequence: 103
-                  # TO-DO -- update condition to just check Outcome
-                  # (from applicationData)
-                  condition: {
-                    operator: "="
-                    children: [
-                      {
-                        operator: "objectProperties"
-                        children: ["applicationData.outcome"]
-                      }
-                      "APPROVED"
-                    ]
-                  }
-                  parameterQueries: {
-                    username: {
-                      operator: "objectProperties"
-                      children: ["applicationData.username"]
-                    }
-                    orgId: {
-                      operator: "objectProperties"
-                      children: ["applicationData.orgId"]
-                    }
-                    permissionNames: ["reviewJoinOrg"]
-                  }
-                }
-                {
-                  actionCode: "grantPermissions"
-                  trigger: ON_REVIEW_SUBMIT
                   sequence: 104
                   # TO-DO -- update condition to just check Outcome
                   # (from applicationData)
