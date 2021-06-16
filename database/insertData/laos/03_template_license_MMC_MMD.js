@@ -847,7 +847,7 @@ exports.queries = [
                           text: {
                             operator: "stringSubstitution",
                             children: [
-                              "Link: **[Company application](/application/%2/summary?active-sections=S3)**, (with original documents)",
+                              "**Link: [Company application](/application/%2/summary?active-sections=S3)** (with original documents)",
                               {
                                 operator: "graphQL",
                                 children: [
