@@ -11,7 +11,7 @@ exports.queries = [
     createTemplate(
       input: {
           template: {
-            code: "CompanyLicense1"
+            code: "CompanyLicense"
             name: "Company License for Modern medicines or Medical devices"
             isLinear: false # CHANGE THIS
             status: AVAILABLE
@@ -1351,7 +1351,7 @@ exports.queries = [
                   actionCode: "cLog"
                   trigger: ON_APPLICATION_SUBMIT
                   parameterQueries: {
-                    message: { value: "Organisation Registration submission" }
+                    message: { value: "Company License submission" }
                   }
                 }
                 {
@@ -1431,17 +1431,32 @@ exports.queries = [
                 {
                   actionCode: "grantPermissions"
                   trigger: ON_REVIEW_SUBMIT
-                  sequence: 103
+                  sequence: 104
                   # TO-DO -- update condition to just check Outcome
                   # (from applicationData)
                   condition: {
-                    operator: "="
+                    operator: "AND"
                     children: [
                       {
-                        operator: "objectProperties"
-                        children: ["applicationData.outcome"]
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.outcome"]
+                          }
+                          "APPROVED"
+                        ]
                       }
-                      "APPROVED"
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q2LicenseType.text"]
+                          }
+                          "import/export medicines and medical devices"
+                        ]
+                      }
                     ]
                   }
                   parameterQueries: {
@@ -1449,11 +1464,117 @@ exports.queries = [
                       operator: "objectProperties"
                       children: ["applicationData.username"]
                     }
-                    orgName: {
+                    orgId: {
                       operator: "objectProperties"
-                      children: ["outputCumulative.organisation.name"]
+                      children: ["applicationData.orgId"]
                     }
-                    permissionNames: ["reviewJoinOrg"]
+                    permissionNames: ["applyImportPermit"]
+                  }
+                }
+                {
+                  actionCode: "grantPermissions"
+                  trigger: ON_REVIEW_SUBMIT
+                  sequence: 105
+                  # TO-DO -- update condition to just check Outcome
+                  # (from applicationData)
+                  condition: {
+                    operator: "AND"
+                    children: [
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.outcome"]
+                          }
+                          "APPROVED"
+                        ]
+                      }
+                      {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q2LicenseType.text"]
+                          }
+                          "import/export medicines and medical devices"
+                        ]
+                      }
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q1ProductType.text"]
+                          }
+                          "modern medicines"
+                        ]
+                      }
+                    ]
+                  }
+                  parameterQueries: {
+                    username: {
+                      operator: "objectProperties"
+                      children: ["applicationData.username"]
+                    }
+                    orgId: {
+                      operator: "objectProperties"
+                      children: ["applicationData.orgId"]
+                    }
+                    permissionNames: ["applyDrugRegoMMC"]
+                  }
+                }
+                {
+                  actionCode: "grantPermissions"
+                  trigger: ON_REVIEW_SUBMIT
+                  sequence: 105
+                  # TO-DO -- update condition to just check Outcome
+                  # (from applicationData)
+                  condition: {
+                    operator: "AND"
+                    children: [
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.outcome"]
+                          }
+                          "APPROVED"
+                        ]
+                      }
+                      {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q2LicenseType.text"]
+                          }
+                          "import/export medicines and medical devices"
+                        ]
+                      }
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q1ProductType.text"]
+                          }
+                          "medical devices"
+                        ]
+                      }
+                    ]
+                  }
+                  parameterQueries: {
+                    username: {
+                      operator: "objectProperties"
+                      children: ["applicationData.username"]
+                    }
+                    orgId: {
+                      operator: "objectProperties"
+                      children: ["applicationData.orgId"]
+                    }
+                    permissionNames: ["applyDrugRegoMMD"]
                   }
                 }
               ]

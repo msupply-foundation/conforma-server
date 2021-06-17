@@ -163,8 +163,9 @@ Grants permission to user/org -- i.e. creates `permission_join` from user/org to
 | Input parameters<br />(\*required) <br/> | Output properties   |
 | ---------------------------------------- | ------------------- |
 | `username`\*                             | `permissionJoinIds` |
-| `orgName`                                | `permissionNames`   |
-| `permissionNames`\* [Array of names]     |                     |
+| `permissionNames`\* [Array of names]     | `permissionNames`   |
+| `orgName`                                |                     |
+| `orgId`                                  |                     |
 
 ---
 

@@ -53,6 +53,57 @@ exports.queries = [
       }
     }
   }`,
+  // applyImportPermit
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyImportPermit"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyDrugRegoMMC
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyDrugRegoMMC"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyDrugRegoMMD
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyDrugRegoMMD"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
   // applyUserEdit
   `mutation createPermissionName {
     createPermissionName(
