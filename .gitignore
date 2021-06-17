@@ -51,9 +51,6 @@ lib
 # Docker related
 githubtoken.txt
 
-# Ignore temp snapshots
-database/snapshots/**temp**
-
 # Diff config in root dir
 /pg-diff-config.json
 
