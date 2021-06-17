@@ -838,7 +838,7 @@ exports.queries = [
                         }
                       }
                       {
-                        code: "S3applicationLink"
+                        code: "S3OutcomeLink"
                         index: 65
                         title: "Link to Company Registration application"
                         elementTypePluginCode: "textInfo"
@@ -847,22 +847,14 @@ exports.queries = [
                           text: {
                             operator: "stringSubstitution",
                             children: [
-                              "**Link: [Company application](/application/%2/summary?active-sections=S3)** (with original documents)",
+                              "**Link: [Company details](/outcomes/organisation/%1)**  \\n(including original application)",
                               {
-                                operator: "graphQL",
-                                children: [
-                                  "query getApplication($id: Int!) {organisationApplicationJoin(id: $id) {id,    application {id, name, serial}}}",
-                                  "graphQLEndpoint",
-                                  [
-                                    "id"
-                                  ],
-                                  1,
-                                  "organisationApplicationJoin.application.serial"
-                                ]
+                                operator: "objectProperties",
+                                children: [ "applicationData.org.id", "" ]
                               }
                             ]
                           }
-                          style: "basic"
+                          style: "none"
                         }
                       }
                       {
