@@ -648,23 +648,23 @@ class PostgresDB {
 
   public joinPermissionNameToUserOrg = async (
     username: string,
-    orgName: string,
+    org: string | number,
     permissionName: string
   ) => {
     const text = `
-    insert into permission_join (user_id, organisation_id, permission_name_id) 
+    INSERT INTO permission_join (user_id, organisation_id, permission_name_id) 
     values (
         (select id from "user" where username = $1),
-        (select id from organisation where name = $2),
+        ${typeof org === 'number' ? '$2' : '(select id from organisation where name = $2)'},
         (select id from permission_name where name = $3))
     ON CONFLICT (user_id, organisation_id, permission_name_id)
       WHERE organisation_id IS NOT NULL
     DO
     		UPDATE SET user_id = (select id from "user" where username = $1)
-    returning id
+    RETURNING id
     `
     try {
-      const result = await this.query({ text, values: [username, orgName, permissionName] })
+      const result = await this.query({ text, values: [username, org, permissionName] })
       return result.rows[0].id
     } catch (err) {
       console.log(err.message)
