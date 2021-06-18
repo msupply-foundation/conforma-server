@@ -938,7 +938,7 @@ exports.queries = [
                   }
                   registration: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.registrationCode.text"]
+                    children: ["applicationData.responses.registrationCode.text", ""]
                   }
                   logo_url: {
                     operator: "+",
@@ -1072,6 +1072,24 @@ exports.queries = [
                   }
                   permissionNames: ["reviewJoinOrg", "applyOrgLicense"]
                 }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 104
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: [
+                        "applicationData.outcome"
+                      ]
+                    }
+                    "APPROVED"
+                  ]
+                }
+                parameterQueries: { newStatus: { value: "COMPLETED" } }
               }
             ]
           }

@@ -838,6 +838,26 @@ exports.queries = [
                         }
                       }
                       {
+                        code: "S3OutcomeLink"
+                        index: 65
+                        title: "Link to Company Registration application"
+                        elementTypePluginCode: "textInfo"
+                        category: INFORMATION
+                        parameters: { 
+                          text: {
+                            operator: "stringSubstitution",
+                            children: [
+                              "**Link: [Company details](/outcomes/organisation/%1)**  \\n(including original application)",
+                              {
+                                operator: "objectProperties",
+                                children: [ "applicationData.org.id", "" ]
+                              }
+                            ]
+                          }
+                          style: "none"
+                        }
+                      }
+                      {
                         code: "S3PB1"
                         index: 70
                         title: "Page Break"
