@@ -19,6 +19,7 @@ import {
   SNAPSHOT_FOLDER,
   SNAPSHOT_OPTIONS_FOLDER,
   FILES_FOLDER,
+  PG_DFF_JS_LOCATION,
 } from './constants'
 const asyncRimRaf = promisify(rimraf)
 
@@ -102,8 +103,8 @@ const getSchemaDiff = async (newSnapshotFolder: string) => {
     JSON.stringify(pgDiffConfig, null, ' ')
   )
 
-  // Running diff command
-  execSync('node node_modules/pg-diff-cli/main.js -c development initial-script', {
+  // Running diff command, node_modules folder location changes in production build
+  execSync(`node ${PG_DFF_JS_LOCATION} -c development initial-script`, {
     cwd: ROOT_FOLDER,
   })
   // Rename diff file
