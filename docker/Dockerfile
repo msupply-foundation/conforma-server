@@ -87,10 +87,11 @@ COPY nginx_config/application_manager.conf /etc/nginx/conf.d/
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
 COPY postgres_config/pg_hba.conf .
 
+ARG INITIAL_DATA_LOCALE=dev
 # --- INITIALISE DATABASE
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
-RUN ./database.sh
+RUN ./database.sh ${INITIAL_DATA_LOCALE}
 
 # --- CREATE LOG DIR
 WORKDIR /var/log/application_manager

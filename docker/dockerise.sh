@@ -6,6 +6,7 @@
 SERVER_BRANCH='b0-0-1' 
 WEB_APP_BRANCH='b0-0-1'  
 IMAGE_NAME='irims-demo'
+INITIAL_DATA_LOCALE='laos'
 
 NODE_VERSION='14'
 POSTGRES_VERSION='12'
@@ -21,6 +22,7 @@ docker build \
    --build-arg WEB_APP_BRANCH="$WEB_APP_BRANCH" \
    --build-arg NODE_VERSION="$NODE_VERSION" \
    --build-arg POSTGRES_VERSION="$POSTGRES_VERSION" \
+   --build-arg INITIAL_DATA_LOCALE="$INITIAL_DATA_LOCALE" \
    --secret id=githubtoken,src=../githubtoken.txt \
    .
 
