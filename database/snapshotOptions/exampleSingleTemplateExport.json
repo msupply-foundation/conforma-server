@@ -1,7 +1,15 @@
 {
   "filters": { "template": { "id": { "in": [2, 8] } } },
   "shouldReInitilise": false,
-  "includeTables": ["templateElement", "template", "templateSection"],
+  "includeTables": [
+    "templateElement",
+    "template",
+    "templateAction",
+    "templateFilterJoin",
+    "templatePermission",
+    "templateStage",
+    "templateSection"
+  ],
   "excludeTables": [],
   "insertScriptsLocale": "dev",
   "includeInsertScripts": [],
