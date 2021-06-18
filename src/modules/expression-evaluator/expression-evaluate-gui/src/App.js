@@ -16,7 +16,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles'
 import evaluatorDev from './expression-evaluator/evaluateExpression'
 import evaluatorPublished from '@openmsupply/expression-evaluator'
-import * as config from './config.json'
+import config from './config.json'
 import { PostgresInterface } from './postgresInterface'
 
 const looseJSON = require('loose-json')

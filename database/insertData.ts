@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import fetch from 'node-fetch'
-import config from '../src/config.json'
+import config from '../src/config'
 import { getAppEntryPointDir } from '../src/components/utilityFunctions'
 
 const dataFolder = path.join(getAppEntryPointDir(), config.databaseFolder, 'insertData')

@@ -38,7 +38,7 @@ typings/
 .env.test
 
 # File storage folder
-files
+/files
 
 #GraphQL schema auto-generated
 database/schema.graphql

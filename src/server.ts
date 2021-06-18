@@ -19,7 +19,7 @@ import {
 } from './components/files/fileHandler'
 import { getAppEntryPointDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
-import config from './config.json'
+import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 
 // Bare-bones Fastify server

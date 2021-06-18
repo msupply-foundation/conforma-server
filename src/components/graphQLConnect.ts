@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import * as config from '../config.json'
+import config from '../config'
 import { getAdminJWT } from './permissions/loginHelpers'
 
 const endpoint = config.graphQLendpoint

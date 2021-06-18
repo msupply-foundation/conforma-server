@@ -1,8 +1,0 @@
-{
-  "TODO": "currently, only need to change serverGraphQL and serverREST, there should be a better way to do this. would providing at runtime be better ?",
-  "TODO": "maybe in production web app should just look at current location + /graphql + /server ?",
-  "serverGraphQL": "http://localhost:3000/postgraphile/graphql",
-  "serverREST": "http://localhost:3000/server",
-  "uploadEndpoint": "/upload",
-  "paginationPresets": [2, 5, 10, 20, 50]
-}
