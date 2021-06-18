@@ -72,7 +72,7 @@ const startServer = async () => {
 
   server.register(lookupTableRoutes, { prefix: '/lookup-table' })
 
-  // Snapshout routes
+  // Snapshot routes
   server.register(snapshotRoutes, { prefix: '/snapshot' })
 
   server.get('/', async (request, reply) => {

@@ -17,7 +17,7 @@ import {
   PG_SCHEMA_DIFF_FILE_NAME,
   ROOT_FOLDER,
   SNAPSHOT_FOLDER,
-  SNAPSHOT_OPTOINS_FOLDER,
+  SNAPSHOT_OPTIONS_FOLDER,
   FILES_FOLDER,
 } from './constants'
 const asyncRimRaf = promisify(rimraf)
@@ -67,7 +67,7 @@ const getOptions = async (optionsName?: string, options?: ExportAndImportOptions
     return options
   }
 
-  const optionsFile = path.join(SNAPSHOT_OPTOINS_FOLDER, `${optionsName}.json`)
+  const optionsFile = path.join(SNAPSHOT_OPTIONS_FOLDER, `${optionsName}.json`)
 
   console.log(`using options from: ${optionsFile}`)
   const optionsRaw = await fs.readFile(optionsFile, {

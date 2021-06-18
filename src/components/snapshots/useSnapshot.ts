@@ -15,7 +15,7 @@ import {
   FILES_FOLDER,
   ROOT_FOLDER,
   SNAPSHOT_FOLDER,
-  SNAPSHOT_OPTOINS_FOLDER,
+  SNAPSHOT_OPTIONS_FOLDER,
 } from './constants'
 
 const useSnapshot: SnapshotOperation = async ({
@@ -81,7 +81,7 @@ const getOptions = async (
   }
   let optionsFile = path.join(snapshotFolder, `${OPTIONS_FILE_NAME}.json`)
 
-  if (optionsName) optionsFile = path.join(SNAPSHOT_OPTOINS_FOLDER, `${optionsName}.json`)
+  if (optionsName) optionsFile = path.join(SNAPSHOT_OPTIONS_FOLDER, `${optionsName}.json`)
   console.log(`using options from: ${optionsFile}`)
   const optionsRaw = await fs.readFile(optionsFile, {
     encoding: 'utf-8',

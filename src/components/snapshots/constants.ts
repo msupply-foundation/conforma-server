@@ -14,5 +14,5 @@ export const PG_SCHEMA_DIFF_FILE_NAME = 'schema_diff'
 export const ROOT_FOLDER = path.join(getAppEntryPointDir(), '../')
 export const DATABASE_FOLDER = path.join(getAppEntryPointDir(), config.databaseFolder)
 export const SNAPSHOT_FOLDER = path.join(DATABASE_FOLDER, SNAPSHOT_SUBFOLDER)
-export const SNAPSHOT_OPTOINS_FOLDER = path.join(DATABASE_FOLDER, OPTIONS_SUBFOLDER)
+export const SNAPSHOT_OPTIONS_FOLDER = path.join(DATABASE_FOLDER, OPTIONS_SUBFOLDER)
 export const FILES_FOLDER = path.join(getAppEntryPointDir(), config.filesFolder)
