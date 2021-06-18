@@ -8,7 +8,7 @@ yarn ts-node ./database/insertDataCLI.ts $1 &
 PID=$!
 wait $PID
 
-yarn ts-node ./database/updateRowPolicies.ts &
+yarn ts-node ./database/updateRowPoliciesCLI.ts &
 
 # Makes script wait until async node script has completed
 PID=$!
