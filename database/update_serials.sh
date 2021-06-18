@@ -1,3 +1,4 @@
+#!/bin/bash
 # Reset serial numbers
 echo "\nUpdating serials..."
 
