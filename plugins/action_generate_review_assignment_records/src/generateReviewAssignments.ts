@@ -29,7 +29,7 @@ async function generateReviewAssignments({
   console.log('Generating review assignment records...')
   try {
     // Get template information and current stage for application
-    const { templateId, stageNumber, stageId } =
+    const { templateId, stageNumber, stageId, stageHistoryTimeCreated } =
       applicationData ?? (await DBConnect.getApplicationData(applicationId))
 
     const numReviewLevels: number = (await DBConnect.getNumReviewLevels(stageId)) || 0
@@ -91,8 +91,9 @@ async function generateReviewAssignments({
       applicationId,
       templateId,
       nextReviewLevel,
-      nextStageNumber: stageNumber,
-      nextStageId: stageId,
+      stageNumber,
+      stageId,
+      stageDate: stageHistoryTimeCreated,
       isLastLevel,
     })
   } catch (error) {
@@ -109,8 +110,9 @@ interface GenerateNextReviewAssignmentsProps {
   applicationId: number
   templateId: number
   nextReviewLevel: number
-  nextStageNumber: number
-  nextStageId: number
+  stageNumber: number
+  stageId: number
+  stageDate: Date
   isLastLevel: boolean
 }
 
@@ -119,13 +121,14 @@ const generateNextReviewAssignments = async ({
   applicationId,
   templateId,
   nextReviewLevel,
-  nextStageNumber,
-  nextStageId,
+  stageNumber,
+  stageId,
+  stageDate,
   isLastLevel,
 }: GenerateNextReviewAssignmentsProps) => {
   const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
     templateId,
-    nextStageNumber,
+    stageNumber,
     nextReviewLevel,
     PermissionPolicyType.Review
   )
@@ -150,8 +153,9 @@ const generateNextReviewAssignments = async ({
       reviewAssignments[userOrgKey] = {
         reviewerId: userId,
         orgId,
-        stageId: nextStageId,
-        stageNumber: nextStageNumber,
+        stageId,
+        stageNumber,
+        stageDate,
         // TO-DO: allow STATUS to be configurable in template
         status,
         applicationId,
@@ -168,7 +172,7 @@ const generateNextReviewAssignments = async ({
   console.log('Generating review_assignment_assigner_join records...')
   const availableAssigners = await db.getPersonnelForApplicationStageLevel(
     templateId,
-    nextStageNumber,
+    stageNumber,
     nextReviewLevel,
     PermissionPolicyType.Assign
   )
@@ -196,7 +200,7 @@ const generateNextReviewAssignments = async ({
       reviewAssignmentIds,
       reviewAssignmentAssignerJoins,
       reviewAssignmentAssignerJoinIds,
-      nextStageNumber,
+      nextStageNumber: stageNumber,
       nextReviewLevel,
     },
   }
