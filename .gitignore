@@ -51,8 +51,8 @@ lib
 # Docker related
 githubtoken.txt
 
-# Ignore temp snapshots
-database/snapshots/**temp**
+# Diff config in root dir
+/pg-diff-config.json
 
 # Temp for expression-evaluator gui
 src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluator/

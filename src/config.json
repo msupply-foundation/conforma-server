@@ -14,6 +14,7 @@
   "filesFolder": "../files",
   "pluginsFolder": "../plugins",
   "imagesFolder": "../images",
+  "databaseFolder": "../database",
   "jwtSecret": "devsecret",
   "RESTport": 8080,
   "thumbnailMaxWidth": 300,

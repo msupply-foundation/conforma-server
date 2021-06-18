@@ -42,7 +42,8 @@ exports.queries = [
                 id: 4000
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q1"
                   }
@@ -54,7 +55,8 @@ exports.queries = [
                 id: 4001
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q2"
                   }
@@ -66,7 +68,8 @@ exports.queries = [
                 id: 4002
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q3"
                   }
@@ -78,7 +81,8 @@ exports.queries = [
                 id: 4003
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q4"
                   }
@@ -90,7 +94,8 @@ exports.queries = [
                 id: 4004
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q5"
                   }
@@ -102,7 +107,8 @@ exports.queries = [
                 id: 4005
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q20"
                   }
@@ -114,7 +120,8 @@ exports.queries = [
                 id: 4006
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q21"
                   }
@@ -126,7 +133,8 @@ exports.queries = [
                 id: 4007
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q22"
                   }
@@ -138,7 +146,8 @@ exports.queries = [
                 id: 4008
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q23"
                   }
@@ -150,7 +159,8 @@ exports.queries = [
                 id: 4009
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q24"
                   }
@@ -213,7 +223,8 @@ exports.queries = [
                 id: 4010
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q1"
                   }
@@ -225,7 +236,8 @@ exports.queries = [
                 id: 4011
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q2"
                   }
@@ -237,7 +249,8 @@ exports.queries = [
                 id: 4012
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q3"
                   }
@@ -249,7 +262,8 @@ exports.queries = [
                 id: 4013
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q4"
                   }
@@ -261,7 +275,8 @@ exports.queries = [
                 id: 4014
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q5"
                   }
@@ -273,7 +288,8 @@ exports.queries = [
                 id: 4015
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q20"
                   }
@@ -285,7 +301,8 @@ exports.queries = [
                 id: 4016
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q21"
                   }
@@ -297,7 +314,8 @@ exports.queries = [
                 id: 4017
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q22"
                   }
@@ -309,7 +327,8 @@ exports.queries = [
                 id: 4018
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q23"
                   }
@@ -321,7 +340,8 @@ exports.queries = [
                 id: 4019
                 isValid: true
                 templateElementToTemplateElementId: {
-                  connectByTemplateCodeAndCode: {
+                  connectByTemplateCodeAndCodeAndTemplateVersion: {
+                    templateVersion: 1
                     templateCode: "ReviewTest"
                     code: "Q24"
                   }
