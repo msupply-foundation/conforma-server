@@ -14,11 +14,14 @@ const config = {
     process.env.NODE_ENV === 'production'
       ? 'http://localhost:5000/postgraphile/graphql'
       : 'http://localhost:5000/graphql',
-  '//': 'Folder path from perspective of server.ts/js',
+  // 'Folder path from perspective of server.ts/js'
   filesFolder: '../files',
   pluginsFolder: '../plugins',
   imagesFolder: '../images',
   databaseFolder: '../database',
+  // In production postgraphile is started with -q and -i /postgraphile/...
+  nodeModulesFolder:
+    process.env.NODE_ENV === 'production' ? '../../node_modules' : '../node_modules',
   jwtSecret: 'devsecret',
   RESTport: 8080,
   thumbnailMaxWidth: 300,
