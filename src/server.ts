@@ -82,7 +82,7 @@ const startServer = async () => {
 
   // Unique name/email/organisation check
   server.get('/check-unique', async (request: any, reply) => {
-    const { type, value } = request.query
+    const { type, value, table, field } = request.query
     if (value === '' || value === undefined) {
       reply.send({
         unique: false,
@@ -90,33 +90,34 @@ const startServer = async () => {
       })
       return
     }
-    let table, field
+    let tableName, fieldName
     switch (type) {
       case 'username':
-        table = 'user'
-        field = 'username'
+        tableName = 'user'
+        fieldName = 'username'
         break
       case 'email':
-        table = 'user'
-        field = 'email'
+        tableName = 'user'
+        fieldName = 'email'
         break
       case 'organisation':
-        table = 'organisation'
-        field = 'name'
-        break
-      case 'orgRegistration':
-        table = 'organisation'
-        field = 'registration'
+        tableName = 'organisation'
+        fieldName = 'name'
         break
       default:
-        reply.send({
-          unique: false,
-          message: 'Type missing or invalid',
-        })
-        return
+        if (!table || !field) {
+          reply.send({
+            unique: false,
+            message: 'Type, table, or field missing or invalid',
+          })
+          return
+        } else {
+          tableName = table
+          fieldName = field
+        }
     }
     try {
-      const isUnique = await DBConnect.isUnique(table, field, value)
+      const isUnique = await DBConnect.isUnique(tableName, fieldName, value)
       reply.send({
         unique: isUnique,
         message: '',

@@ -6,8 +6,7 @@
     "triggerQueue",
     "applicationListShape",
     "elementTypePlugin",
-    "notification",
-    "trigger_queue"
+    "notification"
   ],
   "shouldReInitilise": true,
   "insertScriptsLocale": "dev",

@@ -49,7 +49,7 @@ const takeSnapshot: SnapshotOperation = async ({
       JSON.stringify(options, null, ' ')
     )
 
-    await getScheamDiff(newSnapshotFolder)
+    await getSchemaDiff(newSnapshotFolder)
 
     copyFiles(newSnapshotFolder, options)
 
@@ -89,7 +89,7 @@ const zipSnapshot = async (snapshotFolder: string, snapshotName: string) => {
   )
 }
 
-const getScheamDiff = async (newSnapshotFolder: string) => {
+const getSchemaDiff = async (newSnapshotFolder: string) => {
   console.log('creating schema diff ... ')
   // Creating db to compare to
   execSync('./database/initialise_database.sh tmf_app_manager_temp', { cwd: ROOT_FOLDER })

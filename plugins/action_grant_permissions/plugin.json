@@ -4,7 +4,7 @@
   "name": "Grant Permissions",
   "description": "Grants permission to user/org, creates permission join from user/org to permission name. If org not provided, the permission will be granted to the user only.",
   "required_parameters": ["username", "permissionNames"],
-  "optional_parameters": ["orgName"],
+  "optional_parameters": ["orgName", "orgId"],
   "output_properties": ["permissionJoinIds", "permissionNames"],
   "info": {
     "author": {
