@@ -3,18 +3,17 @@ GraphQL Fragment - DEVELOPMENT Actions
   - Use this to test arbitrary Actions -- but only use the trigger "DEV_TEST"
 \*/
 exports.devActions = `
-    # Create a user
+    # Send notification/email
     {
-      actionCode: "modifyRecord"
+      actionCode: "sendNotification"
       trigger: DEV_TEST
       sequence: 1
       parameterQueries: {
-        tableName: "user"
-        matchField: "username"
-        first_name: "Boba"
-        last_name: "Fett"
-        username: "js"
-        email: "nowhere@outerrim.space"
+        emailAddresses: ["carl@sussol.net"]
+        from: "Application Manager"
+        subject: "Testing..."
+        message: "Sending an email from application manager"
+        attachments: []
       }
     }
    # {

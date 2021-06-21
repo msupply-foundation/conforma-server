@@ -22,6 +22,7 @@ import DBConnect from './components/databaseConnect'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
+require('dotenv').config()
 
 // Bare-bones Fastify server
 

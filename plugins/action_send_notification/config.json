@@ -1,0 +1,6 @@
+{
+  "host": "smithnz.net",
+  "port": 465,
+  "secure": true,
+  "user": "sussol@smithnz.net"
+}
