@@ -18,6 +18,8 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     sendEmail = true,
   } = parameters
 
+  console.log('Application data', applicationData)
+
   const transporter = nodemailer.createTransport({
     host,
     port,

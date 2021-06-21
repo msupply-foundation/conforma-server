@@ -4,9 +4,10 @@ CREATE TABLE public.notification (
     user_id integer REFERENCES public.user (id),
     application_id integer REFERENCES public.application (id),
     review_id integer REFERENCES public.review (id),
+    email_recipients varchar[],
     subject varchar,
     message varchar,
-    document_id integer REFERENCES public.file (id),
+    attachments varchar[],
     is_read boolean
 );
 
