@@ -2,5 +2,7 @@
   "host": "smithnz.net",
   "port": 465,
   "secure": true,
-  "user": "sussol@smithnz.net"
+  "user": "sussol@smithnz.net",
+  "defaultFromName": "mSupply Application Manager",
+  "defaultFromEmail": "no-reply@sussol.net"
 }

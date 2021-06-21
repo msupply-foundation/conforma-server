@@ -8,17 +8,17 @@ import config from '../config.json'
 
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
-  const { host, port, secure, user } = config
+  const { host, port, secure, user, defaultFromName, defaultFromEmail } = config
   const {
-    emailAddresses,
-    from = user,
+    userId = applicationData?.userId,
+    email = applicationData?.email,
+    fromName = defaultFromName,
+    fromEmail = defaultFromEmail,
     subject,
     message,
     attachments = [],
     sendEmail = true,
   } = parameters
-
-  console.log('Application data', applicationData)
 
   const transporter = nodemailer.createTransport({
     host,
@@ -30,41 +30,42 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     },
   })
 
-  console.log('Sending email...')
-
   try {
-    // Create notification database record
+    const emailAddressString = stringifyEmailRecipientsList(email)
 
-    // Send email
-    const result = await transporter.sendMail({
-      from,
-      to: 'ceejaysmith@gmail.com',
+    // Create notification database record
+    console.log('Creating notification...')
+    let notificationResult
+    notificationResult = await db.createNotification({
+      userId,
+      applicationId: applicationData?.applicationId,
+      emailAddressString,
       subject,
-      text: 'This is my email',
+      message,
+      attachments,
     })
 
-    console.log('Message sent:', result)
-    // await createOrUpdateTable(DBConnect, db, tableName, record)
-    // let recordId = await db.getRecordId(tableName, fieldToMatch, valueToMatch)
-    // const isUpdate = recordId !== 0
-    // let result: any = {}
-    // if (isUpdate) {
-    //   // UPDATE
-    //   console.log(`Updating ${tableName} record: ${JSON.stringify(record, null, 2)}`)
-    //   result = await db.updateRecord(tableName, recordId, record)
-    // } else {
-    //   // CREATE NEW
-    //   console.log(`Creating ${tableName} record: ${JSON.stringify(record, null, 2)}`)
-    //   result = await db.createRecord(tableName, record)
-    //   recordId = result.recordId
-    // }
-    // await db.createJoinTableAndRecord(tableName, applicationId, recordId)
-    // if (!result.success) throw new Error('Problem creating or updating record')
-    // console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableName} record, ID: `, result.recordId)
+    // Send email
+    // Note: Using "any" type as imported @types defintions is incorrect, doesn't recognise some fields on "emailResult"
+    console.log('Sending email...')
+    const emailResult: any = await transporter.sendMail({
+      from: `${fromName} <${fromEmail}>`,
+      to: emailAddressString,
+      subject,
+      text: message,
+      // html: Parse text as Markdown TO-DO
+    })
+
+    // Update notification table with email sent confirmation
+    if (emailResult?.response.match(/250 OK.*/)) {
+      console.log(`Email successfully sent to: ${emailResult.envelope.to}\n`)
+      notificationResult = await db.notificationEmailSent(notificationResult.id)
+    }
+
     return {
       status: ActionQueueStatus.Success,
       error_log: '',
-      output: {},
+      output: { notification: notificationResult },
     }
   } catch (error) {
     console.log(error.message)
@@ -73,22 +74,11 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       error_log: error.message,
     }
   }
-
-  // const createOrUpdateTable = async (
-  //   DBConnect: DBConnectType,
-  //   db: DatabaseMethodsType,
-  //   tableName: string,
-  //   record: { [key: string]: object | string }
-  // ) => {
-  //   const tableAndFields = await DBConnect.getDatabaseInfo(tableName)
-
-  //   if (tableAndFields.length === 0) await db.createTable(tableName)
-
-  //   const fieldsToCreate = Object.entries(record)
-  //     .filter(([fieldName]) => !tableAndFields.find(({ column_name }) => column_name === fieldName))
-  //     .map(([fieldName, value]) => ({ fieldName, fieldType: typeof value }))
-
-  //   if (fieldsToCreate.length > 0) await db.createFields(tableName, fieldsToCreate)
 }
 
 export default sendNotification
+
+const stringifyEmailRecipientsList = (emailAddresses: string | string[]): string => {
+  if (!Array.isArray(emailAddresses)) return emailAddresses
+  return emailAddresses.join(', ')
+}
