@@ -1,8 +1,8 @@
 {
-  "host": "smithnz.net",
+  "host": "mail.yakpost.org",
   "port": 465,
   "secure": true,
-  "user": "sussol@smithnz.net",
+  "user": "irims-dev@sussol.net",
   "defaultFromName": "mSupply Application Manager",
   "defaultFromEmail": "no-reply@sussol.net"
 }
