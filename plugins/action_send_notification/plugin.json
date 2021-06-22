@@ -3,8 +3,8 @@
   "code": "sendNotification",
   "name": "Send Email",
   "description": "Creates a notification and send an email",
-  "required_parameters": ["tableName"],
-  "optional_parameters": ["matchField", "matchValue", "<other record fields>"],
+  "required_parameters": ["subject", "message"],
+  "optional_parameters": ["userId", "fromName", "fromEmail", "attachments", "sendEmail"],
   "output_properties": ["[record]"],
   "info": {
     "author": {
