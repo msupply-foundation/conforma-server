@@ -74,6 +74,8 @@ See documentation for more details
 
 ## Triggers and Actions
 
+TODO: UPDATE
+
 In order to see Triggers and Actions working, you'll need to run the `createSchema.sql` then `insertData.sql` scripts in the database folder.
 
 The application with ID = 3 (Company registration: Company C) has one Action associated with it, the Console logger. All it does is write a message to the console, and you can see the details on the `template_action` table.

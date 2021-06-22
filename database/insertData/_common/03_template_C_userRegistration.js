@@ -68,7 +68,16 @@ exports.queries = [
                           {
                             operator: "API"
                             children: [
-                              "http://localhost:8080/check-unique"
+                              {
+                                operator: "+"
+                                children: [
+                                  {
+                                    operator: "objectProperties"
+                                    children: ["applicationData.config.serverREST"]
+                                  }
+                                  "/check-unique"
+                                ]
+                              }
                               ["type", "value"]
                               "username"
                               {
