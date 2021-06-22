@@ -1,7 +1,6 @@
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
-import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
-import { DBConnectType } from '../../../src/components/databaseConnect'
+import databaseMethods from './databaseMethods'
 import path from 'path'
 import nodemailer from 'nodemailer'
 import marked from 'marked'

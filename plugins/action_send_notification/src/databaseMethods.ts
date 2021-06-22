@@ -1,26 +1,22 @@
 interface NotificationRecord {
   id?: number
-  userId?: number
-  applicationId?: number
-  // emailAddresses: string[]
-  // application_id integer REFERENCES public.application (id),
-  // email_recipients varchar[],
-  // subject varchar,
-  // message varchar,
-  // attachments varchar[],
-  // email_sent boolean DEFAULT FALSE,
-  // is_read boolean DEFAULT FALSE
+  userId?: number | null
+  applicationId?: number | null
+  emailAddressString: string
+  subject: string
+  message: string
+  attachments: string[]
 }
 
 const databaseMethods = (DBConnect: any) => ({
   createNotification: async ({
     userId = null,
     applicationId = null,
-    emailAddressString = null,
+    emailAddressString = '',
     subject = '',
     message = '',
     attachments = [],
-  }: any) => {
+  }: NotificationRecord) => {
     const text = `
       INSERT into notification (user_id, application_id, email_recipients, subject, message, attachments)
       VALUES ($1, $2, $3, $4, $5, $6)
