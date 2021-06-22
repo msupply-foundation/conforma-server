@@ -5,6 +5,7 @@ import { DBConnectType } from '../../../src/components/databaseConnect'
 import nodemailer from 'nodemailer'
 import marked from 'marked'
 import config from '../config.json'
+import { Attachment } from 'nodemailer/lib/mailer'
 
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -46,22 +47,24 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     })
 
     // Send email
-    // Note: Using "any" type as imported @types defintions is incorrect, doesn't recognise some fields on "emailResult"
-    console.log('Sending email...')
-    const emailResult: any = await transporter.sendMail({
-      from: `${fromName} <${fromEmail}>`,
-      to: emailAddressString,
-      subject,
-      text: message,
-      html: marked(message),
-    })
+    if (sendEmail) {
+      console.log('Sending email...')
+      // Note: Using "any" type as imported @types defintions is incorrect, doesn't recognise some fields on "SentMessageInfo" type
+      const emailResult: any = await transporter.sendMail({
+        from: `${fromName} <${fromEmail}>`,
+        to: emailAddressString,
+        subject,
+        text: message,
+        html: marked(message),
+        attachments: prepareAttachments(attachments),
+      })
 
-    console.log(marked(message))
-
-    // Update notification table with email sent confirmation
-    if (emailResult?.response.match(/250 OK.*/)) {
-      console.log(`Email successfully sent to: ${emailResult.envelope.to}\n`)
-      notificationResult = await db.notificationEmailSent(notificationResult.id)
+      // Update notification table with email sent confirmation
+      if (emailResult?.response.match(/250 OK.*/)) {
+        console.log('Result', emailResult)
+        console.log(`Email successfully sent to: ${emailResult.envelope.to}\n`)
+        notificationResult = await db.notificationEmailSent(notificationResult.id)
+      }
     }
 
     return {
@@ -84,3 +87,23 @@ const stringifyEmailRecipientsList = (emailAddresses: string | string[]): string
   if (!Array.isArray(emailAddresses)) return emailAddresses
   return emailAddresses.join(', ')
 }
+
+/*
+Takes an array of file paths in a range of formats and builds them into 
+shape expected by sendMail method.
+Input must be one of:
+- <string> full url (starting with http) of file
+- <string> relative url of file (starts with '/') -- gets appended with Host
+- <string> uniqueId of file
+- already formatted sendMail object, with the following properties:
+{
+  path: <full url of file>
+  filename: <name to give attached file>
+}
+*/
+const prepareAttachments = (attachments: string[]): Attachment[] =>
+  attachments.map((file: any) => {
+    if (typeof file === 'object') {
+      if 
+    }
+  })

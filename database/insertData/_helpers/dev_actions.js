@@ -24,8 +24,8 @@ exports.devActions = `
         fromName: "Not My Real Name"
         fromEmail: "not-my-real-name@nowhere.com"
         subject: "Testing HTML Mail..."
-        message: "### This one has MARKDOWN\\n\\nSending another email from **application manager**"
-        attachments: []
+        message: "### This one has MARKDOWN\\n\\nSending another email from **application manager**\\n\\nAnd **attachments!!**"
+        attachments: ["http://localhost:8080/file?uid=l5_S8ACicikGPYbePjzoi"]
       }
     }
    # {
