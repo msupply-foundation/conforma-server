@@ -17,6 +17,7 @@
     "@graphql-codegen/typescript-resolvers": "^1.17.10",
     "@types/bcrypt": "^3.0.0",
     "@types/jest": "^26.0.10",
+    "@types/marked": "^2.0.3",
     "@types/node": "^14.6.0",
     "@types/node-fetch": "^2.5.7",
     "@types/pg": "^7.14.4",

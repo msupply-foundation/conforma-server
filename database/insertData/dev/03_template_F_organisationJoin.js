@@ -305,7 +305,7 @@ exports.queries = [
                   message: {
                     operator: "stringSubstitution"
                     children: [
-                      "Congratulations, %1! Your application to join organisation %2 has been APPROVED.\\n\\n[Application Dashboard](%3)"
+                      "### Congratulations, %1!\\n\\nYour application to join organisation %2 has been APPROVED.\\n\\n[Application Dashboard](%3)"
                       {
                         operator: "objectProperties"
                         children: ["applicationData.firstName", ""]

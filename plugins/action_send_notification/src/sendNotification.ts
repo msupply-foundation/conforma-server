@@ -3,7 +3,7 @@ import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
 import nodemailer from 'nodemailer'
-// import marked from 'marked'
+import marked from 'marked'
 import config from '../config.json'
 
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
@@ -53,8 +53,10 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       to: emailAddressString,
       subject,
       text: message,
-      // html: Parse text as Markdown TO-DO
+      html: marked(message),
     })
+
+    console.log(marked(message))
 
     // Update notification table with email sent confirmation
     if (emailResult?.response.match(/250 OK.*/)) {
