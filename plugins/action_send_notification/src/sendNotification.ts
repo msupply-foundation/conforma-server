@@ -67,7 +67,6 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 
       // Update notification table with email sent confirmation
       if (emailResult?.response.match(/250 OK.*/)) {
-        console.log('Result', emailResult)
         console.log(`Email successfully sent to: ${emailResult.envelope.to}\n`)
         notificationResult = await db.notificationEmailSent(notificationResult.id)
       }
