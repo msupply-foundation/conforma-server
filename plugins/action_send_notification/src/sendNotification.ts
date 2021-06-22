@@ -6,8 +6,8 @@ import nodemailer from 'nodemailer'
 import marked from 'marked'
 import config from '../config.json'
 import { Attachment } from 'nodemailer/lib/mailer'
-import { getFilePath, filesFolder } from '../../../src/components/files/fileHandler'
-import { getAppEntryPointDir } from '../../../src/components/utilityFunctions'
+import { getFilePath } from '../../../src/components/files/fileHandler'
+import { ActionApplicationData } from '../../../src/types'
 
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -22,6 +22,10 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     attachments = [],
     sendEmail = true,
   } = parameters
+
+  const {
+    environmentData: { appRootFolder, filesFolder },
+  } = applicationData as ActionApplicationData
 
   const transporter = nodemailer.createTransport({
     host,
@@ -58,7 +62,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
         subject,
         text: message,
         html: marked(message),
-        attachments: await prepareAttachments(attachments),
+        attachments: await prepareAttachments(attachments, appRootFolder, filesFolder),
       })
 
       // Update notification table with email sent confirmation
@@ -102,7 +106,11 @@ Input elements must be one of:
 }
 - TO-DO: Handle more types of input format (e.g. raw path/url strings)
 */
-const prepareAttachments = async (attachments: string[] | Attachment[]): Promise<Attachment[]> => {
+const prepareAttachments = async (
+  attachments: string[] | Attachment[],
+  appRootFolder: string,
+  filesFolder: string
+): Promise<Attachment[]> => {
   const attachmentObjects = []
   for (const file of attachments) {
     if (typeof file === 'object') {
@@ -111,7 +119,7 @@ const prepareAttachments = async (attachments: string[] | Attachment[]): Promise
     } else {
       const { original_filename, file_path } = await getFilePath(file)
       attachmentObjects.push({
-        path: path.join(getAppEntryPointDir(), filesFolder, file_path as string),
+        path: path.join(appRootFolder, filesFolder, file_path as string),
         filename: original_filename,
       })
     }

@@ -305,7 +305,7 @@ exports.queries = [
                   message: {
                     operator: "stringSubstitution"
                     children: [
-                      "### Congratulations, %1!\\n\\nYour application to join organisation %2 has been APPROVED.\\n\\n[Application Dashboard](%3)"
+                      "### Congratulations, %1!\\n\\nYour application to join organisation %2 has been APPROVED.\\n\\n[Application Dashboard](%3)\\n\\nPlease find attached the ID file you uploaded (testing attachment handling)"
                       {
                         operator: "objectProperties"
                         children: ["applicationData.firstName", ""]
@@ -314,7 +314,13 @@ exports.queries = [
                         operator: "objectProperties"
                         children: ["applicationData.responses.S1Q1.text", ""]
                       }
-                      "http://localhost:3000" #TO-DO: use server from config
+                      "http://localhost:3000" #TO-DO: add website URL to back-end config
+                    ]
+                  }
+                  attachments: {
+                    operator: "objectProperties",
+                    children: [
+                      "applicationData.responses.IDUpload.files.uniqueId"
                     ]
                   }
                 }
