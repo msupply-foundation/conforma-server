@@ -2,10 +2,13 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginType } from '../../types'
 import databaseMethods, { DatabaseMethodsType } from './databaseMethods'
 import { DBConnectType } from '../../../src/components/databaseConnect'
+import path from 'path'
 import nodemailer from 'nodemailer'
 import marked from 'marked'
 import config from '../config.json'
 import { Attachment } from 'nodemailer/lib/mailer'
+import { getFilePath, filesFolder } from '../../../src/components/files/fileHandler'
+import { getAppEntryPointDir } from '../../../src/components/utilityFunctions'
 
 const sendNotification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -56,7 +59,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
         subject,
         text: message,
         html: marked(message),
-        attachments: prepareAttachments(attachments),
+        attachments: await prepareAttachments(attachments),
       })
 
       // Update notification table with email sent confirmation
@@ -89,21 +92,30 @@ const stringifyEmailRecipientsList = (emailAddresses: string | string[]): string
 }
 
 /*
-Takes an array of file paths in a range of formats and builds them into 
+Takes an array of file paths in multiple formats and builds them into 
 shape expected by sendMail method.
-Input must be one of:
-- <string> full url (starting with http) of file
-- <string> relative url of file (starts with '/') -- gets appended with Host
-- <string> uniqueId of file
+Input elements must be one of:
+- <string> uniqueId of file (we will look up the path and filename)
 - already formatted sendMail object, with the following properties:
 {
-  path: <full url of file>
+  path: <full path/url of file>
   filename: <name to give attached file>
 }
+- TO-DO: Handle more types of input format (e.g. raw path/url strings)
 */
-const prepareAttachments = (attachments: string[]): Attachment[] =>
-  attachments.map((file: any) => {
+const prepareAttachments = async (attachments: string[] | Attachment[]): Promise<Attachment[]> => {
+  const attachmentObjects = []
+  for (const file of attachments) {
     if (typeof file === 'object') {
-      if 
+      if (!file?.path || !file?.filename) throw new Error('Invalid attachment')
+      attachmentObjects.push(file)
+    } else {
+      const { original_filename, file_path } = await getFilePath(file)
+      attachmentObjects.push({
+        path: path.join(getAppEntryPointDir(), filesFolder, file_path as string),
+        filename: original_filename,
+      })
     }
-  })
+  }
+  return attachmentObjects
+}
