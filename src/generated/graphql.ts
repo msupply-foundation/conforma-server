@@ -5270,6 +5270,39 @@ export type CreateUserPayloadUserEdgeArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
 };
 
+/** All input for the create `Verification` mutation. */
+export type CreateVerificationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Verification` to be created by this mutation. */
+  verification: VerificationInput;
+};
+
+/** The output of our create `Verification` mutation. */
+export type CreateVerificationPayload = {
+  __typename?: 'CreateVerificationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Verification` that was created by this mutation. */
+  verification?: Maybe<Verification>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Verification`. May be used by Relay 1. */
+  verificationEdge?: Maybe<VerificationsEdge>;
+};
+
+
+/** The output of our create `Verification` mutation. */
+export type CreateVerificationPayloadVerificationEdgeArgs = {
+  orderBy?: Maybe<Array<VerificationsOrderBy>>;
+};
+
 
 
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
@@ -7242,6 +7275,60 @@ export type DeleteUserPayloadUserEdgeArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
 };
 
+/** All input for the `deleteVerificationByNodeId` mutation. */
+export type DeleteVerificationByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Verification` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteVerificationByUniqueId` mutation. */
+export type DeleteVerificationByUniqueIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  uniqueId: Scalars['String'];
+};
+
+/** All input for the `deleteVerification` mutation. */
+export type DeleteVerificationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `Verification` mutation. */
+export type DeleteVerificationPayload = {
+  __typename?: 'DeleteVerificationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Verification` that was deleted by this mutation. */
+  verification?: Maybe<Verification>;
+  deletedVerificationNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Verification`. May be used by Relay 1. */
+  verificationEdge?: Maybe<VerificationsEdge>;
+};
+
+
+/** The output of our delete `Verification` mutation. */
+export type DeleteVerificationPayloadVerificationEdgeArgs = {
+  orderBy?: Maybe<Array<VerificationsOrderBy>>;
+};
+
 export type ElementTypePlugin = Node & {
   __typename?: 'ElementTypePlugin';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -8350,6 +8437,8 @@ export type Mutation = {
   createUser?: Maybe<CreateUserPayload>;
   /** Creates a single `UserOrganisation`. */
   createUserOrganisation?: Maybe<CreateUserOrganisationPayload>;
+  /** Creates a single `Verification`. */
+  createVerification?: Maybe<CreateVerificationPayload>;
   /** Updates a single `ActionPlugin` using its globally unique id and a patch. */
   updateActionPluginByNodeId?: Maybe<UpdateActionPluginPayload>;
   /** Updates a single `ActionPlugin` using a unique key and a patch. */
@@ -8526,6 +8615,12 @@ export type Mutation = {
   updateUserOrganisationByNodeId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `UserOrganisation` using a unique key and a patch. */
   updateUserOrganisation?: Maybe<UpdateUserOrganisationPayload>;
+  /** Updates a single `Verification` using its globally unique id and a patch. */
+  updateVerificationByNodeId?: Maybe<UpdateVerificationPayload>;
+  /** Updates a single `Verification` using a unique key and a patch. */
+  updateVerification?: Maybe<UpdateVerificationPayload>;
+  /** Updates a single `Verification` using a unique key and a patch. */
+  updateVerificationByUniqueId?: Maybe<UpdateVerificationPayload>;
   /** Deletes a single `ActionPlugin` using its globally unique id. */
   deleteActionPluginByNodeId?: Maybe<DeleteActionPluginPayload>;
   /** Deletes a single `ActionPlugin` using a unique key. */
@@ -8702,6 +8797,12 @@ export type Mutation = {
   deleteUserOrganisationByNodeId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `UserOrganisation` using a unique key. */
   deleteUserOrganisation?: Maybe<DeleteUserOrganisationPayload>;
+  /** Deletes a single `Verification` using its globally unique id. */
+  deleteVerificationByNodeId?: Maybe<DeleteVerificationPayload>;
+  /** Deletes a single `Verification` using a unique key. */
+  deleteVerification?: Maybe<DeleteVerificationPayload>;
+  /** Deletes a single `Verification` using a unique key. */
+  deleteVerificationByUniqueId?: Maybe<DeleteVerificationPayload>;
 };
 
 
@@ -8936,6 +9037,12 @@ export type MutationCreateUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserOrganisationArgs = {
   input: CreateUserOrganisationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateVerificationArgs = {
+  input: CreateVerificationInput;
 };
 
 
@@ -9468,6 +9575,24 @@ export type MutationUpdateUserOrganisationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVerificationByNodeIdArgs = {
+  input: UpdateVerificationByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVerificationArgs = {
+  input: UpdateVerificationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVerificationByUniqueIdArgs = {
+  input: UpdateVerificationByUniqueIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteActionPluginByNodeIdArgs = {
   input: DeleteActionPluginByNodeIdInput;
 };
@@ -9992,6 +10117,24 @@ export type MutationDeleteUserOrganisationByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserOrganisationArgs = {
   input: DeleteUserOrganisationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVerificationByNodeIdArgs = {
+  input: DeleteVerificationByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVerificationArgs = {
+  input: DeleteVerificationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVerificationByUniqueIdArgs = {
+  input: DeleteVerificationByUniqueIdInput;
 };
 
 /** An object with a globally unique `ID`. */
@@ -12752,6 +12895,8 @@ export type Query = Node & {
   userOrgJoins?: Maybe<UserOrgJoinsConnection>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations?: Maybe<UserOrganisationsConnection>;
+  /** Reads and enables pagination through a set of `Verification`. */
+  verifications?: Maybe<VerificationsConnection>;
   actionPlugin?: Maybe<ActionPlugin>;
   actionPluginByCode?: Maybe<ActionPlugin>;
   actionQueue?: Maybe<ActionQueue>;
@@ -12802,6 +12947,8 @@ export type Query = Node & {
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
+  verification?: Maybe<Verification>;
+  verificationByUniqueId?: Maybe<Verification>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
   applicationList?: Maybe<ApplicationListShapesConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
@@ -12897,6 +13044,8 @@ export type Query = Node & {
   userByNodeId?: Maybe<User>;
   /** Reads a single `UserOrganisation` using its globally unique `ID`. */
   userOrganisationByNodeId?: Maybe<UserOrganisation>;
+  /** Reads a single `Verification` using its globally unique `ID`. */
+  verificationByNodeId?: Maybe<Verification>;
 };
 
 
@@ -13492,6 +13641,19 @@ export type QueryUserOrganisationsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryVerificationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<VerificationsOrderBy>>;
+  condition?: Maybe<VerificationCondition>;
+  filter?: Maybe<VerificationFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryActionPluginArgs = {
   id: Scalars['Int'];
 };
@@ -13790,6 +13952,18 @@ export type QueryUserByUsernameArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUserOrganisationArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVerificationArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVerificationByUniqueIdArgs = {
+  uniqueId: Scalars['String'];
 };
 
 
@@ -14154,6 +14328,12 @@ export type QueryUserByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryUserOrganisationByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVerificationByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -21684,6 +21864,7 @@ export enum Trigger {
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
+  OnVerification = 'ON_VERIFICATION',
   DevTest = 'DEV_TEST',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
   Processing = 'PROCESSING',
@@ -25950,6 +26131,65 @@ export type UpdateUserPayloadUserEdgeArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
 };
 
+/** All input for the `updateVerificationByNodeId` mutation. */
+export type UpdateVerificationByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Verification` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Verification` being updated. */
+  patch: VerificationPatch;
+};
+
+/** All input for the `updateVerificationByUniqueId` mutation. */
+export type UpdateVerificationByUniqueIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Verification` being updated. */
+  patch: VerificationPatch;
+  uniqueId: Scalars['String'];
+};
+
+/** All input for the `updateVerification` mutation. */
+export type UpdateVerificationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Verification` being updated. */
+  patch: VerificationPatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `Verification` mutation. */
+export type UpdateVerificationPayload = {
+  __typename?: 'UpdateVerificationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Verification` that was updated by this mutation. */
+  verification?: Maybe<Verification>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `Verification`. May be used by Relay 1. */
+  verificationEdge?: Maybe<VerificationsEdge>;
+};
+
+
+/** The output of our update `Verification` mutation. */
+export type UpdateVerificationPayloadVerificationEdgeArgs = {
+  orderBy?: Maybe<Array<VerificationsOrderBy>>;
+};
+
 export type User = Node & {
   __typename?: 'User';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -27009,6 +27249,120 @@ export type UserUserUsernameKeyDelete = {
   username: Scalars['String'];
 };
 
+export type Verification = Node & {
+  __typename?: 'Verification';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  uniqueId: Scalars['String'];
+  isVerified?: Maybe<Scalars['Boolean']>;
+  createdTime?: Maybe<Scalars['Datetime']>;
+  expiryTime?: Maybe<Scalars['Datetime']>;
+  trigger?: Maybe<Trigger>;
+};
+
+/**
+ * A condition to be used against `Verification` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type VerificationCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `uniqueId` field. */
+  uniqueId?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isVerified` field. */
+  isVerified?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `createdTime` field. */
+  createdTime?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `expiryTime` field. */
+  expiryTime?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
+};
+
+/** A filter to be used against `Verification` object types. All fields are combined with a logical ‘and.’ */
+export type VerificationFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `uniqueId` field. */
+  uniqueId?: Maybe<StringFilter>;
+  /** Filter by the object’s `isVerified` field. */
+  isVerified?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `createdTime` field. */
+  createdTime?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `expiryTime` field. */
+  expiryTime?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<VerificationFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<VerificationFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<VerificationFilter>;
+};
+
+/** An input for mutations affecting `Verification` */
+export type VerificationInput = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  isVerified?: Maybe<Scalars['Boolean']>;
+  createdTime?: Maybe<Scalars['Datetime']>;
+  expiryTime?: Maybe<Scalars['Datetime']>;
+  trigger?: Maybe<Trigger>;
+};
+
+/** Represents an update to a `Verification`. Fields that are set will be updated. */
+export type VerificationPatch = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
+  isVerified?: Maybe<Scalars['Boolean']>;
+  createdTime?: Maybe<Scalars['Datetime']>;
+  expiryTime?: Maybe<Scalars['Datetime']>;
+  trigger?: Maybe<Trigger>;
+};
+
+/** A connection to a list of `Verification` values. */
+export type VerificationsConnection = {
+  __typename?: 'VerificationsConnection';
+  /** A list of `Verification` objects. */
+  nodes: Array<Maybe<Verification>>;
+  /** A list of edges which contains the `Verification` and cursor to aid in pagination. */
+  edges: Array<VerificationsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Verification` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Verification` edge in the connection. */
+export type VerificationsEdge = {
+  __typename?: 'VerificationsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Verification` at the end of the edge. */
+  node?: Maybe<Verification>;
+};
+
+/** Methods to use when ordering `Verification`. */
+export enum VerificationsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  UniqueIdAsc = 'UNIQUE_ID_ASC',
+  UniqueIdDesc = 'UNIQUE_ID_DESC',
+  IsVerifiedAsc = 'IS_VERIFIED_ASC',
+  IsVerifiedDesc = 'IS_VERIFIED_DESC',
+  CreatedTimeAsc = 'CREATED_TIME_ASC',
+  CreatedTimeDesc = 'CREATED_TIME_DESC',
+  ExpiryTimeAsc = 'EXPIRY_TIME_ASC',
+  ExpiryTimeDesc = 'EXPIRY_TIME_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 
 /** A filter to be used against YesOrNo fields. All fields are combined with a logical ‘and.’ */
 export type YesOrNoFilter = {
@@ -27181,7 +27535,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'] | ResolversTypes['Verification'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -27564,6 +27918,12 @@ export type ResolversTypes = {
   UserOrgJoinsConnection: ResolverTypeWrapper<UserOrgJoinsConnection>;
   UserOrgJoin: ResolverTypeWrapper<UserOrgJoin>;
   UserOrgJoinsEdge: ResolverTypeWrapper<UserOrgJoinsEdge>;
+  VerificationsOrderBy: VerificationsOrderBy;
+  VerificationCondition: VerificationCondition;
+  VerificationFilter: VerificationFilter;
+  VerificationsConnection: ResolverTypeWrapper<VerificationsConnection>;
+  Verification: ResolverTypeWrapper<Verification>;
+  VerificationsEdge: ResolverTypeWrapper<VerificationsEdge>;
   AssignerListRecordFilter: AssignerListRecordFilter;
   AssignerListConnection: ResolverTypeWrapper<AssignerListConnection>;
   AssignerListRecord: ResolverTypeWrapper<AssignerListRecord>;
@@ -28505,6 +28865,9 @@ export type ResolversTypes = {
   CreateUserOrganisationInput: CreateUserOrganisationInput;
   UserOrganisationInput: UserOrganisationInput;
   CreateUserOrganisationPayload: ResolverTypeWrapper<CreateUserOrganisationPayload>;
+  CreateVerificationInput: CreateVerificationInput;
+  VerificationInput: VerificationInput;
+  CreateVerificationPayload: ResolverTypeWrapper<CreateVerificationPayload>;
   UpdateActionPluginByNodeIdInput: UpdateActionPluginByNodeIdInput;
   ActionPluginPatch: ActionPluginPatch;
   UpdateActionPluginPayload: ResolverTypeWrapper<UpdateActionPluginPayload>;
@@ -28634,6 +28997,11 @@ export type ResolversTypes = {
   UpdateUserOrganisationByNodeIdInput: UpdateUserOrganisationByNodeIdInput;
   UpdateUserOrganisationPayload: ResolverTypeWrapper<UpdateUserOrganisationPayload>;
   UpdateUserOrganisationInput: UpdateUserOrganisationInput;
+  UpdateVerificationByNodeIdInput: UpdateVerificationByNodeIdInput;
+  VerificationPatch: VerificationPatch;
+  UpdateVerificationPayload: ResolverTypeWrapper<UpdateVerificationPayload>;
+  UpdateVerificationInput: UpdateVerificationInput;
+  UpdateVerificationByUniqueIdInput: UpdateVerificationByUniqueIdInput;
   DeleteActionPluginByNodeIdInput: DeleteActionPluginByNodeIdInput;
   DeleteActionPluginPayload: ResolverTypeWrapper<DeleteActionPluginPayload>;
   DeleteActionPluginInput: DeleteActionPluginInput;
@@ -28760,12 +29128,16 @@ export type ResolversTypes = {
   DeleteUserOrganisationByNodeIdInput: DeleteUserOrganisationByNodeIdInput;
   DeleteUserOrganisationPayload: ResolverTypeWrapper<DeleteUserOrganisationPayload>;
   DeleteUserOrganisationInput: DeleteUserOrganisationInput;
+  DeleteVerificationByNodeIdInput: DeleteVerificationByNodeIdInput;
+  DeleteVerificationPayload: ResolverTypeWrapper<DeleteVerificationPayload>;
+  DeleteVerificationInput: DeleteVerificationInput;
+  DeleteVerificationByUniqueIdInput: DeleteVerificationByUniqueIdInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'] | ResolversParentTypes['Verification'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -29086,6 +29458,11 @@ export type ResolversParentTypes = {
   UserOrgJoinsConnection: UserOrgJoinsConnection;
   UserOrgJoin: UserOrgJoin;
   UserOrgJoinsEdge: UserOrgJoinsEdge;
+  VerificationCondition: VerificationCondition;
+  VerificationFilter: VerificationFilter;
+  VerificationsConnection: VerificationsConnection;
+  Verification: Verification;
+  VerificationsEdge: VerificationsEdge;
   AssignerListRecordFilter: AssignerListRecordFilter;
   AssignerListConnection: AssignerListConnection;
   AssignerListRecord: AssignerListRecord;
@@ -30027,6 +30404,9 @@ export type ResolversParentTypes = {
   CreateUserOrganisationInput: CreateUserOrganisationInput;
   UserOrganisationInput: UserOrganisationInput;
   CreateUserOrganisationPayload: CreateUserOrganisationPayload;
+  CreateVerificationInput: CreateVerificationInput;
+  VerificationInput: VerificationInput;
+  CreateVerificationPayload: CreateVerificationPayload;
   UpdateActionPluginByNodeIdInput: UpdateActionPluginByNodeIdInput;
   ActionPluginPatch: ActionPluginPatch;
   UpdateActionPluginPayload: UpdateActionPluginPayload;
@@ -30156,6 +30536,11 @@ export type ResolversParentTypes = {
   UpdateUserOrganisationByNodeIdInput: UpdateUserOrganisationByNodeIdInput;
   UpdateUserOrganisationPayload: UpdateUserOrganisationPayload;
   UpdateUserOrganisationInput: UpdateUserOrganisationInput;
+  UpdateVerificationByNodeIdInput: UpdateVerificationByNodeIdInput;
+  VerificationPatch: VerificationPatch;
+  UpdateVerificationPayload: UpdateVerificationPayload;
+  UpdateVerificationInput: UpdateVerificationInput;
+  UpdateVerificationByUniqueIdInput: UpdateVerificationByUniqueIdInput;
   DeleteActionPluginByNodeIdInput: DeleteActionPluginByNodeIdInput;
   DeleteActionPluginPayload: DeleteActionPluginPayload;
   DeleteActionPluginInput: DeleteActionPluginInput;
@@ -30282,6 +30667,10 @@ export type ResolversParentTypes = {
   DeleteUserOrganisationByNodeIdInput: DeleteUserOrganisationByNodeIdInput;
   DeleteUserOrganisationPayload: DeleteUserOrganisationPayload;
   DeleteUserOrganisationInput: DeleteUserOrganisationInput;
+  DeleteVerificationByNodeIdInput: DeleteVerificationByNodeIdInput;
+  DeleteVerificationPayload: DeleteVerificationPayload;
+  DeleteVerificationInput: DeleteVerificationInput;
+  DeleteVerificationByUniqueIdInput: DeleteVerificationByUniqueIdInput;
 };
 
 export type ActionPluginResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionPlugin'] = ResolversParentTypes['ActionPlugin']> = {
@@ -31051,6 +31440,14 @@ export type CreateUserPayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateVerificationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateVerificationPayload'] = ResolversParentTypes['CreateVerificationPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  verificationEdge?: Resolver<Maybe<ResolversTypes['VerificationsEdge']>, ParentType, ContextType, RequireFields<CreateVerificationPayloadVerificationEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface CursorScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Cursor'], any> {
   name: 'Cursor';
 }
@@ -31459,6 +31856,15 @@ export type DeleteUserPayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteVerificationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteVerificationPayload'] = ResolversParentTypes['DeleteVerificationPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType>;
+  deletedVerificationNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  verificationEdge?: Resolver<Maybe<ResolversTypes['VerificationsEdge']>, ParentType, ContextType, RequireFields<DeleteVerificationPayloadVerificationEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ElementTypePluginResolvers<ContextType = any, ParentType extends ResolversParentTypes['ElementTypePlugin'] = ResolversParentTypes['ElementTypePlugin']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -31613,6 +32019,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createTriggerQueue?: Resolver<Maybe<ResolversTypes['CreateTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateTriggerQueueArgs, 'input'>>;
   createUser?: Resolver<Maybe<ResolversTypes['CreateUserPayload']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   createUserOrganisation?: Resolver<Maybe<ResolversTypes['CreateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationCreateUserOrganisationArgs, 'input'>>;
+  createVerification?: Resolver<Maybe<ResolversTypes['CreateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationCreateVerificationArgs, 'input'>>;
   updateActionPluginByNodeId?: Resolver<Maybe<ResolversTypes['UpdateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionPluginByNodeIdArgs, 'input'>>;
   updateActionPlugin?: Resolver<Maybe<ResolversTypes['UpdateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionPluginArgs, 'input'>>;
   updateActionPluginByCode?: Resolver<Maybe<ResolversTypes['UpdateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionPluginByCodeArgs, 'input'>>;
@@ -31701,6 +32108,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateUserByUsername?: Resolver<Maybe<ResolversTypes['UpdateUserPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserByUsernameArgs, 'input'>>;
   updateUserOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserOrganisationByNodeIdArgs, 'input'>>;
   updateUserOrganisation?: Resolver<Maybe<ResolversTypes['UpdateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserOrganisationArgs, 'input'>>;
+  updateVerificationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateVerificationByNodeIdArgs, 'input'>>;
+  updateVerification?: Resolver<Maybe<ResolversTypes['UpdateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateVerificationArgs, 'input'>>;
+  updateVerificationByUniqueId?: Resolver<Maybe<ResolversTypes['UpdateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateVerificationByUniqueIdArgs, 'input'>>;
   deleteActionPluginByNodeId?: Resolver<Maybe<ResolversTypes['DeleteActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionPluginByNodeIdArgs, 'input'>>;
   deleteActionPlugin?: Resolver<Maybe<ResolversTypes['DeleteActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionPluginArgs, 'input'>>;
   deleteActionPluginByCode?: Resolver<Maybe<ResolversTypes['DeleteActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionPluginByCodeArgs, 'input'>>;
@@ -31789,10 +32199,13 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteUserByUsername?: Resolver<Maybe<ResolversTypes['DeleteUserPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserByUsernameArgs, 'input'>>;
   deleteUserOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserOrganisationByNodeIdArgs, 'input'>>;
   deleteUserOrganisation?: Resolver<Maybe<ResolversTypes['DeleteUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserOrganisationArgs, 'input'>>;
+  deleteVerificationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteVerificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteVerificationByNodeIdArgs, 'input'>>;
+  deleteVerification?: Resolver<Maybe<ResolversTypes['DeleteVerificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteVerificationArgs, 'input'>>;
+  deleteVerificationByUniqueId?: Resolver<Maybe<ResolversTypes['DeleteVerificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteVerificationByUniqueIdArgs, 'input'>>;
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'Notification' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'Notification' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail' | 'Verification', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -32104,6 +32517,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'orderBy'>>;
   userOrgJoins?: Resolver<Maybe<ResolversTypes['UserOrgJoinsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrgJoinsArgs, 'orderBy'>>;
   userOrganisations?: Resolver<Maybe<ResolversTypes['UserOrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrganisationsArgs, 'orderBy'>>;
+  verifications?: Resolver<Maybe<ResolversTypes['VerificationsConnection']>, ParentType, ContextType, RequireFields<QueryVerificationsArgs, 'orderBy'>>;
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginArgs, 'id'>>;
   actionPluginByCode?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByCodeArgs, 'code'>>;
   actionQueue?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueArgs, 'id'>>;
@@ -32154,6 +32568,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByUsernameArgs, 'username'>>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationArgs, 'id'>>;
+  verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationArgs, 'id'>>;
+  verificationByUniqueId?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationByUniqueIdArgs, 'uniqueId'>>;
   applicationList?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListArgs, never>>;
   applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
   assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryAssignedQuestionsCountArgs, never>>;
@@ -32210,6 +32626,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   triggerQueueByNodeId?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType, RequireFields<QueryTriggerQueueByNodeIdArgs, 'nodeId'>>;
   userByNodeId?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByNodeIdArgs, 'nodeId'>>;
   userOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationByNodeIdArgs, 'nodeId'>>;
+  verificationByNodeId?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationByNodeIdArgs, 'nodeId'>>;
 };
 
 export type ReviewResolvers<ContextType = any, ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review']> = {
@@ -33137,6 +33554,14 @@ export type UpdateUserPayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateVerificationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateVerificationPayload'] = ResolversParentTypes['UpdateVerificationPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  verificationEdge?: Resolver<Maybe<ResolversTypes['VerificationsEdge']>, ParentType, ContextType, RequireFields<UpdateVerificationPayloadVerificationEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -33228,6 +33653,31 @@ export type UsersEdgeResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type VerificationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Verification'] = ResolversParentTypes['Verification']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  uniqueId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  isVerified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  createdTime?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  expiryTime?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type VerificationsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['VerificationsConnection'] = ResolversParentTypes['VerificationsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['Verification']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['VerificationsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type VerificationsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['VerificationsEdge'] = ResolversParentTypes['VerificationsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface YesOrNoScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['YesOrNo'], any> {
   name: 'YesOrNo';
 }
@@ -33313,6 +33763,7 @@ export type Resolvers<ContextType = any> = {
   CreateTriggerQueuePayload?: CreateTriggerQueuePayloadResolvers<ContextType>;
   CreateUserOrganisationPayload?: CreateUserOrganisationPayloadResolvers<ContextType>;
   CreateUserPayload?: CreateUserPayloadResolvers<ContextType>;
+  CreateVerificationPayload?: CreateVerificationPayloadResolvers<ContextType>;
   Cursor?: GraphQLScalarType;
   Datetime?: GraphQLScalarType;
   DeleteActionPluginPayload?: DeleteActionPluginPayloadResolvers<ContextType>;
@@ -33353,6 +33804,7 @@ export type Resolvers<ContextType = any> = {
   DeleteTriggerQueuePayload?: DeleteTriggerQueuePayloadResolvers<ContextType>;
   DeleteUserOrganisationPayload?: DeleteUserOrganisationPayloadResolvers<ContextType>;
   DeleteUserPayload?: DeleteUserPayloadResolvers<ContextType>;
+  DeleteVerificationPayload?: DeleteVerificationPayloadResolvers<ContextType>;
   ElementTypePlugin?: ElementTypePluginResolvers<ContextType>;
   ElementTypePluginsConnection?: ElementTypePluginsConnectionResolvers<ContextType>;
   ElementTypePluginsEdge?: ElementTypePluginsEdgeResolvers<ContextType>;
@@ -33493,6 +33945,7 @@ export type Resolvers<ContextType = any> = {
   UpdateTriggerQueuePayload?: UpdateTriggerQueuePayloadResolvers<ContextType>;
   UpdateUserOrganisationPayload?: UpdateUserOrganisationPayloadResolvers<ContextType>;
   UpdateUserPayload?: UpdateUserPayloadResolvers<ContextType>;
+  UpdateVerificationPayload?: UpdateVerificationPayloadResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserOrganisation?: UserOrganisationResolvers<ContextType>;
   UserOrganisationsConnection?: UserOrganisationsConnectionResolvers<ContextType>;
@@ -33502,6 +33955,9 @@ export type Resolvers<ContextType = any> = {
   UserOrgJoinsEdge?: UserOrgJoinsEdgeResolvers<ContextType>;
   UsersConnection?: UsersConnectionResolvers<ContextType>;
   UsersEdge?: UsersEdgeResolvers<ContextType>;
+  Verification?: VerificationResolvers<ContextType>;
+  VerificationsConnection?: VerificationsConnectionResolvers<ContextType>;
+  VerificationsEdge?: VerificationsEdgeResolvers<ContextType>;
   YesOrNo?: GraphQLScalarType;
 };
 
