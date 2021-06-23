@@ -170,8 +170,66 @@ exports.queries = [
             create: [
               # No Core Actions for this one
               {
-                actionCode: "modifyRecord"
+                actionCode: "incrementStage"
+                sequence: 1
+                trigger: ON_APPLICATION_CREATE
+              }
+              {
+                actionCode: "changeStatus"
                 trigger: ON_APPLICATION_SUBMIT
+                sequence: 1
+                parameterQueries: { newStatus: "SUBMITTED" }
+              }
+              {
+                actionCode: "createVerification"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 2
+                parameterQueries: {
+                  message: {
+                    operator: "stringSubstitution"
+                    children: [
+                      "## Registration complete!\\n\\nThanks, %1.\\n\\nPlease log in to continue."
+                      {
+                        operator: "objectProperties"
+                        children: ["applicationData.responses.Q1FirstName.text",""]
+                      }
+                    ]
+                 }
+                 expiry: 4 #hours
+                }
+              }
+              {
+                actionCode: "sendNotification"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 3
+                parameterQueries: {
+                  fromName: "Application Manager"
+                  fromEmail: "no-reply@sussol.net"
+                  email: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q4Email.text", ""]
+                  }
+                  subject: "User Registration - verify account"
+                  message: {
+                    operator: "stringSubstitution"
+                    children: [
+                      "Hi, %1,\\n\\nplease confirm your user account registration by clicking (or copy-pasting) the following link:\\n\\n%2%3"
+                      {
+                        operator: "objectProperties"
+                        children: ["applicationData.responses.Q1FirstName.text", ""]
+                      }
+                      "http://localhost:3000/verify?uid=" #TO-DO: add website URL to back-end config
+                      {
+                        operator: "objectProperties"
+                        children: ["outputCumulative.verification.unique_id"]
+                      }
+                    ]
+                  }
+                }
+              }
+              {
+                actionCode: "modifyRecord"
+                trigger: ON_VERIFICATION
                 sequence: 1
                 parameterQueries: {
                   tableName: "user"
@@ -195,70 +253,24 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q5Password.hash"]
                   }
-                  # TODO: Previously set as Date in db - changed to varchar
-                  date_of_birth: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q6DOB.text", ""]
-                  }
-                  national_id: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q7NationalID.text", ""]
-                  }
-                  national_id_issued_date: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q8IssuedDate.text", ""]
-                  }
-                  birth_place_village: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q9Village.text", ""]
-                  }
-                  birth_place_district: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q11District.text", ""]
-                  }
-                  current_address_village: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q12Village.text", ""]
-                  }
-                  current_address_district: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q13District.text", ""]
-                  }
-                  education_level: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q1EducationLevel", {}]
-                  }
-                  secondary: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q2Secondary.text", ""]
-                  }
-                  university_history: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q3UniversityHistory", {}]
-                  }
                 }
               }
               {
-                actionCode: "incrementStage"
-                sequence: 1
-                trigger: ON_APPLICATION_CREATE
-              }
-              {
                 actionCode: "changeStatus"
-                trigger: ON_APPLICATION_SUBMIT
+                trigger: ON_VERIFICATION
                 sequence: 2
                 parameterQueries: { newStatus: { value: "COMPLETED" } }
               }
               {
                 actionCode: "changeOutcome"
-                trigger: ON_APPLICATION_SUBMIT
+                trigger: ON_VERIFICATION
                 sequence: 3
                 parameterQueries: { newOutcome: { value: "APPROVED" } }
               }
               {
                 actionCode: "grantPermissions"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 103
+                trigger: ON_VERIFICATION
+                sequence: 4
                 parameterQueries: {
                   username: {
                     operator: "objectProperties"

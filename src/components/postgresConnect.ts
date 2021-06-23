@@ -283,6 +283,9 @@ class PostgresDB {
       case 'review_assignment':
         text = 'SELECT application_id FROM review_assignment WHERE id = $1'
         break
+      case 'verification':
+        text = 'SELECT application_id FROM verification WHERE id = $1'
+        break
       // To-Do: queries for other trigger tables
       default:
         throw new Error('Table name not valid')
