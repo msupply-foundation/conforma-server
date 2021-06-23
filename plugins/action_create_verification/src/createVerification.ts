@@ -16,7 +16,6 @@ const createVerification: ActionPluginType = async ({ parameters, applicationDat
   } = parameters
 
   try {
-    // Calculate expiry time
     const expiryTime = expiry ? DateTime.now().plus({ hours: expiry }).toISO() : null
     // Add record
     const verification = await db.createVerification({
