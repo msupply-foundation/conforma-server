@@ -3,7 +3,6 @@ import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 import { nanoid } from 'nanoid'
 import { DateTime } from 'luxon'
-import { ActionApplicationData } from '../../../src/types'
 
 const createVerification: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
@@ -11,7 +10,7 @@ const createVerification: ActionPluginType = async ({ parameters, applicationDat
     applicationId = applicationData?.applicationId,
     expiry = null, // duration in hours
     uniqueId = nanoid(24),
-    message = 'Thank you for verifying',
+    message = '## Verification successful\n\nThank you',
     code = null,
     data = null,
   } = parameters
