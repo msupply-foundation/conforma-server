@@ -44,6 +44,10 @@ class DBConnect {
 
   public updateTriggerQueueStatus = PostgresDB.updateTriggerQueueStatus
 
+  public getVerification = PostgresDB.getVerification
+
+  public setVerification = PostgresDB.setVerification
+
   public addUserOrg = PostgresDB.addUserOrg
 
   public isUnique = PostgresDB.isUnique

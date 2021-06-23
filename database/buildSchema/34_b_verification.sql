@@ -1,8 +1,8 @@
 -- verification
 CREATE TABLE public.verification (
     id serial PRIMARY KEY,
-    application_id integer REFERENCES public.application (id) NOT NULL,
     unique_id varchar UNIQUE NOT NULL,
+    application_id integer REFERENCES public.application (id) NOT NULL,
     created_time timestamptz DEFAULT NOW(),
     expiry_time timestamptz,
     is_verified boolean DEFAULT FALSE,

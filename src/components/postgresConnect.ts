@@ -366,6 +366,32 @@ class PostgresDB {
     }
   }
 
+  public getVerification = async (uid: string) => {
+    const text = `
+      SELECT unique_id, expiry_time, is_verified
+        FROM verification
+        WHERE unique_id = $1`
+    try {
+      const result = await this.query({ text, values: [uid] })
+      return result.rows[0]
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public setVerification = async (uid: string) => {
+    const text = `
+      UPDATE verification
+      SET is_verified = true, trigger = 'ON_VERIFICATION'
+      WHERE unique_id = $1;`
+    try {
+      await this.query({ text, values: [uid] })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
   // Join a user to an org in user_organisation table
   public addUserOrg = async (userOrg: any): Promise<object> => {
     const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 
