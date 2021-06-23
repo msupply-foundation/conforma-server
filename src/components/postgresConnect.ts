@@ -368,7 +368,7 @@ class PostgresDB {
 
   public getVerification = async (uid: string) => {
     const text = `
-      SELECT unique_id, expiry_time, is_verified
+      SELECT unique_id, expiry_time, is_verified, message
         FROM verification
         WHERE unique_id = $1`
     try {

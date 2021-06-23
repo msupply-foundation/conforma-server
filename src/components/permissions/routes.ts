@@ -108,7 +108,7 @@ const routeVerification = async (request: any, reply: any) => {
 
     // All good! - Update verification record
     const result = await databaseConnect.setVerification(uid)
-    if (result) return reply.send({ success: true })
+    if (result) return reply.send({ success: true, message: verification.message })
     else reply.send({ success: false, message: 'Problem with verification' })
   } catch (err) {
     return reply.send({ success: false, message: err.message })

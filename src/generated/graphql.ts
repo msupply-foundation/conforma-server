@@ -26273,6 +26273,9 @@ export type UpdateVerificationInput = {
 export type UpdateVerificationOnVerificationForVerificationApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
   createdTime?: Maybe<Scalars['Datetime']>;
   expiryTime?: Maybe<Scalars['Datetime']>;
   isVerified?: Maybe<Scalars['Boolean']>;
@@ -27368,8 +27371,11 @@ export type Verification = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  applicationId: Scalars['Int'];
   uniqueId: Scalars['String'];
+  applicationId: Scalars['Int'];
+  code?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
   createdTime?: Maybe<Scalars['Datetime']>;
   expiryTime?: Maybe<Scalars['Datetime']>;
   isVerified?: Maybe<Scalars['Boolean']>;
@@ -27457,6 +27463,9 @@ export type VerificationApplicationIdFkeyInverseInput = {
 export type VerificationApplicationIdFkeyVerificationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   uniqueId: Scalars['String'];
+  code?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
   createdTime?: Maybe<Scalars['Datetime']>;
   expiryTime?: Maybe<Scalars['Datetime']>;
   isVerified?: Maybe<Scalars['Boolean']>;
@@ -27471,10 +27480,16 @@ export type VerificationApplicationIdFkeyVerificationCreateInput = {
 export type VerificationCondition = {
   /** Checks for equality with the object’s `id` field. */
   id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `uniqueId` field. */
   uniqueId?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `message` field. */
+  message?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `data` field. */
+  data?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `createdTime` field. */
   createdTime?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `expiryTime` field. */
@@ -27489,10 +27504,16 @@ export type VerificationCondition = {
 export type VerificationFilter = {
   /** Filter by the object’s `id` field. */
   id?: Maybe<IntFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `uniqueId` field. */
   uniqueId?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `message` field. */
+  message?: Maybe<StringFilter>;
+  /** Filter by the object’s `data` field. */
+  data?: Maybe<JsonFilter>;
   /** Filter by the object’s `createdTime` field. */
   createdTime?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `expiryTime` field. */
@@ -27514,8 +27535,11 @@ export type VerificationFilter = {
 /** An input for mutations affecting `Verification` */
 export type VerificationInput = {
   id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
   uniqueId: Scalars['String'];
+  applicationId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
   createdTime?: Maybe<Scalars['Datetime']>;
   expiryTime?: Maybe<Scalars['Datetime']>;
   isVerified?: Maybe<Scalars['Boolean']>;
@@ -27560,8 +27584,11 @@ export type VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerif
 /** Represents an update to a `Verification`. Fields that are set will be updated. */
 export type VerificationPatch = {
   id?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
   createdTime?: Maybe<Scalars['Datetime']>;
   expiryTime?: Maybe<Scalars['Datetime']>;
   isVerified?: Maybe<Scalars['Boolean']>;
@@ -27596,10 +27623,16 @@ export enum VerificationsOrderBy {
   Natural = 'NATURAL',
   IdAsc = 'ID_ASC',
   IdDesc = 'ID_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
   UniqueIdAsc = 'UNIQUE_ID_ASC',
   UniqueIdDesc = 'UNIQUE_ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  MessageAsc = 'MESSAGE_ASC',
+  MessageDesc = 'MESSAGE_DESC',
+  DataAsc = 'DATA_ASC',
+  DataDesc = 'DATA_DESC',
   CreatedTimeAsc = 'CREATED_TIME_ASC',
   CreatedTimeDesc = 'CREATED_TIME_DESC',
   ExpiryTimeAsc = 'EXPIRY_TIME_ASC',
@@ -33967,8 +34000,11 @@ export type UsersEdgeResolvers<ContextType = any, ParentType extends ResolversPa
 export type VerificationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Verification'] = ResolversParentTypes['Verification']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uniqueId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   createdTime?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   expiryTime?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   isVerified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;

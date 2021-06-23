@@ -3,29 +3,22 @@ GraphQL Fragment - DEVELOPMENT Actions
   - Use this to test arbitrary Actions -- but only use the trigger "DEV_TEST"
 \*/
 exports.devActions = `
-    # Send notification/email
+    # Create verification
     {
-      actionCode: "sendNotification"
+      actionCode: "createVerification"
       trigger: DEV_TEST
       sequence: 1
       parameterQueries: {
-        email: ["carl@sussol.net", "ceejaysmith@gmail.com"]
-        subject: "Testing..."
-        message: "Sending an email from application manager"
-        attachments: []
-      }
-    }
-    {
-      actionCode: "sendNotification"
-      trigger: DEV_TEST
-      sequence: 2
-      parameterQueries: {
-        email: "carl@smithnz.net"
-        fromName: "Not My Real Name"
-        fromEmail: "not-my-real-name@nowhere.com"
-        subject: "Testing HTML Mail..."
-        message: "### This one has MARKDOWN\\n\\nSending another email from **application manager**\\n\\nAnd **attachments!!**"
-        attachments: ["l5_S8ACicikGPYbePjzoi"]
+        message: {
+          operator: "stringSubstitution"
+          children: [
+            "## Verification complete!\\n\\nThanks, %1"
+            {
+              operator: "objectProperties"
+              children: ["applicationData.firstName"]
+            }
+          ]
+       }
       }
     }
    # {
