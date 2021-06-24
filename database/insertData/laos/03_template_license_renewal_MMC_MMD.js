@@ -1,5 +1,5 @@
 /*
-TEMPLATE C - Company license type MMC, MMD, MDC, MDM, WSL or RIT
+TEMPLATE - Renewal of Company license type MMC, MMD, MDC, MDM, WSL or RIT
   - for MMC => Modern Medicines
   - for MMD => Medical Devices
 */
@@ -11,11 +11,11 @@ exports.queries = [
     createTemplate(
       input: {
           template: {
-            code: "CompanyLicense"
-            name: "Company License for Modern medicines or Medical devices"
+            code: "RenewalCompanyLicense"
+            name: "Renewal of Company License for Modern medicines or Medical devices"
             isLinear: false # CHANGE THIS
             status: AVAILABLE
-            startMessage: "## Apply for a company license for:\\n\\n Modern medicines or Medical devices.\\n\\n**You will be required to upload the following documents:**\\n- **LMMD01**: Letter of request \\n- **LMMD12**: Letter from mother-company authorizing establishment of branch\\n- **LMMD15**: Site inspection report by F&D unit\\n- **LMMD16**: Company/manufacturer profile (including site master file and GMP certification where applicable)"
+            startMessage: "## Renewal a selected company license for:\\n\\n Modern medicines or Medical devices.\\n\\n**You will be required to upload the following documents:**\\n- **RLMMD01**: Letter of request (physical copy to be submitted after screening)"
             versionTimestamp: "NOW()"
             templateSectionsUsingId: {
               create: [
@@ -1214,10 +1214,42 @@ exports.queries = [
                   title: "License details"
                   index: 3
                   templateElementsUsingId: {
-                    create: [
-                      {
-                        code: "Q1ProductType"
+                  create: [
+                    {
+                        code: "Q1License"
                         index: 10
+                        title: "Select license"
+                        elementTypePluginCode: "dropdownChoice"
+                        category: QUESTION
+                        parameters: {
+                        label: "Select license to renew"
+                        options: {
+                            operator: "graphQL",
+                            children: [
+                                "query getLicenses($orgId: String!) { licenses(filter: {companyId: {equalTo: $orgId}}) { nodes { id companyName expiryDate serial }}}",
+                                "",
+                                ["orgId"],
+                                {
+                                    operator: "+",
+                                    children: [
+                                      {
+                                        operator: "objectProperties",
+                                        children: [
+                                          "currentUser.organisation.orgId"
+                                        ]
+                                      },
+                                      ""
+                                    ]
+                                }
+                                "licenses.nodes"
+                            ]
+                        }
+                        optionsDisplayProperty: "serial"
+                        }
+                      }
+                      {
+                        code: "Q2ProductType"
+                        index: 20
                         title: "Product type"
                         elementTypePluginCode: "radioChoice"
                         category: QUESTION
@@ -1229,22 +1261,26 @@ exports.queries = [
                             "medical devices"
                           ]
                         }
-                      }
-                      {
-                        code: "Q2LicenseType"
-                        index: 20
-                        title: "License type"
-                        elementTypePluginCode: "radioChoice"
-                        category: QUESTION
-                        helpText: "Select the license to apply for will grat the specific license to this company an expiry date genrated on Approval"
-                        parameters: {
-                          label: "Purpose of application"
-                          options: [
-                            "import/export medicines and medical devices"
-                            "local manufacturer or branch of local manufacturer"
-                            "wholesaler for medicines and medical devices"
-                            "retail pharmacy"
-                          ]
+                        defaultValue: {
+                            operator: "graphQL",
+                            children: [
+                                "query getLicense { license(id: $licenseId) { type }}",
+                                "",
+                                ["orgId"],
+                                {
+                                    operator: "+",
+                                    children: [
+                                      {
+                                        operator: "objectProperties",
+                                        children: [
+                                          "applicationData.responses.Q1License.text"
+                                        ]
+                                      },
+                                      ""
+                                    ]
+                                }
+                                "license.type"
+                            ]
                         }
                       }
                     ]
@@ -1259,78 +1295,13 @@ exports.queries = [
                       {
                         code: "LMMD01"
                         index: 10
-                        title: "File upload LMMD01"
+                        title: "File upload RLMMD01"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
-                        isRequired: false
                         parameters: {
                           label: "Letter of request"
                           description: "The physical submission for this form is also required.\\nFile uploaded must be **image** files or **PDF** and under 5MB."
                           fileCountLimit: 1
-                          fileExtensions: ["pdf", "png", "jpg"]
-                          fileSizeLimit: 5000
-                        }
-                      }
-                      {
-                        code: "S5PB1"
-                        index: 20
-                        title: "Page Break"
-                        elementTypePluginCode: "pageBreak"
-                        category: INFORMATION
-                      }
-                      {
-                        code: "LMMD12"
-                        index: 30
-                        title: "File upload LMMD01"
-                        elementTypePluginCode: "fileUpload"
-                        category: QUESTION
-                        isRequired: false
-                        parameters: {
-                          label: "Letter from mother-company authorizing establishment of branch"
-                          description: "File uploaded must be **image** files or **PDF** and under 5MB."
-                          fileCountLimit: 1
-                          fileExtensions: ["pdf", "png", "jpg"]
-                          fileSizeLimit: 5000
-                        }
-                      }
-                      {
-                        code: "S5PB2"
-                        index: 40
-                        title: "Page Break"
-                        elementTypePluginCode: "pageBreak"
-                        category: INFORMATION
-                      }
-                      {
-                        code: "LMMD15"
-                        index: 50
-                        title: "File upload LMMD15"
-                        elementTypePluginCode: "fileUpload"
-                        category: QUESTION
-                        isRequired: false
-                        parameters: {
-                          label: "Site inspection report by F&D unit"
-                          description: "File uploaded must be **image** files or **PDF** and under 5MB."
-                          fileExtensions: ["pdf", "png", "jpg"]
-                          fileSizeLimit: 5000
-                        }
-                      }
-                      {
-                        code: "S5PB3"
-                        index: 60
-                        title: "Page Break"
-                        elementTypePluginCode: "pageBreak"
-                        category: INFORMATION
-                      }
-                      {
-                        code: "LMMD16"
-                        index: 70
-                        title: "File upload LMMD15"
-                        elementTypePluginCode: "fileUpload"
-                        category: QUESTION
-                        isRequired: false
-                        parameters: {
-                          label: "Company/manufacturer profile (including site master file and GMP certification where applicable)"
-                          description: "describing origin of products, staff and qualifications, facilities and equipment, business experience, business development plan.\\nFile uploaded must be **image** files or **PDF** and under 5MB."
                           fileExtensions: ["pdf", "png", "jpg"]
                           fileSizeLimit: 5000
                         }
@@ -1375,7 +1346,7 @@ exports.queries = [
                   actionCode: "cLog"
                   trigger: ON_APPLICATION_SUBMIT
                   parameterQueries: {
-                    message: { value: "Company License submission" }
+                    message: { value: "Renewal Company License submission" }
                   }
                 }
                 {
@@ -1406,6 +1377,7 @@ exports.queries = [
                   parameterQueries: { newOutcome: { value: "APPROVED" } }
                 }
                 # TODO: Generate the expiry and serial before this
+                # For now it's created a new license - should just update existing?
                 {
                   actionCode: "modifyRecord"
                   trigger: ON_REVIEW_SUBMIT
@@ -1426,7 +1398,7 @@ exports.queries = [
                       operator: "objectProperties"
                       children: ["applicationData.responses.Q2LicenseType.text"]
                     }
-                    expiry_date: "31/01/2022"
+                    expiry_date: "31/01/2023"
                     company_id: {
                       operator: "objectProperties"
                       children: ["applicationData.orgId"]
@@ -1452,179 +1424,14 @@ exports.queries = [
 #                   }
                   }
                 }
-                {
-                  actionCode: "grantPermissions"
-                  trigger: ON_REVIEW_SUBMIT
-                  sequence: 102
-                  parameterQueries: {
-                    username: {
-                      operator: "objectProperties"
-                      children: ["applicationData.username"]
-                    }
-                    orgId: {
-                      operator: "objectProperties"
-                      children: ["applicationData.orgId"]
-                    }
-                    permissionNames: ["applyRenewLicense"]
-                  }
-                }
-                {
-                  actionCode: "grantPermissions"
-                  trigger: ON_REVIEW_SUBMIT
-                  sequence: 104
-                  # TO-DO -- update condition to just check Outcome
-                  # (from applicationData)
-                  condition: {
-                    operator: "AND"
-                    children: [
-                      {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["applicationData.outcome"]
-                          }
-                          "APPROVED"
-                        ]
-                      }
-                      {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["applicationData.responses.Q2LicenseType.text"]
-                          }
-                          "import/export medicines and medical devices"
-                        ]
-                      }
-                    ]
-                  }
-                  parameterQueries: {
-                    username: {
-                      operator: "objectProperties"
-                      children: ["applicationData.username"]
-                    }
-                    orgId: {
-                      operator: "objectProperties"
-                      children: ["applicationData.orgId"]
-                    }
-                    permissionNames: ["applyImportPermit"]
-                  }
-                }
-                {
-                  actionCode: "grantPermissions"
-                  trigger: ON_REVIEW_SUBMIT
-                  sequence: 105
-                  # TO-DO -- update condition to just check Outcome
-                  # (from applicationData)
-                  condition: {
-                    operator: "AND"
-                    children: [
-                      {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["applicationData.outcome"]
-                          }
-                          "APPROVED"
-                        ]
-                      }
-                      {
-                        operator: "!="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["applicationData.responses.Q2LicenseType.text"]
-                          }
-                          "import/export medicines and medical devices"
-                        ]
-                      }
-                      {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["applicationData.responses.Q1ProductType.text"]
-                          }
-                          "modern medicines"
-                        ]
-                      }
-                    ]
-                  }
-                  parameterQueries: {
-                    username: {
-                      operator: "objectProperties"
-                      children: ["applicationData.username"]
-                    }
-                    orgId: {
-                      operator: "objectProperties"
-                      children: ["applicationData.orgId"]
-                    }
-                    permissionNames: ["applyDrugRegoMMC"]
-                  }
-                }
-                {
-                  actionCode: "grantPermissions"
-                  trigger: ON_REVIEW_SUBMIT
-                  sequence: 105
-                  # TO-DO -- update condition to just check Outcome
-                  # (from applicationData)
-                  condition: {
-                    operator: "AND"
-                    children: [
-                      {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["applicationData.outcome"]
-                          }
-                          "APPROVED"
-                        ]
-                      }
-                      {
-                        operator: "!="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["applicationData.responses.Q2LicenseType.text"]
-                          }
-                          "import/export medicines and medical devices"
-                        ]
-                      }
-                      {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["applicationData.responses.Q1ProductType.text"]
-                          }
-                          "medical devices"
-                        ]
-                      }
-                    ]
-                  }
-                  parameterQueries: {
-                    username: {
-                      operator: "objectProperties"
-                      children: ["applicationData.username"]
-                    }
-                    orgId: {
-                      operator: "objectProperties"
-                      children: ["applicationData.orgId"]
-                    }
-                    permissionNames: ["applyDrugRegoMMD"]
-                  }
-                }
               ]
             }
             templatePermissionsUsingId: {
               create: [
-                # Apply Company license (granted on Company registration)
+                # Apply Renew license (granted on Company license)
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "applyOrgLicense" }
+                    connectByName: { name: "applyRenewLicense" }
                   }
                 }
                 # Review General - Stage 1
