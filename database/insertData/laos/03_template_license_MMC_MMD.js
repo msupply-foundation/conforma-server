@@ -1422,6 +1422,10 @@ exports.queries = [
                   }
                   parameterQueries: {
                     tableName: "license"
+                    product_type: {
+                      operator: "objectProperties"
+                      children: ["applicationData.responses.Q1ProductType.text"]
+                    }
                     type: {
                       operator: "objectProperties"
                       children: ["applicationData.responses.Q2LicenseType.text"]
