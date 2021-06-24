@@ -1429,7 +1429,7 @@ exports.queries = [
                     expiry_date: "31/01/2022"
                     company_id: {
                       operator: "objectProperties"
-                      children: ["currentUser.organisation.orgId"]
+                      children: ["applicationData.orgId"]
                     }
                     company_name: {
                       operator: "objectProperties"
