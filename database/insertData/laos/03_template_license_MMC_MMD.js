@@ -1262,6 +1262,7 @@ exports.queries = [
                         title: "File upload LMMD01"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Letter of request"
                           description: "The physical submission for this form is also required.\\nFile uploaded must be **image** files or **PDF** and under 5MB."
@@ -1283,6 +1284,7 @@ exports.queries = [
                         title: "File upload LMMD01"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Letter from mother-company authorizing establishment of branch"
                           description: "File uploaded must be **image** files or **PDF** and under 5MB."
@@ -1304,6 +1306,7 @@ exports.queries = [
                         title: "File upload LMMD15"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Site inspection report by F&D unit"
                           description: "File uploaded must be **image** files or **PDF** and under 5MB."
@@ -1324,6 +1327,7 @@ exports.queries = [
                         title: "File upload LMMD15"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Company/manufacturer profile (including site master file and GMP certification where applicable)"
                           description: "describing origin of products, staff and qualifications, facilities and equipment, business experience, business development plan.\\nFile uploaded must be **image** files or **PDF** and under 5MB."
@@ -1423,10 +1427,10 @@ exports.queries = [
                       children: ["applicationData.responses.Q2LicenseType.text"]
                     }
                     expiry_date: "31/01/2022"
-#                   company_id: {
-#                     operator: "objectProperties"
-#                     children: ["currentUser.organisation.orgId"]
-#                   }
+                    company_id: {
+                      operator: "objectProperties"
+                      children: ["currentUser.organisation.orgId"]
+                    }
                     company_name: {
                       operator: "objectProperties"
                       children: ["applicationData.responses.Q1CompanyNameLao.text"]

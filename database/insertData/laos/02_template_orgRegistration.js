@@ -656,7 +656,7 @@ exports.queries = [
                       title: "CV upload"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       helpText: "For all uploads, files must be in **pdf**, **doc** or an **image** format, and less than 10MB each"
                       parameters: {
                         label: "CV (LMMD02)"
@@ -672,7 +672,7 @@ exports.queries = [
                       title: "Medical certificate upload"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Medical certificate  (LMMD03)"
                         description: "QUESTION: Is this for individual?"
@@ -687,7 +687,7 @@ exports.queries = [
                       title: "Current residence certificate"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Certificate of current residence  (LMMD04)"
                         description: "Must include photo (max 3 months)"
@@ -702,7 +702,7 @@ exports.queries = [
                       title: "Recent Photo"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Photo (LMMD05)"
                         description: "Max 1 year (used for printing licence)"
@@ -724,7 +724,7 @@ exports.queries = [
                       title: "Education Certificate"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Certificate of education level (LMMD06)"
                         fileCountLimit: 1
@@ -738,7 +738,7 @@ exports.queries = [
                       title: "Criminal Record"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Criminal record (number 3) (LMMD07)"
                         fileCountLimit: 1
@@ -752,7 +752,7 @@ exports.queries = [
                       title: "Recent Photo"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Letter from previous employers documenting at least 3 years professional experience (LMMD08)"
                         description: "(for private sector must be certified by provincial or capital level)"
@@ -767,7 +767,7 @@ exports.queries = [
                       title: "Resignation document"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Documentation showing resignation from previous employment (LMMD09)"
                         description: "(for private sector must be certified by provincial or capital level)"
@@ -803,7 +803,7 @@ exports.queries = [
                       title: "Layout of facilities"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Layout of facilities (LMMD11)"
                         fileCountLimit: 1
@@ -817,7 +817,7 @@ exports.queries = [
                       title: "Proof of ownership"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Proof of ownership of facilities or contract of rent"
                         fileCountLimit: 1
@@ -831,7 +831,7 @@ exports.queries = [
                       title: "Business licence"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Copy of business licence issued by Ministry of Commerce (LMMD14)"
                         fileCountLimit: 1
