@@ -1219,34 +1219,74 @@ exports.queries = [
                         code: "Q1License"
                         index: 10
                         title: "Select license"
-                        elementTypePluginCode: "dropdownChoice"
+                        elementTypePluginCode: "search"
                         category: QUESTION
                         parameters: {
-                        label: "Select license to renew"
-                        options: {
-                            operator: "graphQL",
-                            children: [
-                                "query getLicenses($orgId: String!) { licenses(filter: {companyId: {equalTo: $orgId}}) { nodes { id companyName expiryDate serial }}}",
-                                "",
-                                ["orgId"],
-                                {
-                                    operator: "+",
-                                    children: [
-                                      {
-                                        operator: "objectProperties",
-                                        children: [
-                                          "currentUser.organisation.orgId"
-                                        ]
-                                      },
-                                      ""
-                                    ]
-                                }
-                                "licenses.nodes"
-                            ]
+                            label: "user"
+                        placeholder: "Search for User"
+                        icon: "user"
+                        minCharacters: 3
+                        multiSelect: true
+                        source: {
+                          operator: "graphQL",
+                          children: [
+                            "query getLicenses($search: String!, $orgId: String!) { licenses(filter: {companyId: {equalTo: $orgId}, serial: { includesInsensitive: $search } }) { nodes { id companyName expiryDate productType type serial }}}",
+                            "",
+                            [
+                              "search",
+                              "orgId"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "search.text"
+                              ]
+                            },
+                            {
+                                operator: "objectProperties",
+                                children: [
+                                  "currentUser.organisation.orgId"
+                                ]
+                            }
+                            "licenses.nodes"
+                          ]
                         }
-                        optionsDisplayProperty: "serial"
+                        displayFormat: {
+                          title: "\${serial}",
+                          description: "Company Name: \${companyName} \\nProduct type:\${productType} \\ntype:\${type} \\nexpiry:\${expiryDate}"
+                        }
+                        resultFormat: {
+                          title: "\${serial}",
+                          description: "Company Name: \${companyName} \\nProduct type:\${productType} \\ntype:\${type} \\nexpiry:\${expiryDate}"
                         }
                       }
+                    }
+
+ #                       label: "Select license to renew"
+ #                       options: {
+ #                           operator: "graphQL",
+ #                           children: [
+ #                               "query getLicenses($orgId: String!) { licenses(filter: {companyId: {equalTo: $orgId}}) { nodes { id companyName expiryDate serial }}}",
+ #                               "",
+ #                               ["orgId"],
+ #                               {
+ #                                   operator: "+",
+ #                                   children: [
+ #                                     {
+ #                                       operator: "objectProperties",
+ #                                       children: [
+ #                                         "currentUser.organisation.orgId"
+ #                                       ]
+ #                                     },
+ #                                     ""
+ #                                   ]
+ #                               }
+ #                               "licenses.nodes"
+ #                           ]
+ #                       }
+ #                       optionsDisplayProperty: "serial"
+ #                       }
+ #                     }
                       {
                         code: "Q2ProductType"
                         index: 20
@@ -1376,54 +1416,7 @@ exports.queries = [
                   }
                   parameterQueries: { newOutcome: { value: "APPROVED" } }
                 }
-                # TODO: Generate the expiry and serial before this
-                # For now it's created a new license - should just update existing?
-                {
-                  actionCode: "modifyRecord"
-                  trigger: ON_REVIEW_SUBMIT
-                  sequence: 101
-                  condition: {
-                    operator: "="
-                    children: [
-                      {
-                        operator: "objectProperties"
-                        children: ["applicationData.outcome"]
-                      }
-                      "APPROVED"
-                    ]
-                  }
-                  parameterQueries: {
-                    tableName: "license"
-                    type: {
-                      operator: "objectProperties"
-                      children: ["applicationData.responses.Q2LicenseType.text"]
-                    }
-                    expiry_date: "31/01/2023"
-                    company_id: {
-                      operator: "objectProperties"
-                      children: ["applicationData.orgId"]
-                    }
-                    company_name: {
-                      operator: "objectProperties"
-                      children: ["applicationData.responses.Q1CompanyNameLao.text"]
-                    }
-                    serial: {
-                      operator: "CONCAT"
-                      children: [
-                        {
-                          operator: "objectProperties"
-                          children: ["applicationData.responses.Q1CompanyNameLao.text"]
-                        }
-                        ":"
-                        "1234"
-                      ]
-                    }
-#                   application_id: {
-#                     operator: "objectProperties"
-#                     children: ["applicationData.id"]
-#                   }
-                  }
-                }
+                # TODO: Add modifyRecord action to create a new license or should just update existing?
               ]
             }
             templatePermissionsUsingId: {
