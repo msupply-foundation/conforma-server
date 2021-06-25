@@ -1222,11 +1222,9 @@ exports.queries = [
                         elementTypePluginCode: "search"
                         category: QUESTION
                         parameters: {
-                            label: "user"
-                        placeholder: "Search for User"
-                        icon: "user"
-                        minCharacters: 3
-                        multiSelect: true
+                            label: "License serial"
+                        placeholder: "Search for License"
+                        minCharacters: 1
                         source: {
                           operator: "graphQL",
                           children: [
@@ -1243,9 +1241,15 @@ exports.queries = [
                               ]
                             },
                             {
-                                operator: "objectProperties",
+                                operator: "+",
                                 children: [
-                                  "currentUser.organisation.orgId"
+                                  {
+                                    operator: "objectProperties",
+                                    children: [
+                                      "currentUser.organisation.orgId"
+                                    ]
+                                  },
+                                  ""
                                 ]
                             }
                             "licenses.nodes"
@@ -1261,68 +1265,6 @@ exports.queries = [
                         }
                       }
                     }
-
- #                       label: "Select license to renew"
- #                       options: {
- #                           operator: "graphQL",
- #                           children: [
- #                               "query getLicenses($orgId: String!) { licenses(filter: {companyId: {equalTo: $orgId}}) { nodes { id companyName expiryDate serial }}}",
- #                               "",
- #                               ["orgId"],
- #                               {
- #                                   operator: "+",
- #                                   children: [
- #                                     {
- #                                       operator: "objectProperties",
- #                                       children: [
- #                                         "currentUser.organisation.orgId"
- #                                       ]
- #                                     },
- #                                     ""
- #                                   ]
- #                               }
- #                               "licenses.nodes"
- #                           ]
- #                       }
- #                       optionsDisplayProperty: "serial"
- #                       }
- #                     }
-                      {
-                        code: "Q2ProductType"
-                        index: 20
-                        title: "Product type"
-                        elementTypePluginCode: "radioChoice"
-                        category: QUESTION
-                        parameters: {
-                          label: "Type of product"
-                          layout: "inline"
-                          options: [
-                            "modern medicines"
-                            "medical devices"
-                          ]
-                        }
-                        defaultValue: {
-                            operator: "graphQL",
-                            children: [
-                                "query getLicense { license(id: $licenseId) { type }}",
-                                "",
-                                ["orgId"],
-                                {
-                                    operator: "+",
-                                    children: [
-                                      {
-                                        operator: "objectProperties",
-                                        children: [
-                                          "applicationData.responses.Q1License.text"
-                                        ]
-                                      },
-                                      ""
-                                    ]
-                                }
-                                "license.type"
-                            ]
-                        }
-                      }
                     ]
                   }
                 }
