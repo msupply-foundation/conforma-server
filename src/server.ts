@@ -65,7 +65,7 @@ const startServer = async () => {
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
   server.post('/create-hash', routeCreateHash)
   server.get('/verify', routeVerification)
-  server.post('/generatePDF', routeGeneratePDF)
+  server.post('/generate-pdf', routeGeneratePDF)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {
