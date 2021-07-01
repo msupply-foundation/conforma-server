@@ -3,22 +3,13 @@ GraphQL Fragment - DEVELOPMENT Actions
   - Use this to test arbitrary Actions -- but only use the trigger "DEV_TEST"
 \*/
 exports.devActions = `
-    # Create verification
+    # Create a document then email it
     {
-      actionCode: "createVerification"
+      actionCode: "generateDoc"
       trigger: DEV_TEST
       sequence: 1
       parameterQueries: {
-        message: {
-          operator: "stringSubstitution"
-          children: [
-            "## Verification complete!\\n\\nThanks, %1"
-            {
-              operator: "objectProperties"
-              children: ["applicationData.firstName"]
-            }
-          ]
-       }
+        docTemplateId: "9eRMD5mgLGuMfntQ1I-_9"
       }
     }
    # {

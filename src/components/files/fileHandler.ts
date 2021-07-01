@@ -3,7 +3,7 @@ import fs from 'fs'
 import util from 'util'
 import { pipeline } from 'stream'
 import { nanoid } from 'nanoid'
-import { getAppEntryPointDir } from '../utilityFunctions'
+import { getAppEntryPointDir, makeFolder } from '../utilityFunctions'
 import config from '../../config'
 import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
@@ -58,9 +58,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       const file_path = path.join(subfolder, `${basename}_${unique_id}${ext}`)
 
       // Save file
-      if (!fs.existsSync(path.join(getAppEntryPointDir(), filesFolder, subfolder))) {
-        fs.mkdirSync(path.join(getAppEntryPointDir(), filesFolder, subfolder))
-      }
+      makeFolder(path.join(getAppEntryPointDir(), filesFolder, subfolder))
       await pump(file.file, fs.createWriteStream(path.join(filesPath, file_path)))
 
       // Create thumbnail from saved file

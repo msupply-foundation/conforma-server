@@ -26,7 +26,7 @@ const carboneRender = util.promisify(
 export const routeGeneratePDF = async (request: any, reply: any) => {
   try {
     const file = await generatePDF(combineRequestParams(request, 'camel'))
-    return reply.sendFile(file)
+    return reply.sendFile(file.filePath)
   } catch (err) {
     return reply.send(err)
   }
@@ -80,7 +80,7 @@ export async function generatePDF({
         mimetype: PDF_MIMETYPE,
       })
     )
-    return outputFilePath
+    return { uniqueId, filename: originalFilename, filePath: outputFilePath }
   } catch (err) {
     throw err
   }
