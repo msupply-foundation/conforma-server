@@ -3,7 +3,6 @@ import fs from 'fs'
 import {
   getAppEntryPointDir,
   objectKeysToSnakeCase,
-  objectKeysToCamelCase,
   combineRequestParams,
   makeFolder,
 } from '../utilityFunctions'
@@ -18,10 +17,18 @@ const PDF_THUMBNAIL = 'noun_PDF_3283219.png'
 const PDF_MIMETYPE = 'application/pdf'
 
 export const routeGeneratePDF = async (request: any, reply: any) => {
-  const { filePath, fileId, data, userId, applicationSerial, applicationResponseId, subFolder } =
-    combineRequestParams(request, 'camel')
+  try {
+    generatePDF(combineRequestParams(request, 'camel'), reply)
+  } catch (err) {
+    return reply.send(err)
+  }
+}
 
-  // Existing Document template properties
+export const generatePDF = async (
+  { filePath, fileId, data, userId, applicationSerial, applicationResponseId, subFolder }: any,
+  reply: any = null
+) => {
+  // Existing Carbone Template properties
   const templateFileInfo = await getFilePath(fileId)
   const templatePath = filePath ?? templateFileInfo.file_path
   const templateFullPath = path.join(appRootFolder, filesFolder, templatePath)
@@ -37,11 +44,15 @@ export const routeGeneratePDF = async (request: any, reply: any) => {
   }_${uniqueId}.pdf`
   const outputFilePath = path.join(subfolder, outputFilename)
 
-  const registerFile = async (err: any, result: any) => {
-    if (err) return reply.send(err)
+  try {
+    carbone.render(templateFullPath, data, { convertTo: 'pdf' }, registerAndReturnFile)
+  } catch (err) {
+    throw err
+  }
+
+  async function registerAndReturnFile(err: any, result: any) {
+    if (err) throw err
     fs.writeFileSync(path.join(appRootFolder, filesFolder, outputFilePath), result)
-    console.log('File Done')
-    console.log(path.join(appRootFolder, filesFolder, outputFilePath))
     try {
       await registerFileInDB(
         objectKeysToSnakeCase({
@@ -55,17 +66,10 @@ export const routeGeneratePDF = async (request: any, reply: any) => {
           mimetype: PDF_MIMETYPE,
         })
       )
-      return reply.send('DONE')
-      return reply.sendFile(path.join(appRootFolder, filesFolder, outputFilePath))
+      if (reply) return reply.sendFile(outputFilePath)
+      return outputFilePath
     } catch (err) {
-      return reply.send(err)
+      throw err
     }
   }
-
-  try {
-    carbone.render(templateFullPath, data, { convertTo: 'pdf' }, registerFile)
-  } catch (err) {
-    return reply.send(err)
-  }
-  //   return reply.send('DONE')
 }
