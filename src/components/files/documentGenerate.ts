@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs'
+import util from 'util'
 import {
   getAppEntryPointDir,
   objectKeysToSnakeCase,
@@ -9,30 +10,50 @@ import {
 import { getFilePath, registerFileInDB } from '../../../src/components/files/fileHandler'
 import { nanoid } from 'nanoid'
 import config from '../../config'
-import carbone from 'carbone'
+import { render, RenderCallback, RenderOptions } from 'carbone'
 
 const appRootFolder = getAppEntryPointDir()
 const filesFolder = config.filesFolder
 const PDF_THUMBNAIL = 'noun_PDF_3283219.png'
 const PDF_MIMETYPE = 'application/pdf'
 
+// Carbone render function wrapped in anonymous function so Promisify has a fixed number of args
+const carboneRender = util.promisify(
+  (path: string, data: object, options: RenderOptions, fn: RenderCallback) =>
+    render(path, data, options, fn)
+)
+
 export const routeGeneratePDF = async (request: any, reply: any) => {
   try {
-    generatePDF(combineRequestParams(request, 'camel'), reply)
+    const file = await generatePDF(combineRequestParams(request, 'camel'))
+    return reply.sendFile(file)
   } catch (err) {
     return reply.send(err)
   }
 }
 
-export const generatePDF = async (
-  { filePath, fileId, data, userId, applicationSerial, applicationResponseId, subFolder }: any,
-  reply: any = null
-) => {
+interface GeneratePDFInput {
+  fileId: string
+  data: object
+  userId?: number
+  applicationSerial?: string
+  applicationResponseId?: number
+  subFolder?: string
+}
+
+export async function generatePDF({
+  fileId,
+  data,
+  userId,
+  applicationSerial,
+  applicationResponseId,
+  subFolder,
+}: GeneratePDFInput) {
   // Existing Carbone Template properties
   const templateFileInfo = await getFilePath(fileId)
-  const templatePath = filePath ?? templateFileInfo.file_path
-  const templateFullPath = path.join(appRootFolder, filesFolder, templatePath)
-  const templateName = path.parse(templateFileInfo.original_filename).name
+  const templatePath = templateFileInfo?.file_path
+  const templateFullPath = path.join(appRootFolder, filesFolder, templatePath as string)
+  const templateName = path.parse(templateFileInfo?.original_filename).name
 
   // Output file/folder properties
   const uniqueId = nanoid()
@@ -45,31 +66,22 @@ export const generatePDF = async (
   const outputFilePath = path.join(subfolder, outputFilename)
 
   try {
-    carbone.render(templateFullPath, data, { convertTo: 'pdf' }, registerAndReturnFile)
+    const result = await carboneRender(templateFullPath, data, { convertTo: 'pdf' })
+    fs.writeFileSync(path.join(appRootFolder, filesFolder, outputFilePath), result)
+    await registerFileInDB(
+      objectKeysToSnakeCase({
+        uniqueId,
+        originalFilename,
+        userId,
+        applicationSerial,
+        applicationResponseId,
+        filePath: outputFilePath,
+        thumbnailPath: PDF_THUMBNAIL,
+        mimetype: PDF_MIMETYPE,
+      })
+    )
+    return outputFilePath
   } catch (err) {
     throw err
-  }
-
-  async function registerAndReturnFile(err: any, result: any) {
-    if (err) throw err
-    fs.writeFileSync(path.join(appRootFolder, filesFolder, outputFilePath), result)
-    try {
-      await registerFileInDB(
-        objectKeysToSnakeCase({
-          uniqueId,
-          originalFilename,
-          userId,
-          applicationSerial,
-          applicationResponseId,
-          filePath: outputFilePath,
-          thumbnailPath: PDF_THUMBNAIL,
-          mimetype: PDF_MIMETYPE,
-        })
-      )
-      if (reply) return reply.sendFile(outputFilePath)
-      return outputFilePath
-    } catch (err) {
-      throw err
-    }
   }
 }
