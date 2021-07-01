@@ -18,7 +18,7 @@ const generateDoc: ActionPluginType = async ({
     return {
       status: ActionQueueStatus.Success,
       error_log: '',
-      output: result,
+      output: { document: result },
     }
   } catch (error) {
     console.log(error.message)

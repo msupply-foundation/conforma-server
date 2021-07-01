@@ -65,6 +65,8 @@ export async function generatePDF({
   }_${uniqueId}.pdf`
   const outputFilePath = path.join(subfolder, outputFilename)
 
+  console.log('Generating document: ' + originalFilename)
+
   try {
     const result = await carboneRender(templateFullPath, data, { convertTo: 'pdf' })
     fs.writeFileSync(path.join(appRootFolder, filesFolder, outputFilePath), result)
@@ -80,6 +82,7 @@ export async function generatePDF({
         mimetype: PDF_MIMETYPE,
       })
     )
+    console.log('Document creation complete\n')
     return { uniqueId, filename: originalFilename, filePath: outputFilePath }
   } catch (err) {
     throw err
