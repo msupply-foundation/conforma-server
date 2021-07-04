@@ -59,7 +59,7 @@ export async function generatePDF({
   const uniqueId = nanoid()
   const subfolder = subFolder ?? applicationSerial ?? ''
   if (subfolder) makeFolder(path.join(appRootFolder, filesFolder, subfolder))
-  const originalFilename = `${templateName}_${applicationSerial ?? uniqueId}`
+  const originalFilename = `${templateName}_${applicationSerial ?? uniqueId}.pdf`
   const outputFilename = `${templateName}${
     applicationSerial ? '_' + applicationSerial : ''
   }_${uniqueId}.pdf`

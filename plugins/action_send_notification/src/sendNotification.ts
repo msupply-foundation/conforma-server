@@ -49,7 +49,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       emailAddressString,
       subject,
       message,
-      attachments,
+      attachments: Array.isArray(attachments) ? attachments : [attachments],
     })
 
     // Send email
@@ -78,7 +78,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
       output: { notification: notificationResult },
     }
   } catch (error) {
-    console.log(error.message)
+    console.log('Problem sending email:', error.message)
     return {
       status: ActionQueueStatus.Fail,
       error_log: error.message,
@@ -96,6 +96,7 @@ const stringifyEmailRecipientsList = (emailAddresses: string | string[]): string
 /*
 Takes an array of file paths in multiple formats and builds them into 
 shape expected by sendMail method.
+If only one attachment, can be provided without being in an array.
 Input elements must be one of:
 - <string> uniqueId of file (we will look up the path and filename)
 - already formatted sendMail object, with the following properties:
@@ -106,12 +107,13 @@ Input elements must be one of:
 - TO-DO: Handle more types of input format (e.g. raw path/url strings)
 */
 const prepareAttachments = async (
-  attachments: string[] | Attachment[],
+  attachments: string[] | Attachment[] | string | Attachment,
   appRootFolder: string,
   filesFolder: string
 ): Promise<Attachment[]> => {
+  const attachmentInput = Array.isArray(attachments) ? attachments : [attachments]
   const attachmentObjects = []
-  for (const file of attachments) {
+  for (const file of attachmentInput) {
     if (typeof file === 'object') {
       if (!file?.path || !file?.filename) throw new Error('Invalid attachment')
       attachmentObjects.push(file)
