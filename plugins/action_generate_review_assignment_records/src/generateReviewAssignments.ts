@@ -93,7 +93,7 @@ async function generateReviewAssignments({
       nextReviewLevel,
       stageNumber,
       stageId,
-      stageDate: stageHistoryTimeCreated,
+      timeStageCreated: stageHistoryTimeCreated,
       isLastLevel,
     })
   } catch (error) {
@@ -112,7 +112,7 @@ interface GenerateNextReviewAssignmentsProps {
   nextReviewLevel: number
   stageNumber: number
   stageId: number
-  stageDate: Date
+  timeStageCreated: Date
   isLastLevel: boolean
 }
 
@@ -123,7 +123,7 @@ const generateNextReviewAssignments = async ({
   nextReviewLevel,
   stageNumber,
   stageId,
-  stageDate,
+  timeStageCreated,
   isLastLevel,
 }: GenerateNextReviewAssignmentsProps) => {
   const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
@@ -155,7 +155,7 @@ const generateNextReviewAssignments = async ({
         orgId,
         stageId,
         stageNumber,
-        stageDate,
+        timeStageCreated,
         // TO-DO: allow STATUS to be configurable in template
         status,
         applicationId,

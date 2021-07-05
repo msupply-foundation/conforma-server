@@ -35,7 +35,7 @@ const databaseMethods = (DBConnect: any) => ({
         orgId,
         stageId,
         stageNumber,
-        stageDate,
+        timeStageCreated,
         status,
         applicationId,
         allowedSections,
@@ -48,7 +48,7 @@ const databaseMethods = (DBConnect: any) => ({
       // but assignment status remains unchanged.
       const text = `
         INSERT INTO review_assignment (
-          reviewer_id, stage_id, stage_number, stage_date,
+          reviewer_id, stage_id, stage_number, time_stage_created,
           status, application_id, allowed_sections,
           level_number, is_last_level, organisation_id
           )
@@ -68,7 +68,7 @@ const databaseMethods = (DBConnect: any) => ({
             reviewerId,
             stageId,
             stageNumber,
-            stageDate,
+            timeStageCreated,
             status,
             applicationId,
             allowedSections,
