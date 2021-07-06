@@ -46,6 +46,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     notificationResult = await db.createNotification({
       userId,
       applicationId: applicationData?.applicationId,
+      reviewId: applicationData?.reviewData?.reviewId,
       emailAddressString,
       subject,
       message,
