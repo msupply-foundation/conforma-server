@@ -9,7 +9,7 @@ exports.devActions = `
       trigger: DEV_TEST
       sequence: 1
       parameterQueries: {
-        email: ["carl@sussol.net", "ceejaysmith@gmail.com"]
+        email: ["test@sussol.net", "test@sussol.net"] # CHANGE EMAIL FOR TESTING
         subject: "Testing..."
         message: "Sending an email from application manager"
         attachments: []
@@ -20,7 +20,7 @@ exports.devActions = `
       trigger: DEV_TEST
       sequence: 2
       parameterQueries: {
-        email: "carl@smithnz.net"
+        email: "test@sussol.net" # CHANGE EMAIL FOR TESTING
         fromName: "Not My Real Name"
         fromEmail: "not-my-real-name@nowhere.com"
         subject: "Testing HTML Mail..."
