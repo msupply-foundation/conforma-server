@@ -1552,6 +1552,45 @@ exports.queries = [
                           "ja-JP"
                         ]
                       }
+                    }
+                    {
+                      code: "numMax"
+                      index: 94
+                      title: "Number Set Maximum"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      defaultValue: 10000000
+                      parameters: {
+                        label: "Set the upper bound for the above"
+                        type: "integer"       
+                      }
+                    } 
+                    {
+                      code: "numMin"
+                      index: 95
+                      title: "Number Set Minimum"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      defaultValue: -10000000
+                      parameters: {
+                        label: "Set the lower bound"
+                        type: "integer"       
+                      }
+                    } 
+                    {
+                      code: "numMin"
+                      index: 94
+                      title: "Number Set Minimum"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      defaultValue: -10000000
+                      parameters: {
+                        label: "Set the lower bound"
+                        type: "integer"       
+                      }
                     } 
                   ]
                 }
