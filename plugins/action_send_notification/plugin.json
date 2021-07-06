@@ -5,7 +5,7 @@
   "description": "Creates a notification and send an email",
   "required_parameters": ["subject", "message"],
   "optional_parameters": ["userId", "fromName", "fromEmail", "attachments", "sendEmail"],
-  "output_properties": ["[record]"],
+  "output_properties": ["notification"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",
