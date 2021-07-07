@@ -35,6 +35,7 @@ const databaseMethods = (DBConnect: any) => ({
         orgId,
         stageId,
         stageNumber,
+        timeStageCreated,
         status,
         applicationId,
         allowedSections,
@@ -47,17 +48,17 @@ const databaseMethods = (DBConnect: any) => ({
       // but assignment status remains unchanged.
       const text = `
         INSERT INTO review_assignment (
-          reviewer_id, stage_id, stage_number,
+          reviewer_id, stage_id, stage_number, time_stage_created,
           status, application_id, allowed_sections,
           level_number, is_last_level, organisation_id
           )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-        ON CONFLICT (reviewer_id,${
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        ON CONFLICT (reviewer_id, ${
           orgId ? ' organisation_id,' : ''
         } stage_number, application_id, level_number)
           WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
         DO
-          UPDATE SET allowed_sections = $6
+          UPDATE SET allowed_sections = $7
         RETURNING id`
 
       try {
@@ -67,6 +68,7 @@ const databaseMethods = (DBConnect: any) => ({
             reviewerId,
             stageId,
             stageNumber,
+            timeStageCreated,
             status,
             applicationId,
             allowedSections,
