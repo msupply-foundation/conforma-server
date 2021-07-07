@@ -13,6 +13,6 @@ CREATE TABLE public.application_response (
     is_valid boolean,
     time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
-    time_submitted timestamptz DEFAULT NULL
+    time_submitted timestamptz
 );
 
