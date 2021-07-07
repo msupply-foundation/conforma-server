@@ -9,12 +9,12 @@ exports.devActions = `
       trigger: DEV_TEST
       sequence: 1
       parameterQueries: {
-        tableName: "user"
-        matchField: "username"
-        first_name: "Boba"
-        last_name: "Fett"
-        username: "js"
-        email: "nowhere@outerrim.space"
+        tableName: "application"
+        matchField: "id"
+        matchValue: 4002
+        name: "TESTING RENAMING"
+        serial: "XXXXX"
+        shouldCreateJoinTable: false
       }
     }
    # {
