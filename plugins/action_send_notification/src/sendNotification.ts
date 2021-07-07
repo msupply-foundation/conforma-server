@@ -42,10 +42,10 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 
     // Create notification database record
     console.log('Creating notification...')
-    let notificationResult
-    notificationResult = await db.createNotification({
+    const notificationResult = await db.createNotification({
       userId,
       applicationId: applicationData?.applicationId,
+      reviewId: applicationData?.reviewData?.reviewId,
       emailAddressString,
       subject,
       message,
@@ -56,21 +56,28 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     if (sendEmail) {
       console.log('Sending email...')
       // Note: Using "any" type as imported @types defintions is incorrect, doesn't recognise some fields on "SentMessageInfo" type
-      const emailResult: any = await transporter.sendMail({
-        from: `${fromName} <${fromEmail}>`,
-        to: emailAddressString,
-        subject,
-        text: message,
-        html: marked(message),
-        attachments: await prepareAttachments(attachments, appRootFolder, filesFolder),
-      })
+      transporter
+        .sendMail({
+          from: `${fromName} <${fromEmail}>`,
+          to: emailAddressString,
+          subject,
+          text: message,
+          html: marked(message),
+          attachments: await prepareAttachments(attachments, appRootFolder, filesFolder),
+        })
+        .then((emailResult: any) => {
+          if (emailResult?.response.match(/250 OK.*/)) {
+            console.log(`Email successfully sent to: ${emailResult.envelope.to}\n`)
 
-      // Update notification table with email sent confirmation
-      if (emailResult?.response.match(/250 OK.*/)) {
-        console.log(`Email successfully sent to: ${emailResult.envelope.to}\n`)
-        notificationResult = await db.notificationEmailSent(notificationResult.id)
-      }
+            // Update notification table with email sent confirmation
+            db.notificationEmailSent(notificationResult.id)
+          }
+        })
     }
+
+    // NOTE: Because sending email happens asynchronously, the output object
+    // for this Action does not reflect whether email has sent successfully.
+    // The "email_sent" field in the notifictation table is the only record of this.
 
     return {
       status: ActionQueueStatus.Success,

@@ -105,7 +105,7 @@ const databaseMethods = (DBConnect: any) => ({
           ${orgId ? ', organisation_id' : ''} 
         )
           WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
-        DO UPDATE SET organisation_id = ${orgId ? 'orgId' : 'NULL'}
+        DO UPDATE SET organisation_id = ${orgId ? '$3' : 'NULL'}
         RETURNING id
       `
       try {
