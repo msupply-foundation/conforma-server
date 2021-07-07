@@ -47,7 +47,7 @@ describe('Duplicate application responses for re-submission with 2 modifications
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4001,
-        stageId: 4,
+        stageId: 5,
       },
       DBConnect,
     }).then((result: any) => {
@@ -104,7 +104,7 @@ describe('Update review_response to required changes_requested by consolidator1'
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4000,
-        stageId: 5,
+        stageId: 6,
         reviewData: {
           reviewId: 4,
           levelNumber: 2,
@@ -165,7 +165,7 @@ describe('Update review_responses after updating changes_requested to reviewer1'
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4002,
-        stageId: 5,
+        stageId: 6,
         reviewData: {
           reviewId: 6,
           levelNumber: 1,
@@ -233,7 +233,7 @@ describe('Update review_responses for second review submission by reviewer2 when
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4002,
-        stageId: 5,
+        stageId: 6,
         reviewData: {
           reviewId: 3002,
           levelNumber: 1,
@@ -319,7 +319,7 @@ describe('Update review_response to submit review with LOQ to applicant by conso
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4004,
-        stageId: 5,
+        stageId: 6,
         reviewData: {
           reviewId: 12,
           levelNumber: 2,
