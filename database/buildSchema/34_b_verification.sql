@@ -6,8 +6,8 @@ CREATE TABLE public.verification (
     code varchar,
     message varchar,
     data jsonb,
-    created_time timestamptz DEFAULT NOW(),
-    expiry_time timestamptz,
+    time_created timestamptz DEFAULT NOW(),
+    time_expired timestamptz,
     is_verified boolean DEFAULT FALSE,
     TRIGGER public.trigger
 );

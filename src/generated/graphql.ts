@@ -26487,8 +26487,8 @@ export type UpdateVerificationOnVerificationForVerificationApplicationIdFkeyPatc
   code?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
-  createdTime?: Maybe<Scalars['Datetime']>;
-  expiryTime?: Maybe<Scalars['Datetime']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeExpired?: Maybe<Scalars['Datetime']>;
   isVerified?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<VerificationApplicationIdFkeyInput>;
@@ -27587,8 +27587,8 @@ export type Verification = Node & {
   code?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
-  createdTime?: Maybe<Scalars['Datetime']>;
-  expiryTime?: Maybe<Scalars['Datetime']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeExpired?: Maybe<Scalars['Datetime']>;
   isVerified?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   /** Reads a single `Application` that is related to this `Verification`. */
@@ -27677,8 +27677,8 @@ export type VerificationApplicationIdFkeyVerificationCreateInput = {
   code?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
-  createdTime?: Maybe<Scalars['Datetime']>;
-  expiryTime?: Maybe<Scalars['Datetime']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeExpired?: Maybe<Scalars['Datetime']>;
   isVerified?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<VerificationApplicationIdFkeyInput>;
@@ -27701,10 +27701,10 @@ export type VerificationCondition = {
   message?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `data` field. */
   data?: Maybe<Scalars['JSON']>;
-  /** Checks for equality with the object’s `createdTime` field. */
-  createdTime?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `expiryTime` field. */
-  expiryTime?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeCreated` field. */
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `timeExpired` field. */
+  timeExpired?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `isVerified` field. */
   isVerified?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `trigger` field. */
@@ -27725,10 +27725,10 @@ export type VerificationFilter = {
   message?: Maybe<StringFilter>;
   /** Filter by the object’s `data` field. */
   data?: Maybe<JsonFilter>;
-  /** Filter by the object’s `createdTime` field. */
-  createdTime?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `expiryTime` field. */
-  expiryTime?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeCreated` field. */
+  timeCreated?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `timeExpired` field. */
+  timeExpired?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `isVerified` field. */
   isVerified?: Maybe<BooleanFilter>;
   /** Filter by the object’s `trigger` field. */
@@ -27751,8 +27751,8 @@ export type VerificationInput = {
   code?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
-  createdTime?: Maybe<Scalars['Datetime']>;
-  expiryTime?: Maybe<Scalars['Datetime']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeExpired?: Maybe<Scalars['Datetime']>;
   isVerified?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<VerificationApplicationIdFkeyInput>;
@@ -27800,8 +27800,8 @@ export type VerificationPatch = {
   code?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
-  createdTime?: Maybe<Scalars['Datetime']>;
-  expiryTime?: Maybe<Scalars['Datetime']>;
+  timeCreated?: Maybe<Scalars['Datetime']>;
+  timeExpired?: Maybe<Scalars['Datetime']>;
   isVerified?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<VerificationApplicationIdFkeyInput>;
@@ -27844,10 +27844,10 @@ export enum VerificationsOrderBy {
   MessageDesc = 'MESSAGE_DESC',
   DataAsc = 'DATA_ASC',
   DataDesc = 'DATA_DESC',
-  CreatedTimeAsc = 'CREATED_TIME_ASC',
-  CreatedTimeDesc = 'CREATED_TIME_DESC',
-  ExpiryTimeAsc = 'EXPIRY_TIME_ASC',
-  ExpiryTimeDesc = 'EXPIRY_TIME_DESC',
+  TimeCreatedAsc = 'TIME_CREATED_ASC',
+  TimeCreatedDesc = 'TIME_CREATED_DESC',
+  TimeExpiredAsc = 'TIME_EXPIRED_ASC',
+  TimeExpiredDesc = 'TIME_EXPIRED_DESC',
   IsVerifiedAsc = 'IS_VERIFIED_ASC',
   IsVerifiedDesc = 'IS_VERIFIED_DESC',
   TriggerAsc = 'TRIGGER_ASC',
@@ -34244,8 +34244,8 @@ export type VerificationResolvers<ContextType = any, ParentType extends Resolver
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
-  createdTime?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
-  expiryTime?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  timeExpired?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   isVerified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
