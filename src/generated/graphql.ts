@@ -4320,6 +4320,8 @@ export type CreateNotificationPayload = {
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Notification`. */
   application?: Maybe<Application>;
+  /** Reads a single `Review` that is related to this `Notification`. */
+  review?: Maybe<Review>;
   /** An edge for our `Notification`. May be used by Relay 1. */
   notificationEdge?: Maybe<NotificationsEdge>;
 };
@@ -5924,6 +5926,8 @@ export type DeleteNotificationPayload = {
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Notification`. */
   application?: Maybe<Application>;
+  /** Reads a single `Review` that is related to this `Notification`. */
+  review?: Maybe<Review>;
   /** An edge for our `Notification`. May be used by Relay 1. */
   notificationEdge?: Maybe<NotificationsEdge>;
 };
@@ -10007,6 +10011,7 @@ export type Notification = Node & {
   id: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
   emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
@@ -10017,6 +10022,8 @@ export type Notification = Node & {
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Notification`. */
   application?: Maybe<Application>;
+  /** Reads a single `Review` that is related to this `Notification`. */
+  review?: Maybe<Review>;
 };
 
 /** The `application` to be created by this mutation. */
@@ -10091,6 +10098,7 @@ export type NotificationApplicationIdFkeyInverseInput = {
 export type NotificationApplicationIdFkeyNotificationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
   emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
@@ -10099,6 +10107,7 @@ export type NotificationApplicationIdFkeyNotificationCreateInput = {
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
+  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
 };
 
 /**
@@ -10112,6 +10121,8 @@ export type NotificationCondition = {
   userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `reviewId` field. */
+  reviewId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `emailRecipients` field. */
   emailRecipients?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `subject` field. */
@@ -10134,6 +10145,8 @@ export type NotificationFilter = {
   userId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `reviewId` field. */
+  reviewId?: Maybe<IntFilter>;
   /** Filter by the object’s `emailRecipients` field. */
   emailRecipients?: Maybe<StringFilter>;
   /** Filter by the object’s `subject` field. */
@@ -10154,6 +10167,10 @@ export type NotificationFilter = {
   application?: Maybe<ApplicationFilter>;
   /** A related `application` exists. */
   applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `review` relation. */
+  review?: Maybe<ReviewFilter>;
+  /** A related `review` exists. */
+  reviewExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<NotificationFilter>>;
   /** Checks for any expressions in this list. */
@@ -10167,6 +10184,7 @@ export type NotificationInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
   emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
@@ -10175,6 +10193,7 @@ export type NotificationInput = {
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
+  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -10215,6 +10234,21 @@ export type NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotif
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `review` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: ReviewPatch;
+};
+
+/** The fields on `notification` to look up the row to update. */
+export type NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `notification` being updated. */
+  patch: UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
   nodeId: Scalars['ID'];
@@ -10234,6 +10268,7 @@ export type NotificationPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
   emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
@@ -10242,6 +10277,80 @@ export type NotificationPatch = {
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
+  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `review` in the `NotificationInput` mutation. */
+export type NotificationReviewIdFkeyInput = {
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectById?: Maybe<ReviewReviewPkeyConnect>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ReviewNodeIdConnect>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteById?: Maybe<ReviewReviewPkeyDelete>;
+  /** The primary key(s) for `review` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ReviewNodeIdDelete>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateById?: Maybe<ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate>;
+  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
+  updateByNodeId?: Maybe<NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate>;
+  /** A `ReviewInput` object that will be created and connected to this object. */
+  create?: Maybe<NotificationReviewIdFkeyReviewCreateInput>;
+};
+
+/** Input for the nested mutation of `notification` in the `ReviewInput` mutation. */
+export type NotificationReviewIdFkeyInverseInput = {
+  /** Flag indicating whether all other `notification` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `notification` for the far side of the relationship. */
+  connectById?: Maybe<Array<NotificationNotificationPkeyConnect>>;
+  /** The primary key(s) for `notification` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<NotificationNodeIdConnect>>;
+  /** The primary key(s) for `notification` for the far side of the relationship. */
+  deleteById?: Maybe<Array<NotificationNotificationPkeyDelete>>;
+  /** The primary key(s) for `notification` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<NotificationNodeIdDelete>>;
+  /** The primary key(s) and patch data for `notification` for the far side of the relationship. */
+  updateById?: Maybe<Array<NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `notification` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate>>;
+  /** A `NotificationInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<NotificationReviewIdFkeyNotificationCreateInput>>;
+};
+
+/** The `notification` to be created by this mutation. */
+export type NotificationReviewIdFkeyNotificationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  emailRecipients?: Maybe<Scalars['String']>;
+  subject?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  userToUserId?: Maybe<NotificationUserIdFkeyInput>;
+  applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
+  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
+};
+
+/** The `review` to be created by this mutation. */
+export type NotificationReviewIdFkeyReviewCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `Notification` values. */
@@ -10275,6 +10384,8 @@ export enum NotificationsOrderBy {
   UserIdDesc = 'USER_ID_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  ReviewIdAsc = 'REVIEW_ID_ASC',
+  ReviewIdDesc = 'REVIEW_ID_DESC',
   EmailRecipientsAsc = 'EMAIL_RECIPIENTS_ASC',
   EmailRecipientsDesc = 'EMAIL_RECIPIENTS_DESC',
   SubjectAsc = 'SUBJECT_ASC',
@@ -10339,6 +10450,7 @@ export type NotificationUserIdFkeyInverseInput = {
 export type NotificationUserIdFkeyNotificationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
   emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
@@ -10347,6 +10459,7 @@ export type NotificationUserIdFkeyNotificationCreateInput = {
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
+  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
 };
 
 /** The `user` to be created by this mutation. */
@@ -14181,6 +14294,8 @@ export type Review = Node & {
   reviewDecisions: ReviewDecisionsConnection;
   /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
   reviewStatusHistories: ReviewStatusHistoriesConnection;
+  /** Reads and enables pagination through a set of `Notification`. */
+  notifications: NotificationsConnection;
   latestDecision?: Maybe<ReviewDecision>;
   status?: Maybe<ReviewStatus>;
   timeStatusCreated?: Maybe<Scalars['Datetime']>;
@@ -14220,6 +14335,18 @@ export type ReviewReviewStatusHistoriesArgs = {
   orderBy?: Maybe<Array<ReviewStatusHistoriesOrderBy>>;
   condition?: Maybe<ReviewStatusHistoryCondition>;
   filter?: Maybe<ReviewStatusHistoryFilter>;
+};
+
+
+export type ReviewNotificationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<NotificationsOrderBy>>;
+  condition?: Maybe<NotificationCondition>;
+  filter?: Maybe<NotificationFilter>;
 };
 
 /** The `application` to be created by this mutation. */
@@ -14305,6 +14432,7 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 export type ReviewAssignment = Node & {
@@ -16085,6 +16213,7 @@ export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The `reviewDecision` to be created by this mutation. */
@@ -16204,6 +16333,10 @@ export type ReviewFilter = {
   reviewStatusHistories?: Maybe<ReviewToManyReviewStatusHistoryFilter>;
   /** Some related `reviewStatusHistories` exist. */
   reviewStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `notifications` relation. */
+  notifications?: Maybe<ReviewToManyNotificationFilter>;
+  /** Some related `notifications` exist. */
+  notificationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignment` relation. */
   reviewAssignment?: Maybe<ReviewAssignmentFilter>;
   /** A related `reviewAssignment` exists. */
@@ -16240,6 +16373,7 @@ export type ReviewInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `ReviewListRecord` values. */
@@ -16293,6 +16427,21 @@ export type ReviewNodeIdConnect = {
 export type ReviewNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `review` to be deleted. */
   nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `notification` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `notification` being updated. */
+  patch: NotificationPatch;
+};
+
+/** The fields on `review` to look up the row to update. */
+export type ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate = {
+  /** An object where the defined keys will be set on the `review` being updated. */
+  patch: UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch;
+  id: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -16401,6 +16550,7 @@ export type ReviewPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 export type ReviewQuestionAssignment = Node & {
@@ -17302,6 +17452,7 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The `reviewResponse` to be created by this mutation. */
@@ -17716,6 +17867,7 @@ export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ReviewInput` mutation. */
@@ -17777,6 +17929,7 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The `user` to be created by this mutation. */
@@ -18082,6 +18235,7 @@ export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The `reviewStatusHistory` to be created by this mutation. */
@@ -18101,6 +18255,16 @@ export type ReviewStatusHistoryReviewStatusHistoryPkeyConnect = {
 /** The fields on `reviewStatusHistory` to look up the row to delete. */
 export type ReviewStatusHistoryReviewStatusHistoryPkeyDelete = {
   id: Scalars['Int'];
+};
+
+/** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
+export type ReviewToManyNotificationFilter = {
+  /** Every related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<NotificationFilter>;
+  /** Some related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<NotificationFilter>;
+  /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<NotificationFilter>;
 };
 
 /** A filter to be used against many `ReviewDecision` object types. All fields are combined with a logical ‘and.’ */
@@ -23020,6 +23184,7 @@ export type UpdateNotificationInput = {
 export type UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
   emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
@@ -23028,11 +23193,13 @@ export type UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatc
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
+  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `notification` being updated. */
-export type UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch = {
+export type UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
   emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
@@ -23042,6 +23209,23 @@ export type UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch = {
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
+  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `notification` being updated. */
+export type UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewId?: Maybe<Scalars['Int']>;
+  emailRecipients?: Maybe<Scalars['String']>;
+  subject?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+  emailSent?: Maybe<Scalars['Boolean']>;
+  isRead?: Maybe<Scalars['Boolean']>;
+  userToUserId?: Maybe<NotificationUserIdFkeyInput>;
+  applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
+  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
 };
 
 /** The output of our update `Notification` mutation. */
@@ -23060,6 +23244,8 @@ export type UpdateNotificationPayload = {
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Notification`. */
   application?: Maybe<Application>;
+  /** Reads a single `Review` that is related to this `Notification`. */
+  review?: Maybe<Review>;
   /** An edge for our `Notification`. May be used by Relay 1. */
   notificationEdge?: Maybe<NotificationsEdge>;
 };
@@ -24176,6 +24362,25 @@ export type UpdateReviewInput = {
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
+export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationId?: Maybe<Scalars['Int']>;
+  reviewerId?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  isLastLevel?: Maybe<Scalars['Boolean']>;
+  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
+  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
+  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
+  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
+  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
+  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `review` being updated. */
 export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
@@ -24191,6 +24396,7 @@ export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
@@ -24208,6 +24414,7 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
@@ -24225,6 +24432,7 @@ export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
@@ -24242,6 +24450,7 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
@@ -24260,6 +24469,7 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
@@ -24278,6 +24488,7 @@ export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyP
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The output of our update `Review` mutation. */
@@ -27181,7 +27392,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -27279,6 +27490,8 @@ export type ResolversTypes = {
   Decision: Decision;
   ReviewToManyReviewStatusHistoryFilter: ReviewToManyReviewStatusHistoryFilter;
   ReviewStatusHistoryFilter: ReviewStatusHistoryFilter;
+  ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
+  NotificationFilter: NotificationFilter;
   ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
   FileFilter: FileFilter;
   TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
@@ -27293,7 +27506,6 @@ export type ResolversTypes = {
   ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
-  NotificationFilter: NotificationFilter;
   OrganisationToManyReviewAssignmentFilter: OrganisationToManyReviewAssignmentFilter;
   OrganisationToManyReviewAssignmentAssignerJoinFilter: OrganisationToManyReviewAssignmentAssignerJoinFilter;
   UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
@@ -27396,6 +27608,11 @@ export type ResolversTypes = {
   ReviewStatusHistoriesConnection: ResolverTypeWrapper<ReviewStatusHistoriesConnection>;
   ReviewStatusHistory: ResolverTypeWrapper<ReviewStatusHistory>;
   ReviewStatusHistoriesEdge: ResolverTypeWrapper<ReviewStatusHistoriesEdge>;
+  NotificationsOrderBy: NotificationsOrderBy;
+  NotificationCondition: NotificationCondition;
+  NotificationsConnection: ResolverTypeWrapper<NotificationsConnection>;
+  Notification: ResolverTypeWrapper<Notification>;
+  NotificationsEdge: ResolverTypeWrapper<NotificationsEdge>;
   ReviewResponsesEdge: ResolverTypeWrapper<ReviewResponsesEdge>;
   FilesOrderBy: FilesOrderBy;
   FileCondition: FileCondition;
@@ -27423,11 +27640,6 @@ export type ResolversTypes = {
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ResolverTypeWrapper<ReviewsConnection>;
   ReviewsEdge: ResolverTypeWrapper<ReviewsEdge>;
-  NotificationsOrderBy: NotificationsOrderBy;
-  NotificationCondition: NotificationCondition;
-  NotificationsConnection: ResolverTypeWrapper<NotificationsConnection>;
-  Notification: ResolverTypeWrapper<Notification>;
-  NotificationsEdge: ResolverTypeWrapper<NotificationsEdge>;
   ApplicationsEdge: ResolverTypeWrapper<ApplicationsEdge>;
   ReviewAssignmentAssignerJoinsOrderBy: ReviewAssignmentAssignerJoinsOrderBy;
   ReviewAssignmentAssignerJoinCondition: ReviewAssignmentAssignerJoinCondition;
@@ -27995,8 +28207,90 @@ export type ResolversTypes = {
   ReviewStatusHistoryReviewIdFkeyInput: ReviewStatusHistoryReviewIdFkeyInput;
   ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch: UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch;
-  ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
+  NotificationReviewIdFkeyInverseInput: NotificationReviewIdFkeyInverseInput;
+  NotificationNotificationPkeyConnect: NotificationNotificationPkeyConnect;
+  NotificationNodeIdConnect: NotificationNodeIdConnect;
+  NotificationNotificationPkeyDelete: NotificationNotificationPkeyDelete;
+  NotificationNodeIdDelete: NotificationNodeIdDelete;
+  NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate;
+  updateNotificationOnNotificationForNotificationReviewIdFkeyPatch: UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch;
+  NotificationUserIdFkeyInput: NotificationUserIdFkeyInput;
+  UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnNotificationForNotificationUserIdFkeyPatch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
+  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
+  FileFilePkeyConnect: FileFilePkeyConnect;
+  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
+  FileNodeIdConnect: FileNodeIdConnect;
+  FileFilePkeyDelete: FileFilePkeyDelete;
+  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
+  FileNodeIdDelete: FileNodeIdDelete;
+  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
+  FileUserIdFkeyInput: FileUserIdFkeyInput;
+  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
+  NotificationUserIdFkeyInverseInput: NotificationUserIdFkeyInverseInput;
+  NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate;
+  updateNotificationOnNotificationForNotificationUserIdFkeyPatch: UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch;
+  NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
+  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
+  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
+  NotificationApplicationIdFkeyInverseInput: NotificationApplicationIdFkeyInverseInput;
+  NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate;
+  updateNotificationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatch;
+  NotificationReviewIdFkeyInput: NotificationReviewIdFkeyInput;
+  ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnNotificationForNotificationReviewIdFkeyPatch: UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch;
+  NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
   ReviewPatch: ReviewPatch;
+  NotificationReviewIdFkeyReviewCreateInput: NotificationReviewIdFkeyReviewCreateInput;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
+  NotificationPatch: NotificationPatch;
+  NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
+  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  ApplicationPatch: ApplicationPatch;
+  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
+  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
+  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
+  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  FilePatch: FilePatch;
+  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
+  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  ApplicationResponsePatch: ApplicationResponsePatch;
+  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
+  NotificationApplicationIdFkeyApplicationCreateInput: NotificationApplicationIdFkeyApplicationCreateInput;
+  UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
+  NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
+  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
+  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
+  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
+  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
+  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
+  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
+  UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
+  NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
+  NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
+  ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
+  NotificationReviewIdFkeyNotificationCreateInput: NotificationReviewIdFkeyNotificationCreateInput;
+  ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
   ReviewStatusHistoryReviewIdFkeyReviewCreateInput: ReviewStatusHistoryReviewIdFkeyReviewCreateInput;
   ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
   ReviewStatusHistoryPatch: ReviewStatusHistoryPatch;
@@ -28027,78 +28321,6 @@ export type ResolversTypes = {
   ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput: ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput;
   ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
-  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
-  FileFilePkeyConnect: FileFilePkeyConnect;
-  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
-  FileNodeIdConnect: FileNodeIdConnect;
-  FileFilePkeyDelete: FileFilePkeyDelete;
-  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
-  FileNodeIdDelete: FileNodeIdDelete;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
-  FileUserIdFkeyInput: FileUserIdFkeyInput;
-  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
-  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
-  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
-  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
-  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
-  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
-  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
-  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  ApplicationResponsePatch: ApplicationResponsePatch;
-  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  FilePatch: FilePatch;
-  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
-  NotificationApplicationIdFkeyInverseInput: NotificationApplicationIdFkeyInverseInput;
-  NotificationNotificationPkeyConnect: NotificationNotificationPkeyConnect;
-  NotificationNodeIdConnect: NotificationNodeIdConnect;
-  NotificationNotificationPkeyDelete: NotificationNotificationPkeyDelete;
-  NotificationNodeIdDelete: NotificationNodeIdDelete;
-  NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatch;
-  NotificationUserIdFkeyInput: NotificationUserIdFkeyInput;
-  UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnNotificationForNotificationUserIdFkeyPatch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
-  NotificationUserIdFkeyInverseInput: NotificationUserIdFkeyInverseInput;
-  NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationUserIdFkeyPatch: UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch;
-  NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
-  ApplicationPatch: ApplicationPatch;
-  NotificationApplicationIdFkeyApplicationCreateInput: NotificationApplicationIdFkeyApplicationCreateInput;
-  UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
-  NotificationPatch: NotificationPatch;
-  NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
-  UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
-  NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
-  NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
-  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
-  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
-  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
-  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
-  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
-  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
-  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
@@ -28765,7 +28987,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -28846,6 +29068,8 @@ export type ResolversParentTypes = {
   DecisionFilter: DecisionFilter;
   ReviewToManyReviewStatusHistoryFilter: ReviewToManyReviewStatusHistoryFilter;
   ReviewStatusHistoryFilter: ReviewStatusHistoryFilter;
+  ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
+  NotificationFilter: NotificationFilter;
   ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
   FileFilter: FileFilter;
   TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
@@ -28860,7 +29084,6 @@ export type ResolversParentTypes = {
   ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
-  NotificationFilter: NotificationFilter;
   OrganisationToManyReviewAssignmentFilter: OrganisationToManyReviewAssignmentFilter;
   OrganisationToManyReviewAssignmentAssignerJoinFilter: OrganisationToManyReviewAssignmentAssignerJoinFilter;
   UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
@@ -28948,6 +29171,10 @@ export type ResolversParentTypes = {
   ReviewStatusHistoriesConnection: ReviewStatusHistoriesConnection;
   ReviewStatusHistory: ReviewStatusHistory;
   ReviewStatusHistoriesEdge: ReviewStatusHistoriesEdge;
+  NotificationCondition: NotificationCondition;
+  NotificationsConnection: NotificationsConnection;
+  Notification: Notification;
+  NotificationsEdge: NotificationsEdge;
   ReviewResponsesEdge: ReviewResponsesEdge;
   FileCondition: FileCondition;
   FilesConnection: FilesConnection;
@@ -28970,10 +29197,6 @@ export type ResolversParentTypes = {
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ReviewsConnection;
   ReviewsEdge: ReviewsEdge;
-  NotificationCondition: NotificationCondition;
-  NotificationsConnection: NotificationsConnection;
-  Notification: Notification;
-  NotificationsEdge: NotificationsEdge;
   ApplicationsEdge: ApplicationsEdge;
   ReviewAssignmentAssignerJoinCondition: ReviewAssignmentAssignerJoinCondition;
   ReviewAssignmentAssignerJoinsConnection: ReviewAssignmentAssignerJoinsConnection;
@@ -29517,8 +29740,90 @@ export type ResolversParentTypes = {
   ReviewStatusHistoryReviewIdFkeyInput: ReviewStatusHistoryReviewIdFkeyInput;
   ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch: UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch;
-  ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
+  NotificationReviewIdFkeyInverseInput: NotificationReviewIdFkeyInverseInput;
+  NotificationNotificationPkeyConnect: NotificationNotificationPkeyConnect;
+  NotificationNodeIdConnect: NotificationNodeIdConnect;
+  NotificationNotificationPkeyDelete: NotificationNotificationPkeyDelete;
+  NotificationNodeIdDelete: NotificationNodeIdDelete;
+  NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate;
+  updateNotificationOnNotificationForNotificationReviewIdFkeyPatch: UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch;
+  NotificationUserIdFkeyInput: NotificationUserIdFkeyInput;
+  UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnNotificationForNotificationUserIdFkeyPatch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
+  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
+  FileFilePkeyConnect: FileFilePkeyConnect;
+  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
+  FileNodeIdConnect: FileNodeIdConnect;
+  FileFilePkeyDelete: FileFilePkeyDelete;
+  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
+  FileNodeIdDelete: FileNodeIdDelete;
+  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
+  FileUserIdFkeyInput: FileUserIdFkeyInput;
+  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
+  NotificationUserIdFkeyInverseInput: NotificationUserIdFkeyInverseInput;
+  NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate;
+  updateNotificationOnNotificationForNotificationUserIdFkeyPatch: UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch;
+  NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
+  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
+  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
+  NotificationApplicationIdFkeyInverseInput: NotificationApplicationIdFkeyInverseInput;
+  NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate;
+  updateNotificationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatch;
+  NotificationReviewIdFkeyInput: NotificationReviewIdFkeyInput;
+  ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnNotificationForNotificationReviewIdFkeyPatch: UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch;
+  NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
   ReviewPatch: ReviewPatch;
+  NotificationReviewIdFkeyReviewCreateInput: NotificationReviewIdFkeyReviewCreateInput;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
+  NotificationPatch: NotificationPatch;
+  NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
+  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  ApplicationPatch: ApplicationPatch;
+  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
+  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
+  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
+  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  FilePatch: FilePatch;
+  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
+  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  ApplicationResponsePatch: ApplicationResponsePatch;
+  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
+  NotificationApplicationIdFkeyApplicationCreateInput: NotificationApplicationIdFkeyApplicationCreateInput;
+  UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
+  NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
+  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
+  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
+  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
+  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
+  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
+  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
+  UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
+  NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
+  NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
+  ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
+  NotificationReviewIdFkeyNotificationCreateInput: NotificationReviewIdFkeyNotificationCreateInput;
+  ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
   ReviewStatusHistoryReviewIdFkeyReviewCreateInput: ReviewStatusHistoryReviewIdFkeyReviewCreateInput;
   ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
   ReviewStatusHistoryPatch: ReviewStatusHistoryPatch;
@@ -29549,78 +29854,6 @@ export type ResolversParentTypes = {
   ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput: ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput;
   ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
-  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
-  FileFilePkeyConnect: FileFilePkeyConnect;
-  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
-  FileNodeIdConnect: FileNodeIdConnect;
-  FileFilePkeyDelete: FileFilePkeyDelete;
-  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
-  FileNodeIdDelete: FileNodeIdDelete;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
-  FileUserIdFkeyInput: FileUserIdFkeyInput;
-  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
-  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
-  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
-  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
-  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
-  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
-  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
-  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  ApplicationResponsePatch: ApplicationResponsePatch;
-  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  FilePatch: FilePatch;
-  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
-  NotificationApplicationIdFkeyInverseInput: NotificationApplicationIdFkeyInverseInput;
-  NotificationNotificationPkeyConnect: NotificationNotificationPkeyConnect;
-  NotificationNodeIdConnect: NotificationNodeIdConnect;
-  NotificationNotificationPkeyDelete: NotificationNotificationPkeyDelete;
-  NotificationNodeIdDelete: NotificationNodeIdDelete;
-  NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatch;
-  NotificationUserIdFkeyInput: NotificationUserIdFkeyInput;
-  UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnNotificationForNotificationUserIdFkeyPatch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
-  NotificationUserIdFkeyInverseInput: NotificationUserIdFkeyInverseInput;
-  NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationUserIdFkeyPatch: UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch;
-  NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
-  ApplicationPatch: ApplicationPatch;
-  NotificationApplicationIdFkeyApplicationCreateInput: NotificationApplicationIdFkeyApplicationCreateInput;
-  UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
-  NotificationPatch: NotificationPatch;
-  NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
-  UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
-  NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
-  NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
-  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
-  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
-  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
-  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
-  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
-  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
-  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
@@ -30798,6 +31031,7 @@ export type CreateNotificationPayloadResolvers<ContextType = any, ParentType ext
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   notificationEdge?: Resolver<Maybe<ResolversTypes['NotificationsEdge']>, ParentType, ContextType, RequireFields<CreateNotificationPayloadNotificationEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -31180,6 +31414,7 @@ export type DeleteNotificationPayloadResolvers<ContextType = any, ParentType ext
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   notificationEdge?: Resolver<Maybe<ResolversTypes['NotificationsEdge']>, ParentType, ContextType, RequireFields<DeleteNotificationPayloadNotificationEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -31792,7 +32027,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'Notification' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -31801,6 +32036,7 @@ export type NotificationResolvers<ContextType = any, ParentType extends Resolver
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   emailRecipients?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   subject?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -31809,6 +32045,7 @@ export type NotificationResolvers<ContextType = any, ParentType extends Resolver
   isRead?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -32228,6 +32465,7 @@ export type ReviewResolvers<ContextType = any, ParentType extends ResolversParen
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ReviewReviewResponsesArgs, 'orderBy'>>;
   reviewDecisions?: Resolver<ResolversTypes['ReviewDecisionsConnection'], ParentType, ContextType, RequireFields<ReviewReviewDecisionsArgs, 'orderBy'>>;
   reviewStatusHistories?: Resolver<ResolversTypes['ReviewStatusHistoriesConnection'], ParentType, ContextType, RequireFields<ReviewReviewStatusHistoriesArgs, 'orderBy'>>;
+  notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ReviewNotificationsArgs, 'orderBy'>>;
   latestDecision?: Resolver<Maybe<ResolversTypes['ReviewDecision']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ReviewStatus']>, ParentType, ContextType>;
   timeStatusCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
@@ -32884,6 +33122,7 @@ export type UpdateNotificationPayloadResolvers<ContextType = any, ParentType ext
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
   notificationEdge?: Resolver<Maybe<ResolversTypes['NotificationsEdge']>, ParentType, ContextType, RequireFields<UpdateNotificationPayloadNotificationEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
