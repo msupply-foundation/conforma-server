@@ -20,6 +20,7 @@ interface ReviewAssignment {
   orgId: number | null
   stageId: number
   stageNumber: number
+  timeStageCreated: Date
   status: ReviewAssignmentStatus
   applicationId: number
   allowedSections: string[] | null
