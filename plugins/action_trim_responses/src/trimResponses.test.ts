@@ -9,44 +9,87 @@ beforeAll(async (done) => {
   // Duplicate application responses, with some modifications
   await DBConnect.query({
     text: `
-  INSERT INTO "public".application_response (id, template_element_id, application_id, "value", is_valid, time_submitted) VALUES (DEFAULT, 1009, 1000, '{"text": "Manufacturer B", "optionIndex": 1}', NULL, 'NOW()');
-  INSERT INTO "public".application_response (id, template_element_id, application_id, "value", is_valid, time_submitted) VALUES (DEFAULT, 1007, 1000, '{"text": "Manufacturer", "optionIndex": 1}', NULL, 'NOW()');
-  INSERT INTO "public".application_response (id, template_element_id, application_id, "value", is_valid, time_submitted) VALUES (DEFAULT, 1006, 1000, '{"text": "12345678"}', NULL, 'NOW()');
-  INSERT INTO "public".application_response (id, template_element_id, application_id, "value", is_valid, time_submitted) VALUES (DEFAULT, 1005, 1000, '{"text": "craig@sussol.net"}', NULL, 'NOW()');
-  INSERT INTO "public".application_response (id, template_element_id, application_id, "value", is_valid, time_submitted) VALUES (DEFAULT, 1004, 1000, '{"text": "craig_drown"}', NULL, 'NOW()');
-  INSERT INTO "public".application_response (id, template_element_id, application_id, "value", is_valid, time_submitted) VALUES (DEFAULT, 1002, 1000, '{"text": "Drown"}', NULL, 'NOW()');
-  `,
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid)
+      VALUES (14001, 4001, 4001, '{"text": "Valerio"}', 'True');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid)
+      VALUES (14002, 4002, 4001, '{"text": "Red"}', 'True');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid)
+      VALUES (14003, 4003, 4001, '{"text": "jj@nowhere.com"}', 'True');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid)
+      VALUES (14004, 4005, 4001, '{"text": "42"}', 'True');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid)
+      VALUES (14005, 4006, 4001, '{"text": "Tonga"}', 'True');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid)
+      VALUES (14006, 4008, 4001, '{"text": "Vitamin A"}', 'True');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid)
+      VALUES (14007, 4009, 4001, '{"text": "Natural Product", "optionIndex": 1}', 'True');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid)
+      VALUES (14008, 4011, 4001, '{"text": "200mg"}', 'True');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid)
+      VALUES (14009, 4012, 4001, '{"text": "250"}', 'True');
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid)
+      VALUES (14010, 4013, 4001, '{"text": "No side effects"}', 'True');
+    `,
     values: [],
   })
   // Duplicate review responses, with some modifications
   await DBConnect.query({
     text: `
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_submitted, status) VALUES (DEFAULT, NULL, 'APPROVE', 1015, 4024, NULL, 5, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_submitted, status) VALUES (DEFAULT, NULL, 'APPROVE', 1014, 4023, NULL, 5, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_submitted, status) VALUES (DEFAULT, NULL, 'APPROVE', 1013, 4022, NULL, 5, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_submitted, status) VALUES (DEFAULT, 'This is still not right', 'DECLINE', 1012, 4021, NULL, 5, 'NOW()', 'SUBMITTED');
-    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, application_response_id, review_response_link_id, review_id, time_submitted, status) VALUES (DEFAULT, NULL, 'APPROVE', 1011, 4020, NULL, 5, 'NOW()', 'SUBMITTED');`,
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    application_response_id, review_response_link_id, review_id, time_submitted, status) 
+      VALUES (1000, NULL, 'APPROVE', 2000, 4010, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    application_response_id, review_response_link_id, review_id, time_submitted, status) 
+      VALUES (1001, NULL, 'APPROVE', 2001, 4011, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    application_response_id, review_response_link_id, review_id, time_submitted, status) 
+      VALUES (1002, NULL, 'APPROVE', 2002, 4012, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    application_response_id, review_response_link_id, review_id, time_submitted, status) 
+      VALUES (1003, 'This not right', 'DECLINE', 2003, 4013, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    application_response_id, review_response_link_id, review_id, time_submitted, status) 
+      VALUES (1004, NULL, 'APPROVE', 2004, 4014, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    application_response_id, review_response_link_id, review_id, time_submitted, status) 
+      VALUES (1005, NULL, 'APPROVE', 2006, 4015, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    application_response_id, review_response_link_id, review_id, time_submitted, status) 
+      VALUES (1006, NULL, 'APPROVE', 2007, 4016, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    application_response_id, review_response_link_id, review_id, time_submitted, status) 
+      VALUES (1007, NULL, 'APPROVE', 2008, 4017, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    application_response_id, review_response_link_id, review_id, time_submitted, status) 
+      VALUES (1008, NULL, 'APPROVE', 2009, 4018, NULL, 5, 'NOW()', 'SUBMITTED');
+    INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
+    application_response_id, review_response_link_id, review_id, time_submitted, status) 
+      VALUES (1009, NULL, 'APPROVE', 2010, 4019, NULL, 5, 'NOW()', 'SUBMITTED');
+    `,
     values: [],
   })
   done()
 })
 
 test('Test: remove unchanged application_response duplicates', () => {
-  return trimResponses({ parameters: { applicationId: 1000 }, DBConnect }).then((result: any) => {
+  return trimResponses({ parameters: { applicationId: 4001 }, DBConnect }).then((result: any) => {
     expect(result).toEqual({
       status: ActionQueueStatus.Success,
       error_log: '',
       output: {
         deletedResponses: [
-          { applicationResponseId: 1, templateElementId: 1009 },
-          { applicationResponseId: 4, templateElementId: 1005 },
-          { applicationResponseId: 6, templateElementId: 1002 },
+          { applicationResponseId: 14001, templateElementId: 4001 },
+          { applicationResponseId: 14002, templateElementId: 4002 },
+          { applicationResponseId: 14003, templateElementId: 4003 },
+          { applicationResponseId: 14004, templateElementId: 4005 },
+          { applicationResponseId: 14005, templateElementId: 4006 },
+          { applicationResponseId: 14007, templateElementId: 4009 },
+          { applicationResponseId: 14010, templateElementId: 4013 },
         ],
         updatedResponses: [
-          { applicationResponseId: 1000, templateElementId: 1001 },
-          { applicationResponseId: 2, templateElementId: 1007 },
-          { applicationResponseId: 3, templateElementId: 1006 },
-          { applicationResponseId: 5, templateElementId: 1004 },
+          { applicationResponseId: 14006, templateElementId: 4008 },
+          { applicationResponseId: 14008, templateElementId: 4011 },
+          { applicationResponseId: 14009, templateElementId: 4012 },
         ],
       },
     })
@@ -63,13 +106,26 @@ test('Test: remove unchanged review_response duplicates, with custom timestamp',
       error_log: '',
       output: {
         deletedResponses: [
-          { reviewResponseId: 47, templateElementId: 4006 },
-          { reviewResponseId: 48, templateElementId: 4005 },
-          { reviewResponseId: 49, templateElementId: 4003 },
+          { reviewResponseId: 1000, templateElementId: 4001 },
+          { reviewResponseId: 1001, templateElementId: 4002 },
+          { reviewResponseId: 1002, templateElementId: 4003 },
+          { reviewResponseId: 1004, templateElementId: 4006 },
+          { reviewResponseId: 1005, templateElementId: 4008 },
+          { reviewResponseId: 1006, templateElementId: 4009 },
+          { reviewResponseId: 1007, templateElementId: 4011 },
+          { reviewResponseId: 1008, templateElementId: 4012 },
         ],
         updatedResponses: [
-          { reviewResponseId: 50, templateElementId: 4002 },
-          { reviewResponseId: 51, templateElementId: 4001 },
+          {
+            reviewResponseDecision: 'DECLINE',
+            reviewResponseId: 1003,
+            templateElementId: 4005,
+          },
+          {
+            reviewResponseDecision: 'APPROVE',
+            reviewResponseId: 1009,
+            templateElementId: 4013,
+          },
         ],
       },
     })

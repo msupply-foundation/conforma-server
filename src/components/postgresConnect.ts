@@ -283,6 +283,9 @@ class PostgresDB {
       case 'review_assignment':
         text = 'SELECT application_id FROM review_assignment WHERE id = $1'
         break
+      case 'verification':
+        text = 'SELECT application_id FROM verification WHERE id = $1'
+        break
       // To-Do: queries for other trigger tables
       default:
         throw new Error('Table name not valid')
@@ -308,6 +311,10 @@ class PostgresDB {
       case 'review_assignment':
         text =
           'SELECT template_id FROM application WHERE id = (SELECT application_id FROM review_assignment WHERE id = $1)'
+        break
+      case 'verification':
+        text =
+          'SELECT template_id FROM application WHERE id = (SELECT application_id FROM verification WHERE id = $1)'
         break
       default:
         throw new Error('Table name not valid')
@@ -356,6 +363,32 @@ class PostgresDB {
     // TODO: Dynamically select what is being updated
     try {
       await this.query({ text, values: Object.values(payload) })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public getVerification = async (uid: string) => {
+    const text = `
+      SELECT unique_id, time_expired, is_verified, message
+        FROM verification
+        WHERE unique_id = $1`
+    try {
+      const result = await this.query({ text, values: [uid] })
+      return result.rows[0]
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public setVerification = async (uid: string) => {
+    const text = `
+      UPDATE verification
+      SET is_verified = true, trigger = 'ON_VERIFICATION'
+      WHERE unique_id = $1;`
+    try {
+      await this.query({ text, values: [uid] })
       return true
     } catch (err) {
       throw err

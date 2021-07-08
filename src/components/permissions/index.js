@@ -4,6 +4,14 @@ import {
   routeLoginOrg,
   routeUpdateRowPolicies,
   routeCreateHash,
+  routeVerification,
 } from './routes'
 
-export { routeCreateHash, routeUserInfo, routeLogin, routeLoginOrg, routeUpdateRowPolicies }
+export {
+  routeCreateHash,
+  routeUserInfo,
+  routeLogin,
+  routeLoginOrg,
+  routeUpdateRowPolicies,
+  routeVerification,
+}
