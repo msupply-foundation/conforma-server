@@ -1,0 +1,30 @@
+{
+  "type": "action_plugin",
+  "code": "generateString",
+  "name": "Generate String",
+  "description": "Creates a text string and (optionally) applies it to a record, e.g. an application name",
+  "required_parameters": ["formatExpression"],
+  "optional_parameters": ["table", "field", "matchField", "matchValue", "shouldUpdateDatabase"],
+  "output_properties": [
+    "applicationId",
+    "status",
+    "statusId",
+    "applicationStatusHistoryTimestamp",
+    "reviewStatusHistoryTimestamp"
+  ],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "update"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-07-08"
+  }
+}
