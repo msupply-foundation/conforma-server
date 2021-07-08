@@ -9,6 +9,7 @@ exports.devActions = `
       trigger: DEV_TEST
       sequence: 1
       parameterQueries: {
+        formatExpression: "\${applicationData.templateName} — \${applicationData.applicationSerial}"
       }
     }
    # {

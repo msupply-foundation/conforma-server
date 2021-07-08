@@ -266,6 +266,14 @@ exports.queries = [
                 sequence: 2
                 parameterQueries: { message: "Application Submitted" }
               }
+              {
+                actionCode: "generateName"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 100
+                parameterQueries: {
+                  formatExpression: "\${applicationData.templateName} — \${applicationData.responses.Q20.text}"
+                }
+              }
             ]
           }
           templatePermissionsUsingId: {
