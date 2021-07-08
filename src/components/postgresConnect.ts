@@ -240,6 +240,7 @@ class PostgresDB {
     const text = `
       SELECT application_id as "applicationId",
       serial as "applicationSerial",
+      name as "applicationName",
       template_id as "templateId",
       template_name as "templateName",
       template_code as "templateCode",
