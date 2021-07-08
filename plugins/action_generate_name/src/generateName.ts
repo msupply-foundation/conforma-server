@@ -89,15 +89,14 @@ const substituteValues = async (
   fallbackString: string
 ): Promise<string> => {
   const extractObjectProperty = async (property: string, data: object) => {
-    return await evaluateExpression(
+    return (await evaluateExpression(
       { operator: 'objectProperties', children: [property, fallbackString] },
       { objects: data }
-    )
+    )) as string
   }
   return await replaceAsync(
     formatExpression,
     /(\${)(.*?)(})/gm,
-    async (_: string, $: string, property: string) =>
-      (await extractObjectProperty(property, data)) as string
+    async (_: string, $: string, property: string) => await extractObjectProperty(property, data)
   )
 }

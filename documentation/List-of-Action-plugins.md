@@ -90,7 +90,7 @@ If we are wanting to change the status of a **review**, the parameter `isReview`
 
 ### Modify Record
 
-Creates or updates a database record on any table. Currently used for creating updating/users and organisations.
+Creates or updates a database record on any table, and creates/updates a related JOIN table to associate the updated record with the application that caused it.
 
 - _Action Code:_ **`modifyRecord`**
 
@@ -99,6 +99,7 @@ Creates or updates a database record on any table. Currently used for creating u
 | `tableName`\*                            | `<tableName>` object |
 | `matchField`                             |                      |
 | `matchValue`                             |                      |
+| `shouldCreateJoinTable` (default `true`) |                      |
 | `...fields for database record`          |                      |
 
 The Action first checks if a record exists, based on the `matchField` (e.g. `username`) and `matchValue` (e.g. the value of `username` to check). If it exists, the record will be updated, otherwise a new record is created.
@@ -137,6 +138,35 @@ This will look for a user record with `username = "js"` and update it with the _
 **Note:**
 
 - fields with a value of `null` will be omitted from the database update, so any current values will remain unchanged.
+- you can create/update an record without creating/updating the JOIN table by explicitly setting `shouldCreateJoinTable: false`
+
+---
+
+### Generate Name (or any custom string)
+
+Creates a custom name string and applies it to a specified database record (usually `application.name`)
+
+- _Action Code:_ **`generateName`**
+
+| Input parameters<br />(\*required) <br/>  | Output properties |
+| ----------------------------------------- | ----------------- |
+| `formatExpression`                        | `generatedName`   |
+| `fieldName` (default `"name"`)            |                   |
+| `matchField` (default `"id"`)             |                   |
+| `matchValue` (default `applicationId`)    |                   |
+| `shouldUpdateDatabase` (default `true`)   |                   |
+| `additionalData`                          |                   |
+| `fallbackString` (default `"UNRESOLVED"`) |                   |
+
+`formatExpression` can be either a string, or a full evaluator expression. If it's a string, it should use `${property.name}` for values to be replaced from `applicationData` (plus any additional fields from `additionalData`). For example, the formatExpression string:
+`${applicationData.templateName} — ${applicationData.applicationSerial}`  
+might output "Drug Registration — 12345" for a Drug Registration application. If no formatExpression is provided, it will default to this example expression.
+
+The parameters `fieldName`, `matchField`, and `matchValue` work exactly the same as the ["ModifyRecord" Action](#modify-record) (above). These are not required if just updating the application name (that's the default behaviour)
+
+If `shouldUpdateDatabase` is set to `false` the string will be generated (and passed to Output) without touching the database.
+
+`fallbackString` is an alternative value to insert for substitutions in `formatExpression` that fail (i.e. they specify an object property that doesn't exist).
 
 ---
 

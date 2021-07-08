@@ -1,10 +1,11 @@
 {
   "type": "action_plugin",
   "code": "generateName",
-  "name": "Generate String",
+  "name": "Generate Name",
   "description": "Creates a text string and (optionally) applies it to a record, e.g. an application name",
-  "required_parameters": ["formatExpression"],
+  "required_parameters": [],
   "optional_parameters": [
+    "formatExpression",
     "tableName",
     "fieldName",
     "matchField",
