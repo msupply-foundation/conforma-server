@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "sendNotification",
+  "name": "Send Email",
+  "description": "Creates a notification and send an email",
+  "required_parameters": ["subject", "message"],
+  "optional_parameters": ["userId", "fromName", "fromEmail", "attachments", "sendEmail"],
+  "output_properties": ["notification"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-06-21"
+  }
+}
