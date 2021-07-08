@@ -1,4 +1,4 @@
-import { processTrigger, executeAction } from './triggersAndActions'
+import { processTrigger, executeAction } from './actions/triggersAndActions'
 import { actionLibrary } from './pluginsConnect'
 import config from '../config'
 import { Client, Pool, QueryResult } from 'pg'

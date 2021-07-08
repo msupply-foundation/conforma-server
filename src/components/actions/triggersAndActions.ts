@@ -5,19 +5,19 @@ import {
   ActionPayload,
   ActionSequential,
   ActionQueueExecutePayload,
-} from '../types'
+} from '../../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import DBConnect from './databaseConnect'
-import { actionLibrary } from './pluginsConnect'
+import DBConnect from '../databaseConnect'
+import { actionLibrary } from '../pluginsConnect'
 import {
   BasicObject,
   EvaluatorNode,
   IParameters,
 } from '@openmsupply/expression-evaluator/lib/types'
 import { getApplicationData } from './getApplicationData'
-import { getAppEntryPointDir } from './utilityFunctions'
+import { getAppEntryPointDir } from '../utilityFunctions'
 import path from 'path'
-import { ActionQueueStatus, TriggerQueueStatus } from '../generated/graphql'
+import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
 
 const schedule = require('node-schedule')
 
