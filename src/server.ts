@@ -10,6 +10,7 @@ import {
   routeLoginOrg,
   routeUpdateRowPolicies,
   routeCreateHash,
+  routeVerification,
 } from './components/permissions'
 import {
   saveFiles,
@@ -62,6 +63,7 @@ const startServer = async () => {
   server.post('/login-org', routeLoginOrg)
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
   server.post('/create-hash', routeCreateHash)
+  server.get('/verify', routeVerification)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {

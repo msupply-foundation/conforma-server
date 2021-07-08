@@ -91,4 +91,35 @@ const routeUpdateRowPolicies = async (request: any, reply: any) => {
   return reply.send(await updateRowPolicies())
 }
 
-export { routeUserInfo, routeLogin, routeLoginOrg, routeUpdateRowPolicies, routeCreateHash }
+const routeVerification = async (request: any, reply: any) => {
+  const { uid } = request.query
+  if (!uid) return reply.send({ success: false, message: 'No verification id provided' })
+  try {
+    // Get verification record
+    const verification = await databaseConnect.getVerification(uid)
+    if (!verification) return reply.send({ success: false, message: 'Invalid verification id' })
+
+    // Check already verified
+    if (verification.is_verified) return reply.send({ success: false, message: 'Already verified' })
+
+    // Check expiry
+    if (verification.time_expired && Date.parse(verification.time_expired) < Date.now())
+      return reply.send({ success: false, message: 'Verification expired' })
+
+    // All good! - Update verification record
+    const result = await databaseConnect.setVerification(uid)
+    if (result) return reply.send({ success: true, message: verification.message })
+    else reply.send({ success: false, message: 'Problem with verification' })
+  } catch (err) {
+    return reply.send({ success: false, message: err.message })
+  }
+}
+
+export {
+  routeUserInfo,
+  routeLogin,
+  routeLoginOrg,
+  routeUpdateRowPolicies,
+  routeCreateHash,
+  routeVerification,
+}
