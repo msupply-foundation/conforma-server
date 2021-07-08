@@ -78,8 +78,8 @@ const trimResponses: ActionPluginType = async ({ parameters, applicationData, DB
 
     // Update timestamp of remaining responses (based on review/application latest status change timestamp)
     const updatedResponses = reviewId
-      ? await db.updateReviewResponseTimestamps(responsesToUpdate, reviewId)
-      : await db.updateApplicationResponseTimestamps(responsesToUpdate, applicationId)
+      ? await db.updateReviewResponseSubmittedTimestamps(responsesToUpdate, reviewId)
+      : await db.updateApplicationResponseSubmittedTimestamps(responsesToUpdate, applicationId)
 
     console.log(`Deleted ${reviewId ? 'review' : 'application'} responses: `, deletedResponses)
     console.log(`Updated ${reviewId ? 'review' : 'application'} responses: `, updatedResponses)
