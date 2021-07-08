@@ -1,7 +1,7 @@
 const databaseMethods = (DBConnect: any) => {
   const createRecord = async (tableName: string, record: { [key: string]: any }) => {
     const text = `
-      INSERT INTO "${tableName}" (${getKeys(record)}) 
+      INSERT INTO "${tableName}" ${getKeys(record)} 
       VALUES (${DBConnect.getValuesPlaceholders(record)})
       RETURNING *
       `
