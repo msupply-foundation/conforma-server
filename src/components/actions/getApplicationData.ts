@@ -13,14 +13,14 @@ export const getApplicationData = async (input: {
   // Requires either application OR trigger_payload, so throw error if neither provided
   if (!input?.payload?.trigger_payload && !input?.applicationId)
     throw new Error('trigger_payload or applicationId required')
-
-  const { trigger_payload } = input?.payload as ActionPayload
+  const { trigger_payload } = (input?.payload as ActionPayload) ?? {}
   const applicationId =
     input?.applicationId ??
     (await DBConnect.getApplicationIdFromTrigger(
       trigger_payload?.table as string,
       trigger_payload?.record_id as number
     ))
+
   const applicationResult = await DBConnect.getApplicationData(applicationId)
 
   const applicationData = applicationResult ? applicationResult : { applicationId }

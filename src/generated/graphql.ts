@@ -635,6 +635,8 @@ export type Application = Node & {
   reviews: ReviewsConnection;
   /** Reads and enables pagination through a set of `File`. */
   filesByApplicationSerial: FilesConnection;
+  /** Reads and enables pagination through a set of `Verification`. */
+  verifications: VerificationsConnection;
   /** Reads and enables pagination through a set of `Notification`. */
   notifications: NotificationsConnection;
   stage?: Maybe<Scalars['String']>;
@@ -712,6 +714,18 @@ export type ApplicationFilesByApplicationSerialArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
   condition?: Maybe<FileCondition>;
   filter?: Maybe<FileFilter>;
+};
+
+
+export type ApplicationVerificationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<VerificationsOrderBy>>;
+  condition?: Maybe<VerificationCondition>;
+  filter?: Maybe<VerificationFilter>;
 };
 
 
@@ -825,6 +839,10 @@ export type ApplicationFilter = {
   filesByApplicationSerial?: Maybe<ApplicationToManyFileFilter>;
   /** Some related `filesByApplicationSerial` exist. */
   filesByApplicationSerialExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `verifications` relation. */
+  verifications?: Maybe<ApplicationToManyVerificationFilter>;
+  /** Some related `verifications` exist. */
+  verificationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `notifications` relation. */
   notifications?: Maybe<ApplicationToManyNotificationFilter>;
   /** Some related `notifications` exist. */
@@ -870,6 +888,7 @@ export type ApplicationInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -1333,6 +1352,28 @@ export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialK
   serial: Scalars['String'];
 };
 
+/** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `verification` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `verification` being updated. */
+  patch: VerificationPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
 /** The `application` to be created by this mutation. */
 export type ApplicationOrgIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
@@ -1353,6 +1394,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -1479,6 +1521,7 @@ export type ApplicationPatch = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -1550,6 +1593,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -2028,6 +2072,7 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -2408,6 +2453,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -3330,6 +3376,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -3470,6 +3517,16 @@ export type ApplicationToManyReviewFilter = {
   none?: Maybe<ReviewFilter>;
 };
 
+/** A filter to be used against many `Verification` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyVerificationFilter = {
+  /** Every related `Verification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<VerificationFilter>;
+  /** Some related `Verification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<VerificationFilter>;
+  /** No related `Verification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<VerificationFilter>;
+};
+
 /** The `application` to be created by this mutation. */
 export type ApplicationUserIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
@@ -3490,6 +3547,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -4370,10 +4428,6 @@ export type CreateNotificationPayload = {
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Notification`. */
   application?: Maybe<Application>;
-  /** Reads a single `Review` that is related to this `Notification`. */
-  review?: Maybe<Review>;
-  /** Reads a single `File` that is related to this `Notification`. */
-  document?: Maybe<File>;
   /** An edge for our `Notification`. May be used by Relay 1. */
   notificationEdge?: Maybe<NotificationsEdge>;
 };
@@ -5324,6 +5378,41 @@ export type CreateUserPayloadUserEdgeArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
 };
 
+/** All input for the create `Verification` mutation. */
+export type CreateVerificationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Verification` to be created by this mutation. */
+  verification: VerificationInput;
+};
+
+/** The output of our create `Verification` mutation. */
+export type CreateVerificationPayload = {
+  __typename?: 'CreateVerificationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Verification` that was created by this mutation. */
+  verification?: Maybe<Verification>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `Verification`. */
+  application?: Maybe<Application>;
+  /** An edge for our `Verification`. May be used by Relay 1. */
+  verificationEdge?: Maybe<VerificationsEdge>;
+};
+
+
+/** The output of our create `Verification` mutation. */
+export type CreateVerificationPayloadVerificationEdgeArgs = {
+  orderBy?: Maybe<Array<VerificationsOrderBy>>;
+};
+
 
 
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
@@ -5978,10 +6067,6 @@ export type DeleteNotificationPayload = {
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Notification`. */
   application?: Maybe<Application>;
-  /** Reads a single `Review` that is related to this `Notification`. */
-  review?: Maybe<Review>;
-  /** Reads a single `File` that is related to this `Notification`. */
-  document?: Maybe<File>;
   /** An edge for our `Notification`. May be used by Relay 1. */
   notificationEdge?: Maybe<NotificationsEdge>;
 };
@@ -7300,6 +7385,62 @@ export type DeleteUserPayloadUserEdgeArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
 };
 
+/** All input for the `deleteVerificationByNodeId` mutation. */
+export type DeleteVerificationByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Verification` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteVerificationByUniqueId` mutation. */
+export type DeleteVerificationByUniqueIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  uniqueId: Scalars['String'];
+};
+
+/** All input for the `deleteVerification` mutation. */
+export type DeleteVerificationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `Verification` mutation. */
+export type DeleteVerificationPayload = {
+  __typename?: 'DeleteVerificationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Verification` that was deleted by this mutation. */
+  verification?: Maybe<Verification>;
+  deletedVerificationNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `Verification`. */
+  application?: Maybe<Application>;
+  /** An edge for our `Verification`. May be used by Relay 1. */
+  verificationEdge?: Maybe<VerificationsEdge>;
+};
+
+
+/** The output of our delete `Verification` mutation. */
+export type DeleteVerificationPayloadVerificationEdgeArgs = {
+  orderBy?: Maybe<Array<VerificationsOrderBy>>;
+};
+
 export type ElementTypePlugin = Node & {
   __typename?: 'ElementTypePlugin';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -7453,20 +7594,6 @@ export type File = Node & {
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
   applicationResponse?: Maybe<ApplicationResponse>;
-  /** Reads and enables pagination through a set of `Notification`. */
-  notificationsByDocumentId: NotificationsConnection;
-};
-
-
-export type FileNotificationsByDocumentIdArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<NotificationsOrderBy>>;
-  condition?: Maybe<NotificationCondition>;
-  filter?: Maybe<NotificationFilter>;
 };
 
 /** The `applicationResponse` to be created by this mutation. */
@@ -7501,7 +7628,6 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `applicationResponse` in the `FileInput` mutation. */
@@ -7569,6 +7695,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -7587,7 +7714,6 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `FileInput` mutation. */
@@ -7710,10 +7836,6 @@ export type FileFilter = {
   submitted?: Maybe<BooleanFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `notificationsByDocumentId` relation. */
-  notificationsByDocumentId?: Maybe<FileToManyNotificationFilter>;
-  /** Some related `notificationsByDocumentId` exist. */
-  notificationsByDocumentIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -7750,7 +7872,6 @@ export type FileInput = {
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -7831,28 +7952,6 @@ export type FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate = {
   uniqueId: Scalars['String'];
 };
 
-/** The globally unique `ID` look up for the row to update. */
-export type FileOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `notification` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `notification` being updated. */
-  patch: NotificationPatch;
-};
-
-/** The fields on `file` to look up the row to update. */
-export type FileOnNotificationForNotificationDocumentIdFkeyUsingFilePkeyUpdate = {
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: UpdateFileOnNotificationForNotificationDocumentIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The fields on `file` to look up the row to update. */
-export type FileOnNotificationForNotificationDocumentIdFkeyUsingFileUniqueIdKeyUpdate = {
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: UpdateFileOnNotificationForNotificationDocumentIdFkeyPatch;
-  uniqueId: Scalars['String'];
-};
-
 /** Represents an update to a `File`. Fields that are set will be updated. */
 export type FilePatch = {
   id?: Maybe<Scalars['Int']>;
@@ -7869,7 +7968,6 @@ export type FilePatch = {
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `File` values. */
@@ -7923,16 +8021,6 @@ export enum FilesOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
-/** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
-export type FileToManyNotificationFilter = {
-  /** Every related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<NotificationFilter>;
-  /** Some related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<NotificationFilter>;
-  /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<NotificationFilter>;
-};
-
 /** The `file` to be created by this mutation. */
 export type FileUserIdFkeyFileCreateInput = {
   id?: Maybe<Scalars['Int']>;
@@ -7948,7 +8036,6 @@ export type FileUserIdFkeyFileCreateInput = {
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `FileInput` mutation. */
@@ -8465,6 +8552,8 @@ export type Mutation = {
   createUser?: Maybe<CreateUserPayload>;
   /** Creates a single `UserOrganisation`. */
   createUserOrganisation?: Maybe<CreateUserOrganisationPayload>;
+  /** Creates a single `Verification`. */
+  createVerification?: Maybe<CreateVerificationPayload>;
   /** Updates a single `ActionPlugin` using its globally unique id and a patch. */
   updateActionPluginByNodeId?: Maybe<UpdateActionPluginPayload>;
   /** Updates a single `ActionPlugin` using a unique key and a patch. */
@@ -8641,6 +8730,12 @@ export type Mutation = {
   updateUserOrganisationByNodeId?: Maybe<UpdateUserOrganisationPayload>;
   /** Updates a single `UserOrganisation` using a unique key and a patch. */
   updateUserOrganisation?: Maybe<UpdateUserOrganisationPayload>;
+  /** Updates a single `Verification` using its globally unique id and a patch. */
+  updateVerificationByNodeId?: Maybe<UpdateVerificationPayload>;
+  /** Updates a single `Verification` using a unique key and a patch. */
+  updateVerification?: Maybe<UpdateVerificationPayload>;
+  /** Updates a single `Verification` using a unique key and a patch. */
+  updateVerificationByUniqueId?: Maybe<UpdateVerificationPayload>;
   /** Deletes a single `ActionPlugin` using its globally unique id. */
   deleteActionPluginByNodeId?: Maybe<DeleteActionPluginPayload>;
   /** Deletes a single `ActionPlugin` using a unique key. */
@@ -8817,6 +8912,12 @@ export type Mutation = {
   deleteUserOrganisationByNodeId?: Maybe<DeleteUserOrganisationPayload>;
   /** Deletes a single `UserOrganisation` using a unique key. */
   deleteUserOrganisation?: Maybe<DeleteUserOrganisationPayload>;
+  /** Deletes a single `Verification` using its globally unique id. */
+  deleteVerificationByNodeId?: Maybe<DeleteVerificationPayload>;
+  /** Deletes a single `Verification` using a unique key. */
+  deleteVerification?: Maybe<DeleteVerificationPayload>;
+  /** Deletes a single `Verification` using a unique key. */
+  deleteVerificationByUniqueId?: Maybe<DeleteVerificationPayload>;
 };
 
 
@@ -9051,6 +9152,12 @@ export type MutationCreateUserArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserOrganisationArgs = {
   input: CreateUserOrganisationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateVerificationArgs = {
+  input: CreateVerificationInput;
 };
 
 
@@ -9583,6 +9690,24 @@ export type MutationUpdateUserOrganisationArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVerificationByNodeIdArgs = {
+  input: UpdateVerificationByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVerificationArgs = {
+  input: UpdateVerificationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateVerificationByUniqueIdArgs = {
+  input: UpdateVerificationByUniqueIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteActionPluginByNodeIdArgs = {
   input: DeleteActionPluginByNodeIdInput;
 };
@@ -10109,6 +10234,24 @@ export type MutationDeleteUserOrganisationArgs = {
   input: DeleteUserOrganisationInput;
 };
 
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVerificationByNodeIdArgs = {
+  input: DeleteVerificationByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVerificationArgs = {
+  input: DeleteVerificationInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteVerificationByUniqueIdArgs = {
+  input: DeleteVerificationByUniqueIdInput;
+};
+
 /** An object with a globally unique `ID`. */
 export type Node = {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -10122,19 +10265,16 @@ export type Notification = Node & {
   id: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
+  emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  documentId?: Maybe<Scalars['Int']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   isRead?: Maybe<Scalars['Boolean']>;
   /** Reads a single `User` that is related to this `Notification`. */
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Notification`. */
   application?: Maybe<Application>;
-  /** Reads a single `Review` that is related to this `Notification`. */
-  review?: Maybe<Review>;
-  /** Reads a single `File` that is related to this `Notification`. */
-  document?: Maybe<File>;
 };
 
 /** The `application` to be created by this mutation. */
@@ -10158,6 +10298,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -10209,15 +10350,14 @@ export type NotificationApplicationIdFkeyInverseInput = {
 export type NotificationApplicationIdFkeyNotificationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
+  emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  documentId?: Maybe<Scalars['Int']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
-  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
-  fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
 };
 
 /**
@@ -10231,94 +10371,18 @@ export type NotificationCondition = {
   userId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `reviewId` field. */
-  reviewId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `emailRecipients` field. */
+  emailRecipients?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `subject` field. */
   subject?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `message` field. */
   message?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `documentId` field. */
-  documentId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `attachments` field. */
+  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `emailSent` field. */
+  emailSent?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `isRead` field. */
   isRead?: Maybe<Scalars['Boolean']>;
-};
-
-/** The `file` to be created by this mutation. */
-export type NotificationDocumentIdFkeyFileCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  uniqueId: Scalars['String'];
-  originalFilename: Scalars['String'];
-  userId?: Maybe<Scalars['Int']>;
-  applicationSerial?: Maybe<Scalars['String']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  filePath: Scalars['String'];
-  thumbnailPath?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  submitted?: Maybe<Scalars['Boolean']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `file` in the `NotificationInput` mutation. */
-export type NotificationDocumentIdFkeyInput = {
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectById?: Maybe<FileFilePkeyConnect>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectByUniqueId?: Maybe<FileFileUniqueIdKeyConnect>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  connectByNodeId?: Maybe<FileNodeIdConnect>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteById?: Maybe<FileFilePkeyDelete>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteByUniqueId?: Maybe<FileFileUniqueIdKeyDelete>;
-  /** The primary key(s) for `file` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<FileNodeIdDelete>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateById?: Maybe<FileOnNotificationForNotificationDocumentIdFkeyUsingFilePkeyUpdate>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateByUniqueId?: Maybe<FileOnNotificationForNotificationDocumentIdFkeyUsingFileUniqueIdKeyUpdate>;
-  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
-  updateByNodeId?: Maybe<NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate>;
-  /** A `FileInput` object that will be created and connected to this object. */
-  create?: Maybe<NotificationDocumentIdFkeyFileCreateInput>;
-};
-
-/** Input for the nested mutation of `notification` in the `FileInput` mutation. */
-export type NotificationDocumentIdFkeyInverseInput = {
-  /** Flag indicating whether all other `notification` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `notification` for the far side of the relationship. */
-  connectById?: Maybe<Array<NotificationNotificationPkeyConnect>>;
-  /** The primary key(s) for `notification` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<NotificationNodeIdConnect>>;
-  /** The primary key(s) for `notification` for the far side of the relationship. */
-  deleteById?: Maybe<Array<NotificationNotificationPkeyDelete>>;
-  /** The primary key(s) for `notification` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<NotificationNodeIdDelete>>;
-  /** The primary key(s) and patch data for `notification` for the far side of the relationship. */
-  updateById?: Maybe<Array<NotificationOnNotificationForNotificationDocumentIdFkeyUsingNotificationPkeyUpdate>>;
-  /** The primary key(s) and patch data for `notification` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<FileOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate>>;
-  /** A `NotificationInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<NotificationDocumentIdFkeyNotificationCreateInput>>;
-};
-
-/** The `notification` to be created by this mutation. */
-export type NotificationDocumentIdFkeyNotificationCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  subject?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  isRead?: Maybe<Scalars['Boolean']>;
-  userToUserId?: Maybe<NotificationUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
-  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
-  fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
 };
 
 /** A filter to be used against `Notification` object types. All fields are combined with a logical ‘and.’ */
@@ -10329,14 +10393,16 @@ export type NotificationFilter = {
   userId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewId` field. */
-  reviewId?: Maybe<IntFilter>;
+  /** Filter by the object’s `emailRecipients` field. */
+  emailRecipients?: Maybe<StringFilter>;
   /** Filter by the object’s `subject` field. */
   subject?: Maybe<StringFilter>;
   /** Filter by the object’s `message` field. */
   message?: Maybe<StringFilter>;
-  /** Filter by the object’s `documentId` field. */
-  documentId?: Maybe<IntFilter>;
+  /** Filter by the object’s `attachments` field. */
+  attachments?: Maybe<StringListFilter>;
+  /** Filter by the object’s `emailSent` field. */
+  emailSent?: Maybe<BooleanFilter>;
   /** Filter by the object’s `isRead` field. */
   isRead?: Maybe<BooleanFilter>;
   /** Filter by the object’s `user` relation. */
@@ -10347,14 +10413,6 @@ export type NotificationFilter = {
   application?: Maybe<ApplicationFilter>;
   /** A related `application` exists. */
   applicationExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `review` relation. */
-  review?: Maybe<ReviewFilter>;
-  /** A related `review` exists. */
-  reviewExists?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `document` relation. */
-  document?: Maybe<FileFilter>;
-  /** A related `document` exists. */
-  documentExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<NotificationFilter>>;
   /** Checks for any expressions in this list. */
@@ -10368,15 +10426,14 @@ export type NotificationInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
+  emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  documentId?: Maybe<Scalars['Int']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
-  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
-  fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -10417,36 +10474,6 @@ export type NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotif
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `file` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `file` being updated. */
-  patch: FilePatch;
-};
-
-/** The fields on `notification` to look up the row to update. */
-export type NotificationOnNotificationForNotificationDocumentIdFkeyUsingNotificationPkeyUpdate = {
-  /** An object where the defined keys will be set on the `notification` being updated. */
-  patch: UpdateNotificationOnNotificationForNotificationDocumentIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `review` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `review` being updated. */
-  patch: ReviewPatch;
-};
-
-/** The fields on `notification` to look up the row to update. */
-export type NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate = {
-  /** An object where the defined keys will be set on the `notification` being updated. */
-  patch: UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
 export type NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
   nodeId: Scalars['ID'];
@@ -10466,88 +10493,14 @@ export type NotificationPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
+  emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  documentId?: Maybe<Scalars['Int']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
-  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
-  fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `review` in the `NotificationInput` mutation. */
-export type NotificationReviewIdFkeyInput = {
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  connectById?: Maybe<ReviewReviewPkeyConnect>;
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ReviewNodeIdConnect>;
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  deleteById?: Maybe<ReviewReviewPkeyDelete>;
-  /** The primary key(s) for `review` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ReviewNodeIdDelete>;
-  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
-  updateById?: Maybe<ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate>;
-  /** The primary key(s) and patch data for `review` for the far side of the relationship. */
-  updateByNodeId?: Maybe<NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate>;
-  /** A `ReviewInput` object that will be created and connected to this object. */
-  create?: Maybe<NotificationReviewIdFkeyReviewCreateInput>;
-};
-
-/** Input for the nested mutation of `notification` in the `ReviewInput` mutation. */
-export type NotificationReviewIdFkeyInverseInput = {
-  /** Flag indicating whether all other `notification` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `notification` for the far side of the relationship. */
-  connectById?: Maybe<Array<NotificationNotificationPkeyConnect>>;
-  /** The primary key(s) for `notification` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<NotificationNodeIdConnect>>;
-  /** The primary key(s) for `notification` for the far side of the relationship. */
-  deleteById?: Maybe<Array<NotificationNotificationPkeyDelete>>;
-  /** The primary key(s) for `notification` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<NotificationNodeIdDelete>>;
-  /** The primary key(s) and patch data for `notification` for the far side of the relationship. */
-  updateById?: Maybe<Array<NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate>>;
-  /** The primary key(s) and patch data for `notification` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate>>;
-  /** A `NotificationInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<NotificationReviewIdFkeyNotificationCreateInput>>;
-};
-
-/** The `notification` to be created by this mutation. */
-export type NotificationReviewIdFkeyNotificationCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  subject?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  documentId?: Maybe<Scalars['Int']>;
-  isRead?: Maybe<Scalars['Boolean']>;
-  userToUserId?: Maybe<NotificationUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
-  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
-  fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
-};
-
-/** The `review` to be created by this mutation. */
-export type NotificationReviewIdFkeyReviewCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  trigger?: Maybe<Trigger>;
-  applicationId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  levelNumber?: Maybe<Scalars['Int']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  timeStageCreated?: Maybe<Scalars['Datetime']>;
-  isLastLevel?: Maybe<Scalars['Boolean']>;
-  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
-  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
-  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `Notification` values. */
@@ -10581,14 +10534,16 @@ export enum NotificationsOrderBy {
   UserIdDesc = 'USER_ID_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  ReviewIdAsc = 'REVIEW_ID_ASC',
-  ReviewIdDesc = 'REVIEW_ID_DESC',
+  EmailRecipientsAsc = 'EMAIL_RECIPIENTS_ASC',
+  EmailRecipientsDesc = 'EMAIL_RECIPIENTS_DESC',
   SubjectAsc = 'SUBJECT_ASC',
   SubjectDesc = 'SUBJECT_DESC',
   MessageAsc = 'MESSAGE_ASC',
   MessageDesc = 'MESSAGE_DESC',
-  DocumentIdAsc = 'DOCUMENT_ID_ASC',
-  DocumentIdDesc = 'DOCUMENT_ID_DESC',
+  AttachmentsAsc = 'ATTACHMENTS_ASC',
+  AttachmentsDesc = 'ATTACHMENTS_DESC',
+  EmailSentAsc = 'EMAIL_SENT_ASC',
+  EmailSentDesc = 'EMAIL_SENT_DESC',
   IsReadAsc = 'IS_READ_ASC',
   IsReadDesc = 'IS_READ_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -10643,15 +10598,14 @@ export type NotificationUserIdFkeyInverseInput = {
 export type NotificationUserIdFkeyNotificationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
+  emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  documentId?: Maybe<Scalars['Int']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
-  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
-  fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
 };
 
 /** The `user` to be created by this mutation. */
@@ -13057,6 +13011,8 @@ export type Query = Node & {
   userOrgJoins?: Maybe<UserOrgJoinsConnection>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations?: Maybe<UserOrganisationsConnection>;
+  /** Reads and enables pagination through a set of `Verification`. */
+  verifications?: Maybe<VerificationsConnection>;
   actionPlugin?: Maybe<ActionPlugin>;
   actionPluginByCode?: Maybe<ActionPlugin>;
   actionQueue?: Maybe<ActionQueue>;
@@ -13107,6 +13063,8 @@ export type Query = Node & {
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
+  verification?: Maybe<Verification>;
+  verificationByUniqueId?: Maybe<Verification>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
   applicationList?: Maybe<ApplicationListShapesConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
@@ -13203,6 +13161,8 @@ export type Query = Node & {
   userByNodeId?: Maybe<User>;
   /** Reads a single `UserOrganisation` using its globally unique `ID`. */
   userOrganisationByNodeId?: Maybe<UserOrganisation>;
+  /** Reads a single `Verification` using its globally unique `ID`. */
+  verificationByNodeId?: Maybe<Verification>;
 };
 
 
@@ -13798,6 +13758,19 @@ export type QueryUserOrganisationsArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryVerificationsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<VerificationsOrderBy>>;
+  condition?: Maybe<VerificationCondition>;
+  filter?: Maybe<VerificationFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryActionPluginArgs = {
   id: Scalars['Int'];
 };
@@ -14096,6 +14069,18 @@ export type QueryUserByUsernameArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryUserOrganisationArgs = {
   id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVerificationArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVerificationByUniqueIdArgs = {
+  uniqueId: Scalars['String'];
 };
 
 
@@ -14469,6 +14454,12 @@ export type QueryUserOrganisationByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
+
+/** The root query type which gives access points into the data universe. */
+export type QueryVerificationByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
 export type Review = Node & {
   __typename?: 'Review';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -14494,8 +14485,6 @@ export type Review = Node & {
   reviewDecisions: ReviewDecisionsConnection;
   /** Reads and enables pagination through a set of `ReviewStatusHistory`. */
   reviewStatusHistories: ReviewStatusHistoriesConnection;
-  /** Reads and enables pagination through a set of `Notification`. */
-  notifications: NotificationsConnection;
   latestDecision?: Maybe<ReviewDecision>;
   status?: Maybe<ReviewStatus>;
   timeStatusCreated?: Maybe<Scalars['Datetime']>;
@@ -14537,18 +14526,6 @@ export type ReviewReviewStatusHistoriesArgs = {
   filter?: Maybe<ReviewStatusHistoryFilter>;
 };
 
-
-export type ReviewNotificationsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<NotificationsOrderBy>>;
-  condition?: Maybe<NotificationCondition>;
-  filter?: Maybe<NotificationFilter>;
-};
-
 /** The `application` to be created by this mutation. */
 export type ReviewApplicationIdFkeyApplicationCreateInput = {
   id?: Maybe<Scalars['Int']>;
@@ -14570,6 +14547,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -14633,7 +14611,6 @@ export type ReviewApplicationIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 export type ReviewAssignment = Node & {
@@ -14736,6 +14713,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -16434,7 +16412,6 @@ export type ReviewDecisionReviewIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The `reviewDecision` to be created by this mutation. */
@@ -16556,10 +16533,6 @@ export type ReviewFilter = {
   reviewStatusHistories?: Maybe<ReviewToManyReviewStatusHistoryFilter>;
   /** Some related `reviewStatusHistories` exist. */
   reviewStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `notifications` relation. */
-  notifications?: Maybe<ReviewToManyNotificationFilter>;
-  /** Some related `notifications` exist. */
-  notificationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignment` relation. */
   reviewAssignment?: Maybe<ReviewAssignmentFilter>;
   /** A related `reviewAssignment` exists. */
@@ -16597,7 +16570,6 @@ export type ReviewInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `ReviewListRecord` values. */
@@ -16651,21 +16623,6 @@ export type ReviewNodeIdConnect = {
 export type ReviewNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `review` to be deleted. */
   nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `notification` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `notification` being updated. */
-  patch: NotificationPatch;
-};
-
-/** The fields on `review` to look up the row to update. */
-export type ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate = {
-  /** An object where the defined keys will be set on the `review` being updated. */
-  patch: UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch;
-  id: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -16775,7 +16732,6 @@ export type ReviewPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 export type ReviewQuestionAssignment = Node & {
@@ -17699,7 +17655,6 @@ export type ReviewResponseReviewIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The `reviewResponse` to be created by this mutation. */
@@ -18128,7 +18083,6 @@ export type ReviewReviewAssignmentIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ReviewInput` mutation. */
@@ -18191,7 +18145,6 @@ export type ReviewReviewerIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The `user` to be created by this mutation. */
@@ -18500,7 +18453,6 @@ export type ReviewStatusHistoryReviewIdFkeyReviewCreateInput = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The `reviewStatusHistory` to be created by this mutation. */
@@ -18520,16 +18472,6 @@ export type ReviewStatusHistoryReviewStatusHistoryPkeyConnect = {
 /** The fields on `reviewStatusHistory` to look up the row to delete. */
 export type ReviewStatusHistoryReviewStatusHistoryPkeyDelete = {
   id: Scalars['Int'];
-};
-
-/** A filter to be used against many `Notification` object types. All fields are combined with a logical ‘and.’ */
-export type ReviewToManyNotificationFilter = {
-  /** Every related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<NotificationFilter>;
-  /** Some related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<NotificationFilter>;
-  /** No related `Notification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<NotificationFilter>;
 };
 
 /** A filter to be used against many `ReviewDecision` object types. All fields are combined with a logical ‘and.’ */
@@ -22113,6 +22055,7 @@ export enum Trigger {
   OnReviewAssign = 'ON_REVIEW_ASSIGN',
   OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
+  OnVerification = 'ON_VERIFICATION',
   DevTest = 'DEV_TEST',
   OnScheduleTime = 'ON_SCHEDULE_TIME',
   Processing = 'PROCESSING',
@@ -22574,6 +22517,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -22597,6 +22541,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -22620,6 +22565,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -22644,6 +22590,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -22668,6 +22615,7 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -22692,6 +22640,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -22716,6 +22665,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -22740,6 +22690,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -22764,6 +22715,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -22788,6 +22740,32 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
@@ -23246,7 +23224,6 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
@@ -23264,7 +23241,6 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `file` being updated. */
@@ -23282,26 +23258,6 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   userToUserId?: Maybe<FileUserIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `file` being updated. */
-export type UpdateFileOnNotificationForNotificationDocumentIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  uniqueId?: Maybe<Scalars['String']>;
-  originalFilename?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['Int']>;
-  applicationSerial?: Maybe<Scalars['String']>;
-  applicationResponseId?: Maybe<Scalars['Int']>;
-  filePath?: Maybe<Scalars['String']>;
-  thumbnailPath?: Maybe<Scalars['String']>;
-  mimetype?: Maybe<Scalars['String']>;
-  submitted?: Maybe<Scalars['Boolean']>;
-  timestamp?: Maybe<Scalars['Datetime']>;
-  userToUserId?: Maybe<FileUserIdFkeyInput>;
-  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
-  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
-  notificationsUsingId?: Maybe<NotificationDocumentIdFkeyInverseInput>;
 };
 
 /** The output of our update `File` mutation. */
@@ -23479,60 +23435,28 @@ export type UpdateNotificationInput = {
 export type UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
+  emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  documentId?: Maybe<Scalars['Int']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
-  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
-  fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
-};
-
-/** An object where the defined keys will be set on the `notification` being updated. */
-export type UpdateNotificationOnNotificationForNotificationDocumentIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
-  subject?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  isRead?: Maybe<Scalars['Boolean']>;
-  userToUserId?: Maybe<NotificationUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
-  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
-  fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
-};
-
-/** An object where the defined keys will be set on the `notification` being updated. */
-export type UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  subject?: Maybe<Scalars['String']>;
-  message?: Maybe<Scalars['String']>;
-  documentId?: Maybe<Scalars['Int']>;
-  isRead?: Maybe<Scalars['Boolean']>;
-  userToUserId?: Maybe<NotificationUserIdFkeyInput>;
-  applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
-  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
-  fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
 };
 
 /** An object where the defined keys will be set on the `notification` being updated. */
 export type UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   applicationId?: Maybe<Scalars['Int']>;
-  reviewId?: Maybe<Scalars['Int']>;
+  emailRecipients?: Maybe<Scalars['String']>;
   subject?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
-  documentId?: Maybe<Scalars['Int']>;
+  attachments?: Maybe<Array<Maybe<Scalars['String']>>>;
+  emailSent?: Maybe<Scalars['Boolean']>;
   isRead?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<NotificationUserIdFkeyInput>;
   applicationToApplicationId?: Maybe<NotificationApplicationIdFkeyInput>;
-  reviewToReviewId?: Maybe<NotificationReviewIdFkeyInput>;
-  fileToDocumentId?: Maybe<NotificationDocumentIdFkeyInput>;
 };
 
 /** The output of our update `Notification` mutation. */
@@ -23551,10 +23475,6 @@ export type UpdateNotificationPayload = {
   user?: Maybe<User>;
   /** Reads a single `Application` that is related to this `Notification`. */
   application?: Maybe<Application>;
-  /** Reads a single `Review` that is related to this `Notification`. */
-  review?: Maybe<Review>;
-  /** Reads a single `File` that is related to this `Notification`. */
-  document?: Maybe<File>;
   /** An edge for our `Notification`. May be used by Relay 1. */
   notificationEdge?: Maybe<NotificationsEdge>;
 };
@@ -24681,26 +24601,6 @@ export type UpdateReviewInput = {
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
-export type UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
-  trigger?: Maybe<Trigger>;
-  applicationId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
-  levelNumber?: Maybe<Scalars['Int']>;
-  stageNumber?: Maybe<Scalars['Int']>;
-  timeStageCreated?: Maybe<Scalars['Datetime']>;
-  isLastLevel?: Maybe<Scalars['Boolean']>;
-  reviewAssignmentToReviewAssignmentId?: Maybe<ReviewReviewAssignmentIdFkeyInput>;
-  applicationToApplicationId?: Maybe<ReviewApplicationIdFkeyInput>;
-  userToReviewerId?: Maybe<ReviewReviewerIdFkeyInput>;
-  reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
-  reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
-  reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `review` being updated. */
 export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   reviewAssignmentId?: Maybe<Scalars['Int']>;
@@ -24717,7 +24617,6 @@ export type UpdateReviewOnReviewDecisionForReviewDecisionReviewIdFkeyPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
@@ -24736,7 +24635,6 @@ export type UpdateReviewOnReviewForReviewApplicationIdFkeyPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
@@ -24755,7 +24653,6 @@ export type UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
@@ -24774,7 +24671,6 @@ export type UpdateReviewOnReviewForReviewReviewerIdFkeyPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
@@ -24794,7 +24690,6 @@ export type UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch = {
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `review` being updated. */
@@ -24814,7 +24709,6 @@ export type UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyP
   reviewResponsesUsingId?: Maybe<ReviewResponseReviewIdFkeyInverseInput>;
   reviewDecisionsUsingId?: Maybe<ReviewDecisionReviewIdFkeyInverseInput>;
   reviewStatusHistoriesUsingId?: Maybe<ReviewStatusHistoryReviewIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationReviewIdFkeyInverseInput>;
 };
 
 /** The output of our update `Review` mutation. */
@@ -26499,6 +26393,81 @@ export type UpdateUserPayloadUserEdgeArgs = {
   orderBy?: Maybe<Array<UsersOrderBy>>;
 };
 
+/** All input for the `updateVerificationByNodeId` mutation. */
+export type UpdateVerificationByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `Verification` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `Verification` being updated. */
+  patch: VerificationPatch;
+};
+
+/** All input for the `updateVerificationByUniqueId` mutation. */
+export type UpdateVerificationByUniqueIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Verification` being updated. */
+  patch: VerificationPatch;
+  uniqueId: Scalars['String'];
+};
+
+/** All input for the `updateVerification` mutation. */
+export type UpdateVerificationInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `Verification` being updated. */
+  patch: VerificationPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `verification` being updated. */
+export type UpdateVerificationOnVerificationForVerificationApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
+  createdTime?: Maybe<Scalars['Datetime']>;
+  expiryTime?: Maybe<Scalars['Datetime']>;
+  isVerified?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<VerificationApplicationIdFkeyInput>;
+};
+
+/** The output of our update `Verification` mutation. */
+export type UpdateVerificationPayload = {
+  __typename?: 'UpdateVerificationPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `Verification` that was updated by this mutation. */
+  verification?: Maybe<Verification>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `Verification`. */
+  application?: Maybe<Application>;
+  /** An edge for our `Verification`. May be used by Relay 1. */
+  verificationEdge?: Maybe<VerificationsEdge>;
+};
+
+
+/** The output of our update `Verification` mutation. */
+export type UpdateVerificationPayloadVerificationEdgeArgs = {
+  orderBy?: Maybe<Array<VerificationsOrderBy>>;
+};
+
 export type User = Node & {
   __typename?: 'User';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -27558,6 +27527,305 @@ export type UserUserUsernameKeyDelete = {
   username: Scalars['String'];
 };
 
+export type Verification = Node & {
+  __typename?: 'Verification';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  uniqueId: Scalars['String'];
+  applicationId: Scalars['Int'];
+  code?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
+  createdTime?: Maybe<Scalars['Datetime']>;
+  expiryTime?: Maybe<Scalars['Datetime']>;
+  isVerified?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  /** Reads a single `Application` that is related to this `Verification`. */
+  application?: Maybe<Application>;
+};
+
+/** The `application` to be created by this mutation. */
+export type VerificationApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `application` in the `VerificationInput` mutation. */
+export type VerificationApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<VerificationApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** Input for the nested mutation of `verification` in the `ApplicationInput` mutation. */
+export type VerificationApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `verification` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `verification` for the far side of the relationship. */
+  connectById?: Maybe<Array<VerificationVerificationPkeyConnect>>;
+  /** The primary key(s) for `verification` for the far side of the relationship. */
+  connectByUniqueId?: Maybe<Array<VerificationVerificationUniqueIdKeyConnect>>;
+  /** The primary key(s) for `verification` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<VerificationNodeIdConnect>>;
+  /** The primary key(s) for `verification` for the far side of the relationship. */
+  deleteById?: Maybe<Array<VerificationVerificationPkeyDelete>>;
+  /** The primary key(s) for `verification` for the far side of the relationship. */
+  deleteByUniqueId?: Maybe<Array<VerificationVerificationUniqueIdKeyDelete>>;
+  /** The primary key(s) for `verification` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<VerificationNodeIdDelete>>;
+  /** The primary key(s) and patch data for `verification` for the far side of the relationship. */
+  updateById?: Maybe<Array<VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationPkeyUpdate>>;
+  /** The primary key(s) and patch data for `verification` for the far side of the relationship. */
+  updateByUniqueId?: Maybe<Array<VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate>>;
+  /** The primary key(s) and patch data for `verification` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate>>;
+  /** A `VerificationInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<VerificationApplicationIdFkeyVerificationCreateInput>>;
+};
+
+/** The `verification` to be created by this mutation. */
+export type VerificationApplicationIdFkeyVerificationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  code?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
+  createdTime?: Maybe<Scalars['Datetime']>;
+  expiryTime?: Maybe<Scalars['Datetime']>;
+  isVerified?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<VerificationApplicationIdFkeyInput>;
+};
+
+/**
+ * A condition to be used against `Verification` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type VerificationCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `uniqueId` field. */
+  uniqueId?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `message` field. */
+  message?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `data` field. */
+  data?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `createdTime` field. */
+  createdTime?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `expiryTime` field. */
+  expiryTime?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `isVerified` field. */
+  isVerified?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
+};
+
+/** A filter to be used against `Verification` object types. All fields are combined with a logical ‘and.’ */
+export type VerificationFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `uniqueId` field. */
+  uniqueId?: Maybe<StringFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `message` field. */
+  message?: Maybe<StringFilter>;
+  /** Filter by the object’s `data` field. */
+  data?: Maybe<JsonFilter>;
+  /** Filter by the object’s `createdTime` field. */
+  createdTime?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `expiryTime` field. */
+  expiryTime?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `isVerified` field. */
+  isVerified?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<VerificationFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<VerificationFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<VerificationFilter>;
+};
+
+/** An input for mutations affecting `Verification` */
+export type VerificationInput = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  applicationId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
+  createdTime?: Maybe<Scalars['Datetime']>;
+  expiryTime?: Maybe<Scalars['Datetime']>;
+  isVerified?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<VerificationApplicationIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type VerificationNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `verification` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type VerificationNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `verification` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The fields on `verification` to look up the row to update. */
+export type VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `verification` being updated. */
+  patch: UpdateVerificationOnVerificationForVerificationApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `verification` to look up the row to update. */
+export type VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `verification` being updated. */
+  patch: UpdateVerificationOnVerificationForVerificationApplicationIdFkeyPatch;
+  uniqueId: Scalars['String'];
+};
+
+/** Represents an update to a `Verification`. Fields that are set will be updated. */
+export type VerificationPatch = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  message?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
+  createdTime?: Maybe<Scalars['Datetime']>;
+  expiryTime?: Maybe<Scalars['Datetime']>;
+  isVerified?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<VerificationApplicationIdFkeyInput>;
+};
+
+/** A connection to a list of `Verification` values. */
+export type VerificationsConnection = {
+  __typename?: 'VerificationsConnection';
+  /** A list of `Verification` objects. */
+  nodes: Array<Maybe<Verification>>;
+  /** A list of edges which contains the `Verification` and cursor to aid in pagination. */
+  edges: Array<VerificationsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `Verification` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `Verification` edge in the connection. */
+export type VerificationsEdge = {
+  __typename?: 'VerificationsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `Verification` at the end of the edge. */
+  node?: Maybe<Verification>;
+};
+
+/** Methods to use when ordering `Verification`. */
+export enum VerificationsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  UniqueIdAsc = 'UNIQUE_ID_ASC',
+  UniqueIdDesc = 'UNIQUE_ID_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
+  MessageAsc = 'MESSAGE_ASC',
+  MessageDesc = 'MESSAGE_DESC',
+  DataAsc = 'DATA_ASC',
+  DataDesc = 'DATA_DESC',
+  CreatedTimeAsc = 'CREATED_TIME_ASC',
+  CreatedTimeDesc = 'CREATED_TIME_DESC',
+  ExpiryTimeAsc = 'EXPIRY_TIME_ASC',
+  ExpiryTimeDesc = 'EXPIRY_TIME_DESC',
+  IsVerifiedAsc = 'IS_VERIFIED_ASC',
+  IsVerifiedDesc = 'IS_VERIFIED_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** The fields on `verification` to look up the row to connect. */
+export type VerificationVerificationPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `verification` to look up the row to delete. */
+export type VerificationVerificationPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `verification` to look up the row to connect. */
+export type VerificationVerificationUniqueIdKeyConnect = {
+  uniqueId: Scalars['String'];
+};
+
+/** The fields on `verification` to look up the row to delete. */
+export type VerificationVerificationUniqueIdKeyDelete = {
+  uniqueId: Scalars['String'];
+};
+
 
 /** A filter to be used against YesOrNo fields. All fields are combined with a logical ‘and.’ */
 export type YesOrNoFilter = {
@@ -27730,7 +27998,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['Verification'] | ResolversTypes['Notification'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -27828,11 +28096,8 @@ export type ResolversTypes = {
   Decision: Decision;
   ReviewToManyReviewStatusHistoryFilter: ReviewToManyReviewStatusHistoryFilter;
   ReviewStatusHistoryFilter: ReviewStatusHistoryFilter;
-  ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
-  NotificationFilter: NotificationFilter;
-  FileFilter: FileFilter;
-  FileToManyNotificationFilter: FileToManyNotificationFilter;
   ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
+  FileFilter: FileFilter;
   TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
   TemplateElementToManyReviewResponseFilter: TemplateElementToManyReviewResponseFilter;
   TemplateSectionToManyApplicationSectionFilter: TemplateSectionToManyApplicationSectionFilter;
@@ -27844,7 +28109,10 @@ export type ResolversTypes = {
   ApplicationToManyReviewAssignmentFilter: ApplicationToManyReviewAssignmentFilter;
   ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
+  ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
+  VerificationFilter: VerificationFilter;
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
+  NotificationFilter: NotificationFilter;
   OrganisationToManyReviewAssignmentFilter: OrganisationToManyReviewAssignmentFilter;
   OrganisationToManyReviewAssignmentAssignerJoinFilter: OrganisationToManyReviewAssignmentAssignerJoinFilter;
   UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
@@ -27947,16 +28215,11 @@ export type ResolversTypes = {
   ReviewStatusHistoriesConnection: ResolverTypeWrapper<ReviewStatusHistoriesConnection>;
   ReviewStatusHistory: ResolverTypeWrapper<ReviewStatusHistory>;
   ReviewStatusHistoriesEdge: ResolverTypeWrapper<ReviewStatusHistoriesEdge>;
-  NotificationsOrderBy: NotificationsOrderBy;
-  NotificationCondition: NotificationCondition;
-  NotificationsConnection: ResolverTypeWrapper<NotificationsConnection>;
-  Notification: ResolverTypeWrapper<Notification>;
-  File: ResolverTypeWrapper<File>;
-  NotificationsEdge: ResolverTypeWrapper<NotificationsEdge>;
   ReviewResponsesEdge: ResolverTypeWrapper<ReviewResponsesEdge>;
   FilesOrderBy: FilesOrderBy;
   FileCondition: FileCondition;
   FilesConnection: ResolverTypeWrapper<FilesConnection>;
+  File: ResolverTypeWrapper<File>;
   FilesEdge: ResolverTypeWrapper<FilesEdge>;
   ApplicationResponsesEdge: ResolverTypeWrapper<ApplicationResponsesEdge>;
   ReviewQuestionAssignmentsOrderBy: ReviewQuestionAssignmentsOrderBy;
@@ -27979,6 +28242,16 @@ export type ResolversTypes = {
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ResolverTypeWrapper<ReviewsConnection>;
   ReviewsEdge: ResolverTypeWrapper<ReviewsEdge>;
+  VerificationsOrderBy: VerificationsOrderBy;
+  VerificationCondition: VerificationCondition;
+  VerificationsConnection: ResolverTypeWrapper<VerificationsConnection>;
+  Verification: ResolverTypeWrapper<Verification>;
+  VerificationsEdge: ResolverTypeWrapper<VerificationsEdge>;
+  NotificationsOrderBy: NotificationsOrderBy;
+  NotificationCondition: NotificationCondition;
+  NotificationsConnection: ResolverTypeWrapper<NotificationsConnection>;
+  Notification: ResolverTypeWrapper<Notification>;
+  NotificationsEdge: ResolverTypeWrapper<NotificationsEdge>;
   ApplicationsEdge: ResolverTypeWrapper<ApplicationsEdge>;
   ReviewAssignmentAssignerJoinsOrderBy: ReviewAssignmentAssignerJoinsOrderBy;
   ReviewAssignmentAssignerJoinCondition: ReviewAssignmentAssignerJoinCondition;
@@ -28546,101 +28819,8 @@ export type ResolversTypes = {
   ReviewStatusHistoryReviewIdFkeyInput: ReviewStatusHistoryReviewIdFkeyInput;
   ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch: UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch;
-  NotificationReviewIdFkeyInverseInput: NotificationReviewIdFkeyInverseInput;
-  NotificationNotificationPkeyConnect: NotificationNotificationPkeyConnect;
-  NotificationNodeIdConnect: NotificationNodeIdConnect;
-  NotificationNotificationPkeyDelete: NotificationNotificationPkeyDelete;
-  NotificationNodeIdDelete: NotificationNodeIdDelete;
-  NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationReviewIdFkeyPatch: UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch;
-  NotificationUserIdFkeyInput: NotificationUserIdFkeyInput;
-  UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnNotificationForNotificationUserIdFkeyPatch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
-  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
-  FileFilePkeyConnect: FileFilePkeyConnect;
-  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
-  FileNodeIdConnect: FileNodeIdConnect;
-  FileFilePkeyDelete: FileFilePkeyDelete;
-  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
-  FileNodeIdDelete: FileNodeIdDelete;
-  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
-  FileUserIdFkeyInput: FileUserIdFkeyInput;
-  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
-  NotificationUserIdFkeyInverseInput: NotificationUserIdFkeyInverseInput;
-  NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationUserIdFkeyPatch: UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch;
-  NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
-  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
-  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
-  NotificationApplicationIdFkeyInverseInput: NotificationApplicationIdFkeyInverseInput;
-  NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatch;
-  NotificationReviewIdFkeyInput: NotificationReviewIdFkeyInput;
-  ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate;
-  updateReviewOnNotificationForNotificationReviewIdFkeyPatch: UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch;
-  NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
-  ReviewPatch: ReviewPatch;
-  NotificationReviewIdFkeyReviewCreateInput: NotificationReviewIdFkeyReviewCreateInput;
-  NotificationDocumentIdFkeyInput: NotificationDocumentIdFkeyInput;
-  FileOnNotificationForNotificationDocumentIdFkeyUsingFilePkeyUpdate: FileOnNotificationForNotificationDocumentIdFkeyUsingFilePkeyUpdate;
-  updateFileOnNotificationForNotificationDocumentIdFkeyPatch: UpdateFileOnNotificationForNotificationDocumentIdFkeyPatch;
-  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
-  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
-  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
-  NotificationDocumentIdFkeyInverseInput: NotificationDocumentIdFkeyInverseInput;
-  NotificationOnNotificationForNotificationDocumentIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationDocumentIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationDocumentIdFkeyPatch: UpdateNotificationOnNotificationForNotificationDocumentIdFkeyPatch;
-  FileOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate: FileOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate;
-  NotificationPatch: NotificationPatch;
-  NotificationDocumentIdFkeyNotificationCreateInput: NotificationDocumentIdFkeyNotificationCreateInput;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  FilePatch: FilePatch;
-  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
-  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  ApplicationResponsePatch: ApplicationResponsePatch;
-  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
-  FileOnNotificationForNotificationDocumentIdFkeyUsingFileUniqueIdKeyUpdate: FileOnNotificationForNotificationDocumentIdFkeyUsingFileUniqueIdKeyUpdate;
-  NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate;
-  NotificationDocumentIdFkeyFileCreateInput: NotificationDocumentIdFkeyFileCreateInput;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
-  NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
-  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  ApplicationPatch: ApplicationPatch;
-  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
-  NotificationApplicationIdFkeyApplicationCreateInput: NotificationApplicationIdFkeyApplicationCreateInput;
-  UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
-  NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
-  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
-  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
-  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
-  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
-  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
-  UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
-  NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
-  NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
-  ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
-  NotificationReviewIdFkeyNotificationCreateInput: NotificationReviewIdFkeyNotificationCreateInput;
   ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
+  ReviewPatch: ReviewPatch;
   ReviewStatusHistoryReviewIdFkeyReviewCreateInput: ReviewStatusHistoryReviewIdFkeyReviewCreateInput;
   ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
   ReviewStatusHistoryPatch: ReviewStatusHistoryPatch;
@@ -28671,6 +28851,97 @@ export type ResolversTypes = {
   ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput: ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput;
   ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
+  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
+  FileFilePkeyConnect: FileFilePkeyConnect;
+  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
+  FileNodeIdConnect: FileNodeIdConnect;
+  FileFilePkeyDelete: FileFilePkeyDelete;
+  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
+  FileNodeIdDelete: FileNodeIdDelete;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
+  FileUserIdFkeyInput: FileUserIdFkeyInput;
+  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
+  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
+  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
+  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
+  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
+  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
+  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
+  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  ApplicationResponsePatch: ApplicationResponsePatch;
+  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FilePatch: FilePatch;
+  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
+  VerificationApplicationIdFkeyInverseInput: VerificationApplicationIdFkeyInverseInput;
+  VerificationVerificationPkeyConnect: VerificationVerificationPkeyConnect;
+  VerificationVerificationUniqueIdKeyConnect: VerificationVerificationUniqueIdKeyConnect;
+  VerificationNodeIdConnect: VerificationNodeIdConnect;
+  VerificationVerificationPkeyDelete: VerificationVerificationPkeyDelete;
+  VerificationVerificationUniqueIdKeyDelete: VerificationVerificationUniqueIdKeyDelete;
+  VerificationNodeIdDelete: VerificationNodeIdDelete;
+  VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationPkeyUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationPkeyUpdate;
+  updateVerificationOnVerificationForVerificationApplicationIdFkeyPatch: UpdateVerificationOnVerificationForVerificationApplicationIdFkeyPatch;
+  VerificationApplicationIdFkeyInput: VerificationApplicationIdFkeyInput;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnVerificationForVerificationApplicationIdFkeyPatch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
+  NotificationApplicationIdFkeyInverseInput: NotificationApplicationIdFkeyInverseInput;
+  NotificationNotificationPkeyConnect: NotificationNotificationPkeyConnect;
+  NotificationNodeIdConnect: NotificationNodeIdConnect;
+  NotificationNotificationPkeyDelete: NotificationNotificationPkeyDelete;
+  NotificationNodeIdDelete: NotificationNodeIdDelete;
+  NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate;
+  updateNotificationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatch;
+  NotificationUserIdFkeyInput: NotificationUserIdFkeyInput;
+  UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnNotificationForNotificationUserIdFkeyPatch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
+  NotificationUserIdFkeyInverseInput: NotificationUserIdFkeyInverseInput;
+  NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate;
+  updateNotificationOnNotificationForNotificationUserIdFkeyPatch: UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch;
+  NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
+  ApplicationPatch: ApplicationPatch;
+  NotificationApplicationIdFkeyApplicationCreateInput: NotificationApplicationIdFkeyApplicationCreateInput;
+  UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
+  NotificationPatch: NotificationPatch;
+  NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
+  UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
+  NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
+  NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
+  NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
+  VerificationApplicationIdFkeyApplicationCreateInput: VerificationApplicationIdFkeyApplicationCreateInput;
+  VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
+  VerificationPatch: VerificationPatch;
+  VerificationApplicationIdFkeyVerificationCreateInput: VerificationApplicationIdFkeyVerificationCreateInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
+  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
+  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
+  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
+  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
+  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
+  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
+  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
@@ -29077,6 +29348,9 @@ export type ResolversTypes = {
   CreateUserOrganisationInput: CreateUserOrganisationInput;
   UserOrganisationInput: UserOrganisationInput;
   CreateUserOrganisationPayload: ResolverTypeWrapper<CreateUserOrganisationPayload>;
+  CreateVerificationInput: CreateVerificationInput;
+  VerificationInput: VerificationInput;
+  CreateVerificationPayload: ResolverTypeWrapper<CreateVerificationPayload>;
   UpdateActionPluginByNodeIdInput: UpdateActionPluginByNodeIdInput;
   ActionPluginPatch: ActionPluginPatch;
   UpdateActionPluginPayload: ResolverTypeWrapper<UpdateActionPluginPayload>;
@@ -29206,6 +29480,10 @@ export type ResolversTypes = {
   UpdateUserOrganisationByNodeIdInput: UpdateUserOrganisationByNodeIdInput;
   UpdateUserOrganisationPayload: ResolverTypeWrapper<UpdateUserOrganisationPayload>;
   UpdateUserOrganisationInput: UpdateUserOrganisationInput;
+  UpdateVerificationByNodeIdInput: UpdateVerificationByNodeIdInput;
+  UpdateVerificationPayload: ResolverTypeWrapper<UpdateVerificationPayload>;
+  UpdateVerificationInput: UpdateVerificationInput;
+  UpdateVerificationByUniqueIdInput: UpdateVerificationByUniqueIdInput;
   DeleteActionPluginByNodeIdInput: DeleteActionPluginByNodeIdInput;
   DeleteActionPluginPayload: ResolverTypeWrapper<DeleteActionPluginPayload>;
   DeleteActionPluginInput: DeleteActionPluginInput;
@@ -29332,12 +29610,16 @@ export type ResolversTypes = {
   DeleteUserOrganisationByNodeIdInput: DeleteUserOrganisationByNodeIdInput;
   DeleteUserOrganisationPayload: ResolverTypeWrapper<DeleteUserOrganisationPayload>;
   DeleteUserOrganisationInput: DeleteUserOrganisationInput;
+  DeleteVerificationByNodeIdInput: DeleteVerificationByNodeIdInput;
+  DeleteVerificationPayload: ResolverTypeWrapper<DeleteVerificationPayload>;
+  DeleteVerificationInput: DeleteVerificationInput;
+  DeleteVerificationByUniqueIdInput: DeleteVerificationByUniqueIdInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['Verification'] | ResolversParentTypes['Notification'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -29418,11 +29700,8 @@ export type ResolversParentTypes = {
   DecisionFilter: DecisionFilter;
   ReviewToManyReviewStatusHistoryFilter: ReviewToManyReviewStatusHistoryFilter;
   ReviewStatusHistoryFilter: ReviewStatusHistoryFilter;
-  ReviewToManyNotificationFilter: ReviewToManyNotificationFilter;
-  NotificationFilter: NotificationFilter;
-  FileFilter: FileFilter;
-  FileToManyNotificationFilter: FileToManyNotificationFilter;
   ApplicationResponseToManyFileFilter: ApplicationResponseToManyFileFilter;
+  FileFilter: FileFilter;
   TemplateElementToManyReviewQuestionAssignmentFilter: TemplateElementToManyReviewQuestionAssignmentFilter;
   TemplateElementToManyReviewResponseFilter: TemplateElementToManyReviewResponseFilter;
   TemplateSectionToManyApplicationSectionFilter: TemplateSectionToManyApplicationSectionFilter;
@@ -29434,7 +29713,10 @@ export type ResolversParentTypes = {
   ApplicationToManyReviewAssignmentFilter: ApplicationToManyReviewAssignmentFilter;
   ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
+  ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
+  VerificationFilter: VerificationFilter;
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
+  NotificationFilter: NotificationFilter;
   OrganisationToManyReviewAssignmentFilter: OrganisationToManyReviewAssignmentFilter;
   OrganisationToManyReviewAssignmentAssignerJoinFilter: OrganisationToManyReviewAssignmentAssignerJoinFilter;
   UserToManyPermissionJoinFilter: UserToManyPermissionJoinFilter;
@@ -29522,14 +29804,10 @@ export type ResolversParentTypes = {
   ReviewStatusHistoriesConnection: ReviewStatusHistoriesConnection;
   ReviewStatusHistory: ReviewStatusHistory;
   ReviewStatusHistoriesEdge: ReviewStatusHistoriesEdge;
-  NotificationCondition: NotificationCondition;
-  NotificationsConnection: NotificationsConnection;
-  Notification: Notification;
-  File: File;
-  NotificationsEdge: NotificationsEdge;
   ReviewResponsesEdge: ReviewResponsesEdge;
   FileCondition: FileCondition;
   FilesConnection: FilesConnection;
+  File: File;
   FilesEdge: FilesEdge;
   ApplicationResponsesEdge: ApplicationResponsesEdge;
   ReviewQuestionAssignmentCondition: ReviewQuestionAssignmentCondition;
@@ -29548,6 +29826,14 @@ export type ResolversParentTypes = {
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ReviewsConnection;
   ReviewsEdge: ReviewsEdge;
+  VerificationCondition: VerificationCondition;
+  VerificationsConnection: VerificationsConnection;
+  Verification: Verification;
+  VerificationsEdge: VerificationsEdge;
+  NotificationCondition: NotificationCondition;
+  NotificationsConnection: NotificationsConnection;
+  Notification: Notification;
+  NotificationsEdge: NotificationsEdge;
   ApplicationsEdge: ApplicationsEdge;
   ReviewAssignmentAssignerJoinCondition: ReviewAssignmentAssignerJoinCondition;
   ReviewAssignmentAssignerJoinsConnection: ReviewAssignmentAssignerJoinsConnection;
@@ -30091,101 +30377,8 @@ export type ResolversParentTypes = {
   ReviewStatusHistoryReviewIdFkeyInput: ReviewStatusHistoryReviewIdFkeyInput;
   ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch: UpdateReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyPatch;
-  NotificationReviewIdFkeyInverseInput: NotificationReviewIdFkeyInverseInput;
-  NotificationNotificationPkeyConnect: NotificationNotificationPkeyConnect;
-  NotificationNodeIdConnect: NotificationNodeIdConnect;
-  NotificationNotificationPkeyDelete: NotificationNotificationPkeyDelete;
-  NotificationNodeIdDelete: NotificationNodeIdDelete;
-  NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationReviewIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationReviewIdFkeyPatch: UpdateNotificationOnNotificationForNotificationReviewIdFkeyPatch;
-  NotificationUserIdFkeyInput: NotificationUserIdFkeyInput;
-  UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnNotificationForNotificationUserIdFkeyPatch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
-  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
-  FileFilePkeyConnect: FileFilePkeyConnect;
-  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
-  FileNodeIdConnect: FileNodeIdConnect;
-  FileFilePkeyDelete: FileFilePkeyDelete;
-  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
-  FileNodeIdDelete: FileNodeIdDelete;
-  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
-  FileUserIdFkeyInput: FileUserIdFkeyInput;
-  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
-  NotificationUserIdFkeyInverseInput: NotificationUserIdFkeyInverseInput;
-  NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationUserIdFkeyPatch: UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch;
-  NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
-  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
-  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
-  NotificationApplicationIdFkeyInverseInput: NotificationApplicationIdFkeyInverseInput;
-  NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatch;
-  NotificationReviewIdFkeyInput: NotificationReviewIdFkeyInput;
-  ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnNotificationForNotificationReviewIdFkeyUsingReviewPkeyUpdate;
-  updateReviewOnNotificationForNotificationReviewIdFkeyPatch: UpdateReviewOnNotificationForNotificationReviewIdFkeyPatch;
-  NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
-  ReviewPatch: ReviewPatch;
-  NotificationReviewIdFkeyReviewCreateInput: NotificationReviewIdFkeyReviewCreateInput;
-  NotificationDocumentIdFkeyInput: NotificationDocumentIdFkeyInput;
-  FileOnNotificationForNotificationDocumentIdFkeyUsingFilePkeyUpdate: FileOnNotificationForNotificationDocumentIdFkeyUsingFilePkeyUpdate;
-  updateFileOnNotificationForNotificationDocumentIdFkeyPatch: UpdateFileOnNotificationForNotificationDocumentIdFkeyPatch;
-  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
-  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
-  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
-  NotificationDocumentIdFkeyInverseInput: NotificationDocumentIdFkeyInverseInput;
-  NotificationOnNotificationForNotificationDocumentIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationDocumentIdFkeyUsingNotificationPkeyUpdate;
-  updateNotificationOnNotificationForNotificationDocumentIdFkeyPatch: UpdateNotificationOnNotificationForNotificationDocumentIdFkeyPatch;
-  FileOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate: FileOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate;
-  NotificationPatch: NotificationPatch;
-  NotificationDocumentIdFkeyNotificationCreateInput: NotificationDocumentIdFkeyNotificationCreateInput;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  FilePatch: FilePatch;
-  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
-  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  ApplicationResponsePatch: ApplicationResponsePatch;
-  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
-  FileOnNotificationForNotificationDocumentIdFkeyUsingFileUniqueIdKeyUpdate: FileOnNotificationForNotificationDocumentIdFkeyUsingFileUniqueIdKeyUpdate;
-  NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationDocumentIdFkeyNodeIdUpdate;
-  NotificationDocumentIdFkeyFileCreateInput: NotificationDocumentIdFkeyFileCreateInput;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
-  NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
-  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  ApplicationPatch: ApplicationPatch;
-  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
-  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
-  NotificationApplicationIdFkeyApplicationCreateInput: NotificationApplicationIdFkeyApplicationCreateInput;
-  UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
-  NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
-  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
-  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
-  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
-  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
-  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
-  UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
-  NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
-  NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
-  ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
-  NotificationReviewIdFkeyNotificationCreateInput: NotificationReviewIdFkeyNotificationCreateInput;
   ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewStatusHistoryOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
+  ReviewPatch: ReviewPatch;
   ReviewStatusHistoryReviewIdFkeyReviewCreateInput: ReviewStatusHistoryReviewIdFkeyReviewCreateInput;
   ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate: ReviewOnReviewStatusHistoryForReviewStatusHistoryReviewIdFkeyNodeIdUpdate;
   ReviewStatusHistoryPatch: ReviewStatusHistoryPatch;
@@ -30216,6 +30409,97 @@ export type ResolversParentTypes = {
   ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput: ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput;
   ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
+  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
+  FileFilePkeyConnect: FileFilePkeyConnect;
+  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
+  FileNodeIdConnect: FileNodeIdConnect;
+  FileFilePkeyDelete: FileFilePkeyDelete;
+  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
+  FileNodeIdDelete: FileNodeIdDelete;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
+  FileUserIdFkeyInput: FileUserIdFkeyInput;
+  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
+  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
+  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
+  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
+  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
+  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
+  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
+  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  ApplicationResponsePatch: ApplicationResponsePatch;
+  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FilePatch: FilePatch;
+  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
+  VerificationApplicationIdFkeyInverseInput: VerificationApplicationIdFkeyInverseInput;
+  VerificationVerificationPkeyConnect: VerificationVerificationPkeyConnect;
+  VerificationVerificationUniqueIdKeyConnect: VerificationVerificationUniqueIdKeyConnect;
+  VerificationNodeIdConnect: VerificationNodeIdConnect;
+  VerificationVerificationPkeyDelete: VerificationVerificationPkeyDelete;
+  VerificationVerificationUniqueIdKeyDelete: VerificationVerificationUniqueIdKeyDelete;
+  VerificationNodeIdDelete: VerificationNodeIdDelete;
+  VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationPkeyUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationPkeyUpdate;
+  updateVerificationOnVerificationForVerificationApplicationIdFkeyPatch: UpdateVerificationOnVerificationForVerificationApplicationIdFkeyPatch;
+  VerificationApplicationIdFkeyInput: VerificationApplicationIdFkeyInput;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnVerificationForVerificationApplicationIdFkeyPatch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
+  NotificationApplicationIdFkeyInverseInput: NotificationApplicationIdFkeyInverseInput;
+  NotificationNotificationPkeyConnect: NotificationNotificationPkeyConnect;
+  NotificationNodeIdConnect: NotificationNodeIdConnect;
+  NotificationNotificationPkeyDelete: NotificationNotificationPkeyDelete;
+  NotificationNodeIdDelete: NotificationNodeIdDelete;
+  NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyUsingNotificationPkeyUpdate;
+  updateNotificationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateNotificationOnNotificationForNotificationApplicationIdFkeyPatch;
+  NotificationUserIdFkeyInput: NotificationUserIdFkeyInput;
+  UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnNotificationForNotificationUserIdFkeyPatch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
+  NotificationUserIdFkeyInverseInput: NotificationUserIdFkeyInverseInput;
+  NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate;
+  updateNotificationOnNotificationForNotificationUserIdFkeyPatch: UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch;
+  NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
+  ApplicationPatch: ApplicationPatch;
+  NotificationApplicationIdFkeyApplicationCreateInput: NotificationApplicationIdFkeyApplicationCreateInput;
+  UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
+  NotificationPatch: NotificationPatch;
+  NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
+  UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
+  NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
+  NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
+  ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
+  NotificationApplicationIdFkeyNotificationCreateInput: NotificationApplicationIdFkeyNotificationCreateInput;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
+  VerificationApplicationIdFkeyApplicationCreateInput: VerificationApplicationIdFkeyApplicationCreateInput;
+  VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyUsingVerificationUniqueIdKeyUpdate;
+  ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
+  VerificationPatch: VerificationPatch;
+  VerificationApplicationIdFkeyVerificationCreateInput: VerificationApplicationIdFkeyVerificationCreateInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
+  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
+  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
+  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
+  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
+  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
+  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
+  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
   ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
@@ -30622,6 +30906,9 @@ export type ResolversParentTypes = {
   CreateUserOrganisationInput: CreateUserOrganisationInput;
   UserOrganisationInput: UserOrganisationInput;
   CreateUserOrganisationPayload: CreateUserOrganisationPayload;
+  CreateVerificationInput: CreateVerificationInput;
+  VerificationInput: VerificationInput;
+  CreateVerificationPayload: CreateVerificationPayload;
   UpdateActionPluginByNodeIdInput: UpdateActionPluginByNodeIdInput;
   ActionPluginPatch: ActionPluginPatch;
   UpdateActionPluginPayload: UpdateActionPluginPayload;
@@ -30751,6 +31038,10 @@ export type ResolversParentTypes = {
   UpdateUserOrganisationByNodeIdInput: UpdateUserOrganisationByNodeIdInput;
   UpdateUserOrganisationPayload: UpdateUserOrganisationPayload;
   UpdateUserOrganisationInput: UpdateUserOrganisationInput;
+  UpdateVerificationByNodeIdInput: UpdateVerificationByNodeIdInput;
+  UpdateVerificationPayload: UpdateVerificationPayload;
+  UpdateVerificationInput: UpdateVerificationInput;
+  UpdateVerificationByUniqueIdInput: UpdateVerificationByUniqueIdInput;
   DeleteActionPluginByNodeIdInput: DeleteActionPluginByNodeIdInput;
   DeleteActionPluginPayload: DeleteActionPluginPayload;
   DeleteActionPluginInput: DeleteActionPluginInput;
@@ -30877,6 +31168,10 @@ export type ResolversParentTypes = {
   DeleteUserOrganisationByNodeIdInput: DeleteUserOrganisationByNodeIdInput;
   DeleteUserOrganisationPayload: DeleteUserOrganisationPayload;
   DeleteUserOrganisationInput: DeleteUserOrganisationInput;
+  DeleteVerificationByNodeIdInput: DeleteVerificationByNodeIdInput;
+  DeleteVerificationPayload: DeleteVerificationPayload;
+  DeleteVerificationInput: DeleteVerificationInput;
+  DeleteVerificationByUniqueIdInput: DeleteVerificationByUniqueIdInput;
 };
 
 export type ActionPluginResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionPlugin'] = ResolversParentTypes['ActionPlugin']> = {
@@ -30963,6 +31258,7 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewAssignmentsArgs, 'orderBy'>>;
   reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewsArgs, 'orderBy'>>;
   filesByApplicationSerial?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationFilesByApplicationSerialArgs, 'orderBy'>>;
+  verifications?: Resolver<ResolversTypes['VerificationsConnection'], ParentType, ContextType, RequireFields<ApplicationVerificationsArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ApplicationNotificationsArgs, 'orderBy'>>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -31399,8 +31695,6 @@ export type CreateNotificationPayloadResolvers<ContextType = any, ParentType ext
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
-  document?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType>;
   notificationEdge?: Resolver<Maybe<ResolversTypes['NotificationsEdge']>, ParentType, ContextType, RequireFields<CreateNotificationPayloadNotificationEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -31654,6 +31948,15 @@ export type CreateUserPayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateVerificationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateVerificationPayload'] = ResolversParentTypes['CreateVerificationPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  verificationEdge?: Resolver<Maybe<ResolversTypes['VerificationsEdge']>, ParentType, ContextType, RequireFields<CreateVerificationPayloadVerificationEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface CursorScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Cursor'], any> {
   name: 'Cursor';
 }
@@ -31783,8 +32086,6 @@ export type DeleteNotificationPayloadResolvers<ContextType = any, ParentType ext
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
-  document?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType>;
   notificationEdge?: Resolver<Maybe<ResolversTypes['NotificationsEdge']>, ParentType, ContextType, RequireFields<DeleteNotificationPayloadNotificationEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -32064,6 +32365,16 @@ export type DeleteUserPayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteVerificationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteVerificationPayload'] = ResolversParentTypes['DeleteVerificationPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType>;
+  deletedVerificationNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  verificationEdge?: Resolver<Maybe<ResolversTypes['VerificationsEdge']>, ParentType, ContextType, RequireFields<DeleteVerificationPayloadVerificationEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ElementTypePluginResolvers<ContextType = any, ParentType extends ResolversParentTypes['ElementTypePlugin'] = ResolversParentTypes['ElementTypePlugin']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -32107,7 +32418,6 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
-  notificationsByDocumentId?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<FileNotificationsByDocumentIdArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -32219,6 +32529,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createTriggerQueue?: Resolver<Maybe<ResolversTypes['CreateTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateTriggerQueueArgs, 'input'>>;
   createUser?: Resolver<Maybe<ResolversTypes['CreateUserPayload']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   createUserOrganisation?: Resolver<Maybe<ResolversTypes['CreateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationCreateUserOrganisationArgs, 'input'>>;
+  createVerification?: Resolver<Maybe<ResolversTypes['CreateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationCreateVerificationArgs, 'input'>>;
   updateActionPluginByNodeId?: Resolver<Maybe<ResolversTypes['UpdateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionPluginByNodeIdArgs, 'input'>>;
   updateActionPlugin?: Resolver<Maybe<ResolversTypes['UpdateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionPluginArgs, 'input'>>;
   updateActionPluginByCode?: Resolver<Maybe<ResolversTypes['UpdateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionPluginByCodeArgs, 'input'>>;
@@ -32307,6 +32618,9 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateUserByUsername?: Resolver<Maybe<ResolversTypes['UpdateUserPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserByUsernameArgs, 'input'>>;
   updateUserOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserOrganisationByNodeIdArgs, 'input'>>;
   updateUserOrganisation?: Resolver<Maybe<ResolversTypes['UpdateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserOrganisationArgs, 'input'>>;
+  updateVerificationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateVerificationByNodeIdArgs, 'input'>>;
+  updateVerification?: Resolver<Maybe<ResolversTypes['UpdateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateVerificationArgs, 'input'>>;
+  updateVerificationByUniqueId?: Resolver<Maybe<ResolversTypes['UpdateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateVerificationByUniqueIdArgs, 'input'>>;
   deleteActionPluginByNodeId?: Resolver<Maybe<ResolversTypes['DeleteActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionPluginByNodeIdArgs, 'input'>>;
   deleteActionPlugin?: Resolver<Maybe<ResolversTypes['DeleteActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionPluginArgs, 'input'>>;
   deleteActionPluginByCode?: Resolver<Maybe<ResolversTypes['DeleteActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionPluginByCodeArgs, 'input'>>;
@@ -32395,10 +32709,13 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteUserByUsername?: Resolver<Maybe<ResolversTypes['DeleteUserPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserByUsernameArgs, 'input'>>;
   deleteUserOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserOrganisationByNodeIdArgs, 'input'>>;
   deleteUserOrganisation?: Resolver<Maybe<ResolversTypes['DeleteUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserOrganisationArgs, 'input'>>;
+  deleteVerificationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteVerificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteVerificationByNodeIdArgs, 'input'>>;
+  deleteVerification?: Resolver<Maybe<ResolversTypes['DeleteVerificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteVerificationArgs, 'input'>>;
+  deleteVerificationByUniqueId?: Resolver<Maybe<ResolversTypes['DeleteVerificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteVerificationByUniqueIdArgs, 'input'>>;
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'Verification' | 'Notification' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -32407,15 +32724,14 @@ export type NotificationResolvers<ContextType = any, ParentType extends Resolver
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  emailRecipients?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   subject?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  documentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  attachments?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  emailSent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isRead?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
-  document?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -32711,6 +33027,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'orderBy'>>;
   userOrgJoins?: Resolver<Maybe<ResolversTypes['UserOrgJoinsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrgJoinsArgs, 'orderBy'>>;
   userOrganisations?: Resolver<Maybe<ResolversTypes['UserOrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrganisationsArgs, 'orderBy'>>;
+  verifications?: Resolver<Maybe<ResolversTypes['VerificationsConnection']>, ParentType, ContextType, RequireFields<QueryVerificationsArgs, 'orderBy'>>;
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginArgs, 'id'>>;
   actionPluginByCode?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByCodeArgs, 'code'>>;
   actionQueue?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueArgs, 'id'>>;
@@ -32761,6 +33078,8 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByUsernameArgs, 'username'>>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationArgs, 'id'>>;
+  verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationArgs, 'id'>>;
+  verificationByUniqueId?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationByUniqueIdArgs, 'uniqueId'>>;
   applicationList?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListArgs, never>>;
   applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
   assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryAssignedQuestionsCountArgs, never>>;
@@ -32818,6 +33137,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   triggerQueueByNodeId?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType, RequireFields<QueryTriggerQueueByNodeIdArgs, 'nodeId'>>;
   userByNodeId?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByNodeIdArgs, 'nodeId'>>;
   userOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationByNodeIdArgs, 'nodeId'>>;
+  verificationByNodeId?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationByNodeIdArgs, 'nodeId'>>;
 };
 
 export type ReviewResolvers<ContextType = any, ParentType extends ResolversParentTypes['Review'] = ResolversParentTypes['Review']> = {
@@ -32837,7 +33157,6 @@ export type ReviewResolvers<ContextType = any, ParentType extends ResolversParen
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ReviewReviewResponsesArgs, 'orderBy'>>;
   reviewDecisions?: Resolver<ResolversTypes['ReviewDecisionsConnection'], ParentType, ContextType, RequireFields<ReviewReviewDecisionsArgs, 'orderBy'>>;
   reviewStatusHistories?: Resolver<ResolversTypes['ReviewStatusHistoriesConnection'], ParentType, ContextType, RequireFields<ReviewReviewStatusHistoriesArgs, 'orderBy'>>;
-  notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ReviewNotificationsArgs, 'orderBy'>>;
   latestDecision?: Resolver<Maybe<ResolversTypes['ReviewDecision']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ReviewStatus']>, ParentType, ContextType>;
   timeStatusCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
@@ -33497,8 +33816,6 @@ export type UpdateNotificationPayloadResolvers<ContextType = any, ParentType ext
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  review?: Resolver<Maybe<ResolversTypes['Review']>, ParentType, ContextType>;
-  document?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType>;
   notificationEdge?: Resolver<Maybe<ResolversTypes['NotificationsEdge']>, ParentType, ContextType, RequireFields<UpdateNotificationPayloadNotificationEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -33752,6 +34069,15 @@ export type UpdateUserPayloadResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateVerificationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateVerificationPayload'] = ResolversParentTypes['UpdateVerificationPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  verificationEdge?: Resolver<Maybe<ResolversTypes['VerificationsEdge']>, ParentType, ContextType, RequireFields<UpdateVerificationPayloadVerificationEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -33843,6 +34169,36 @@ export type UsersEdgeResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type VerificationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Verification'] = ResolversParentTypes['Verification']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  uniqueId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  createdTime?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  expiryTime?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  isVerified?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type VerificationsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['VerificationsConnection'] = ResolversParentTypes['VerificationsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['Verification']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['VerificationsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type VerificationsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['VerificationsEdge'] = ResolversParentTypes['VerificationsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export interface YesOrNoScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['YesOrNo'], any> {
   name: 'YesOrNo';
 }
@@ -33928,6 +34284,7 @@ export type Resolvers<ContextType = any> = {
   CreateTriggerQueuePayload?: CreateTriggerQueuePayloadResolvers<ContextType>;
   CreateUserOrganisationPayload?: CreateUserOrganisationPayloadResolvers<ContextType>;
   CreateUserPayload?: CreateUserPayloadResolvers<ContextType>;
+  CreateVerificationPayload?: CreateVerificationPayloadResolvers<ContextType>;
   Cursor?: GraphQLScalarType;
   Datetime?: GraphQLScalarType;
   DeleteActionPluginPayload?: DeleteActionPluginPayloadResolvers<ContextType>;
@@ -33968,6 +34325,7 @@ export type Resolvers<ContextType = any> = {
   DeleteTriggerQueuePayload?: DeleteTriggerQueuePayloadResolvers<ContextType>;
   DeleteUserOrganisationPayload?: DeleteUserOrganisationPayloadResolvers<ContextType>;
   DeleteUserPayload?: DeleteUserPayloadResolvers<ContextType>;
+  DeleteVerificationPayload?: DeleteVerificationPayloadResolvers<ContextType>;
   ElementTypePlugin?: ElementTypePluginResolvers<ContextType>;
   ElementTypePluginsConnection?: ElementTypePluginsConnectionResolvers<ContextType>;
   ElementTypePluginsEdge?: ElementTypePluginsEdgeResolvers<ContextType>;
@@ -34108,6 +34466,7 @@ export type Resolvers<ContextType = any> = {
   UpdateTriggerQueuePayload?: UpdateTriggerQueuePayloadResolvers<ContextType>;
   UpdateUserOrganisationPayload?: UpdateUserOrganisationPayloadResolvers<ContextType>;
   UpdateUserPayload?: UpdateUserPayloadResolvers<ContextType>;
+  UpdateVerificationPayload?: UpdateVerificationPayloadResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserOrganisation?: UserOrganisationResolvers<ContextType>;
   UserOrganisationsConnection?: UserOrganisationsConnectionResolvers<ContextType>;
@@ -34117,6 +34476,9 @@ export type Resolvers<ContextType = any> = {
   UserOrgJoinsEdge?: UserOrgJoinsEdgeResolvers<ContextType>;
   UsersConnection?: UsersConnectionResolvers<ContextType>;
   UsersEdge?: UsersEdgeResolvers<ContextType>;
+  Verification?: VerificationResolvers<ContextType>;
+  VerificationsConnection?: VerificationsConnectionResolvers<ContextType>;
+  VerificationsEdge?: VerificationsEdgeResolvers<ContextType>;
   YesOrNo?: GraphQLScalarType;
 };
 
