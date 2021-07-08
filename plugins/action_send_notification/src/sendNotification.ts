@@ -77,7 +77,7 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
 
     // NOTE: Because sending email happens asynchronously, the output object
     // for this Action does not reflect whether email has sent successfully.
-    // The "email_sent" field in the notifictation table is the only record of this.
+    // The "email_sent" field in the notification table is the only record of this.
 
     return {
       status: ActionQueueStatus.Success,
