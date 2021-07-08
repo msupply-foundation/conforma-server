@@ -13,6 +13,7 @@ exports.queries = [
         template: {
           code: "UserRegistration"
           name: "User Registration"
+          plural: "User Registations"
           submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm."
           status: AVAILABLE
           versionTimestamp: "NOW()"

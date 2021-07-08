@@ -12,6 +12,7 @@ exports.queries = [
         template: {
           code: "medicalDeviceRego"
           name: "Drug Registration MMD"
+          plural: "Drug Registrations MMD"
           isLinear: true
           status: AVAILABLE
           startMessage: "## Apply for a drug registration for a medical devices"

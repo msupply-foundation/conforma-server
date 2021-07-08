@@ -12,6 +12,7 @@ exports.queries = [
         template: {
           code: "CompanyRego"
           name: "Company Registration"
+          plural: "Companies Registrations"
           isLinear: false # CHANGE THIS 
           status: AVAILABLE
           startMessage: "## Registering a company in the system\\n\\nAs well as providing information about your company, you will be required to supply the following documents as part of this registration process:\\n\\n- **LMMD02** – CV of applicant with recent (max 1 year) photo\\n- **LMMD03** – Medical Certificate (max 3 months)\\n- **LMMD04** – Certificate of current residence with photo (max 3 months)\\n- **LMMD05** – Recent (max 1 year) photo\\n- **LMMD06** – Certificate of education level\\n- **LMMD07** – Criminal record \\"number 3\\"\\n- **LMMD08** – Letter from previous employers documenting at least 3 years professional experience (for private sector must be certified by provincial or capital level)\\n- **LMMD09** – Documentation showing resignation from previous employment (for private sector must be certified by provincial or capital level)\\n- **LMMD10** – Map of location of company\\n- **LMMD11** – Layout of facilities\\n- **LMMD13** – Proof of ownership of facilities or contract of rent\\n- **LMMD14** – Copy of business licence issued by Ministry of Commerce"
