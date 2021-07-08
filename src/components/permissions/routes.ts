@@ -103,7 +103,7 @@ const routeVerification = async (request: any, reply: any) => {
     if (verification.is_verified) return reply.send({ success: false, message: 'Already verified' })
 
     // Check expiry
-    if (verification.expiry_time && Date.parse(verification.expiry_time) < Date.now())
+    if (verification.time_expired && Date.parse(verification.time_expired) < Date.now())
       return reply.send({ success: false, message: 'Verification expired' })
 
     // All good! - Update verification record
