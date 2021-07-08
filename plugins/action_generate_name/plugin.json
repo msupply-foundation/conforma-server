@@ -1,17 +1,20 @@
 {
   "type": "action_plugin",
-  "code": "generateString",
+  "code": "generateName",
   "name": "Generate String",
   "description": "Creates a text string and (optionally) applies it to a record, e.g. an application name",
   "required_parameters": ["formatExpression"],
-  "optional_parameters": ["table", "field", "matchField", "matchValue", "shouldUpdateDatabase"],
-  "output_properties": [
-    "applicationId",
-    "status",
-    "statusId",
-    "applicationStatusHistoryTimestamp",
-    "reviewStatusHistoryTimestamp"
+  "optional_parameters": [
+    "tableName",
+    "fieldName",
+    "matchField",
+    "matchValue",
+    "additionalData",
+    "formatExpression",
+    "shouldUpdateDatabase",
+    "fallbackString"
   ],
+  "output_properties": ["generatedName"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

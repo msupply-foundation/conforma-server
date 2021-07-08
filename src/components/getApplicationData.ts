@@ -1,4 +1,4 @@
-import { ActionPayload } from '../types'
+import { ActionApplicationData, ActionPayload } from '../types'
 import DBConnect from './databaseConnect'
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import { getAppEntryPointDir } from './utilityFunctions'
@@ -9,7 +9,7 @@ export const getApplicationData = async (input: {
   payload?: ActionPayload
   applicationId?: number
   reviewId?: number
-}) => {
+}): Promise<ActionApplicationData> => {
   // Requires either application OR trigger_payload, so throw error if neither provided
   if (!input?.payload?.trigger_payload && !input?.applicationId)
     throw new Error('trigger_payload or applicationId required')

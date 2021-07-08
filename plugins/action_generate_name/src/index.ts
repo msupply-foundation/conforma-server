@@ -1,4 +1,4 @@
 import { ActionPluginType } from '../../types'
-import changeStatus from './changeStatus'
-const action: ActionPluginType = changeStatus
+import generateName from './generateName'
+const action: ActionPluginType = generateName
 export { action }

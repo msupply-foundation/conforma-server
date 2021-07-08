@@ -5,16 +5,10 @@ GraphQL Fragment - DEVELOPMENT Actions
 exports.devActions = `
     # Create a user
     {
-      actionCode: "modifyRecord"
+      actionCode: "generateName"
       trigger: DEV_TEST
       sequence: 1
       parameterQueries: {
-        tableName: "application"
-        matchField: "id"
-        matchValue: 4002
-        name: "TESTING RENAMING"
-        serial: "XXXXX"
-        shouldCreateJoinTable: false
       }
     }
    # {

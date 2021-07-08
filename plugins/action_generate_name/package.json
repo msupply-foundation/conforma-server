@@ -9,5 +9,7 @@
     "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
   },
   "devDependencies": {},
-  "dependencies": {}
+  "dependencies": {
+    "string-replace-async": "^2.0.0"
+  }
 }
