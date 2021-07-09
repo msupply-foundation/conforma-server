@@ -15,7 +15,6 @@ exports.queries = [
         template: {
           code: "OrgJoin"
           name: "Join Company"
-          plural: "Join Companies"
           isLinear: false
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- PhotoID"
