@@ -10,6 +10,7 @@ import {
   routeLoginOrg,
   routeUpdateRowPolicies,
   routeCreateHash,
+  routeVerification,
 } from './components/permissions'
 import {
   saveFiles,
@@ -22,6 +23,7 @@ import DBConnect from './components/databaseConnect'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
+require('dotenv').config()
 
 // Bare-bones Fastify server
 
@@ -61,6 +63,7 @@ const startServer = async () => {
   server.post('/login-org', routeLoginOrg)
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
   server.post('/create-hash', routeCreateHash)
+  server.get('/verify', routeVerification)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {
