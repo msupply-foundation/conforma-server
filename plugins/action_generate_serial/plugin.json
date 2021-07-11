@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "generateSerial",
+  "name": "Generate Serial",
+  "description": "Generates serial numbers or IDs using a specified pattern",
+  "required_parameters": [],
+  "optional_parameters": [],
+  "output_properties": ["generatedSerial"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "update"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-07-11"
+  }
+}

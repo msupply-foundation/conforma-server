@@ -1,0 +1,15 @@
+{
+  "name": "generate_serial",
+  "version": "0.1",
+  "description": "Generates serial numbers or IDs using a specified pattern",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "custom_string_patterns": "file:.yalc/custom_string_patterns"
+  }
+}

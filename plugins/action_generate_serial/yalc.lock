@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "custom_string_patterns": {
+      "signature": "e78a1212cf8329ffbc3a8b70e56b34ef",
+      "file": true
+    }
+  }
+}
