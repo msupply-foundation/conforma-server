@@ -33,9 +33,10 @@ $application_event$
 LANGUAGE plpgsql;
 
 --TRIGGER to run above function when response is updated
-CREATE TRIGGER outcome_trigger
+CREATE TRIGGER application_response_timestamp_trigger
     AFTER UPDATE OF status,
     value,
     is_valid ON public.application_response
     FOR EACH ROW
-    EXECUTE FUNCTION public.update_response_timestamp ()
+    EXECUTE FUNCTION public.update_response_timestamp ();
+
