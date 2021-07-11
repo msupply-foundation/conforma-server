@@ -1,6 +1,6 @@
 import RandExp from 'randexp'
 import { replaceCount, replaceCustom } from './helpers'
-import { CustomReplacers, GenerateArgs } from './types'
+import { CustomReplacers, GenerateArgs, PatternGeneratorOptions } from './types'
 
 const defaultIncrement = (current: number | string) => Number(current) + 1
 
@@ -12,8 +12,13 @@ function* simpleCounter(init: number) {
 }
 
 // Wrap counter generator in function so getCounter just returns the value, not the whole iterator object
-const simpleCounterWrapper = (counter: Generator) => () => counter.next().value
+const generatorWrapper = (counter: Generator) => () => counter.next().value
 
+// A "short-hand" function if only one generated string is required
+export const patternGen = (pattern: string | RegExp, options: PatternGeneratorOptions = {}) => {
+  const pg = new PatternGenerator(pattern, options)
+  return pg.gen()
+}
 class PatternGenerator {
   simpleCounter: Generator
   pattern: string | RegExp
@@ -21,7 +26,7 @@ class PatternGenerator {
   setCounter: Function | null
   counterIncrement: (input: string | number) => string | number
   internalCounter: number
-  numberFormat: Intl.NumberFormat
+  numberFormat?: Intl.NumberFormat
   customReplacers: CustomReplacers
 
   constructor(
@@ -33,10 +38,10 @@ class PatternGenerator {
       counterInit = 1,
       customReplacers = {},
       numberFormat,
-    }: any
+    }: PatternGeneratorOptions = {}
   ) {
     this.simpleCounter = simpleCounter(counterInit)
-    this.getCounter = getCounter ?? simpleCounterWrapper(this.simpleCounter)
+    this.getCounter = getCounter ?? generatorWrapper(this.simpleCounter)
     this.setCounter = setCounter ?? null
     this.pattern = pattern
     this.counterIncrement = counterIncrement

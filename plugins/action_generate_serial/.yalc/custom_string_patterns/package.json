@@ -2,7 +2,8 @@
   "name": "custom_string_patterns",
   "version": "0.1.0",
   "description": "Generate random and incrementing string patterns using regex and custom functions",
-  "main": "patterns.ts",
+  "main": "lib/patterns.ts",
+  "types": "lib/patterns.d.ts",
   "repository": "https://github.com/CarlosNZ/custom_string_patterns.git",
   "author": "Carl Smith <5456533+CarlosNZ@users.noreply.github.com>",
   "license": "MIT",
@@ -14,5 +15,5 @@
     "build": "rimraf ./lib && tsc",
     "dev": "ts-node ./src/dev.ts"
   },
-  "yalcSig": "e78a1212cf8329ffbc3a8b70e56b34ef"
+  "yalcSig": "ba65245113a945008186642c23b119e6"
 }
