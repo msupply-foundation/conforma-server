@@ -17133,6 +17133,7 @@ export type ReviewResponse = Node & {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -17247,6 +17248,7 @@ export type ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -17286,6 +17288,8 @@ export type ReviewResponseCondition = {
   timeUpdated?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `timeSubmitted` field. */
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `isVisibleToApplicant` field. */
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `templateElementId` field. */
@@ -17353,6 +17357,8 @@ export type ReviewResponseFilter = {
   timeUpdated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `timeSubmitted` field. */
   timeSubmitted?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `isVisibleToApplicant` field. */
   isVisibleToApplicant?: Maybe<BooleanFilter>;
   /** Filter by the object’s `templateElementId` field. */
@@ -17414,6 +17420,7 @@ export type ReviewResponseInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -17558,6 +17565,7 @@ export type ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput 
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -17583,6 +17591,7 @@ export type ReviewResponsePatch = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -17699,6 +17708,7 @@ export type ReviewResponseReviewIdFkeyReviewResponseCreateInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -17771,6 +17781,7 @@ export type ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInpu
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -17813,6 +17824,7 @@ export type ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -17882,6 +17894,8 @@ export enum ReviewResponsesOrderBy {
   TimeUpdatedDesc = 'TIME_UPDATED_DESC',
   TimeSubmittedAsc = 'TIME_SUBMITTED_ASC',
   TimeSubmittedDesc = 'TIME_SUBMITTED_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
   IsVisibleToApplicantAsc = 'IS_VISIBLE_TO_APPLICANT_ASC',
   IsVisibleToApplicantDesc = 'IS_VISIBLE_TO_APPLICANT_DESC',
   TemplateElementIdAsc = 'TEMPLATE_ELEMENT_ID_ASC',
@@ -17982,6 +17996,7 @@ export type ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput = {
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
@@ -24950,6 +24965,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResp
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -24974,6 +24990,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseOriginalReviewR
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -24998,6 +25015,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPat
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -25022,6 +25040,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewQuestionA
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -25046,6 +25065,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseL
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   templateElementId?: Maybe<Scalars['Int']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
@@ -25071,6 +25091,7 @@ export type UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElement
   timeCreated?: Maybe<Scalars['Datetime']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
   timeSubmitted?: Maybe<Scalars['Datetime']>;
+  stageNumber?: Maybe<Scalars['Int']>;
   isVisibleToApplicant?: Maybe<Scalars['Boolean']>;
   recommendedApplicantVisibility?: Maybe<ReviewResponseRecommendedApplicantVisibility>;
   status?: Maybe<ReviewResponseStatus>;
@@ -32984,6 +33005,7 @@ export type ReviewResponseResolvers<ContextType = any, ParentType extends Resolv
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   timeUpdated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   timeSubmitted?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isVisibleToApplicant?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   templateElementId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   recommendedApplicantVisibility?: Resolver<Maybe<ResolversTypes['ReviewResponseRecommendedApplicantVisibility']>, ParentType, ContextType>;
