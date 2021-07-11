@@ -1,0 +1,11 @@
+{
+  "name": "create_verification_action",
+  "version": "0.1",
+  "description": "Adds a record to verification table",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  }
+}

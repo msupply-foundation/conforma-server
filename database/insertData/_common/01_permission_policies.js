@@ -145,7 +145,17 @@ exports.queries = [
         },
         review: {
           view: {
-            reviewer_id: 'jwtUserDetails_bigint_userId',
+            application_id: {
+              $in: {
+                $select: {
+                  application_id: true,
+                  $from: 'review_assignment',
+                  $where: {
+                    reviewer_id: 'jwtUserDetails_bigint_userId',
+                  },
+                },
+              },
+            },
           },
         },
         review_assignment: {
