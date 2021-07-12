@@ -3,7 +3,7 @@ import fs from 'fs'
 import util from 'util'
 import { pipeline } from 'stream'
 import { nanoid } from 'nanoid'
-import { getAppEntryPointDir } from '../utilityFunctions'
+import { getAppEntryPointDir, makeFolder } from '../utilityFunctions'
 import config from '../../config'
 import DBConnect from '../databaseConnect'
 import createThumbnail from './createThumbnails'
@@ -53,14 +53,12 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       const basename = path.basename(file.filename, ext)
       const unique_id = nanoid()
 
-      const subfolder = queryParams?.application_serial || ''
+      const subfolder = queryParams?.subFolder ?? queryParams?.application_serial ?? ''
 
       const file_path = path.join(subfolder, `${basename}_${unique_id}${ext}`)
 
       // Save file
-      if (!fs.existsSync(path.join(getAppEntryPointDir(), filesFolder, subfolder))) {
-        fs.mkdirSync(path.join(getAppEntryPointDir(), filesFolder, subfolder))
-      }
+      makeFolder(path.join(getAppEntryPointDir(), filesFolder, subfolder))
       await pump(file.file, fs.createWriteStream(path.join(filesPath, file_path)))
 
       // Create thumbnail from saved file
@@ -90,25 +88,27 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
   return filesInfo
 }
 
-async function registerFileInDB({
+export async function registerFileInDB({
   unique_id,
+  original_filename,
   file,
   file_path,
   thumbnail_path,
   application_serial,
   user_id,
   application_response_id,
+  mimetype,
 }: any) {
   try {
     await DBConnect.addFile({
       user_id,
       unique_id,
-      original_filename: file.filename,
+      original_filename: file ? file.filename : original_filename,
       application_serial,
       application_response_id,
       file_path,
       thumbnail_path,
-      mimetype: file.mimetype,
+      mimetype: file ? file.mimetype : mimetype,
     })
   } catch (err) {
     throw err

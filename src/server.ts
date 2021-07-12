@@ -12,6 +12,7 @@ import {
   routeCreateHash,
   routeVerification,
 } from './components/permissions'
+import { routeGeneratePDF } from './components/files/documentGenerate'
 import {
   saveFiles,
   getFilePath,
@@ -64,6 +65,7 @@ const startServer = async () => {
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
   server.post('/create-hash', routeCreateHash)
   server.get('/verify', routeVerification)
+  server.post('/generate-pdf', routeGeneratePDF)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {
