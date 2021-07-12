@@ -1241,17 +1241,17 @@ exports.queries = [
                               ]
                             },
                             {
-                                operator: "+",
-                                children: [
-                                  {
-                                    operator: "objectProperties",
-                                    children: [
-                                      "currentUser.organisation.orgId"
-                                    ]
-                                  },
-                                  ""
-                                ]
-                            }
+                              operator: "+",
+                              children: [
+                                {
+                                  operator: "objectProperties",
+                                  children: [
+                                    "currentUser.organisation.orgId"
+                                  ]
+                                },
+                                ""
+                              ]
+                            },
                             "licenses.nodes"
                           ]
                         }
