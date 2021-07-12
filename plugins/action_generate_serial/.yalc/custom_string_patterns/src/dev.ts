@@ -1,3 +1,7 @@
+/*
+This file used as a playground for development. It is not published in the actual package.
+*/
+
 import Pattern, { patternGen } from './patterns'
 import { generatePlates } from './customCounters'
 
