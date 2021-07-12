@@ -1,9 +1,0 @@
-{
-  "version": "v1",
-  "packages": {
-    "custom_string_patterns": {
-      "signature": "4f8707179705fc46741967fe82023be7",
-      "file": true
-    }
-  }
-}

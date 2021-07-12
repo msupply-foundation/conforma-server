@@ -2,7 +2,6 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginOutput, ActionPluginInput } from '../../types'
 import databaseMethods from './databaseMethods'
 import evaluateExpression from '@openmsupply/expression-evaluator'
-import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
 import { patternGen } from 'custom_string_patterns'
 
 async function generateSerial({
