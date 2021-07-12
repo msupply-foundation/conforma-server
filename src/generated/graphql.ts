@@ -531,6 +531,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** The `actionQueue` to be created by this mutation. */
@@ -3417,6 +3418,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -4293,6 +4295,8 @@ export type CreateFilePayload = {
   query?: Maybe<Query>;
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
+  /** Reads a single `Template` that is related to this `File`. */
+  template?: Maybe<Template>;
   /** Reads a single `Application` that is related to this `File`. */
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
@@ -5891,6 +5895,8 @@ export type DeleteFilePayload = {
   query?: Maybe<Query>;
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
+  /** Reads a single `Template` that is related to this `File`. */
+  template?: Maybe<Template>;
   /** Reads a single `Application` that is related to this `File`. */
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
@@ -7557,6 +7563,7 @@ export type File = Node & {
   uniqueId: Scalars['String'];
   originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath: Scalars['String'];
@@ -7566,6 +7573,8 @@ export type File = Node & {
   timestamp?: Maybe<Scalars['Datetime']>;
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
+  /** Reads a single `Template` that is related to this `File`. */
+  template?: Maybe<Template>;
   /** Reads a single `Application` that is related to this `File`. */
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
@@ -7595,6 +7604,7 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   uniqueId: Scalars['String'];
   originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -7602,6 +7612,7 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
 };
@@ -7681,6 +7692,7 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   uniqueId: Scalars['String'];
   originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -7688,6 +7700,7 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
 };
@@ -7752,6 +7765,8 @@ export type FileCondition = {
   originalFilename?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `applicationSerial` field. */
   applicationSerial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicationResponseId` field. */
@@ -7798,6 +7813,8 @@ export type FileFilter = {
   originalFilename?: Maybe<StringFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationSerial` field. */
   applicationSerial?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponseId` field. */
@@ -7816,6 +7833,10 @@ export type FileFilter = {
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
   userExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** A related `template` exists. */
+  templateExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `applicationByApplicationSerial` relation. */
   applicationByApplicationSerial?: Maybe<ApplicationFilter>;
   /** A related `applicationByApplicationSerial` exists. */
@@ -7838,6 +7859,7 @@ export type FileInput = {
   uniqueId: Scalars['String'];
   originalFilename: Scalars['String'];
   userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath: Scalars['String'];
@@ -7846,6 +7868,7 @@ export type FileInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
 };
@@ -7907,6 +7930,28 @@ export type FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type FileOnFileForFileTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `template` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: TemplatePatch;
+};
+
+/** The fields on `file` to look up the row to update. */
+export type FileOnFileForFileTemplateIdFkeyUsingFilePkeyUpdate = {
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: UpdateFileOnFileForFileTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `file` to look up the row to update. */
+export type FileOnFileForFileTemplateIdFkeyUsingFileUniqueIdKeyUpdate = {
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: UpdateFileOnFileForFileTemplateIdFkeyPatch;
+  uniqueId: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type FileOnFileForFileUserIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `user` to be connected. */
   nodeId: Scalars['ID'];
@@ -7934,6 +7979,7 @@ export type FilePatch = {
   uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath?: Maybe<Scalars['String']>;
@@ -7942,6 +7988,7 @@ export type FilePatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
 };
@@ -7979,6 +8026,8 @@ export enum FilesOrderBy {
   OriginalFilenameDesc = 'ORIGINAL_FILENAME_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
   ApplicationSerialAsc = 'APPLICATION_SERIAL_ASC',
   ApplicationSerialDesc = 'APPLICATION_SERIAL_DESC',
   ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
@@ -7998,10 +8047,11 @@ export enum FilesOrderBy {
 }
 
 /** The `file` to be created by this mutation. */
-export type FileUserIdFkeyFileCreateInput = {
+export type FileTemplateIdFkeyFileCreateInput = {
   id?: Maybe<Scalars['Int']>;
   uniqueId: Scalars['String'];
   originalFilename: Scalars['String'];
+  userId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath: Scalars['String'];
@@ -8010,6 +8060,94 @@ export type FileUserIdFkeyFileCreateInput = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `template` in the `FileInput` mutation. */
+export type FileTemplateIdFkeyInput = {
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectById?: Maybe<TemplateTemplatePkeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateNodeIdConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateTemplatePkeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateById?: Maybe<TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByNodeId?: Maybe<FileOnFileForFileTemplateIdFkeyNodeIdUpdate>;
+  /** A `TemplateInput` object that will be created and connected to this object. */
+  create?: Maybe<FileTemplateIdFkeyTemplateCreateInput>;
+};
+
+/** Input for the nested mutation of `file` in the `TemplateInput` mutation. */
+export type FileTemplateIdFkeyInverseInput = {
+  /** Flag indicating whether all other `file` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  connectById?: Maybe<Array<FileFilePkeyConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  connectByUniqueId?: Maybe<Array<FileFileUniqueIdKeyConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<FileNodeIdConnect>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteById?: Maybe<Array<FileFilePkeyDelete>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteByUniqueId?: Maybe<Array<FileFileUniqueIdKeyDelete>>;
+  /** The primary key(s) for `file` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<FileNodeIdDelete>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateById?: Maybe<Array<FileOnFileForFileTemplateIdFkeyUsingFilePkeyUpdate>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateByUniqueId?: Maybe<Array<FileOnFileForFileTemplateIdFkeyUsingFileUniqueIdKeyUpdate>>;
+  /** The primary key(s) and patch data for `file` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateOnFileForFileTemplateIdFkeyNodeIdUpdate>>;
+  /** A `FileInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<FileTemplateIdFkeyFileCreateInput>>;
+};
+
+/** The `template` to be created by this mutation. */
+export type FileTemplateIdFkeyTemplateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+};
+
+/** The `file` to be created by this mutation. */
+export type FileUserIdFkeyFileCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId: Scalars['String'];
+  originalFilename: Scalars['String'];
+  templateId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath: Scalars['String'];
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
 };
@@ -16293,6 +16431,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** A filter to be used against many `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -19009,6 +19148,8 @@ export type Template = Node & {
   templateActions: TemplateActionsConnection;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
+  /** Reads and enables pagination through a set of `File`. */
+  files: FilesConnection;
 };
 
 
@@ -19105,6 +19246,18 @@ export type TemplateReviewAssignmentsArgs = {
   orderBy?: Maybe<Array<ReviewAssignmentsOrderBy>>;
   condition?: Maybe<ReviewAssignmentCondition>;
   filter?: Maybe<ReviewAssignmentFilter>;
+};
+
+
+export type TemplateFilesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<FilesOrderBy>>;
+  condition?: Maybe<FileCondition>;
+  filter?: Maybe<FileFilter>;
 };
 
 export type TemplateAction = Node & {
@@ -19345,6 +19498,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `TemplateCategory` values. */
@@ -20162,6 +20316,10 @@ export type TemplateFilter = {
   reviewAssignments?: Maybe<TemplateToManyReviewAssignmentFilter>;
   /** Some related `reviewAssignments` exist. */
   reviewAssignmentsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `files` relation. */
+  files?: Maybe<TemplateToManyFileFilter>;
+  /** Some related `files` exist. */
+  filesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateCategory` relation. */
   templateCategory?: Maybe<TemplateCategoryFilter>;
   /** A related `templateCategory` exists. */
@@ -20452,6 +20610,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** The `templateFilterJoin` to be created by this mutation. */
@@ -20483,6 +20642,7 @@ export type TemplateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -20524,6 +20684,21 @@ export type TemplateOnApplicationForApplicationTemplateIdFkeyNodeIdUpdate = {
 export type TemplateOnApplicationForApplicationTemplateIdFkeyUsingTemplatePkeyUpdate = {
   /** An object where the defined keys will be set on the `template` being updated. */
   patch: UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateOnFileForFileTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `file` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `file` being updated. */
+  patch: FilePatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnFileForFileTemplateIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -20653,6 +20828,7 @@ export type TemplatePatch = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 export type TemplatePermission = Node & {
@@ -20971,6 +21147,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** The `templatePermission` to be created by this mutation. */
@@ -21278,6 +21455,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** The `templateSection` to be created by this mutation. */
@@ -21927,6 +22105,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** The `templateStage` to be created by this mutation. */
@@ -22087,6 +22266,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** The fields on `template` to look up the row to connect. */
@@ -22117,6 +22297,16 @@ export type TemplateToManyApplicationFilter = {
   some?: Maybe<ApplicationFilter>;
   /** No related `Application` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ApplicationFilter>;
+};
+
+/** A filter to be used against many `File` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateToManyFileFilter = {
+  /** Every related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<FileFilter>;
+  /** Some related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<FileFilter>;
+  /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<FileFilter>;
 };
 
 /** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
@@ -23352,6 +23542,7 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -23359,6 +23550,7 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
 };
@@ -23369,6 +23561,7 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
@@ -23376,6 +23569,26 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
+  applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
+  applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `file` being updated. */
+export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  uniqueId?: Maybe<Scalars['String']>;
+  originalFilename?: Maybe<Scalars['String']>;
+  userId?: Maybe<Scalars['Int']>;
+  applicationSerial?: Maybe<Scalars['String']>;
+  applicationResponseId?: Maybe<Scalars['Int']>;
+  filePath?: Maybe<Scalars['String']>;
+  thumbnailPath?: Maybe<Scalars['String']>;
+  mimetype?: Maybe<Scalars['String']>;
+  submitted?: Maybe<Scalars['Boolean']>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
 };
@@ -23385,6 +23598,7 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
   originalFilename?: Maybe<Scalars['String']>;
+  templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
   filePath?: Maybe<Scalars['String']>;
@@ -23393,6 +23607,7 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   submitted?: Maybe<Scalars['Boolean']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   userToUserId?: Maybe<FileUserIdFkeyInput>;
+  templateToTemplateId?: Maybe<FileTemplateIdFkeyInput>;
   applicationToApplicationSerial?: Maybe<FileApplicationSerialFkeyInput>;
   applicationResponseToApplicationResponseId?: Maybe<FileApplicationResponseIdFkeyInput>;
 };
@@ -23411,6 +23626,8 @@ export type UpdateFilePayload = {
   query?: Maybe<Query>;
   /** Reads a single `User` that is related to this `File`. */
   user?: Maybe<User>;
+  /** Reads a single `Template` that is related to this `File`. */
+  template?: Maybe<Template>;
   /** Reads a single `Application` that is related to this `File`. */
   applicationByApplicationSerial?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` that is related to this `File`. */
@@ -25667,6 +25884,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -25690,6 +25908,31 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `template` being updated. */
+export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -25713,6 +25956,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -25736,6 +25980,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -25759,6 +26004,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -25781,6 +26027,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -25804,6 +26051,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -25827,6 +26075,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -25850,6 +26099,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 /** The output of our update `Template` mutation. */
@@ -28323,6 +28573,7 @@ export type ResolversTypes = {
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateActionFilter: TemplateActionFilter;
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
+  TemplateToManyFileFilter: TemplateToManyFileFilter;
   TemplateCategoryFilter: TemplateCategoryFilter;
   TemplateCategoryToManyTemplateFilter: TemplateCategoryToManyTemplateFilter;
   ActionQueuesConnection: ResolverTypeWrapper<ActionQueuesConnection>;
@@ -28885,9 +29136,38 @@ export type ResolversTypes = {
   ReviewAssignmentTemplateIdFkeyInput: ReviewAssignmentTemplateIdFkeyInput;
   TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch: UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate;
-  TemplatePatch: TemplatePatch;
-  ReviewAssignmentTemplateIdFkeyTemplateCreateInput: ReviewAssignmentTemplateIdFkeyTemplateCreateInput;
+  FileTemplateIdFkeyInverseInput: FileTemplateIdFkeyInverseInput;
+  FileFilePkeyConnect: FileFilePkeyConnect;
+  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
+  FileNodeIdConnect: FileNodeIdConnect;
+  FileFilePkeyDelete: FileFilePkeyDelete;
+  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
+  FileNodeIdDelete: FileNodeIdDelete;
+  FileOnFileForFileTemplateIdFkeyUsingFilePkeyUpdate: FileOnFileForFileTemplateIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileTemplateIdFkeyPatch: UpdateFileOnFileForFileTemplateIdFkeyPatch;
+  FileUserIdFkeyInput: FileUserIdFkeyInput;
+  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
+  ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput: ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput;
+  ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyConnect: ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyConnect;
+  ReviewAssignmentAssignerJoinNodeIdConnect: ReviewAssignmentAssignerJoinNodeIdConnect;
+  ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyDelete: ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyDelete;
+  ReviewAssignmentAssignerJoinNodeIdDelete: ReviewAssignmentAssignerJoinNodeIdDelete;
+  ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate;
+  updateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch: UpdateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch;
+  ReviewAssignmentAssignerJoinAssignerIdFkeyInput: ReviewAssignmentAssignerJoinAssignerIdFkeyInput;
+  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch: UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch;
+  ReviewReviewerIdFkeyInverseInput: ReviewReviewerIdFkeyInverseInput;
+  ReviewReviewPkeyConnect: ReviewReviewPkeyConnect;
+  ReviewNodeIdConnect: ReviewNodeIdConnect;
+  ReviewReviewPkeyDelete: ReviewReviewPkeyDelete;
+  ReviewNodeIdDelete: ReviewNodeIdDelete;
+  ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewForReviewReviewerIdFkeyPatch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
+  ReviewReviewAssignmentIdFkeyInput: ReviewReviewAssignmentIdFkeyInput;
+  ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch;
   ReviewAssignmentLevelIdFkeyInput: ReviewAssignmentLevelIdFkeyInput;
   TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingTemplateStageReviewLevelPkeyUpdate: TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingTemplateStageReviewLevelPkeyUpdate;
   updateTemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch: UpdateTemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch;
@@ -28895,18 +29175,8 @@ export type ResolversTypes = {
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingReviewAssignmentPkeyUpdate;
   updateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch;
   ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput: ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput;
-  ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyConnect: ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyConnect;
-  ReviewAssignmentAssignerJoinNodeIdConnect: ReviewAssignmentAssignerJoinNodeIdConnect;
-  ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyDelete: ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyDelete;
-  ReviewAssignmentAssignerJoinNodeIdDelete: ReviewAssignmentAssignerJoinNodeIdDelete;
   ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate;
   updateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyPatch;
-  ReviewAssignmentAssignerJoinAssignerIdFkeyInput: ReviewAssignmentAssignerJoinAssignerIdFkeyInput;
-  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch: UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch;
-  ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput: ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput;
-  ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate;
-  updateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch: UpdateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch;
   ReviewAssignmentAssignerJoinOrganisationIdFkeyInput: ReviewAssignmentAssignerJoinOrganisationIdFkeyInput;
   OrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate;
   updateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyPatch: UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyPatch;
@@ -28933,18 +29203,8 @@ export type ResolversTypes = {
   ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
   updateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
   ReviewReviewAssignmentIdFkeyInverseInput: ReviewReviewAssignmentIdFkeyInverseInput;
-  ReviewReviewPkeyConnect: ReviewReviewPkeyConnect;
-  ReviewNodeIdConnect: ReviewNodeIdConnect;
-  ReviewReviewPkeyDelete: ReviewReviewPkeyDelete;
-  ReviewNodeIdDelete: ReviewNodeIdDelete;
   ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch;
-  ReviewReviewAssignmentIdFkeyInput: ReviewReviewAssignmentIdFkeyInput;
-  ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch;
-  ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
-  ReviewAssignmentPatch: ReviewAssignmentPatch;
-  ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput;
   ReviewApplicationIdFkeyInput: ReviewApplicationIdFkeyInput;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnReviewForReviewApplicationIdFkeyPatch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
@@ -28954,16 +29214,31 @@ export type ResolversTypes = {
   ReviewReviewerIdFkeyInput: ReviewReviewerIdFkeyInput;
   UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate;
   updateUserOnReviewForReviewReviewerIdFkeyPatch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
-  ReviewReviewerIdFkeyInverseInput: ReviewReviewerIdFkeyInverseInput;
-  ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate;
-  updateReviewOnReviewForReviewReviewerIdFkeyPatch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
-  ReviewResponseReviewIdFkeyInverseInput: ReviewResponseReviewIdFkeyInverseInput;
+  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
+  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
+  FileTemplateIdFkeyInput: FileTemplateIdFkeyInput;
+  TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnFileForFileTemplateIdFkeyPatch: UpdateTemplateOnFileForFileTemplateIdFkeyPatch;
+  FileOnFileForFileTemplateIdFkeyNodeIdUpdate: FileOnFileForFileTemplateIdFkeyNodeIdUpdate;
+  TemplatePatch: TemplatePatch;
+  FileTemplateIdFkeyTemplateCreateInput: FileTemplateIdFkeyTemplateCreateInput;
+  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
+  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
+  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
+  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
+  ReviewResponseApplicationResponseIdFkeyInverseInput: ReviewResponseApplicationResponseIdFkeyInverseInput;
   ReviewResponseReviewResponsePkeyConnect: ReviewResponseReviewResponsePkeyConnect;
   ReviewResponseNodeIdConnect: ReviewResponseNodeIdConnect;
   ReviewResponseReviewResponsePkeyDelete: ReviewResponseReviewResponsePkeyDelete;
   ReviewResponseNodeIdDelete: ReviewResponseNodeIdDelete;
-  ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
   ReviewResponseReviewQuestionAssignmentIdFkeyInput: ReviewResponseReviewQuestionAssignmentIdFkeyInput;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
   updateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
@@ -28973,9 +29248,16 @@ export type ResolversTypes = {
   ReviewResponseApplicationResponseIdFkeyInput: ReviewResponseApplicationResponseIdFkeyInput;
   ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
   updateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
-  ReviewResponseApplicationResponseIdFkeyInverseInput: ReviewResponseApplicationResponseIdFkeyInverseInput;
-  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
+  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  FilePatch: FilePatch;
+  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
+  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
+  ApplicationResponsePatch: ApplicationResponsePatch;
+  ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
   ReviewResponseReviewResponseLinkIdFkeyInput: ReviewResponseReviewResponseLinkIdFkeyInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyUsingReviewResponsePkeyUpdate;
   updateReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyPatch;
@@ -28985,6 +29267,24 @@ export type ResolversTypes = {
   ReviewResponseReviewIdFkeyInput: ReviewResponseReviewIdFkeyInput;
   ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  ReviewResponseReviewIdFkeyInverseInput: ReviewResponseReviewIdFkeyInverseInput;
+  ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  ReviewResponseTemplateElementIdFkeyInput: ReviewResponseTemplateElementIdFkeyInput;
+  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
+  updateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
+  ReviewResponseTemplateElementIdFkeyInverseInput: ReviewResponseTemplateElementIdFkeyInverseInput;
+  ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
+  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
+  ReviewResponsePatch: ReviewResponsePatch;
+  ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput: ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput;
+  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate;
+  ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
+  TemplateElementPatch: TemplateElementPatch;
+  ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput: ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput;
+  ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
+  ReviewResponseReviewIdFkeyReviewResponseCreateInput: ReviewResponseReviewIdFkeyReviewResponseCreateInput;
   ReviewDecisionReviewIdFkeyInverseInput: ReviewDecisionReviewIdFkeyInverseInput;
   ReviewDecisionReviewDecisionPkeyConnect: ReviewDecisionReviewDecisionPkeyConnect;
   ReviewDecisionNodeIdConnect: ReviewDecisionNodeIdConnect;
@@ -29015,30 +29315,12 @@ export type ResolversTypes = {
   NotificationUserIdFkeyInput: NotificationUserIdFkeyInput;
   UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnNotificationForNotificationUserIdFkeyPatch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
-  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
-  FileFilePkeyConnect: FileFilePkeyConnect;
-  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
-  FileNodeIdConnect: FileNodeIdConnect;
-  FileFilePkeyDelete: FileFilePkeyDelete;
-  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
-  FileNodeIdDelete: FileNodeIdDelete;
-  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
-  FileUserIdFkeyInput: FileUserIdFkeyInput;
-  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
   NotificationUserIdFkeyInverseInput: NotificationUserIdFkeyInverseInput;
   NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate;
   updateNotificationOnNotificationForNotificationUserIdFkeyPatch: UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch;
   NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
-  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
-  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
   VerificationApplicationIdFkeyInverseInput: VerificationApplicationIdFkeyInverseInput;
   VerificationVerificationPkeyConnect: VerificationVerificationPkeyConnect;
   VerificationVerificationUniqueIdKeyConnect: VerificationVerificationUniqueIdKeyConnect;
@@ -29071,39 +29353,14 @@ export type ResolversTypes = {
   ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
   VerificationPatch: VerificationPatch;
   VerificationApplicationIdFkeyVerificationCreateInput: VerificationApplicationIdFkeyVerificationCreateInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
-  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
-  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
-  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
-  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  FilePatch: FilePatch;
-  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
-  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  ApplicationResponsePatch: ApplicationResponsePatch;
-  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
   NotificationApplicationIdFkeyApplicationCreateInput: NotificationApplicationIdFkeyApplicationCreateInput;
   UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
   NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
-  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
-  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
-  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
-  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
-  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
   UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
   NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
   NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
   ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
   NotificationReviewIdFkeyNotificationCreateInput: NotificationReviewIdFkeyNotificationCreateInput;
@@ -29119,36 +29376,28 @@ export type ResolversTypes = {
   ReviewDecisionReviewIdFkeyReviewDecisionCreateInput: ReviewDecisionReviewIdFkeyReviewDecisionCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
   ReviewResponseReviewIdFkeyReviewCreateInput: ReviewResponseReviewIdFkeyReviewCreateInput;
-  ReviewResponseTemplateElementIdFkeyInput: ReviewResponseTemplateElementIdFkeyInput;
-  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
-  updateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
-  ReviewResponseTemplateElementIdFkeyInverseInput: ReviewResponseTemplateElementIdFkeyInverseInput;
-  ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
-  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
-  ReviewResponsePatch: ReviewResponsePatch;
-  ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput: ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput;
-  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate;
-  ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
-  TemplateElementPatch: TemplateElementPatch;
-  ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput: ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyNodeIdUpdate;
   ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput: ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyNodeIdUpdate;
   ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput: ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput;
-  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
-  ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
-  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
-  ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
   ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
   ReviewQuestionAssignmentPatch: ReviewQuestionAssignmentPatch;
   ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
-  ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
-  ReviewResponseReviewIdFkeyReviewResponseCreateInput: ReviewResponseReviewIdFkeyReviewResponseCreateInput;
-  UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
-  ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
+  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
+  ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
+  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
+  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
+  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
+  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
+  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
   UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate;
   ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
   ReviewReviewerIdFkeyUserCreateInput: ReviewReviewerIdFkeyUserCreateInput;
@@ -29160,6 +29409,7 @@ export type ResolversTypes = {
   ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
   ReviewReviewAssignmentIdFkeyReviewCreateInput: ReviewReviewAssignmentIdFkeyReviewCreateInput;
   ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewAssignmentPatch: ReviewAssignmentPatch;
   ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput;
   TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
   ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput;
@@ -29178,11 +29428,6 @@ export type ResolversTypes = {
   ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyNodeIdUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyNodeIdUpdate;
   OrganisationPatch: OrganisationPatch;
   ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInput: ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInput;
-  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate;
-  ReviewAssignmentAssignerJoinAssignerIdFkeyReviewAssignmentAssignerJoinCreateInput: ReviewAssignmentAssignerJoinAssignerIdFkeyReviewAssignmentAssignerJoinCreateInput;
-  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserUsernameKeyUpdate;
-  ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate;
-  ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput;
   ReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyNodeIdUpdate;
   ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentAssignerJoinCreateInput: ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentAssignerJoinCreateInput;
   TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate: TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate;
@@ -29190,6 +29435,23 @@ export type ResolversTypes = {
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate;
   TemplateStageReviewLevelPatch: TemplateStageReviewLevelPatch;
   ReviewAssignmentLevelIdFkeyTemplateStageReviewLevelCreateInput: ReviewAssignmentLevelIdFkeyTemplateStageReviewLevelCreateInput;
+  ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput;
+  UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
+  ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
+  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserUsernameKeyUpdate;
+  ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput;
+  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerJoinAssignerIdFkeyReviewAssignmentAssignerJoinCreateInput: ReviewAssignmentAssignerJoinAssignerIdFkeyReviewAssignmentAssignerJoinCreateInput;
+  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
+  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
+  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
+  FileOnFileForFileTemplateIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileTemplateIdFkeyUsingFileUniqueIdKeyUpdate;
+  TemplateOnFileForFileTemplateIdFkeyNodeIdUpdate: TemplateOnFileForFileTemplateIdFkeyNodeIdUpdate;
+  FileTemplateIdFkeyFileCreateInput: FileTemplateIdFkeyFileCreateInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate;
+  ReviewAssignmentTemplateIdFkeyTemplateCreateInput: ReviewAssignmentTemplateIdFkeyTemplateCreateInput;
   ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
   ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
@@ -29938,6 +30200,7 @@ export type ResolversParentTypes = {
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateActionFilter: TemplateActionFilter;
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
+  TemplateToManyFileFilter: TemplateToManyFileFilter;
   TemplateCategoryFilter: TemplateCategoryFilter;
   TemplateCategoryToManyTemplateFilter: TemplateCategoryToManyTemplateFilter;
   ActionQueuesConnection: ActionQueuesConnection;
@@ -30454,9 +30717,38 @@ export type ResolversParentTypes = {
   ReviewAssignmentTemplateIdFkeyInput: ReviewAssignmentTemplateIdFkeyInput;
   TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch: UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate;
-  TemplatePatch: TemplatePatch;
-  ReviewAssignmentTemplateIdFkeyTemplateCreateInput: ReviewAssignmentTemplateIdFkeyTemplateCreateInput;
+  FileTemplateIdFkeyInverseInput: FileTemplateIdFkeyInverseInput;
+  FileFilePkeyConnect: FileFilePkeyConnect;
+  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
+  FileNodeIdConnect: FileNodeIdConnect;
+  FileFilePkeyDelete: FileFilePkeyDelete;
+  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
+  FileNodeIdDelete: FileNodeIdDelete;
+  FileOnFileForFileTemplateIdFkeyUsingFilePkeyUpdate: FileOnFileForFileTemplateIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileTemplateIdFkeyPatch: UpdateFileOnFileForFileTemplateIdFkeyPatch;
+  FileUserIdFkeyInput: FileUserIdFkeyInput;
+  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
+  ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput: ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput;
+  ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyConnect: ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyConnect;
+  ReviewAssignmentAssignerJoinNodeIdConnect: ReviewAssignmentAssignerJoinNodeIdConnect;
+  ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyDelete: ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyDelete;
+  ReviewAssignmentAssignerJoinNodeIdDelete: ReviewAssignmentAssignerJoinNodeIdDelete;
+  ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate;
+  updateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch: UpdateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch;
+  ReviewAssignmentAssignerJoinAssignerIdFkeyInput: ReviewAssignmentAssignerJoinAssignerIdFkeyInput;
+  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch: UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch;
+  ReviewReviewerIdFkeyInverseInput: ReviewReviewerIdFkeyInverseInput;
+  ReviewReviewPkeyConnect: ReviewReviewPkeyConnect;
+  ReviewNodeIdConnect: ReviewNodeIdConnect;
+  ReviewReviewPkeyDelete: ReviewReviewPkeyDelete;
+  ReviewNodeIdDelete: ReviewNodeIdDelete;
+  ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate;
+  updateReviewOnReviewForReviewReviewerIdFkeyPatch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
+  ReviewReviewAssignmentIdFkeyInput: ReviewReviewAssignmentIdFkeyInput;
+  ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch;
   ReviewAssignmentLevelIdFkeyInput: ReviewAssignmentLevelIdFkeyInput;
   TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingTemplateStageReviewLevelPkeyUpdate: TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingTemplateStageReviewLevelPkeyUpdate;
   updateTemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch: UpdateTemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch;
@@ -30464,18 +30756,8 @@ export type ResolversParentTypes = {
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyUsingReviewAssignmentPkeyUpdate;
   updateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyPatch;
   ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput: ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyInverseInput;
-  ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyConnect: ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyConnect;
-  ReviewAssignmentAssignerJoinNodeIdConnect: ReviewAssignmentAssignerJoinNodeIdConnect;
-  ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyDelete: ReviewAssignmentAssignerJoinReviewAssignmentAssignerJoinPkeyDelete;
-  ReviewAssignmentAssignerJoinNodeIdDelete: ReviewAssignmentAssignerJoinNodeIdDelete;
   ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate;
   updateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyPatch;
-  ReviewAssignmentAssignerJoinAssignerIdFkeyInput: ReviewAssignmentAssignerJoinAssignerIdFkeyInput;
-  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch: UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch;
-  ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput: ReviewAssignmentAssignerJoinAssignerIdFkeyInverseInput;
-  ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingReviewAssignmentAssignerJoinPkeyUpdate;
-  updateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch: UpdateReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyPatch;
   ReviewAssignmentAssignerJoinOrganisationIdFkeyInput: ReviewAssignmentAssignerJoinOrganisationIdFkeyInput;
   OrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyUsingOrganisationPkeyUpdate;
   updateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyPatch: UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyPatch;
@@ -30502,18 +30784,8 @@ export type ResolversParentTypes = {
   ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
   updateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyPatch;
   ReviewReviewAssignmentIdFkeyInverseInput: ReviewReviewAssignmentIdFkeyInverseInput;
-  ReviewReviewPkeyConnect: ReviewReviewPkeyConnect;
-  ReviewNodeIdConnect: ReviewNodeIdConnect;
-  ReviewReviewPkeyDelete: ReviewReviewPkeyDelete;
-  ReviewNodeIdDelete: ReviewNodeIdDelete;
   ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateReviewOnReviewForReviewReviewAssignmentIdFkeyPatch;
-  ReviewReviewAssignmentIdFkeyInput: ReviewReviewAssignmentIdFkeyInput;
-  ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch: UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch;
-  ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
-  ReviewAssignmentPatch: ReviewAssignmentPatch;
-  ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput;
   ReviewApplicationIdFkeyInput: ReviewApplicationIdFkeyInput;
   ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnReviewForReviewApplicationIdFkeyPatch: UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch;
@@ -30523,16 +30795,31 @@ export type ResolversParentTypes = {
   ReviewReviewerIdFkeyInput: ReviewReviewerIdFkeyInput;
   UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserPkeyUpdate;
   updateUserOnReviewForReviewReviewerIdFkeyPatch: UpdateUserOnReviewForReviewReviewerIdFkeyPatch;
-  ReviewReviewerIdFkeyInverseInput: ReviewReviewerIdFkeyInverseInput;
-  ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewForReviewReviewerIdFkeyUsingReviewPkeyUpdate;
-  updateReviewOnReviewForReviewReviewerIdFkeyPatch: UpdateReviewOnReviewForReviewReviewerIdFkeyPatch;
-  ReviewResponseReviewIdFkeyInverseInput: ReviewResponseReviewIdFkeyInverseInput;
+  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
+  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
+  FileTemplateIdFkeyInput: FileTemplateIdFkeyInput;
+  TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnFileForFileTemplateIdFkeyPatch: UpdateTemplateOnFileForFileTemplateIdFkeyPatch;
+  FileOnFileForFileTemplateIdFkeyNodeIdUpdate: FileOnFileForFileTemplateIdFkeyNodeIdUpdate;
+  TemplatePatch: TemplatePatch;
+  FileTemplateIdFkeyTemplateCreateInput: FileTemplateIdFkeyTemplateCreateInput;
+  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
+  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
+  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
+  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
+  ReviewResponseApplicationResponseIdFkeyInverseInput: ReviewResponseApplicationResponseIdFkeyInverseInput;
   ReviewResponseReviewResponsePkeyConnect: ReviewResponseReviewResponsePkeyConnect;
   ReviewResponseNodeIdConnect: ReviewResponseNodeIdConnect;
   ReviewResponseReviewResponsePkeyDelete: ReviewResponseReviewResponsePkeyDelete;
   ReviewResponseNodeIdDelete: ReviewResponseNodeIdDelete;
-  ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
   ReviewResponseReviewQuestionAssignmentIdFkeyInput: ReviewResponseReviewQuestionAssignmentIdFkeyInput;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyUsingReviewQuestionAssignmentPkeyUpdate;
   updateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch: UpdateReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyPatch;
@@ -30542,9 +30829,16 @@ export type ResolversParentTypes = {
   ReviewResponseApplicationResponseIdFkeyInput: ReviewResponseApplicationResponseIdFkeyInput;
   ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
   updateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
-  ReviewResponseApplicationResponseIdFkeyInverseInput: ReviewResponseApplicationResponseIdFkeyInverseInput;
-  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyPatch;
+  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
+  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
+  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  FilePatch: FilePatch;
+  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
+  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
+  ApplicationResponsePatch: ApplicationResponsePatch;
+  ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
   ReviewResponseReviewResponseLinkIdFkeyInput: ReviewResponseReviewResponseLinkIdFkeyInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyUsingReviewResponsePkeyUpdate;
   updateReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyPatch;
@@ -30554,6 +30848,24 @@ export type ResolversParentTypes = {
   ReviewResponseReviewIdFkeyInput: ReviewResponseReviewIdFkeyInput;
   ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewPkeyUpdate;
   updateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  ReviewResponseReviewIdFkeyInverseInput: ReviewResponseReviewIdFkeyInverseInput;
+  ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyPatch;
+  ReviewResponseTemplateElementIdFkeyInput: ReviewResponseTemplateElementIdFkeyInput;
+  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
+  updateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
+  ReviewResponseTemplateElementIdFkeyInverseInput: ReviewResponseTemplateElementIdFkeyInverseInput;
+  ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingReviewResponsePkeyUpdate;
+  updateReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
+  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
+  ReviewResponsePatch: ReviewResponsePatch;
+  ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput: ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput;
+  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate;
+  ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
+  TemplateElementPatch: TemplateElementPatch;
+  ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput: ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput;
+  ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
+  ReviewResponseReviewIdFkeyReviewResponseCreateInput: ReviewResponseReviewIdFkeyReviewResponseCreateInput;
   ReviewDecisionReviewIdFkeyInverseInput: ReviewDecisionReviewIdFkeyInverseInput;
   ReviewDecisionReviewDecisionPkeyConnect: ReviewDecisionReviewDecisionPkeyConnect;
   ReviewDecisionNodeIdConnect: ReviewDecisionNodeIdConnect;
@@ -30584,30 +30896,12 @@ export type ResolversParentTypes = {
   NotificationUserIdFkeyInput: NotificationUserIdFkeyInput;
   UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnNotificationForNotificationUserIdFkeyPatch: UpdateUserOnNotificationForNotificationUserIdFkeyPatch;
-  FileUserIdFkeyInverseInput: FileUserIdFkeyInverseInput;
-  FileFilePkeyConnect: FileFilePkeyConnect;
-  FileFileUniqueIdKeyConnect: FileFileUniqueIdKeyConnect;
-  FileNodeIdConnect: FileNodeIdConnect;
-  FileFilePkeyDelete: FileFilePkeyDelete;
-  FileFileUniqueIdKeyDelete: FileFileUniqueIdKeyDelete;
-  FileNodeIdDelete: FileNodeIdDelete;
-  FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate: FileOnFileForFileUserIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileUserIdFkeyPatch: UpdateFileOnFileForFileUserIdFkeyPatch;
-  FileUserIdFkeyInput: FileUserIdFkeyInput;
-  UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate: UserOnFileForFileUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnFileForFileUserIdFkeyPatch: UpdateUserOnFileForFileUserIdFkeyPatch;
   NotificationUserIdFkeyInverseInput: NotificationUserIdFkeyInverseInput;
   NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate: NotificationOnNotificationForNotificationUserIdFkeyUsingNotificationPkeyUpdate;
   updateNotificationOnNotificationForNotificationUserIdFkeyPatch: UpdateNotificationOnNotificationForNotificationUserIdFkeyPatch;
   NotificationApplicationIdFkeyInput: NotificationApplicationIdFkeyInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnNotificationForNotificationApplicationIdFkeyPatch: UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch;
-  FileApplicationSerialFkeyInverseInput: FileApplicationSerialFkeyInverseInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationSerialFkeyPatch: UpdateFileOnFileForFileApplicationSerialFkeyPatch;
-  FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnFileForFileApplicationSerialFkeyPatch: UpdateApplicationOnFileForFileApplicationSerialFkeyPatch;
   VerificationApplicationIdFkeyInverseInput: VerificationApplicationIdFkeyInverseInput;
   VerificationVerificationPkeyConnect: VerificationVerificationPkeyConnect;
   VerificationVerificationUniqueIdKeyConnect: VerificationVerificationUniqueIdKeyConnect;
@@ -30640,39 +30934,14 @@ export type ResolversParentTypes = {
   ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
   VerificationPatch: VerificationPatch;
   VerificationApplicationIdFkeyVerificationCreateInput: VerificationApplicationIdFkeyVerificationCreateInput;
-  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
-  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
-  FileApplicationResponseIdFkeyInput: FileApplicationResponseIdFkeyInput;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyUsingApplicationResponsePkeyUpdate;
-  updateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch: UpdateApplicationResponseOnFileForFileApplicationResponseIdFkeyPatch;
-  FileApplicationResponseIdFkeyInverseInput: FileApplicationResponseIdFkeyInverseInput;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFilePkeyUpdate;
-  updateFileOnFileForFileApplicationResponseIdFkeyPatch: UpdateFileOnFileForFileApplicationResponseIdFkeyPatch;
-  FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationResponseIdFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  FilePatch: FilePatch;
-  FileApplicationResponseIdFkeyFileCreateInput: FileApplicationResponseIdFkeyFileCreateInput;
-  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
-  ApplicationResponsePatch: ApplicationResponsePatch;
-  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
-  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
-  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
-  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
   ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnNotificationForNotificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationApplicationIdFkeyNodeIdUpdate;
   NotificationApplicationIdFkeyApplicationCreateInput: NotificationApplicationIdFkeyApplicationCreateInput;
   UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate: UserOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
   NotificationUserIdFkeyNotificationCreateInput: NotificationUserIdFkeyNotificationCreateInput;
-  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
-  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
-  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
-  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
-  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
   UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnNotificationForNotificationUserIdFkeyUsingUserUsernameKeyUpdate;
   NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate: NotificationOnNotificationForNotificationUserIdFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
   NotificationUserIdFkeyUserCreateInput: NotificationUserIdFkeyUserCreateInput;
   ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate: ReviewOnNotificationForNotificationReviewIdFkeyNodeIdUpdate;
   NotificationReviewIdFkeyNotificationCreateInput: NotificationReviewIdFkeyNotificationCreateInput;
@@ -30688,36 +30957,28 @@ export type ResolversParentTypes = {
   ReviewDecisionReviewIdFkeyReviewDecisionCreateInput: ReviewDecisionReviewIdFkeyReviewDecisionCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
   ReviewResponseReviewIdFkeyReviewCreateInput: ReviewResponseReviewIdFkeyReviewCreateInput;
-  ReviewResponseTemplateElementIdFkeyInput: ReviewResponseTemplateElementIdFkeyInput;
-  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementPkeyUpdate;
-  updateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch: UpdateTemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
-  ReviewResponseTemplateElementIdFkeyInverseInput: ReviewResponseTemplateElementIdFkeyInverseInput;
-  ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingReviewResponsePkeyUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingReviewResponsePkeyUpdate;
-  updateReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch: UpdateReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyPatch;
-  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
-  ReviewResponsePatch: ReviewResponsePatch;
-  ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput: ReviewResponseTemplateElementIdFkeyReviewResponseCreateInput;
-  TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate: TemplateElementOnReviewResponseForReviewResponseTemplateElementIdFkeyUsingTemplateElementTemplateCodeCodeTemplateVersionKeyUpdate;
-  ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseTemplateElementIdFkeyNodeIdUpdate;
-  TemplateElementPatch: TemplateElementPatch;
-  ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput: ReviewResponseTemplateElementIdFkeyTemplateElementCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseOriginalReviewResponseIdFkeyNodeIdUpdate;
   ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput: ReviewResponseOriginalReviewResponseIdFkeyReviewResponseCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewResponseLinkIdFkeyNodeIdUpdate;
   ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput: ReviewResponseReviewResponseLinkIdFkeyReviewResponseCreateInput;
-  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
-  ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
-  ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
-  ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput: ReviewResponseApplicationResponseIdFkeyApplicationResponseCreateInput;
   ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
   ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewResponseCreateInput;
   ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate: ReviewResponseOnReviewResponseForReviewResponseReviewQuestionAssignmentIdFkeyNodeIdUpdate;
   ReviewQuestionAssignmentPatch: ReviewQuestionAssignmentPatch;
   ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput: ReviewResponseReviewQuestionAssignmentIdFkeyReviewQuestionAssignmentCreateInput;
-  ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate: ReviewOnReviewResponseForReviewResponseReviewIdFkeyNodeIdUpdate;
-  ReviewResponseReviewIdFkeyReviewResponseCreateInput: ReviewResponseReviewIdFkeyReviewResponseCreateInput;
-  UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
-  ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
+  ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate: ApplicationResponseOnReviewResponseForReviewResponseApplicationResponseIdFkeyNodeIdUpdate;
+  ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput: ReviewResponseApplicationResponseIdFkeyReviewResponseCreateInput;
+  FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate: FileOnFileForFileApplicationResponseIdFkeyNodeIdUpdate;
+  FileApplicationResponseIdFkeyApplicationResponseCreateInput: FileApplicationResponseIdFkeyApplicationResponseCreateInput;
+  FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileApplicationSerialFkeyUsingFileUniqueIdKeyUpdate;
+  ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate: ApplicationOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyFileCreateInput: FileApplicationSerialFkeyFileCreateInput;
+  ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationSerialKeyUpdate;
+  FileOnFileForFileApplicationSerialFkeyNodeIdUpdate: FileOnFileForFileApplicationSerialFkeyNodeIdUpdate;
+  FileApplicationSerialFkeyApplicationCreateInput: FileApplicationSerialFkeyApplicationCreateInput;
+  FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileUserIdFkeyUsingFileUniqueIdKeyUpdate;
+  UserOnFileForFileUserIdFkeyNodeIdUpdate: UserOnFileForFileUserIdFkeyNodeIdUpdate;
+  FileUserIdFkeyFileCreateInput: FileUserIdFkeyFileCreateInput;
   UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewForReviewReviewerIdFkeyUsingUserUsernameKeyUpdate;
   ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
   ReviewReviewerIdFkeyUserCreateInput: ReviewReviewerIdFkeyUserCreateInput;
@@ -30729,6 +30990,7 @@ export type ResolversParentTypes = {
   ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
   ReviewReviewAssignmentIdFkeyReviewCreateInput: ReviewReviewAssignmentIdFkeyReviewCreateInput;
   ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate: ReviewQuestionAssignmentOnReviewQuestionAssignmentForReviewQuestionAssignmentReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewAssignmentPatch: ReviewAssignmentPatch;
   ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreateInput;
   TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate: TemplateElementOnReviewQuestionAssignmentForReviewQuestionAssignmentTemplateElementIdFkeyNodeIdUpdate;
   ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput: ReviewQuestionAssignmentTemplateElementIdFkeyReviewQuestionAssignmentCreateInput;
@@ -30747,11 +31009,6 @@ export type ResolversParentTypes = {
   ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyNodeIdUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinOrganisationIdFkeyNodeIdUpdate;
   OrganisationPatch: OrganisationPatch;
   ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInput: ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInput;
-  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate;
-  ReviewAssignmentAssignerJoinAssignerIdFkeyReviewAssignmentAssignerJoinCreateInput: ReviewAssignmentAssignerJoinAssignerIdFkeyReviewAssignmentAssignerJoinCreateInput;
-  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserUsernameKeyUpdate;
-  ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate;
-  ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput;
   ReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinReviewAssignmentIdFkeyNodeIdUpdate;
   ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentAssignerJoinCreateInput: ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentAssignerJoinCreateInput;
   TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate: TemplateStageReviewLevelOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate;
@@ -30759,6 +31016,23 @@ export type ResolversParentTypes = {
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFkeyNodeIdUpdate;
   TemplateStageReviewLevelPatch: TemplateStageReviewLevelPatch;
   ReviewAssignmentLevelIdFkeyTemplateStageReviewLevelCreateInput: ReviewAssignmentLevelIdFkeyTemplateStageReviewLevelCreateInput;
+  ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate: ReviewOnReviewForReviewReviewAssignmentIdFkeyNodeIdUpdate;
+  ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput: ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput;
+  UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate: UserOnReviewForReviewReviewerIdFkeyNodeIdUpdate;
+  ReviewReviewerIdFkeyReviewCreateInput: ReviewReviewerIdFkeyReviewCreateInput;
+  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyUsingUserUsernameKeyUpdate;
+  ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate: ReviewAssignmentAssignerJoinOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput;
+  UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJoinAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerJoinAssignerIdFkeyReviewAssignmentAssignerJoinCreateInput: ReviewAssignmentAssignerJoinAssignerIdFkeyReviewAssignmentAssignerJoinCreateInput;
+  UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate: UserOnFileForFileUserIdFkeyUsingUserUsernameKeyUpdate;
+  FileOnFileForFileUserIdFkeyNodeIdUpdate: FileOnFileForFileUserIdFkeyNodeIdUpdate;
+  FileUserIdFkeyUserCreateInput: FileUserIdFkeyUserCreateInput;
+  FileOnFileForFileTemplateIdFkeyUsingFileUniqueIdKeyUpdate: FileOnFileForFileTemplateIdFkeyUsingFileUniqueIdKeyUpdate;
+  TemplateOnFileForFileTemplateIdFkeyNodeIdUpdate: TemplateOnFileForFileTemplateIdFkeyNodeIdUpdate;
+  FileTemplateIdFkeyFileCreateInput: FileTemplateIdFkeyFileCreateInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate;
+  ReviewAssignmentTemplateIdFkeyTemplateCreateInput: ReviewAssignmentTemplateIdFkeyTemplateCreateInput;
   ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
   ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
@@ -31870,6 +32144,7 @@ export type CreateFilePayloadResolvers<ContextType = any, ParentType extends Res
   file?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<CreateFilePayloadFileEdgeArgs, 'orderBy'>>;
@@ -32259,6 +32534,7 @@ export type DeleteFilePayloadResolvers<ContextType = any, ParentType extends Res
   deletedFileNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<DeleteFilePayloadFileEdgeArgs, 'orderBy'>>;
@@ -32613,6 +32889,7 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   uniqueId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   originalFilename?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   applicationSerial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   filePath?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -32621,6 +32898,7 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   submitted?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -33645,6 +33923,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   actionQueues?: Resolver<ResolversTypes['ActionQueuesConnection'], ParentType, ContextType, RequireFields<TemplateActionQueuesArgs, 'orderBy'>>;
   templateActions?: Resolver<ResolversTypes['TemplateActionsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateActionsArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateReviewAssignmentsArgs, 'orderBy'>>;
+  files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<TemplateFilesArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -33996,6 +34275,7 @@ export type UpdateFilePayloadResolvers<ContextType = any, ParentType extends Res
   file?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   applicationByApplicationSerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType>;
   fileEdge?: Resolver<Maybe<ResolversTypes['FilesEdge']>, ParentType, ContextType, RequireFields<UpdateFilePayloadFileEdgeArgs, 'orderBy'>>;

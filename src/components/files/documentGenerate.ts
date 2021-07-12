@@ -36,6 +36,7 @@ interface GeneratePDFInput {
   fileId: string
   data: object
   userId?: number
+  templateId?: number
   applicationSerial?: string
   applicationResponseId?: number
   subFolder?: string
@@ -45,6 +46,7 @@ export async function generatePDF({
   fileId,
   data,
   userId,
+  templateId,
   applicationSerial,
   applicationResponseId,
   subFolder,
@@ -75,6 +77,7 @@ export async function generatePDF({
         uniqueId,
         originalFilename,
         userId,
+        templateId,
         applicationSerial,
         applicationResponseId,
         filePath: outputFilePath,
