@@ -21,6 +21,7 @@ CREATE VIEW permissions_all AS (
         template_permission.level_number AS "reviewLevel", 
         template_permission.allowed_sections AS "allowedSections",
         template_permission.can_self_assign AS "canSelfAssign",
+        template_permission.can_make_final_decision AS "canMakeFinalDecision",
         template_permission.restrictions AS "restrictions",
         permission_policy.name AS "policyName",
         permission_policy.type AS "permissionType",
