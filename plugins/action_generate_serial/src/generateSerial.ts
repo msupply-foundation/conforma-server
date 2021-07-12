@@ -1,22 +1,51 @@
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginOutput, ActionPluginInput } from '../../types'
-import Pattern from 'custom_string_patterns'
-
-const serialGenerator = new Pattern(/[A-Z]{3}-<+dddd>/, { counterInit: 100 })
+import databaseMethods from './databaseMethods'
+import evaluateExpression from '@openmsupply/expression-evaluator'
+import { EvaluatorNode } from '@openmsupply/expression-evaluator/lib/types'
+import { patternGen } from 'custom_string_patterns'
 
 async function generateSerial({
   parameters,
   applicationData,
+  outputCumulative,
   DBConnect,
 }: ActionPluginInput): Promise<ActionPluginOutput> {
-  // const { patternString } = parameters
+  const {
+    pattern,
+    counterName,
+    customFields,
+    additionalData = {},
+    counterInit,
+    numberFormat,
+    fallbackText = 'Not_Found',
+  } = parameters
+  const db = databaseMethods(DBConnect)
+  const data = {
+    applicationData,
+    outputCumulative,
+    ...additionalData,
+  }
+
+  // Turn data into customReplacer functions
+  const customReplacers: any = {}
+  for (const key of Object.keys(customFields)) {
+    customReplacers[key] = () => extractObjectProperty(customFields[key], data, fallbackText)
+  }
 
   try {
-    const generateSerial = await serialGenerator.gen()
+    if (!(await db.doesCounterExist(counterName))) await db.createCounter(counterName, counterInit)
+
+    const generatedSerial = await patternGen(pattern, {
+      getCounter: () => DBConnect.getCounter(counterName),
+      numberFormat,
+      customReplacers,
+    })
+    console.log(generatedSerial)
     return {
       status: ActionQueueStatus.Success,
       error_log: '',
-      output: { generateSerial },
+      output: { generatedSerial },
     }
   } catch (error) {
     console.log(error.message)
@@ -28,3 +57,10 @@ async function generateSerial({
 }
 
 export default generateSerial
+
+const extractObjectProperty = async (property: string, data: object, fallbackText: string) => {
+  return (await evaluateExpression(
+    { operator: 'objectProperties', children: [property, fallbackText] },
+    { objects: data }
+  )) as string
+}

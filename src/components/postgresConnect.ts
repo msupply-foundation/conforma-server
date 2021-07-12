@@ -94,6 +94,20 @@ class PostgresDB {
     this.pool.end()
   }
 
+  public getCounter = async (counterName: string, increment = true) => {
+    const textSelect = 'SELECT value FROM counter WHERE name = $1;'
+    const textUpdate = 'UPDATE counter SET value = value + 1 WHERE name = $1;'
+    try {
+      await this.query({ text: 'BEGIN TRANSACTION;' })
+      const result: any = await this.query({ text: textSelect, values: [counterName] })
+      if (increment) await this.query({ text: textUpdate, values: [counterName] })
+      await this.query({ text: 'COMMIT TRANSACTION;' })
+      return result.rows[0]?.value
+    } catch (err) {
+      throw err
+    }
+  }
+
   public addActionQueue = async (action: ActionQueuePayload): Promise<boolean> => {
     const text = `INSERT into action_queue (${Object.keys(action)}, time_queued) 
       VALUES (${this.getValuesPlaceholders(action)}, CURRENT_TIMESTAMP)`
