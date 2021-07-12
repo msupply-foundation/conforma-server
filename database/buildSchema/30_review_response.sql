@@ -34,6 +34,29 @@ CREATE TABLE public.review_response (
     status public.review_response_status DEFAULT 'DRAFT'
 );
 
+-- Function to automatically update "time_updated"
+CREATE OR REPLACE FUNCTION public.update_review_response_timestamp ()
+    RETURNS TRIGGER
+    AS $application_event$
+BEGIN
+    UPDATE
+        public.review_response
+    SET
+        time_updated = NOW()
+    WHERE
+        id = NEW.id;
+    RETURN NULL;
+END;
+$application_event$
+LANGUAGE plpgsql;
+
+--TRIGGER to run above function when response is updated
+CREATE TRIGGER review_response_timestamp_trigger
+    AFTER UPDATE OF comment,
+    decision ON public.review_response
+    FOR EACH ROW
+    EXECUTE FUNCTION public.update_review_response_timestamp ();
+
 -- set review response original_review_response_id (the response that links to application id should be available for all reaponses)
 -- also flatten out review response chain by providing template_element_id in review_response and application_response_id
 CREATE OR REPLACE FUNCTION set_original_response ()
