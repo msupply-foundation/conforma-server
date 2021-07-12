@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-custom_string_patterns@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/custom_string_patterns/-/custom_string_patterns-0.1.2.tgz#2bf99845fb72e7475cbb66ffc959d89f7aa7e27c"
-  integrity sha512-uISzvuXuDUafYmM7moAv/JR4s8YTD9ALqeCOyPiWe3sCoDyLM7rnW1fRg2iITKv1+3TxkXkBeRQ5ixqLy/hxzg==
+custom_string_patterns@^0.1.6:
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/custom_string_patterns/-/custom_string_patterns-0.1.6.tgz#1ef97d934bc01687104bc93e772709217b23891f"
+  integrity sha512-3fn2ILbkownepG0+ZMM0NUeqZ4TEwXx7Sejq09XLpCM+WkZXTPsWuJ/49iztZqmYiOW9/0IS/X8cBHt2Kx0aXQ==
   dependencies:
     randexp "^0.5.3"
 
