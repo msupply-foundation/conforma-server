@@ -5,6 +5,7 @@ CREATE TABLE public.template_permission (
     template_id integer REFERENCES public.template (id),
     allowed_sections varchar[] DEFAULT NULL,
     can_self_assign boolean NOT NULL DEFAULT false,
+    can_make_final_decision boolean NOT NULL DEFAULT false,
     stage_number integer,
     level_number integer,
     restrictions jsonb

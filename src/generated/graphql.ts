@@ -20664,6 +20664,7 @@ export type TemplatePermission = Node & {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign: Scalars['Boolean'];
+  canMakeFinalDecision: Scalars['Boolean'];
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -20688,6 +20689,8 @@ export type TemplatePermissionCondition = {
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `levelNumber` field. */
@@ -20708,6 +20711,8 @@ export type TemplatePermissionFilter = {
   allowedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `levelNumber` field. */
@@ -20737,6 +20742,7 @@ export type TemplatePermissionInput = {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -20793,6 +20799,7 @@ export type TemplatePermissionPatch = {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -20860,6 +20867,7 @@ export type TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput 
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -20902,6 +20910,8 @@ export enum TemplatePermissionsOrderBy {
   AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
   CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
   CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
+  CanMakeFinalDecisionAsc = 'CAN_MAKE_FINAL_DECISION_ASC',
+  CanMakeFinalDecisionDesc = 'CAN_MAKE_FINAL_DECISION_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   LevelNumberAsc = 'LEVEL_NUMBER_ASC',
@@ -20979,6 +20989,7 @@ export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   permissionNameId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -25907,6 +25918,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionPer
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -25920,6 +25932,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTem
   permissionNameId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -33770,6 +33783,7 @@ export type TemplatePermissionResolvers<ContextType = any, ParentType extends Re
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   allowedSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   canSelfAssign?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  canMakeFinalDecision?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   levelNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   restrictions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
