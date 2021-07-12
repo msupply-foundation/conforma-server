@@ -10,7 +10,7 @@ exports.queries = [
         template: {
           code: "UserEdit"
           name: "Edit User Details"
-          plural: "Edit Users Details" 
+          namePlural: "Edit Users Details" 
           submissionMessage: "Thanks for updating your details. You will need to log out and log back into the system for the changes to take effect."
           status: AVAILABLE
           versionTimestamp: "NOW()"

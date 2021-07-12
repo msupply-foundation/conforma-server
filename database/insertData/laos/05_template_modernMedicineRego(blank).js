@@ -12,7 +12,7 @@ exports.queries = [
         template: {
           code: "modernMedicineRego"
           name: "Drug Registration MMC"
-          plural: "Drug Registrations MMC"
+          namePlural: "Drug Registrations MMC"
           isLinear: true
           status: AVAILABLE
           startMessage: "## Apply for a drug registration of a medicine"
@@ -121,4 +121,3 @@ exports.queries = [
     }
   }`,
 ]
-

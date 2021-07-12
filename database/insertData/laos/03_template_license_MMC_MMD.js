@@ -13,7 +13,7 @@ exports.queries = [
           template: {
             code: "CompanyLicense"
             name: "Company License -- Modern medicines or Medical devices"
-            plural: "Companies Licenses -- Modern medicines or Medical devices"
+            namePlural: "Companies Licenses -- Modern medicines or Medical devices"
             isLinear: false # CHANGE THIS
             status: AVAILABLE
             startMessage: "## Apply for a company license for:\\n\\n Modern medicines or Medical devices.\\n\\n**You will be required to upload the following documents:**\\n- **LMMD01**: Letter of request \\n- **LMMD12**: Letter from mother-company authorizing establishment of branch\\n- **LMMD15**: Site inspection report by F&D unit\\n- **LMMD16**: Company/manufacturer profile (including site master file and GMP certification where applicable)"
