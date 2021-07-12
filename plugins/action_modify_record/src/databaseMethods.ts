@@ -5,7 +5,6 @@ const databaseMethods = (DBConnect: any) => {
       VALUES (${DBConnect.getValuesPlaceholders(record)})
       RETURNING *
       `
-    console.log('TEXT', text)
     try {
       const result = await DBConnect.query({ text, values: Object.values(record) })
       const firstRow = result.rows[0]
