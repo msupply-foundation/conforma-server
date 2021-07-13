@@ -138,12 +138,13 @@ const generateNextReviewAssignments = async ({
   // Build reviewers into object map so we can combine duplicate user_orgs
   // and merge their section code restrictions
   nextLevelReviewers.forEach((reviewer: Reviewer) => {
-    const { userId, orgId, allowedSections, canSelfAssign } = reviewer
+    const { userId, orgId, allowedSections, canSelfAssign, canMakeFinalDecision } = reviewer
 
-    const status =
-      canSelfAssign || nextReviewLevel > 1
-        ? ReviewAssignmentStatus.AvailableForSelfAssignment
-        : ReviewAssignmentStatus.Available
+    const status = canMakeFinalDecision
+      ? ReviewAssignmentStatus.Assigned
+      : canSelfAssign || nextReviewLevel > 1
+      ? ReviewAssignmentStatus.AvailableForSelfAssignment
+      : ReviewAssignmentStatus.Available
 
     const userOrgKey = `${userId}_${orgId ? orgId : 0}`
     if (reviewAssignments[userOrgKey])
