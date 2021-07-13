@@ -58,6 +58,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "John" }
+                stageNumber: 1
                 timeCreated: "2021-01-30T00:00:00Z"
                 timeUpdated: "2021-01-30T00:00:01Z"
                 timeSubmitted: "2021-01-31T00:00:00Z"
@@ -74,6 +75,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Smith" }
+                stageNumber: 1
                 timeCreated: "2021-01-30T00:00:00Z"
                 timeUpdated: "2021-01-30T00:00:02Z"
                 timeSubmitted: "2021-01-31T00:00:00Z"
@@ -90,6 +92,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "js@nowhere.com" }
+                stageNumber: 1
                 timeCreated: "2021-01-30T00:00:00Z"
                 timeUpdated: "2021-01-30T00:00:03Z"
                 timeSubmitted: "2021-01-31T00:00:00Z"
@@ -106,6 +109,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "39" }
+                stageNumber: 1
                 timeCreated: "2021-01-30T00:00:00Z"
                 timeUpdated: "2021-01-30T00:00:04Z"
                 timeSubmitted: "2021-01-31T00:00:00Z"
@@ -122,6 +126,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "New Zealand" }
+                stageNumber: 1
                 timeCreated: "2021-01-30T00:00:00Z"
                 timeUpdated: "2021-01-30T00:00:05Z"
                 timeSubmitted: "2021-01-31T00:00:00Z"
@@ -138,6 +143,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Vitamin C" }
+                stageNumber: 1
                 timeCreated: "2021-01-30T00:00:00Z"
                 timeUpdated: "2021-01-30T00:00:05Z"
                 timeSubmitted: "2021-01-31T00:00:00Z"
@@ -154,6 +160,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
+                stageNumber: 1
                 timeCreated: "2021-01-30T00:00:00Z"
                 timeUpdated: "2021-01-30T00:00:05Z"
                 timeSubmitted: "2021-01-31T00:00:00Z"
@@ -170,6 +177,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "50mg" }
+                stageNumber: 1
                 timeCreated: "2021-01-30T00:00:00Z"
                 timeUpdated: "2021-01-30T00:00:05Z"
                 timeSubmitted: "2021-01-31T00:00:00Z"
@@ -186,6 +194,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "100" }
+                stageNumber: 1
                 timeCreated: "2021-01-30T00:00:00Z"
                 timeUpdated: "2021-01-30T00:00:05Z"
                 timeSubmitted: "2021-01-31T00:00:00Z"
@@ -202,6 +211,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Turning orange" }
+                stageNumber: 1
                 timeCreated: "2021-01-30T00:00:00Z"
                 timeUpdated: "2021-01-30T00:00:05Z"
                 timeSubmitted: "2021-01-31T00:00:00Z"
@@ -274,6 +284,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Valerio" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T00:00:00Z"
                 timeUpdated: "2021-05-18T00:00:01Z"
                 timeSubmitted: "2021-05-18T10:00:00Z"
@@ -290,6 +301,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Red" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T00:00:00Z"
                 timeUpdated: "2021-05-18T00:00:02Z"
                 timeSubmitted: "2021-05-18T10:00:00Z"
@@ -306,6 +318,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "jj@nowhere.com" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T00:00:00Z"
                 timeUpdated: "2021-05-18T00:00:03Z"
                 timeSubmitted: "2021-05-18T10:00:00Z"
@@ -322,6 +335,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "42" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T00:00:00Z"
                 timeUpdated: "2021-05-18T00:00:04Z"
                 timeSubmitted: "2021-05-18T10:00:00Z"
@@ -338,6 +352,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Tonga" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T00:00:00Z"
                 timeUpdated: "2021-05-18T00:00:05Z"
                 timeSubmitted: "2021-05-18T10:00:00Z"
@@ -354,6 +369,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Vitamin B" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T00:00:00Z"
                 timeUpdated: "2021-05-18T00:00:06Z"
                 timeSubmitted: "2021-05-18T10:00:00Z"
@@ -370,6 +386,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
+                stageNumber: 1
                 timeCreated: "2021-05-18T00:00:00Z"
                 timeUpdated: "2021-05-18T00:00:07Z"
                 timeSubmitted: "2021-05-18T10:00:00Z"
@@ -386,6 +403,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "100mg" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T00:00:00Z"
                 timeUpdated: "2021-05-18T00:00:08Z"
                 timeSubmitted: "2021-05-18T10:00:00Z"
@@ -402,6 +420,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "200" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T00:00:00Z"
                 timeUpdated: "2021-05-18T00:00:09Z"
                 timeSubmitted: "2021-05-18T10:00:00Z"
@@ -418,6 +437,7 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "No side effects" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T00:00:00Z"
                 timeUpdated: "2021-05-18T00:00:10Z"
                 timeSubmitted: "2021-05-18T10:00:00Z"
@@ -497,6 +517,7 @@ exports.queries = [
                 templateElementId: 4001
                 status: SUBMITTED 
                 value: { text: "Andrei" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T10:00:00Z"
                 timeUpdated: "2021-05-18T10:00:01Z"
                 timeSubmitted: "2021-05-18T10:10:00Z"
@@ -507,6 +528,7 @@ exports.queries = [
                 templateElementId: 4002
                 status: SUBMITTED 
                 value: { text: "Blue" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T10:00:00Z"
                 timeUpdated: "2021-05-18T10:00:02Z"
                 timeSubmitted: "2021-05-18T10:10:00Z"
@@ -517,6 +539,7 @@ exports.queries = [
                 templateElementId: 4003
                 status: SUBMITTED 
                 value: { text: "jw@nowhere.com" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T10:00:00Z"
                 timeUpdated: "2021-05-18T10:00:03Z"
                 timeSubmitted: "2021-05-18T10:10:00Z"
@@ -527,6 +550,7 @@ exports.queries = [
                 templateElementId: 4005
                 status: SUBMITTED 
                 value: { text: "22" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T10:00:00Z"
                 timeUpdated: "2021-05-18T10:00:04Z"
                 timeSubmitted: "2021-05-18T10:10:00Z"
@@ -537,6 +561,7 @@ exports.queries = [
                 templateElementId: 4006
                 status: SUBMITTED 
                 value: { text: "China" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T10:00:00Z"
                 timeUpdated: "2021-05-18T10:00:05Z"
                 timeSubmitted: "2021-05-18T10:10:00Z"
@@ -547,6 +572,7 @@ exports.queries = [
                 templateElementId: 4008
                 status: SUBMITTED 
                 value: { text: "Amoxicillin" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T10:00:00Z"
                 timeUpdated: "2021-05-18T10:00:06Z"
                 timeSubmitted: "2021-05-18T10:10:00Z"
@@ -557,6 +583,7 @@ exports.queries = [
                 templateElementId: 4009
                 status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
+                stageNumber: 1
                 timeCreated: "2021-05-18T10:00:00Z"
                 timeUpdated: "2021-05-18T10:00:07Z"
                 timeSubmitted: "2021-05-18T10:10:00Z"
@@ -567,6 +594,7 @@ exports.queries = [
                 templateElementId: 4011
                 status: SUBMITTED 
                 value: { text: "250mg" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T10:00:00Z"
                 timeUpdated: "2021-05-18T10:00:08Z"
                 timeSubmitted: "2021-05-18T10:10:00Z"
@@ -577,6 +605,7 @@ exports.queries = [
                 templateElementId: 4012
                 status: SUBMITTED 
                 value: { text: "1000" }
+                stageNumber: 1
                 timeCreated: "2021-05-18T10:00:00Z"
                 timeUpdated: "2021-05-18T10:00:09Z"
                 timeSubmitted: "2021-05-18T10:10:00Z"
@@ -587,6 +616,7 @@ exports.queries = [
                 templateElementId: 4013
                 status: SUBMITTED 
                 value: { text: "nausea\\nvomiting\\ndiarrhea\\nstomach pain\\nswollen, black, or \\"hairy\\" tongue." }
+                stageNumber: 1
                 timeCreated: "2021-05-18T10:00:00Z"
                 timeUpdated: "2021-05-18T10:00:10Z"
                 timeSubmitted: "2021-05-18T10:10:00Z"
@@ -649,6 +679,7 @@ exports.queries = [
                 templateElementId: 4001
                 status: SUBMITTED 
                 value: { text: "Valerio" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:01Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -659,6 +690,7 @@ exports.queries = [
                 templateElementId: 4002
                 status: SUBMITTED 
                 value: { text: "Red" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:02Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -669,6 +701,7 @@ exports.queries = [
                 templateElementId: 4003
                 status: SUBMITTED 
                 value: { text: "vw@nowhere.com" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:03Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -679,6 +712,7 @@ exports.queries = [
                 templateElementId: 4005
                 status: SUBMITTED 
                 value: { text: "63" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:04Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -689,6 +723,7 @@ exports.queries = [
                 templateElementId: 4006
                 status: SUBMITTED 
                 value: { text: "Italy" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:05Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -699,6 +734,7 @@ exports.queries = [
                 templateElementId: 4008
                 status: SUBMITTED 
                 value: { text: "Paracetamol" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:06Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -709,6 +745,7 @@ exports.queries = [
                 templateElementId: 4009
                 status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:07Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -719,6 +756,7 @@ exports.queries = [
                 templateElementId: 4011
                 status: SUBMITTED 
                 value: { text: "250mg" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:08Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -729,6 +767,7 @@ exports.queries = [
                 templateElementId: 4012
                 status: SUBMITTED 
                 value: { text: "1000" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:09Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -739,6 +778,7 @@ exports.queries = [
                 templateElementId: 4013
                 status: SUBMITTED 
                 value: { text: "Nothing too serious" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:10Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -817,6 +857,7 @@ exports.queries = [
                 templateElementId: 4001
                 status: SUBMITTED 
                 value: { text: "Another" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:01Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -827,6 +868,7 @@ exports.queries = [
                 templateElementId: 4002
                 status: SUBMITTED 
                 value: { text: "Test" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:02Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -837,6 +879,7 @@ exports.queries = [
                 templateElementId: 4003
                 status: SUBMITTED 
                 value: { text: "this@test.com" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:03Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -847,6 +890,7 @@ exports.queries = [
                 templateElementId: 4005
                 status: SUBMITTED 
                 value: { text: "18" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:04Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -857,6 +901,7 @@ exports.queries = [
                 templateElementId: 4006
                 status: SUBMITTED 
                 value: { text: "Brazil" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:05Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -867,6 +912,7 @@ exports.queries = [
                 templateElementId: 4008
                 status: SUBMITTED 
                 value: { text: "Amoxicilin" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:06Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -881,6 +927,7 @@ exports.queries = [
                   selection: "Medicine"
                   optionIndex: 0
                 }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:07Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
@@ -898,6 +945,7 @@ exports.queries = [
                 templateElementId: 4012
                 status: SUBMITTED 
                 value: { text: "200" }
+                stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:08Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
