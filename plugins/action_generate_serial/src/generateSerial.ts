@@ -40,7 +40,7 @@ async function generateSerial({
       numberFormat,
       customReplacers,
     })
-    console.log(generatedSerial)
+    console.log('Generated serial:', generatedSerial)
     return {
       status: ActionQueueStatus.Success,
       error_log: '',
