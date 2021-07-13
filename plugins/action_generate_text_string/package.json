@@ -1,7 +1,7 @@
 {
-  "name": "generate_serial",
+  "name": "generate_text_string",
   "version": "0.1",
-  "description": "Generates serial numbers or IDs using a specified pattern",
+  "description": "Generates serial numbers or arbitrary text strings using a specified pattern",
   "author": "The mSupplyFoundation",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "custom_string_patterns": "^0.1.6",
+    "custom_string_patterns": "^0.2.1",
     "randexp": "^0.5.3"
   }
 }

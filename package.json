@@ -36,7 +36,7 @@
     "postgraphile-plugin-nested-mutations": "^1.1.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.2.0",
-    "ts-node": "^8.10.2",
+    "ts-node": "^10.1.0",
     "typescript": "^3.9.7"
   },
   "scripts": {
@@ -73,6 +73,7 @@
     "fastify-cors": "^4.1.0",
     "fastify-multipart": "^3.1.0",
     "fastify-static": "^4.2.2",
+    "global": "^4.4.0",
     "json-sql-builder2": "^1.0.24",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
