@@ -13,6 +13,7 @@ export interface Reviewer {
   restrictions: { [key: string]: object }
   allowedSections: string[] | null
   canSelfAssign: boolean
+  canMakeFinalDecision: boolean
 }
 
 interface ReviewAssignment {
