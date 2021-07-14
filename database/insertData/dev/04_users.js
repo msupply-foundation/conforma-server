@@ -514,6 +514,11 @@ exports.queries = [
                   connectByName: { name: "reviewOrgRego" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "admin" }
+                }
+              }
             ]
           }
         }
