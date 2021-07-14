@@ -249,6 +249,32 @@ exports.queries = [
                 }
                 {
                   permissionNameToPermissionNameId: {
+                    connectByName: { name: "admin" }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ) {
+        user {
+          username
+        }
+      }
+    }`,
+  `mutation {
+      createUser(
+        input: {
+          user: {
+            email: "screenproceedure@sussol.net"
+            username: "screenproceedure"
+            firstName: "Screen"
+            lastName: "Proceedure"
+            passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+            permissionJoinsUsingId: {
+              create: [
+                {
+                  permissionNameToPermissionNameId: {
                     connectByName: { name: "reviewOrgLicence" }
                   }
                 }
