@@ -22,6 +22,7 @@ export const getApplicationData = async (input: {
     ))
 
   const applicationResult = await DBConnect.getApplicationData(applicationId)
+  if (!applicationResult) throw new Error("Can't get application data")
 
   const applicationData = applicationResult ? applicationResult : { applicationId }
 
