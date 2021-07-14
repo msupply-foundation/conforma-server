@@ -16,12 +16,12 @@ export interface Reviewer {
   canMakeFinalDecision: boolean
 }
 
-interface ReviewAssignment {
+export interface ReviewAssignment {
   reviewerId: number
   orgId: number | null
   stageId: number
   stageNumber: number
-  timeStageCreated: Date
+  timeStageCreated?: Date
   status: ReviewAssignmentStatus
   applicationId: number
   allowedSections: string[] | null
