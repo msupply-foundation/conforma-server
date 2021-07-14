@@ -27,11 +27,12 @@ const takeSnapshot: SnapshotOperation = async ({
   snapshotName = DEFAULT_SNAPSHOT_NAME,
   optionsName = DEFAULT_OPTIONS_NAME,
   options: inOptions,
+  extraOptions = {},
 }) => {
   try {
     console.log(`taking snapshot, name: ${snapshotName}`)
 
-    const options = await getOptions(optionsName, inOptions)
+    const options = await getOptions(optionsName, inOptions, extraOptions)
     const snapshotObject = await getRecordsAsObject(options)
 
     const newSnapshotFolder = path.join(SNAPSHOT_FOLDER, snapshotName)
@@ -50,7 +51,7 @@ const takeSnapshot: SnapshotOperation = async ({
       JSON.stringify(options, null, ' ')
     )
 
-    await getSchemaDiff(newSnapshotFolder)
+    if (options.shouldReInitilise) await getSchemaDiff(newSnapshotFolder)
 
     copyFiles(newSnapshotFolder, options)
 
@@ -62,10 +63,14 @@ const takeSnapshot: SnapshotOperation = async ({
   }
 }
 
-const getOptions = async (optionsName?: string, options?: ExportAndImportOptions) => {
+const getOptions = async (
+  optionsName?: string,
+  options?: ExportAndImportOptions,
+  extraOptions: Partial<ExportAndImportOptions> = {}
+) => {
   if (options) {
     console.log('use options passed as a parameter')
-    return options
+    return { ...options, ...extraOptions }
   }
 
   const optionsFile = path.join(SNAPSHOT_OPTIONS_FOLDER, `${optionsName}.json`)
@@ -75,7 +80,9 @@ const getOptions = async (optionsName?: string, options?: ExportAndImportOptions
     encoding: 'utf-8',
   })
 
-  return JSON.parse(optionsRaw) as ExportAndImportOptions
+  const parsedOptions = JSON.parse(optionsRaw) as ExportAndImportOptions
+
+  return { ...parsedOptions, ...extraOptions }
 }
 
 const zipSnapshot = async (snapshotFolder: string, snapshotName: string) => {

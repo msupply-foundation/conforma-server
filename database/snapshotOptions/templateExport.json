@@ -1,0 +1,22 @@
+{
+  "filters": {},
+  "shouldReInitilise": false,
+  "includeTables": [
+    "templateElement",
+    "template",
+    "templateAction",
+    "templateFilterJoin",
+    "filter",
+    "templatePermission",
+    "templateStage",
+    "templateSection",
+    "templateStageReviewLevel",
+    "permissionName",
+    "permissionPoliy"
+  ],
+  "tablesToUpdateOnInsertFail": ["permissionName", "permissionPolicy", "filter"],
+  "excludeTables": [],
+  "insertScriptsLocale": "dev",
+  "includeInsertScripts": [],
+  "excludeInsertScripts": []
+}
