@@ -31,6 +31,7 @@ export type ExportAndImportOptions = {
   insertScriptsLocale: string
   includeInsertScripts: string[]
   excludeInsertScripts: string[]
+  tablesToUpdateOnInsertFail: string[]
 }
 
 export type ObjectRecord = { [columnName: string]: any }
@@ -49,4 +50,5 @@ export type SnapshotOperation = (props: {
   snapshotName?: string
   optionsName?: string
   options?: ExportAndImportOptions
+  extraOptions?: Partial<ExportAndImportOptions>
 }) => Promise<{ success: boolean; message: string; error?: string }>
