@@ -22,6 +22,7 @@ exports.queries = [
             create: [
               {
                 isCurrent: false
+                timeCreated: "2021-01-30T00:00:00Z"
                 templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: { 
@@ -33,6 +34,7 @@ exports.queries = [
               }
               {
                 isCurrent: true
+                timeCreated: "2021-01-31T00:00:00Z"
                 templateStageToStageId: { connectById: { id: 6 } }
                 applicationStatusHistoriesUsingId: {
                   create: { 
@@ -248,6 +250,7 @@ exports.queries = [
           applicationStageHistoriesUsingId: {
             create: {
               isCurrent: true
+              timeCreated: "2021-05-18T00:00:00Z"
               templateStageToStageId: { connectById: { id: 5 } }
               applicationStatusHistoriesUsingId: {
                 create: [
@@ -475,6 +478,7 @@ exports.queries = [
             create: [
               {
                 isCurrent: false
+                timeCreated: "2021-05-18T00:00:00Z"
                 templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: [
@@ -498,6 +502,7 @@ exports.queries = [
               }
               {
                 isCurrent: true
+                timeCreated: "2021-05-19T10:00:00Z"
                 templateStageToStageId: { connectById: { id: 6 } }
                 applicationStatusHistoriesUsingId: {
                   create: { 
@@ -634,12 +639,180 @@ exports.queries = [
       }
     }
   }`,
-  // Application 4 for Review Testing -- Un-assigned, level 1
+  // Application 4 for Review Testing -- on Stage 2 during consolidation (Level 2) 
   `mutation ReviewTestApplication4 {
     createApplication(
       input: {
         application: {
           id: 4003
+          serial: "45678"
+          applicationSectionsUsingId: {
+            create: [{ templateSectionId: 1005 }, { templateSectionId: 1006 }]
+          }
+          name: "Test Review -- Amoxicilin"
+          outcome: PENDING
+          isActive: true
+          templateId: 5
+          userId: 2
+          applicationStageHistoriesUsingId: {
+            create: [
+              {
+                isCurrent: false
+                timeCreated: "2021-06-09T00:00:00Z"
+                templateStageToStageId: { connectById: { id: 5 } }
+                applicationStatusHistoriesUsingId: {
+                  create: [
+                    { 
+                      isCurrent: false
+                      status: DRAFT
+                      timeCreated: "2021-06-09T00:00:00Z"
+                    }
+                    { 
+                      isCurrent: false
+                      status: SUBMITTED
+                      timeCreated: "2021-06-09T10:00:00Z"
+                    }
+                    { 
+                      isCurrent: false
+                      status: COMPLETED
+                      timeCreated: "2021-06-10T10:00:00Z"
+                    }
+                  ]
+                }
+              }
+              {
+                isCurrent: true
+                templateStageToStageId: { connectById: { id: 7 } }
+                applicationStatusHistoriesUsingId: {
+                  create: { 
+                    isCurrent: true
+                    status: SUBMITTED
+                    timeCreated: "2021-07-10T10:00:00Z"
+                  }
+                }
+              }
+            ]
+          }
+          applicationResponsesUsingId: {
+            create: [
+              {
+                id: 4150
+                isValid: true
+                templateElementId: 4001
+                status: SUBMITTED 
+                value: { text: "Another" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:01Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
+              }
+              {
+                id: 4151
+                isValid: true
+                templateElementId: 4002
+                status: SUBMITTED 
+                value: { text: "Test" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:02Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
+              }
+              {
+                id: 4152
+                isValid: true
+                templateElementId: 4003
+                status: SUBMITTED 
+                value: { text: "this@test.com" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:03Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
+              }
+              {
+                id: 4153
+                isValid: true
+                templateElementId: 4005
+                status: SUBMITTED 
+                value: { text: "18" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:04Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
+              }
+              {
+                id: 4154
+                isValid: true
+                templateElementId: 4006
+                status: SUBMITTED 
+                value: { text: "Brazil" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:05Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
+              }
+              {
+                id: 4155
+                isValid: true
+                templateElementId: 4008
+                status: SUBMITTED 
+                value: { text: "Amoxicilin" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:06Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
+              }
+              {
+                id: 4156
+                isValid: true
+                templateElementId: 4009
+                status: SUBMITTED 
+                value: { 
+                  text: "Medicine"
+                  selection: "Medicine"
+                  optionIndex: 0
+                }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:07Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
+              }
+              {
+                id: 4157
+                isValid: true
+                templateElementId: 4011
+                status: SUBMITTED 
+                value: { text: "100g" }
+              }
+              {
+                id: 4158
+                isValid: true
+                templateElementId: 4012
+                status: SUBMITTED 
+                value: { text: "200" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:08Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      application {
+        name
+        template {
+          name
+        }
+      }
+    }
+  }`,
+  // Application 5 for Review Testing -- on Stage 3 during final decision (level 1)
+  `mutation ReviewTestApplication4 {
+    createApplication(
+      input: {
+        application: {
+          id: 4004
           serial: "ABC123"
           applicationSectionsUsingId: {
             create: [{ templateSectionId: 1005 }, { templateSectionId: 1006 }]
@@ -652,7 +825,8 @@ exports.queries = [
           applicationStageHistoriesUsingId: {
             create: [
               {
-                isCurrent: true
+                isCurrent: false
+                timeCreated: "2021-06-09T00:00:00Z"
                 templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: [
@@ -662,11 +836,45 @@ exports.queries = [
                       timeCreated: "2021-06-09T00:00:00Z"
                     }
                     { 
-                      isCurrent: true
+                      isCurrent: false
                       status: SUBMITTED
                       timeCreated: "2021-06-09T10:00:00Z"
                     }
+                    { 
+                      isCurrent: false
+                      status: COMPLETED
+                      timeCreated: "2021-06-10T10:00:00Z"
+                    }
                   ]
+                }
+              }
+              {
+                isCurrent: false
+                templateStageToStageId: { connectById: { id: 6 } }
+                applicationStatusHistoriesUsingId: {
+                  create: [
+                    { 
+                      isCurrent: false
+                      status: SUBMITTED
+                      timeCreated: "2021-06-10T10:00:00Z"
+                    }
+                    { 
+                      isCurrent: false
+                      status: COMPLETED
+                      timeCreated: "2021-07-10T10:00:00Z"
+                    }
+                  ]
+                }
+              }
+              {
+                isCurrent: true
+                templateStageToStageId: { connectById: { id: 7 } }
+                applicationStatusHistoriesUsingId: {
+                  create: { 
+                    isCurrent: true
+                    status: SUBMITTED
+                    timeCreated: "2021-07-10T10:00:00Z"
+                  }
                 }
               }
             ]
@@ -796,55 +1004,40 @@ exports.queries = [
       }
     }
   }`,
-  // Application 5 for Review Testing -- on Stage 2 with consolidation assigned
+  // Application 6 for Review Testing -- Un-assigned, Stage 1 level 1
   `mutation ReviewTestApplication4 {
     createApplication(
       input: {
         application: {
-          id: 4004
-          serial: "45678"
+          id: 4005
+          serial: "ABC456"
           applicationSectionsUsingId: {
             create: [{ templateSectionId: 1005 }, { templateSectionId: 1006 }]
           }
-          name: "Test Review -- Amoxicilin"
+          name: "Test Review -- Oxygen"
           outcome: PENDING
           isActive: true
           templateId: 5
-          userId: 2
+          userId: 4
           applicationStageHistoriesUsingId: {
             create: [
               {
-                isCurrent: false
+                isCurrent: true
+                timeCreated: "2021-07-14T00:00:00Z"
                 templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: [
                     { 
                       isCurrent: false
                       status: DRAFT
-                      timeCreated: "2021-06-09T00:00:00Z"
+                      timeCreated: "2021-07-14T00:00:00Z"
                     }
                     { 
-                      isCurrent: false
+                      isCurrent: true
                       status: SUBMITTED
-                      timeCreated: "2021-06-09T10:00:00Z"
-                    }
-                    { 
-                      isCurrent: false
-                      status: COMPLETED
-                      timeCreated: "2021-06-10T10:00:00Z"
+                      timeCreated: "2021-07-14T10:00:00Z"
                     }
                   ]
-                }
-              }
-              {
-                isCurrent: true
-                templateStageToStageId: { connectById: { id: 6 } }
-                applicationStatusHistoriesUsingId: {
-                  create: { 
-                    isCurrent: true
-                    status: SUBMITTED
-                    timeCreated: "2021-06-10T10:00:00Z"
-                  }
                 }
               }
             ]
@@ -852,102 +1045,113 @@ exports.queries = [
           applicationResponsesUsingId: {
             create: [
               {
-                id: 4150
+                id: 4110
                 isValid: true
                 templateElementId: 4001
                 status: SUBMITTED 
-                value: { text: "Another" }
+                value: { text: "Valerio" }
                 stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:01Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
-                id: 4151
+                id: 4111
                 isValid: true
                 templateElementId: 4002
                 status: SUBMITTED 
-                value: { text: "Test" }
+                value: { text: "Red" }
                 stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:02Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
-                id: 4152
+                id: 4112
                 isValid: true
                 templateElementId: 4003
                 status: SUBMITTED 
-                value: { text: "this@test.com" }
+                value: { text: "vw@nowhere.com" }
                 stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:03Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
-                id: 4153
+                id: 4113
                 isValid: true
                 templateElementId: 4005
                 status: SUBMITTED 
-                value: { text: "18" }
+                value: { text: "50" }
                 stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:04Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
-                id: 4154
+                id: 4114
                 isValid: true
                 templateElementId: 4006
                 status: SUBMITTED 
-                value: { text: "Brazil" }
+                value: { text: "India" }
                 stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:05Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
-                id: 4155
+                id: 4115
                 isValid: true
                 templateElementId: 4008
                 status: SUBMITTED 
-                value: { text: "Amoxicilin" }
+                value: { text: "Oxygen" }
                 stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:06Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
-                id: 4156
+                id: 4116
                 isValid: true
                 templateElementId: 4009
                 status: SUBMITTED 
-                value: { 
-                  text: "Medicine"
-                  selection: "Medicine"
-                  optionIndex: 0
-                }
+                value: { text: "Natural Product", optionIndex: 1 }
                 stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:07Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
-                id: 4157
+                id: 4117
                 isValid: true
                 templateElementId: 4011
                 status: SUBMITTED 
-                value: { text: "100g" }
-              }
-              {
-                id: 4158
-                isValid: true
-                templateElementId: 4012
-                status: SUBMITTED 
-                value: { text: "200" }
+                value: { text: "244 metric tonne" }
                 stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:08Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
+              }
+              {
+                id: 4118
+                isValid: true
+                templateElementId: 4012
+                status: SUBMITTED 
+                value: { text: "50" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:09Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
+              }
+              {
+                id: 4119
+                isValid: true
+                templateElementId: 4013
+                status: SUBMITTED 
+                value: { text: "Blood oxygen saturation increased, heart rate decreased, and cognitive function improved as the concentration and flow rate of administered oxygen increased" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:10Z"
                 timeSubmitted: "2021-06-09T10:00:00Z"
               }
             ]

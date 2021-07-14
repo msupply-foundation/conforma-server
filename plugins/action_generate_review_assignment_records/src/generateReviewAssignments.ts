@@ -1,5 +1,5 @@
 import { ActionPluginInput } from '../../types'
-import { Reviewer, ReviewAssignmentObject } from './types'
+import { Reviewer, ReviewAssignmentObject, ReviewAssignment } from './types'
 import databaseMethods from './databaseMethods'
 import {
   ActionQueueStatus,
@@ -193,11 +193,19 @@ const generateNextReviewAssignments = async ({
 
   console.log('ReviewAssignmentAssignerJoinIds', reviewAssignmentAssignerJoinIds)
 
+  // Remove timeStageCreated from log - to help with tests
+  const reviewAssignmentsLog: ReviewAssignment[] = []
+
+  Object.values(reviewAssignments).forEach((reviewAssignment) => {
+    delete reviewAssignment.timeStageCreated
+    reviewAssignmentsLog.push(reviewAssignment)
+  })
+
   return {
     status: ActionQueueStatus.Success,
     error_log: '',
     output: {
-      reviewAssignments: Object.values(reviewAssignments),
+      reviewAssignments: reviewAssignmentsLog,
       reviewAssignmentIds,
       reviewAssignmentAssignerJoins,
       reviewAssignmentAssignerJoinIds,

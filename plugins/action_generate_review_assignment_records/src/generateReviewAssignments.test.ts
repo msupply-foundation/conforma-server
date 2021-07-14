@@ -31,7 +31,6 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             levelNumber: 1,
             isLastLevel: true,
             //isFinalDecision: false,
-            timeStageCreated: '2021-07-13T21:56:01.116Z',
           },
           {
             reviewerId: 3,
@@ -44,7 +43,6 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             levelNumber: 1,
             isLastLevel: true,
             //isFinalDecision: false,
-            timeStageCreated: '2021-07-13T21:56:01.116Z',
           },
           {
             reviewerId: 4,
@@ -57,7 +55,6 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             levelNumber: 1,
             isLastLevel: true,
             //isFinalDecision: false,
-            timeStageCreated: '2021-07-13T21:56:01.116Z',
           },
           {
             reviewerId: 5,
@@ -70,7 +67,6 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             levelNumber: 1,
             isLastLevel: true,
             //isFinalDecision: false,
-            timeStageCreated: '2021-07-13T21:56:01.116Z',
           },
           {
             reviewerId: 7,
@@ -83,7 +79,6 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             levelNumber: 1,
             isLastLevel: true,
             //isFinalDecision: false,
-            timeStageCreated: '2021-07-13T21:56:01.116Z',
           },
           {
             reviewerId: 8,
@@ -96,7 +91,6 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             levelNumber: 1,
             isLastLevel: true,
             //isFinalDecision: false,
-            timeStageCreated: '2021-07-13T21:56:01.116Z',
           },
           {
             reviewerId: 9,
@@ -109,7 +103,6 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             levelNumber: 1,
             isLastLevel: true,
             //isFinalDecision: false,
-            timeStageCreated: '2021-07-13T21:56:01.116Z',
           },
         ],
         reviewAssignmentIds: [1, 2, 3, 4, 1005, 6, 7],
@@ -143,12 +136,11 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
             levelNumber: 1,
             isLastLevel: false,
             //isFinalDecision: false,
-            timeStageCreated: '2021-07-13T21:56:01.159Z',
           },
           {
             reviewerId: 8,
             orgId: null,
-            stageId: 5,
+            stageId: 6,
             stageNumber: 2,
             status: ReviewAssignmentStatus.Available,
             applicationId: 4002,
@@ -156,7 +148,6 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
             levelNumber: 1,
             isLastLevel: false,
             //isFinalDecision: false,
-            timeStageCreated: '2021-07-13T21:56:01.159Z',
           },
         ],
         reviewAssignmentIds: [1007, 1008],
@@ -190,75 +181,13 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
   })
 })
 
+// Recreated test case for First Review submissiion (Stage 1 - generate assignment for Stage 2)
+
 // Simulate review submission:
 
-test('Test: Submit Review ID#1000 for Application ID#4000 - Stage 2 Lvl 1', () => {
+test('Test: Submit Review ID#6003 for Application ID#4002 - Stage 2 Lvl 1 to update existing level 2 assignment', () => {
   return generateReviewAssignments({
-    parameters: { templateId: 4, applicationId: 4000, reviewId: 1000 }, // stageNumber: 2, stageId: 5, levels: 2
-    DBConnect,
-  }).then((result: any) => {
-    expect(result).toEqual({
-      status: ActionQueueStatus.Success,
-      error_log: '',
-      output: {
-        reviewAssignments: [
-          {
-            reviewerId: 7,
-            orgId: null,
-            stageId: 5,
-            stageNumber: 2,
-            status: ReviewAssignmentStatus.Available,
-            applicationId: 4000,
-            allowedSections: ['S1'],
-            levelNumber: 1,
-            isLastLevel: false,
-          },
-          {
-            reviewerId: 8,
-            orgId: null,
-            stageId: 5,
-            stageNumber: 2,
-            status: ReviewAssignmentStatus.Available,
-            applicationId: 4000,
-            allowedSections: ['S2'],
-            levelNumber: 1,
-            isLastLevel: false,
-          },
-        ],
-        reviewAssignmentIds: [1001, 1002],
-        reviewAssignmentAssignerJoinIds: [5, 6, 7, 8],
-        reviewAssignmentAssignerJoins: [
-          {
-            assignerId: 11,
-            orgId: null,
-            reviewAssignmentId: 1001,
-          },
-          {
-            assignerId: 12,
-            orgId: null,
-            reviewAssignmentId: 1001,
-          },
-          {
-            assignerId: 11,
-            orgId: null,
-            reviewAssignmentId: 1002,
-          },
-          {
-            assignerId: 12,
-            orgId: null,
-            reviewAssignmentId: 1002,
-          },
-        ],
-        nextStageNumber: 2,
-        nextReviewLevel: 1,
-      },
-    })
-  })
-})
-
-test('Test: Submit Review ID#4000 for Application ID#4002 - Stage 2 Lvl2 (Last level)', () => {
-  return generateReviewAssignments({
-    parameters: { templateId: 4, applicationId: 4002, reviewId: 4000 }, // stageNumber: 2, stageId: 5, levels: 2
+    parameters: { templateId: 4, applicationId: 4002, reviewId: 6003 }, // stageNumber: 2, stageId: 6, levels: 2
     DBConnect,
   }).then((result: any) => {
     expect(result).toEqual({
@@ -269,31 +198,78 @@ test('Test: Submit Review ID#4000 for Application ID#4002 - Stage 2 Lvl2 (Last l
           {
             reviewerId: 9,
             orgId: null,
-            stageId: 5,
+            stageId: 6,
             stageNumber: 2,
+            levelNumber: 2,
             status: ReviewAssignmentStatus.AvailableForSelfAssignment,
             applicationId: 4002,
             allowedSections: null,
-            levelNumber: 2,
             isLastLevel: true,
+            //isFinalDecision: false,
           },
           {
             reviewerId: 10,
             orgId: null,
-            stageId: 5,
+            stageId: 6,
             stageNumber: 2,
+            levelNumber: 2,
             status: ReviewAssignmentStatus.AvailableForSelfAssignment,
             applicationId: 4002,
             allowedSections: null,
-            levelNumber: 2,
             isLastLevel: true,
+            //isFinalDecision: false,
           },
         ],
         reviewAssignmentIds: [1009, 1010],
-        reviewAssignmentAssignerJoins: [],
         reviewAssignmentAssignerJoinIds: [],
+        reviewAssignmentAssignerJoins: [],
         nextStageNumber: 2,
         nextReviewLevel: 2,
+      },
+    })
+  })
+})
+
+test('Test: Submit Review ID#7003 for Application ID#4004 - Stage 2 Lvl 2 to create assignments for Stage 3 (Fina Decision)', () => {
+  return generateReviewAssignments({
+    parameters: { templateId: 4, applicationId: 4004, reviewId: 7004 }, // stageNumber: 2, stageId: 7, levels: 2
+    DBConnect,
+  }).then((result: any) => {
+    expect(result).toEqual({
+      status: ActionQueueStatus.Success,
+      error_log: '',
+      output: {
+        reviewAssignments: [
+          {
+            reviewerId: 17,
+            orgId: null,
+            stageId: 7,
+            stageNumber: 3,
+            levelNumber: 1,
+            status: ReviewAssignmentStatus.Assigned,
+            applicationId: 4004,
+            allowedSections: null,
+            isLastLevel: true,
+            //isFinalDecision: true,
+          },
+          {
+            reviewerId: 18,
+            orgId: null,
+            stageId: 7,
+            stageNumber: 3,
+            levelNumber: 1,
+            status: ReviewAssignmentStatus.Assigned,
+            applicationId: 4004,
+            allowedSections: null,
+            isLastLevel: true,
+            //isFinalDecision: true,
+          },
+        ],
+        reviewAssignmentIds: [12, 13],
+        reviewAssignmentAssignerJoins: [],
+        reviewAssignmentAssignerJoinIds: [],
+        nextStageNumber: 3,
+        nextReviewLevel: 1,
       },
     })
   })
