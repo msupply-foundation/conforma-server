@@ -4,6 +4,7 @@ CREATE TABLE public.template_section (
     template_id integer REFERENCES public.template (id),
     title varchar,
     code varchar,
-    index integer
+    index integer,
+    UNIQUE (template_id, code)
 );
 
