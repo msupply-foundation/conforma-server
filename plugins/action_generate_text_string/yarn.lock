@@ -7,18 +7,24 @@ checkdigit@^1.1.1:
   resolved "https://registry.yarnpkg.com/checkdigit/-/checkdigit-1.1.1.tgz#08df08de493a3eaa3fa9183e5864b27beef96687"
   integrity sha1-CN8I3kk6Pqo/qRg+WGSye+75Zoc=
 
-custom_string_patterns@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/custom_string_patterns/-/custom_string_patterns-0.2.1.tgz#942d5599a4a09b96856b0eeb208c109c2efaa212"
-  integrity sha512-e+cpJuOYp5k7ZHPVvTHFqD1mfSruj3ynla2kZQ3xxMsOQgEj0nSgSwZSgblod7RZNCi8SCcK/XaBN2fgn8Wl/w==
+custom_string_patterns@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/custom_string_patterns/-/custom_string_patterns-0.3.2.tgz#49a64d049b9d35fb053e30a132606a24fd61338e"
+  integrity sha512-RRYwC9OeG0KOc8XLC6wsLGT9MhcT6on0iYuoS1XTBe8Lm5f54YDjl1BcDXwOkTOxDjI8fSkzi4Q1sEjhx1176w==
   dependencies:
     checkdigit "^1.1.1"
+    lodash "^4.17.21"
     randexp "^0.5.3"
 
 drange@^1.0.2:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/drange/-/drange-1.1.1.tgz#b2aecec2aab82fcef11dbbd7b9e32b83f8f6c0b8"
   integrity sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==
+
+lodash@^4.17.21:
+  version "4.17.21"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
+  integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 randexp@^0.5.3:
   version "0.5.3"

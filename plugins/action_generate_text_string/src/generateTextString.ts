@@ -2,8 +2,8 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginOutput, ActionPluginInput } from '../../types'
 import databaseMethods from './databaseMethods'
 import modifyRecord from '../../action_modify_record/src/modifyRecord'
-import evaluateExpression from '@openmsupply/expression-evaluator'
 import { patternGen } from 'custom_string_patterns'
+import { get as extractObjectProperty } from 'lodash'
 
 async function generateTextString({
   parameters,
@@ -18,7 +18,7 @@ async function generateTextString({
     additionalData = {},
     counterInit,
     numberFormat,
-    fallbackText = 'Not_Found',
+    fallbackText = 'Missing_data_property',
     updateRecord = false,
     tableName = 'application',
     fieldName = 'name',
@@ -34,19 +34,25 @@ async function generateTextString({
 
   // Turn data into customReplacer functions
   const customReplacers: any = {}
-  for (const key of Object.keys(customFields)) {
-    customReplacers[key] = () => extractObjectProperty(customFields[key], data, fallbackText)
-  }
+  if (customFields)
+    for (const key of Object.keys(customFields)) {
+      customReplacers[key] = () => extractObjectProperty(data, customFields[key], fallbackText)
+    }
 
   try {
     if (counterName && !(await db.doesCounterExist(counterName)))
       await db.createCounter(counterName, counterInit)
 
-    const generatedText = await patternGen(pattern, {
-      getCounter: counterName ? () => DBConnect.getCounter(counterName) : undefined,
-      numberFormat,
-      customReplacers,
-    })
+    const generatedText = await patternGen(
+      pattern,
+      {
+        getCounter: counterName ? () => DBConnect.getCounter(counterName) : undefined,
+        numberFormat,
+        customReplacers,
+        fallbackString: fallbackText,
+      },
+      { data }
+    )
     console.log('Text string created:', generatedText)
 
     // Update database record if requested
@@ -88,10 +94,3 @@ async function generateTextString({
 }
 
 export default generateTextString
-
-const extractObjectProperty = async (property: string, data: object, fallbackText: string) => {
-  return (await evaluateExpression(
-    { operator: 'objectProperties', children: [property, fallbackText] },
-    { objects: data }
-  )) as string
-}

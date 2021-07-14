@@ -10,7 +10,7 @@
   },
   "devDependencies": {},
   "dependencies": {
-    "custom_string_patterns": "^0.2.1",
+    "custom_string_patterns": "^0.3.2",
     "randexp": "^0.5.3"
   }
 }
