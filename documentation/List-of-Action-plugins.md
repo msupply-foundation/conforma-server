@@ -7,6 +7,7 @@
 - [Increment Stage](#increment-stage)
 - [Change Status](#change-status)
 - [Modify Record](#modify-record)
+- [Generate Text String](#generate-text-string)
 - [Join User to Organsation](#join-user-to-organsation)
 - [Grant Permissions](#grant-permissions)
 - [Generate Review Assignments](#generate-review-assignments)
@@ -142,31 +143,86 @@ This will look for a user record with `username = "js"` and update it with the _
 
 ---
 
-### Generate Name (or any custom string)
+### Generate Text String
 
-Creates a custom name string and applies it to a specified database record (usually `application.name`)
+Generates serial numbers or arbitrary text strings (e.g. for application name) using a specified pattern, and updates a database record if requested.
 
-- _Action Code:_ **`generateName`**
+- _Action Code:_ **`generateTextString`**
 
-| Input parameters<br />(\*required) <br/>  | Output properties |
-| ----------------------------------------- | ----------------- |
-| `formatExpression`                        | `generatedName`   |
-| `fieldName` (default `"name"`)            |                   |
-| `matchField` (default `"id"`)             |                   |
-| `matchValue` (default `applicationId`)    |                   |
-| `shouldUpdateDatabase` (default `true`)   |                   |
-| `additionalData`                          |                   |
-| `fallbackString` (default `"UNRESOLVED"`) |                   |
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `pattern`\*                              | `generatedText`   |
+| `counterName`                            |                   |
+| `counterInit`                            |                   |
+| `customFields`                           |                   |
+| `numberFormat`                           |                   |
+| `fallbackText`                           |                   |
+| `updateRecord` (default `false`)         |                   |
+| `tableName` (default `application`)      |                   |
+| `fieldName` (default `name`)             |                   |
+| `matchField` (default `"id"`)            |                   |
+| `matchValue` (default `applicationId`)   |                   |
+| `additionalData`                         |                   |
 
-`formatExpression` can be either a string, or a full evaluator expression. If it's a string, it should use `${property.name}` for values to be replaced from `applicationData` (plus any additional fields from `additionalData`). For example, the formatExpression string:
-`${applicationData.templateName} — ${applicationData.applicationSerial}`  
-might output "Drug Registration — 12345" for a Drug Registration application. If no formatExpression is provided, it will default to this example expression.
+This action uses the [custom_string_patterns](https://www.npmjs.com/package/custom_string_patterns), which allows the generation of random strings using Regular Expressions, but with the added functionality of also including:
 
-The parameters `fieldName`, `matchField`, and `matchValue` work exactly the same as the ["ModifyRecord" Action](#modify-record) (above). These are not required if just updating the application name (that's the default behaviour)
+- incrementing, persistent counters
+- custom replacement functions
+- object data replacement.
 
-If `shouldUpdateDatabase` is set to `false` the string will be generated (and passed to Output) without touching the database.
+Please see the custom_string_patterns documentation for full detail, but basically the `pattern` field specified the string to be generated using:
 
-`fallbackString` is an alternative value to insert for substitutions in `formatExpression` that fail (i.e. they specify an object property that doesn't exist).
+- regular expressions generate random strings that match the regex
+- `<+ddd>` represents a "counter", with each `d` specifiying a digit (will be padded with leading 0's to fill the required length). There can be any number of different counters in the system -- they are stored in the `counters` database table with a unique name and current value. Each time a value is retrieved, the number is incremented by 1.
+- `<?field>` - the `?` specifies that this is a customReplacementFunction. A simplified version is used in this Action, so any `?` strings just represent a shorthand for a data field -- the mapping of these names to actual fields is specified in `customFields` (see below)
+- `<applicationData.username>` - this just specifies the name of a property to replace into the output string. By default, `applicationData` and `outputCumulative` are available, but other data can be specified with the `additionalData` field. If the property is missing from the supplied data objects, the output string will be replaced with the value set in `fallbackText`
+
+An example:
+
+```
+{
+  pattern: "<?tempCode>-[A-Z]{3}-<+dddd>",
+  counterName: "demo",
+  counterInit: 100,
+  customFields: {
+    tempCode: "applicationData.templateCode"
+}
+```
+
+The pattern `<?tempCode>-[A-Z]{3}-<+dddd>` consists of:
+
+- `<?tempCode>` - this will be replaced with whatever data field is specified in `customFields` -- in this case `applicationData.templateCode`. Note that this is equivalent to just putting `<applicationData.templateCode>` directly in the pattern.
+- `[A-Z]{3}` a regular expression specifying 3 random upper-case characters in the A to Z range
+- `<+dddd>` will be replaced with a four-digit number, which will be taken from the current value of the counter specifed in `counterName`, in this case "demo".
+
+For an "Organisation Registration" application, this pattern would result in a sequence of output strings like:  
+`OrgRegistration-KUD-0100`  
+`OrgRegistration-JNI-0101`  
+`OrgRegistration-QLF-0102`
+
+If the counter doesn't already exist in the `counter` table, it will be created when first called, and its value will be set to the value specified in `counterInit` (or 1 if `counterInit` not set).
+
+#### Updating a record
+
+This action can also update a database record with the generated value, by specifying `updateRecord: true`
+
+The parameters `tableName`, `fieldName`, `matchField`, and `matchValue` work exactly the same as the ["ModifyRecord" Action](#modify-record) (above). These are not required if just updating the application name (that's the default behaviour).
+
+The parameters to update an application name might be something like:
+
+```
+  pattern: "<?templateName>—<?productName>",
+  customFields: {
+      templateName: "applicationData.templateName",
+      productName: "applicationData.responses.Q20.text"
+  }
+```
+
+which is the same as just:
+
+```
+  pattern: "<applicationData.templateName>—<applicationData.responses.Q20.text>"
+```
 
 ---
 
