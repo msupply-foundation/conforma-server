@@ -37,15 +37,15 @@ export const getApplicationData = async (input: {
     responseData[response.code] = response.value
   }
 
-  const reviewData =
-    input?.reviewId || trigger_payload?.table === 'review'
-      ? {
-          reviewId: input?.reviewId ?? trigger_payload?.record_id,
-          ...(await DBConnect.getReviewData(
-            input?.reviewId ?? (trigger_payload?.record_id as number)
-          )),
-        }
-      : {}
+  const reviewId =
+    input?.reviewId ?? (trigger_payload?.table === 'review' ? trigger_payload?.record_id : null)
+
+  const reviewData = reviewId
+    ? {
+        reviewId,
+        ...(await DBConnect.getReviewData(reviewId)),
+      }
+    : {}
 
   const environmentData = {
     appRootFolder: getAppEntryPointDir(),
