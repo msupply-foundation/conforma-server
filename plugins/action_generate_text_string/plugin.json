@@ -2,7 +2,7 @@
   "type": "action_plugin",
   "code": "generateTextString",
   "name": "Generate Text String",
-  "description": "Generates serial numbers or arbitrary text strings using a specified pattern, and updates a database record if requested",
+  "description": "Generates serial numbers or arbitrary text strings (e.g. for application name) using a specified pattern, and updates a database record if requested",
   "required_parameters": ["pattern"],
   "optional_parameters": [
     "counterName",
