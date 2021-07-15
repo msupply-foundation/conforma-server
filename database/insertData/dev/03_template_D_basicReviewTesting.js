@@ -312,6 +312,7 @@ exports.queries = [
                 }
                 stageNumber: 3
                 levelNumber: 1
+                canMakeFinalDecision: true
               }
               # Assign general
               {
