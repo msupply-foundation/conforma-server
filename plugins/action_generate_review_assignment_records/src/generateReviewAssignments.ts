@@ -163,6 +163,7 @@ const generateNextReviewAssignments = async ({
         allowedSections: allowedSections || null,
         levelNumber: nextReviewLevel,
         isLastLevel,
+        isFinalDecision: canMakeFinalDecision,
       }
   })
   // Save review_assignment records to database
