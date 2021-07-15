@@ -230,47 +230,67 @@ test('Test: Submit Review ID#6003 for Application ID#4002 - Stage 2 Lvl 1 to upd
   })
 })
 
-test('Test: Submit Review ID#7003 for Application ID#4004 - Stage 2 Lvl 2 to create assignments for Stage 3 (Fina Decision)', () => {
-  return generateReviewAssignments({
-    parameters: { templateId: 4, applicationId: 4004, reviewId: 7004 }, // stageNumber: 2, stageId: 7, levels: 2
-    DBConnect,
-  }).then((result: any) => {
-    expect(result).toEqual({
-      status: ActionQueueStatus.Success,
-      error_log: '',
-      output: {
-        reviewAssignments: [
-          {
-            reviewerId: 17,
-            orgId: null,
-            stageId: 7,
-            stageNumber: 3,
-            levelNumber: 1,
-            status: ReviewAssignmentStatus.Assigned,
-            applicationId: 4004,
-            allowedSections: null,
-            isLastLevel: true,
-            //isFinalDecision: true,
-          },
-          {
-            reviewerId: 18,
-            orgId: null,
-            stageId: 7,
-            stageNumber: 3,
-            levelNumber: 1,
-            status: ReviewAssignmentStatus.Assigned,
-            applicationId: 4004,
-            allowedSections: null,
-            isLastLevel: true,
-            //isFinalDecision: true,
-          },
-        ],
-        reviewAssignmentIds: [12, 13],
-        reviewAssignmentAssignerJoins: [],
-        reviewAssignmentAssignerJoinIds: [],
-        nextStageNumber: 3,
-        nextReviewLevel: 1,
-      },
+describe('Move Review to next stage (Final Decision) before generation of reviewAssignments', () => {
+  // Setup database
+  beforeAll(async (done) => {
+    await DBConnect.query({
+      text: `
+      INSERT INTO public.review_decision (id, decision, review_id)
+        VALUES (DEFAULT, 'NON_CONFORM', 7004);
+      INSERT INTO public.review_status_history (id, review_id, status)
+        VALUES (DEFAULT, 7004, 'SUBMITTED'); 
+      INSERT INTO public.application_stage_history (id, application_id, stage_id, is_current)
+        VALUES (1000, 4004, 7, 'True');
+      INSERT INTO public.application_status_history (id, application_stage_history_id, status, is_current)
+        VALUES (DEFAULT, 1000, 'SUBMITTED', 'True'); 
+      `,
+      values: [],
+    })
+    done()
+  })
+
+  test('Submit Review ID#7003 for Application ID#4004 - Stage 2 Lvl 2 to create assignments for Stage 3 (Fina Decision)', () => {
+    return generateReviewAssignments({
+      parameters: { templateId: 4, applicationId: 4004, reviewId: 7004 }, // stageNumber: 2, stageId: 7, levels: 2
+      DBConnect,
+    }).then((result: any) => {
+      expect(result).toEqual({
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: {
+          reviewAssignments: [
+            {
+              reviewerId: 17,
+              orgId: null,
+              stageId: 7,
+              stageNumber: 3,
+              levelNumber: 1,
+              status: ReviewAssignmentStatus.Assigned,
+              applicationId: 4004,
+              allowedSections: null,
+              isLastLevel: true,
+              //isFinalDecision: true,
+            },
+            {
+              reviewerId: 18,
+              orgId: null,
+              stageId: 7,
+              stageNumber: 3,
+              levelNumber: 1,
+              status: ReviewAssignmentStatus.Assigned,
+              applicationId: 4004,
+              allowedSections: null,
+              isLastLevel: true,
+              //isFinalDecision: true,
+            },
+          ],
+          reviewAssignmentIds: [12, 13],
+          reviewAssignmentAssignerJoins: [],
+          reviewAssignmentAssignerJoinIds: [],
+          nextStageNumber: 3,
+          nextReviewLevel: 1,
+        },
+      })
     })
   })
 })
