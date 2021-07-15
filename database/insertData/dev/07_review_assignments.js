@@ -39,6 +39,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1000
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-01-31T00:00:00Z"
                     timeUpdated: "2021-01-31T00:00:01Z"
                     timeSubmitted: "2021-02-01T00:00:00Z"
@@ -48,6 +49,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1001
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-01-31T00:00:00Z"
                     timeUpdated: "2021-01-31T00:00:02Z"
                     timeSubmitted: "2021-02-01T00:00:00Z"
@@ -57,6 +59,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1002
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-01-31T00:00:00Z"
                     timeUpdated: "2021-01-31T00:00:03Z"
                     timeSubmitted: "2021-02-01T00:00:00Z"
@@ -66,6 +69,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1003
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-01-31T00:00:00Z"
                     timeUpdated: "2021-01-31T00:00:04Z"
                     timeSubmitted: "2021-02-01T00:00:00Z"
@@ -75,6 +79,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1004
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-01-31T00:00:00Z"
                     timeUpdated: "2021-01-31T00:00:05Z"
                     timeSubmitted: "2021-02-01T00:00:00Z"
@@ -84,6 +89,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1006
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-01-31T00:00:00Z"
                     timeUpdated: "2021-01-31T00:00:06Z"
                     timeSubmitted: "2021-02-01T00:00:00Z"
@@ -93,6 +99,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1007
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-01-31T00:00:00Z"
                     timeUpdated: "2021-01-31T00:00:07Z"
                     timeSubmitted: "2021-02-01T00:00:00Z"
@@ -102,6 +109,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1008
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-01-31T00:00:00Z"
                     timeUpdated: "2021-01-31T00:00:08Z"
                     timeSubmitted: "2021-02-01T00:00:00Z"
@@ -111,6 +119,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1009
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-01-31T00:00:00Z"
                     timeUpdated: "2021-01-31T00:00:09Z"
                     timeSubmitted: "2021-02-01T00:00:00Z"
@@ -120,6 +129,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1010
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-01-31T00:00:00Z"
                     timeUpdated: "2021-01-31T00:00:10Z"
                     timeSubmitted: "2021-02-01T00:00:00Z"
@@ -192,6 +202,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1011
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-02-01T00:00:00Z"
                     timeUpdated: "2021-02-01T00:00:01Z"
                     timeSubmitted: "2021-02-01T00:10:00Z"
@@ -202,6 +213,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1012
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-02-01T00:00:00Z"
                     timeUpdated: "2021-02-01T00:00:02Z"
                     timeSubmitted: "2021-02-01T00:10:00Z"
@@ -212,6 +224,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1013
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-02-01T00:00:00Z"
                     timeUpdated: "2021-02-01T00:00:03Z"
                     timeSubmitted: "2021-02-01T00:10:00Z"
@@ -222,6 +235,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1014
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-02-01T00:00:00Z"
                     timeUpdated: "2021-02-01T00:00:04Z"
                     timeSubmitted: "2021-02-01T00:10:00Z"
@@ -232,6 +246,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1015
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-02-01T00:00:00Z"
                     timeUpdated: "2021-02-01T00:00:05Z"
                     timeSubmitted: "2021-02-01T00:10:00Z"
@@ -304,6 +319,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1017
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-02-02T00:10:00Z"
                     timeUpdated: "2021-02-02T00:10:01Z"
                     timeSubmitted: "2021-02-02T01:10:00Z"
@@ -314,6 +330,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1018
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-02-02T00:10:00Z"
                     timeUpdated: "2021-02-02T00:10:02Z"
                     timeSubmitted: "2021-02-02T01:10:00Z"
@@ -324,6 +341,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1019
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-02-02T00:10:00Z"
                     timeUpdated: "2021-02-02T00:10:03Z"
                     timeSubmitted: "2021-02-02T01:10:00Z"
@@ -334,6 +352,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1020
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-02-02T00:00:00Z"
                     timeUpdated: "2021-02-02T00:10:04Z"
                     timeSubmitted: "2021-02-02T01:10:00Z"
@@ -344,6 +363,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1021
                     status: SUBMITTED
                     decision: DECLINE
+                    stageNumber: 2
                     comment: "Not descriptive side effects"
                     timeCreated: "2021-02-02T00:10:00Z"
                     timeUpdated: "2021-02-02T00:10:05Z"
@@ -428,6 +448,9 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1022
                     reviewResponseLinkId: 3000
                     status: DRAFT
+                    stageNumber: 2
+                    timeCreated: "2021-05-19T00:10:00Z"
+                    timeUpdated: "2021-05-19T00:10:00Z"
                   }
                   {
                     id: 5038
@@ -435,6 +458,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1023
                     reviewResponseLinkId: 3001
                     status: DRAFT
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:10:00Z"
                     timeUpdated: "2021-05-19T00:10:01Z"
                   }
@@ -444,6 +468,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1024
                     reviewResponseLinkId: 3002
                     status: DRAFT
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:10:00Z"
                     timeUpdated: "2021-05-19T00:10:02Z"
                   }
@@ -453,6 +478,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1025
                     reviewResponseLinkId: 3003
                     status: DRAFT
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:10:00Z"
                     timeUpdated: "2021-05-19T00:10:03Z"
                   }
@@ -462,6 +488,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1026
                     reviewResponseLinkId: 3004
                     status: DRAFT
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:10:00Z"
                     timeUpdated: "2021-05-19T00:10:04Z"
                   }
@@ -471,6 +498,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1027
                     reviewResponseLinkId: 3005
                     status: DRAFT
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:10:00Z"
                     timeUpdated: "2021-05-19T00:10:05Z"
                   }
@@ -480,6 +508,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1028
                     reviewResponseLinkId: 3006
                     status: DRAFT
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:10:00Z"
                     timeUpdated: "2021-05-19T00:10:06Z"
                   }
@@ -489,6 +518,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1029
                     reviewResponseLinkId: 3007
                     status: DRAFT
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:10:00Z"
                     timeUpdated: "2021-05-19T00:10:07Z"
                   }
@@ -498,6 +528,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1030
                     reviewResponseLinkId: 3008
                     status: DRAFT
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:10:00Z"
                     timeUpdated: "2021-05-19T00:10:08Z"
                   }
@@ -507,6 +538,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 1031
                     reviewResponseLinkId: 3009
                     status: DRAFT
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:10:00Z"
                     timeUpdated: "2021-05-19T00:10:09Z"
                   }
@@ -614,6 +646,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 2000
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:01Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -623,6 +656,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 2001
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:02Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -632,6 +666,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 2002
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:03Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -641,6 +676,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 2003
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:04Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -650,6 +686,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 2004
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:05Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -659,6 +696,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 2006
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:06Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -668,6 +706,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 2007
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:07Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -677,6 +716,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 2008
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:08Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -686,6 +726,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 2009
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:09Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -695,6 +736,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 2010
                     status: SUBMITTED
                     decision: DECLINE
+                    stageNumber: 1
                     isVisibleToApplicant: true
                     comment: "List lighter effects"
                     timeCreated: "2021-05-19T00:00:00Z"
@@ -773,6 +815,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3000
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:01Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -782,6 +825,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3001
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:02Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -791,6 +835,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3002
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:03Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -800,6 +845,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3003
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:04Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -809,6 +855,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3004
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:05Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -818,6 +865,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3005
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:06Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -827,6 +875,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3006
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:07Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -836,6 +885,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3007
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:08Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -845,6 +895,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3008
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:09Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -854,6 +905,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3009
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T05:00:10Z"
                     timeSubmitted: "2021-05-19T10:00:00Z"
@@ -925,6 +977,7 @@ exports.queries = [
                     status: SUBMITTED
                     decision: DECLINE
                     comment: "Name not conform with uploaded proof of identity"
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T15:00:01Z"
                     timeSubmitted: "2021-05-19T15:00:00Z"
@@ -936,6 +989,7 @@ exports.queries = [
                     status: SUBMITTED
                     decision: DECLINE
                     comment: "Surname not conform with uploaded proof of identity"
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T15:00:02Z"
                     timeSubmitted: "2021-05-19T15:00:00Z"
@@ -946,6 +1000,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3012
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T15:00:03Z"
                     timeSubmitted: "2021-05-19T15:00:00Z"
@@ -956,6 +1011,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3013
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T15:00:04Z"
                     timeSubmitted: "2021-05-19T15:00:00Z"
@@ -966,6 +1022,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3014
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T15:00:05Z"
                     timeSubmitted: "2021-05-19T15:00:00Z"
@@ -1045,6 +1102,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3015
                     status: DRAFT
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T15:00:01Z"
                   }
@@ -1053,6 +1111,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3016
                     status: DRAFT
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T15:00:02Z"
                   }
@@ -1061,6 +1120,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3017
                     status: DRAFT
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T15:00:03Z"
                   }
@@ -1069,6 +1129,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3018
                     status: DRAFT
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T15:00:04Z"
                   }
@@ -1077,6 +1138,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 3019
                     status: DRAFT
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-05-19T00:00:00Z"
                     timeUpdated: "2021-05-19T15:00:05Z"
                   }
@@ -1186,6 +1248,7 @@ exports.queries = [
                     status: SUBMITTED
                     decision: DISAGREE
                     comment: "Please check again"
+                    stageNumber: 2
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:01Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1198,6 +1261,7 @@ exports.queries = [
                     status: SUBMITTED
                     decision: DISAGREE
                     comment: "Please check again"
+                    stageNumber: 2
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:02Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1209,6 +1273,7 @@ exports.queries = [
                     reviewResponseLinkId: 4002
                     status: SUBMITTED
                     decision: AGREE
+                    stageNumber: 2
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:03Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1220,6 +1285,7 @@ exports.queries = [
                     reviewResponseLinkId: 4003
                     status: SUBMITTED
                     decision: AGREE
+                    stageNumber: 2
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:04Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1231,6 +1297,7 @@ exports.queries = [
                     reviewResponseLinkId: 4004
                     status: SUBMITTED
                     decision: AGREE
+                    stageNumber: 2
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:05Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1354,6 +1421,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5000
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:01Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1363,6 +1431,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5001
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:02Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1372,12 +1441,17 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5002
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
+                    timeCreated: "2021-06-10T00:00:00Z"
+                    timeUpdated: "2021-06-10T10:00:02Z"
+                    timeSubmitted: "2021-06-10T10:00:00Z"
                   }
                   {
                     applicationResponseId: 4153
                     reviewQuestionAssignmentId: 5003
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:03Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1387,6 +1461,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5004
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:04Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1396,6 +1471,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5005
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:05Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1405,6 +1481,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5006
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:06Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1414,6 +1491,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5007
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:07Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1423,6 +1501,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5008
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 1
                     timeCreated: "2021-06-10T00:00:00Z"
                     timeUpdated: "2021-06-10T10:00:08Z"
                     timeSubmitted: "2021-06-10T10:00:00Z"
@@ -1493,6 +1572,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5010
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-07-10T00:00:00Z"
                     timeUpdated: "2021-07-10T10:00:01Z"
                     timeSubmitted: "2021-07-10T10:00:00Z"
@@ -1503,6 +1583,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5011
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-07-10T00:00:00Z"
                     timeUpdated: "2021-07-10T10:00:02Z"
                     timeSubmitted: "2021-07-10T10:00:00Z"
@@ -1513,6 +1594,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5012
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-07-10T00:00:00Z"
                     timeUpdated: "2021-07-10T10:00:03Z"
                     timeSubmitted: "2021-07-10T10:00:00Z"
@@ -1523,6 +1605,7 @@ exports.queries = [
                     reviewQuestionAssignmentId: 5013
                     status: SUBMITTED
                     decision: APPROVE
+                    stageNumber: 2
                     timeCreated: "2021-07-10T00:00:00Z"
                     timeUpdated: "2021-07-10T10:00:04Z"
                     timeSubmitted: "2021-07-10T10:00:00Z"
@@ -1534,6 +1617,7 @@ exports.queries = [
                     status: SUBMITTED
                     decision: DECLINE
                     comment: "Country name spelling wrong"
+                    stageNumber: 2
                     timeCreated: "2021-07-10T00:00:00Z"
                     timeUpdated: "2021-07-10T10:00:05Z"
                     timeSubmitted: "2021-07-10T10:00:00Z"
@@ -1690,9 +1774,9 @@ exports.queries = [
                     reviewResponseLinkId: 5000
                     status: DRAFT
                     decision: AGREE
+                    stageNumber: 2
                     timeCreated: "2021-07-20T00:00:00Z"
                     timeUpdated: "2021-07-20T10:00:01Z"
-                    timeSubmitted: "2021-07-20T10:00:00Z"
                   }
                   {
                     id: 5021
@@ -1701,9 +1785,9 @@ exports.queries = [
                     reviewResponseLinkId: 5001
                     status: DRAFT
                     decision: AGREE
+                    stageNumber: 2
                     timeCreated: "2021-07-20T00:00:00Z"
                     timeUpdated: "2021-07-20T10:00:02Z"
-                    timeSubmitted: "2021-07-20T10:00:00Z"
                   }
                   {
                     id: 5022
@@ -1712,9 +1796,9 @@ exports.queries = [
                     reviewResponseLinkId: 5002
                     status: DRAFT
                     decision: AGREE
+                    stageNumber: 2
                     timeCreated: "2021-07-20T00:00:00Z"
                     timeUpdated: "2021-07-20T10:00:03Z"
-                    timeSubmitted: "2021-07-20T10:00:00Z"
                   }
                   {
                     id: 5023
@@ -1723,9 +1807,9 @@ exports.queries = [
                     reviewResponseLinkId: 5003
                     status: DRAFT
                     decision: AGREE
+                    stageNumber: 2
                     timeCreated: "2021-07-20T00:00:00Z"
                     timeUpdated: "2021-07-20T10:00:04Z"
-                    timeSubmitted: "2021-07-20T10:00:00Z"
                   }
                   {
                     id: 5024
@@ -1734,9 +1818,9 @@ exports.queries = [
                     reviewResponseLinkId: 5004
                     status: DRAFT
                     decision: AGREE
+                    stageNumber: 2
                     timeCreated: "2021-07-20T00:00:00Z"
                     timeUpdated: "2021-07-20T10:00:05Z"
-                    timeSubmitted: "2021-07-20T10:00:00Z"
                   }
                 ]
               }
