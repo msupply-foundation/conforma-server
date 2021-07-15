@@ -1,7 +1,7 @@
 {
   "name": "generate_text_string",
   "version": "0.1",
-  "description": "enerates serial numbers or arbitrary text strings (e.g. for application name) using a specified pattern, and updates a database record if requested",
+  "description": "Generates serial numbers or arbitrary text strings (e.g. for application name) using a specified pattern, and updates a database record if requested",
   "author": "The mSupplyFoundation",
   "license": "MIT",
   "scripts": {
