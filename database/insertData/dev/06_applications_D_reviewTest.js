@@ -649,7 +649,7 @@ exports.queries = [
           applicationSectionsUsingId: {
             create: [{ templateSectionId: 1005 }, { templateSectionId: 1006 }]
           }
-          name: "Test Review -- Amoxicilin"
+          name: "Test Review -- Ibuprofen"
           outcome: PENDING
           isActive: true
           templateId: 5
@@ -682,7 +682,7 @@ exports.queries = [
               }
               {
                 isCurrent: true
-                templateStageToStageId: { connectById: { id: 7 } }
+                templateStageToStageId: { connectById: { id: 6 } }
                 applicationStatusHistoriesUsingId: {
                   create: { 
                     isCurrent: true
@@ -755,7 +755,7 @@ exports.queries = [
                 isValid: true
                 templateElementId: 4008
                 status: SUBMITTED 
-                value: { text: "Amoxicilin" }
+                value: { text: "Ibuprofen" }
                 stageNumber: 1
                 timeCreated: "2021-06-09T00:00:00Z"
                 timeUpdated: "2021-06-09T00:00:06Z"
@@ -807,7 +807,7 @@ exports.queries = [
       }
     }
   }`,
-  // Application 5 for Review Testing -- on Stage 3 during final decision (level 1)
+  // Application 5 for Review Testing -- on Stage 2 during consolidation (Level 2) 
   `mutation ReviewTestApplication4 {
     createApplication(
       input: {
@@ -849,32 +849,16 @@ exports.queries = [
                 }
               }
               {
-                isCurrent: false
+                isCurrent: true
                 templateStageToStageId: { connectById: { id: 6 } }
                 applicationStatusHistoriesUsingId: {
                   create: [
                     { 
-                      isCurrent: false
+                      isCurrent: true
                       status: SUBMITTED
                       timeCreated: "2021-06-10T10:00:00Z"
                     }
-                    { 
-                      isCurrent: false
-                      status: COMPLETED
-                      timeCreated: "2021-07-10T10:00:00Z"
-                    }
                   ]
-                }
-              }
-              {
-                isCurrent: true
-                templateStageToStageId: { connectById: { id: 7 } }
-                applicationStatusHistoriesUsingId: {
-                  create: { 
-                    isCurrent: true
-                    status: SUBMITTED
-                    timeCreated: "2021-07-10T10:00:00Z"
-                  }
                 }
               }
             ]
