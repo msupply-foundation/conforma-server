@@ -5,6 +5,7 @@ SELECT
     template.id AS template_id,
     template.name AS template_name,
     template.code AS template_code,
+    template.serial_pattern AS template_serial_pattern,
     serial,
     application.name,
     user_id,

@@ -3,23 +3,26 @@ GraphQL Fragment - CORE ACTIONS
   - common Actions for all templates
 */
 exports.coreActions = `
-    # ON_APPLICATION_CREATE
-    # change status to DRAFT
+    # ON_APPLICATION_CREATE    
     # generate serial
     # generate initial name
+    # change status to DRAFT
     {
         actionCode: "generateTextString"
         sequence: 1
         trigger: ON_APPLICATION_CREATE
         parameterQueries: {
-          pattern: "S-[A-Z]{3}-<+dddd>"
+          pattern: {
+            operator: "objectProperties"
+            children: [ "applicationData.templateSerialPattern.pattern" ]
+          }
           counterName: {
             operator: "objectProperties"
-            children: [ "applicationData.templateCode" ]
+            children: [ "applicationData.templateSerialPattern.counterName" ]
           }
-          counterInit: 100
-          customFields: {
-            # TBD
+          counterInit: {
+            operator: "objectProperties"
+            children: [ "applicationData.templateSerialPattern.counterInit", 1 ]
           }
           updateRecord: true
           fieldName: "serial"

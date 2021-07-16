@@ -515,6 +515,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -2742,6 +2743,7 @@ export type ApplicationStageStatusAll = {
   templateId?: Maybe<Scalars['Int']>;
   templateName?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
+  templateSerialPattern?: Maybe<Scalars['JSON']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
@@ -2773,6 +2775,8 @@ export type ApplicationStageStatusAllCondition = {
   templateName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateCode` field. */
   templateCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `templateSerialPattern` field. */
+  templateSerialPattern?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `serial` field. */
   serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
@@ -2817,6 +2821,8 @@ export type ApplicationStageStatusAllFilter = {
   templateName?: Maybe<StringFilter>;
   /** Filter by the object’s `templateCode` field. */
   templateCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `templateSerialPattern` field. */
+  templateSerialPattern?: Maybe<JsonFilter>;
   /** Filter by the object’s `serial` field. */
   serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
@@ -2890,6 +2896,8 @@ export enum ApplicationStageStatusAllsOrderBy {
   TemplateNameDesc = 'TEMPLATE_NAME_DESC',
   TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
+  TemplateSerialPatternAsc = 'TEMPLATE_SERIAL_PATTERN_ASC',
+  TemplateSerialPatternDesc = 'TEMPLATE_SERIAL_PATTERN_DESC',
   SerialAsc = 'SERIAL_ASC',
   SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
@@ -2930,6 +2938,7 @@ export type ApplicationStageStatusLatest = {
   templateId?: Maybe<Scalars['Int']>;
   templateName?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
+  templateSerialPattern?: Maybe<Scalars['JSON']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   userId?: Maybe<Scalars['Int']>;
@@ -2961,6 +2970,8 @@ export type ApplicationStageStatusLatestCondition = {
   templateName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateCode` field. */
   templateCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `templateSerialPattern` field. */
+  templateSerialPattern?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `serial` field. */
   serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
@@ -3005,6 +3016,8 @@ export type ApplicationStageStatusLatestFilter = {
   templateName?: Maybe<StringFilter>;
   /** Filter by the object’s `templateCode` field. */
   templateCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `templateSerialPattern` field. */
+  templateSerialPattern?: Maybe<JsonFilter>;
   /** Filter by the object’s `serial` field. */
   serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
@@ -3078,6 +3091,8 @@ export enum ApplicationStageStatusLatestsOrderBy {
   TemplateNameDesc = 'TEMPLATE_NAME_DESC',
   TemplateCodeAsc = 'TEMPLATE_CODE_ASC',
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
+  TemplateSerialPatternAsc = 'TEMPLATE_SERIAL_PATTERN_ASC',
+  TemplateSerialPatternDesc = 'TEMPLATE_SERIAL_PATTERN_DESC',
   SerialAsc = 'SERIAL_ASC',
   SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
@@ -3440,6 +3455,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -16581,6 +16597,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -19304,6 +19321,7 @@ export type Template = Node & {
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -19649,6 +19667,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -19858,6 +19877,8 @@ export type TemplateCondition = {
   name?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `serialPattern` field. */
+  serialPattern?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `isLinear` field. */
   isLinear?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `startMessage` field. */
@@ -20436,6 +20457,8 @@ export type TemplateFilter = {
   name?: Maybe<StringFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
+  /** Filter by the object’s `serialPattern` field. */
+  serialPattern?: Maybe<JsonFilter>;
   /** Filter by the object’s `isLinear` field. */
   isLinear?: Maybe<BooleanFilter>;
   /** Filter by the object’s `startMessage` field. */
@@ -20756,6 +20779,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -20787,6 +20811,7 @@ export type TemplateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -20957,6 +20982,7 @@ export type TemplatePatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -21275,6 +21301,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -21582,6 +21609,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -21659,6 +21687,8 @@ export enum TemplatesOrderBy {
   NameDesc = 'NAME_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
+  SerialPatternAsc = 'SERIAL_PATTERN_ASC',
+  SerialPatternDesc = 'SERIAL_PATTERN_DESC',
   IsLinearAsc = 'IS_LINEAR_ASC',
   IsLinearDesc = 'IS_LINEAR_DESC',
   StartMessageAsc = 'START_MESSAGE_ASC',
@@ -22231,6 +22261,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -22392,6 +22423,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -26040,6 +26072,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -26063,6 +26096,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -26086,6 +26120,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -26109,6 +26144,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -26132,6 +26168,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -26155,6 +26192,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -26177,6 +26215,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -26200,6 +26239,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -26223,6 +26263,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  serialPattern?: Maybe<Scalars['JSON']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
@@ -32040,6 +32081,7 @@ export type ApplicationStageStatusAllResolvers<ContextType = any, ParentType ext
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateSerialPattern?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -32078,6 +32120,7 @@ export type ApplicationStageStatusLatestResolvers<ContextType = any, ParentType 
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateSerialPattern?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -34109,6 +34152,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  serialPattern?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   isLinear?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   startMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['TemplateStatus']>, ParentType, ContextType>;

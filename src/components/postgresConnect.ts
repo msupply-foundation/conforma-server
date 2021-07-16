@@ -258,6 +258,7 @@ class PostgresDB {
       template_id as "templateId",
       template_name as "templateName",
       template_code as "templateCode",
+      template_serial_pattern as "templateSerialPattern",
       stage_id as "stageId", stage_number as "stageNumber", stage,
       stage_history_id as "stageHistoryId",
       stage_history_time_created as "stageHistoryTimeCreated",

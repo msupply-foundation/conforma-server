@@ -9,6 +9,10 @@ CREATE TABLE public.template (
     id serial PRIMARY KEY,
     name varchar,
     code varchar NOT NULL,
+    serial_pattern jsonb DEFAULT '{
+        "pattern": "GEN-[A-Z]{3}-<+dddd>",
+        "counterName": "general"
+    }' ::jsonb,
     is_linear boolean DEFAULT TRUE,
     start_message jsonb,
     status public.template_status,
