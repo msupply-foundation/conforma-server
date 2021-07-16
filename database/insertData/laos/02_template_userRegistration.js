@@ -467,7 +467,7 @@ exports.queries = [
               }
               {
                 actionCode: "incrementStage"
-                sequence: 1
+                sequence: 3
                 trigger: ON_APPLICATION_CREATE
               }
               {
