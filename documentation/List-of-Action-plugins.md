@@ -164,65 +164,118 @@ Generates serial numbers or arbitrary text strings (e.g. for application name) u
 | `matchValue` (default `applicationId`)   |                   |
 | `additionalData`                         |                   |
 
-This action uses the [custom_string_patterns](https://www.npmjs.com/package/custom_string_patterns), which allows the generation of random strings using Regular Expressions, but with the added functionality of also including:
+This action achieves two things:
 
+1. Generate strings based on pre-defined patterns, and;
+2. (Optionally) update database records based on the generated string (e.g. update the application name on application submission)
+
+It uses the [custom_string_patterns](https://www.npmjs.com/package/custom_string_patterns) package (which is, in turn, based on [randexp](https://www.npmjs.com/package/randexp)). It provides a shorthand for defining strings, which can include:
+
+- random values based on regular expressions
 - incrementing, persistent counters
 - custom replacement functions
 - object data replacement.
 
-Please see the custom_string_patterns documentation for full detail, but basically the `pattern` field specified the string to be generated using:
+**A quick example:**
 
-- regular expressions generate random strings that match the regex
-- `<+ddd>` represents a "counter", with each `d` specifiying a digit (will be padded with leading 0's to fill the required length). There can be any number of different counters in the system -- they are stored in the `counters` database table with a unique name and current value. Each time a value is retrieved, the number is incremented by 1.
-- `<?field>` - the `?` specifies that this is a customReplacementFunction. A simplified version is used in this Action, so any `?` strings just represent a shorthand for a data field -- the mapping of these names to actual fields is specified in `customFields` (see below)
-- `<applicationData.username>` - this just specifies the name of a property to replace into the output string. By default, `applicationData` and `outputCumulative` are available, but other data can be specified with the `additionalData` field. If the property is missing from the supplied data objects, the output string will be replaced with the value set in `fallbackText`
+The pattern: `<?templateCode>-[A-Z]{3}-<+dddd>` consists of:
 
-An example:
-
-```
-{
-  pattern: "<?tempCode>-[A-Z]{3}-<+dddd>",
-  counterName: "demo",
-  counterInit: 100,
-  customFields: {
-    tempCode: "applicationData.templateCode"
-}
-```
-
-The pattern `<?tempCode>-[A-Z]{3}-<+dddd>` consists of:
-
-- `<?tempCode>` - this will be replaced with whatever data field is specified in `customFields` -- in this case `applicationData.templateCode`. Note that this is equivalent to just putting `<applicationData.templateCode>` directly in the pattern.
+- `<?templateCode>` - will be replaced by the template code
 - `[A-Z]{3}` a regular expression specifying 3 random upper-case characters in the A to Z range
-- `<+dddd>` will be replaced with a four-digit number, which will be taken from the current value of the counter specifed in `counterName`, in this case "demo".
+- `<+dddd>` will be replaced with a four-digit number from a counter.
 
-For an "Organisation Registration" application, this pattern would result in a sequence of output strings like:  
+So for an "Organisation Registration" application, this pattern would result in a sequence of output strings like:  
 `OrgRegistration-KUD-0100`  
 `OrgRegistration-JNI-0101`  
 `OrgRegistration-QLF-0102`
 
-If the counter doesn't already exist in the `counter` table, it will be created when first called, and its value will be set to the value specified in `counterInit` (or 1 if `counterInit` not set).
+#### Parameters summary
 
-#### Updating a record
+The parameters can be considered in two distinct groups -- parameters for defining how to generate the string, and parameters for updating a database record.
 
-This action can also update a database record with the generated value, by specifying `updateRecord: true`
+##### String parameters
 
-The parameters `tableName`, `fieldName`, `matchField`, and `matchValue` work exactly the same as the ["ModifyRecord" Action](#modify-record) (above). These are not required if just updating the application name (that's the default behaviour).
+- `pattern`: defines the structure of the generated string. Please see the custom_string_patterns [documentation](https://www.npmjs.com/package/custom_string_patterns) for full detail, but the quick summary is:
 
-The parameters to update an application name might be something like:
+  - regular expressions generate random strings that match the regex
+  - `<+ddd>` inserts a number from a counter (see below for more detail about counters), with each `d` specifiying a digit (will be padded with leading 0's to fill the required length).
+  - `<applicationData.username>` - this just specifies the name of a property to replace into the output string.
+
+  - `<?field>` - the `?` specifies that this is a customReplacement function. A simplified version is used in this Action, so any `?` strings just represent a shorthand for a data field -- the mapping of these names to actual fields is specified in `customFields` (see below)
+
+- `counterName`: if the pattern specifies a counter, this field specifies the name of the counter to use. There can be any number of different counters in the system -- they are stored in the `counter` database table with a unique name and current value. Each time a value is retrieved, the number is automatically incremented by 1.
+
+- `counterInit`: if `counterName` doesn't already exist in the `counter` table, it will be created when first called, and its value will be set to the value specified in `counterInit` (or 1 if `counterInit` not set).
+
+- `additionalData`: by default, `applicationData` and `outputCumulative` are passed to the string generator, so any fields on those objects (e.g. `applicationName`) are available, but other data can be made accessible with the `additionalData` field.
+
+- `customFields`: as mentioned above, `customFields` just specifies a mapping from the replacement function (`<?xxxx>`) in the pattern to the exact property in the data objects available. So, in the example pattern above, we have `<?templateCode>`. The `customFields` parameter specifies where to find `templateCode`, like so:
+
+  `customFields: { templateCode: applicationData.templateCode }`
+
+  `customFields` are not necessary, they just provide a "shorthand" to write more concise string patterns. This pattern would result in the exact same thing:
+
+  ```
+  <applicationData.templateCode>-[A-Z]{3}-<+dddd>
+  ```
+
+  Note that this syntax doesn't required the `?` marker in the `< >`
+
+- `fallbackText`: if the named property is not found in the supplied data, the replacement will instead be the value specified in `fallbackText`
+
+##### Update record parameters
+
+`updateRecord`: needs to be explicity set to `true` to update the database.
+
+This action actually just calls [modifyRecord](#modify-record) to update the database, so the following parameters are the same as for in that action:
+
+- `tableName` (default `application`)
+- `fieldName` (default `name`)
+- `matchField` (default `id`)
+- `matchValue` (default `applicationId`)
+
+##### More examples:
+
+1.
 
 ```
-  pattern: "<?templateName>—<?productName>",
-  customFields: {
-      templateName: "applicationData.templateName",
-      productName: "applicationData.responses.Q20.text"
+{
+  pattern: "S-[A-Z]{3}-<+dddd>"
+  counterName: {
+    operator: "objectProperties"
+    children: [ "applicationData.templateCode" ]
   }
+  counterInit: 100
+  updateRecord: true
+  fieldName: "serial"
+}
 ```
 
-which is the same as just:
+This generates serial numbers such as:  
+`S-XLD-0100`  
+`S-ZEH-0101`  
+`S-DXF-0102`
+
+It gets the number from a counter named from the `templateCode` via evaluator expression look-up, starts counting at 100, then saves the generated string to the `serial` field on the `application` table (this is the default table, so doesn't need to be specified explicitly).
+
+2.
 
 ```
-  pattern: "<applicationData.templateName>—<applicationData.responses.Q20.text>"
+{
+    pattern: "<?templateName> - <?productName>",
+    customFields: {
+        templateName: "applicationData.templateName",
+        productName: "applicationData.responses.Q20.text"
+    }
+    updateRecord: true
+}
 ```
+
+This will update the application name with the template name and the product name, which we can see in this is extracted from `Q20` of the applicant's responses. As explained above, the pattern could just be expressed as `<applicationData.templateName> - <applicationData.responses.Q20.text>` with no `customFields`, but in this case it helps make clear what `Q20` actually holds (i.e. "product name")
+
+The resulting application names would be things like:  
+`Drug Registration - Paracetamol`  
+`Drug Registration - Amphetamine`
 
 ---
 
