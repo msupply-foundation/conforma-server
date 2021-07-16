@@ -20,6 +20,7 @@ import path from 'path'
 import { ActionQueueStatus, TriggerQueueStatus } from '../generated/graphql'
 
 const schedule = require('node-schedule')
+const showApplicationDataLog = false
 
 // Load actions from Database at server startup
 export const loadActions = async function (actionLibrary: ActionLibrary) {
@@ -199,8 +200,8 @@ export async function executeAction(
   // Get fresh applicationData for each Action
   const applicationData = await getApplicationData(payload)
 
-  // Enable next line to inspect applicationData:
-  // console.log('ApplicationData: ', applicationData)
+  // Debug helper console.log to inspect applicationData:
+  if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)
 
   const evaluatorParams = {
     objects: { applicationData, ...additionalObjects },

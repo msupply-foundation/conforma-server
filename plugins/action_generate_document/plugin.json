@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "generateDoc",
+  "name": "Generate Document",
+  "description": "Generates a PDF document from a Carbone template",
+  "required_parameters": ["docTemplateId"],
+  "optional_parameters": ["data", "userId", "applicationSerial"],
+  "output_properties": ["document"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-07-01"
+  }
+}
