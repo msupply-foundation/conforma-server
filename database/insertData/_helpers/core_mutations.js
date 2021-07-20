@@ -103,6 +103,7 @@ exports.coreActions = `
     # 5 - generate review assignments
     # 6 - adjust visibility of review responses (for applicant - LOQ)
     # 7 - change application status (for applicant - LOQ)
+    # 8 & 9 - change application outcome after last stage and last level submission
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_SUBMIT
@@ -253,6 +254,74 @@ exports.coreActions = `
         newStatus: "CHANGES_REQUIRED"
         isReview: false #Required since we're updating an application status
       }
+    }
+    #
+    # Change outcome of application to APPROVED if last decision is CONFORM
+    #
+    {
+      actionCode: "changeOutcome"
+      trigger: ON_REVIEW_SUBMIT
+      sequence: 8
+      condition: {
+        operator: "AND"
+        children: [
+          {
+            operator: "="
+            children: [
+              {
+                operator: "objectProperties"
+                children: [
+                  "applicationData.reviewData.latestDecision.decision"
+                ]
+              }
+              "CONFORM"
+            ]
+          }
+          {
+            operator: "objectProperties"
+            children: ["applicationData.reviewData.isLastLevel"]
+          }
+          {
+            operator: "objectProperties"
+            children: ["applicationData.reviewData.isLastStage"]
+          }
+        ]
+      }
+      parameterQueries: { newOutcome: { value: "APPROVED" } }
+    }
+    #
+    # Change outcome of application to REJECTED if last decision is NON_CONFORM
+    #
+    {
+      actionCode: "changeOutcome"
+      trigger: ON_REVIEW_SUBMIT
+      sequence: 9
+      condition: {
+        operator: "AND"
+        children: [
+          {
+            operator: "="
+            children: [
+              {
+                operator: "objectProperties"
+                children: [
+                  "applicationData.reviewData.latestDecision.decision"
+                ]
+              }
+              "NON_CONFORM"
+            ]
+          }
+          {
+            operator: "objectProperties"
+            children: ["applicationData.reviewData.isLastLevel"]
+          }
+          {
+            operator: "objectProperties"
+            children: ["applicationData.reviewData.isLastStage"]
+          }
+        ]
+      }
+      parameterQueries: { newOutcome: { value: "REJECTED" } }
     }
     # -------------------------------------------
     # ON_REVIEW_SELF_ASSIGN
