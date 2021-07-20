@@ -16635,6 +16635,7 @@ export enum ReviewerAction {
   StartReview = 'START_REVIEW',
   ViewReview = 'VIEW_REVIEW',
   ContinueReview = 'CONTINUE_REVIEW',
+  MakeDecision = 'MAKE_DECISION',
   RestartReview = 'RESTART_REVIEW',
   UpdateReview = 'UPDATE_REVIEW'
 }

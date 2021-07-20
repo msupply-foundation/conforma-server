@@ -4,6 +4,7 @@ CREATE TYPE public.reviewer_action AS ENUM (
     'START_REVIEW',
     'VIEW_REVIEW',
     'CONTINUE_REVIEW',
+    'MAKE_DECISION',
     'RESTART_REVIEW',
     'UPDATE_REVIEW'
 );
@@ -23,6 +24,11 @@ CREATE FUNCTION review_list (stageid int, reviewerid int)
                 THEN 'RESTART_REVIEW'
             WHEN COUNT(*) FILTER (WHERE review_status_history.status = 'DRAFT') != 0
                 THEN 'CONTINUE_REVIEW'
+            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED' 
+                                    AND review_assignment.is_final_decision = TRUE
+                                    AND review_assignment.is_last_stage = TRUE
+                                    AND review.id IS NULL) != 0
+                THEN 'MAKE_DECISION'
             WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED' AND review.id IS NULL) != 0
                 THEN 'START_REVIEW'
             WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE_FOR_SELF_ASSIGNMENT') != 0
