@@ -27,6 +27,7 @@ export interface ReviewAssignment {
   allowedSections: string[] | null
   levelNumber: number
   isLastLevel: boolean
+  isLastStage: boolean
   isFinalDecision: boolean
 }
 

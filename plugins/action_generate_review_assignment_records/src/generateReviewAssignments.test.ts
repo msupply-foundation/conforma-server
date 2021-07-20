@@ -30,6 +30,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             allowedSections: null,
             levelNumber: 1,
             isLastLevel: true,
+            isLastStage: false,
             isFinalDecision: false,
           },
           {
@@ -42,6 +43,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             allowedSections: null,
             levelNumber: 1,
             isLastLevel: true,
+            isLastStage: false,
             isFinalDecision: false,
           },
           {
@@ -54,6 +56,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             allowedSections: null,
             levelNumber: 1,
             isLastLevel: true,
+            isLastStage: false,
             isFinalDecision: false,
           },
           {
@@ -66,6 +69,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             allowedSections: null,
             levelNumber: 1,
             isLastLevel: true,
+            isLastStage: false,
             isFinalDecision: false,
           },
           {
@@ -78,6 +82,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             allowedSections: null,
             levelNumber: 1,
             isLastLevel: true,
+            isLastStage: false,
             isFinalDecision: false,
           },
           {
@@ -90,6 +95,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             allowedSections: null,
             levelNumber: 1,
             isLastLevel: true,
+            isLastStage: false,
             isFinalDecision: false,
           },
           {
@@ -102,6 +108,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
             allowedSections: null,
             levelNumber: 1,
             isLastLevel: true,
+            isLastStage: false,
             isFinalDecision: false,
           },
         ],
@@ -135,6 +142,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
             allowedSections: ['S1'],
             levelNumber: 1,
             isLastLevel: false,
+            isLastStage: false,
             isFinalDecision: false,
           },
           {
@@ -147,6 +155,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
             allowedSections: ['S2'],
             levelNumber: 1,
             isLastLevel: false,
+            isLastStage: false,
             isFinalDecision: false,
           },
         ],
@@ -205,6 +214,7 @@ test('Test: Submit Review ID#6003 for Application ID#4002 - Stage 2 Lvl 1 to upd
             applicationId: 4002,
             allowedSections: null,
             isLastLevel: true,
+            isLastStage: false,
             isFinalDecision: false,
           },
           {
@@ -217,6 +227,7 @@ test('Test: Submit Review ID#6003 for Application ID#4002 - Stage 2 Lvl 1 to upd
             applicationId: 4002,
             allowedSections: null,
             isLastLevel: true,
+            isLastStage: false,
             isFinalDecision: false,
           },
         ],
@@ -249,7 +260,7 @@ describe('Move Review to next stage (Final Decision) before generation of review
     done()
   })
 
-  test('Submit Review ID#7003 for Application ID#4004 - Stage 2 Lvl 2 to create assignments for Stage 3 (Fina Decision)', () => {
+  test('Submit Review ID#7003 for Application ID#4004 - Stage 2 Lvl 2 to create assignments for Stage 3 (Last Stage) - Final Decision', () => {
     return generateReviewAssignments({
       parameters: { templateId: 4, applicationId: 4004, reviewId: 7004 }, // stageNumber: 2, stageId: 7, levels: 2
       DBConnect,
@@ -269,6 +280,7 @@ describe('Move Review to next stage (Final Decision) before generation of review
               applicationId: 4004,
               allowedSections: null,
               isLastLevel: true,
+              isLastStage: true,
               isFinalDecision: true,
             },
             {
@@ -281,6 +293,7 @@ describe('Move Review to next stage (Final Decision) before generation of review
               applicationId: 4004,
               allowedSections: null,
               isLastLevel: true,
+              isLastStage: true,
               isFinalDecision: true,
             },
           ],

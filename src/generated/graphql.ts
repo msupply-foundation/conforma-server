@@ -14763,6 +14763,7 @@ export type ReviewAssignment = Node & {
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   /** Reads a single `User` that is related to this `ReviewAssignment`. */
@@ -14909,6 +14910,7 @@ export type ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput = {
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -14984,6 +14986,7 @@ export type ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput = {
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -15382,6 +15385,7 @@ export type ReviewAssignmentAssignerJoinReviewAssignmentIdFkeyReviewAssignmentCr
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -15470,6 +15474,8 @@ export type ReviewAssignmentCondition = {
   levelId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `isLastLevel` field. */
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isLastStage` field. */
+  isLastStage?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `isLocked` field. */
   isLocked?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `isFinalDecision` field. */
@@ -15510,6 +15516,8 @@ export type ReviewAssignmentFilter = {
   levelId?: Maybe<IntFilter>;
   /** Filter by the object’s `isLastLevel` field. */
   isLastLevel?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isLastStage` field. */
+  isLastStage?: Maybe<BooleanFilter>;
   /** Filter by the object’s `isLocked` field. */
   isLocked?: Maybe<BooleanFilter>;
   /** Filter by the object’s `isFinalDecision` field. */
@@ -15580,6 +15588,7 @@ export type ReviewAssignmentInput = {
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -15649,6 +15658,7 @@ export type ReviewAssignmentLevelIdFkeyReviewAssignmentCreateInput = {
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -15917,6 +15927,7 @@ export type ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput = {
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -15949,6 +15960,7 @@ export type ReviewAssignmentPatch = {
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -16034,6 +16046,7 @@ export type ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput = {
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -16125,6 +16138,8 @@ export enum ReviewAssignmentsOrderBy {
   LevelIdDesc = 'LEVEL_ID_DESC',
   IsLastLevelAsc = 'IS_LAST_LEVEL_ASC',
   IsLastLevelDesc = 'IS_LAST_LEVEL_DESC',
+  IsLastStageAsc = 'IS_LAST_STAGE_ASC',
+  IsLastStageDesc = 'IS_LAST_STAGE_DESC',
   IsLockedAsc = 'IS_LOCKED_ASC',
   IsLockedDesc = 'IS_LOCKED_DESC',
   IsFinalDecisionAsc = 'IS_FINAL_DECISION_ASC',
@@ -16188,6 +16203,7 @@ export type ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput = {
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -16304,6 +16320,7 @@ export type ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput = {
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -17111,6 +17128,7 @@ export type ReviewQuestionAssignmentReviewAssignmentIdFkeyReviewAssignmentCreate
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -18249,6 +18267,7 @@ export type ReviewReviewAssignmentIdFkeyReviewAssignmentCreateInput = {
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -24446,6 +24465,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentAssignerJoinForReviewAssignm
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -24477,6 +24497,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicati
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -24508,6 +24529,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerI
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -24539,6 +24561,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentLevelIdFk
   timeUpdated?: Maybe<Scalars['Datetime']>;
   levelNumber?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -24570,6 +24593,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisat
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -24601,6 +24625,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerI
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -24632,6 +24657,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFk
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -24663,6 +24689,7 @@ export type UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateI
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -24695,6 +24722,7 @@ export type UpdateReviewAssignmentOnReviewForReviewReviewAssignmentIdFkeyPatch =
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -24727,6 +24755,7 @@ export type UpdateReviewAssignmentOnReviewQuestionAssignmentForReviewQuestionAss
   levelNumber?: Maybe<Scalars['Int']>;
   levelId?: Maybe<Scalars['Int']>;
   isLastLevel?: Maybe<Scalars['Boolean']>;
+  isLastStage?: Maybe<Scalars['Boolean']>;
   isLocked?: Maybe<Scalars['Boolean']>;
   isFinalDecision?: Maybe<Scalars['Boolean']>;
   userToAssignerId?: Maybe<ReviewAssignmentAssignerIdFkeyInput>;
@@ -33509,6 +33538,7 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   levelNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   levelId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isLastLevel?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isLastStage?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isLocked?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isFinalDecision?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
