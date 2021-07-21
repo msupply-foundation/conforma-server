@@ -213,6 +213,13 @@ exports.queries = [
           outcomeDisplayDetailsUsingId: {
             create: [
               {
+                columnName: "productType"
+                elementTypePluginCode: "shortText"
+                isTextColumn: true
+                parameters: { label: "Product type" }
+                title: "Product type"
+              }
+              {
                 columnName: "type"
                 elementTypePluginCode: "shortText"
                 isTextColumn: true
@@ -238,6 +245,7 @@ exports.queries = [
           outcomeDisplayTablesUsingId: {
             create: [
               { columnName: "serial", title: "Serial", isTextColumn: true }
+              { columnName: "productType", title: "Product type", isTextColumn: true }
               { columnName: "type", title: "License type", isTextColumn: true }
               { columnName: "expiryDate", title: "Expiry date", isTextColumn: true }
               { columnName: "companyName", title: "Company name", isTextColumn: true }

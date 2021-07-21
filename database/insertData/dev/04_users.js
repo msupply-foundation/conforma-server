@@ -491,7 +491,7 @@ exports.queries = [
           username: "finalDecision1"
           firstName: "Final"
           lastName: "Decision Maker 1"
-          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          passwordHash: "$2a$10$5SZSiEj2RqgZzKu4.aCeFOicNo8f9cgXfCqK0k5ioNgGwTJvC42jG"
           permissionJoinsUsingId: {
             create: [
               {
@@ -516,7 +516,7 @@ exports.queries = [
           username: "finalDecision2"
           firstName: "Final"
           lastName: "Decision Maker 2"
-          passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+          passwordHash: "$2a$10$DHIKam/EQItFhIBA5I4wduldlnc4n/0w42RJ9.SBA5htb4cZ/iEvi"
           permissionJoinsUsingId: {
             create: [
               {
