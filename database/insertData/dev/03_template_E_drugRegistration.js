@@ -997,9 +997,9 @@ exports.queries = [
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "canScreenDrugRego" }
                 }
-                restrictions: { canSelfAssign: true }
                 levelNumber: 1
                 stageNumber: 1
+                canSelfAssign: true
               }
               # Assign Drug Registration Stage 2
               {
