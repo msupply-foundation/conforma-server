@@ -9,6 +9,7 @@ export const getApplicationData = async (input: {
   payload?: ActionPayload
   applicationId?: number
   reviewId?: number
+  templateData?: any
 }): Promise<ActionApplicationData> => {
   // Requires either application OR trigger_payload, so throw error if neither provided
   if (!input?.payload?.trigger_payload && !input?.applicationId)
@@ -47,6 +48,9 @@ export const getApplicationData = async (input: {
       }
     : {}
 
+  const templateData =
+    input?.templateData || (await DBConnect.getTemplateData(applicationData.templateId))
+
   const environmentData = {
     appRootFolder: getAppEntryPointDir(),
     filesFolder: config.filesFolder,
@@ -56,6 +60,7 @@ export const getApplicationData = async (input: {
     action_payload: input?.payload,
     ...applicationData,
     ...userData,
+    templateData,
     responses: responseData,
     reviewData,
     environmentData,

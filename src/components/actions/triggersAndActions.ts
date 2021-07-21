@@ -99,6 +99,9 @@ export async function processTrigger(payload: TriggerPayload) {
 
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
+  // Get all template data
+  const templateData = await DBConnect.getTemplateData(templateId)
+
   // Get Actions from matching Template
   const actions = await DBConnect.getActionsByTemplateId(templateId, trigger)
 
@@ -160,6 +163,7 @@ export async function processTrigger(payload: TriggerPayload) {
       }
       const result = await executeAction(actionPayload, actionLibrary, {
         outputCumulative,
+        templateData,
       })
       outputCumulative = { ...outputCumulative, ...result.output }
       // Enable next line to inspect outputCumulative:
@@ -197,7 +201,10 @@ export async function executeAction(
   additionalObjects: any = {}
 ): Promise<ActionQueueExecutePayload> {
   // Get fresh applicationData for each Action
-  const applicationData = await getApplicationData({ payload })
+  const applicationData = await getApplicationData({
+    payload,
+    templateData: additionalObjects?.templateData,
+  })
 
   // Enable next line to inspect applicationData:
   // console.log('ApplicationData: ', applicationData)

@@ -70,6 +70,92 @@ class GraphQLdb {
     }
     // Not implemented yet -- needs more data in DB
   }
+
+  public getTemplateData = async (templateId: number) => {
+    const data = await this.gqlQuery(
+      `
+        query getTemplateData($templateId: Int!) {
+          template(id: $templateId) {
+            id
+            code
+            name
+            status
+            isLinear
+            startMessage
+            submissionMessage
+            version
+            versionTimestamp
+            templateCategory {
+              code
+              id
+              title
+            }
+            templateSections {
+              nodes {
+                id
+                code
+                index
+                title
+                templateElementsBySectionId {
+                  nodes {
+                    id
+                    code
+                    category
+                    elementTypePluginCode
+                    title
+                    index
+                    defaultValue      
+                    helpText
+                    visibilityCondition
+                    isEditable
+                    isRequired
+                    validation
+                    validationMessage
+                    parameters
+                  }
+                }
+              }
+            }
+            templateStages {
+              nodes {
+                id
+                number
+                title
+                description
+                colour
+              }
+            }
+            templateActions {
+              nodes {
+                id
+                actionCode
+                sequence
+                condition
+                parameterQueries
+                trigger
+              }
+            }
+            templatePermissions {
+              nodes {
+                id
+                permissionName {
+                  name
+                  id
+                }
+                stageNumber
+                levelNumber
+                allowedSections
+                canSelfAssign        
+                restrictions
+              }
+            }
+          }
+        }      
+      `,
+      { templateId }
+    )
+    return data.template
+  }
 }
 
 const graphqlDBInstance = GraphQLdb.Instance
