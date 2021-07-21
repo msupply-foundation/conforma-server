@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import config from '../config'
 import { getAdminJWT } from './permissions/loginHelpers'
+import { Template } from '../generated/graphql'
 
 const endpoint = config.graphQLendpoint
 
@@ -71,7 +72,7 @@ class GraphQLdb {
     // Not implemented yet -- needs more data in DB
   }
 
-  public getTemplateData = async (templateId: number) => {
+  public getTemplateData = async (templateId: number): Promise<Template> => {
     const data = await this.gqlQuery(
       `
         query getTemplateData($templateId: Int!) {

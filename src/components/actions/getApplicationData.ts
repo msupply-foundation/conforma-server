@@ -3,13 +3,14 @@ import DBConnect from '../databaseConnect'
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import config from '../../config'
+import { Template } from '../../generated/graphql'
 
 // Add more data (such as org/review, etc.) here as required
 export const getApplicationData = async (input: {
   payload?: ActionPayload
   applicationId?: number
   reviewId?: number
-  templateData?: any
+  templateData?: Template
 }): Promise<ActionApplicationData> => {
   // Requires either application OR trigger_payload, so throw error if neither provided
   if (!input?.payload?.trigger_payload && !input?.applicationId)
