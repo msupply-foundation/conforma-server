@@ -19,6 +19,7 @@ import {
   createFilesFolder,
   filesFolder,
 } from './components/files/fileHandler'
+import routeRunAction from './components/actions/runAction'
 import { getAppEntryPointDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
 import config from './config'
@@ -64,6 +65,7 @@ const startServer = async () => {
   server.post('/login-org', routeLoginOrg)
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
   server.post('/create-hash', routeCreateHash)
+  server.post('/run-action', routeRunAction)
   server.get('/verify', routeVerification)
   server.post('/generate-pdf', routeGeneratePDF)
 
