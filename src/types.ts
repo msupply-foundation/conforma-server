@@ -146,6 +146,7 @@ export interface FilePayload {
   user_id: number
   unique_id: string
   original_filename: string
+  template_id: number
   application_serial: string
   application_response_id: number
   file_path: string
