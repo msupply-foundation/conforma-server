@@ -2,7 +2,7 @@ import { ActionPayload } from '../types'
 import DBConnect from './databaseConnect'
 import { BasicObject } from '@openmsupply/expression-evaluator/lib/types'
 import { getAppEntryPointDir } from './utilityFunctions'
-import config from '../config.json'
+import config from '../config'
 
 // Add more data (such as org/review, etc.) here as required
 export const getApplicationData = async (payload: ActionPayload) => {

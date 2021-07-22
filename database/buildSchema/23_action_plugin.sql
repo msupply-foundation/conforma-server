@@ -1,6 +1,7 @@
 -- action plugins
 CREATE TABLE public.action_plugin (
-    code varchar PRIMARY KEY,
+    id serial PRIMARY KEY,
+    code varchar UNIQUE,
     name varchar,
     description varchar,
     path varchar,

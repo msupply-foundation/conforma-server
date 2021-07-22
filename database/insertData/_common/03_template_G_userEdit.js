@@ -10,6 +10,7 @@ exports.queries = [
         template: {
           code: "UserEdit"
           name: "Edit User Details"
+          namePlural: "Edit Users Details" 
           submissionMessage: "Thanks for updating your details. You will need to log out and log back into the system for the changes to take effect."
           status: AVAILABLE
           versionTimestamp: "NOW()"
@@ -110,7 +111,16 @@ exports.queries = [
                           {
                             operator: "API"
                             children: [
-                              "http://localhost:8080/check-unique"
+                              {
+                                operator: "+"
+                                children: [
+                                  {
+                                    operator: "objectProperties"
+                                    children: ["applicationData.config.serverREST"]
+                                  }
+                                  "/check-unique"
+                                ]
+                              }
                               ["type", "value"]
                               "username"
                               {

@@ -9,7 +9,7 @@ import * as fs from 'fs'
 import path from 'path'
 const isEqual = require('deep-equal')
 import { getAppEntryPointDir } from './utilityFunctions'
-import * as config from '../config.json'
+import config from '../config'
 import DBConnect from './databaseConnect'
 import { ActionPlugin } from '../types'
 

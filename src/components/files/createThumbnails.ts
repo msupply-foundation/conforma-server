@@ -10,9 +10,8 @@ const genericThumbnails: { [key: string]: string } = {
   file: 'noun_File_3764922.png',
 }
 
-import * as config from '../../config.json'
+import config from '../../config'
 import path from 'path'
-import fs from 'fs'
 import sharp from 'sharp'
 const { thumbnailMaxWidth, thumbnailMaxHeight } = config
 

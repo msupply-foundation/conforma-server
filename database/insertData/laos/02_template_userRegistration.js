@@ -13,6 +13,7 @@ exports.queries = [
         template: {
           code: "UserRegistration"
           name: "User Registration"
+          namePlural: "User Registations"
           submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm."
           status: AVAILABLE
           versionTimestamp: "NOW()"
@@ -68,7 +69,16 @@ exports.queries = [
                           {
                             operator: "API"
                             children: [
-                              "http://localhost:8080/check-unique"
+                              {
+                                operator: "+"
+                                children: [
+                                  {
+                                    operator: "objectProperties"
+                                    children: ["applicationData.config.serverREST"]
+                                  }
+                                  "/check-unique"
+                                ]
+                              }
                               ["type", "value"]
                               "username"
                               {

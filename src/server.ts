@@ -10,7 +10,9 @@ import {
   routeLoginOrg,
   routeUpdateRowPolicies,
   routeCreateHash,
+  routeVerification,
 } from './components/permissions'
+import { routeGeneratePDF } from './components/files/documentGenerate'
 import {
   saveFiles,
   getFilePath,
@@ -19,8 +21,10 @@ import {
 } from './components/files/fileHandler'
 import { getAppEntryPointDir } from './components/utilityFunctions'
 import DBConnect from './components/databaseConnect'
-import config from './config.json'
+import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
+import snapshotRoutes from './components/snapshots/routes'
+require('dotenv').config()
 
 // Bare-bones Fastify server
 
@@ -60,6 +64,8 @@ const startServer = async () => {
   server.post('/login-org', routeLoginOrg)
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
   server.post('/create-hash', routeCreateHash)
+  server.get('/verify', routeVerification)
+  server.post('/generate-pdf', routeGeneratePDF)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {
@@ -70,6 +76,9 @@ const startServer = async () => {
   })
 
   server.register(lookupTableRoutes, { prefix: '/lookup-table' })
+
+  // Snapshot routes
+  server.register(snapshotRoutes, { prefix: '/snapshot' })
 
   server.get('/', async (request, reply) => {
     console.log('Request made')

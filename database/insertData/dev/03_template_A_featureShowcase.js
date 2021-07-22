@@ -13,6 +13,7 @@ exports.queries = [
         template: {
           code: "Demo"
           name: "Demo -- Feature Showcase"
+          namePlural: "Demo -- Feature Showcases"
           isLinear: false
           startMessage: {
             operator: "stringSubstitution"
@@ -155,7 +156,16 @@ exports.queries = [
                       validation: {
                         operator: "API"
                         children: [
-                          { value: "http://localhost:8080/check-unique" }
+                          {
+                            operator: "+"
+                            children: [
+                              {
+                                operator: "objectProperties"
+                                children: ["applicationData.config.serverREST"]
+                              }
+                              "/check-unique"
+                            ]
+                          }
                           { value: ["type", "value"] }
                           { value: "username" }
                           {

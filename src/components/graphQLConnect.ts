@@ -1,5 +1,5 @@
 import fetch from 'node-fetch'
-import * as config from '../config.json'
+import config from '../config'
 import { getAdminJWT } from './permissions/loginHelpers'
 
 const endpoint = config.graphQLendpoint
@@ -29,6 +29,14 @@ class GraphQLdb {
       }),
     })
     const data = await queryResult.json()
+    if (data.errors)
+      throw new Error(
+        `problem executing gql: ${query} variables: ${variables} errors: ${JSON.stringify(
+          data.errors,
+          null,
+          ' '
+        )}`
+      )
     return data.data
   }
 

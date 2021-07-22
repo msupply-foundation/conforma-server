@@ -149,15 +149,32 @@ exports.coreActions = `
         operator: "AND"
         children: [
           {
-            operator: "="
+            operator: "OR",
             children: [
               {
-                operator: "objectProperties"
+                operator: "=",
                 children: [
-                  "applicationData.reviewData.latestDecision.decision"
+                  {
+                    operator: "objectProperties",
+                    children: [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ]
+                  },
+                  "CONFORM"
+                ]
+              },
+              {
+                operator: "=",
+                children: [
+                  {
+                    operator: "objectProperties",
+                    children: [
+                      "applicationData.reviewData.latestDecision.decision"
+                    ]
+                  },
+                  "NON_CONFORM"
                 ]
               }
-              "CONFORM"
             ]
           }
           {

@@ -58,6 +58,21 @@ $$
 LANGUAGE SQL
 IMMUTABLE;
 
+-- FUNCTION to auto-add time_stage_created to review
+CREATE OR REPLACE FUNCTION public.review_time_stage_created (review_assignment_id int)
+    RETURNS timestamptz
+    AS $$
+    SELECT
+        time_stage_created
+    FROM
+        review_assignment
+    WHERE
+        id = $1;
+
+$$
+LANGUAGE SQL
+IMMUTABLE;
+
 -- FUNCTION to auto-add is_last_level to review
 CREATE OR REPLACE FUNCTION public.review_is_last_level (review_assignment_id int)
     RETURNS boolean
@@ -78,12 +93,13 @@ CREATE TABLE public.review (
     id serial PRIMARY KEY,
     review_assignment_id integer REFERENCES public.review_assignment (id),
     -- status via review_status_history
-    -- time_created viw review_status_history
+    -- time_status_created via review_status_history
     TRIGGER public.trigger,
     application_id integer GENERATED ALWAYS AS (public.review_application_id (review_assignment_id)) STORED REFERENCES public.application (id),
     reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id (review_assignment_id)) STORED REFERENCES public.user (id),
     level_number integer GENERATED ALWAYS AS (public.review_level (review_assignment_id)) STORED,
     stage_number integer GENERATED ALWAYS AS (public.review_stage (review_assignment_id)) STORED,
+    time_stage_created timestamptz GENERATED ALWAYS AS (public.review_time_stage_created (review_assignment_id)) STORED,
     is_last_level boolean GENERATED ALWAYS AS (public.review_is_last_level (review_assignment_id)) STORED
 );
 
