@@ -27,6 +27,27 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
+  checkExistingReviewAssignment: async (reviewAssigment: any) => {
+    const { applicationId, stageNumber, levelNumber, reviewerId } = reviewAssigment
+
+    const text = `
+      SELECT * FROM review_assignment 
+      WHERE application_id = $1
+      AND stage_number = $2
+      AND level_number = $3
+      AND reviewer_id = $4
+    `
+    try {
+      const result = await DBConnect.query({
+        text,
+        values: [applicationId, stageNumber, levelNumber, reviewerId],
+      })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
   addReviewAssignments: async (reviewAssignments: any) => {
     const reviewAssignmentIds = []
     for (const reviewAssignment of reviewAssignments) {
