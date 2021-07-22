@@ -51,12 +51,16 @@ Usage: `GET` request with file database id as a URL query parameter.
 
 `/check-unique`
 
-Endpoint to check if a username/email/org name is unique in the system. Needed because the front-end user won't have permission to query the full list of records, only ones they have permission for.
+Endpoint to check if an entity (e.g. username, email) is unique in the system. Needed because the front-end user won't have permission to query the full list of records, only ones they have permission for.
 
 Query parameters:
 
 - `type`: available options: `username`, `email`, `organisation`
 - `value`: the value being checked for uniqueness
+- `table`: the database table to check
+- `field`: the field in the above table to check
+
+Note that `table` and `field` are only required when `type` is not specified -- `type` is basically a table/field shorthand for "username", "email" and "organisation" checks; for any other checks, use `table` and `field`.
 
 Example request URL: `/check-unique/type=email&value=carl@sussol.net`
 
@@ -177,6 +181,48 @@ A json array of new policies:
     "CREATE POLICY \"view_pp3pn3tp3\" ON \"application\" FOR SELECT USING (jwt_get_boolean('pp3pn3tp3') = true and template_id = jwt_get_bigint('pp3pn3tp3_templateId')) "
 ]
 ```
+
+#### Run Action
+
+POST: `/run-action`
+
+End point to run Actions[Triggers-and-Actions.md] in isolation. Returns the action's "Output" object.
+
+**Parameters** (as body JSON):
+
+- `actionCode` -- code of the required action (e.g. "incrementStage")
+- `applicationId` -- used to fetch `applicationData`, which is required by most actions. If omitted, `applicationData` will not be passed to action, which _may_ cause problems..
+- `parameters` -- the input parameters of the specified action.
+
+**Example**:
+
+```
+{
+    "actionCode": "generateTextString",
+    "applicationId": 4001,
+    "parameters": {
+        "pattern": "<?templateName>-<?productName>",
+        "customFields": {
+            "templateName": "applicationData.templateName",
+            "productName": "applicationData.responses.Q20.text"
+        }
+    }
+}
+```
+
+returns:
+
+```
+{
+    "status": "SUCCESS",
+    "error_log": "",
+    "output": {
+        "generatedText": "Test -- Review Process-Vitamin B"
+    }
+}
+```
+
+---
 
 **To-do**: authorisation of some sort (use JWT, and some way to define ADMIN user, maybe boolean on permission_policy)
 
