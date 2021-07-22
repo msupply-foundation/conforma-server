@@ -268,11 +268,16 @@ exports.queries = [
                 parameterQueries: { message: "Application Submitted" }
               }
               {
-                actionCode: "generateName"
+                actionCode: "generateTextString"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 100
                 parameterQueries: {
-                  formatExpression: "\${applicationData.templateName} — \${applicationData.responses.Q20.text}"
+                  pattern: "<?templateName>—<?productName>"
+                  customFields: {
+                    templateName: "applicationData.templateName",
+                    productName: "applicationData.responses.Q20.text"
+                  }
+                  updateRecord: true
                 }
               }
             ]
