@@ -24,14 +24,22 @@ exports.queries = [
                 isCurrent: false
                 templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
-                  create: { isCurrent: false, status: COMPLETED }
+                  create: { 
+                    isCurrent: false
+                    status: COMPLETED
+                    timeCreated: "2021-01-31T00:00:00Z"
+                  }
                 }
               }
               {
                 isCurrent: true
                 templateStageToStageId: { connectById: { id: 6 } }
                 applicationStatusHistoriesUsingId: {
-                  create: { isCurrent: true, status: SUBMITTED }
+                  create: { 
+                    isCurrent: true
+                    status: SUBMITTED
+                    timeCreated: "2021-02-01T00:00:00Z"
+                  }
                 }
               }
             ]
@@ -50,6 +58,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "John" }
+                stageNumber: 1
+                timeCreated: "2021-01-30T00:00:00Z"
+                timeUpdated: "2021-01-30T00:00:01Z"
+                timeSubmitted: "2021-01-31T00:00:00Z"
               }
               {
                 id: 4001
@@ -63,6 +75,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Smith" }
+                stageNumber: 1
+                timeCreated: "2021-01-30T00:00:00Z"
+                timeUpdated: "2021-01-30T00:00:02Z"
+                timeSubmitted: "2021-01-31T00:00:00Z"
               }
               {
                 id: 4002
@@ -76,6 +92,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "js@nowhere.com" }
+                stageNumber: 1
+                timeCreated: "2021-01-30T00:00:00Z"
+                timeUpdated: "2021-01-30T00:00:03Z"
+                timeSubmitted: "2021-01-31T00:00:00Z"
               }
               {
                 id: 4003
@@ -89,6 +109,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "39" }
+                stageNumber: 1
+                timeCreated: "2021-01-30T00:00:00Z"
+                timeUpdated: "2021-01-30T00:00:04Z"
+                timeSubmitted: "2021-01-31T00:00:00Z"
               }
               {
                 id: 4004
@@ -102,6 +126,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "New Zealand" }
+                stageNumber: 1
+                timeCreated: "2021-01-30T00:00:00Z"
+                timeUpdated: "2021-01-30T00:00:05Z"
+                timeSubmitted: "2021-01-31T00:00:00Z"
               }
               {
                 id: 4005
@@ -115,6 +143,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Vitamin C" }
+                stageNumber: 1
+                timeCreated: "2021-01-30T00:00:00Z"
+                timeUpdated: "2021-01-30T00:00:05Z"
+                timeSubmitted: "2021-01-31T00:00:00Z"
               }
               {
                 id: 4006
@@ -128,6 +160,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
+                stageNumber: 1
+                timeCreated: "2021-01-30T00:00:00Z"
+                timeUpdated: "2021-01-30T00:00:05Z"
+                timeSubmitted: "2021-01-31T00:00:00Z"
               }
               {
                 id: 4007
@@ -141,6 +177,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "50mg" }
+                stageNumber: 1
+                timeCreated: "2021-01-30T00:00:00Z"
+                timeUpdated: "2021-01-30T00:00:05Z"
+                timeSubmitted: "2021-01-31T00:00:00Z"
               }
               {
                 id: 4008
@@ -154,6 +194,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "100" }
+                stageNumber: 1
+                timeCreated: "2021-01-30T00:00:00Z"
+                timeUpdated: "2021-01-30T00:00:05Z"
+                timeSubmitted: "2021-01-31T00:00:00Z"
               }
               {
                 id: 4009
@@ -167,6 +211,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Turning orange" }
+                stageNumber: 1
+                timeCreated: "2021-01-30T00:00:00Z"
+                timeUpdated: "2021-01-30T00:00:05Z"
+                timeSubmitted: "2021-01-31T00:00:00Z"
               }
             ]
           }
@@ -203,10 +251,15 @@ exports.queries = [
               templateStageToStageId: { connectById: { id: 5 } }
               applicationStatusHistoriesUsingId: {
                 create: [
+                  {
+                    isCurrent: false, 
+                    status: DRAFT
+                    timeCreated: "2021-05-18T00:00:00Z"
+                  }
                   { 
                     isCurrent: false, 
                     status: SUBMITTED
-                    timeCreated: "2021-05-18T00:00:00Z"
+                    timeCreated: "2021-05-18T10:00:00Z"
                   }
                   { 
                     isCurrent: true, 
@@ -231,6 +284,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Valerio" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T00:00:00Z"
+                timeUpdated: "2021-05-18T00:00:01Z"
+                timeSubmitted: "2021-05-18T10:00:00Z"
               }
               {
                 id: 4011
@@ -244,6 +301,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Red" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T00:00:00Z"
+                timeUpdated: "2021-05-18T00:00:02Z"
+                timeSubmitted: "2021-05-18T10:00:00Z"
               }
               {
                 id: 4012
@@ -257,6 +318,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "jj@nowhere.com" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T00:00:00Z"
+                timeUpdated: "2021-05-18T00:00:03Z"
+                timeSubmitted: "2021-05-18T10:00:00Z"
               }
               {
                 id: 4013
@@ -270,6 +335,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "42" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T00:00:00Z"
+                timeUpdated: "2021-05-18T00:00:04Z"
+                timeSubmitted: "2021-05-18T10:00:00Z"
               }
               {
                 id: 4014
@@ -283,6 +352,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Tonga" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T00:00:00Z"
+                timeUpdated: "2021-05-18T00:00:05Z"
+                timeSubmitted: "2021-05-18T10:00:00Z"
               }
               {
                 id: 4015
@@ -296,6 +369,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Vitamin B" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T00:00:00Z"
+                timeUpdated: "2021-05-18T00:00:06Z"
+                timeSubmitted: "2021-05-18T10:00:00Z"
               }
               {
                 id: 4016
@@ -309,6 +386,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
+                stageNumber: 1
+                timeCreated: "2021-05-18T00:00:00Z"
+                timeUpdated: "2021-05-18T00:00:07Z"
+                timeSubmitted: "2021-05-18T10:00:00Z"
               }
               {
                 id: 4017
@@ -322,6 +403,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "100mg" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T00:00:00Z"
+                timeUpdated: "2021-05-18T00:00:08Z"
+                timeSubmitted: "2021-05-18T10:00:00Z"
               }
               {
                 id: 4018
@@ -335,6 +420,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "200" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T00:00:00Z"
+                timeUpdated: "2021-05-18T00:00:09Z"
+                timeSubmitted: "2021-05-18T10:00:00Z"
               }
               {
                 id: 4019
@@ -348,6 +437,10 @@ exports.queries = [
                 }
                 status: SUBMITTED 
                 value: { text: "No side effects" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T00:00:00Z"
+                timeUpdated: "2021-05-18T00:00:10Z"
+                timeSubmitted: "2021-05-18T10:00:00Z"
               }
             ]
           }
@@ -384,14 +477,34 @@ exports.queries = [
                 isCurrent: false
                 templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
-                  create: { isCurrent: false, status: COMPLETED }
+                  create: [
+                    {
+                      isCurrent: false, 
+                      status: DRAFT
+                      timeCreated: "2021-05-18T00:00:00Z"
+                    }
+                    {
+                      isCurrent: false, 
+                      status: SUBMITTED
+                      timeCreated: "2021-05-18T10:00:00Z"
+                    }
+                    { 
+                      isCurrent: false
+                      status: COMPLETED
+                      timeCreated: "2021-05-19T10:00:00Z"
+                    }
+                  ]
                 }
               }
               {
                 isCurrent: true
                 templateStageToStageId: { connectById: { id: 6 } }
                 applicationStatusHistoriesUsingId: {
-                  create: { isCurrent: true, status: SUBMITTED }
+                  create: { 
+                    isCurrent: true
+                    status: SUBMITTED
+                    timeCreated: "2021-05-19T10:00:00Z"
+                  }
                 }
               }
             ]
@@ -404,6 +517,10 @@ exports.queries = [
                 templateElementId: 4001
                 status: SUBMITTED 
                 value: { text: "Andrei" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T10:00:00Z"
+                timeUpdated: "2021-05-18T10:00:01Z"
+                timeSubmitted: "2021-05-18T10:10:00Z"
               }
               {
                 id: 4021
@@ -411,6 +528,10 @@ exports.queries = [
                 templateElementId: 4002
                 status: SUBMITTED 
                 value: { text: "Blue" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T10:00:00Z"
+                timeUpdated: "2021-05-18T10:00:02Z"
+                timeSubmitted: "2021-05-18T10:10:00Z"
               }
               {
                 id: 4022
@@ -418,6 +539,10 @@ exports.queries = [
                 templateElementId: 4003
                 status: SUBMITTED 
                 value: { text: "jw@nowhere.com" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T10:00:00Z"
+                timeUpdated: "2021-05-18T10:00:03Z"
+                timeSubmitted: "2021-05-18T10:10:00Z"
               }
               {
                 id: 4023
@@ -425,6 +550,10 @@ exports.queries = [
                 templateElementId: 4005
                 status: SUBMITTED 
                 value: { text: "22" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T10:00:00Z"
+                timeUpdated: "2021-05-18T10:00:04Z"
+                timeSubmitted: "2021-05-18T10:10:00Z"
               }
               {
                 id: 4024
@@ -432,6 +561,10 @@ exports.queries = [
                 templateElementId: 4006
                 status: SUBMITTED 
                 value: { text: "China" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T10:00:00Z"
+                timeUpdated: "2021-05-18T10:00:05Z"
+                timeSubmitted: "2021-05-18T10:10:00Z"
               }
               {
                 id: 4025
@@ -439,6 +572,10 @@ exports.queries = [
                 templateElementId: 4008
                 status: SUBMITTED 
                 value: { text: "Amoxicillin" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T10:00:00Z"
+                timeUpdated: "2021-05-18T10:00:06Z"
+                timeSubmitted: "2021-05-18T10:10:00Z"
               }
               {
                 id: 4026
@@ -446,6 +583,10 @@ exports.queries = [
                 templateElementId: 4009
                 status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
+                stageNumber: 1
+                timeCreated: "2021-05-18T10:00:00Z"
+                timeUpdated: "2021-05-18T10:00:07Z"
+                timeSubmitted: "2021-05-18T10:10:00Z"
               }
               {
                 id: 4027
@@ -453,6 +594,10 @@ exports.queries = [
                 templateElementId: 4011
                 status: SUBMITTED 
                 value: { text: "250mg" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T10:00:00Z"
+                timeUpdated: "2021-05-18T10:00:08Z"
+                timeSubmitted: "2021-05-18T10:10:00Z"
               }
               {
                 id: 4028
@@ -460,6 +605,10 @@ exports.queries = [
                 templateElementId: 4012
                 status: SUBMITTED 
                 value: { text: "1000" }
+                stageNumber: 1
+                timeCreated: "2021-05-18T10:00:00Z"
+                timeUpdated: "2021-05-18T10:00:09Z"
+                timeSubmitted: "2021-05-18T10:10:00Z"
               }
               {
                 id: 4029
@@ -467,6 +616,10 @@ exports.queries = [
                 templateElementId: 4013
                 status: SUBMITTED 
                 value: { text: "nausea\\nvomiting\\ndiarrhea\\nstomach pain\\nswollen, black, or \\"hairy\\" tongue." }
+                stageNumber: 1
+                timeCreated: "2021-05-18T10:00:00Z"
+                timeUpdated: "2021-05-18T10:00:10Z"
+                timeSubmitted: "2021-05-18T10:10:00Z"
               }
             ]
           }
@@ -502,7 +655,18 @@ exports.queries = [
                 isCurrent: true
                 templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
-                  create: { isCurrent: true, status: SUBMITTED }
+                  create: [
+                    { 
+                      isCurrent: false
+                      status: DRAFT
+                      timeCreated: "2021-06-09T00:00:00Z"
+                    }
+                    { 
+                      isCurrent: true
+                      status: SUBMITTED
+                      timeCreated: "2021-06-09T10:00:00Z"
+                    }
+                  ]
                 }
               }
             ]
@@ -515,6 +679,10 @@ exports.queries = [
                 templateElementId: 4001
                 status: SUBMITTED 
                 value: { text: "Valerio" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:01Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4101
@@ -522,6 +690,10 @@ exports.queries = [
                 templateElementId: 4002
                 status: SUBMITTED 
                 value: { text: "Red" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:02Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4102
@@ -529,6 +701,10 @@ exports.queries = [
                 templateElementId: 4003
                 status: SUBMITTED 
                 value: { text: "vw@nowhere.com" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:03Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4103
@@ -536,6 +712,10 @@ exports.queries = [
                 templateElementId: 4005
                 status: SUBMITTED 
                 value: { text: "63" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:04Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4104
@@ -543,6 +723,10 @@ exports.queries = [
                 templateElementId: 4006
                 status: SUBMITTED 
                 value: { text: "Italy" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:05Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4105
@@ -550,6 +734,10 @@ exports.queries = [
                 templateElementId: 4008
                 status: SUBMITTED 
                 value: { text: "Paracetamol" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:06Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4106
@@ -557,6 +745,10 @@ exports.queries = [
                 templateElementId: 4009
                 status: SUBMITTED 
                 value: { text: "Natural Product", optionIndex: 1 }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:07Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4107
@@ -564,6 +756,10 @@ exports.queries = [
                 templateElementId: 4011
                 status: SUBMITTED 
                 value: { text: "250mg" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:08Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4108
@@ -571,6 +767,10 @@ exports.queries = [
                 templateElementId: 4012
                 status: SUBMITTED 
                 value: { text: "1000" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:09Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4109
@@ -578,6 +778,10 @@ exports.queries = [
                 templateElementId: 4013
                 status: SUBMITTED 
                 value: { text: "Nothing too serious" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:10Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
             ]
           }
@@ -614,8 +818,21 @@ exports.queries = [
                 templateStageToStageId: { connectById: { id: 5 } }
                 applicationStatusHistoriesUsingId: {
                   create: [
-                    { isCurrent: false, status: SUBMITTED }
-                    { isCurrent: false, status: COMPLETED }
+                    { 
+                      isCurrent: false
+                      status: DRAFT
+                      timeCreated: "2021-06-09T00:00:00Z"
+                    }
+                    { 
+                      isCurrent: false
+                      status: SUBMITTED
+                      timeCreated: "2021-06-09T10:00:00Z"
+                    }
+                    { 
+                      isCurrent: false
+                      status: COMPLETED
+                      timeCreated: "2021-06-10T10:00:00Z"
+                    }
                   ]
                 }
               }
@@ -623,7 +840,11 @@ exports.queries = [
                 isCurrent: true
                 templateStageToStageId: { connectById: { id: 6 } }
                 applicationStatusHistoriesUsingId: {
-                  create: { isCurrent: true, status: SUBMITTED }
+                  create: { 
+                    isCurrent: true
+                    status: SUBMITTED
+                    timeCreated: "2021-06-10T10:00:00Z"
+                  }
                 }
               }
             ]
@@ -636,6 +857,10 @@ exports.queries = [
                 templateElementId: 4001
                 status: SUBMITTED 
                 value: { text: "Another" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:01Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4151
@@ -643,6 +868,10 @@ exports.queries = [
                 templateElementId: 4002
                 status: SUBMITTED 
                 value: { text: "Test" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:02Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4152
@@ -650,6 +879,10 @@ exports.queries = [
                 templateElementId: 4003
                 status: SUBMITTED 
                 value: { text: "this@test.com" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:03Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4153
@@ -657,6 +890,10 @@ exports.queries = [
                 templateElementId: 4005
                 status: SUBMITTED 
                 value: { text: "18" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:04Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4154
@@ -664,6 +901,10 @@ exports.queries = [
                 templateElementId: 4006
                 status: SUBMITTED 
                 value: { text: "Brazil" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:05Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4155
@@ -671,6 +912,10 @@ exports.queries = [
                 templateElementId: 4008
                 status: SUBMITTED 
                 value: { text: "Amoxicilin" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:06Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4156
@@ -682,6 +927,10 @@ exports.queries = [
                   selection: "Medicine"
                   optionIndex: 0
                 }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:07Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
               {
                 id: 4157
@@ -696,6 +945,10 @@ exports.queries = [
                 templateElementId: 4012
                 status: SUBMITTED 
                 value: { text: "200" }
+                stageNumber: 1
+                timeCreated: "2021-06-09T00:00:00Z"
+                timeUpdated: "2021-06-09T00:00:08Z"
+                timeSubmitted: "2021-06-09T10:00:00Z"
               }
             ]
           }

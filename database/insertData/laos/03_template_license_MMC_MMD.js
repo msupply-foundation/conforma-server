@@ -12,7 +12,8 @@ exports.queries = [
       input: {
           template: {
             code: "CompanyLicense"
-            name: "Company License for Modern medicines or Medical devices"
+            name: "Company License -- Modern medicines or Medical devices"
+            namePlural: "Companies Licenses -- Modern medicines or Medical devices"
             isLinear: false # CHANGE THIS
             status: AVAILABLE
             startMessage: "## Apply for a company license for:\\n\\n Modern medicines or Medical devices.\\n\\n**You will be required to upload the following documents:**\\n- **LMMD01**: Letter of request \\n- **LMMD12**: Letter from mother-company authorizing establishment of branch\\n- **LMMD15**: Site inspection report by F&D unit\\n- **LMMD16**: Company/manufacturer profile (including site master file and GMP certification where applicable)"
@@ -1262,6 +1263,7 @@ exports.queries = [
                         title: "File upload LMMD01"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Letter of request"
                           description: "The physical submission for this form is also required.\\nFile uploaded must be **image** files or **PDF** and under 5MB."
@@ -1283,6 +1285,7 @@ exports.queries = [
                         title: "File upload LMMD01"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Letter from mother-company authorizing establishment of branch"
                           description: "File uploaded must be **image** files or **PDF** and under 5MB."
@@ -1304,6 +1307,7 @@ exports.queries = [
                         title: "File upload LMMD15"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Site inspection report by F&D unit"
                           description: "File uploaded must be **image** files or **PDF** and under 5MB."
@@ -1324,6 +1328,7 @@ exports.queries = [
                         title: "File upload LMMD15"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Company/manufacturer profile (including site master file and GMP certification where applicable)"
                           description: "describing origin of products, staff and qualifications, facilities and equipment, business experience, business development plan.\\nFile uploaded must be **image** files or **PDF** and under 5MB."
@@ -1418,15 +1423,19 @@ exports.queries = [
                   }
                   parameterQueries: {
                     tableName: "license"
+                    product_type: {
+                      operator: "objectProperties"
+                      children: ["applicationData.responses.Q1ProductType.text"]
+                    }
                     type: {
                       operator: "objectProperties"
                       children: ["applicationData.responses.Q2LicenseType.text"]
                     }
                     expiry_date: "31/01/2022"
-#                   company_id: {
-#                     operator: "objectProperties"
-#                     children: ["currentUser.organisation.orgId"]
-#                   }
+                    company_id: {
+                      operator: "objectProperties"
+                      children: ["applicationData.orgId"]
+                    }
                     company_name: {
                       operator: "objectProperties"
                       children: ["applicationData.responses.Q1CompanyNameLao.text"]
@@ -1446,6 +1455,22 @@ exports.queries = [
 #                     operator: "objectProperties"
 #                     children: ["applicationData.id"]
 #                   }
+                  }
+                }
+                {
+                  actionCode: "grantPermissions"
+                  trigger: ON_REVIEW_SUBMIT
+                  sequence: 102
+                  parameterQueries: {
+                    username: {
+                      operator: "objectProperties"
+                      children: ["applicationData.username"]
+                    }
+                    orgId: {
+                      operator: "objectProperties"
+                      children: ["applicationData.orgId"]
+                    }
+                    permissionNames: ["applyRenewLicense"]
                   }
                 }
                 {

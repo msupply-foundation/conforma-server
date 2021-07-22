@@ -272,11 +272,6 @@ exports.queries = [
                   connectByName: { name: "reviewReviewTestAssessmentLvl2" }
                 }
               }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestApproval" }
-                }
-              }
             ]
           }
         }
@@ -489,6 +484,57 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "canAssessDrugRego" }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+  // Final decision users
+  `mutation {
+    createUser(
+      input: {
+        user: {
+          username: "finalDecision1"
+          firstName: "Final"
+          lastName: "Decision Maker 1"
+          passwordHash: "$2a$10$5SZSiEj2RqgZzKu4.aCeFOicNo8f9cgXfCqK0k5ioNgGwTJvC42jG"
+          permissionJoinsUsingId: {
+            create: [
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewReviewTestApproval" }
+                }
+              }
+            ]
+          }
+        }
+      }
+    ) {
+      user {
+        username
+      }
+    }
+  }`,
+  `mutation {
+    createUser(
+      input: {
+        user: {
+          username: "finalDecision2"
+          firstName: "Final"
+          lastName: "Decision Maker 2"
+          passwordHash: "$2a$10$DHIKam/EQItFhIBA5I4wduldlnc4n/0w42RJ9.SBA5htb4cZ/iEvi"
+          permissionJoinsUsingId: {
+            create: [
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewReviewTestApproval" }
                 }
               }
             ]
