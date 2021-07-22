@@ -948,7 +948,7 @@ exports.queries = [
               {
                 actionCode: "changeOutcome"
                 trigger: ON_REVIEW_SUBMIT
-                sequence: 1
+                sequence: 10
                 condition: {
                   operator: "AND"
                   children: [
