@@ -240,7 +240,10 @@ class PostgresDB {
     const text = `
       SELECT application_id as "applicationId",
       serial as "applicationSerial",
+      name as "applicationName",
       template_id as "templateId",
+      template_name as "templateName",
+      template_code as "templateCode",
       stage_id as "stageId", stage_number as "stageNumber", stage,
       stage_history_id as "stageHistoryId",
       stage_history_time_created as "stageHistoryTimeCreated",
@@ -248,10 +251,8 @@ class PostgresDB {
       user_id as "userId",
       org_id as "orgId",
       outcome
-      FROM application_stage_status_all
+      FROM application_stage_status_latest
       WHERE application_id = $1
-      AND stage_is_current = true
-      AND status_is_current = true
     `
     const result = await this.query({ text, values: [applicationId] })
     const applicationData = result.rows[0]

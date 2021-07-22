@@ -198,7 +198,7 @@ export async function executeAction(
   additionalObjects: any = {}
 ): Promise<ActionQueueExecutePayload> {
   // Get fresh applicationData for each Action
-  const applicationData = await getApplicationData(payload)
+  const applicationData = await getApplicationData({ payload })
 
   // Debug helper console.log to inspect applicationData:
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)

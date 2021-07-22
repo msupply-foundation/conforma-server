@@ -3,8 +3,10 @@ CREATE OR REPLACE VIEW public.application_stage_status_all AS
 SELECT
     stage.application_id,
     ts.template_id,
+    template.name AS template_name,
+    template.code AS template_code,
     serial,
-    name,
+    application.name,
     user_id,
     org_id,
     stage_id,
@@ -23,6 +25,7 @@ FROM
     application_stage_history stage
     FULL OUTER JOIN application_status_history status ON stage.id = status.application_stage_history_id
 JOIN template_stage ts ON stage.stage_id = ts.id
+JOIN TEMPLATE ON ts.template_id = template.id
 JOIN application ON stage.application_id = application.id;
 
 -- As above, but only with the CURRENT stage/status

@@ -1,0 +1,15 @@
+{
+  "name": "generate_name",
+  "version": "0.1",
+  "description": "Creates a text string and (optionally) applies it to a record, e.g. an application name",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "string-replace-async": "^2.0.0"
+  }
+}
