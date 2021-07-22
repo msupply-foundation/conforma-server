@@ -25,6 +25,7 @@ CREATE TABLE public.review_response (
     review_response_link_id integer REFERENCES public.review_response (id),
     original_review_response_id integer REFERENCES public.review_response (id),
     review_id integer REFERENCES public.review (id),
+    stage_number integer DEFAULT NULL,
     time_created timestamptz DEFAULT CURRENT_TIMESTAMP,
     time_updated timestamptz DEFAULT CURRENT_TIMESTAMP,
     time_submitted timestamptz,

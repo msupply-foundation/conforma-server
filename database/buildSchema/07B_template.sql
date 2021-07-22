@@ -8,6 +8,7 @@ CREATE TYPE public.template_status AS ENUM (
 CREATE TABLE public.template (
     id serial PRIMARY KEY,
     name varchar,
+    name_plural varchar,
     code varchar NOT NULL,
     is_linear boolean DEFAULT TRUE,
     start_message jsonb,

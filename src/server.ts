@@ -20,6 +20,7 @@ import {
   filesFolder,
 } from './components/files/fileHandler'
 import { getAppEntryPointDir, objectKeysToSnakeCase } from './components/utilityFunctions'
+import routeRunAction from './components/actions/runAction'
 import DBConnect from './components/databaseConnect'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
@@ -64,6 +65,7 @@ const startServer = async () => {
   server.post('/login-org', routeLoginOrg)
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
   server.post('/create-hash', routeCreateHash)
+  server.post('/run-action', routeRunAction)
   server.get('/verify', routeVerification)
   server.post('/generate-pdf', routeGeneratePDF)
 

@@ -71,7 +71,10 @@ export interface ActionApplicationData {
   action_payload: ActionPayload
   applicationId: number
   applicationSerial: string
+  applicationName: string
   templateId: number
+  templateName: string
+  templateCode: string
   stageId: number
   stageNumber: number
   stage: string

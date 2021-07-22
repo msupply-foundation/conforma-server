@@ -1,10 +1,12 @@
 -- Create VIEW which collects ALL application, stage, stage_history, and status_history together
 CREATE OR REPLACE VIEW public.application_stage_status_all AS
 SELECT
-    stage.application_id,
-    ts.template_id,
+    application.id AS application_id,
+    template.id AS template_id,
+    template.name AS template_name,
+    template.code AS template_code,
     serial,
-    name,
+    application.name,
     user_id,
     org_id,
     stage_id,
@@ -20,10 +22,11 @@ SELECT
     status.is_current AS status_is_current,
     application.outcome
 FROM
-    application_stage_history stage
-    FULL OUTER JOIN application_status_history status ON stage.id = status.application_stage_history_id
-JOIN template_stage ts ON stage.stage_id = ts.id
-JOIN application ON stage.application_id = application.id;
+    application
+    JOIN TEMPLATE ON application.template_id = template.id
+    LEFT JOIN application_stage_history stage ON application.id = stage.application_id
+    LEFT JOIN application_status_history status ON stage.id = status.application_stage_history_id
+    LEFT JOIN template_stage ts ON stage.stage_id = ts.id;
 
 -- As above, but only with the CURRENT stage/status
 CREATE OR REPLACE VIEW application_stage_status_latest AS
@@ -31,9 +34,10 @@ SELECT
     *
 FROM
     application_stage_status_all
-WHERE
-    stage_is_current = TRUE
-    AND status_is_current = TRUE;
+WHERE (stage_is_current = TRUE
+    OR stage_is_current IS NULL)
+AND (status_is_current = TRUE
+    OR stage_is_current IS NULL);
 
 -- Function to expose stage_number field on application table in GraphQL
 CREATE FUNCTION public.application_stage_number (app public.application)

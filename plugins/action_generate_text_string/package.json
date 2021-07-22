@@ -1,0 +1,16 @@
+{
+  "name": "generate_text_string",
+  "version": "0.1",
+  "description": "Generates serial numbers or arbitrary text strings (e.g. for application name) using a specified pattern, and updates a database record if requested",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "custom_string_patterns": "^0.5.0",
+    "randexp": "^0.5.3"
+  }
+}
