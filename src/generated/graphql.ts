@@ -514,6 +514,7 @@ export type ActionQueueTemplateIdFkeyInverseInput = {
 export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -892,6 +893,106 @@ export type ApplicationInput = {
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
 };
 
+/** A connection to a list of `String` values. */
+export type ApplicationListFilterApplicantConnection = {
+  __typename?: 'ApplicationListFilterApplicantConnection';
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']>>;
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<ApplicationListFilterApplicantEdge>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `String` edge in the connection. */
+export type ApplicationListFilterApplicantEdge = {
+  __typename?: 'ApplicationListFilterApplicantEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `String` values. */
+export type ApplicationListFilterAssignerConnection = {
+  __typename?: 'ApplicationListFilterAssignerConnection';
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']>>;
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<ApplicationListFilterAssignerEdge>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `String` edge in the connection. */
+export type ApplicationListFilterAssignerEdge = {
+  __typename?: 'ApplicationListFilterAssignerEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `String` values. */
+export type ApplicationListFilterOrganisationConnection = {
+  __typename?: 'ApplicationListFilterOrganisationConnection';
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']>>;
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<ApplicationListFilterOrganisationEdge>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `String` edge in the connection. */
+export type ApplicationListFilterOrganisationEdge = {
+  __typename?: 'ApplicationListFilterOrganisationEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `String` values. */
+export type ApplicationListFilterReviewerConnection = {
+  __typename?: 'ApplicationListFilterReviewerConnection';
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']>>;
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<ApplicationListFilterReviewerEdge>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `String` edge in the connection. */
+export type ApplicationListFilterReviewerEdge = {
+  __typename?: 'ApplicationListFilterReviewerEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `String` values. */
+export type ApplicationListFilterStageConnection = {
+  __typename?: 'ApplicationListFilterStageConnection';
+  /** A list of `String` objects. */
+  nodes: Array<Maybe<Scalars['String']>>;
+  /** A list of edges which contains the `String` and cursor to aid in pagination. */
+  edges: Array<ApplicationListFilterStageEdge>;
+  /** The count of *all* `String` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `String` edge in the connection. */
+export type ApplicationListFilterStageEdge = {
+  __typename?: 'ApplicationListFilterStageEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `String` at the end of the edge. */
+  node?: Maybe<Scalars['String']>;
+};
+
 export type ApplicationListShape = {
   __typename?: 'ApplicationListShape';
   id?: Maybe<Scalars['Int']>;
@@ -899,9 +1000,6 @@ export type ApplicationListShape = {
   name?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
   templateName?: Maybe<Scalars['String']>;
-  applicantUsername?: Maybe<Scalars['String']>;
-  applicantFirstName?: Maybe<Scalars['String']>;
-  applicantLastName?: Maybe<Scalars['String']>;
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
@@ -909,8 +1007,8 @@ export type ApplicationListShape = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
-  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
+  reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
@@ -933,12 +1031,6 @@ export type ApplicationListShapeCondition = {
   templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateName` field. */
   templateName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicantUsername` field. */
-  applicantUsername?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicantFirstName` field. */
-  applicantFirstName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `applicantLastName` field. */
-  applicantLastName?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicant` field. */
   applicant?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `orgName` field. */
@@ -953,10 +1045,10 @@ export type ApplicationListShapeCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `assignerUsernames` field. */
-  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  /** Checks for equality with the object’s `reviewerUsernames` field. */
-  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `assigners` field. */
+  assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `reviewers` field. */
+  reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `reviewerAction` field. */
   reviewerAction?: Maybe<ReviewerAction>;
   /** Checks for equality with the object’s `assignerAction` field. */
@@ -981,12 +1073,6 @@ export type ApplicationListShapeFilter = {
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateName` field. */
   templateName?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicantUsername` field. */
-  applicantUsername?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicantFirstName` field. */
-  applicantFirstName?: Maybe<StringFilter>;
-  /** Filter by the object’s `applicantLastName` field. */
-  applicantLastName?: Maybe<StringFilter>;
   /** Filter by the object’s `applicant` field. */
   applicant?: Maybe<StringFilter>;
   /** Filter by the object’s `orgName` field. */
@@ -1001,10 +1087,10 @@ export type ApplicationListShapeFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `assignerUsernames` field. */
-  assignerUsernames?: Maybe<StringListFilter>;
-  /** Filter by the object’s `reviewerUsernames` field. */
-  reviewerUsernames?: Maybe<StringListFilter>;
+  /** Filter by the object’s `assigners` field. */
+  assigners?: Maybe<StringListFilter>;
+  /** Filter by the object’s `reviewers` field. */
+  reviewers?: Maybe<StringListFilter>;
   /** Filter by the object’s `reviewerAction` field. */
   reviewerAction?: Maybe<ReviewerActionFilter>;
   /** Filter by the object’s `assignerAction` field. */
@@ -1030,9 +1116,6 @@ export type ApplicationListShapeInput = {
   name?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
   templateName?: Maybe<Scalars['String']>;
-  applicantUsername?: Maybe<Scalars['String']>;
-  applicantFirstName?: Maybe<Scalars['String']>;
-  applicantLastName?: Maybe<Scalars['String']>;
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
@@ -1040,8 +1123,8 @@ export type ApplicationListShapeInput = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
-  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
+  reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
   assignerAction?: Maybe<AssignerAction>;
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
@@ -1084,12 +1167,6 @@ export enum ApplicationListShapesOrderBy {
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   TemplateNameAsc = 'TEMPLATE_NAME_ASC',
   TemplateNameDesc = 'TEMPLATE_NAME_DESC',
-  ApplicantUsernameAsc = 'APPLICANT_USERNAME_ASC',
-  ApplicantUsernameDesc = 'APPLICANT_USERNAME_DESC',
-  ApplicantFirstNameAsc = 'APPLICANT_FIRST_NAME_ASC',
-  ApplicantFirstNameDesc = 'APPLICANT_FIRST_NAME_DESC',
-  ApplicantLastNameAsc = 'APPLICANT_LAST_NAME_ASC',
-  ApplicantLastNameDesc = 'APPLICANT_LAST_NAME_DESC',
   ApplicantAsc = 'APPLICANT_ASC',
   ApplicantDesc = 'APPLICANT_DESC',
   OrgNameAsc = 'ORG_NAME_ASC',
@@ -1104,10 +1181,10 @@ export enum ApplicationListShapesOrderBy {
   OutcomeDesc = 'OUTCOME_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
   LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
-  AssignerUsernamesAsc = 'ASSIGNER_USERNAMES_ASC',
-  AssignerUsernamesDesc = 'ASSIGNER_USERNAMES_DESC',
-  ReviewerUsernamesAsc = 'REVIEWER_USERNAMES_ASC',
-  ReviewerUsernamesDesc = 'REVIEWER_USERNAMES_DESC',
+  AssignersAsc = 'ASSIGNERS_ASC',
+  AssignersDesc = 'ASSIGNERS_DESC',
+  ReviewersAsc = 'REVIEWERS_ASC',
+  ReviewersDesc = 'REVIEWERS_DESC',
   ReviewerActionAsc = 'REVIEWER_ACTION_ASC',
   ReviewerActionDesc = 'REVIEWER_ACTION_DESC',
   AssignerActionAsc = 'ASSIGNER_ACTION_ASC',
@@ -3439,6 +3516,7 @@ export type ApplicationTemplateIdFkeyInverseInput = {
 export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -3737,18 +3815,18 @@ export type AssignmentListEdge = {
 export type AssignmentListRecord = {
   __typename?: 'AssignmentListRecord';
   applicationId?: Maybe<Scalars['Int']>;
-  reviewerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
-  assignerUsernames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
+  assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 /** A filter to be used against `AssignmentListRecord` object types. All fields are combined with a logical ‘and.’ */
 export type AssignmentListRecordFilter = {
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `reviewerUsernames` field. */
-  reviewerUsernames?: Maybe<StringListFilter>;
-  /** Filter by the object’s `assignerUsernames` field. */
-  assignerUsernames?: Maybe<StringListFilter>;
+  /** Filter by the object’s `reviewers` field. */
+  reviewers?: Maybe<StringListFilter>;
+  /** Filter by the object’s `assigners` field. */
+  assigners?: Maybe<StringListFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<AssignmentListRecordFilter>>;
   /** Checks for any expressions in this list. */
@@ -8301,8 +8379,6 @@ export type Filter = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   code: Scalars['String'];
-  iconColor?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
@@ -8328,10 +8404,6 @@ export type FilterCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `iconColor` field. */
-  iconColor?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `icon` field. */
-  icon?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `title` field. */
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `query` field. */
@@ -8346,10 +8418,6 @@ export type FilterFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
-  /** Filter by the object’s `iconColor` field. */
-  iconColor?: Maybe<StringFilter>;
-  /** Filter by the object’s `icon` field. */
-  icon?: Maybe<StringFilter>;
   /** Filter by the object’s `title` field. */
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `query` field. */
@@ -8392,8 +8460,6 @@ export type FilterFilterPkeyDelete = {
 export type FilterInput = {
   id?: Maybe<Scalars['Int']>;
   code: Scalars['String'];
-  iconColor?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
@@ -8438,8 +8504,6 @@ export type FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilt
 export type FilterPatch = {
   id?: Maybe<Scalars['Int']>;
   code?: Maybe<Scalars['String']>;
-  iconColor?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
@@ -8475,10 +8539,6 @@ export enum FiltersOrderBy {
   IdDesc = 'ID_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
-  IconColorAsc = 'ICON_COLOR_ASC',
-  IconColorDesc = 'ICON_COLOR_DESC',
-  IconAsc = 'ICON_ASC',
-  IconDesc = 'ICON_DESC',
   TitleAsc = 'TITLE_ASC',
   TitleDesc = 'TITLE_DESC',
   QueryAsc = 'QUERY_ASC',
@@ -13098,6 +13158,7 @@ export type PermissionsAll = {
   reviewLevel?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   restrictions?: Maybe<Scalars['JSON']>;
   policyName?: Maybe<Scalars['String']>;
   permissionType?: Maybe<PermissionPolicyType>;
@@ -13131,6 +13192,8 @@ export type PermissionsAllCondition = {
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `restrictions` field. */
   restrictions?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `policyName` field. */
@@ -13171,6 +13234,8 @@ export type PermissionsAllFilter = {
   allowedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `restrictions` field. */
   restrictions?: Maybe<JsonFilter>;
   /** Filter by the object’s `policyName` field. */
@@ -13240,6 +13305,8 @@ export enum PermissionsAllsOrderBy {
   AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
   CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
   CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
+  CanMakeFinalDecisionAsc = 'CAN_MAKE_FINAL_DECISION_ASC',
+  CanMakeFinalDecisionDesc = 'CAN_MAKE_FINAL_DECISION_DESC',
   RestrictionsAsc = 'RESTRICTIONS_ASC',
   RestrictionsDesc = 'RESTRICTIONS_DESC',
   PolicyNameAsc = 'POLICY_NAME_ASC',
@@ -13424,6 +13491,11 @@ export type Query = Node & {
   verificationByUniqueId?: Maybe<Verification>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
   applicationList?: Maybe<ApplicationListShapesConnection>;
+  applicationListFilterApplicant?: Maybe<ApplicationListFilterApplicantConnection>;
+  applicationListFilterAssigner?: Maybe<ApplicationListFilterAssignerConnection>;
+  applicationListFilterOrganisation?: Maybe<ApplicationListFilterOrganisationConnection>;
+  applicationListFilterReviewer?: Maybe<ApplicationListFilterReviewerConnection>;
+  applicationListFilterStage?: Maybe<ApplicationListFilterStageConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
   assignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignerList?: Maybe<AssignerListConnection>;
@@ -14478,6 +14550,70 @@ export type QueryApplicationListArgs = {
   after?: Maybe<Scalars['Cursor']>;
   orderBy?: Maybe<Array<ApplicationListShapesOrderBy>>;
   filter?: Maybe<ApplicationListShapeFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationListFilterApplicantArgs = {
+  applicant?: Maybe<Scalars['String']>;
+  templateCode?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<StringFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationListFilterAssignerArgs = {
+  assigner?: Maybe<Scalars['String']>;
+  templateCode?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<StringFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationListFilterOrganisationArgs = {
+  organisation?: Maybe<Scalars['String']>;
+  templateCode?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<StringFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationListFilterReviewerArgs = {
+  reviewer?: Maybe<Scalars['String']>;
+  templateCode?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<StringFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryApplicationListFilterStageArgs = {
+  templateCode?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  filter?: Maybe<StringFilter>;
 };
 
 
@@ -16580,6 +16716,7 @@ export type ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput = {
 export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -19303,6 +19440,7 @@ export type Template = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -19648,6 +19786,7 @@ export type TemplateActionTemplateIdFkeyTemplateActionCreateInput = {
 export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -19856,6 +19995,8 @@ export type TemplateCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `name` field. */
   name?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `namePlural` field. */
+  namePlural?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `isLinear` field. */
@@ -20434,6 +20575,8 @@ export type TemplateFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `name` field. */
   name?: Maybe<StringFilter>;
+  /** Filter by the object’s `namePlural` field. */
+  namePlural?: Maybe<StringFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
   /** Filter by the object’s `isLinear` field. */
@@ -20548,8 +20691,6 @@ export type TemplateFilterJoinFilter = {
 export type TemplateFilterJoinFilterIdFkeyFilterCreateInput = {
   id?: Maybe<Scalars['Int']>;
   code: Scalars['String'];
-  iconColor?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
@@ -20755,6 +20896,7 @@ export type TemplateFilterJoinTemplateIdFkeyInverseInput = {
 export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -20786,6 +20928,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput = {
 export type TemplateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -20956,6 +21099,7 @@ export type TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplatePk
 export type TemplatePatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -20984,6 +21128,7 @@ export type TemplatePermission = Node & {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign: Scalars['Boolean'];
+  canMakeFinalDecision: Scalars['Boolean'];
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -21008,6 +21153,8 @@ export type TemplatePermissionCondition = {
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `stageNumber` field. */
   stageNumber?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `levelNumber` field. */
@@ -21028,6 +21175,8 @@ export type TemplatePermissionFilter = {
   allowedSections?: Maybe<StringListFilter>;
   /** Filter by the object’s `canSelfAssign` field. */
   canSelfAssign?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `canMakeFinalDecision` field. */
+  canMakeFinalDecision?: Maybe<BooleanFilter>;
   /** Filter by the object’s `stageNumber` field. */
   stageNumber?: Maybe<IntFilter>;
   /** Filter by the object’s `levelNumber` field. */
@@ -21057,6 +21206,7 @@ export type TemplatePermissionInput = {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -21113,6 +21263,7 @@ export type TemplatePermissionPatch = {
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -21180,6 +21331,7 @@ export type TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput 
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -21222,6 +21374,8 @@ export enum TemplatePermissionsOrderBy {
   AllowedSectionsDesc = 'ALLOWED_SECTIONS_DESC',
   CanSelfAssignAsc = 'CAN_SELF_ASSIGN_ASC',
   CanSelfAssignDesc = 'CAN_SELF_ASSIGN_DESC',
+  CanMakeFinalDecisionAsc = 'CAN_MAKE_FINAL_DECISION_ASC',
+  CanMakeFinalDecisionDesc = 'CAN_MAKE_FINAL_DECISION_DESC',
   StageNumberAsc = 'STAGE_NUMBER_ASC',
   StageNumberDesc = 'STAGE_NUMBER_DESC',
   LevelNumberAsc = 'LEVEL_NUMBER_ASC',
@@ -21274,6 +21428,7 @@ export type TemplatePermissionTemplateIdFkeyInverseInput = {
 export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -21299,6 +21454,7 @@ export type TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput = {
   permissionNameId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -21581,6 +21737,7 @@ export type TemplateSectionTemplateIdFkeyInverseInput = {
 export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -21657,6 +21814,8 @@ export enum TemplatesOrderBy {
   IdDesc = 'ID_DESC',
   NameAsc = 'NAME_ASC',
   NameDesc = 'NAME_DESC',
+  NamePluralAsc = 'NAME_PLURAL_ASC',
+  NamePluralDesc = 'NAME_PLURAL_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
   IsLinearAsc = 'IS_LINEAR_ASC',
@@ -22230,6 +22389,7 @@ export type TemplateStageTemplateIdFkeyInverseInput = {
 export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -22391,6 +22551,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCategoryCreateInput = {
 export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -23849,8 +24010,6 @@ export type UpdateFilterInput = {
 export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   code?: Maybe<Scalars['String']>;
-  iconColor?: Maybe<Scalars['String']>;
-  icon?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
@@ -26039,6 +26198,7 @@ export type UpdateTemplateInput = {
 export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -26062,6 +26222,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
 export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -26085,6 +26246,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
 export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -26108,6 +26270,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
 export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -26131,6 +26294,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
 export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -26154,6 +26318,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
 export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -26176,6 +26341,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
 export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -26199,6 +26365,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
 export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -26222,6 +26389,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
 export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
@@ -26296,6 +26464,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionPer
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -26309,6 +26478,7 @@ export type UpdateTemplatePermissionOnTemplatePermissionForTemplatePermissionTem
   permissionNameId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign?: Maybe<Scalars['Boolean']>;
+  canMakeFinalDecision?: Maybe<Scalars['Boolean']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
   restrictions?: Maybe<Scalars['JSON']>;
@@ -28969,6 +29139,16 @@ export type ResolversTypes = {
   UserOrgJoinsConnection: ResolverTypeWrapper<UserOrgJoinsConnection>;
   UserOrgJoin: ResolverTypeWrapper<UserOrgJoin>;
   UserOrgJoinsEdge: ResolverTypeWrapper<UserOrgJoinsEdge>;
+  ApplicationListFilterApplicantConnection: ResolverTypeWrapper<ApplicationListFilterApplicantConnection>;
+  ApplicationListFilterApplicantEdge: ResolverTypeWrapper<ApplicationListFilterApplicantEdge>;
+  ApplicationListFilterAssignerConnection: ResolverTypeWrapper<ApplicationListFilterAssignerConnection>;
+  ApplicationListFilterAssignerEdge: ResolverTypeWrapper<ApplicationListFilterAssignerEdge>;
+  ApplicationListFilterOrganisationConnection: ResolverTypeWrapper<ApplicationListFilterOrganisationConnection>;
+  ApplicationListFilterOrganisationEdge: ResolverTypeWrapper<ApplicationListFilterOrganisationEdge>;
+  ApplicationListFilterReviewerConnection: ResolverTypeWrapper<ApplicationListFilterReviewerConnection>;
+  ApplicationListFilterReviewerEdge: ResolverTypeWrapper<ApplicationListFilterReviewerEdge>;
+  ApplicationListFilterStageConnection: ResolverTypeWrapper<ApplicationListFilterStageConnection>;
+  ApplicationListFilterStageEdge: ResolverTypeWrapper<ApplicationListFilterStageEdge>;
   AssignerListRecordFilter: AssignerListRecordFilter;
   AssignerListConnection: ResolverTypeWrapper<AssignerListConnection>;
   AssignerListRecord: ResolverTypeWrapper<AssignerListRecord>;
@@ -30555,6 +30735,16 @@ export type ResolversParentTypes = {
   UserOrgJoinsConnection: UserOrgJoinsConnection;
   UserOrgJoin: UserOrgJoin;
   UserOrgJoinsEdge: UserOrgJoinsEdge;
+  ApplicationListFilterApplicantConnection: ApplicationListFilterApplicantConnection;
+  ApplicationListFilterApplicantEdge: ApplicationListFilterApplicantEdge;
+  ApplicationListFilterAssignerConnection: ApplicationListFilterAssignerConnection;
+  ApplicationListFilterAssignerEdge: ApplicationListFilterAssignerEdge;
+  ApplicationListFilterOrganisationConnection: ApplicationListFilterOrganisationConnection;
+  ApplicationListFilterOrganisationEdge: ApplicationListFilterOrganisationEdge;
+  ApplicationListFilterReviewerConnection: ApplicationListFilterReviewerConnection;
+  ApplicationListFilterReviewerEdge: ApplicationListFilterReviewerEdge;
+  ApplicationListFilterStageConnection: ApplicationListFilterStageConnection;
+  ApplicationListFilterStageEdge: ApplicationListFilterStageEdge;
   AssignerListRecordFilter: AssignerListRecordFilter;
   AssignerListConnection: AssignerListConnection;
   AssignerListRecord: AssignerListRecord;
@@ -31897,15 +32087,77 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ApplicationListFilterApplicantConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListFilterApplicantConnection'] = ResolversParentTypes['ApplicationListFilterApplicantConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ApplicationListFilterApplicantEdge']>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListFilterApplicantEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListFilterApplicantEdge'] = ResolversParentTypes['ApplicationListFilterApplicantEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListFilterAssignerConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListFilterAssignerConnection'] = ResolversParentTypes['ApplicationListFilterAssignerConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ApplicationListFilterAssignerEdge']>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListFilterAssignerEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListFilterAssignerEdge'] = ResolversParentTypes['ApplicationListFilterAssignerEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListFilterOrganisationConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListFilterOrganisationConnection'] = ResolversParentTypes['ApplicationListFilterOrganisationConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ApplicationListFilterOrganisationEdge']>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListFilterOrganisationEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListFilterOrganisationEdge'] = ResolversParentTypes['ApplicationListFilterOrganisationEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListFilterReviewerConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListFilterReviewerConnection'] = ResolversParentTypes['ApplicationListFilterReviewerConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ApplicationListFilterReviewerEdge']>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListFilterReviewerEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListFilterReviewerEdge'] = ResolversParentTypes['ApplicationListFilterReviewerEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListFilterStageConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListFilterStageConnection'] = ResolversParentTypes['ApplicationListFilterStageConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['String']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ApplicationListFilterStageEdge']>, ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ApplicationListFilterStageEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListFilterStageEdge'] = ResolversParentTypes['ApplicationListFilterStageEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ApplicationListShapeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationListShape'] = ResolversParentTypes['ApplicationListShape']> = {
   id?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  applicantUsername?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  applicantFirstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  applicantLastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicant?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   orgName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -31913,8 +32165,8 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
   lastActiveDate?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
-  assignerUsernames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  reviewerUsernames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  assigners?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  reviewers?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
   assignerAction?: Resolver<Maybe<ResolversTypes['AssignerAction']>, ParentType, ContextType>;
   isFullyAssignedLevel1?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -32174,8 +32426,8 @@ export type AssignmentListEdgeResolvers<ContextType = any, ParentType extends Re
 
 export type AssignmentListRecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['AssignmentListRecord'] = ResolversParentTypes['AssignmentListRecord']> = {
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewerUsernames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  assignerUsernames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  reviewers?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  assigners?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -33112,8 +33364,6 @@ export type FilterResolvers<ContextType = any, ParentType extends ResolversParen
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  iconColor?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   userRole?: Resolver<Maybe<ResolversTypes['PermissionPolicyType']>, ParentType, ContextType>;
@@ -33633,6 +33883,7 @@ export type PermissionsAllResolvers<ContextType = any, ParentType extends Resolv
   reviewLevel?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   allowedSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   canSelfAssign?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  canMakeFinalDecision?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   restrictions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   policyName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   permissionType?: Resolver<Maybe<ResolversTypes['PermissionPolicyType']>, ParentType, ContextType>;
@@ -33766,6 +34017,11 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   verification?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationArgs, 'id'>>;
   verificationByUniqueId?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationByUniqueIdArgs, 'uniqueId'>>;
   applicationList?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListArgs, never>>;
+  applicationListFilterApplicant?: Resolver<Maybe<ResolversTypes['ApplicationListFilterApplicantConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterApplicantArgs, never>>;
+  applicationListFilterAssigner?: Resolver<Maybe<ResolversTypes['ApplicationListFilterAssignerConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterAssignerArgs, never>>;
+  applicationListFilterOrganisation?: Resolver<Maybe<ResolversTypes['ApplicationListFilterOrganisationConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterOrganisationArgs, never>>;
+  applicationListFilterReviewer?: Resolver<Maybe<ResolversTypes['ApplicationListFilterReviewerConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterReviewerArgs, never>>;
+  applicationListFilterStage?: Resolver<Maybe<ResolversTypes['ApplicationListFilterStageConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterStageArgs, never>>;
   applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
   assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryAssignedQuestionsCountArgs, never>>;
   assignerList?: Resolver<Maybe<ResolversTypes['AssignerListConnection']>, ParentType, ContextType, RequireFields<QueryAssignerListArgs, never>>;
@@ -34108,6 +34364,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  namePlural?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isLinear?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   startMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -34250,6 +34507,7 @@ export type TemplatePermissionResolvers<ContextType = any, ParentType extends Re
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   allowedSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   canSelfAssign?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  canMakeFinalDecision?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   levelNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   restrictions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -34908,6 +35166,16 @@ export type Resolvers<ContextType = any> = {
   ActionQueuesConnection?: ActionQueuesConnectionResolvers<ContextType>;
   ActionQueuesEdge?: ActionQueuesEdgeResolvers<ContextType>;
   Application?: ApplicationResolvers<ContextType>;
+  ApplicationListFilterApplicantConnection?: ApplicationListFilterApplicantConnectionResolvers<ContextType>;
+  ApplicationListFilterApplicantEdge?: ApplicationListFilterApplicantEdgeResolvers<ContextType>;
+  ApplicationListFilterAssignerConnection?: ApplicationListFilterAssignerConnectionResolvers<ContextType>;
+  ApplicationListFilterAssignerEdge?: ApplicationListFilterAssignerEdgeResolvers<ContextType>;
+  ApplicationListFilterOrganisationConnection?: ApplicationListFilterOrganisationConnectionResolvers<ContextType>;
+  ApplicationListFilterOrganisationEdge?: ApplicationListFilterOrganisationEdgeResolvers<ContextType>;
+  ApplicationListFilterReviewerConnection?: ApplicationListFilterReviewerConnectionResolvers<ContextType>;
+  ApplicationListFilterReviewerEdge?: ApplicationListFilterReviewerEdgeResolvers<ContextType>;
+  ApplicationListFilterStageConnection?: ApplicationListFilterStageConnectionResolvers<ContextType>;
+  ApplicationListFilterStageEdge?: ApplicationListFilterStageEdgeResolvers<ContextType>;
   ApplicationListShape?: ApplicationListShapeResolvers<ContextType>;
   ApplicationListShapesConnection?: ApplicationListShapesConnectionResolvers<ContextType>;
   ApplicationListShapesEdge?: ApplicationListShapesEdgeResolvers<ContextType>;

@@ -7,10 +7,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "check circle"
           code: "approveApplications"
           query: { outcome: "APPROVED" }
-          title: "Approved Applications"
+          title: "Approved applications"
           userRole: APPLY
         }
       }
@@ -24,10 +23,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "arrow alternate circle right"
           code: "submittedApplications"
           query: { status: "submitted" }
-          title: "Submitted Applications"
+          title: "Submitted applications"
           userRole: APPLY
         }
       }
@@ -41,10 +39,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "save"
           code: "draftApplications"
           query: { status: "draft" }
-          title: "Draft Applications"
+          title: "Draft applications"
           userRole: APPLY
         }
       }
@@ -58,10 +55,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "exchange"
           code: "changeRequestApplications"
           query: { status: "Changes Required" }
-          title: "Changes Required"
+          title: "Applications pending action"
           userRole: APPLY
         }
       }
@@ -75,10 +71,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "user plus"
           code: "availableForSelfAssignmentReviews"
           query: { reviewerAction: "SELF_ASSIGN" }
-          title: "Available For Self Assignment"
+          title: "Applications available for self-assignment"
           userRole: REVIEW
         }
       }
@@ -91,10 +86,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "gavel"
           code: "readyToStartReviews"
           query: { reviewerAction: "START_REVIEW" }
-          title: "Ready to Review"
+          title: "Applications pending review"
           userRole: REVIEW
         }
       }
@@ -107,10 +101,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "exchange"
           code: "readyToRestartReviews"
           query: { reviewerAction: "RESTART_REVIEW" }
-          title: "Ready to Re-Review"
+          title: "Applications with updates to review"
           userRole: REVIEW
         }
       }
@@ -123,10 +116,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "save"
           code: "draftReviews"
           query: { reviewerAction: "CONTINUE_REVIEW" }
-          title: "Draft Reviews"
+          title: "Draft reviews of applications"
           userRole: REVIEW
         }
       }
@@ -139,10 +131,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "redo"
           code: "changeRequestReviews"
           query: { reviewerAction: "UPDATE_REVIEW" }
-          title: "Changes Required"
+          title: "Reviews pending action"
           userRole: REVIEW
         }
       }
@@ -156,10 +147,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "user plus"
           code: "awaitingAssignments"
           query: { assignerAction: "ASSIGN" }
-          title: "Awaiting Assignment"
+          title: "Reviews awaiting assignment"
           userRole: ASSIGN
           
         }
@@ -172,10 +162,9 @@ exports.queries = [
     createFilter(
       input: {
         filter: {
-          icon: "remove user"
           code: "availableForReAssignments"
           query: { assignerAction: "RE_ASSIGN" }
-          title: "Re Assign"
+          title: "Reviews available for re-assignment"
           userRole: ASSIGN
         }
       }
