@@ -2,16 +2,24 @@
 # yarn lockfile v1
 
 
+axios@^0.21.1:
+  version "0.21.1"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
+  integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
+  dependencies:
+    follow-redirects "^1.10.0"
+
 checkdigit@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/checkdigit/-/checkdigit-1.1.1.tgz#08df08de493a3eaa3fa9183e5864b27beef96687"
   integrity sha1-CN8I3kk6Pqo/qRg+WGSye+75Zoc=
 
-custom_string_patterns@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/custom_string_patterns/-/custom_string_patterns-0.3.2.tgz#49a64d049b9d35fb053e30a132606a24fd61338e"
-  integrity sha512-RRYwC9OeG0KOc8XLC6wsLGT9MhcT6on0iYuoS1XTBe8Lm5f54YDjl1BcDXwOkTOxDjI8fSkzi4Q1sEjhx1176w==
+custom_string_patterns@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/custom_string_patterns/-/custom_string_patterns-0.5.0.tgz#628064a96e1b2406cd6a755aed88b3f1c8133d0b"
+  integrity sha512-7qvao087P9OT/qJiVYphaOmAe56zoPjCkGRBjgba+BIRMAoPBoXYXZ3YbCKA7sEXkxhg8j0mKOD+mVUDKyBoQw==
   dependencies:
+    axios "^0.21.1"
     checkdigit "^1.1.1"
     lodash "^4.17.21"
     randexp "^0.5.3"
@@ -20,6 +28,11 @@ drange@^1.0.2:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/drange/-/drange-1.1.1.tgz#b2aecec2aab82fcef11dbbd7b9e32b83f8f6c0b8"
   integrity sha512-pYxfDYpued//QpnLIm4Avk7rsNtAtQkUES2cwAYSvD/wd2pKD71gN2Ebj3e7klzXwjocvE8c5vx/1fxwpqmSxA==
+
+follow-redirects@^1.10.0:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.1.tgz#d9114ded0a1cfdd334e164e6662ad02bfd91ff43"
+  integrity sha512-HWqDgT7ZEkqRzBvc2s64vSZ/hfOceEol3ac/7tKwzuvEyWx3/4UegXh5oBOIotkGsObyk3xznnSRVADBgWSQVg==
 
 lodash@^4.17.21:
   version "4.17.21"
