@@ -1009,14 +1009,14 @@ exports.queries = [
                 levelNumber: 1
                 stageNumber: 2
               }
-              # Review Drug Registration Stage 2 -- uncomment when available
-              # {
-              #   permissionNameToPermissionNameId: {
-              #     connectByName: { name: "canAssessDrugRego" }
-              #   }
-              #   levelNumber: 1
-              #   stageNumber: 2
-              # }
+              # Review Drug Registration Stage 2
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "canAssessDrugRego" }
+                }
+                levelNumber: 1
+                stageNumber: 2
+              }
             ]
           }
         }
