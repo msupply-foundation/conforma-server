@@ -61,9 +61,6 @@ const routeLoginOrg = async (request: any, reply: any) => {
 
   const userInfo = await getUserInfo({ userId, orgId })
 
-  if (!userInfo.user.organisation)
-    return reply.send({ success: false, message: 'User does not belong to organisation' })
-
   reply.send({ success: true, ...userInfo })
 }
 
