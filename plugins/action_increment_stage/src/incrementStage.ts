@@ -1,4 +1,8 @@
-import { ActionQueueStatus, ApplicationStatus } from '../../../src/generated/graphql'
+import {
+  ActionQueueStatus,
+  ApplicationOutcome,
+  ApplicationStatus,
+} from '../../../src/generated/graphql'
 import { ActionPluginOutput, ActionPluginInput } from '../../types'
 
 async function incrementStage({
@@ -7,11 +11,18 @@ async function incrementStage({
   DBConnect,
 }: ActionPluginInput): Promise<ActionPluginOutput> {
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
+  const outcome = applicationData?.outcome
   const returnObject: ActionPluginOutput = {
     status: ActionQueueStatus.Fail,
     error_log: 'unknown error',
   }
   console.log(`Incrementing the Stage for Application ${applicationId}...`)
+
+  if (outcome != ApplicationOutcome.Pending) {
+    returnObject.status = ActionQueueStatus.Fail
+    returnObject.error_log = 'Outcome not pending'
+    return returnObject
+  }
 
   try {
     const templateId: number =
