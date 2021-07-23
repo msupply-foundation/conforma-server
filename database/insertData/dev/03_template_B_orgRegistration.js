@@ -12,7 +12,8 @@ exports.queries = [
       input: {
         template: {
           code: "OrgRegistration"
-          name: "Organisation Registration"
+          name: "Company Registration"
+          namePlural: "Companies Registrations"
           isLinear: true
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- Proof of organisation name\\n- Proof of organisation address\\n- Organisation licence document"

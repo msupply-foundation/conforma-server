@@ -5,9 +5,42 @@ GraphQL Fragment - CORE ACTIONS
 exports.coreActions = `
     # ON_APPLICATION_CREATE
     # change status to DRAFT
+    # generate serial
+    # generate initial name
+    {
+        actionCode: "generateTextString"
+        sequence: 1
+        trigger: ON_APPLICATION_CREATE
+        parameterQueries: {
+          pattern: "S-[A-Z]{3}-<+dddd>"
+          counterName: {
+            operator: "objectProperties"
+            children: [ "applicationData.templateCode" ]
+          }
+          counterInit: 100
+          customFields: {
+            # TBD
+          }
+          updateRecord: true
+          fieldName: "serial"
+        }
+    }
+    {
+        actionCode: "generateTextString"
+        sequence: 2
+        trigger: ON_APPLICATION_CREATE
+        parameterQueries: {
+          pattern: "<?templateName> - <?serial>"
+          customFields: {
+            templateName: "applicationData.templateName"
+            serial: "applicationData.applicationSerial"
+          }
+          updateRecord: true
+        }
+    }
     {
         actionCode: "incrementStage"
-        sequence: 1
+        sequence: 3
         trigger: ON_APPLICATION_CREATE
     }
     # ON_APPLICATION_RESTART

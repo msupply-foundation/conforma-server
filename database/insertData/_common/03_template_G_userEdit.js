@@ -10,6 +10,7 @@ exports.queries = [
         template: {
           code: "UserEdit"
           name: "Edit User Details"
+          namePlural: "Edit Users Details" 
           submissionMessage: "Thanks for updating your details. You will need to log out and log back into the system for the changes to take effect."
           status: AVAILABLE
           versionTimestamp: "NOW()"
@@ -294,6 +295,37 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               # No Core Actions for this one
+                {
+                  actionCode: "generateTextString"
+                  sequence: 1
+                  trigger: ON_APPLICATION_CREATE
+                  parameterQueries: {
+                    pattern: "U-[A-Z]{3}-<+dddd>"
+                    counterName: {
+                      operator: "objectProperties"
+                      children: [ "applicationData.templateCode" ]
+                    }
+                    counterInit: 100
+                    customFields: {
+                      # TBD
+                    }
+                    updateRecord: true
+                    fieldName: "serial"
+                  }
+              }
+              {
+                  actionCode: "generateTextString"
+                  sequence: 2
+                  trigger: ON_APPLICATION_CREATE
+                  parameterQueries: {
+                    pattern: "<?templateName> - <?serial>"
+                    customFields: {
+                      templateName: "applicationData.templateName"
+                      serial: "applicationData.applicationSerial"
+                    }
+                    updateRecord: true
+                  }
+              }
               {
                 actionCode: "incrementStage"
                 sequence: 1

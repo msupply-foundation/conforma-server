@@ -13,6 +13,7 @@ exports.queries = [
         template: {
           code: "ReviewTest"
           name: "Test -- Review Process"
+          namePlural: "Test -- Reviews Processes"
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- Proof of your identity\\n- Pictures of product\\n- Product licence document"
           versionTimestamp: "NOW()"
@@ -265,6 +266,19 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 2
                 parameterQueries: { message: "Application Submitted" }
+              }
+              {
+                actionCode: "generateTextString"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 100
+                parameterQueries: {
+                  pattern: "<?templateName>—<?productName>"
+                  customFields: {
+                    templateName: "applicationData.templateName",
+                    productName: "applicationData.responses.Q20.text"
+                  }
+                  updateRecord: true
+                }
               }
             ]
           }

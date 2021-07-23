@@ -4,6 +4,7 @@ CREATE TABLE public.file (
     unique_id varchar UNIQUE NOT NULL,
     original_filename varchar NOT NULL,
     user_id integer REFERENCES public.user (id),
+    template_id integer REFERENCES public.template (id),
     application_serial varchar REFERENCES public.application (serial),
     application_response_id integer REFERENCES public.application_response (id),
     file_path varchar NOT NULL,

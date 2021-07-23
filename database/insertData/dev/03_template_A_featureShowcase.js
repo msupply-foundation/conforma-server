@@ -13,6 +13,7 @@ exports.queries = [
         template: {
           code: "Demo"
           name: "Demo -- Feature Showcase"
+          namePlural: "Demo -- Feature Showcases"
           isLinear: false
           startMessage: {
             operator: "stringSubstitution"
