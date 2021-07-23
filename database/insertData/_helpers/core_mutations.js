@@ -19,7 +19,7 @@ exports.coreActions = `
           }
           # counterInit: 100
           updateRecord: true
-          table: "application"
+          tableName: "application"
           fieldName: "serial"
         }
     }
@@ -34,7 +34,7 @@ exports.coreActions = `
             serial: "applicationData.applicationSerial"
           }
           updateRecord: true
-          table: "application"
+          tableName: "application"
           fieldName: "name"
         }
     }

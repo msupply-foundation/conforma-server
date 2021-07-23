@@ -247,7 +247,7 @@ This action actually just calls [modifyRecord](#modify-record) to update the dat
   }
   counterInit: 100
   updateRecord: true
-  table: "application"
+  tableName: "application"
   fieldName: "serial"
 }
 ```
@@ -269,7 +269,7 @@ It gets the number from a counter named from the `templateCode` via evaluator ex
         productName: "applicationData.responses.Q20.text"
     }
     updateRecord: true
-    table: "application"
+    tableName: "application"
     fieldName: "name"
 }
 ```
