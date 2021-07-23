@@ -174,7 +174,7 @@ exports.queries = [
                   sequence: 1
                   trigger: ON_APPLICATION_CREATE
                   parameterQueries: {
-                    pattern: "U-[A-Z]{3}-<+dddd>"
+                    pattern: "UR-[A-Z]{3}-<+dddd>"
                     counterName: {
                       operator: "objectProperties"
                       children: [ "applicationData.templateCode" ]
@@ -184,6 +184,7 @@ exports.queries = [
                       # TBD
                     }
                     updateRecord: true
+                    table: "application"
                     fieldName: "serial"
                   }
               }
@@ -198,6 +199,8 @@ exports.queries = [
                       serial: "applicationData.applicationSerial"
                     }
                     updateRecord: true
+                    table: "application"
+                    fieldName: "name"
                   }
               }
               {

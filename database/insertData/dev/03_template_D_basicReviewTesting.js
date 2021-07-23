@@ -278,6 +278,8 @@ exports.queries = [
                     productName: "applicationData.responses.Q20.text"
                   }
                   updateRecord: true
+                  table: "application"
+                  fieldName: "name"
                 }
               }
             ]

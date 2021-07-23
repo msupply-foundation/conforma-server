@@ -158,8 +158,8 @@ Generates serial numbers or arbitrary text strings (e.g. for application name) u
 | `numberFormat`                           |                   |
 | `fallbackText`                           |                   |
 | `updateRecord` (default `false`)         |                   |
-| `tableName` (default `application`)      |                   |
-| `fieldName` (default `name`)             |                   |
+| `tableName`                              |                   |
+| `fieldName`                              |                   |
 | `matchField` (default `"id"`)            |                   |
 | `matchValue` (default `applicationId`)   |                   |
 | `additionalData`                         |                   |
@@ -229,8 +229,8 @@ The parameters can be considered in two distinct groups -- parameters for defini
 
 This action actually just calls [modifyRecord](#modify-record) to update the database, so the following parameters are the same as for in that action:
 
-- `tableName` (default `application`)
-- `fieldName` (default `name`)
+- `tableName`
+- `fieldName`
 - `matchField` (default `id`)
 - `matchValue` (default `applicationId`)
 
@@ -247,6 +247,7 @@ This action actually just calls [modifyRecord](#modify-record) to update the dat
   }
   counterInit: 100
   updateRecord: true
+  table: "application"
   fieldName: "serial"
 }
 ```
@@ -256,7 +257,7 @@ This generates serial numbers such as:
 `S-ZEH-0101`  
 `S-DXF-0102`
 
-It gets the number from a counter named from the `templateCode` via evaluator expression look-up, starts counting at 100, then saves the generated string to the `serial` field on the `application` table (this is the default table, so doesn't need to be specified explicitly).
+It gets the number from a counter named from the `templateCode` via evaluator expression look-up, starts counting at 100, then saves the generated string to the `serial` field on the `application` table.
 
 2.
 
@@ -268,6 +269,8 @@ It gets the number from a counter named from the `templateCode` via evaluator ex
         productName: "applicationData.responses.Q20.text"
     }
     updateRecord: true
+    table: "application"
+    fieldName: "name"
 }
 ```
 
