@@ -289,7 +289,8 @@ exports.coreActions = `
       }
     }
     #
-    # Change outcome of application to APPROVED if last decision is CONFORM
+    # Change outcome of application to APPROVED/REJECT acording with
+    # last level & last stage reviewr decision is CONFORM/NON_CONFORM
     #
     {
       actionCode: "changeOutcome"
@@ -299,7 +300,7 @@ exports.coreActions = `
         operator: "AND"
         children: [
           {
-            operator: "="
+            operator: "!="
             children: [
               {
                 operator: "objectProperties"
@@ -307,7 +308,7 @@ exports.coreActions = `
                   "applicationData.reviewData.latestDecision.decision"
                 ]
               }
-              "CONFORM"
+              "LIST_OF_QUESTIONS"
             ]
           }
           {
@@ -316,45 +317,35 @@ exports.coreActions = `
           }
           {
             operator: "objectProperties"
-            children: ["applicationData.reviewData.isLastStage"]
-          }
-        ]
-      }
-      parameterQueries: { newOutcome: { value: "APPROVED" } }
-    }
-    #
-    # Change outcome of application to REJECTED if last decision is NON_CONFORM
-    #
-    {
-      actionCode: "changeOutcome"
-      trigger: ON_REVIEW_SUBMIT
-      sequence: 9
-      condition: {
-        operator: "AND"
-        children: [
-          {
-            operator: "="
-            children: [
-              {
-                operator: "objectProperties"
-                children: [
-                  "applicationData.reviewData.latestDecision.decision"
-                ]
-              }
-              "NON_CONFORM"
+            children: ["applicationData.reviewData.isLastStage"
+              null  
             ]
           }
-          {
-            operator: "objectProperties"
-            children: ["applicationData.reviewData.isLastLevel"]
-          }
-          {
-            operator: "objectProperties"
-            children: ["applicationData.reviewData.isLastStage"]
-          }
         ]
       }
-      parameterQueries: { newOutcome: { value: "REJECTED" } }
+      parameterQueries: { {
+        "newOutcome": {
+         "operator": "?",
+         "children": [
+          {
+           "operator": "=",
+           "children": [
+            {
+             "operator": "objectProperties",
+             "children": [
+              "applicationData.reviewData.latestDecision.decision",
+              null
+             ]
+            },
+            "CONFORM"
+           ]
+          },
+          "APPROVED",
+          "REJECTED"
+         ]
+        }
+       } }
+      
     }
     # -------------------------------------------
     # ON_REVIEW_SELF_ASSIGN
