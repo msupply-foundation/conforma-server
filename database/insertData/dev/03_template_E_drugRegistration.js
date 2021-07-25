@@ -970,9 +970,9 @@ exports.queries = [
                       children: [
                         {
                           operator: "objectProperties"
-                          children: ["applicationData.reviewData.stageNumber"]
+                          children: ["applicationData.stage"]
                         }
-                        1
+                        "Screening"
                       ]
                     }
                     {
