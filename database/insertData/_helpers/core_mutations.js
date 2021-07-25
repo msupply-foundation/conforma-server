@@ -304,9 +304,7 @@ exports.coreActions = `
             children: [
               {
                 operator: "objectProperties"
-                children: [
-                  "applicationData.reviewData.latestDecision.decision"
-                ]
+                children: [ "applicationData.reviewData.latestDecision.decision" ]
               }
               "LIST_OF_QUESTIONS"
             ]
@@ -317,35 +315,38 @@ exports.coreActions = `
           }
           {
             operator: "objectProperties"
-            children: ["applicationData.reviewData.isLastStage"
-              null  
-            ]
+            children: 
+              [
+                "applicationData.reviewData.isLastStage"
+                null  
+              ]
           }
         ]
       }
-      parameterQueries: { {
-        "newOutcome": {
-         "operator": "?",
-         "children": [
-          {
-           "operator": "=",
-           "children": [
+      parameterQueries: { 
+        newOutcome: {
+          operator: "?",
+          children: [
             {
-             "operator": "objectProperties",
-             "children": [
-              "applicationData.reviewData.latestDecision.decision",
-              null
-             ]
+              operator: "=",
+              children: 
+              [
+                {
+                  operator: "objectProperties",
+                  children: 
+                  [
+                    "applicationData.reviewData.latestDecision.decision",
+                    null
+                  ]
+                },
+                "CONFORM"
+              ]
             },
-            "CONFORM"
-           ]
-          },
-          "APPROVED",
-          "REJECTED"
-         ]
+            "APPROVED",
+            "REJECTED"
+          ]
         }
-       } }
-      
+      }
     }
     # -------------------------------------------
     # ON_REVIEW_SELF_ASSIGN
