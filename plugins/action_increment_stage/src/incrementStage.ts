@@ -35,7 +35,7 @@ async function incrementStage({
         : await DBConnect.getCurrentStageStatusHistory(applicationId)
 
     const currentStageHistoryId = current?.stageHistoryId
-    const currentStageNum = current?.stageNumber
+    const currentStageNum = current?.stageNumber ?? 0
     const currentStatus = current?.status
 
     const nextStage = await DBConnect.getNextStage(templateId, currentStageNum)
@@ -47,7 +47,7 @@ async function incrementStage({
       return returnObject
     }
 
-    if (current) {
+    if (current?.stageNumber) {
       // Make a "Completed" status_history for existing stage_history
       const result = await DBConnect.addNewApplicationStatusHistory(
         currentStageHistoryId,

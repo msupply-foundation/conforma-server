@@ -5,9 +5,42 @@ GraphQL Fragment - CORE ACTIONS
 exports.coreActions = `
     # ON_APPLICATION_CREATE
     # change status to DRAFT
+    # generate serial
+    # generate initial name
+    {
+        actionCode: "generateTextString"
+        sequence: 1
+        trigger: ON_APPLICATION_CREATE
+        parameterQueries: {
+          pattern: "S-[A-Z]{3}-<+dddd>"
+          counterName: {
+            operator: "objectProperties"
+            children: [ "applicationData.templateCode" ]
+          }
+          counterInit: 100
+          customFields: {
+            # TBD
+          }
+          updateRecord: true
+          fieldName: "serial"
+        }
+    }
+    {
+        actionCode: "generateTextString"
+        sequence: 2
+        trigger: ON_APPLICATION_CREATE
+        parameterQueries: {
+          pattern: "<?templateName> - <?serial>"
+          customFields: {
+            templateName: "applicationData.templateName"
+            serial: "applicationData.applicationSerial"
+          }
+          updateRecord: true
+        }
+    }
     {
         actionCode: "incrementStage"
-        sequence: 1
+        sequence: 3
         trigger: ON_APPLICATION_CREATE
     }
     # ON_APPLICATION_RESTART
@@ -256,7 +289,8 @@ exports.coreActions = `
       }
     }
     #
-    # Change outcome of application to APPROVED if last decision is CONFORM
+    # Change outcome of application to APPROVED/REJECT acording with
+    # last level & last stage reviewr decision is CONFORM/NON_CONFORM
     #
     {
       actionCode: "changeOutcome"
@@ -266,15 +300,13 @@ exports.coreActions = `
         operator: "AND"
         children: [
           {
-            operator: "="
+            operator: "!="
             children: [
               {
                 operator: "objectProperties"
-                children: [
-                  "applicationData.reviewData.latestDecision.decision"
-                ]
+                children: [ "applicationData.reviewData.latestDecision.decision" ]
               }
-              "CONFORM"
+              "LIST_OF_QUESTIONS"
             ]
           }
           {
@@ -283,45 +315,38 @@ exports.coreActions = `
           }
           {
             operator: "objectProperties"
-            children: ["applicationData.reviewData.isLastStage"]
+            children: 
+              [
+                "applicationData.reviewData.isLastStage"
+                null  
+              ]
           }
         ]
       }
-      parameterQueries: { newOutcome: { value: "APPROVED" } }
-    }
-    #
-    # Change outcome of application to REJECTED if last decision is NON_CONFORM
-    #
-    {
-      actionCode: "changeOutcome"
-      trigger: ON_REVIEW_SUBMIT
-      sequence: 57
-      condition: {
-        operator: "AND"
-        children: [
-          {
-            operator: "="
-            children: [
-              {
-                operator: "objectProperties"
-                children: [
-                  "applicationData.reviewData.latestDecision.decision"
-                ]
-              }
-              "NON_CONFORM"
-            ]
-          }
-          {
-            operator: "objectProperties"
-            children: ["applicationData.reviewData.isLastLevel"]
-          }
-          {
-            operator: "objectProperties"
-            children: ["applicationData.reviewData.isLastStage"]
-          }
-        ]
+      parameterQueries: { 
+        newOutcome: {
+          operator: "?",
+          children: [
+            {
+              operator: "=",
+              children: 
+              [
+                {
+                  operator: "objectProperties",
+                  children: 
+                  [
+                    "applicationData.reviewData.latestDecision.decision",
+                    null
+                  ]
+                },
+                "CONFORM"
+              ]
+            },
+            "APPROVED",
+            "REJECTED"
+          ]
+        }
       }
-      parameterQueries: { newOutcome: { value: "REJECTED" } }
     }
     # -------------------------------------------
     # ON_REVIEW_SELF_ASSIGN

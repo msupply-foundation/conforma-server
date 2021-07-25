@@ -9,6 +9,7 @@
 - [Actions](#actions)
 - [Action parameters](#action-parameters)
 - [Passing information to Actions](#passing-information-to-actions)
+- [Running actions via REST endpoint]()
 
 <!-- tocstop -->
 
@@ -150,3 +151,24 @@ Note that `applicationData` is regenerated between each Action in a sequence, so
     }
 }
 ```
+
+### Running Actions via REST endpoint
+
+There is a endpoint on the server which can be used to invoke single actions on demand. This may be useful if, for example, the front-end needs to run an action, such as generating a new serial number (using `generateTextString` action)
+
+Endpoint: `/run-action`
+Type: `POST`
+Parameters (via body JSON):
+
+```js
+{
+    "actionCode": "generateTextString", // Code of the action
+    "applicationId": 4001, // for generating applicationData, so not required for all actions
+    "parameters": {
+        <...input parameters for the action itself>
+    }
+}
+
+```
+
+TO-DO: Add authentication to Endpoint (and most other endpoints)

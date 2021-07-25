@@ -12,6 +12,7 @@ exports.queries = [
         template: {
           code: "importPermit"
           name: "Import permit"
+          namePlural: "Import permits"
           isLinear: true
           status: AVAILABLE
           startMessage: "## Apply for import permit of Modern medicines or Medical devices"
@@ -111,4 +112,3 @@ exports.queries = [
     }
   }`,
 ]
-

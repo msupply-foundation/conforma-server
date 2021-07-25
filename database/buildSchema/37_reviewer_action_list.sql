@@ -26,8 +26,7 @@ CREATE FUNCTION review_list (stageid int, reviewerid int)
                 THEN 'CONTINUE_REVIEW'
             WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED' 
                                     AND review_assignment.is_final_decision = TRUE
-                                    AND review_assignment.is_last_stage = TRUE
-                                    AND review.id IS NULL) != 0
+                                    AND review_assignment.is_last_stage = TRUE) != 0
                 THEN 'MAKE_DECISION'
             WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED' AND review.id IS NULL) != 0
                 THEN 'START_REVIEW'
