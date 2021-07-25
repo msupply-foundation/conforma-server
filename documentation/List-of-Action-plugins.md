@@ -57,7 +57,7 @@ Changes the application Stage to the next in the sequence
 
   - If a new application, will create a corresponding Status set to "Draft"
   - If application is already on final stage, will leave unchanged
-  - If application outcome is different to PENDING, will leave unchanged
+  - If application outcome is anything other than PENDING, will leave unchanged
 
 | Input parameters<br />(\*required) <br/> | Output properties |
 | ---------------------------------------- | ----------------- |
