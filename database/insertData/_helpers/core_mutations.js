@@ -136,6 +136,7 @@ exports.coreActions = `
     # 5 - generate review assignments
     # 6 - adjust visibility of review responses (for applicant - LOQ)
     # 7 - change application status (for applicant - LOQ)
+    # 8 & 9 - change application outcome after last stage and last level submission
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_SUBMIT
@@ -285,6 +286,66 @@ exports.coreActions = `
       parameterQueries: {
         newStatus: "CHANGES_REQUIRED"
         isReview: false #Required since we're updating an application status
+      }
+    }
+    #
+    # Change outcome of application to APPROVED/REJECT acording with
+    # last level & last stage reviewr decision is CONFORM/NON_CONFORM
+    #
+    {
+      actionCode: "changeOutcome"
+      trigger: ON_REVIEW_SUBMIT
+      sequence: 8
+      condition: {
+        operator: "AND"
+        children: [
+          {
+            operator: "!="
+            children: [
+              {
+                operator: "objectProperties"
+                children: [ "applicationData.reviewData.latestDecision.decision" ]
+              }
+              "LIST_OF_QUESTIONS"
+            ]
+          }
+          {
+            operator: "objectProperties"
+            children: ["applicationData.reviewData.isLastLevel"]
+          }
+          {
+            operator: "objectProperties"
+            children: 
+              [
+                "applicationData.reviewData.isLastStage"
+                null  
+              ]
+          }
+        ]
+      }
+      parameterQueries: { 
+        newOutcome: {
+          operator: "?",
+          children: [
+            {
+              operator: "=",
+              children: 
+              [
+                {
+                  operator: "objectProperties",
+                  children: 
+                  [
+                    "applicationData.reviewData.latestDecision.decision",
+                    null
+                  ]
+                },
+                "CONFORM"
+              ]
+            },
+            "APPROVED",
+            "REJECTED"
+          ]
+        }
       }
     }
     # -------------------------------------------

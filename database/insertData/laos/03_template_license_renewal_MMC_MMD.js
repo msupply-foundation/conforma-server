@@ -1331,36 +1331,36 @@ exports.queries = [
                     message: { value: "Renewal Company License submission" }
                   }
                 }
-                {
-                  actionCode: "changeOutcome"
-                  trigger: ON_REVIEW_SUBMIT
-                  sequence: 100
-                  condition: {
-                    operator: "AND"
-                    children: [
-                      {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: [
-                              "applicationData.reviewData.latestDecision.decision"
-                            ]
-                          }
-                          "CONFORM"
-                        ]
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: ["applicationData.reviewData.isLastLevel"]
-                      }
-                    ]
-                  }
-                  parameterQueries: { newOutcome: { value: "APPROVED" } }
-                }
-                # TODO: Add modifyRecord action to create a new license or should just update existing?
-              ]
-            }
+#               {
+#                 actionCode: "changeOutcome"
+#                 trigger: ON_REVIEW_SUBMIT
+#                 sequence: 100
+#                 condition: {
+#                   operator: "AND"
+#                   children: [
+#                     {
+#                       operator: "="
+#                       children: [
+#                         {
+#                           operator: "objectProperties"
+#                           children: [
+#                             "applicationData.reviewData.latestDecision.decision"
+#                           ]
+#                         }
+#                         "CONFORM"
+#                       ]
+#                     }
+#                     {
+#                       operator: "objectProperties"
+#                       children: ["applicationData.reviewData.isLastLevel"]
+#                     }
+#                   ]
+#                 }
+#                 parameterQueries: { newOutcome: { value: "APPROVED" } }
+#               }
+#               # TODO: Add modifyRecord action to create a new license or should just update existing?
+#             ]
+#           }
             templatePermissionsUsingId: {
               create: [
                 # Apply Renew license (granted on Company license)

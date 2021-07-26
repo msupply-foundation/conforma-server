@@ -33,6 +33,7 @@ async function generateReviewAssignments({
       applicationData ?? (await DBConnect.getApplicationData(applicationId))
 
     const numReviewLevels: number = (await DBConnect.getNumReviewLevels(stageId)) || 0
+    const lastStageNumber: number = await db.getLastStageNumber(applicationId)
 
     let nextReviewLevel = 1
 
@@ -67,7 +68,13 @@ async function generateReviewAssignments({
             output: {},
           }
         }
-        console.log('New stage - total levels: ', numReviewLevels, stageNumber, previousStage)
+        console.log(
+          'New stage - total levels: ',
+          numReviewLevels,
+          stageNumber,
+          '\n Last Stage: ',
+          lastStageNumber
+        )
       }
       // Review in same stage - for next level
       else {
@@ -86,6 +93,7 @@ async function generateReviewAssignments({
       }
     }
     const isLastLevel = nextReviewLevel === numReviewLevels
+    const isLastStage = stageNumber === lastStageNumber
     return generateNextReviewAssignments({
       db,
       applicationId,
@@ -95,6 +103,7 @@ async function generateReviewAssignments({
       stageId,
       timeStageCreated: stageHistoryTimeCreated,
       isLastLevel,
+      isLastStage,
     })
   } catch (error) {
     console.log(error.message)
@@ -114,6 +123,7 @@ interface GenerateNextReviewAssignmentsProps {
   stageId: number
   timeStageCreated: Date
   isLastLevel: boolean
+  isLastStage: boolean
 }
 
 const generateNextReviewAssignments = async ({
@@ -125,6 +135,7 @@ const generateNextReviewAssignments = async ({
   stageId,
   timeStageCreated,
   isLastLevel,
+  isLastStage,
 }: GenerateNextReviewAssignmentsProps) => {
   const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
     templateId,
@@ -164,6 +175,8 @@ const generateNextReviewAssignments = async ({
         allowedSections: allowedSections || null,
         levelNumber: nextReviewLevel,
         isLastLevel,
+        isLastStage,
+        isFinalDecision: canMakeFinalDecision,
       }
   })
   // Save review_assignment records to database
@@ -193,6 +206,14 @@ const generateNextReviewAssignments = async ({
   )
 
   console.log('ReviewAssignmentAssignerJoinIds', reviewAssignmentAssignerJoinIds)
+
+  // Remove timeStageCreated from log - to help with tests
+  const reviewAssignmentsLog: ReviewAssignment[] = []
+
+  Object.values(reviewAssignments).forEach((reviewAssignment) => {
+    delete reviewAssignment.timeStageCreated
+    reviewAssignmentsLog.push(reviewAssignment)
+  })
 
   return {
     status: ActionQueueStatus.Success,

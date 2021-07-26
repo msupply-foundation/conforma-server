@@ -1,6 +1,24 @@
 import { PermissionPolicyType } from '../../../src/generated/graphql'
+import { ReviewAssignment } from './types'
 
 const databaseMethods = (DBConnect: any) => ({
+  getLastStageNumber: async (applicationId: number) => {
+    const text = `
+    SELECT MAX(number)
+    FROM application 
+    INNER JOIN template_stage ON template_stage.template_id = application.template_id 
+    WHERE application.id = $1`
+
+    try {
+      const result = await DBConnect.query({ text, values: [applicationId] })
+      const responses = result.rows[0].max
+      return responses
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+
   getPersonnelForApplicationStageLevel: async (
     templateId: number,
     stageNumber: number,
@@ -27,7 +45,7 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
-  addReviewAssignments: async (reviewAssignments: any) => {
+  addReviewAssignments: async (reviewAssignments: ReviewAssignment[]) => {
     const reviewAssignmentIds = []
     for (const reviewAssignment of reviewAssignments) {
       const {
@@ -41,6 +59,8 @@ const databaseMethods = (DBConnect: any) => ({
         allowedSections,
         levelNumber,
         isLastLevel,
+        isLastStage,
+        isFinalDecision,
       } = reviewAssignment
       // Needs a slightly different query with different CONFLICT restrictions
       // depending on whether orgId exists or not.
@@ -50,9 +70,10 @@ const databaseMethods = (DBConnect: any) => ({
         INSERT INTO review_assignment (
           reviewer_id, stage_id, stage_number, time_stage_created,
           status, application_id, allowed_sections,
-          level_number, is_last_level, organisation_id
+          level_number, is_last_level, is_last_stage,
+          organisation_id, is_final_decision
           )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         ON CONFLICT (reviewer_id, ${
           orgId ? ' organisation_id,' : ''
         } stage_number, application_id, level_number)
@@ -74,7 +95,9 @@ const databaseMethods = (DBConnect: any) => ({
             allowedSections,
             levelNumber,
             isLastLevel,
+            isLastStage,
             orgId,
+            isFinalDecision,
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
