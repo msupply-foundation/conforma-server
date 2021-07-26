@@ -34,7 +34,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
         reviewAssignments: [
           {
             reviewerId: 2,
-            orgId: null,
+            organisationId: null,
             stageId: 5,
             stageNumber: 1,
             status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -46,7 +46,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
           },
           {
             reviewerId: 3,
-            orgId: null,
+            organisationId: null,
             stageId: 5,
             stageNumber: 1,
             status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -58,7 +58,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
           },
           {
             reviewerId: 4,
-            orgId: null,
+            organisationId: null,
             stageId: 5,
             stageNumber: 1,
             status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -70,7 +70,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
           },
           {
             reviewerId: 5,
-            orgId: null,
+            organisationId: null,
             stageId: 5,
             stageNumber: 1,
             status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -82,7 +82,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
           },
           {
             reviewerId: 7,
-            orgId: null,
+            organisationId: null,
             stageId: 5,
             stageNumber: 1,
             status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -94,7 +94,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
           },
           {
             reviewerId: 8,
-            orgId: null,
+            organisationId: null,
             stageId: 5,
             stageNumber: 1,
             status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -106,7 +106,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
           },
           {
             reviewerId: 9,
-            orgId: null,
+            organisationId: null,
             stageId: 5,
             stageNumber: 1,
             status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -139,7 +139,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
         reviewAssignments: [
           {
             reviewerId: 7,
-            orgId: null,
+            organisationId: null,
             stageId: 6,
             stageNumber: 2,
             status: ReviewAssignmentStatus.Available,
@@ -151,7 +151,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
           },
           {
             reviewerId: 8,
-            orgId: null,
+            organisationId: null,
             stageId: 6,
             stageNumber: 2,
             status: ReviewAssignmentStatus.Available,
@@ -209,7 +209,7 @@ test('Test: Submit Review ID#6003 for Application ID#4002 - Stage 2 Lvl 1 to upd
         reviewAssignments: [
           {
             reviewerId: 9,
-            orgId: null,
+            organisationId: null,
             stageId: 6,
             stageNumber: 2,
             levelNumber: 2,
@@ -221,7 +221,7 @@ test('Test: Submit Review ID#6003 for Application ID#4002 - Stage 2 Lvl 1 to upd
           },
           {
             reviewerId: 10,
-            orgId: null,
+            organisationId: null,
             stageId: 6,
             stageNumber: 2,
             levelNumber: 2,
@@ -273,7 +273,7 @@ describe('Move Review to next stage (Final Decision) before generation of review
           reviewAssignments: [
             {
               reviewerId: 17,
-              orgId: null,
+              organisationId: null,
               stageId: 7,
               stageNumber: 3,
               levelNumber: 1,
@@ -285,7 +285,7 @@ describe('Move Review to next stage (Final Decision) before generation of review
             },
             {
               reviewerId: 18,
-              orgId: null,
+              organisationId: null,
               stageId: 7,
               stageNumber: 3,
               levelNumber: 1,

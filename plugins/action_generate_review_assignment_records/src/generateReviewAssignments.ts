@@ -1,5 +1,5 @@
 import { ActionPluginInput } from '../../types'
-import { Reviewer, ReviewAssignmentObject, ReviewAssignment } from './types'
+import { Reviewer, ReviewAssignmentObject } from './types'
 import databaseMethods from './databaseMethods'
 import {
   ActionQueueStatus,
@@ -154,7 +154,7 @@ const generateNextReviewAssignments = async ({
     else
       reviewAssignments[userOrgKey] = {
         reviewerId: userId,
-        orgId,
+        organisationId: orgId,
         stageId,
         stageNumber,
         timeStageCreated,
