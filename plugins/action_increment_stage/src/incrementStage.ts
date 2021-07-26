@@ -19,8 +19,9 @@ async function incrementStage({
   console.log(`Incrementing the Stage for Application ${applicationId}...`)
 
   if (outcome != ApplicationOutcome.Pending) {
-    returnObject.status = ActionQueueStatus.Fail
-    returnObject.error_log = 'Outcome not pending'
+    console.log("WARNING: Application doesn't have pending outcome")
+    returnObject.status = ActionQueueStatus.Success
+    returnObject.error_log = 'Warning: No changes made'
     return returnObject
   }
 
