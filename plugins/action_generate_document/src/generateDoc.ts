@@ -12,9 +12,16 @@ const generateDoc: ActionPluginType = async ({
   const data = parameters?.data ?? { ...applicationData, ...outputCumulative }
   const userId = parameters?.userId ?? applicationData?.userId
   const applicationSerial = parameters?.applicationSerial ?? applicationData?.applicationSerial
+  const templateId = parameters?.templateId ?? applicationData?.templateId
 
   try {
-    const result = await generatePDF({ fileId: docTemplateId, data, userId, applicationSerial })
+    const result = await generatePDF({
+      fileId: docTemplateId,
+      data,
+      userId,
+      templateId,
+      applicationSerial,
+    })
     return {
       status: ActionQueueStatus.Success,
       error_log: '',

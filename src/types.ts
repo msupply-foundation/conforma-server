@@ -71,7 +71,10 @@ export interface ActionApplicationData {
   action_payload: ActionPayload
   applicationId: number
   applicationSerial: string
+  applicationName: string
   templateId: number
+  templateName: string
+  templateCode: string
   stageId: number
   stageNumber: number
   stage: string
@@ -143,6 +146,7 @@ export interface FilePayload {
   user_id: number
   unique_id: string
   original_filename: string
+  template_id: number
   application_serial: string
   application_response_id: number
   file_path: string

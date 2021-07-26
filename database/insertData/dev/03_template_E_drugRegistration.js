@@ -13,6 +13,7 @@ exports.queries = [
         template: {
           code: "DrugRegoGen"
           name: "Drug Registration - General Medicines Procedure"
+          namePlural: "Drug Registrations - General Medicines Procedures"
           isLinear: false
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- Ingredients\\n- Samples\\n- Product images"

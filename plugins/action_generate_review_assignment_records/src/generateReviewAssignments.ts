@@ -140,11 +140,12 @@ const generateNextReviewAssignments = async ({
   nextLevelReviewers.forEach((reviewer: Reviewer) => {
     const { userId, orgId, allowedSections, canSelfAssign, canMakeFinalDecision } = reviewer
 
-    const status = canMakeFinalDecision
-      ? ReviewAssignmentStatus.Assigned
-      : canSelfAssign || nextReviewLevel > 1
-      ? ReviewAssignmentStatus.AvailableForSelfAssignment
-      : ReviewAssignmentStatus.Available
+    const getAssignmentStatus = () => {
+      if (canMakeFinalDecision) return ReviewAssignmentStatus.Assigned
+      if (canSelfAssign || nextReviewLevel > 1)
+        return ReviewAssignmentStatus.AvailableForSelfAssignment
+      return ReviewAssignmentStatus.Available
+    }
 
     const userOrgKey = `${userId}_${orgId ? orgId : 0}`
     if (reviewAssignments[userOrgKey])
@@ -158,7 +159,7 @@ const generateNextReviewAssignments = async ({
         stageNumber,
         timeStageCreated,
         // TO-DO: allow STATUS to be configurable in template
-        status,
+        status: getAssignmentStatus(),
         applicationId,
         allowedSections: allowedSections || null,
         levelNumber: nextReviewLevel,
@@ -194,19 +195,11 @@ const generateNextReviewAssignments = async ({
 
   console.log('ReviewAssignmentAssignerJoinIds', reviewAssignmentAssignerJoinIds)
 
-  // Remove timeStageCreated from log - to help with tests
-  const reviewAssignmentsLog: ReviewAssignment[] = []
-
-  Object.values(reviewAssignments).forEach((reviewAssignment) => {
-    delete reviewAssignment.timeStageCreated
-    reviewAssignmentsLog.push(reviewAssignment)
-  })
-
   return {
     status: ActionQueueStatus.Success,
     error_log: '',
     output: {
-      reviewAssignments: reviewAssignmentsLog,
+      reviewAssignments,
       reviewAssignmentIds,
       reviewAssignmentAssignerJoins,
       reviewAssignmentAssignerJoinIds,

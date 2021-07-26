@@ -2,8 +2,6 @@
 CREATE TABLE public.filter (
     id serial PRIMARY KEY,
     code varchar NOT NULL UNIQUE,
-    icon_color varchar DEFAULT 'blue',
-    icon varchar,
     title varchar,
     query jsonb,
     user_role public.permission_policy_type
