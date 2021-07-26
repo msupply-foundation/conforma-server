@@ -19,7 +19,8 @@ import {
   createFilesFolder,
   filesFolder,
 } from './components/files/fileHandler'
-import { getAppEntryPointDir } from './components/utilityFunctions'
+import { getAppEntryPointDir, objectKeysToSnakeCase } from './components/utilityFunctions'
+import routeRunAction from './components/actions/runAction'
 import DBConnect from './components/databaseConnect'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
@@ -64,6 +65,7 @@ const startServer = async () => {
   server.post('/login-org', routeLoginOrg)
   server.get('/updateRowPolicies', routeUpdateRowPolicies)
   server.post('/create-hash', routeCreateHash)
+  server.post('/run-action', routeRunAction)
   server.get('/verify', routeVerification)
   server.post('/generate-pdf', routeGeneratePDF)
 
@@ -71,7 +73,7 @@ const startServer = async () => {
   server.post('/upload', async function (request: any, reply) {
     // TO-DO: Authentication
     const data = await request.files()
-    const fileData = await saveFiles(data, request.query)
+    const fileData = await saveFiles(data, objectKeysToSnakeCase(request.query))
     reply.send({ success: true, fileData })
   })
 
