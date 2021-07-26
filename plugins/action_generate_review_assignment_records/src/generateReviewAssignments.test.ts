@@ -3,9 +3,21 @@
 // NOTE: Just checks that Actions returns expected ouput, doesn't check that
 // database has entered correct information
 
+import { map, omit } from 'lodash'
 import DBConnect from '../../../src/components/databaseConnect'
 import { ActionQueueStatus, ReviewAssignmentStatus } from '../../../src/generated/graphql'
 import { action as generateReviewAssignments } from './index'
+
+const removeTimeStageCreated = (reviewAssignment: any) =>
+  omit(reviewAssignment, ['timeStageCreated'])
+
+const clearResult = (result: any) => ({
+  ...result,
+  output: {
+    ...result.output,
+    reviewAssignments: map(result.output.reviewAssignments, removeTimeStageCreated),
+  },
+})
 
 // Simulate application submission:
 
@@ -15,7 +27,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
     parameters: { applicationId: 4001 },
     DBConnect,
   }).then((result: any) => {
-    expect(result).toEqual({
+    expect(clearResult(result)).toEqual({
       status: ActionQueueStatus.Success,
       error_log: '',
       output: {
@@ -127,7 +139,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
     parameters: { templateId: 4, applicationId: 4002 }, // stageNumber: 2, stageId: 6, levels: 2
     DBConnect,
   }).then((result: any) => {
-    expect(result).toEqual({
+    expect(clearResult(result)).toEqual({
       status: ActionQueueStatus.Success,
       error_log: '',
       output: {
@@ -199,7 +211,7 @@ test('Test: Submit Review ID#6003 for Application ID#4002 - Stage 2 Lvl 1 to upd
     parameters: { templateId: 4, applicationId: 4002, reviewId: 6003 }, // stageNumber: 2, stageId: 6, levels: 2
     DBConnect,
   }).then((result: any) => {
-    expect(result).toEqual({
+    expect(clearResult(result)).toEqual({
       status: ActionQueueStatus.Success,
       error_log: '',
       output: {
@@ -265,7 +277,7 @@ describe('Move Review to next stage (Final Decision) before generation of review
       parameters: { templateId: 4, applicationId: 4004, reviewId: 7004 }, // stageNumber: 2, stageId: 7, levels: 2
       DBConnect,
     }).then((result: any) => {
-      expect(result).toEqual({
+      expect(clearResult(result)).toEqual({
         status: ActionQueueStatus.Success,
         error_log: '',
         output: {
