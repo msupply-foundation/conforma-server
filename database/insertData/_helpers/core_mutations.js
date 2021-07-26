@@ -136,10 +136,11 @@ exports.coreActions = `
     # 5 - generate review assignments
     # 6 - adjust visibility of review responses (for applicant - LOQ)
     # 7 - change application status (for applicant - LOQ)
+    # 8 & 9 - change application outcome after last stage and last level submission
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_SUBMIT
-        sequence: 1
+        sequence: 50
         parameterQueries: {
           newStatus: "SUBMITTED"
         }
@@ -147,7 +148,7 @@ exports.coreActions = `
     {
         actionCode: "trimResponses"
         trigger: ON_REVIEW_SUBMIT
-        sequence: 2
+        sequence: 51
         parameterQueries: {
           timestamp: {
             operator: "objectProperties"
@@ -158,7 +159,7 @@ exports.coreActions = `
    {
         actionCode: "updateReviewsStatuses"
         trigger: ON_REVIEW_SUBMIT
-        sequence: 3
+        sequence: 52
         parameterQueries: {
           applicationId: {
             operator: "objectProperties"
@@ -177,7 +178,7 @@ exports.coreActions = `
     {
       actionCode: "incrementStage"
       trigger: ON_REVIEW_SUBMIT
-      sequence: 4
+      sequence: 53
       condition: {
         operator: "AND"
         children: [
@@ -223,7 +224,7 @@ exports.coreActions = `
     {
       actionCode: "generateReviewAssignments"
       trigger: ON_REVIEW_SUBMIT
-      sequence: 5
+      sequence: 54
     }
     # update review visibility for applicant
     # condition checks for latest review decison = LIST_OF_QUESTIONS
@@ -259,7 +260,7 @@ exports.coreActions = `
     # AND review being isLastLevel
     {
       actionCode: "changeStatus"
-      sequence: 7
+      sequence: 55
       trigger: ON_REVIEW_SUBMIT
       condition: {
         operator: "AND"
@@ -285,6 +286,66 @@ exports.coreActions = `
       parameterQueries: {
         newStatus: "CHANGES_REQUIRED"
         isReview: false #Required since we're updating an application status
+      }
+    }
+    #
+    # Change outcome of application to APPROVED/REJECT acording with
+    # last level & last stage reviewr decision is CONFORM/NON_CONFORM
+    #
+    {
+      actionCode: "changeOutcome"
+      trigger: ON_REVIEW_SUBMIT
+      sequence: 56
+      condition: {
+        operator: "AND"
+        children: [
+          {
+            operator: "!="
+            children: [
+              {
+                operator: "objectProperties"
+                children: [ "applicationData.reviewData.latestDecision.decision" ]
+              }
+              "LIST_OF_QUESTIONS"
+            ]
+          }
+          {
+            operator: "objectProperties"
+            children: ["applicationData.reviewData.isLastLevel"]
+          }
+          {
+            operator: "objectProperties"
+            children: 
+              [
+                "applicationData.reviewData.isLastStage"
+                null  
+              ]
+          }
+        ]
+      }
+      parameterQueries: { 
+        newOutcome: {
+          operator: "?",
+          children: [
+            {
+              operator: "=",
+              children: 
+              [
+                {
+                  operator: "objectProperties",
+                  children: 
+                  [
+                    "applicationData.reviewData.latestDecision.decision",
+                    null
+                  ]
+                },
+                "CONFORM"
+              ]
+            },
+            "APPROVED",
+            "REJECTED"
+          ]
+        }
       }
     }
     # -------------------------------------------

@@ -733,6 +733,7 @@ class PostgresDB {
       throw err
     }
   }
+
   public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
       SELECT review.level_number AS "levelNumber", stage_number as "stageNumber"

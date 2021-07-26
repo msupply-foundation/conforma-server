@@ -38,6 +38,7 @@ CREATE TABLE public.review_assignment (
     level_number integer,
     level_id integer REFERENCES public.template_stage_review_level (id),
     is_last_level boolean,
+    is_last_stage boolean,
     is_locked boolean DEFAULT FALSE,
     is_final_decision boolean DEFAULT FALSE
 );
