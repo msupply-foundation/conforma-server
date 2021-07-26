@@ -941,6 +941,48 @@ exports.queries = [
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: { message: "Application Submitted" }
               }
+              #
+              # Change outcome of application to REJECT if decision in stage Screening is NON_CONFORM
+              # Note: There is a generic core action to change an application outcome 
+              # after the last level reviewer on the last stage submits a decision!
+              #
+              {
+                actionCode: "changeOutcome"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 10
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "NON_CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.stage"]
+                        }
+                        "Screening"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
+                parameterQueries: { newOutcome: { value: "REJECTED" } }
+              }
             ]
           }
           templatePermissionsUsingId: {
@@ -956,9 +998,9 @@ exports.queries = [
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "canScreenDrugRego" }
                 }
-                restrictions: { canSelfAssign: true }
                 levelNumber: 1
                 stageNumber: 1
+                canSelfAssign: true
               }
               # Assign Drug Registration Stage 2
               {
@@ -968,14 +1010,14 @@ exports.queries = [
                 levelNumber: 1
                 stageNumber: 2
               }
-              # Review Drug Registration Stage 2 -- uncomment when available
-              # {
-              #   permissionNameToPermissionNameId: {
-              #     connectByName: { name: "canAssessDrugRego" }
-              #   }
-              #   levelNumber: 1
-              #   stageNumber: 2
-              # }
+              # Review Drug Registration Stage 2
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "canAssessDrugRego" }
+                }
+                levelNumber: 1
+                stageNumber: 2
+              }
             ]
           }
         }

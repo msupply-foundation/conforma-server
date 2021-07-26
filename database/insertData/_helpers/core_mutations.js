@@ -140,7 +140,7 @@ exports.coreActions = `
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_SUBMIT
-        sequence: 1
+        sequence: 50
         parameterQueries: {
           newStatus: "SUBMITTED"
         }
@@ -148,7 +148,7 @@ exports.coreActions = `
     {
         actionCode: "trimResponses"
         trigger: ON_REVIEW_SUBMIT
-        sequence: 2
+        sequence: 51
         parameterQueries: {
           timestamp: {
             operator: "objectProperties"
@@ -159,7 +159,7 @@ exports.coreActions = `
    {
         actionCode: "updateReviewsStatuses"
         trigger: ON_REVIEW_SUBMIT
-        sequence: 3
+        sequence: 52
         parameterQueries: {
           applicationId: {
             operator: "objectProperties"
@@ -178,7 +178,7 @@ exports.coreActions = `
     {
       actionCode: "incrementStage"
       trigger: ON_REVIEW_SUBMIT
-      sequence: 4
+      sequence: 53
       condition: {
         operator: "AND"
         children: [
@@ -224,7 +224,7 @@ exports.coreActions = `
     {
       actionCode: "generateReviewAssignments"
       trigger: ON_REVIEW_SUBMIT
-      sequence: 5
+      sequence: 54
     }
     # update review visibility for applicant
     # condition checks for latest review decison = LIST_OF_QUESTIONS
@@ -260,7 +260,7 @@ exports.coreActions = `
     # AND review being isLastLevel
     {
       actionCode: "changeStatus"
-      sequence: 7
+      sequence: 55
       trigger: ON_REVIEW_SUBMIT
       condition: {
         operator: "AND"
@@ -295,7 +295,7 @@ exports.coreActions = `
     {
       actionCode: "changeOutcome"
       trigger: ON_REVIEW_SUBMIT
-      sequence: 8
+      sequence: 56
       condition: {
         operator: "AND"
         children: [
