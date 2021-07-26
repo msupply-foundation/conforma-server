@@ -9,7 +9,7 @@ const databaseMethods = (DBConnect: any) => ({
   ) => {
     const text = `
     SELECT
-      "userId", "orgId", "restrictions", "allowedSections", "canSelfAssign"
+      "userId", "orgId", "restrictions", "allowedSections", "canSelfAssign", "canMakeFinalDecision"
       FROM permissions_all
       WHERE "templateId" = $1
       AND "stageNumber" = $2

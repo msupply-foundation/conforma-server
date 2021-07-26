@@ -1,5 +1,5 @@
 import { ActionPluginInput } from '../../types'
-import { Reviewer, ReviewAssignmentObject } from './types'
+import { Reviewer, ReviewAssignmentObject, ReviewAssignment } from './types'
 import databaseMethods from './databaseMethods'
 import {
   ActionQueueStatus,
@@ -138,12 +138,14 @@ const generateNextReviewAssignments = async ({
   // Build reviewers into object map so we can combine duplicate user_orgs
   // and merge their section code restrictions
   nextLevelReviewers.forEach((reviewer: Reviewer) => {
-    const { userId, orgId, allowedSections, canSelfAssign } = reviewer
+    const { userId, orgId, allowedSections, canSelfAssign, canMakeFinalDecision } = reviewer
 
-    const status =
-      canSelfAssign || nextReviewLevel > 1
-        ? ReviewAssignmentStatus.AvailableForSelfAssignment
-        : ReviewAssignmentStatus.Available
+    const getAssignmentStatus = () => {
+      if (canMakeFinalDecision) return ReviewAssignmentStatus.Assigned
+      if (canSelfAssign || nextReviewLevel > 1)
+        return ReviewAssignmentStatus.AvailableForSelfAssignment
+      return ReviewAssignmentStatus.Available
+    }
 
     const userOrgKey = `${userId}_${orgId ? orgId : 0}`
     if (reviewAssignments[userOrgKey])
@@ -157,7 +159,7 @@ const generateNextReviewAssignments = async ({
         stageNumber,
         timeStageCreated,
         // TO-DO: allow STATUS to be configurable in template
-        status,
+        status: getAssignmentStatus(),
         applicationId,
         allowedSections: allowedSections || null,
         levelNumber: nextReviewLevel,
@@ -196,7 +198,7 @@ const generateNextReviewAssignments = async ({
     status: ActionQueueStatus.Success,
     error_log: '',
     output: {
-      reviewAssignments: Object.values(reviewAssignments),
+      reviewAssignments,
       reviewAssignmentIds,
       reviewAssignmentAssignerJoins,
       reviewAssignmentAssignerJoinIds,
