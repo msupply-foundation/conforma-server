@@ -194,19 +194,11 @@ const generateNextReviewAssignments = async ({
 
   console.log('ReviewAssignmentAssignerJoinIds', reviewAssignmentAssignerJoinIds)
 
-  // Remove timeStageCreated from log - to help with tests
-  const reviewAssignmentsLog: ReviewAssignment[] = []
-
-  Object.values(reviewAssignments).forEach((reviewAssignment) => {
-    delete reviewAssignment.timeStageCreated
-    reviewAssignmentsLog.push(reviewAssignment)
-  })
-
   return {
     status: ActionQueueStatus.Success,
     error_log: '',
     output: {
-      reviewAssignments: reviewAssignmentsLog,
+      reviewAssignments,
       reviewAssignmentIds,
       reviewAssignmentAssignerJoins,
       reviewAssignmentAssignerJoinIds,
