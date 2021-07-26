@@ -9,7 +9,7 @@ const generateDoc: ActionPluginType = async ({
   outputCumulative,
 }) => {
   const { docTemplateId, additionalData } = parameters
-  const data = parameters?.data ?? { ...applicationData, ...outputCumulative, ...additionalData }
+  const data = parameters?.data ?? { ...applicationData, ...outputCumulative, additionalData }
   const userId = parameters?.userId ?? applicationData?.userId
   const applicationSerial = parameters?.applicationSerial ?? applicationData?.applicationSerial
   const templateId = parameters?.templateId ?? applicationData?.templateId

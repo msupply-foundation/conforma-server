@@ -20,7 +20,7 @@ import path from 'path'
 import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
 
 const schedule = require('node-schedule')
-const showApplicationDataLog = true
+const showApplicationDataLog = false
 
 // Load actions from Database at server startup
 export const loadActions = async function (actionLibrary: ActionLibrary) {
