@@ -1,6 +1,6 @@
 {
   "filters": { "template": { "id": { "in": [2, 8] } } },
-  "shouldReInitilise": false,
+  "shouldReInitialise": false,
   "includeTables": [
     "templateElement",
     "template",

@@ -15,7 +15,7 @@
     "reviewResponse"
   ],
   "excludeTables": [],
-  "shouldReInitilise": true,
+  "shouldReInitialise": true,
   "insertScriptsLocale": "dev",
   "includeInsertScripts": [],
   "excludeInsertScripts": ["07_review_assignments.js", "06_applications_D_reviewTest.js"]

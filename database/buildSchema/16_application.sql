@@ -11,11 +11,11 @@ CREATE TABLE public.application (
     user_id integer REFERENCES public.user (id),
     org_id integer REFERENCES public.organisation (id),
     session_id varchar,
-    is_config bool DEFAULT FALSE,
     serial varchar UNIQUE,
     name varchar,
     outcome public.application_outcome,
     is_active bool,
+    is_config bool DEFAULT FALSE,
     TRIGGER public.trigger
 );
 

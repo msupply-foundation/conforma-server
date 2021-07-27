@@ -27,7 +27,7 @@ export type ExportAndImportOptions = {
   }
   includeTables: string[]
   excludeTables: string[]
-  shouldReInitilise: boolean
+  shouldReInitialise: boolean
   insertScriptsLocale: string
   includeInsertScripts: string[]
   excludeInsertScripts: string[]

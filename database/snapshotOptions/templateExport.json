@@ -1,6 +1,6 @@
 {
   "filters": {},
-  "shouldReInitilise": false,
+  "shouldReInitialise": false,
   "includeTables": [
     "templateElement",
     "template",

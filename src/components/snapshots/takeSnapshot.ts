@@ -51,7 +51,7 @@ const takeSnapshot: SnapshotOperation = async ({
       JSON.stringify(options, null, ' ')
     )
 
-    if (options.shouldReInitilise) await getSchemaDiff(newSnapshotFolder)
+    if (options.shouldReInitialise) await getSchemaDiff(newSnapshotFolder)
 
     copyFiles(newSnapshotFolder, options)
 
