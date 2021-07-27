@@ -1780,6 +1780,10 @@ exports.queries = [
               { id: 5035, templateElementId: 4003 }
               { id: 5036, templateElementId: 4005 }
               { id: 5037, templateElementId: 4006 }
+              { id: 5038, templateElementId: 4008 }
+              { id: 5039, templateElementId: 4009 }
+              { id: 5040, templateElementId: 4011 }
+              { id: 5041, templateElementId: 4012 }
             ]
           }
           reviewsUsingId: {
