@@ -12,6 +12,7 @@ exports.queries = [
         template: {
           code: "CompanyRego"
           name: "Company Registration"
+          namePlural: "Companies Registrations"
           isLinear: false # CHANGE THIS 
           status: AVAILABLE
           startMessage: "## Registering a company in the system\\n\\nAs well as providing information about your company, you will be required to supply the following documents as part of this registration process:\\n\\n- **LMMD02** – CV of applicant with recent (max 1 year) photo\\n- **LMMD03** – Medical Certificate (max 3 months)\\n- **LMMD04** – Certificate of current residence with photo (max 3 months)\\n- **LMMD05** – Recent (max 1 year) photo\\n- **LMMD06** – Certificate of education level\\n- **LMMD07** – Criminal record \\"number 3\\"\\n- **LMMD08** – Letter from previous employers documenting at least 3 years professional experience (for private sector must be certified by provincial or capital level)\\n- **LMMD09** – Documentation showing resignation from previous employment (for private sector must be certified by provincial or capital level)\\n- **LMMD10** – Map of location of company\\n- **LMMD11** – Layout of facilities\\n- **LMMD13** – Proof of ownership of facilities or contract of rent\\n- **LMMD14** – Copy of business licence issued by Ministry of Commerce"
@@ -656,7 +657,7 @@ exports.queries = [
                       title: "CV upload"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       helpText: "For all uploads, files must be in **pdf**, **doc** or an **image** format, and less than 10MB each"
                       parameters: {
                         label: "CV (LMMD02)"
@@ -672,7 +673,7 @@ exports.queries = [
                       title: "Medical certificate upload"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Medical certificate  (LMMD03)"
                         description: "QUESTION: Is this for individual?"
@@ -687,7 +688,7 @@ exports.queries = [
                       title: "Current residence certificate"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Certificate of current residence  (LMMD04)"
                         description: "Must include photo (max 3 months)"
@@ -702,7 +703,7 @@ exports.queries = [
                       title: "Recent Photo"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Photo (LMMD05)"
                         description: "Max 1 year (used for printing licence)"
@@ -724,7 +725,7 @@ exports.queries = [
                       title: "Education Certificate"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Certificate of education level (LMMD06)"
                         fileCountLimit: 1
@@ -738,7 +739,7 @@ exports.queries = [
                       title: "Criminal Record"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Criminal record (number 3) (LMMD07)"
                         fileCountLimit: 1
@@ -752,7 +753,7 @@ exports.queries = [
                       title: "Recent Photo"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Letter from previous employers documenting at least 3 years professional experience (LMMD08)"
                         description: "(for private sector must be certified by provincial or capital level)"
@@ -767,7 +768,7 @@ exports.queries = [
                       title: "Resignation document"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Documentation showing resignation from previous employment (LMMD09)"
                         description: "(for private sector must be certified by provincial or capital level)"
@@ -803,7 +804,7 @@ exports.queries = [
                       title: "Layout of facilities"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Layout of facilities (LMMD11)"
                         fileCountLimit: 1
@@ -817,7 +818,7 @@ exports.queries = [
                       title: "Proof of ownership"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Proof of ownership of facilities or contract of rent"
                         fileCountLimit: 1
@@ -831,7 +832,7 @@ exports.queries = [
                       title: "Business licence"
                       elementTypePluginCode: "fileUpload"
                       category: QUESTION
-                      isRequired: true 
+                      isRequired: false 
                       parameters: {
                         label: "Copy of business licence issued by Ministry of Commerce (LMMD14)"
                         fileCountLimit: 1
@@ -881,35 +882,35 @@ exports.queries = [
                   message: { value: "Organisation Registration submission" }
                 }
               }
-              {
-                actionCode: "changeOutcome"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 100
-                condition: {
-                  operator: "AND"
-                  children: [
-                    {
-                      operator: "="
-                      children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
-                      ]
-                    }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
-                  ]
-                }
-                parameterQueries: {
-                  newOutcome: { value: "APPROVED" }
-                }
-              }
+#             {
+#               actionCode: "changeOutcome"
+#               trigger: ON_REVIEW_SUBMIT
+#               sequence: 100
+#               condition: {
+#                 operator: "AND"
+#                 children: [
+#                   {
+#                     operator: "="
+#                     children: [
+#                       {
+#                         operator: "objectProperties"
+#                         children: [
+#                           "applicationData.reviewData.latestDecision.decision"
+#                         ]
+#                       }
+#                       "CONFORM"
+#                     ]
+#                   }
+#                   {
+#                     operator: "objectProperties"
+#                     children: ["applicationData.reviewData.isLastLevel"]
+#                   }
+#                 ]
+#               }
+#               parameterQueries: {
+#                 newOutcome: { value: "APPROVED" }
+#               }
+#             }
               {
                 actionCode: "modifyRecord"
                 trigger: ON_REVIEW_SUBMIT

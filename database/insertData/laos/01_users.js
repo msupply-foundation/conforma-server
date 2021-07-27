@@ -42,7 +42,8 @@ exports.queries = [
             email: "reviewer1@sussol.net"
             passwordHash: "$2a$10$r8XTfUWIzrSaDfn0rxbIlei0kFHitJMI4W3g59w/94/9VopxNB4w."
             username: "orgRegoReviewer1"
-            firstName: "OrgRegoReviewer1"
+            firstName: "OrgRegoReviewer"
+            lastName: "1"
             permissionJoinsUsingId: {
               create: [
                 {
@@ -73,6 +74,7 @@ exports.queries = [
             passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
             username: "orgRegoReviewer2"
             firstName: "OrgRegoReviewer2"
+            lastName: "2"
             permissionJoinsUsingId: {
               create: [
                 {
@@ -102,7 +104,8 @@ exports.queries = [
             email: "allreviewer1@sussol.net"
             passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
             username: "allReviewer"
-            firstName: "AllReviewer"
+            firstName: "All"
+            lastName: "Reviewer"
             permissionJoinsUsingId: {
               create: [
                 {
@@ -137,7 +140,8 @@ exports.queries = [
             email: "reviewOrgLicence1@sussol.net"
             passwordHash: "$2a$10$pzhH6GcC7rw38AencBcbCuDaN6ANGZnVnE3ViCa5veOeTelbkkkv2"
             username: "reviewOrgLicence1"
-            firstName: "Company Licence Reviewer1"
+            firstName: "Company Licence"
+            lastName: "Reviewer1"
             permissionJoinsUsingId: {
               create: [
                 {
@@ -167,7 +171,8 @@ exports.queries = [
             email: "reviewOrgLicence2"
             passwordHash: "$2a$10$Kk4m2yhfFC5GqX2mJsXTtO.GLq6zNbezYnI8ix09h/MfNNy6AW7Ne"
             username: "reviewOrgLicence2"
-            firstName: "Company Licence Reviewer2"
+            firstName: "Company Licence"
+            lastName: "Reviewer2"
             permissionJoinsUsingId: {
               create: [
                 {
@@ -197,7 +202,8 @@ exports.queries = [
             email: "assigner@sussol.net"
             passwordHash: "$2a$10$DA4a1E2i3dfN5BrdmO6iX.EYt.ob0czyF1sQqNQxPMPrfEPsRCx2a"
             username: "assigner"
-            firstName: "Assigner"
+            firstName: "Company Licence"
+            lastName: "Assigner"
             permissionJoinsUsingId: {
               create: [
                 # Assign General
@@ -229,6 +235,7 @@ exports.queries = [
             email: "admin@sussol.net"
             username: "admin"
             firstName: "Admin"
+            lastName: "Admin"
             passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
             permissionJoinsUsingId: {
               create: [

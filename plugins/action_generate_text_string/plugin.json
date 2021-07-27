@@ -1,0 +1,36 @@
+{
+  "type": "action_plugin",
+  "code": "generateTextString",
+  "name": "Generate Text String",
+  "description": "Generates serial numbers or arbitrary text strings (e.g. for application name) using a specified pattern, and updates a database record if requested",
+  "required_parameters": ["pattern"],
+  "optional_parameters": [
+    "counterName",
+    "customFields",
+    "additionalData",
+    "counterInit",
+    "numberFormat",
+    "fallbackText",
+    "updateRecord",
+    "tableName",
+    "fieldName",
+    "matchField",
+    "matchValue"
+  ],
+  "output_properties": ["generatedText"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "update"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-07-11"
+  }
+}

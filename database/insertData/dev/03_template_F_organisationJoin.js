@@ -14,7 +14,7 @@ exports.queries = [
       input: {
         template: {
           code: "OrgJoin"
-          name: "Join Organisation"
+          name: "Join Company"
           isLinear: false
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- PhotoID"
@@ -169,35 +169,35 @@ exports.queries = [
                   }
                 }
               }
-              {
-                actionCode: "changeOutcome"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 100
-                condition: {
-                  operator: "AND"
-                  children: [
-                    {
-                      operator: "="
-                      children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
-                      ]
-                    }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
-                  ]
-                }
-                parameterQueries: {
-                  newOutcome: "APPROVED"
-                }
-              }
+#             {
+#               actionCode: "changeOutcome"
+#               trigger: ON_REVIEW_SUBMIT
+#               sequence: 100
+#               condition: {
+#                 operator: "AND"
+#                 children: [
+#                   {
+#                     operator: "="
+#                     children: [
+#                       {
+#                         operator: "objectProperties"
+#                         children: [
+#                           "applicationData.reviewData.latestDecision.decision"
+#                         ]
+#                       }
+#                       "CONFORM"
+#                     ]
+#                   }
+#                   {
+#                     operator: "objectProperties"
+#                     children: ["applicationData.reviewData.isLastLevel"]
+#                   }
+#                 ]
+#               }
+#               parameterQueries: {
+#                 newOutcome: "APPROVED"
+#               }
+#             }
               {
                 actionCode: "joinUserOrg"
                 trigger: ON_REVIEW_SUBMIT
@@ -350,7 +350,7 @@ exports.queries = [
                 }
                 stageNumber: 1
                 levelNumber: 1
-                restrictions: { canSelfAssign: true }
+                canSelfAssign: true
               }
             ]
           }

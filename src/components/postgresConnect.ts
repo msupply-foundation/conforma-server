@@ -1,4 +1,4 @@
-import { processTrigger, executeAction } from './triggersAndActions'
+import { processTrigger, executeAction } from './actions/triggersAndActions'
 import { actionLibrary } from './pluginsConnect'
 import config from '../config'
 import { Client, Pool, QueryResult } from 'pg'
@@ -92,6 +92,20 @@ class PostgresDB {
 
   public end = () => {
     this.pool.end()
+  }
+
+  public getCounter = async (counterName: string, increment = true) => {
+    const textSelect = 'SELECT value FROM counter WHERE name = $1;'
+    const textUpdate = 'UPDATE counter SET value = value + 1 WHERE name = $1;'
+    try {
+      await this.query({ text: 'BEGIN TRANSACTION;' })
+      const result: any = await this.query({ text: textSelect, values: [counterName] })
+      if (increment) await this.query({ text: textUpdate, values: [counterName] })
+      await this.query({ text: 'COMMIT TRANSACTION;' })
+      return result.rows[0]?.value
+    } catch (err) {
+      throw err
+    }
   }
 
   public addActionQueue = async (action: ActionQueuePayload): Promise<boolean> => {
@@ -240,7 +254,10 @@ class PostgresDB {
     const text = `
       SELECT application_id as "applicationId",
       serial as "applicationSerial",
+      name as "applicationName",
       template_id as "templateId",
+      template_name as "templateName",
+      template_code as "templateCode",
       stage_id as "stageId", stage_number as "stageNumber", stage,
       stage_history_id as "stageHistoryId",
       stage_history_time_created as "stageHistoryTimeCreated",
@@ -248,10 +265,8 @@ class PostgresDB {
       user_id as "userId",
       org_id as "orgId",
       outcome
-      FROM application_stage_status_all
+      FROM application_stage_status_latest
       WHERE application_id = $1
-      AND stage_is_current = true
-      AND status_is_current = true
     `
     const result = await this.query({ text, values: [applicationId] })
     const applicationData = result.rows[0]
@@ -718,6 +733,7 @@ class PostgresDB {
       throw err
     }
   }
+
   public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
       SELECT review.level_number AS "levelNumber", stage_number as "stageNumber"

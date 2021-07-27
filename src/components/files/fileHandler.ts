@@ -51,7 +51,7 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
     for await (const file of data) {
       const ext = path.extname(file.filename)
       const basename = path.basename(file.filename, ext)
-      const unique_id = nanoid()
+      const unique_id = queryParams?.uid ?? nanoid()
 
       const subfolder = queryParams?.subFolder ?? queryParams?.application_serial ?? ''
 
@@ -94,6 +94,7 @@ export async function registerFileInDB({
   file,
   file_path,
   thumbnail_path,
+  template_id,
   application_serial,
   user_id,
   application_response_id,
@@ -104,6 +105,7 @@ export async function registerFileInDB({
       user_id,
       unique_id,
       original_filename: file ? file.filename : original_filename,
+      template_id,
       application_serial,
       application_response_id,
       file_path,

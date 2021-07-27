@@ -12,6 +12,7 @@ exports.queries = [
         template: {
           code: "importPermit"
           name: "Import permit"
+          namePlural: "Import permits"
           isLinear: true
           status: AVAILABLE
           startMessage: "## Apply for import permit of Modern medicines or Medical devices"
@@ -62,33 +63,33 @@ exports.queries = [
                   message: { value: "Import permit (Modern medicines or Medical devices) submission" }
                 }
               }
-              {
-                actionCode: "changeOutcome"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 100
-                condition: {
-                  operator: "AND"
-                  children: [
-                    {
-                      operator: "="
-                      children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
-                      ]
-                    }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
-                  ]
-                }
-                parameterQueries: { newOutcome: { value: "APPROVED" } }
-              }
+#             {
+#               actionCode: "changeOutcome"
+#               trigger: ON_REVIEW_SUBMIT
+#               sequence: 100
+#               condition: {
+#                 operator: "AND"
+#                 children: [
+#                   {
+#                     operator: "="
+#                     children: [
+#                       {
+#                         operator: "objectProperties"
+#                         children: [
+#                           "applicationData.reviewData.latestDecision.decision"
+#                         ]
+#                       }
+#                       "CONFORM"
+#                     ]
+#                   }
+#                   {
+#                     operator: "objectProperties"
+#                     children: ["applicationData.reviewData.isLastLevel"]
+#                   }
+#                 ]
+#               }
+#               parameterQueries: { newOutcome: { value: "APPROVED" } }
+#             }
             ]
           }
           templatePermissionsUsingId: {
@@ -111,4 +112,3 @@ exports.queries = [
     }
   }`,
 ]
-

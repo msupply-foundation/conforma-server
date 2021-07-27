@@ -16,6 +16,8 @@ class DBConnect {
 
   public getValuesPlaceholders = PostgresDB.getValuesPlaceholders
 
+  public getCounter = PostgresDB.getCounter
+
   public addActionQueue = PostgresDB.addActionQueue
 
   public executedActionStatusUpdate = PostgresDB.executedActionStatusUpdate
