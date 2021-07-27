@@ -2,7 +2,9 @@
 CREATE TYPE public.application_outcome AS ENUM (
     'PENDING',
     'APPROVED',
-    'REJECTED'
+    'REJECTED',
+    'EXPIRED',
+    'WITHDRAWN'
 );
 
 CREATE TABLE public.application (
@@ -38,5 +40,5 @@ LANGUAGE plpgsql;
 CREATE TRIGGER outcome_trigger
     AFTER INSERT OR UPDATE OF outcome ON public.application
     FOR EACH ROW
-    WHEN (NEW.outcome = 'APPROVED' OR NEW.outcome = 'REJECTED')
+    WHEN (NEW.outcome <> 'PENDING')
     EXECUTE FUNCTION public.outcome_changed ()
