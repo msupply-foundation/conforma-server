@@ -614,11 +614,11 @@ export type Application = Node & {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   /** Reads a single `Template` that is related to this `Application`. */
   template?: Maybe<Template>;
@@ -778,8 +778,6 @@ export type ApplicationCondition = {
   orgId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `sessionId` field. */
   sessionId?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `isConfig` field. */
-  isConfig?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `serial` field. */
   serial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `name` field. */
@@ -788,6 +786,8 @@ export type ApplicationCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `isActive` field. */
   isActive?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isConfig` field. */
+  isConfig?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
 };
@@ -804,8 +804,6 @@ export type ApplicationFilter = {
   orgId?: Maybe<IntFilter>;
   /** Filter by the object’s `sessionId` field. */
   sessionId?: Maybe<StringFilter>;
-  /** Filter by the object’s `isConfig` field. */
-  isConfig?: Maybe<BooleanFilter>;
   /** Filter by the object’s `serial` field. */
   serial?: Maybe<StringFilter>;
   /** Filter by the object’s `name` field. */
@@ -814,6 +812,8 @@ export type ApplicationFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `isActive` field. */
   isActive?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isConfig` field. */
+  isConfig?: Maybe<BooleanFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `stage` field. */
@@ -881,11 +881,11 @@ export type ApplicationInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -1464,11 +1464,11 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -1592,11 +1592,11 @@ export type ApplicationPatch = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -1666,11 +1666,11 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -2156,11 +2156,11 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -2455,8 +2455,6 @@ export enum ApplicationsOrderBy {
   OrgIdDesc = 'ORG_ID_DESC',
   SessionIdAsc = 'SESSION_ID_ASC',
   SessionIdDesc = 'SESSION_ID_DESC',
-  IsConfigAsc = 'IS_CONFIG_ASC',
-  IsConfigDesc = 'IS_CONFIG_DESC',
   SerialAsc = 'SERIAL_ASC',
   SerialDesc = 'SERIAL_DESC',
   NameAsc = 'NAME_ASC',
@@ -2465,6 +2463,8 @@ export enum ApplicationsOrderBy {
   OutcomeDesc = 'OUTCOME_DESC',
   IsActiveAsc = 'IS_ACTIVE_ASC',
   IsActiveDesc = 'IS_ACTIVE_DESC',
+  IsConfigAsc = 'IS_CONFIG_ASC',
+  IsConfigDesc = 'IS_CONFIG_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -2546,11 +2546,11 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -3470,11 +3470,11 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -3644,11 +3644,11 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -8012,11 +8012,11 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -10808,11 +10808,11 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -15445,11 +15445,11 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -15616,11 +15616,11 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23663,11 +23663,11 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23688,11 +23688,11 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23713,11 +23713,11 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23739,11 +23739,11 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23765,11 +23765,11 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23791,11 +23791,11 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23817,11 +23817,11 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23843,11 +23843,11 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23869,11 +23869,11 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23895,11 +23895,11 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -23921,11 +23921,11 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -28952,11 +28952,11 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
-  isConfig?: Maybe<Scalars['Boolean']>;
   serial?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   outcome?: Maybe<ApplicationOutcome>;
   isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
   userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
@@ -32775,11 +32775,11 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   sessionId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  isConfig?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   serial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
   isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isConfig?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
