@@ -12,6 +12,5 @@ export const loadActionPlugins = async () => {
   // Load Action functions into global scope
   await loadActions(actionLibrary)
   // Launch any overdue scheduled actions
-  console.log('Checking for overdue actions...')
   await triggerScheduledActions()
 }

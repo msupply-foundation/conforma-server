@@ -59,7 +59,7 @@ scheduler.scheduleJob(checkActionSchedule, () => {
 export const triggerScheduledActions = async () => {
   console.log(
     DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
-    'Triggering scheduled actions...'
+    'Checking scheduled actions...'
   )
   DBConnect.triggerScheduledActions()
 }

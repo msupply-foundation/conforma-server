@@ -22,7 +22,6 @@ CREATE TABLE public.action_queue (
         output jsonb,
         time_queued timestamptz,
         time_completed timestamptz,
-        time_scheduled timestamptz,
         error_log varchar
 );
 

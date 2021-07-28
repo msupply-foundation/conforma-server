@@ -1294,6 +1294,91 @@ exports.queries = [
               ${coreActions}
               ${devActions}
               {
+                actionCode: "scheduleAction"
+                trigger: ON_APPLICATION_CREATE
+                sequence: 1
+                parameterQueries:{
+                  code: "not1"
+                  duration: { minute: 2 }
+                }
+              }
+              {
+                actionCode: "scheduleAction"
+                trigger: ON_APPLICATION_CREATE
+                parameterQueries:{
+                  code: "exp1"
+                  duration: { minute: 4 }
+                }
+              }
+              {
+                actionCode: "sendNotification"
+                trigger: ON_SCHEDULE
+                code: "not1"
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.status"]
+                    }
+                    "DRAFT"
+                  ]
+                }
+                parameterQueries: {
+                  fromName: "Application Manager"
+                  fromEmail: "no-reply@sussol.net"
+                  email: {
+                    operator: "objectProperties"
+                    children: ["applicationData.email", ""]
+                  }
+                  subject: "Draft application in progress"
+                  message: "Your application will expire if you don't complete it soon"
+                }
+              }
+              {
+                actionCode: "changeOutcome"
+                trigger: ON_SCHEDULE
+                code: "exp1"
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.status"]
+                    }
+                    "DRAFT"
+                  ]
+                }
+                parameterQueries:{
+                  newOutcome: "EXPIRED"
+                }
+              }
+              {
+                actionCode: "sendNotification"
+                trigger: ON_SCHEDULE
+                code: "exp1"
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.status"]
+                    }
+                    "DRAFT"
+                  ]
+                }
+                parameterQueries: {
+                  fromName: "Application Manager"
+                  fromEmail: "no-reply@sussol.net"
+                  email: {
+                    operator: "objectProperties"
+                    children: ["applicationData.email", ""]
+                  }
+                  subject: "Application expired"
+                  message: "Your application has expired. If you wish to continue, you'll need to re-apply."
+                }
+              }
+              {
                 actionCode: "cLog"
                 trigger: ON_APPLICATION_SUBMIT
                 sequence: 100
