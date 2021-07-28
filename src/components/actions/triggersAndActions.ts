@@ -20,6 +20,7 @@ import path from 'path'
 import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
 import scheduler from 'node-schedule'
 import config from '../../config'
+import { DateTime } from 'luxon'
 
 const showApplicationDataLog = false
 
@@ -44,18 +45,22 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
 
 // Instantiate node-scheduler to run scheduled actions periodically
 const checkActionSchedule = new scheduler.RecurrenceRule()
+
+const hoursSchedule = config.hoursSchedule
+checkActionSchedule.hour = hoursSchedule
+checkActionSchedule.minute = 0
 // Enable next line for testing -- it'll run every 30 secs
 // checkActionSchedule.second = [0, 30]
-
-const hoursSchedule = config.hoursSchedule || 0
-checkActionSchedule.hour = hoursSchedule
 
 scheduler.scheduleJob(checkActionSchedule, () => {
   triggerScheduledActions()
 })
 
 export const triggerScheduledActions = async () => {
-  console.log('Triggering scheduled actions...')
+  console.log(
+    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
+    'Triggering scheduled actions...'
+  )
   DBConnect.triggerScheduledActions()
 }
 
