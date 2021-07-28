@@ -22,11 +22,11 @@ class DBConnect {
 
   public executedActionStatusUpdate = PostgresDB.executedActionStatusUpdate
 
-  public getActionsScheduled = PostgresDB.getActionsScheduled
-
   public getActionsProcessing = PostgresDB.getActionsProcessing
 
   public updateActionParametersEvaluated = PostgresDB.updateActionParametersEvaluated
+
+  public triggerScheduledActions = PostgresDB.triggerScheduledActions
 
   public resetTrigger = PostgresDB.resetTrigger
 

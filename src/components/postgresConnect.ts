@@ -133,22 +133,6 @@ class PostgresDB {
     }
   }
 
-  public getActionsScheduled = async (
-    payload: ActionQueueGetPayload = { status: ActionQueueStatus.Scheduled }
-  ): Promise<ActionQueue[]> => {
-    const text =
-      'SELECT id, action_code, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
-    try {
-      const result = await this.query({
-        text,
-        values: Object.values(payload),
-      })
-      return result.rows as ActionQueue[]
-    } catch (err) {
-      throw err
-    }
-  }
-
   public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
     const text =
       "SELECT id, action_code, trigger_payload, condition_expression, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'PROCESSING' ORDER BY sequence"
@@ -170,6 +154,20 @@ class PostgresDB {
         text,
         values: [parameters, action_id],
       })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public triggerScheduledActions = async () => {
+    const text = `
+      UPDATE action_schedule SET trigger = 'ON_SCHEDULE'
+        WHERE time_scheduled < NOW()
+        AND is_active = true
+    `
+    try {
+      const result = await this.query({ text })
       return true
     } catch (err) {
       throw err

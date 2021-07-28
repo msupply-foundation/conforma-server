@@ -18,8 +18,9 @@ import { getApplicationData } from './getApplicationData'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import path from 'path'
 import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
+import scheduler from 'node-schedule'
+import config from '../../config'
 
-const schedule = require('node-schedule')
 const showApplicationDataLog = false
 
 // Load actions from Database at server startup
@@ -41,58 +42,21 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
   }
 }
 
-// Load scheduled jobs from Database at server startup
-export const loadScheduledActions = async function (
-  actionLibrary: ActionLibrary,
-  actionSchedule: any[]
-) {
-  console.log('Loading Scheduled jobs...')
+// Instantiate node-scheduler to run scheduled actions periodically
+const checkActionSchedule = new scheduler.RecurrenceRule()
+// Enable next line for testing -- it'll run every 30 secs
+// checkActionSchedule.second = [0, 30]
 
-  // Load from Database
-  const actions = await DBConnect.getActionsScheduled()
+const hoursSchedule = config.hoursSchedule || 0
+checkActionSchedule.hour = hoursSchedule
 
-  let isExecutedAction = true
-  // TO-DO: Implement Scheduled Actions properly -- this code is probably no longer working
-  for await (const scheduledAction of actions)
-    while (isExecutedAction) {
-      const date = new Date(scheduledAction.time_completed)
-      if (date > new Date(Date.now())) {
-        const job = schedule.scheduleJob(date, function () {
-          // TODO: Check if was executed otherwise don't continue
-          executeAction(
-            {
-              id: scheduledAction.id,
-              code: scheduledAction.action_code,
-              condition_expression: scheduledAction.condition_expression as EvaluatorNode,
-              parameter_queries: scheduledAction.parameter_queries,
-            },
-            actionLibrary
-          )
-        })
-        actionSchedule.push(job)
-      } else {
-        // Overdue jobs to be executed immediately
-        console.log(
-          'Executing overdue action:',
-          scheduledAction.action_code,
-          scheduledAction.parameters_evaluated
-        )
-        // TODO: Evaluate parameters at runtime
-        executeAction(
-          {
-            id: scheduledAction.id,
-            code: scheduledAction.action_code,
-            condition_expression: scheduledAction.condition_expression as EvaluatorNode,
-            parameter_queries: scheduledAction.parameter_queries,
-          },
-          actionLibrary
-        )
-      }
-    }
+scheduler.scheduleJob(checkActionSchedule, () => {
+  triggerScheduledActions()
+})
 
-  actionSchedule.length > 0
-    ? console.log(`${actionSchedule.length} scheduled jobs loaded.`)
-    : console.log('There were no jobs to be loaded.')
+export const triggerScheduledActions = async () => {
+  console.log('Triggering scheduled actions...')
+  DBConnect.triggerScheduledActions()
 }
 
 export async function processTrigger(payload: TriggerPayload) {

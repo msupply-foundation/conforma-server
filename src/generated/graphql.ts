@@ -418,7 +418,6 @@ export enum ActionQueuesOrderBy {
 }
 
 export enum ActionQueueStatus {
-  Scheduled = 'SCHEDULED',
   Queued = 'QUEUED',
   Processing = 'PROCESSING',
   Success = 'SUCCESS',

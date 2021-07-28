@@ -1,4 +1,4 @@
-import { loadActions, loadScheduledActions } from './actions/triggersAndActions'
+import { loadActions, triggerScheduledActions } from './actions/triggersAndActions'
 import registerPlugins from './registerPlugins'
 import { ActionLibrary } from '../types'
 
@@ -11,6 +11,7 @@ export const loadActionPlugins = async () => {
   await registerPlugins()
   // Load Action functions into global scope
   await loadActions(actionLibrary)
-  // // Schedule future actions and execute overdue ones
-  await loadScheduledActions(actionLibrary, actionSchedule)
+  // Launch any overdue scheduled actions
+  console.log('Checking for overdue actions...')
+  await triggerScheduledActions()
 }
