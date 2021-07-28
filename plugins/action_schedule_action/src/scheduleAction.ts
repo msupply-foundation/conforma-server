@@ -3,6 +3,10 @@ import { ActionPluginType } from '../../types'
 import databaseMethods from './databaseMethods'
 import { DateTime } from 'luxon'
 
+// Todo:
+// - console output
+// - update rather than create if applicationId and code match
+
 const scheduleAction: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
   const {

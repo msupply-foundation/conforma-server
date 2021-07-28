@@ -1298,7 +1298,7 @@ exports.queries = [
                 trigger: ON_APPLICATION_CREATE
                 sequence: 1
                 parameterQueries:{
-                  code: "not1"
+                  code: "war1"
                   duration: { minute: 2 }
                 }
               }
@@ -1313,7 +1313,7 @@ exports.queries = [
               {
                 actionCode: "sendNotification"
                 trigger: ON_SCHEDULE
-                code: "not1"
+                code: "war1"
                 condition: {
                   operator: "="
                   children: [
@@ -1339,6 +1339,7 @@ exports.queries = [
                 actionCode: "changeOutcome"
                 trigger: ON_SCHEDULE
                 code: "exp1"
+                sequence: 1
                 condition: {
                   operator: "="
                   children: [
@@ -1351,6 +1352,25 @@ exports.queries = [
                 }
                 parameterQueries:{
                   newOutcome: "EXPIRED"
+                }
+              }
+              {
+                actionCode: "changeStatus"
+                trigger: ON_SCHEDULE
+                code: "exp1"
+                sequence: 2
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.status"]
+                    }
+                    "DRAFT"
+                  ]
+                }
+                parameterQueries:{
+                  newStatus: "COMPLETED"
                 }
               }
               {
