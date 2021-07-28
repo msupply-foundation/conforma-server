@@ -29,6 +29,7 @@ CREATE TABLE public.trigger_queue (
     trigger_type public.trigger,
     "table" varchar,
     record_id int,
+    template_action_code varchar,
     timestamp timestamptz,
     status public.trigger_queue_status,
     log jsonb
@@ -39,10 +40,17 @@ CREATE OR REPLACE FUNCTION public.add_event_to_trigger_queue ()
     RETURNS TRIGGER
     AS $trigger_queue$
 BEGIN
-    INSERT INTO trigger_queue (trigger_type, "table", record_id, timestamp, status)
-        VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, CURRENT_TIMESTAMP, 'TRIGGERED');
-    EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
-    RETURN NULL;
+    IF TG_TABLE_NAME = 'action_schedule' THEN
+        INSERT INTO trigger_queue (trigger_type, "table", record_id, template_action_code, timestamp, status)
+            VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, NEW.template_action_code, CURRENT_TIMESTAMP, 'TRIGGERED');
+        EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
+        RETURN NULL;
+    ELSE
+        INSERT INTO trigger_queue (trigger_type, "table", record_id, timestamp, status)
+            VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, CURRENT_TIMESTAMP, 'TRIGGERED');
+        EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
+        RETURN NULL;
+    END IF;
 END;
 $trigger_queue$
 LANGUAGE plpgsql;

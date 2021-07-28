@@ -1,7 +1,7 @@
 -- scheduled actions/events
 CREATE TABLE public.action_schedule (
     id serial PRIMARY KEY,
-    table_name varchar,
+    "table" varchar,
     entity_id integer,
     template_action_code varchar,
     time_scheduled timestamptz,
