@@ -40,6 +40,7 @@ CREATE OR REPLACE FUNCTION public.add_event_to_trigger_queue ()
     RETURNS TRIGGER
     AS $trigger_queue$
 BEGIN
+    --
     IF TG_TABLE_NAME = 'action_schedule' THEN
         INSERT INTO trigger_queue (trigger_type, "table", record_id, template_action_code, timestamp, status)
             VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, NEW.template_action_code, CURRENT_TIMESTAMP, 'TRIGGERED');

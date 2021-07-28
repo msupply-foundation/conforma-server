@@ -1,7 +1,7 @@
 const databaseMethods = (DBConnect: any) => ({
   createVerification: async ({ uniqueId, applicationId, expiryTime, code, message, data }: any) => {
     const text = `
-      INSERT into verification (unique_id, application_id, time_expired, code, message, data)
+      INSERT into verification (unique_id, application_id, time_expired, template_action_code, message, data)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
     `

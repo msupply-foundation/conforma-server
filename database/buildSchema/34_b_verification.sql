@@ -3,7 +3,7 @@ CREATE TABLE public.verification (
     id serial PRIMARY KEY,
     unique_id varchar UNIQUE NOT NULL,
     application_id integer REFERENCES public.application (id) NOT NULL,
-    code varchar,
+    template_action_code varchar,
     message varchar,
     data jsonb,
     time_created timestamptz DEFAULT NOW(),
