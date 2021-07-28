@@ -618,6 +618,7 @@ export type ActionSchedule = Node & {
   timeScheduled?: Maybe<Scalars['Datetime']>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   /** Reads a single `Application` that is related to this `ActionSchedule`. */
   application?: Maybe<Application>;
@@ -643,6 +644,7 @@ export type ActionScheduleApplicationIdFkeyActionScheduleCreateInput = {
   templateActionCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   templateId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
@@ -737,6 +739,8 @@ export type ActionScheduleCondition = {
   applicationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `isActive` field. */
+  isActive?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
 };
@@ -757,6 +761,8 @@ export type ActionScheduleFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `isActive` field. */
+  isActive?: Maybe<BooleanFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `application` relation. */
@@ -784,6 +790,7 @@ export type ActionScheduleInput = {
   timeScheduled?: Maybe<Scalars['Datetime']>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
@@ -840,6 +847,7 @@ export type ActionSchedulePatch = {
   timeScheduled?: Maybe<Scalars['Datetime']>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
@@ -884,6 +892,8 @@ export enum ActionSchedulesOrderBy {
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  IsActiveAsc = 'IS_ACTIVE_ASC',
+  IsActiveDesc = 'IS_ACTIVE_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
@@ -898,6 +908,7 @@ export type ActionScheduleTemplateIdFkeyActionScheduleCreateInput = {
   templateActionCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   applicationId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
@@ -24015,6 +24026,7 @@ export type UpdateActionScheduleOnActionScheduleForActionScheduleApplicationIdFk
   templateActionCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   templateId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
@@ -24028,6 +24040,7 @@ export type UpdateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyP
   templateActionCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   applicationId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
   applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
   templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
@@ -28322,7 +28335,7 @@ export type UpdateVerificationInput = {
 export type UpdateVerificationOnVerificationForVerificationApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
+  templateActionCode?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -29422,7 +29435,7 @@ export type Verification = Node & {
   id: Scalars['Int'];
   uniqueId: Scalars['String'];
   applicationId: Scalars['Int'];
-  code?: Maybe<Scalars['String']>;
+  templateActionCode?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -29513,7 +29526,7 @@ export type VerificationApplicationIdFkeyInverseInput = {
 export type VerificationApplicationIdFkeyVerificationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   uniqueId: Scalars['String'];
-  code?: Maybe<Scalars['String']>;
+  templateActionCode?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -29534,8 +29547,8 @@ export type VerificationCondition = {
   uniqueId?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `code` field. */
-  code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `templateActionCode` field. */
+  templateActionCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `message` field. */
   message?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `data` field. */
@@ -29558,8 +29571,8 @@ export type VerificationFilter = {
   uniqueId?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `code` field. */
-  code?: Maybe<StringFilter>;
+  /** Filter by the object’s `templateActionCode` field. */
+  templateActionCode?: Maybe<StringFilter>;
   /** Filter by the object’s `message` field. */
   message?: Maybe<StringFilter>;
   /** Filter by the object’s `data` field. */
@@ -29587,7 +29600,7 @@ export type VerificationInput = {
   id?: Maybe<Scalars['Int']>;
   uniqueId: Scalars['String'];
   applicationId?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['String']>;
+  templateActionCode?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -29636,7 +29649,7 @@ export type VerificationPatch = {
   id?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['String']>;
+  templateActionCode?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -29677,8 +29690,8 @@ export enum VerificationsOrderBy {
   UniqueIdDesc = 'UNIQUE_ID_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  CodeAsc = 'CODE_ASC',
-  CodeDesc = 'CODE_DESC',
+  TemplateActionCodeAsc = 'TEMPLATE_ACTION_CODE_ASC',
+  TemplateActionCodeDesc = 'TEMPLATE_ACTION_CODE_DESC',
   MessageAsc = 'MESSAGE_ASC',
   MessageDesc = 'MESSAGE_DESC',
   DataAsc = 'DATA_ASC',
@@ -33321,6 +33334,7 @@ export type ActionScheduleResolvers<ContextType = any, ParentType extends Resolv
   timeScheduled?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
@@ -36465,7 +36479,7 @@ export type VerificationResolvers<ContextType = any, ParentType extends Resolver
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uniqueId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  templateActionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;

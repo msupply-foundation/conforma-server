@@ -7,6 +7,7 @@ CREATE TABLE public.action_schedule (
     time_scheduled timestamptz,
     application_id integer REFERENCES public.application (id),
     template_id integer REFERENCES public.template (id),
+    is_active boolean DEFAULT TRUE,
     TRIGGER public.trigger
 );
 

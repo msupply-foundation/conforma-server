@@ -96,12 +96,17 @@ export const loadScheduledActions = async function (
 }
 
 export async function processTrigger(payload: TriggerPayload) {
-  const { trigger_id, trigger, table, record_id } = payload
+  const { trigger_id, trigger, table, record_id, template_action_code } = payload
 
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
-  // Get Actions from matching Template
-  const actions = await DBConnect.getActionsByTemplateId(templateId, trigger)
+  // Get Actions from matching Template (and match templateActionCode if applicable)
+  const actions = await (
+    await DBConnect.getActionsByTemplateId(templateId, trigger)
+  ).filter((action) => {
+    if (!template_action_code) return true
+    else return action.template_action_code === template_action_code
+  })
 
   // Separate into Sequential and Async actions
   const actionsSequential: ActionSequential[] = []

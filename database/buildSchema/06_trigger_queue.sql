@@ -41,7 +41,7 @@ CREATE OR REPLACE FUNCTION public.add_event_to_trigger_queue ()
     AS $trigger_queue$
 BEGIN
     --
-    IF TG_TABLE_NAME = 'action_schedule' THEN
+    IF TG_TABLE_NAME = 'action_schedule' OR TG_TABLE_NAME = 'verification' THEN
         INSERT INTO trigger_queue (trigger_type, "table", record_id, template_action_code, timestamp, status)
             VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, NEW.template_action_code, CURRENT_TIMESTAMP, 'TRIGGERED');
         EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
@@ -62,7 +62,7 @@ CREATE OR REPLACE FUNCTION public.notify_trigger_queue ()
     AS $trigger_event$
 BEGIN
     PERFORM
-        pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id)::text);
+        pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'template_action_code', NEW.template_action_code)::text);
     RETURN NULL;
 END;
 $trigger_event$
