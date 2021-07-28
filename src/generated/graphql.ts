@@ -531,6 +531,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -605,6 +606,366 @@ export type ActionQueueTriggerEventFkeyTriggerQueueCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
 };
 
+export type ActionSchedule = Node & {
+  __typename?: 'ActionSchedule';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  tableName?: Maybe<Scalars['String']>;
+  entityId?: Maybe<Scalars['Int']>;
+  templateActionCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  /** Reads a single `Application` that is related to this `ActionSchedule`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Template` that is related to this `ActionSchedule`. */
+  template?: Maybe<Template>;
+};
+
+/** The fields on `actionSchedule` to look up the row to connect. */
+export type ActionScheduleActionSchedulePkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `actionSchedule` to look up the row to delete. */
+export type ActionScheduleActionSchedulePkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The `actionSchedule` to be created by this mutation. */
+export type ActionScheduleApplicationIdFkeyActionScheduleCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  entityId?: Maybe<Scalars['Int']>;
+  templateActionCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  templateId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
+};
+
+/** The `application` to be created by this mutation. */
+export type ActionScheduleApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `application` in the `ActionScheduleInput` mutation. */
+export type ActionScheduleApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<ActionScheduleApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** Input for the nested mutation of `actionSchedule` in the `ApplicationInput` mutation. */
+export type ActionScheduleApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `actionSchedule` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
+  connectById?: Maybe<Array<ActionScheduleActionSchedulePkeyConnect>>;
+  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ActionScheduleNodeIdConnect>>;
+  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ActionScheduleActionSchedulePkeyDelete>>;
+  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ActionScheduleNodeIdDelete>>;
+  /** The primary key(s) and patch data for `actionSchedule` for the far side of the relationship. */
+  updateById?: Maybe<Array<ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate>>;
+  /** The primary key(s) and patch data for `actionSchedule` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate>>;
+  /** A `ActionScheduleInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ActionScheduleApplicationIdFkeyActionScheduleCreateInput>>;
+};
+
+/**
+ * A condition to be used against `ActionSchedule` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type ActionScheduleCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `tableName` field. */
+  tableName?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `entityId` field. */
+  entityId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateActionCode` field. */
+  templateActionCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `timeScheduled` field. */
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
+};
+
+/** A filter to be used against `ActionSchedule` object types. All fields are combined with a logical ‘and.’ */
+export type ActionScheduleFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `tableName` field. */
+  tableName?: Maybe<StringFilter>;
+  /** Filter by the object’s `entityId` field. */
+  entityId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateActionCode` field. */
+  templateActionCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `timeScheduled` field. */
+  timeScheduled?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** A related `application` exists. */
+  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** A related `template` exists. */
+  templateExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ActionScheduleFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ActionScheduleFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ActionScheduleFilter>;
+};
+
+/** An input for mutations affecting `ActionSchedule` */
+export type ActionScheduleInput = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  entityId?: Maybe<Scalars['Int']>;
+  templateActionCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type ActionScheduleNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `actionSchedule` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type ActionScheduleNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `actionSchedule` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The fields on `actionSchedule` to look up the row to update. */
+export type ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate = {
+  /** An object where the defined keys will be set on the `actionSchedule` being updated. */
+  patch: UpdateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `template` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: TemplatePatch;
+};
+
+/** The fields on `actionSchedule` to look up the row to update. */
+export type ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate = {
+  /** An object where the defined keys will be set on the `actionSchedule` being updated. */
+  patch: UpdateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `ActionSchedule`. Fields that are set will be updated. */
+export type ActionSchedulePatch = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  entityId?: Maybe<Scalars['Int']>;
+  templateActionCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
+};
+
+/** A connection to a list of `ActionSchedule` values. */
+export type ActionSchedulesConnection = {
+  __typename?: 'ActionSchedulesConnection';
+  /** A list of `ActionSchedule` objects. */
+  nodes: Array<Maybe<ActionSchedule>>;
+  /** A list of edges which contains the `ActionSchedule` and cursor to aid in pagination. */
+  edges: Array<ActionSchedulesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ActionSchedule` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ActionSchedule` edge in the connection. */
+export type ActionSchedulesEdge = {
+  __typename?: 'ActionSchedulesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ActionSchedule` at the end of the edge. */
+  node?: Maybe<ActionSchedule>;
+};
+
+/** Methods to use when ordering `ActionSchedule`. */
+export enum ActionSchedulesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TableNameAsc = 'TABLE_NAME_ASC',
+  TableNameDesc = 'TABLE_NAME_DESC',
+  EntityIdAsc = 'ENTITY_ID_ASC',
+  EntityIdDesc = 'ENTITY_ID_DESC',
+  TemplateActionCodeAsc = 'TEMPLATE_ACTION_CODE_ASC',
+  TemplateActionCodeDesc = 'TEMPLATE_ACTION_CODE_DESC',
+  TimeScheduledAsc = 'TIME_SCHEDULED_ASC',
+  TimeScheduledDesc = 'TIME_SCHEDULED_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** The `actionSchedule` to be created by this mutation. */
+export type ActionScheduleTemplateIdFkeyActionScheduleCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  entityId?: Maybe<Scalars['Int']>;
+  templateActionCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
+};
+
+/** Input for the nested mutation of `template` in the `ActionScheduleInput` mutation. */
+export type ActionScheduleTemplateIdFkeyInput = {
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectById?: Maybe<TemplateTemplatePkeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateNodeIdConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateTemplatePkeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateById?: Maybe<TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate>;
+  /** A `TemplateInput` object that will be created and connected to this object. */
+  create?: Maybe<ActionScheduleTemplateIdFkeyTemplateCreateInput>;
+};
+
+/** Input for the nested mutation of `actionSchedule` in the `TemplateInput` mutation. */
+export type ActionScheduleTemplateIdFkeyInverseInput = {
+  /** Flag indicating whether all other `actionSchedule` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
+  connectById?: Maybe<Array<ActionScheduleActionSchedulePkeyConnect>>;
+  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ActionScheduleNodeIdConnect>>;
+  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ActionScheduleActionSchedulePkeyDelete>>;
+  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ActionScheduleNodeIdDelete>>;
+  /** The primary key(s) and patch data for `actionSchedule` for the far side of the relationship. */
+  updateById?: Maybe<Array<ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate>>;
+  /** The primary key(s) and patch data for `actionSchedule` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate>>;
+  /** A `ActionScheduleInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ActionScheduleTemplateIdFkeyActionScheduleCreateInput>>;
+};
+
+/** The `template` to be created by this mutation. */
+export type ActionScheduleTemplateIdFkeyTemplateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+};
+
 export type Application = Node & {
   __typename?: 'Application';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -631,6 +992,8 @@ export type Application = Node & {
   applicationStageHistories: ApplicationStageHistoriesConnection;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
   applicationResponses: ApplicationResponsesConnection;
+  /** Reads and enables pagination through a set of `ActionSchedule`. */
+  actionSchedules: ActionSchedulesConnection;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
   /** Reads and enables pagination through a set of `Review`. */
@@ -680,6 +1043,18 @@ export type ApplicationApplicationResponsesArgs = {
   orderBy?: Maybe<Array<ApplicationResponsesOrderBy>>;
   condition?: Maybe<ApplicationResponseCondition>;
   filter?: Maybe<ApplicationResponseFilter>;
+};
+
+
+export type ApplicationActionSchedulesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
+  condition?: Maybe<ActionScheduleCondition>;
+  filter?: Maybe<ActionScheduleFilter>;
 };
 
 
@@ -829,6 +1204,10 @@ export type ApplicationFilter = {
   applicationResponses?: Maybe<ApplicationToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
   applicationResponsesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `actionSchedules` relation. */
+  actionSchedules?: Maybe<ApplicationToManyActionScheduleFilter>;
+  /** Some related `actionSchedules` exist. */
+  actionSchedulesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignments` relation. */
   reviewAssignments?: Maybe<ApplicationToManyReviewAssignmentFilter>;
   /** Some related `reviewAssignments` exist. */
@@ -887,6 +1266,7 @@ export type ApplicationInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -1211,6 +1591,28 @@ export type ApplicationNodeIdDelete = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `actionSchedule` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `actionSchedule` being updated. */
+  patch: ActionSchedulePatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `organisation` to be connected. */
   nodeId: Scalars['ID'];
@@ -1469,6 +1871,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -1598,6 +2001,7 @@ export type ApplicationPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -1671,6 +2075,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -2160,6 +2565,7 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -2541,6 +2947,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -3462,6 +3869,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -3534,8 +3942,19 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+};
+
+/** A filter to be used against many `ActionSchedule` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyActionScheduleFilter = {
+  /** Every related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ActionScheduleFilter>;
+  /** Some related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ActionScheduleFilter>;
+  /** No related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ActionScheduleFilter>;
 };
 
 /** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -3635,6 +4054,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -4218,6 +4638,43 @@ export type CreateActionQueuePayload = {
 /** The output of our create `ActionQueue` mutation. */
 export type CreateActionQueuePayloadActionQueueEdgeArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
+};
+
+/** All input for the create `ActionSchedule` mutation. */
+export type CreateActionScheduleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ActionSchedule` to be created by this mutation. */
+  actionSchedule: ActionScheduleInput;
+};
+
+/** The output of our create `ActionSchedule` mutation. */
+export type CreateActionSchedulePayload = {
+  __typename?: 'CreateActionSchedulePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ActionSchedule` that was created by this mutation. */
+  actionSchedule?: Maybe<ActionSchedule>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `ActionSchedule`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Template` that is related to this `ActionSchedule`. */
+  template?: Maybe<Template>;
+  /** An edge for our `ActionSchedule`. May be used by Relay 1. */
+  actionScheduleEdge?: Maybe<ActionSchedulesEdge>;
+};
+
+
+/** The output of our create `ActionSchedule` mutation. */
+export type CreateActionSchedulePayloadActionScheduleEdgeArgs = {
+  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
 };
 
 /** All input for the create `Application` mutation. */
@@ -5787,6 +6244,54 @@ export type DeleteActionQueuePayload = {
 /** The output of our delete `ActionQueue` mutation. */
 export type DeleteActionQueuePayloadActionQueueEdgeArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
+};
+
+/** All input for the `deleteActionScheduleByNodeId` mutation. */
+export type DeleteActionScheduleByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ActionSchedule` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteActionSchedule` mutation. */
+export type DeleteActionScheduleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `ActionSchedule` mutation. */
+export type DeleteActionSchedulePayload = {
+  __typename?: 'DeleteActionSchedulePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ActionSchedule` that was deleted by this mutation. */
+  actionSchedule?: Maybe<ActionSchedule>;
+  deletedActionScheduleNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `ActionSchedule`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Template` that is related to this `ActionSchedule`. */
+  template?: Maybe<Template>;
+  /** An edge for our `ActionSchedule`. May be used by Relay 1. */
+  actionScheduleEdge?: Maybe<ActionSchedulesEdge>;
+};
+
+
+/** The output of our delete `ActionSchedule` mutation. */
+export type DeleteActionSchedulePayloadActionScheduleEdgeArgs = {
+  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
 };
 
 /** All input for the `deleteApplicationByNodeId` mutation. */
@@ -7968,6 +8473,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -8419,6 +8925,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -8864,6 +9371,8 @@ export type Mutation = {
   createActionPlugin?: Maybe<CreateActionPluginPayload>;
   /** Creates a single `ActionQueue`. */
   createActionQueue?: Maybe<CreateActionQueuePayload>;
+  /** Creates a single `ActionSchedule`. */
+  createActionSchedule?: Maybe<CreateActionSchedulePayload>;
   /** Creates a single `Application`. */
   createApplication?: Maybe<CreateApplicationPayload>;
   /** Creates a single `ApplicationListShape`. */
@@ -8952,6 +9461,10 @@ export type Mutation = {
   updateActionQueueByNodeId?: Maybe<UpdateActionQueuePayload>;
   /** Updates a single `ActionQueue` using a unique key and a patch. */
   updateActionQueue?: Maybe<UpdateActionQueuePayload>;
+  /** Updates a single `ActionSchedule` using its globally unique id and a patch. */
+  updateActionScheduleByNodeId?: Maybe<UpdateActionSchedulePayload>;
+  /** Updates a single `ActionSchedule` using a unique key and a patch. */
+  updateActionSchedule?: Maybe<UpdateActionSchedulePayload>;
   /** Updates a single `Application` using its globally unique id and a patch. */
   updateApplicationByNodeId?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `Application` using a unique key and a patch. */
@@ -9140,6 +9653,10 @@ export type Mutation = {
   deleteActionQueueByNodeId?: Maybe<DeleteActionQueuePayload>;
   /** Deletes a single `ActionQueue` using a unique key. */
   deleteActionQueue?: Maybe<DeleteActionQueuePayload>;
+  /** Deletes a single `ActionSchedule` using its globally unique id. */
+  deleteActionScheduleByNodeId?: Maybe<DeleteActionSchedulePayload>;
+  /** Deletes a single `ActionSchedule` using a unique key. */
+  deleteActionSchedule?: Maybe<DeleteActionSchedulePayload>;
   /** Deletes a single `Application` using its globally unique id. */
   deleteApplicationByNodeId?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `Application` using a unique key. */
@@ -9330,6 +9847,12 @@ export type MutationCreateActionPluginArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateActionQueueArgs = {
   input: CreateActionQueueInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateActionScheduleArgs = {
+  input: CreateActionScheduleInput;
 };
 
 
@@ -9594,6 +10117,18 @@ export type MutationUpdateActionQueueByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateActionQueueArgs = {
   input: UpdateActionQueueInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateActionScheduleByNodeIdArgs = {
+  input: UpdateActionScheduleByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateActionScheduleArgs = {
+  input: UpdateActionScheduleInput;
 };
 
 
@@ -10158,6 +10693,18 @@ export type MutationDeleteActionQueueByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteActionQueueArgs = {
   input: DeleteActionQueueInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteActionScheduleByNodeIdArgs = {
+  input: DeleteActionScheduleByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteActionScheduleArgs = {
+  input: DeleteActionScheduleInput;
 };
 
 
@@ -10740,6 +11287,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -13485,6 +14033,8 @@ export type Query = Node & {
   actionPlugins?: Maybe<ActionPluginsConnection>;
   /** Reads and enables pagination through a set of `ActionQueue`. */
   actionQueues?: Maybe<ActionQueuesConnection>;
+  /** Reads and enables pagination through a set of `ActionSchedule`. */
+  actionSchedules?: Maybe<ActionSchedulesConnection>;
   /** Reads and enables pagination through a set of `Application`. */
   applications?: Maybe<ApplicationsConnection>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
@@ -13578,6 +14128,7 @@ export type Query = Node & {
   actionPlugin?: Maybe<ActionPlugin>;
   actionPluginByCode?: Maybe<ActionPlugin>;
   actionQueue?: Maybe<ActionQueue>;
+  actionSchedule?: Maybe<ActionSchedule>;
   application?: Maybe<Application>;
   applicationBySerial?: Maybe<Application>;
   applicationResponse?: Maybe<ApplicationResponse>;
@@ -13659,6 +14210,8 @@ export type Query = Node & {
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
   actionQueueByNodeId?: Maybe<ActionQueue>;
+  /** Reads a single `ActionSchedule` using its globally unique `ID`. */
+  actionScheduleByNodeId?: Maybe<ActionSchedule>;
   /** Reads a single `Application` using its globally unique `ID`. */
   applicationByNodeId?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` using its globally unique `ID`. */
@@ -13767,6 +14320,19 @@ export type QueryActionQueuesArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
   condition?: Maybe<ActionQueueCondition>;
   filter?: Maybe<ActionQueueFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryActionSchedulesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
+  condition?: Maybe<ActionScheduleCondition>;
+  filter?: Maybe<ActionScheduleFilter>;
 };
 
 
@@ -14374,6 +14940,12 @@ export type QueryActionQueueArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryActionScheduleArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryApplicationArgs = {
   id: Scalars['Int'];
 };
@@ -14907,6 +15479,12 @@ export type QueryActionQueueByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryActionScheduleByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryApplicationByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -15232,6 +15810,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -15402,6 +15981,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -16916,6 +17496,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -19667,6 +20248,8 @@ export type Template = Node & {
   actionQueues: ActionQueuesConnection;
   /** Reads and enables pagination through a set of `TemplateAction`. */
   templateActions: TemplateActionsConnection;
+  /** Reads and enables pagination through a set of `ActionSchedule`. */
+  actionSchedules: ActionSchedulesConnection;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
   /** Reads and enables pagination through a set of `File`. */
@@ -19758,6 +20341,18 @@ export type TemplateTemplateActionsArgs = {
 };
 
 
+export type TemplateActionSchedulesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
+  condition?: Maybe<ActionScheduleCondition>;
+  filter?: Maybe<ActionScheduleFilter>;
+};
+
+
 export type TemplateReviewAssignmentsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -19787,6 +20382,7 @@ export type TemplateAction = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
@@ -19805,6 +20401,8 @@ export type TemplateActionCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `trigger` field. */
@@ -19823,6 +20421,8 @@ export type TemplateActionFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<IntFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
   /** Filter by the object’s `trigger` field. */
@@ -19849,6 +20449,7 @@ export type TemplateActionFilter = {
 export type TemplateActionInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
@@ -19888,6 +20489,7 @@ export type TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyUsingTe
 export type TemplateActionPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
@@ -19925,6 +20527,8 @@ export enum TemplateActionsOrderBy {
   IdDesc = 'ID_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
   ActionCodeAsc = 'ACTION_CODE_ASC',
   ActionCodeDesc = 'ACTION_CODE_DESC',
   TriggerAsc = 'TRIGGER_ASC',
@@ -19990,6 +20594,7 @@ export type TemplateActionTemplateIdFkeyInverseInput = {
 /** The `templateAction` to be created by this mutation. */
 export type TemplateActionTemplateIdFkeyTemplateActionCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
@@ -20019,6 +20624,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -20838,6 +21444,10 @@ export type TemplateFilter = {
   templateActions?: Maybe<TemplateToManyTemplateActionFilter>;
   /** Some related `templateActions` exist. */
   templateActionsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `actionSchedules` relation. */
+  actionSchedules?: Maybe<TemplateToManyActionScheduleFilter>;
+  /** Some related `actionSchedules` exist. */
+  actionSchedulesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignments` relation. */
   reviewAssignments?: Maybe<TemplateToManyReviewAssignmentFilter>;
   /** Some related `reviewAssignments` exist. */
@@ -21134,6 +21744,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -21167,6 +21778,7 @@ export type TemplateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -21195,6 +21807,21 @@ export type TemplateOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate = {
 export type TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplatePkeyUpdate = {
   /** An object where the defined keys will be set on the `template` being updated. */
   patch: UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `actionSchedule` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `actionSchedule` being updated. */
+  patch: ActionSchedulePatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -21354,6 +21981,7 @@ export type TemplatePatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -21684,6 +22312,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -21994,6 +22623,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -22647,6 +23277,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -22809,6 +23440,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -22831,6 +23463,16 @@ export type TemplateToManyActionQueueFilter = {
   some?: Maybe<ActionQueueFilter>;
   /** No related `ActionQueue` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ActionQueueFilter>;
+};
+
+/** A filter to be used against many `ActionSchedule` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateToManyActionScheduleFilter = {
+  /** Every related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ActionScheduleFilter>;
+  /** Some related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ActionScheduleFilter>;
+  /** No related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ActionScheduleFilter>;
 };
 
 /** A filter to be used against many `Application` object types. All fields are combined with a logical ‘and.’ */
@@ -22926,8 +23568,8 @@ export enum Trigger {
   OnReviewSelfAssign = 'ON_REVIEW_SELF_ASSIGN',
   OnApprovalSubmit = 'ON_APPROVAL_SUBMIT',
   OnVerification = 'ON_VERIFICATION',
+  OnSchedule = 'ON_SCHEDULE',
   DevTest = 'DEV_TEST',
-  OnScheduleTime = 'ON_SCHEDULE_TIME',
   Processing = 'PROCESSING',
   Error = 'ERROR'
 }
@@ -23330,6 +23972,83 @@ export type UpdateActionQueuePayloadActionQueueEdgeArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
 };
 
+/** All input for the `updateActionScheduleByNodeId` mutation. */
+export type UpdateActionScheduleByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ActionSchedule` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `ActionSchedule` being updated. */
+  patch: ActionSchedulePatch;
+};
+
+/** All input for the `updateActionSchedule` mutation. */
+export type UpdateActionScheduleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `ActionSchedule` being updated. */
+  patch: ActionSchedulePatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `actionSchedule` being updated. */
+export type UpdateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  entityId?: Maybe<Scalars['Int']>;
+  templateActionCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  templateId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `actionSchedule` being updated. */
+export type UpdateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  entityId?: Maybe<Scalars['Int']>;
+  templateActionCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
+};
+
+/** The output of our update `ActionSchedule` mutation. */
+export type UpdateActionSchedulePayload = {
+  __typename?: 'UpdateActionSchedulePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ActionSchedule` that was updated by this mutation. */
+  actionSchedule?: Maybe<ActionSchedule>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `ActionSchedule`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Template` that is related to this `ActionSchedule`. */
+  template?: Maybe<Template>;
+  /** An edge for our `ActionSchedule`. May be used by Relay 1. */
+  actionScheduleEdge?: Maybe<ActionSchedulesEdge>;
+};
+
+
+/** The output of our update `ActionSchedule` mutation. */
+export type UpdateActionSchedulePayloadActionScheduleEdgeArgs = {
+  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
+};
+
 /** All input for the `updateApplicationByNodeId` mutation. */
 export type UpdateApplicationByNodeIdInput = {
   /**
@@ -23368,6 +24087,32 @@ export type UpdateApplicationInput = {
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -23384,6 +24129,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -23408,6 +24154,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -23432,6 +24179,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -23457,6 +24205,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -23482,6 +24231,7 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -23507,6 +24257,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -23532,6 +24283,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -23557,6 +24309,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -23582,6 +24335,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -23607,6 +24361,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -23632,6 +24387,7 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -26146,6 +26902,7 @@ export type UpdateTemplateActionInput = {
 /** An object where the defined keys will be set on the `templateAction` being updated. */
 export type UpdateTemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['Int']>;
   actionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
@@ -26521,6 +27278,33 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `template` being updated. */
+export type UpdateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -26546,6 +27330,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -26571,6 +27356,7 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -26596,6 +27382,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -26621,6 +27408,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -26646,6 +27434,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -26670,6 +27459,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -26695,6 +27485,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -26720,6 +27511,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -26745,6 +27537,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -28647,6 +29440,7 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -29082,7 +29876,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['Verification'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ActionSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -29192,6 +29986,8 @@ export type ResolversTypes = {
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
   ApplicationStatusHistoryFilter: ApplicationStatusHistoryFilter;
   ApplicationToManyApplicationResponseFilter: ApplicationToManyApplicationResponseFilter;
+  ApplicationToManyActionScheduleFilter: ApplicationToManyActionScheduleFilter;
+  ActionScheduleFilter: ActionScheduleFilter;
   ApplicationToManyReviewAssignmentFilter: ApplicationToManyReviewAssignmentFilter;
   ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
@@ -29221,6 +30017,7 @@ export type ResolversTypes = {
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateActionFilter: TemplateActionFilter;
+  TemplateToManyActionScheduleFilter: TemplateToManyActionScheduleFilter;
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
   TemplateToManyFileFilter: TemplateToManyFileFilter;
   TemplateCategoryFilter: TemplateCategoryFilter;
@@ -29329,6 +30126,11 @@ export type ResolversTypes = {
   ApplicationStatusHistory: ResolverTypeWrapper<ApplicationStatusHistory>;
   ApplicationStatusHistoriesEdge: ResolverTypeWrapper<ApplicationStatusHistoriesEdge>;
   ApplicationStageHistoriesEdge: ResolverTypeWrapper<ApplicationStageHistoriesEdge>;
+  ActionSchedulesOrderBy: ActionSchedulesOrderBy;
+  ActionScheduleCondition: ActionScheduleCondition;
+  ActionSchedulesConnection: ResolverTypeWrapper<ActionSchedulesConnection>;
+  ActionSchedule: ResolverTypeWrapper<ActionSchedule>;
+  ActionSchedulesEdge: ResolverTypeWrapper<ActionSchedulesEdge>;
   ReviewsOrderBy: ReviewsOrderBy;
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ResolverTypeWrapper<ReviewsConnection>;
@@ -29685,66 +30487,28 @@ export type ResolversTypes = {
   TemplateActionTemplateIdFkeyInput: TemplateActionTemplateIdFkeyInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
-  ReviewAssignmentTemplateIdFkeyInverseInput: ReviewAssignmentTemplateIdFkeyInverseInput;
-  ReviewAssignmentReviewAssignmentPkeyConnect: ReviewAssignmentReviewAssignmentPkeyConnect;
-  ReviewAssignmentNodeIdConnect: ReviewAssignmentNodeIdConnect;
-  ReviewAssignmentReviewAssignmentPkeyDelete: ReviewAssignmentReviewAssignmentPkeyDelete;
-  ReviewAssignmentNodeIdDelete: ReviewAssignmentNodeIdDelete;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch;
-  ReviewAssignmentAssignerIdFkeyInput: ReviewAssignmentAssignerIdFkeyInput;
-  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
-  ApplicationUserIdFkeyInverseInput: ApplicationUserIdFkeyInverseInput;
-  ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnApplicationForApplicationUserIdFkeyPatch: UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch;
+  ActionScheduleTemplateIdFkeyInverseInput: ActionScheduleTemplateIdFkeyInverseInput;
+  ActionScheduleActionSchedulePkeyConnect: ActionScheduleActionSchedulePkeyConnect;
+  ActionScheduleNodeIdConnect: ActionScheduleNodeIdConnect;
+  ActionScheduleActionSchedulePkeyDelete: ActionScheduleActionSchedulePkeyDelete;
+  ActionScheduleNodeIdDelete: ActionScheduleNodeIdDelete;
+  ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate: ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate;
+  updateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch: UpdateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
+  ActionScheduleApplicationIdFkeyInput: ActionScheduleApplicationIdFkeyInput;
+  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch: UpdateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
   ApplicationUserIdFkeyInput: ApplicationUserIdFkeyInput;
   UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnApplicationForApplicationUserIdFkeyPatch: UpdateUserOnApplicationForApplicationUserIdFkeyPatch;
-  ReviewAssignmentAssignerIdFkeyInverseInput: ReviewAssignmentAssignerIdFkeyInverseInput;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
-  ReviewAssignmentReviewerIdFkeyInput: ReviewAssignmentReviewerIdFkeyInput;
-  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
-  ReviewAssignmentReviewerIdFkeyInverseInput: ReviewAssignmentReviewerIdFkeyInverseInput;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
-  ReviewAssignmentOrganisationIdFkeyInput: ReviewAssignmentOrganisationIdFkeyInput;
-  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationPkeyUpdate;
-  updateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch: UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch;
-  ApplicationOrgIdFkeyInverseInput: ApplicationOrgIdFkeyInverseInput;
-  ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnApplicationForApplicationOrgIdFkeyPatch: UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch;
+  ApplicationUserIdFkeyInverseInput: ApplicationUserIdFkeyInverseInput;
+  ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnApplicationForApplicationUserIdFkeyPatch: UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch;
   ApplicationOrgIdFkeyInput: ApplicationOrgIdFkeyInput;
   OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationPkeyUpdate;
   updateOrganisationOnApplicationForApplicationOrgIdFkeyPatch: UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch;
-  ReviewAssignmentOrganisationIdFkeyInverseInput: ReviewAssignmentOrganisationIdFkeyInverseInput;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch;
-  ReviewAssignmentStageIdFkeyInput: ReviewAssignmentStageIdFkeyInput;
-  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate;
-  updateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
-  TemplateStageReviewLevelStageIdFkeyInverseInput: TemplateStageReviewLevelStageIdFkeyInverseInput;
-  TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect: TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect;
-  TemplateStageReviewLevelNodeIdConnect: TemplateStageReviewLevelNodeIdConnect;
-  TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete: TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete;
-  TemplateStageReviewLevelNodeIdDelete: TemplateStageReviewLevelNodeIdDelete;
-  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate;
-  updateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
-  TemplateStageReviewLevelStageIdFkeyInput: TemplateStageReviewLevelStageIdFkeyInput;
-  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate;
-  updateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
-  ApplicationStageHistoryStageIdFkeyInverseInput: ApplicationStageHistoryStageIdFkeyInverseInput;
-  ApplicationStageHistoryApplicationStageHistoryPkeyConnect: ApplicationStageHistoryApplicationStageHistoryPkeyConnect;
-  ApplicationStageHistoryNodeIdConnect: ApplicationStageHistoryNodeIdConnect;
-  ApplicationStageHistoryApplicationStageHistoryPkeyDelete: ApplicationStageHistoryApplicationStageHistoryPkeyDelete;
-  ApplicationStageHistoryNodeIdDelete: ApplicationStageHistoryNodeIdDelete;
-  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
-  updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
-  ApplicationStageHistoryApplicationIdFkeyInput: ApplicationStageHistoryApplicationIdFkeyInput;
-  ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
+  ApplicationOrgIdFkeyInverseInput: ApplicationOrgIdFkeyInverseInput;
+  ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnApplicationForApplicationOrgIdFkeyPatch: UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch;
   ApplicationSectionApplicationIdFkeyInverseInput: ApplicationSectionApplicationIdFkeyInverseInput;
   ApplicationSectionApplicationSectionPkeyConnect: ApplicationSectionApplicationSectionPkeyConnect;
   ApplicationSectionNodeIdConnect: ApplicationSectionNodeIdConnect;
@@ -29756,17 +30520,15 @@ export type ResolversTypes = {
   ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch: UpdateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch;
   ApplicationStageHistoryApplicationIdFkeyInverseInput: ApplicationStageHistoryApplicationIdFkeyInverseInput;
+  ApplicationStageHistoryApplicationStageHistoryPkeyConnect: ApplicationStageHistoryApplicationStageHistoryPkeyConnect;
+  ApplicationStageHistoryNodeIdConnect: ApplicationStageHistoryNodeIdConnect;
+  ApplicationStageHistoryApplicationStageHistoryPkeyDelete: ApplicationStageHistoryApplicationStageHistoryPkeyDelete;
+  ApplicationStageHistoryNodeIdDelete: ApplicationStageHistoryNodeIdDelete;
   ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationStageHistoryPkeyUpdate;
   updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
-  ApplicationStageHistoryStageIdFkeyInput: ApplicationStageHistoryStageIdFkeyInput;
-  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate;
-  updateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
-  ReviewAssignmentStageIdFkeyInverseInput: ReviewAssignmentStageIdFkeyInverseInput;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
-  ReviewAssignmentApplicationIdFkeyInput: ReviewAssignmentApplicationIdFkeyInput;
-  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
+  ApplicationStageHistoryApplicationIdFkeyInput: ApplicationStageHistoryApplicationIdFkeyInput;
+  ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
   ApplicationResponseApplicationIdFkeyInverseInput: ApplicationResponseApplicationIdFkeyInverseInput;
   ApplicationResponseApplicationResponsePkeyConnect: ApplicationResponseApplicationResponsePkeyConnect;
   ApplicationResponseNodeIdConnect: ApplicationResponseNodeIdConnect;
@@ -29795,6 +30557,62 @@ export type ResolversTypes = {
   ApplicationResponseApplicationIdFkeyInput: ApplicationResponseApplicationIdFkeyInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
+  ActionScheduleApplicationIdFkeyInverseInput: ActionScheduleApplicationIdFkeyInverseInput;
+  ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate: ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate;
+  updateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch: UpdateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
+  ActionScheduleTemplateIdFkeyInput: ActionScheduleTemplateIdFkeyInput;
+  TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch: UpdateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
+  ReviewAssignmentTemplateIdFkeyInverseInput: ReviewAssignmentTemplateIdFkeyInverseInput;
+  ReviewAssignmentReviewAssignmentPkeyConnect: ReviewAssignmentReviewAssignmentPkeyConnect;
+  ReviewAssignmentNodeIdConnect: ReviewAssignmentNodeIdConnect;
+  ReviewAssignmentReviewAssignmentPkeyDelete: ReviewAssignmentReviewAssignmentPkeyDelete;
+  ReviewAssignmentNodeIdDelete: ReviewAssignmentNodeIdDelete;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch;
+  ReviewAssignmentAssignerIdFkeyInput: ReviewAssignmentAssignerIdFkeyInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  ReviewAssignmentAssignerIdFkeyInverseInput: ReviewAssignmentAssignerIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  ReviewAssignmentReviewerIdFkeyInput: ReviewAssignmentReviewerIdFkeyInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  ReviewAssignmentReviewerIdFkeyInverseInput: ReviewAssignmentReviewerIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  ReviewAssignmentOrganisationIdFkeyInput: ReviewAssignmentOrganisationIdFkeyInput;
+  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationPkeyUpdate;
+  updateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch: UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch;
+  ReviewAssignmentOrganisationIdFkeyInverseInput: ReviewAssignmentOrganisationIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch;
+  ReviewAssignmentStageIdFkeyInput: ReviewAssignmentStageIdFkeyInput;
+  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  TemplateStageReviewLevelStageIdFkeyInverseInput: TemplateStageReviewLevelStageIdFkeyInverseInput;
+  TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect: TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect;
+  TemplateStageReviewLevelNodeIdConnect: TemplateStageReviewLevelNodeIdConnect;
+  TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete: TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete;
+  TemplateStageReviewLevelNodeIdDelete: TemplateStageReviewLevelNodeIdDelete;
+  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate;
+  updateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
+  TemplateStageReviewLevelStageIdFkeyInput: TemplateStageReviewLevelStageIdFkeyInput;
+  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
+  ApplicationStageHistoryStageIdFkeyInverseInput: ApplicationStageHistoryStageIdFkeyInverseInput;
+  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
+  updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
+  ApplicationStageHistoryStageIdFkeyInput: ApplicationStageHistoryStageIdFkeyInput;
+  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
+  ReviewAssignmentStageIdFkeyInverseInput: ReviewAssignmentStageIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  ReviewAssignmentApplicationIdFkeyInput: ReviewAssignmentApplicationIdFkeyInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
   ReviewAssignmentApplicationIdFkeyInverseInput: ReviewAssignmentApplicationIdFkeyInverseInput;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingReviewAssignmentPkeyUpdate;
   updateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
@@ -30119,6 +30937,61 @@ export type ResolversTypes = {
   ReviewAssignmentTemplateIdFkeyTemplateCreateInput: ReviewAssignmentTemplateIdFkeyTemplateCreateInput;
   ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
   ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
+  ReviewAssignmentApplicationIdFkeyApplicationCreateInput: ReviewAssignmentApplicationIdFkeyApplicationCreateInput;
+  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
+  ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput: ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput;
+  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
+  TemplateStagePatch: TemplateStagePatch;
+  ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput: ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput;
+  ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect: ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect;
+  ApplicationStatusHistoryNodeIdConnect: ApplicationStatusHistoryNodeIdConnect;
+  ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete: ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete;
+  ApplicationStatusHistoryNodeIdDelete: ApplicationStatusHistoryNodeIdDelete;
+  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate;
+  updateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput;
+  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate;
+  updateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
+  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
+  ApplicationStageHistoryPatch: ApplicationStageHistoryPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput;
+  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
+  ApplicationStatusHistoryPatch: ApplicationStatusHistoryPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput;
+  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
+  ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput;
+  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
+  TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput;
+  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
+  TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
+  ReviewAssignmentStageIdFkeyTemplateStageCreateInput: ReviewAssignmentStageIdFkeyTemplateStageCreateInput;
+  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate;
+  ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput;
+  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
+  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate;
+  ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput: ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
+  ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
+  ReviewAssignmentReviewerIdFkeyUserCreateInput: ReviewAssignmentReviewerIdFkeyUserCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
+  TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate: TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate;
+  ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput: ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput;
+  ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate: ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate;
+  ActionScheduleTemplateIdFkeyTemplateCreateInput: ActionScheduleTemplateIdFkeyTemplateCreateInput;
+  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate;
+  ActionSchedulePatch: ActionSchedulePatch;
+  ActionScheduleApplicationIdFkeyActionScheduleCreateInput: ActionScheduleApplicationIdFkeyActionScheduleCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationCreateInput: ApplicationResponseApplicationIdFkeyApplicationCreateInput;
@@ -30146,30 +31019,9 @@ export type ResolversTypes = {
   ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput: ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput: ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput;
-  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
-  ReviewAssignmentApplicationIdFkeyApplicationCreateInput: ReviewAssignmentApplicationIdFkeyApplicationCreateInput;
-  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
-  ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput: ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput;
-  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
-  TemplateStagePatch: TemplateStagePatch;
-  ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput: ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput;
-  ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect: ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect;
-  ApplicationStatusHistoryNodeIdConnect: ApplicationStatusHistoryNodeIdConnect;
-  ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete: ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete;
-  ApplicationStatusHistoryNodeIdDelete: ApplicationStatusHistoryNodeIdDelete;
-  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate;
-  updateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput;
-  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate;
-  updateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
-  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
-  ApplicationStageHistoryPatch: ApplicationStageHistoryPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput;
-  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
-  ApplicationStatusHistoryPatch: ApplicationStatusHistoryPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput;
+  ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate;
+  ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput: ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput;
   ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate;
   ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreateInput;
   ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate;
@@ -30177,48 +31029,24 @@ export type ResolversTypes = {
   ApplicationSectionApplicationIdFkeyApplicationCreateInput: ApplicationSectionApplicationIdFkeyApplicationCreateInput;
   ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate;
   ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput: ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput;
-  ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate;
-  ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput: ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput;
-  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
-  ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput;
-  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
-  TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput;
-  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
-  TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
-  ReviewAssignmentStageIdFkeyTemplateStageCreateInput: ReviewAssignmentStageIdFkeyTemplateStageCreateInput;
-  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate;
-  ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput;
+  ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate;
+  OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate;
+  ApplicationOrgIdFkeyApplicationCreateInput: ApplicationOrgIdFkeyApplicationCreateInput;
   OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationNameKeyUpdate;
   OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationRegistrationKeyUpdate;
   ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate;
   ApplicationOrgIdFkeyOrganisationCreateInput: ApplicationOrgIdFkeyOrganisationCreateInput;
-  ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate;
-  OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate;
-  ApplicationOrgIdFkeyApplicationCreateInput: ApplicationOrgIdFkeyApplicationCreateInput;
-  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
-  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate;
-  ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput: ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput;
-  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
-  ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput;
-  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
-  ReviewAssignmentReviewerIdFkeyUserCreateInput: ReviewAssignmentReviewerIdFkeyUserCreateInput;
-  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
-  ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput;
-  UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate;
-  ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
-  ApplicationUserIdFkeyUserCreateInput: ApplicationUserIdFkeyUserCreateInput;
   ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate;
   UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate: UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyApplicationCreateInput: ApplicationUserIdFkeyApplicationCreateInput;
-  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
-  ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
-  TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate: TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate;
-  ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput: ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput;
+  UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate;
+  ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
+  ApplicationUserIdFkeyUserCreateInput: ApplicationUserIdFkeyUserCreateInput;
+  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate: ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate;
+  ActionScheduleApplicationIdFkeyApplicationCreateInput: ActionScheduleApplicationIdFkeyApplicationCreateInput;
+  TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate: TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate;
+  ActionScheduleTemplateIdFkeyActionScheduleCreateInput: ActionScheduleTemplateIdFkeyActionScheduleCreateInput;
   TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
   TemplateActionTemplateIdFkeyTemplateCreateInput: TemplateActionTemplateIdFkeyTemplateCreateInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
@@ -30321,6 +31149,9 @@ export type ResolversTypes = {
   TriggerQueuePatch: TriggerQueuePatch;
   ActionQueueTriggerEventFkeyTriggerQueueCreateInput: ActionQueueTriggerEventFkeyTriggerQueueCreateInput;
   CreateActionQueuePayload: ResolverTypeWrapper<CreateActionQueuePayload>;
+  CreateActionScheduleInput: CreateActionScheduleInput;
+  ActionScheduleInput: ActionScheduleInput;
+  CreateActionSchedulePayload: ResolverTypeWrapper<CreateActionSchedulePayload>;
   CreateApplicationInput: CreateApplicationInput;
   ApplicationInput: ApplicationInput;
   CreateApplicationPayload: ResolverTypeWrapper<CreateApplicationPayload>;
@@ -30485,6 +31316,9 @@ export type ResolversTypes = {
   UpdateActionQueueByNodeIdInput: UpdateActionQueueByNodeIdInput;
   UpdateActionQueuePayload: ResolverTypeWrapper<UpdateActionQueuePayload>;
   UpdateActionQueueInput: UpdateActionQueueInput;
+  UpdateActionScheduleByNodeIdInput: UpdateActionScheduleByNodeIdInput;
+  UpdateActionSchedulePayload: ResolverTypeWrapper<UpdateActionSchedulePayload>;
+  UpdateActionScheduleInput: UpdateActionScheduleInput;
   UpdateApplicationByNodeIdInput: UpdateApplicationByNodeIdInput;
   UpdateApplicationPayload: ResolverTypeWrapper<UpdateApplicationPayload>;
   UpdateApplicationInput: UpdateApplicationInput;
@@ -30622,6 +31456,9 @@ export type ResolversTypes = {
   DeleteActionQueueByNodeIdInput: DeleteActionQueueByNodeIdInput;
   DeleteActionQueuePayload: ResolverTypeWrapper<DeleteActionQueuePayload>;
   DeleteActionQueueInput: DeleteActionQueueInput;
+  DeleteActionScheduleByNodeIdInput: DeleteActionScheduleByNodeIdInput;
+  DeleteActionSchedulePayload: ResolverTypeWrapper<DeleteActionSchedulePayload>;
+  DeleteActionScheduleInput: DeleteActionScheduleInput;
   DeleteApplicationByNodeIdInput: DeleteApplicationByNodeIdInput;
   DeleteApplicationPayload: ResolverTypeWrapper<DeleteApplicationPayload>;
   DeleteApplicationInput: DeleteApplicationInput;
@@ -30754,7 +31591,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ActionSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -30847,6 +31684,8 @@ export type ResolversParentTypes = {
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
   ApplicationStatusHistoryFilter: ApplicationStatusHistoryFilter;
   ApplicationToManyApplicationResponseFilter: ApplicationToManyApplicationResponseFilter;
+  ApplicationToManyActionScheduleFilter: ApplicationToManyActionScheduleFilter;
+  ActionScheduleFilter: ActionScheduleFilter;
   ApplicationToManyReviewAssignmentFilter: ApplicationToManyReviewAssignmentFilter;
   ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
@@ -30876,6 +31715,7 @@ export type ResolversParentTypes = {
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateActionFilter: TemplateActionFilter;
+  TemplateToManyActionScheduleFilter: TemplateToManyActionScheduleFilter;
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
   TemplateToManyFileFilter: TemplateToManyFileFilter;
   TemplateCategoryFilter: TemplateCategoryFilter;
@@ -30964,6 +31804,10 @@ export type ResolversParentTypes = {
   ApplicationStatusHistory: ApplicationStatusHistory;
   ApplicationStatusHistoriesEdge: ApplicationStatusHistoriesEdge;
   ApplicationStageHistoriesEdge: ApplicationStageHistoriesEdge;
+  ActionScheduleCondition: ActionScheduleCondition;
+  ActionSchedulesConnection: ActionSchedulesConnection;
+  ActionSchedule: ActionSchedule;
+  ActionSchedulesEdge: ActionSchedulesEdge;
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ReviewsConnection;
   ReviewsEdge: ReviewsEdge;
@@ -31293,66 +32137,28 @@ export type ResolversParentTypes = {
   TemplateActionTemplateIdFkeyInput: TemplateActionTemplateIdFkeyInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
-  ReviewAssignmentTemplateIdFkeyInverseInput: ReviewAssignmentTemplateIdFkeyInverseInput;
-  ReviewAssignmentReviewAssignmentPkeyConnect: ReviewAssignmentReviewAssignmentPkeyConnect;
-  ReviewAssignmentNodeIdConnect: ReviewAssignmentNodeIdConnect;
-  ReviewAssignmentReviewAssignmentPkeyDelete: ReviewAssignmentReviewAssignmentPkeyDelete;
-  ReviewAssignmentNodeIdDelete: ReviewAssignmentNodeIdDelete;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch;
-  ReviewAssignmentAssignerIdFkeyInput: ReviewAssignmentAssignerIdFkeyInput;
-  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
-  ApplicationUserIdFkeyInverseInput: ApplicationUserIdFkeyInverseInput;
-  ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnApplicationForApplicationUserIdFkeyPatch: UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch;
+  ActionScheduleTemplateIdFkeyInverseInput: ActionScheduleTemplateIdFkeyInverseInput;
+  ActionScheduleActionSchedulePkeyConnect: ActionScheduleActionSchedulePkeyConnect;
+  ActionScheduleNodeIdConnect: ActionScheduleNodeIdConnect;
+  ActionScheduleActionSchedulePkeyDelete: ActionScheduleActionSchedulePkeyDelete;
+  ActionScheduleNodeIdDelete: ActionScheduleNodeIdDelete;
+  ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate: ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate;
+  updateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch: UpdateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
+  ActionScheduleApplicationIdFkeyInput: ActionScheduleApplicationIdFkeyInput;
+  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch: UpdateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
   ApplicationUserIdFkeyInput: ApplicationUserIdFkeyInput;
   UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnApplicationForApplicationUserIdFkeyPatch: UpdateUserOnApplicationForApplicationUserIdFkeyPatch;
-  ReviewAssignmentAssignerIdFkeyInverseInput: ReviewAssignmentAssignerIdFkeyInverseInput;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
-  ReviewAssignmentReviewerIdFkeyInput: ReviewAssignmentReviewerIdFkeyInput;
-  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate;
-  updateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
-  ReviewAssignmentReviewerIdFkeyInverseInput: ReviewAssignmentReviewerIdFkeyInverseInput;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
-  ReviewAssignmentOrganisationIdFkeyInput: ReviewAssignmentOrganisationIdFkeyInput;
-  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationPkeyUpdate;
-  updateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch: UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch;
-  ApplicationOrgIdFkeyInverseInput: ApplicationOrgIdFkeyInverseInput;
-  ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnApplicationForApplicationOrgIdFkeyPatch: UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch;
+  ApplicationUserIdFkeyInverseInput: ApplicationUserIdFkeyInverseInput;
+  ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnApplicationForApplicationUserIdFkeyPatch: UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch;
   ApplicationOrgIdFkeyInput: ApplicationOrgIdFkeyInput;
   OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationPkeyUpdate;
   updateOrganisationOnApplicationForApplicationOrgIdFkeyPatch: UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch;
-  ReviewAssignmentOrganisationIdFkeyInverseInput: ReviewAssignmentOrganisationIdFkeyInverseInput;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch;
-  ReviewAssignmentStageIdFkeyInput: ReviewAssignmentStageIdFkeyInput;
-  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate;
-  updateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
-  TemplateStageReviewLevelStageIdFkeyInverseInput: TemplateStageReviewLevelStageIdFkeyInverseInput;
-  TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect: TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect;
-  TemplateStageReviewLevelNodeIdConnect: TemplateStageReviewLevelNodeIdConnect;
-  TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete: TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete;
-  TemplateStageReviewLevelNodeIdDelete: TemplateStageReviewLevelNodeIdDelete;
-  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate;
-  updateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
-  TemplateStageReviewLevelStageIdFkeyInput: TemplateStageReviewLevelStageIdFkeyInput;
-  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate;
-  updateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
-  ApplicationStageHistoryStageIdFkeyInverseInput: ApplicationStageHistoryStageIdFkeyInverseInput;
-  ApplicationStageHistoryApplicationStageHistoryPkeyConnect: ApplicationStageHistoryApplicationStageHistoryPkeyConnect;
-  ApplicationStageHistoryNodeIdConnect: ApplicationStageHistoryNodeIdConnect;
-  ApplicationStageHistoryApplicationStageHistoryPkeyDelete: ApplicationStageHistoryApplicationStageHistoryPkeyDelete;
-  ApplicationStageHistoryNodeIdDelete: ApplicationStageHistoryNodeIdDelete;
-  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
-  updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
-  ApplicationStageHistoryApplicationIdFkeyInput: ApplicationStageHistoryApplicationIdFkeyInput;
-  ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
+  ApplicationOrgIdFkeyInverseInput: ApplicationOrgIdFkeyInverseInput;
+  ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnApplicationForApplicationOrgIdFkeyPatch: UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch;
   ApplicationSectionApplicationIdFkeyInverseInput: ApplicationSectionApplicationIdFkeyInverseInput;
   ApplicationSectionApplicationSectionPkeyConnect: ApplicationSectionApplicationSectionPkeyConnect;
   ApplicationSectionNodeIdConnect: ApplicationSectionNodeIdConnect;
@@ -31364,17 +32170,15 @@ export type ResolversParentTypes = {
   ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch: UpdateApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyPatch;
   ApplicationStageHistoryApplicationIdFkeyInverseInput: ApplicationStageHistoryApplicationIdFkeyInverseInput;
+  ApplicationStageHistoryApplicationStageHistoryPkeyConnect: ApplicationStageHistoryApplicationStageHistoryPkeyConnect;
+  ApplicationStageHistoryNodeIdConnect: ApplicationStageHistoryNodeIdConnect;
+  ApplicationStageHistoryApplicationStageHistoryPkeyDelete: ApplicationStageHistoryApplicationStageHistoryPkeyDelete;
+  ApplicationStageHistoryNodeIdDelete: ApplicationStageHistoryNodeIdDelete;
   ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationStageHistoryPkeyUpdate;
   updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
-  ApplicationStageHistoryStageIdFkeyInput: ApplicationStageHistoryStageIdFkeyInput;
-  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate;
-  updateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
-  ReviewAssignmentStageIdFkeyInverseInput: ReviewAssignmentStageIdFkeyInverseInput;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate;
-  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
-  ReviewAssignmentApplicationIdFkeyInput: ReviewAssignmentApplicationIdFkeyInput;
-  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
+  ApplicationStageHistoryApplicationIdFkeyInput: ApplicationStageHistoryApplicationIdFkeyInput;
+  ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch: UpdateApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyPatch;
   ApplicationResponseApplicationIdFkeyInverseInput: ApplicationResponseApplicationIdFkeyInverseInput;
   ApplicationResponseApplicationResponsePkeyConnect: ApplicationResponseApplicationResponsePkeyConnect;
   ApplicationResponseNodeIdConnect: ApplicationResponseNodeIdConnect;
@@ -31403,6 +32207,62 @@ export type ResolversParentTypes = {
   ApplicationResponseApplicationIdFkeyInput: ApplicationResponseApplicationIdFkeyInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
+  ActionScheduleApplicationIdFkeyInverseInput: ActionScheduleApplicationIdFkeyInverseInput;
+  ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate: ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate;
+  updateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch: UpdateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
+  ActionScheduleTemplateIdFkeyInput: ActionScheduleTemplateIdFkeyInput;
+  TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch: UpdateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
+  ReviewAssignmentTemplateIdFkeyInverseInput: ReviewAssignmentTemplateIdFkeyInverseInput;
+  ReviewAssignmentReviewAssignmentPkeyConnect: ReviewAssignmentReviewAssignmentPkeyConnect;
+  ReviewAssignmentNodeIdConnect: ReviewAssignmentNodeIdConnect;
+  ReviewAssignmentReviewAssignmentPkeyDelete: ReviewAssignmentReviewAssignmentPkeyDelete;
+  ReviewAssignmentNodeIdDelete: ReviewAssignmentNodeIdDelete;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPatch;
+  ReviewAssignmentAssignerIdFkeyInput: ReviewAssignmentAssignerIdFkeyInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  ReviewAssignmentAssignerIdFkeyInverseInput: ReviewAssignmentAssignerIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch;
+  ReviewAssignmentReviewerIdFkeyInput: ReviewAssignmentReviewerIdFkeyInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserPkeyUpdate;
+  updateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  ReviewAssignmentReviewerIdFkeyInverseInput: ReviewAssignmentReviewerIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch;
+  ReviewAssignmentOrganisationIdFkeyInput: ReviewAssignmentOrganisationIdFkeyInput;
+  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationPkeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationPkeyUpdate;
+  updateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch: UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch;
+  ReviewAssignmentOrganisationIdFkeyInverseInput: ReviewAssignmentOrganisationIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyPatch;
+  ReviewAssignmentStageIdFkeyInput: ReviewAssignmentStageIdFkeyInput;
+  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateTemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  TemplateStageReviewLevelStageIdFkeyInverseInput: TemplateStageReviewLevelStageIdFkeyInverseInput;
+  TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect: TemplateStageReviewLevelTemplateStageReviewLevelPkeyConnect;
+  TemplateStageReviewLevelNodeIdConnect: TemplateStageReviewLevelNodeIdConnect;
+  TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete: TemplateStageReviewLevelTemplateStageReviewLevelPkeyDelete;
+  TemplateStageReviewLevelNodeIdDelete: TemplateStageReviewLevelNodeIdDelete;
+  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStageReviewLevelPkeyUpdate;
+  updateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
+  TemplateStageReviewLevelStageIdFkeyInput: TemplateStageReviewLevelStageIdFkeyInput;
+  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch: UpdateTemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyPatch;
+  ApplicationStageHistoryStageIdFkeyInverseInput: ApplicationStageHistoryStageIdFkeyInverseInput;
+  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingApplicationStageHistoryPkeyUpdate;
+  updateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
+  ApplicationStageHistoryStageIdFkeyInput: ApplicationStageHistoryStageIdFkeyInput;
+  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyUsingTemplateStagePkeyUpdate;
+  updateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch: UpdateTemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyPatch;
+  ReviewAssignmentStageIdFkeyInverseInput: ReviewAssignmentStageIdFkeyInverseInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyUsingReviewAssignmentPkeyUpdate;
+  updateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyPatch;
+  ReviewAssignmentApplicationIdFkeyInput: ReviewAssignmentApplicationIdFkeyInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch: UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
   ReviewAssignmentApplicationIdFkeyInverseInput: ReviewAssignmentApplicationIdFkeyInverseInput;
   ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingReviewAssignmentPkeyUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingReviewAssignmentPkeyUpdate;
   updateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch: UpdateReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyPatch;
@@ -31727,6 +32587,61 @@ export type ResolversParentTypes = {
   ReviewAssignmentTemplateIdFkeyTemplateCreateInput: ReviewAssignmentTemplateIdFkeyTemplateCreateInput;
   ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
   ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentApplicationIdFkeyReviewAssignmentCreateInput;
+  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
+  ReviewAssignmentApplicationIdFkeyApplicationCreateInput: ReviewAssignmentApplicationIdFkeyApplicationCreateInput;
+  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
+  ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput: ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput;
+  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
+  TemplateStagePatch: TemplateStagePatch;
+  ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput: ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput;
+  ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect: ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect;
+  ApplicationStatusHistoryNodeIdConnect: ApplicationStatusHistoryNodeIdConnect;
+  ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete: ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete;
+  ApplicationStatusHistoryNodeIdDelete: ApplicationStatusHistoryNodeIdDelete;
+  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate;
+  updateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput;
+  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate;
+  updateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
+  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
+  ApplicationStageHistoryPatch: ApplicationStageHistoryPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput;
+  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
+  ApplicationStatusHistoryPatch: ApplicationStatusHistoryPatch;
+  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput;
+  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
+  ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput;
+  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
+  TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput;
+  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
+  TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
+  ReviewAssignmentStageIdFkeyTemplateStageCreateInput: ReviewAssignmentStageIdFkeyTemplateStageCreateInput;
+  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate;
+  ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput;
+  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
+  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate;
+  ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput: ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
+  ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
+  ReviewAssignmentReviewerIdFkeyUserCreateInput: ReviewAssignmentReviewerIdFkeyUserCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput;
+  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate;
+  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
+  ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
+  TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate: TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate;
+  ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput: ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput;
+  ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate: ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate;
+  ActionScheduleTemplateIdFkeyTemplateCreateInput: ActionScheduleTemplateIdFkeyTemplateCreateInput;
+  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate;
+  ActionSchedulePatch: ActionSchedulePatch;
+  ActionScheduleApplicationIdFkeyActionScheduleCreateInput: ActionScheduleApplicationIdFkeyActionScheduleCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationCreateInput: ApplicationResponseApplicationIdFkeyApplicationCreateInput;
@@ -31754,30 +32669,9 @@ export type ResolversParentTypes = {
   ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput: ApplicationResponseTemplateElementIdFkeyTemplateElementCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput: ApplicationResponseApplicationIdFkeyApplicationResponseCreateInput;
-  ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnReviewAssignmentForReviewAssignmentApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentApplicationIdFkeyNodeIdUpdate;
-  ReviewAssignmentApplicationIdFkeyApplicationCreateInput: ReviewAssignmentApplicationIdFkeyApplicationCreateInput;
-  TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: TemplateStageOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
-  ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput: ReviewAssignmentStageIdFkeyReviewAssignmentCreateInput;
-  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
-  TemplateStagePatch: TemplateStagePatch;
-  ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput: ApplicationStageHistoryStageIdFkeyTemplateStageCreateInput;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInverseInput;
-  ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect: ApplicationStatusHistoryApplicationStatusHistoryPkeyConnect;
-  ApplicationStatusHistoryNodeIdConnect: ApplicationStatusHistoryNodeIdConnect;
-  ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete: ApplicationStatusHistoryApplicationStatusHistoryPkeyDelete;
-  ApplicationStatusHistoryNodeIdDelete: ApplicationStatusHistoryNodeIdDelete;
-  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStatusHistoryPkeyUpdate;
-  updateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyInput;
-  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyUsingApplicationStageHistoryPkeyUpdate;
-  updateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch: UpdateApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyPatch;
-  ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStatusHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
-  ApplicationStageHistoryPatch: ApplicationStageHistoryPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStageHistoryCreateInput;
-  ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStatusHistoryForApplicationStatusHistoryApplicationStageHistoryIdFkeyNodeIdUpdate;
-  ApplicationStatusHistoryPatch: ApplicationStatusHistoryPatch;
-  ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput: ApplicationStatusHistoryApplicationStageHistoryIdFkeyApplicationStatusHistoryCreateInput;
+  ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate;
+  ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput: ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput;
   ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate;
   ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryApplicationIdFkeyApplicationStageHistoryCreateInput;
   ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyUsingApplicationSerialKeyUpdate;
@@ -31785,48 +32679,24 @@ export type ResolversParentTypes = {
   ApplicationSectionApplicationIdFkeyApplicationCreateInput: ApplicationSectionApplicationIdFkeyApplicationCreateInput;
   ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate: ApplicationOnApplicationSectionForApplicationSectionApplicationIdFkeyNodeIdUpdate;
   ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput: ApplicationSectionApplicationIdFkeyApplicationSectionCreateInput;
-  ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate: ApplicationStageHistoryOnApplicationStageHistoryForApplicationStageHistoryApplicationIdFkeyNodeIdUpdate;
-  ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput: ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput;
-  TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate: TemplateStageOnApplicationStageHistoryForApplicationStageHistoryStageIdFkeyNodeIdUpdate;
-  ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput: ApplicationStageHistoryStageIdFkeyApplicationStageHistoryCreateInput;
-  TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageReviewLevelOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
-  TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageCreateInput;
-  TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageReviewLevelForTemplateStageReviewLevelStageIdFkeyNodeIdUpdate;
-  TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput: TemplateStageReviewLevelStageIdFkeyTemplateStageReviewLevelCreateInput;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentStageIdFkeyNodeIdUpdate;
-  ReviewAssignmentStageIdFkeyTemplateStageCreateInput: ReviewAssignmentStageIdFkeyTemplateStageCreateInput;
-  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate;
-  ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput: ReviewAssignmentOrganisationIdFkeyReviewAssignmentCreateInput;
+  ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate;
+  OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate;
+  ApplicationOrgIdFkeyApplicationCreateInput: ApplicationOrgIdFkeyApplicationCreateInput;
   OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationNameKeyUpdate;
   OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyUsingOrganisationRegistrationKeyUpdate;
   ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate;
   ApplicationOrgIdFkeyOrganisationCreateInput: ApplicationOrgIdFkeyOrganisationCreateInput;
-  ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationOrgIdFkeyUsingApplicationSerialKeyUpdate;
-  OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate: OrganisationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate;
-  ApplicationOrgIdFkeyApplicationCreateInput: ApplicationOrgIdFkeyApplicationCreateInput;
-  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationNameKeyUpdate;
-  OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate: OrganisationOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyUsingOrganisationRegistrationKeyUpdate;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentOrganisationIdFkeyNodeIdUpdate;
-  ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput: ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput;
-  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
-  ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentReviewerIdFkeyReviewAssignmentCreateInput;
-  UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyUsingUserUsernameKeyUpdate;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentReviewerIdFkeyNodeIdUpdate;
-  ReviewAssignmentReviewerIdFkeyUserCreateInput: ReviewAssignmentReviewerIdFkeyUserCreateInput;
-  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
-  ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput: ReviewAssignmentAssignerIdFkeyReviewAssignmentCreateInput;
-  UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate;
-  ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
-  ApplicationUserIdFkeyUserCreateInput: ApplicationUserIdFkeyUserCreateInput;
   ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationForApplicationUserIdFkeyUsingApplicationSerialKeyUpdate;
   UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate: UserOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyApplicationCreateInput: ApplicationUserIdFkeyApplicationCreateInput;
-  UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate: UserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyUsingUserUsernameKeyUpdate;
-  ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate: ReviewAssignmentOnReviewAssignmentForReviewAssignmentAssignerIdFkeyNodeIdUpdate;
-  ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
-  TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate: TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate;
-  ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput: ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput;
+  UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate;
+  ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
+  ApplicationUserIdFkeyUserCreateInput: ApplicationUserIdFkeyUserCreateInput;
+  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate: ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate;
+  ActionScheduleApplicationIdFkeyApplicationCreateInput: ActionScheduleApplicationIdFkeyApplicationCreateInput;
+  TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate: TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate;
+  ActionScheduleTemplateIdFkeyActionScheduleCreateInput: ActionScheduleTemplateIdFkeyActionScheduleCreateInput;
   TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
   TemplateActionTemplateIdFkeyTemplateCreateInput: TemplateActionTemplateIdFkeyTemplateCreateInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
@@ -31929,6 +32799,9 @@ export type ResolversParentTypes = {
   TriggerQueuePatch: TriggerQueuePatch;
   ActionQueueTriggerEventFkeyTriggerQueueCreateInput: ActionQueueTriggerEventFkeyTriggerQueueCreateInput;
   CreateActionQueuePayload: CreateActionQueuePayload;
+  CreateActionScheduleInput: CreateActionScheduleInput;
+  ActionScheduleInput: ActionScheduleInput;
+  CreateActionSchedulePayload: CreateActionSchedulePayload;
   CreateApplicationInput: CreateApplicationInput;
   ApplicationInput: ApplicationInput;
   CreateApplicationPayload: CreateApplicationPayload;
@@ -32093,6 +32966,9 @@ export type ResolversParentTypes = {
   UpdateActionQueueByNodeIdInput: UpdateActionQueueByNodeIdInput;
   UpdateActionQueuePayload: UpdateActionQueuePayload;
   UpdateActionQueueInput: UpdateActionQueueInput;
+  UpdateActionScheduleByNodeIdInput: UpdateActionScheduleByNodeIdInput;
+  UpdateActionSchedulePayload: UpdateActionSchedulePayload;
+  UpdateActionScheduleInput: UpdateActionScheduleInput;
   UpdateApplicationByNodeIdInput: UpdateApplicationByNodeIdInput;
   UpdateApplicationPayload: UpdateApplicationPayload;
   UpdateApplicationInput: UpdateApplicationInput;
@@ -32230,6 +33106,9 @@ export type ResolversParentTypes = {
   DeleteActionQueueByNodeIdInput: DeleteActionQueueByNodeIdInput;
   DeleteActionQueuePayload: DeleteActionQueuePayload;
   DeleteActionQueueInput: DeleteActionQueueInput;
+  DeleteActionScheduleByNodeIdInput: DeleteActionScheduleByNodeIdInput;
+  DeleteActionSchedulePayload: DeleteActionSchedulePayload;
+  DeleteActionScheduleInput: DeleteActionScheduleInput;
   DeleteApplicationByNodeIdInput: DeleteApplicationByNodeIdInput;
   DeleteApplicationPayload: DeleteApplicationPayload;
   DeleteApplicationInput: DeleteApplicationInput;
@@ -32422,6 +33301,35 @@ export type ActionQueuesEdgeResolvers<ContextType = any, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ActionScheduleResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionSchedule'] = ResolversParentTypes['ActionSchedule']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  tableName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  entityId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateActionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  timeScheduled?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ActionSchedulesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionSchedulesConnection'] = ResolversParentTypes['ActionSchedulesConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['ActionSchedule']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ActionSchedulesEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ActionSchedulesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionSchedulesEdge'] = ResolversParentTypes['ActionSchedulesEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ApplicationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Application'] = ResolversParentTypes['Application']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -32440,6 +33348,7 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   applicationSections?: Resolver<ResolversTypes['ApplicationSectionsConnection'], ParentType, ContextType, RequireFields<ApplicationApplicationSectionsArgs, 'orderBy'>>;
   applicationStageHistories?: Resolver<ResolversTypes['ApplicationStageHistoriesConnection'], ParentType, ContextType, RequireFields<ApplicationApplicationStageHistoriesArgs, 'orderBy'>>;
   applicationResponses?: Resolver<ResolversTypes['ApplicationResponsesConnection'], ParentType, ContextType, RequireFields<ApplicationApplicationResponsesArgs, 'orderBy'>>;
+  actionSchedules?: Resolver<ResolversTypes['ActionSchedulesConnection'], ParentType, ContextType, RequireFields<ApplicationActionSchedulesArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewAssignmentsArgs, 'orderBy'>>;
   reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewsArgs, 'orderBy'>>;
   filesByApplicationSerial?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationFilesByApplicationSerialArgs, 'orderBy'>>;
@@ -32866,6 +33775,16 @@ export type CreateActionQueuePayloadResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateActionSchedulePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateActionSchedulePayload'] = ResolversParentTypes['CreateActionSchedulePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  actionSchedule?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  actionScheduleEdge?: Resolver<Maybe<ResolversTypes['ActionSchedulesEdge']>, ParentType, ContextType, RequireFields<CreateActionSchedulePayloadActionScheduleEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateApplicationListShapePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateApplicationListShapePayload'] = ResolversParentTypes['CreateApplicationListShapePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationListShape?: Resolver<Maybe<ResolversTypes['ApplicationListShape']>, ParentType, ContextType>;
@@ -33262,6 +34181,17 @@ export type DeleteActionQueuePayloadResolvers<ContextType = any, ParentType exte
   triggerQueueByTriggerEvent?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   actionQueueEdge?: Resolver<Maybe<ResolversTypes['ActionQueuesEdge']>, ParentType, ContextType, RequireFields<DeleteActionQueuePayloadActionQueueEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteActionSchedulePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteActionSchedulePayload'] = ResolversParentTypes['DeleteActionSchedulePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  actionSchedule?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType>;
+  deletedActionScheduleNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  actionScheduleEdge?: Resolver<Maybe<ResolversTypes['ActionSchedulesEdge']>, ParentType, ContextType, RequireFields<DeleteActionSchedulePayloadActionScheduleEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -33783,6 +34713,7 @@ export type LookupTablesEdgeResolvers<ContextType = any, ParentType extends Reso
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createActionPlugin?: Resolver<Maybe<ResolversTypes['CreateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateActionPluginArgs, 'input'>>;
   createActionQueue?: Resolver<Maybe<ResolversTypes['CreateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateActionQueueArgs, 'input'>>;
+  createActionSchedule?: Resolver<Maybe<ResolversTypes['CreateActionSchedulePayload']>, ParentType, ContextType, RequireFields<MutationCreateActionScheduleArgs, 'input'>>;
   createApplication?: Resolver<Maybe<ResolversTypes['CreateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationArgs, 'input'>>;
   createApplicationListShape?: Resolver<Maybe<ResolversTypes['CreateApplicationListShapePayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationListShapeArgs, 'input'>>;
   createApplicationResponse?: Resolver<Maybe<ResolversTypes['CreateApplicationResponsePayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationResponseArgs, 'input'>>;
@@ -33827,6 +34758,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateActionPluginByCode?: Resolver<Maybe<ResolversTypes['UpdateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionPluginByCodeArgs, 'input'>>;
   updateActionQueueByNodeId?: Resolver<Maybe<ResolversTypes['UpdateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionQueueByNodeIdArgs, 'input'>>;
   updateActionQueue?: Resolver<Maybe<ResolversTypes['UpdateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionQueueArgs, 'input'>>;
+  updateActionScheduleByNodeId?: Resolver<Maybe<ResolversTypes['UpdateActionSchedulePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionScheduleByNodeIdArgs, 'input'>>;
+  updateActionSchedule?: Resolver<Maybe<ResolversTypes['UpdateActionSchedulePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionScheduleArgs, 'input'>>;
   updateApplicationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationByNodeIdArgs, 'input'>>;
   updateApplication?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationArgs, 'input'>>;
   updateApplicationBySerial?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationBySerialArgs, 'input'>>;
@@ -33921,6 +34854,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteActionPluginByCode?: Resolver<Maybe<ResolversTypes['DeleteActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionPluginByCodeArgs, 'input'>>;
   deleteActionQueueByNodeId?: Resolver<Maybe<ResolversTypes['DeleteActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionQueueByNodeIdArgs, 'input'>>;
   deleteActionQueue?: Resolver<Maybe<ResolversTypes['DeleteActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionQueueArgs, 'input'>>;
+  deleteActionScheduleByNodeId?: Resolver<Maybe<ResolversTypes['DeleteActionSchedulePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionScheduleByNodeIdArgs, 'input'>>;
+  deleteActionSchedule?: Resolver<Maybe<ResolversTypes['DeleteActionSchedulePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionScheduleArgs, 'input'>>;
   deleteApplicationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationByNodeIdArgs, 'input'>>;
   deleteApplication?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationArgs, 'input'>>;
   deleteApplicationBySerial?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationBySerialArgs, 'input'>>;
@@ -34013,7 +34948,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'Verification' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ActionSchedule' | 'Verification' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -34285,6 +35220,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   node?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<QueryNodeArgs, 'nodeId'>>;
   actionPlugins?: Resolver<Maybe<ResolversTypes['ActionPluginsConnection']>, ParentType, ContextType, RequireFields<QueryActionPluginsArgs, 'orderBy'>>;
   actionQueues?: Resolver<Maybe<ResolversTypes['ActionQueuesConnection']>, ParentType, ContextType, RequireFields<QueryActionQueuesArgs, 'orderBy'>>;
+  actionSchedules?: Resolver<Maybe<ResolversTypes['ActionSchedulesConnection']>, ParentType, ContextType, RequireFields<QueryActionSchedulesArgs, 'orderBy'>>;
   applications?: Resolver<Maybe<ResolversTypes['ApplicationsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationsArgs, 'orderBy'>>;
   applicationListShapes?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListShapesArgs, 'orderBy'>>;
   applicationResponses?: Resolver<Maybe<ResolversTypes['ApplicationResponsesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationResponsesArgs, 'orderBy'>>;
@@ -34333,6 +35269,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginArgs, 'id'>>;
   actionPluginByCode?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByCodeArgs, 'code'>>;
   actionQueue?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueArgs, 'id'>>;
+  actionSchedule?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType, RequireFields<QueryActionScheduleArgs, 'id'>>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationArgs, 'id'>>;
   applicationBySerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationBySerialArgs, 'serial'>>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType, RequireFields<QueryApplicationResponseArgs, 'id'>>;
@@ -34411,6 +35348,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryTemplateQuestionsCountArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
   actionQueueByNodeId?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueByNodeIdArgs, 'nodeId'>>;
+  actionScheduleByNodeId?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType, RequireFields<QueryActionScheduleByNodeIdArgs, 'nodeId'>>;
   applicationByNodeId?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationByNodeIdArgs, 'nodeId'>>;
   applicationResponseByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType, RequireFields<QueryApplicationResponseByNodeIdArgs, 'nodeId'>>;
   applicationSectionByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationSection']>, ParentType, ContextType, RequireFields<QueryApplicationSectionByNodeIdArgs, 'nodeId'>>;
@@ -34753,6 +35691,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   applications?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<TemplateApplicationsArgs, 'orderBy'>>;
   actionQueues?: Resolver<ResolversTypes['ActionQueuesConnection'], ParentType, ContextType, RequireFields<TemplateActionQueuesArgs, 'orderBy'>>;
   templateActions?: Resolver<ResolversTypes['TemplateActionsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateActionsArgs, 'orderBy'>>;
+  actionSchedules?: Resolver<ResolversTypes['ActionSchedulesConnection'], ParentType, ContextType, RequireFields<TemplateActionSchedulesArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateReviewAssignmentsArgs, 'orderBy'>>;
   files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<TemplateFilesArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -34762,6 +35701,7 @@ export type TemplateActionResolvers<ContextType = any, ParentType extends Resolv
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  code?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   actionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   sequence?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -35041,6 +35981,16 @@ export type UpdateActionQueuePayloadResolvers<ContextType = any, ParentType exte
   triggerQueueByTriggerEvent?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   actionQueueEdge?: Resolver<Maybe<ResolversTypes['ActionQueuesEdge']>, ParentType, ContextType, RequireFields<UpdateActionQueuePayloadActionQueueEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateActionSchedulePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateActionSchedulePayload'] = ResolversParentTypes['UpdateActionSchedulePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  actionSchedule?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  actionScheduleEdge?: Resolver<Maybe<ResolversTypes['ActionSchedulesEdge']>, ParentType, ContextType, RequireFields<UpdateActionSchedulePayloadActionScheduleEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -35539,6 +36489,9 @@ export type Resolvers<ContextType = any> = {
   ActionQueue?: ActionQueueResolvers<ContextType>;
   ActionQueuesConnection?: ActionQueuesConnectionResolvers<ContextType>;
   ActionQueuesEdge?: ActionQueuesEdgeResolvers<ContextType>;
+  ActionSchedule?: ActionScheduleResolvers<ContextType>;
+  ActionSchedulesConnection?: ActionSchedulesConnectionResolvers<ContextType>;
+  ActionSchedulesEdge?: ActionSchedulesEdgeResolvers<ContextType>;
   Application?: ApplicationResolvers<ContextType>;
   ApplicationListFilterApplicantConnection?: ApplicationListFilterApplicantConnectionResolvers<ContextType>;
   ApplicationListFilterApplicantEdge?: ApplicationListFilterApplicantEdgeResolvers<ContextType>;
@@ -35589,6 +36542,7 @@ export type Resolvers<ContextType = any> = {
   CountersEdge?: CountersEdgeResolvers<ContextType>;
   CreateActionPluginPayload?: CreateActionPluginPayloadResolvers<ContextType>;
   CreateActionQueuePayload?: CreateActionQueuePayloadResolvers<ContextType>;
+  CreateActionSchedulePayload?: CreateActionSchedulePayloadResolvers<ContextType>;
   CreateApplicationListShapePayload?: CreateApplicationListShapePayloadResolvers<ContextType>;
   CreateApplicationPayload?: CreateApplicationPayloadResolvers<ContextType>;
   CreateApplicationResponsePayload?: CreateApplicationResponsePayloadResolvers<ContextType>;
@@ -35632,6 +36586,7 @@ export type Resolvers<ContextType = any> = {
   Datetime?: GraphQLScalarType;
   DeleteActionPluginPayload?: DeleteActionPluginPayloadResolvers<ContextType>;
   DeleteActionQueuePayload?: DeleteActionQueuePayloadResolvers<ContextType>;
+  DeleteActionSchedulePayload?: DeleteActionSchedulePayloadResolvers<ContextType>;
   DeleteApplicationPayload?: DeleteApplicationPayloadResolvers<ContextType>;
   DeleteApplicationResponsePayload?: DeleteApplicationResponsePayloadResolvers<ContextType>;
   DeleteApplicationSectionPayload?: DeleteApplicationSectionPayloadResolvers<ContextType>;
@@ -35774,6 +36729,7 @@ export type Resolvers<ContextType = any> = {
   TriggerQueuesEdge?: TriggerQueuesEdgeResolvers<ContextType>;
   UpdateActionPluginPayload?: UpdateActionPluginPayloadResolvers<ContextType>;
   UpdateActionQueuePayload?: UpdateActionQueuePayloadResolvers<ContextType>;
+  UpdateActionSchedulePayload?: UpdateActionSchedulePayloadResolvers<ContextType>;
   UpdateApplicationPayload?: UpdateApplicationPayloadResolvers<ContextType>;
   UpdateApplicationResponsePayload?: UpdateApplicationResponsePayloadResolvers<ContextType>;
   UpdateApplicationSectionPayload?: UpdateApplicationSectionPayloadResolvers<ContextType>;
