@@ -20394,7 +20394,7 @@ export type TemplateAction = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
@@ -20414,7 +20414,7 @@ export type TemplateActionCondition = {
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `code` field. */
-  code?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `trigger` field. */
@@ -20434,7 +20434,7 @@ export type TemplateActionFilter = {
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `code` field. */
-  code?: Maybe<IntFilter>;
+  code?: Maybe<StringFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
   /** Filter by the object’s `trigger` field. */
@@ -20461,7 +20461,7 @@ export type TemplateActionFilter = {
 export type TemplateActionInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
@@ -20501,7 +20501,7 @@ export type TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyUsingTe
 export type TemplateActionPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
@@ -20606,7 +20606,7 @@ export type TemplateActionTemplateIdFkeyInverseInput = {
 /** The `templateAction` to be created by this mutation. */
 export type TemplateActionTemplateIdFkeyTemplateActionCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
@@ -26925,7 +26925,7 @@ export type UpdateTemplateActionInput = {
 /** An object where the defined keys will be set on the `templateAction` being updated. */
 export type UpdateTemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
@@ -35726,7 +35726,7 @@ export type TemplateActionResolvers<ContextType = any, ParentType extends Resolv
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  code?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   actionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   sequence?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;

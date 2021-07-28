@@ -177,6 +177,9 @@ export async function processTrigger(payload: TriggerPayload) {
   }
   // After all done, set Trigger on table back to NULL (or Error)
   DBConnect.resetTrigger(table, record_id, actionFailed !== '')
+  // and set is_active = false if scheduled action
+  if (table === 'action_schedule' && actionFailed === '')
+    DBConnect.setScheduledActionDone(table, record_id)
 }
 
 async function evaluateParameters(

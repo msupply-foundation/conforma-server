@@ -3,13 +3,14 @@ GraphQL Fragment - DEVELOPMENT Actions
   - Use this to test arbitrary Actions -- but only use the trigger "DEV_TEST"
 \*/
 exports.devActions = `
-    # Create a user
+    # Check scheduled actions working
     {
-      actionCode: "generateName"
-      trigger: DEV_TEST
+      actionCode: "cLog"
+      code: "TEST1"
+      trigger: ON_SCHEDULE
       sequence: 1
       parameterQueries: {
-        formatExpression: "\${applicationData.templateName} — \${applicationData.applicationSerial}"
+        message: "This is a scheduled action!!"
       }
     }
    # {

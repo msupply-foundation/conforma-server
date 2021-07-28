@@ -30,6 +30,8 @@ class DBConnect {
 
   public resetTrigger = PostgresDB.resetTrigger
 
+  public setScheduledActionDone = PostgresDB.setScheduledActionDone
+
   public addFile = PostgresDB.addFile
 
   public getFileDownloadInfo = PostgresDB.getFileDownloadInfo

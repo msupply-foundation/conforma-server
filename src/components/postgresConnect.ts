@@ -194,6 +194,19 @@ class PostgresDB {
     }
   }
 
+  public setScheduledActionDone = async (table: string, record_id: number): Promise<boolean> => {
+    const text = `UPDATE ${table} SET is_active = false WHERE id = $1`
+    try {
+      const result = await this.query({
+        text,
+        values: [record_id],
+      })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
   public addFile = async (payload: FilePayload): Promise<string> => {
     const text = `INSERT INTO file (${Object.keys(payload)}) 
       VALUES (${this.getValuesPlaceholders(payload)}) RETURNING unique_id`

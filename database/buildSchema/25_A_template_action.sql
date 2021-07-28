@@ -2,7 +2,7 @@
 CREATE TABLE public.template_action (
     id serial PRIMARY KEY,
     template_id integer REFERENCES public.template (id),
-    code integer,
+    code varchar,
     action_code varchar,
     TRIGGER public.trigger,
     sequence integer
