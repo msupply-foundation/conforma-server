@@ -604,7 +604,7 @@ export type ActionSchedule = Node & {
   entityId?: Maybe<Scalars['Int']>;
   eventCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
   isActive?: Maybe<Scalars['Boolean']>;
   trigger?: Maybe<Trigger>;
@@ -755,8 +755,6 @@ export type ActionScheduleFilter = {
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** A related `template` exists. */
@@ -33317,7 +33315,7 @@ export type ActionScheduleResolvers<ContextType = any, ParentType extends Resolv
   entityId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   timeScheduled?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
