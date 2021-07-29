@@ -22,7 +22,10 @@ import scheduler from 'node-schedule'
 import config from '../../config'
 import { DateTime } from 'luxon'
 
+// Dev configs
 const showApplicationDataLog = false
+const showActionOutcomeLog = false
+const schedulerMode = 'test'
 
 // Load actions from Database at server startup
 export const loadActions = async function (actionLibrary: ActionLibrary) {
@@ -48,9 +51,8 @@ const checkActionSchedule = new scheduler.RecurrenceRule()
 
 const hoursSchedule = config.hoursSchedule
 checkActionSchedule.hour = hoursSchedule
-checkActionSchedule.minute = 0
-// Enable next line for testing -- it'll run every 30 secs
-// checkActionSchedule.second = [0, 30]
+if (schedulerMode === 'test') checkActionSchedule.second = [0, 30]
+else checkActionSchedule.minute = 0
 
 scheduler.scheduleJob(checkActionSchedule, () => {
   triggerScheduledActions()
@@ -137,8 +139,8 @@ export async function processTrigger(payload: TriggerPayload) {
         outputCumulative,
       })
       outputCumulative = { ...outputCumulative, ...result.output }
-      // Enable next line to inspect outputCumulative:
-      // console.log('outputCumulative: ', outputCumulative)
+      // Debug helper console.log to inspect action outputs:
+      if (showActionOutcomeLog) console.log('outputCumulative:', outputCumulative)
       if (result.status === ActionQueueStatus.Fail) console.log(result.error_log)
     } catch (err) {
       actionFailed = action.action_code
@@ -207,8 +209,6 @@ export async function executeAction(
         outputCumulative: evaluatorParams.objects?.outputCumulative || {},
         DBConnect,
       })
-      // Enable next line to inspect output
-      // console.log('Output', actionResult.output)
 
       return await DBConnect.executedActionStatusUpdate({
         status: actionResult.status,
