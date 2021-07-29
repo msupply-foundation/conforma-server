@@ -11,6 +11,7 @@ CREATE TABLE public.action_schedule (
     TRIGGER public.trigger
 );
 
+-- event codes must be unique per application
 CREATE UNIQUE INDEX unique_application_event ON action_schedule (application_id, event_code);
 
 -- TRIGGER (Listener) on action_schedule table
