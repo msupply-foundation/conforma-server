@@ -31,12 +31,13 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level) - reviewAssignment
     expect(clearResult(result)).toEqual({
       status: ActionQueueStatus.Success,
       error_log: '',
-      output: {},
+      output: {
+        reviewAssignments: [],
+      },
     })
   })
 })
 
-// Simulate application submissions:
 describe('Submit new application on first stage to generate reviewAssignments on Stage 1', () => {
   // Setup database
   beforeAll(async (done) => {
@@ -252,8 +253,6 @@ describe('Re-submit new application on second stage to generate new reviewAssign
   })
 })
 
-// Recreated test case for First Review submission (Stage 1 - generate assignment for Stage 2)
-
 // Simulate review submission:
 
 test('Test: Submit Review ID#7002 for Application ID#4003 - Stage 2 Lvl 1 to generate level 2 assignments', () => {
@@ -308,14 +307,14 @@ describe('Create new Review to simulate application moving to last stage (Final 
   beforeAll(async (done) => {
     await DBConnect.query({
       text: `
-      INSERT INTO public.review (id, application_id, review_assignment_id)
-        VALUES (8000, 4004, 10)
+      INSERT INTO public.review (id, review_assignment_id)
+        VALUES (8000, 10);
       INSERT INTO public.review_decision (id, decision, review_id)
         VALUES (DEFAULT, 'NON_CONFORM', 8000);
       INSERT INTO public.review_status_history (id, review_id, status)
-        VALUES (DEFAULT, 7004, 'SUBMITTED');
+        VALUES (DEFAULT, 8000, 'SUBMITTED');
       INSERT INTO public.application_stage_history (id, application_id, stage_id, is_current)
-        VALUES (2000, 4004, 7, 'True');
+        VALUES (2000, 4003, 7, 'True');
       INSERT INTO public.application_status_history (id, application_stage_history_id, status, is_current)
         VALUES (DEFAULT, 2000, 'SUBMITTED', 'True');
       `,
@@ -324,9 +323,9 @@ describe('Create new Review to simulate application moving to last stage (Final 
     done()
   })
 
-  test('Submit Review ID#7003 for Application ID#4004 - Stage 2 Lvl 2 to create assignments for Stage 3 (Last Stage) - Final Decision', () => {
+  test('Submit Review ID#8000 for Application ID#4004 - Stage 2 Lvl 2 to create assignments for Stage 3 (Last Stage) - Final Decision', () => {
     return generateReviewAssignments({
-      parameters: { templateId: 4, applicationId: 4004, reviewId: 7004 }, // stageNumber: 2, stageId: 7, levels: 2
+      parameters: { templateId: 4, applicationId: 4003, reviewId: 8000 }, // stageNumber: 2, stageId: 7, levels: 2
       DBConnect,
     }).then((result: any) => {
       expect(clearResult(result)).toEqual({
@@ -341,7 +340,7 @@ describe('Create new Review to simulate application moving to last stage (Final 
               stageNumber: 3,
               levelNumber: 1,
               status: ReviewAssignmentStatus.Assigned,
-              applicationId: 4004,
+              applicationId: 4003,
               allowedSections: null,
               isLastLevel: true,
               isLastStage: true,
@@ -354,7 +353,7 @@ describe('Create new Review to simulate application moving to last stage (Final 
               stageNumber: 3,
               levelNumber: 1,
               status: ReviewAssignmentStatus.Assigned,
-              applicationId: 4004,
+              applicationId: 4003,
               allowedSections: null,
               isLastLevel: true,
               isLastStage: true,

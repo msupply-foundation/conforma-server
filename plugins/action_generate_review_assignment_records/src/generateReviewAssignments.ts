@@ -124,8 +124,6 @@ async function generateReviewAssignments({
       nextLevelReviewers,
     })
 
-    console.log('ReviewAssignments', reviewAssignments)
-
     return generateNextReviewAssignments({
       db,
       templateId,
