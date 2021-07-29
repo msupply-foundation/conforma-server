@@ -53,8 +53,17 @@ async function generateReviewAssignments({
     }
     // For level 1+ or next stages review assignment
     else {
-      const { stageNumber: previousStage, levelNumber: previousLevel } =
-        await DBConnect.getReviewStageAndLevel(reviewId)
+      const review = await DBConnect.getReviewStageAndLevel(reviewId)
+      if (!review) {
+        console.log('No review found for received reviewId, no review assignments to generate.')
+        return {
+          status: ActionQueueStatus.Success,
+          error_log: '',
+          output: {},
+        }
+      }
+
+      const { stageNumber: previousStage, levelNumber: previousLevel } = review
       console.log('Review existing', previousStage, previousLevel)
       // Review in new stage - first level
       if (previousStage !== stageNumber) {
@@ -94,16 +103,35 @@ async function generateReviewAssignments({
     }
     const isLastLevel = nextReviewLevel === numReviewLevels
     const isLastStage = stageNumber === lastStageNumber
-    return generateNextReviewAssignments({
+    const nextLevelReviewers: Reviewer[] = await db.getPersonnelForApplicationStageLevel(
+      templateId,
+      stageNumber,
+      nextReviewLevel,
+      PermissionPolicyType.Review
+    )
+    console.log('Next level reviewers', nextLevelReviewers)
+    // Build reviewers into object map so we can combine duplicate user_orgs
+    // and merge their section code restrictions
+    const reviewAssignments = await getReviewAssignmentsToGenerate({
       db,
       applicationId,
-      templateId,
       nextReviewLevel,
       stageNumber,
       stageId,
       timeStageCreated: stageHistoryTimeCreated,
       isLastLevel,
       isLastStage,
+      nextLevelReviewers,
+    })
+
+    console.log('ReviewAssignments', reviewAssignments)
+
+    return generateNextReviewAssignments({
+      db,
+      templateId,
+      nextReviewLevel,
+      stageNumber,
+      reviewAssignments,
     })
   } catch (error) {
     console.log(error.message)
@@ -114,11 +142,18 @@ async function generateReviewAssignments({
   }
 }
 
-interface GenerateNextReviewAssignmentsProps {
+// Helper function -- concatenates two arrays, but handles case
+// when either or both are null/undefined
+const mergeAllowedSections = (prevArray?: string[] | null, newArray?: string[] | null) => {
+  if (!prevArray) return newArray
+  else if (!newArray) return prevArray
+  else return Array.from(new Set([...prevArray, ...newArray]))
+}
+interface ReviewAssignmentsToGenerateProps {
   db: any
-  applicationId: number
-  templateId: number
+  nextLevelReviewers: Reviewer[]
   nextReviewLevel: number
+  applicationId: number
   stageNumber: number
   stageId: number
   timeStageCreated: Date
@@ -126,29 +161,19 @@ interface GenerateNextReviewAssignmentsProps {
   isLastStage: boolean
 }
 
-const generateNextReviewAssignments = async ({
+const getReviewAssignmentsToGenerate = async ({
   db,
-  applicationId,
-  templateId,
+  nextLevelReviewers,
   nextReviewLevel,
+  applicationId,
   stageNumber,
   stageId,
   timeStageCreated,
   isLastLevel,
   isLastStage,
-}: GenerateNextReviewAssignmentsProps) => {
-  const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
-    templateId,
-    stageNumber,
-    nextReviewLevel,
-    PermissionPolicyType.Review
-  )
-  console.log('Next level reviewers', nextLevelReviewers)
+}: ReviewAssignmentsToGenerateProps) => {
   const reviewAssignments: ReviewAssignmentObject = {}
-
-  // Build reviewers into object map so we can combine duplicate user_orgs
-  // and merge their section code restrictions
-  nextLevelReviewers.forEach((reviewer: Reviewer) => {
+  for (const reviewer of nextLevelReviewers) {
     const { userId, orgId, allowedSections, canSelfAssign, canMakeFinalDecision } = reviewer
 
     const getAssignmentStatus = () => {
@@ -158,7 +183,7 @@ const generateNextReviewAssignments = async ({
       return ReviewAssignmentStatus.Available
     }
 
-    const existingReviewAssignment = db.checkExistingReviewAssignment({
+    const existingReviewAssignment = await db.checkExistingReviewAssignment({
       applicationId,
       stageNumber,
       levelNumber: nextReviewLevel,
@@ -178,7 +203,6 @@ const generateNextReviewAssignments = async ({
         stageId,
         stageNumber,
         timeStageCreated,
-        // TO-DO: allow STATUS to be configurable in template
         status: getAssignmentStatus(),
         applicationId,
         allowedSections: allowedSections || null,
@@ -187,63 +211,81 @@ const generateNextReviewAssignments = async ({
         isLastStage,
         isFinalDecision: canMakeFinalDecision,
       }
-  })
-  // Save review_assignment records to database
-  const reviewAssignmentIds = await db.addReviewAssignments(Object.values(reviewAssignments))
-
-  // Generate review_assignment_assigner_joins
-  // For now we assume that assigners have no Section restrictions
-  console.log('Generating review_assignment_assigner_join records...')
-  const availableAssigners = await db.getPersonnelForApplicationStageLevel(
-    templateId,
-    stageNumber,
-    nextReviewLevel,
-    PermissionPolicyType.Assign
-  )
-  const reviewAssignmentAssignerJoins = []
-  for (const reviewAssignmentId of reviewAssignmentIds) {
-    for (const assigner of availableAssigners) {
-      reviewAssignmentAssignerJoins.push({
-        assignerId: assigner.userId,
-        orgId: assigner.orgId,
-        reviewAssignmentId,
-      })
-    }
   }
-  const reviewAssignmentAssignerJoinIds = await db.addReviewAssignmentAssignerJoins(
-    reviewAssignmentAssignerJoins
-  )
-
-  console.log('ReviewAssignmentAssignerJoinIds', reviewAssignmentAssignerJoinIds)
-
-  // Remove timeStageCreated from log - to help with tests
-  const reviewAssignmentsLog: ReviewAssignment[] = []
-
-  Object.values(reviewAssignments).forEach((reviewAssignment) => {
-    delete reviewAssignment.timeStageCreated
-    reviewAssignmentsLog.push(reviewAssignment)
-  })
-
-  return {
-    status: ActionQueueStatus.Success,
-    error_log: '',
-    output: {
-      reviewAssignments,
-      reviewAssignmentIds,
-      reviewAssignmentAssignerJoins,
-      reviewAssignmentAssignerJoinIds,
-      nextStageNumber: stageNumber,
-      nextReviewLevel,
-    },
-  }
+  return reviewAssignments
 }
 
-// Helper function -- concatenates two arrays, but handles case
-// when either or both are null/undefined
-const mergeAllowedSections = (prevArray?: string[] | null, newArray?: string[] | null) => {
-  if (!prevArray) return newArray
-  else if (!newArray) return prevArray
-  else return Array.from(new Set([...prevArray, ...newArray]))
+interface GenerateNextReviewAssignmentsProps {
+  db: any
+  templateId: number
+  nextReviewLevel: number
+  stageNumber: number
+  reviewAssignments?: ReviewAssignmentObject
+}
+
+const generateNextReviewAssignments = async ({
+  db,
+  templateId,
+  nextReviewLevel,
+  stageNumber,
+  reviewAssignments,
+}: GenerateNextReviewAssignmentsProps) => {
+  if (!reviewAssignments) {
+    console.log('No Review assignments to create')
+    return {
+      status: ActionQueueStatus.Success,
+      error_log: '',
+      output: {},
+    }
+  } else {
+    // Save review_assignment records to database
+    const reviewAssignmentIds = await db.addReviewAssignments(Object.values(reviewAssignments))
+
+    // Generate review_assignment_assigner_joins
+    // For now we assume that assigners have no Section restrictions
+    console.log('Generating review_assignment_assigner_join records...')
+    const availableAssigners = await db.getPersonnelForApplicationStageLevel(
+      templateId,
+      stageNumber,
+      nextReviewLevel,
+      PermissionPolicyType.Assign
+    )
+    const reviewAssignmentAssignerJoins = []
+    for (const reviewAssignmentId of reviewAssignmentIds) {
+      for (const assigner of availableAssigners) {
+        reviewAssignmentAssignerJoins.push({
+          assignerId: assigner.userId,
+          orgId: assigner.orgId,
+          reviewAssignmentId,
+        })
+      }
+    }
+    const reviewAssignmentAssignerJoinIds = await db.addReviewAssignmentAssignerJoins(
+      reviewAssignmentAssignerJoins
+    )
+
+    console.log('ReviewAssignmentAssignerJoinIds', reviewAssignmentAssignerJoinIds)
+
+    // Remove timeStageCreated from log - to help with tests
+    const reviewAssignmentsLog: ReviewAssignment[] = []
+
+    Object.values(reviewAssignments).forEach((reviewAssignment) => {
+      delete reviewAssignment.timeStageCreated
+      reviewAssignmentsLog.push(reviewAssignment)
+    })
+    return {
+      status: ActionQueueStatus.Success,
+      error_log: '',
+      output: {
+        reviewAssignments: reviewAssignmentsLog,
+        reviewAssignmentIds,
+        reviewAssignmentAssignerJoins,
+        reviewAssignmentAssignerJoinIds,
+        nextStageNumber: stageNumber,
+        nextReviewLevel,
+      },
+    }
+  }
 }
 
 export default generateReviewAssignments

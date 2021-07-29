@@ -60,7 +60,7 @@ const databaseMethods = (DBConnect: any) => ({
         text,
         values: [applicationId, stageNumber, levelNumber, reviewerId],
       })
-      return result.rows
+      return result.rows.length > 0
     } catch (err) {
       console.log(err.message)
       throw err
