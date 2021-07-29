@@ -67,7 +67,7 @@ export const triggerScheduledActions = async () => {
 }
 
 export async function processTrigger(payload: TriggerPayload) {
-  const { trigger_id, trigger, table, record_id, template_action_code } = payload
+  const { trigger_id, trigger, table, record_id, event_code } = payload
 
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
@@ -75,8 +75,8 @@ export async function processTrigger(payload: TriggerPayload) {
   const actions = await (
     await DBConnect.getActionsByTemplateId(templateId, trigger)
   ).filter((action) => {
-    if (!template_action_code) return true
-    else return action.template_action_code === template_action_code
+    if (!event_code) return true
+    else return action.event_code === event_code
   })
 
   // Separate into Sequential and Async actions

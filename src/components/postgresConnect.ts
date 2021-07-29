@@ -359,7 +359,7 @@ class PostgresDB {
     templateId: number,
     trigger: Trigger
   ): Promise<ActionInTemplate[]> => {
-    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.code AS template_action_code, sequence, condition, parameter_queries 
+    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.event_code AS event_code, sequence, condition, parameter_queries 
     FROM template 
     JOIN template_action ON template.id = template_action.template_id 
     JOIN action_plugin ON template_action.action_code = action_plugin.code 

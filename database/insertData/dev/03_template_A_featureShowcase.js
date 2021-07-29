@@ -1298,7 +1298,7 @@ exports.queries = [
                 trigger: ON_APPLICATION_CREATE
                 sequence: 1
                 parameterQueries:{
-                  code: "war1"
+                  eventCode: "warn1"
                   duration: { minute: 2 }
                 }
               }
@@ -1306,14 +1306,14 @@ exports.queries = [
                 actionCode: "scheduleAction"
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries:{
-                  code: "exp1"
+                  eventCode: "exp1"
                   duration: { minute: 4 }
                 }
               }
               {
                 actionCode: "sendNotification"
                 trigger: ON_SCHEDULE
-                code: "war1"
+                eventCode: "warn1"
                 condition: {
                   operator: "="
                   children: [
@@ -1338,7 +1338,7 @@ exports.queries = [
               {
                 actionCode: "changeOutcome"
                 trigger: ON_SCHEDULE
-                code: "exp1"
+                eventCode: "exp1"
                 sequence: 1
                 condition: {
                   operator: "="
@@ -1357,7 +1357,7 @@ exports.queries = [
               {
                 actionCode: "changeStatus"
                 trigger: ON_SCHEDULE
-                code: "exp1"
+                eventCode: "exp1"
                 sequence: 2
                 condition: {
                   operator: "="
@@ -1376,7 +1376,7 @@ exports.queries = [
               {
                 actionCode: "sendNotification"
                 trigger: ON_SCHEDULE
-                code: "exp1"
+                eventCode: "exp1"
                 condition: {
                   operator: "="
                   children: [

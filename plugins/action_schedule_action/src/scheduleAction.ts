@@ -15,7 +15,7 @@ const scheduleAction: ActionPluginType = async ({ parameters, applicationData, D
     applicationId = applicationData?.applicationId,
     templateId = applicationData?.templateId,
     duration, // either number (weeks) or Luxon duration object
-    code = null,
+    eventCode = null,
   } = parameters
 
   try {
@@ -24,13 +24,13 @@ const scheduleAction: ActionPluginType = async ({ parameters, applicationData, D
         ? DateTime.now().plus({ weeks: duration }).toISO()
         : DateTime.now().plus(duration)
     // Add record
-    const scheduledAction = await db.createActionSchedule({
+    const scheduledAction = await db.createOrUpdateActionSchedule({
       tableName,
       entityId,
       applicationId,
       templateId,
       scheduledTime,
-      code,
+      eventCode,
     })
     return {
       status: ActionQueueStatus.Success,

@@ -6,7 +6,7 @@ exports.devActions = `
     # Check scheduled actions working
     {
       actionCode: "cLog"
-      code: "TEST1"
+      eventCode: "TEST1"
       trigger: ON_SCHEDULE
       sequence: 1
       parameterQueries: {

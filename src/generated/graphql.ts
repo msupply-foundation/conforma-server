@@ -588,7 +588,7 @@ export type ActionQueueTriggerEventFkeyTriggerQueueCreateInput = {
   triggerType?: Maybe<Trigger>;
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
@@ -602,7 +602,7 @@ export type ActionSchedule = Node & {
   id: Scalars['Int'];
   table?: Maybe<Scalars['String']>;
   entityId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -629,7 +629,7 @@ export type ActionScheduleApplicationIdFkeyActionScheduleCreateInput = {
   id?: Maybe<Scalars['Int']>;
   table?: Maybe<Scalars['String']>;
   entityId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   templateId?: Maybe<Scalars['Int']>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -719,8 +719,8 @@ export type ActionScheduleCondition = {
   table?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `entityId` field. */
   entityId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateActionCode` field. */
-  templateActionCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `eventCode` field. */
+  eventCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `timeScheduled` field. */
   timeScheduled?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `applicationId` field. */
@@ -741,8 +741,8 @@ export type ActionScheduleFilter = {
   table?: Maybe<StringFilter>;
   /** Filter by the object’s `entityId` field. */
   entityId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateActionCode` field. */
-  templateActionCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `eventCode` field. */
+  eventCode?: Maybe<StringFilter>;
   /** Filter by the object’s `timeScheduled` field. */
   timeScheduled?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `applicationId` field. */
@@ -774,7 +774,7 @@ export type ActionScheduleInput = {
   id?: Maybe<Scalars['Int']>;
   table?: Maybe<Scalars['String']>;
   entityId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -831,7 +831,7 @@ export type ActionSchedulePatch = {
   id?: Maybe<Scalars['Int']>;
   table?: Maybe<Scalars['String']>;
   entityId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   applicationId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -872,8 +872,8 @@ export enum ActionSchedulesOrderBy {
   TableDesc = 'TABLE_DESC',
   EntityIdAsc = 'ENTITY_ID_ASC',
   EntityIdDesc = 'ENTITY_ID_DESC',
-  TemplateActionCodeAsc = 'TEMPLATE_ACTION_CODE_ASC',
-  TemplateActionCodeDesc = 'TEMPLATE_ACTION_CODE_DESC',
+  EventCodeAsc = 'EVENT_CODE_ASC',
+  EventCodeDesc = 'EVENT_CODE_DESC',
   TimeScheduledAsc = 'TIME_SCHEDULED_ASC',
   TimeScheduledDesc = 'TIME_SCHEDULED_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
@@ -893,7 +893,7 @@ export type ActionScheduleTemplateIdFkeyActionScheduleCreateInput = {
   id?: Maybe<Scalars['Int']>;
   table?: Maybe<Scalars['String']>;
   entityId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   applicationId?: Maybe<Scalars['Int']>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -20382,8 +20382,8 @@ export type TemplateAction = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
   condition?: Maybe<Scalars['JSON']>;
@@ -20401,10 +20401,10 @@ export type TemplateActionCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `code` field. */
-  code?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `eventCode` field. */
+  eventCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `trigger` field. */
   trigger?: Maybe<Trigger>;
   /** Checks for equality with the object’s `sequence` field. */
@@ -20421,10 +20421,10 @@ export type TemplateActionFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `code` field. */
-  code?: Maybe<StringFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `eventCode` field. */
+  eventCode?: Maybe<StringFilter>;
   /** Filter by the object’s `trigger` field. */
   trigger?: Maybe<TriggerFilter>;
   /** Filter by the object’s `sequence` field. */
@@ -20449,8 +20449,8 @@ export type TemplateActionFilter = {
 export type TemplateActionInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
   condition?: Maybe<Scalars['JSON']>;
@@ -20489,8 +20489,8 @@ export type TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyUsingTe
 export type TemplateActionPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
   condition?: Maybe<Scalars['JSON']>;
@@ -20527,10 +20527,10 @@ export enum TemplateActionsOrderBy {
   IdDesc = 'ID_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
-  CodeAsc = 'CODE_ASC',
-  CodeDesc = 'CODE_DESC',
   ActionCodeAsc = 'ACTION_CODE_ASC',
   ActionCodeDesc = 'ACTION_CODE_DESC',
+  EventCodeAsc = 'EVENT_CODE_ASC',
+  EventCodeDesc = 'EVENT_CODE_DESC',
   TriggerAsc = 'TRIGGER_ASC',
   TriggerDesc = 'TRIGGER_DESC',
   SequenceAsc = 'SEQUENCE_ASC',
@@ -20594,8 +20594,8 @@ export type TemplateActionTemplateIdFkeyInverseInput = {
 /** The `templateAction` to be created by this mutation. */
 export type TemplateActionTemplateIdFkeyTemplateActionCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
   condition?: Maybe<Scalars['JSON']>;
@@ -23608,7 +23608,7 @@ export type TriggerQueue = Node & {
   triggerType?: Maybe<Trigger>;
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
@@ -23641,8 +23641,8 @@ export type TriggerQueueCondition = {
   table?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `recordId` field. */
   recordId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateActionCode` field. */
-  templateActionCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `eventCode` field. */
+  eventCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `status` field. */
@@ -23661,8 +23661,8 @@ export type TriggerQueueFilter = {
   table?: Maybe<StringFilter>;
   /** Filter by the object’s `recordId` field. */
   recordId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateActionCode` field. */
-  templateActionCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `eventCode` field. */
+  eventCode?: Maybe<StringFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `status` field. */
@@ -23687,7 +23687,7 @@ export type TriggerQueueInput = {
   triggerType?: Maybe<Trigger>;
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
@@ -23727,7 +23727,7 @@ export type TriggerQueuePatch = {
   triggerType?: Maybe<Trigger>;
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
@@ -23767,8 +23767,8 @@ export enum TriggerQueuesOrderBy {
   TableDesc = 'TABLE_DESC',
   RecordIdAsc = 'RECORD_ID_ASC',
   RecordIdDesc = 'RECORD_ID_DESC',
-  TemplateActionCodeAsc = 'TEMPLATE_ACTION_CODE_ASC',
-  TemplateActionCodeDesc = 'TEMPLATE_ACTION_CODE_DESC',
+  EventCodeAsc = 'EVENT_CODE_ASC',
+  EventCodeDesc = 'EVENT_CODE_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
   StatusAsc = 'STATUS_ASC',
@@ -24009,7 +24009,7 @@ export type UpdateActionScheduleOnActionScheduleForActionScheduleApplicationIdFk
   id?: Maybe<Scalars['Int']>;
   table?: Maybe<Scalars['String']>;
   entityId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   templateId?: Maybe<Scalars['Int']>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -24023,7 +24023,7 @@ export type UpdateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyP
   id?: Maybe<Scalars['Int']>;
   table?: Maybe<Scalars['String']>;
   entityId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timeScheduled?: Maybe<Scalars['Datetime']>;
   applicationId?: Maybe<Scalars['Int']>;
   isActive?: Maybe<Scalars['Boolean']>;
@@ -26911,8 +26911,8 @@ export type UpdateTemplateActionInput = {
 /** An object where the defined keys will be set on the `templateAction` being updated. */
 export type UpdateTemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
-  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
   sequence?: Maybe<Scalars['Int']>;
   condition?: Maybe<Scalars['JSON']>;
@@ -27943,7 +27943,7 @@ export type UpdateTriggerQueueOnActionQueueForActionQueueTriggerEventFkeyPatch =
   triggerType?: Maybe<Trigger>;
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
@@ -28321,7 +28321,7 @@ export type UpdateVerificationInput = {
 export type UpdateVerificationOnVerificationForVerificationApplicationIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -29421,7 +29421,7 @@ export type Verification = Node & {
   id: Scalars['Int'];
   uniqueId: Scalars['String'];
   applicationId: Scalars['Int'];
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -29512,7 +29512,7 @@ export type VerificationApplicationIdFkeyInverseInput = {
 export type VerificationApplicationIdFkeyVerificationCreateInput = {
   id?: Maybe<Scalars['Int']>;
   uniqueId: Scalars['String'];
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -29533,8 +29533,8 @@ export type VerificationCondition = {
   uniqueId?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicationId` field. */
   applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateActionCode` field. */
-  templateActionCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `eventCode` field. */
+  eventCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `message` field. */
   message?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `data` field. */
@@ -29557,8 +29557,8 @@ export type VerificationFilter = {
   uniqueId?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationId` field. */
   applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateActionCode` field. */
-  templateActionCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `eventCode` field. */
+  eventCode?: Maybe<StringFilter>;
   /** Filter by the object’s `message` field. */
   message?: Maybe<StringFilter>;
   /** Filter by the object’s `data` field. */
@@ -29586,7 +29586,7 @@ export type VerificationInput = {
   id?: Maybe<Scalars['Int']>;
   uniqueId: Scalars['String'];
   applicationId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -29635,7 +29635,7 @@ export type VerificationPatch = {
   id?: Maybe<Scalars['Int']>;
   uniqueId?: Maybe<Scalars['String']>;
   applicationId?: Maybe<Scalars['Int']>;
-  templateActionCode?: Maybe<Scalars['String']>;
+  eventCode?: Maybe<Scalars['String']>;
   message?: Maybe<Scalars['String']>;
   data?: Maybe<Scalars['JSON']>;
   timeCreated?: Maybe<Scalars['Datetime']>;
@@ -29676,8 +29676,8 @@ export enum VerificationsOrderBy {
   UniqueIdDesc = 'UNIQUE_ID_DESC',
   ApplicationIdAsc = 'APPLICATION_ID_ASC',
   ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  TemplateActionCodeAsc = 'TEMPLATE_ACTION_CODE_ASC',
-  TemplateActionCodeDesc = 'TEMPLATE_ACTION_CODE_DESC',
+  EventCodeAsc = 'EVENT_CODE_ASC',
+  EventCodeDesc = 'EVENT_CODE_DESC',
   MessageAsc = 'MESSAGE_ASC',
   MessageDesc = 'MESSAGE_DESC',
   DataAsc = 'DATA_ASC',
@@ -33315,7 +33315,7 @@ export type ActionScheduleResolvers<ContextType = any, ParentType extends Resolv
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   table?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   entityId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  templateActionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   timeScheduled?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -35711,8 +35711,8 @@ export type TemplateActionResolvers<ContextType = any, ParentType extends Resolv
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   actionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   sequence?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   condition?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -35955,7 +35955,7 @@ export type TriggerQueueResolvers<ContextType = any, ParentType extends Resolver
   triggerType?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
   table?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   recordId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  templateActionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['TriggerQueueStatus']>, ParentType, ContextType>;
   log?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -36464,7 +36464,7 @@ export type VerificationResolvers<ContextType = any, ParentType extends Resolver
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uniqueId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  templateActionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;

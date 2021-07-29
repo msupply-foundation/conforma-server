@@ -1,21 +1,23 @@
 const databaseMethods = (DBConnect: any) => ({
-  createActionSchedule: async ({
+  createOrUpdateActionSchedule: async ({
     tableName,
     entityId,
     applicationId,
     templateId,
     scheduledTime,
-    code,
+    eventCode,
   }: any) => {
     const text = `
-      INSERT into action_schedule ("table", entity_id, template_action_code, time_scheduled, application_id, template_id)
+      INSERT into action_schedule ("table", entity_id, event_code, time_scheduled, application_id, template_id)
       VALUES ($1, $2, $3, $4, $5, $6)
+      ON CONFLICT (event_code, application_id)
+        DO UPDATE SET time_scheduled = $4
       RETURNING *
     `
     try {
       const result = await DBConnect.query({
         text,
-        values: [tableName, entityId, code, scheduledTime, applicationId, templateId],
+        values: [tableName, entityId, eventCode, scheduledTime, applicationId, templateId],
       })
       return result?.rows[0]
     } catch (err) {
