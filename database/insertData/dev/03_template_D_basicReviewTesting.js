@@ -279,17 +279,49 @@ exports.queries = [
                 }
               }
               {
+                actionCode: "scheduleAction"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 1
+                parameterQueries:{
+                  eventCode: "warn1"
+                  duration: { minute: 10 }
+                }
+              }
+              {
+                actionCode: "scheduleAction"
+                trigger: ON_REVIEW_SUBMIT
+                parameterQueries:{
+                  eventCode: "exp1"
+                  duration: { minute: 15 }
+                }
+              }
+              {
                 actionCode: "sendNotification"
                 trigger: ON_SCHEDULE
                 eventCode: "warn1"
                 condition: {
-                  operator: "="
+                  operator: "OR"
                   children: [
                     {
-                      operator: "objectProperties"
-                      children: ["applicationData.status"]
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.status"]
+                        }
+                        "DRAFT"
+                      ]
+                    },
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.status"]
+                        }
+                        "CHANGES_REQUESTED"
+                      ]
                     }
-                    "DRAFT"
                   ]
                 }
                 parameterQueries: {
@@ -299,7 +331,16 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.email", ""]
                   }
-                  subject: "Draft application in progress"
+                  subject: {
+                    operator: "stringSubstitution"
+                    children: [
+                      "Draft application %1 in progress",
+                      {
+                        operator: "objectProperties"
+                        children: [ "applicationData.applicationSerial", ""]
+                      }
+                    ]
+                  }
                   message: "Your application will expire if you don't complete it soon"
                 }
               }
@@ -309,13 +350,28 @@ exports.queries = [
                 eventCode: "exp1"
                 sequence: 1
                 condition: {
-                  operator: "="
+                  operator: "OR"
                   children: [
                     {
-                      operator: "objectProperties"
-                      children: ["applicationData.status"]
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.status"]
+                        }
+                        "DRAFT"
+                      ]
+                    },
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.status"]
+                        }
+                        "CHANGES_REQUESTED"
+                      ]
                     }
-                    "DRAFT"
                   ]
                 }
                 parameterQueries:{
@@ -328,13 +384,28 @@ exports.queries = [
                 eventCode: "exp1"
                 sequence: 2
                 condition: {
-                  operator: "="
+                  operator: "OR"
                   children: [
                     {
-                      operator: "objectProperties"
-                      children: ["applicationData.status"]
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.status"]
+                        }
+                        "DRAFT"
+                      ]
+                    },
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.status"]
+                        }
+                        "CHANGES_REQUESTED"
+                      ]
                     }
-                    "DRAFT"
                   ]
                 }
                 parameterQueries:{
@@ -346,13 +417,28 @@ exports.queries = [
                 trigger: ON_SCHEDULE
                 eventCode: "exp1"
                 condition: {
-                  operator: "="
+                  operator: "OR"
                   children: [
                     {
-                      operator: "objectProperties"
-                      children: ["applicationData.status"]
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.status"]
+                        }
+                        "DRAFT"
+                      ]
+                    },
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.status"]
+                        }
+                        "CHANGES_REQUESTED"
+                      ]
                     }
-                    "DRAFT"
                   ]
                 }
                 parameterQueries: {
@@ -362,7 +448,16 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.email", ""]
                   }
-                  subject: "Application expired"
+                  subject: {
+                    operator: "stringSubstitution"
+                    children: [
+                      "Your application %1 has expired",
+                      {
+                        operator: "objectProperties"
+                        children: [ "applicationData.applicationSerial", ""]
+                      }
+                    ]
+                  }
                   message: "Your application has expired. If you wish to continue, you'll need to re-apply."
                 }
               }

@@ -22,7 +22,7 @@ const scheduleAction: ActionPluginType = async ({ parameters, applicationData, D
     const scheduledTime =
       typeof duration === 'number'
         ? DateTime.now().plus({ weeks: duration }).toISO()
-        : DateTime.now().plus(duration)
+        : DateTime.now().plus(duration).toISO()
     // Add record
     const scheduledAction = await db.createOrUpdateActionSchedule({
       tableName,
@@ -32,6 +32,7 @@ const scheduleAction: ActionPluginType = async ({ parameters, applicationData, D
       scheduledTime,
       eventCode,
     })
+    console.log('Action event scheduled:', { applicationId, eventCode, scheduledTime })
     return {
       status: ActionQueueStatus.Success,
       error_log: '',

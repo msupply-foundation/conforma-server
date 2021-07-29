@@ -1331,7 +1331,16 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.email", ""]
                   }
-                  subject: "Draft application in progress"
+                  subject: {
+                    operator: "stringSubstitution"
+                    children: [
+                      "Draft application %1 in progress",
+                      {
+                        operator: "objectProperties"
+                        children: [ "applicationData.applicationSerial", ""]
+                      }
+                    ]
+                  }
                   message: "Your application will expire if you don't complete it soon"
                 }
               }
