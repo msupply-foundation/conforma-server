@@ -231,7 +231,7 @@ exports.queries = [
       }
     }
   }`,
-  // Application 2 for Review Testing - on Stage 1 of 3
+  // Application 2 for Review Testing - on Stage 1 of 3 - LOQ to Applicant
   `mutation ReviewTestApplication2 {
     createApplication(
       input: {
@@ -458,7 +458,7 @@ exports.queries = [
       }
     }
   }`,
-  // Application 3 for Review Testing
+  // Application 3 for Review Testing 
   `mutation ReviewTestApplication3 {
     createApplication(
       input: {
@@ -639,7 +639,7 @@ exports.queries = [
       }
     }
   }`,
-  // Application 4 for Review Testing -- on Stage 2 during consolidation (Level 2) 
+  // Application 4 for Review Testing -- on Stage 2 (Level 1) 
   `mutation ReviewTestApplication4 {
     createApplication(
       input: {

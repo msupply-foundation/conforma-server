@@ -1507,7 +1507,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 1 in Stage 2, Lvl 1 (section 1) = DECLINED - Suggest LOQ
+  // -- Reviewer 1 in Stage 2, Lvl 1 (section 1) = DECLINED - In progress
   `mutation {
     createReviewAssignment(
       input: {
@@ -1539,57 +1539,52 @@ exports.queries = [
                     id: 5000
                     applicationResponseId: 4150
                     reviewQuestionAssignmentId: 5010
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: APPROVE
                     stageNumber: 2
                     timeCreated: "2021-07-10T00:00:00Z"
                     timeUpdated: "2021-07-10T10:00:01Z"
-                    timeSubmitted: "2021-07-10T10:00:00Z"
                   }
                   {
                     id: 5001
                     applicationResponseId: 4151
                     reviewQuestionAssignmentId: 5011
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: APPROVE
                     stageNumber: 2
                     timeCreated: "2021-07-10T00:00:00Z"
                     timeUpdated: "2021-07-10T10:00:02Z"
-                    timeSubmitted: "2021-07-10T10:00:00Z"
                   }
                   {
                     id: 5002
                     applicationResponseId: 4152
                     reviewQuestionAssignmentId: 5012
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: APPROVE
                     stageNumber: 2
                     timeCreated: "2021-07-10T00:00:00Z"
                     timeUpdated: "2021-07-10T10:00:03Z"
-                    timeSubmitted: "2021-07-10T10:00:00Z"
                   }
                   {
                     id: 5003
                     applicationResponseId: 4153
                     reviewQuestionAssignmentId: 5013
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: APPROVE
                     stageNumber: 2
                     timeCreated: "2021-07-10T00:00:00Z"
                     timeUpdated: "2021-07-10T10:00:04Z"
-                    timeSubmitted: "2021-07-10T10:00:00Z"
                   }
                   {
                     id: 5004
                     applicationResponseId: 4154
                     reviewQuestionAssignmentId: 5014
-                    status: SUBMITTED
+                    status: DRAFT
                     decision: DECLINE
                     comment: "Country name spelling wrong"
                     stageNumber: 2
                     timeCreated: "2021-07-10T00:00:00Z"
                     timeUpdated: "2021-07-10T10:00:05Z"
-                    timeSubmitted: "2021-07-10T10:00:00Z"
                   }
                 ]
               }
@@ -1597,21 +1592,13 @@ exports.queries = [
                 create: [
                   { 
                     status: DRAFT
-                    isCurrent: false
-                    timeCreated: "2021-07-10T00:00:00Z"
-                  }
-                  {
-                    status: SUBMITTED
                     isCurrent: true
-                    timeCreated: "2021-07-10T10:00:00Z"
+                    timeCreated: "2021-07-10T00:00:00Z"
                   }
                 ]
               }
               reviewDecisionsUsingId: {
-                create: { 
-                  decision: LIST_OF_QUESTIONS 
-                  comment: "Suggestion by Reviewer 1 to reply to applicant with LOQ"
-                }
+                create: { decision: NO_DECISION }
               }
             }
           }
@@ -1667,158 +1654,6 @@ exports.queries = [
       reviewAssignment {
         application {
           name
-        }
-      }
-    }
-  }`,
-  // -- Consolidator 1 Lvl 2 - Stage 2 = NOT AVAILABLE (not assignable for this consolidator)
-  `mutation {
-    createReviewAssignment(
-      input: {
-        reviewAssignment: {
-          id: 1033
-          applicationId: 4003
-          stageId: 6
-          stageNumber: 2
-          levelNumber: 2
-          isLastLevel: true
-          userToReviewerId: {
-            connectByUsername: { username: "testConsolidator1" }
-          }
-          status: SELF_ASSIGNED_BY_ANOTHER
-          reviewQuestionAssignmentsUsingId: {
-            create: [
-              { id: 5022, templateElementId: 4001 }
-              { id: 5023, templateElementId: 4002 }
-              { id: 5024, templateElementId: 4003 }
-              { id: 5025, templateElementId: 4005 }
-              { id: 5026, templateElementId: 4006 }
-              { id: 5027, templateElementId: 4008 }
-              { id: 5028, templateElementId: 4009 }
-              { id: 5029, templateElementId: 4011 }
-              { id: 5030, templateElementId: 4012 }
-            ]
-          }
-        }
-      }
-    ) {
-      reviewer {
-        username
-      }
-      reviewAssignment {
-        application {
-          name
-        }
-      }
-    }
-  }`,
-  // -- Consolidator 2 Lvl 2 - Stage 2 = DRAFT (AGREE with Reviewer 1)
-  `mutation {
-    createReviewAssignment(
-      input: {
-        reviewAssignment: {
-          id: 1034
-          applicationId: 4003
-          stageId: 6
-          stageNumber: 2
-          levelNumber: 2
-          isLastLevel: true
-          userToReviewerId: {
-            connectByUsername: { username: "testConsolidator2" }
-          }
-          status: ASSIGNED
-          reviewQuestionAssignmentsUsingId: {
-            create: [
-              { id: 5033, templateElementId: 4001 }
-              { id: 5034, templateElementId: 4002 }
-              { id: 5035, templateElementId: 4003 }
-              { id: 5036, templateElementId: 4005 }
-              { id: 5037, templateElementId: 4006 }
-            ]
-          }
-          reviewsUsingId: {
-            create: {
-              id: 7004
-              reviewResponsesUsingId: {
-                create: [
-                  {
-                    applicationResponseId: 4150
-                    reviewQuestionAssignmentId: 5033
-                    reviewResponseLinkId: 5000
-                    status: DRAFT
-                    decision: AGREE
-                    stageNumber: 2
-                    timeCreated: "2021-07-20T00:00:00Z"
-                    timeUpdated: "2021-07-20T10:00:01Z"
-                  }
-                  {
-                    applicationResponseId: 4151
-                    reviewQuestionAssignmentId: 5034
-                    reviewResponseLinkId: 5001
-                    status: DRAFT
-                    decision: AGREE
-                    stageNumber: 2
-                    timeCreated: "2021-07-20T00:00:00Z"
-                    timeUpdated: "2021-07-20T10:00:02Z"
-                  }
-                  {
-                    applicationResponseId: 4152
-                    reviewQuestionAssignmentId: 5035
-                    reviewResponseLinkId: 5002
-                    status: DRAFT
-                    decision: AGREE
-                    stageNumber: 2
-                    timeCreated: "2021-07-20T00:00:00Z"
-                    timeUpdated: "2021-07-20T10:00:03Z"
-                  }
-                  {
-                    applicationResponseId: 4153
-                    reviewQuestionAssignmentId: 5036
-                    reviewResponseLinkId: 5003
-                    status: DRAFT
-                    decision: AGREE
-                    stageNumber: 2
-                    timeCreated: "2021-07-20T00:00:00Z"
-                    timeUpdated: "2021-07-20T10:00:04Z"
-                  }
-                  {
-                    applicationResponseId: 4154
-                    reviewQuestionAssignmentId: 5037
-                    reviewResponseLinkId: 5004
-                    status: DRAFT
-                    decision: AGREE
-                    stageNumber: 2
-                    timeCreated: "2021-07-20T00:00:00Z"
-                    timeUpdated: "2021-07-20T10:00:05Z"
-                  }
-                ]
-              }
-              reviewStatusHistoriesUsingId: {
-                create: [
-                  {
-                    status: DRAFT
-                    isCurrent: true
-                    timeCreated: "2021-06-10T10:00:00Z"
-                  }
-                ]
-              }
-              reviewDecisionsUsingId: {
-                create: { decision: NO_DECISION }
-              }
-            }
-          }
-        }
-      }
-    ) {
-      reviewAssignment {
-        application {
-          name
-        }
-        stage {
-          id
-        }
-        reviewer{
-          username
         }
       }
     }
