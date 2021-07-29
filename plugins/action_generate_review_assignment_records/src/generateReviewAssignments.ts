@@ -190,15 +190,6 @@ const getReviewAssignmentsToGenerate = async ({
 
     if (existingReviewAssignment) return // Don't create new reviewAssignment if already exists
 
-    const existingReviewAssignment = db.checkExistingReviewAssignment({
-      applicationId,
-      stageNumber,
-      levelNumber: nextReviewLevel,
-      reviewerId: userId,
-    })
-
-    if (existingReviewAssignment) return // Don't create new reviewAssignment if already exists
-
     const userOrgKey = `${userId}_${orgId ? orgId : 0}`
     if (reviewAssignments[userOrgKey])
       reviewAssignments[userOrgKey].allowedSections =

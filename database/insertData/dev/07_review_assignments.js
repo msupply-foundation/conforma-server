@@ -1075,7 +1075,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = DRAFT (Partial stage 2 not submitted)
+  // -- Reviewer 2 in Stage 2, Lvl 1 (section 2) = ASSIGNED (Partial stage 2 not started)
   `mutation {
     createReviewAssignment(
       input: {
@@ -1099,68 +1099,6 @@ exports.queries = [
               { id: 3018, templateElementId: 4012 }
               { id: 3019, templateElementId: 4013 }
             ]
-          }
-          reviewsUsingId: {
-            create: {
-              id: 6004
-              reviewResponsesUsingId: {
-                create: [
-                  {
-                    applicationResponseId: 4025
-                    reviewQuestionAssignmentId: 3015
-                    status: DRAFT
-                    decision: APPROVE
-                    stageNumber: 2
-                    timeCreated: "2021-05-19T00:00:00Z"
-                    timeUpdated: "2021-05-19T15:00:01Z"
-                  }
-                  {
-                    applicationResponseId: 4026
-                    reviewQuestionAssignmentId: 3016
-                    status: DRAFT
-                    decision: APPROVE
-                    stageNumber: 2
-                    timeCreated: "2021-05-19T00:00:00Z"
-                    timeUpdated: "2021-05-19T15:00:02Z"
-                  }
-                  {
-                    applicationResponseId: 4027
-                    reviewQuestionAssignmentId: 3017
-                    status: DRAFT
-                    decision: APPROVE
-                    stageNumber: 2
-                    timeCreated: "2021-05-19T00:00:00Z"
-                    timeUpdated: "2021-05-19T15:00:03Z"
-                  }
-                  {
-                    applicationResponseId: 4028
-                    reviewQuestionAssignmentId: 3018
-                    status: DRAFT
-                    decision: APPROVE
-                    stageNumber: 2
-                    timeCreated: "2021-05-19T00:00:00Z"
-                    timeUpdated: "2021-05-19T15:00:04Z"
-                  }
-                  {
-                    applicationResponseId: 4029
-                    reviewQuestionAssignmentId: 3019
-                    status: DRAFT
-                    decision: APPROVE
-                    stageNumber: 2
-                    timeCreated: "2021-05-19T00:00:00Z"
-                    timeUpdated: "2021-05-19T15:00:05Z"
-                  }
-                ]
-              }
-              reviewStatusHistoriesUsingId: {
-                create: [
-                  { status: DRAFT, isCurrent: true, timeCreated: "2021-05-19T00:00:00Z" }
-                ]
-              }
-              reviewDecisionsUsingId: {
-                create: [{ decision: NO_DECISION }]
-              }
-            }
           }
         }
       }
@@ -2248,7 +2186,7 @@ exports.queries = [
     }
   }`,
   // Assign test reviews of Application 6 (serial: ABC456) of Review Testing (template)
-  // Reviewer 1 in Stage 1 (All sectios) = NOT STARTED
+  // Reviewer 1 in Stage 1 (All sectios) = ASSIGNED (Not started)
   `mutation {
     createReviewAssignment(
       input: {
