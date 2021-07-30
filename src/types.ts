@@ -170,6 +170,7 @@ export interface TriggerPayload {
   record_id: number
   application_id?: number
   event_code?: string
+  data?: { [key: string]: any }
 }
 
 export interface TriggerQueueUpdatePayload {

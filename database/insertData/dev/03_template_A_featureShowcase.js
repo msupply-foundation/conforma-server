@@ -1296,7 +1296,7 @@ exports.queries = [
               {
                 actionCode: "scheduleAction"
                 trigger: ON_APPLICATION_CREATE
-                sequence: 1
+                sequence: 100
                 parameterQueries:{
                   eventCode: "warn1"
                   duration: { minute: 2 }
@@ -1304,6 +1304,7 @@ exports.queries = [
               }
               {
                 actionCode: "scheduleAction"
+                sequence: 102
                 trigger: ON_APPLICATION_CREATE
                 parameterQueries:{
                   eventCode: "exp1"

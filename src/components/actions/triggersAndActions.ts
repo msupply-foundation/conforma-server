@@ -67,7 +67,7 @@ export const triggerScheduledActions = async () => {
 }
 
 export async function processTrigger(payload: TriggerPayload) {
-  const { trigger_id, trigger, table, record_id, event_code } = payload
+  const { trigger_id, trigger, table, record_id, data, event_code } = payload
 
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
@@ -112,7 +112,7 @@ export async function processTrigger(payload: TriggerPayload) {
   // Get sequential Actions from database
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
-  let outputCumulative = {} // Collect output properties of actions in sequence
+  let outputCumulative = data // Collect output properties of actions in sequence
 
   // Execute sequential Actions one by one
   let actionFailed = ''
@@ -149,7 +149,7 @@ export async function processTrigger(payload: TriggerPayload) {
   // After all done, set Trigger on table back to NULL (or Error)
   DBConnect.resetTrigger(table, record_id, actionFailed !== '')
   // and set is_active = false if scheduled action
-  if (table === 'action_schedule' && actionFailed === '')
+  if (table === 'trigger_schedule' && actionFailed === '')
     DBConnect.setScheduledActionDone(table, record_id)
 }
 

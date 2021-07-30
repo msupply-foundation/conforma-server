@@ -162,7 +162,7 @@ class PostgresDB {
 
   public triggerScheduledActions = async () => {
     const text = `
-      UPDATE action_schedule SET trigger = 'ON_SCHEDULE'
+      UPDATE trigger_schedule SET trigger = 'ON_SCHEDULE'
         WHERE time_scheduled < NOW()
         AND is_active = true
     `
@@ -312,8 +312,8 @@ class PostgresDB {
       case 'verification':
         text = 'SELECT application_id FROM verification WHERE id = $1'
         break
-      case 'action_schedule':
-        text = 'SELECT application_id FROM action_schedule WHERE id = $1'
+      case 'trigger_schedule':
+        text = 'SELECT application_id FROM trigger_schedule WHERE id = $1'
         break
       // To-Do: queries for other trigger tables
       default:
@@ -345,8 +345,8 @@ class PostgresDB {
         text =
           'SELECT template_id FROM application WHERE id = (SELECT application_id FROM verification WHERE id = $1)'
         break
-      case 'action_schedule':
-        text = 'SELECT template_id FROM action_schedule WHERE id = $1'
+      case 'trigger_schedule':
+        text = 'SELECT template_id FROM trigger_schedule WHERE id = $1'
         break
       default:
         throw new Error('Table name not valid')

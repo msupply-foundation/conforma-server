@@ -1,7 +1,7 @@
 {
   "name": "schedule_action",
   "version": "0.1",
-  "description": "Adds a record to action_schedule table to schedule an action for some time in the future",
+  "description": "Adds a record to trigger_schedule table to schedule an action for some time in the future",
   "author": "The mSupplyFoundation",
   "license": "MIT",
   "scripts": {

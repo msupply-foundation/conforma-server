@@ -264,7 +264,7 @@ exports.queries = [
               {
                 actionCode: "scheduleAction"
                 trigger: ON_APPLICATION_CREATE
-                sequence: 1
+                sequence: 100
                 parameterQueries:{
                   eventCode: "warn1"
                   duration: { minute: 10 }
@@ -273,6 +273,7 @@ exports.queries = [
               {
                 actionCode: "scheduleAction"
                 trigger: ON_APPLICATION_CREATE
+                sequence: 101
                 parameterQueries:{
                   eventCode: "exp1"
                   duration: { minute: 15 }
@@ -281,7 +282,7 @@ exports.queries = [
               {
                 actionCode: "scheduleAction"
                 trigger: ON_REVIEW_SUBMIT
-                sequence: 1
+                sequence: 100
                 parameterQueries:{
                   eventCode: "warn1"
                   duration: { minute: 10 }
@@ -290,6 +291,7 @@ exports.queries = [
               {
                 actionCode: "scheduleAction"
                 trigger: ON_REVIEW_SUBMIT
+                sequence: 101
                 parameterQueries:{
                   eventCode: "exp1"
                   duration: { minute: 15 }

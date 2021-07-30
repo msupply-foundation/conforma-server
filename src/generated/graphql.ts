@@ -520,7 +520,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -589,379 +589,11 @@ export type ActionQueueTriggerEventFkeyTriggerQueueCreateInput = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   eventCode?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
-};
-
-export type ActionSchedule = Node & {
-  __typename?: 'ActionSchedule';
-  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
-  nodeId: Scalars['ID'];
-  id: Scalars['Int'];
-  table?: Maybe<Scalars['String']>;
-  entityId?: Maybe<Scalars['Int']>;
-  eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
-  applicationId: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  /** Reads a single `Application` that is related to this `ActionSchedule`. */
-  application?: Maybe<Application>;
-  /** Reads a single `Template` that is related to this `ActionSchedule`. */
-  template?: Maybe<Template>;
-};
-
-/** The fields on `actionSchedule` to look up the row to connect. */
-export type ActionScheduleActionSchedulePkeyConnect = {
-  id: Scalars['Int'];
-};
-
-/** The fields on `actionSchedule` to look up the row to delete. */
-export type ActionScheduleActionSchedulePkeyDelete = {
-  id: Scalars['Int'];
-};
-
-/** The `actionSchedule` to be created by this mutation. */
-export type ActionScheduleApplicationIdFkeyActionScheduleCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  table?: Maybe<Scalars['String']>;
-  entityId?: Maybe<Scalars['Int']>;
-  eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
-  templateId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
-};
-
-/** The `application` to be created by this mutation. */
-export type ActionScheduleApplicationIdFkeyApplicationCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  sessionId?: Maybe<Scalars['String']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
-  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
-  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-};
-
-/** Input for the nested mutation of `application` in the `ActionScheduleInput` mutation. */
-export type ActionScheduleApplicationIdFkeyInput = {
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
-  /** The primary key(s) for `application` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateById?: Maybe<ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateBySerial?: Maybe<ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
-  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate>;
-  /** A `ApplicationInput` object that will be created and connected to this object. */
-  create?: Maybe<ActionScheduleApplicationIdFkeyApplicationCreateInput>;
-};
-
-/** Input for the nested mutation of `actionSchedule` in the `ApplicationInput` mutation. */
-export type ActionScheduleApplicationIdFkeyInverseInput = {
-  /** Flag indicating whether all other `actionSchedule` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
-  connectById?: Maybe<Array<ActionScheduleActionSchedulePkeyConnect>>;
-  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ActionScheduleNodeIdConnect>>;
-  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ActionScheduleActionSchedulePkeyDelete>>;
-  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ActionScheduleNodeIdDelete>>;
-  /** The primary key(s) and patch data for `actionSchedule` for the far side of the relationship. */
-  updateById?: Maybe<Array<ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate>>;
-  /** The primary key(s) and patch data for `actionSchedule` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate>>;
-  /** A `ActionScheduleInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ActionScheduleApplicationIdFkeyActionScheduleCreateInput>>;
-};
-
-/**
- * A condition to be used against `ActionSchedule` object types. All fields are
- * tested for equality and combined with a logical ‘and.’
- */
-export type ActionScheduleCondition = {
-  /** Checks for equality with the object’s `id` field. */
-  id?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `table` field. */
-  table?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `entityId` field. */
-  entityId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `eventCode` field. */
-  eventCode?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `timeScheduled` field. */
-  timeScheduled?: Maybe<Scalars['Datetime']>;
-  /** Checks for equality with the object’s `applicationId` field. */
-  applicationId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `templateId` field. */
-  templateId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `isActive` field. */
-  isActive?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `trigger` field. */
-  trigger?: Maybe<Trigger>;
-};
-
-/** A filter to be used against `ActionSchedule` object types. All fields are combined with a logical ‘and.’ */
-export type ActionScheduleFilter = {
-  /** Filter by the object’s `id` field. */
-  id?: Maybe<IntFilter>;
-  /** Filter by the object’s `table` field. */
-  table?: Maybe<StringFilter>;
-  /** Filter by the object’s `entityId` field. */
-  entityId?: Maybe<IntFilter>;
-  /** Filter by the object’s `eventCode` field. */
-  eventCode?: Maybe<StringFilter>;
-  /** Filter by the object’s `timeScheduled` field. */
-  timeScheduled?: Maybe<DatetimeFilter>;
-  /** Filter by the object’s `applicationId` field. */
-  applicationId?: Maybe<IntFilter>;
-  /** Filter by the object’s `templateId` field. */
-  templateId?: Maybe<IntFilter>;
-  /** Filter by the object’s `isActive` field. */
-  isActive?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `trigger` field. */
-  trigger?: Maybe<TriggerFilter>;
-  /** Filter by the object’s `application` relation. */
-  application?: Maybe<ApplicationFilter>;
-  /** Filter by the object’s `template` relation. */
-  template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
-  /** Checks for all expressions in this list. */
-  and?: Maybe<Array<ActionScheduleFilter>>;
-  /** Checks for any expressions in this list. */
-  or?: Maybe<Array<ActionScheduleFilter>>;
-  /** Negates the expression. */
-  not?: Maybe<ActionScheduleFilter>;
-};
-
-/** An input for mutations affecting `ActionSchedule` */
-export type ActionScheduleInput = {
-  id?: Maybe<Scalars['Int']>;
-  table?: Maybe<Scalars['String']>;
-  entityId?: Maybe<Scalars['Int']>;
-  eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
-};
-
-/** The globally unique `ID` look up for the row to connect. */
-export type ActionScheduleNodeIdConnect = {
-  /** The globally unique `ID` which identifies a single `actionSchedule` to be connected. */
-  nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to delete. */
-export type ActionScheduleNodeIdDelete = {
-  /** The globally unique `ID` which identifies a single `actionSchedule` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `application` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: ApplicationPatch;
-};
-
-/** The fields on `actionSchedule` to look up the row to update. */
-export type ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate = {
-  /** An object where the defined keys will be set on the `actionSchedule` being updated. */
-  patch: UpdateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `template` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `template` being updated. */
-  patch: TemplatePatch;
-};
-
-/** The fields on `actionSchedule` to look up the row to update. */
-export type ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate = {
-  /** An object where the defined keys will be set on the `actionSchedule` being updated. */
-  patch: UpdateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** Represents an update to a `ActionSchedule`. Fields that are set will be updated. */
-export type ActionSchedulePatch = {
-  id?: Maybe<Scalars['Int']>;
-  table?: Maybe<Scalars['String']>;
-  entityId?: Maybe<Scalars['Int']>;
-  eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
-};
-
-/** A connection to a list of `ActionSchedule` values. */
-export type ActionSchedulesConnection = {
-  __typename?: 'ActionSchedulesConnection';
-  /** A list of `ActionSchedule` objects. */
-  nodes: Array<Maybe<ActionSchedule>>;
-  /** A list of edges which contains the `ActionSchedule` and cursor to aid in pagination. */
-  edges: Array<ActionSchedulesEdge>;
-  /** Information to aid in pagination. */
-  pageInfo: PageInfo;
-  /** The count of *all* `ActionSchedule` you could get from the connection. */
-  totalCount: Scalars['Int'];
-};
-
-/** A `ActionSchedule` edge in the connection. */
-export type ActionSchedulesEdge = {
-  __typename?: 'ActionSchedulesEdge';
-  /** A cursor for use in pagination. */
-  cursor?: Maybe<Scalars['Cursor']>;
-  /** The `ActionSchedule` at the end of the edge. */
-  node?: Maybe<ActionSchedule>;
-};
-
-/** Methods to use when ordering `ActionSchedule`. */
-export enum ActionSchedulesOrderBy {
-  Natural = 'NATURAL',
-  IdAsc = 'ID_ASC',
-  IdDesc = 'ID_DESC',
-  TableAsc = 'TABLE_ASC',
-  TableDesc = 'TABLE_DESC',
-  EntityIdAsc = 'ENTITY_ID_ASC',
-  EntityIdDesc = 'ENTITY_ID_DESC',
-  EventCodeAsc = 'EVENT_CODE_ASC',
-  EventCodeDesc = 'EVENT_CODE_DESC',
-  TimeScheduledAsc = 'TIME_SCHEDULED_ASC',
-  TimeScheduledDesc = 'TIME_SCHEDULED_DESC',
-  ApplicationIdAsc = 'APPLICATION_ID_ASC',
-  ApplicationIdDesc = 'APPLICATION_ID_DESC',
-  TemplateIdAsc = 'TEMPLATE_ID_ASC',
-  TemplateIdDesc = 'TEMPLATE_ID_DESC',
-  IsActiveAsc = 'IS_ACTIVE_ASC',
-  IsActiveDesc = 'IS_ACTIVE_DESC',
-  TriggerAsc = 'TRIGGER_ASC',
-  TriggerDesc = 'TRIGGER_DESC',
-  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
-  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
-}
-
-/** The `actionSchedule` to be created by this mutation. */
-export type ActionScheduleTemplateIdFkeyActionScheduleCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  table?: Maybe<Scalars['String']>;
-  entityId?: Maybe<Scalars['Int']>;
-  eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
-};
-
-/** Input for the nested mutation of `template` in the `ActionScheduleInput` mutation. */
-export type ActionScheduleTemplateIdFkeyInput = {
-  /** The primary key(s) for `template` for the far side of the relationship. */
-  connectById?: Maybe<TemplateTemplatePkeyConnect>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
-  connectByNodeId?: Maybe<TemplateNodeIdConnect>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
-  deleteById?: Maybe<TemplateTemplatePkeyDelete>;
-  /** The primary key(s) for `template` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
-  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
-  updateById?: Maybe<TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate>;
-  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
-  updateByNodeId?: Maybe<ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate>;
-  /** A `TemplateInput` object that will be created and connected to this object. */
-  create?: Maybe<ActionScheduleTemplateIdFkeyTemplateCreateInput>;
-};
-
-/** Input for the nested mutation of `actionSchedule` in the `TemplateInput` mutation. */
-export type ActionScheduleTemplateIdFkeyInverseInput = {
-  /** Flag indicating whether all other `actionSchedule` records that match this relationship should be removed. */
-  deleteOthers?: Maybe<Scalars['Boolean']>;
-  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
-  connectById?: Maybe<Array<ActionScheduleActionSchedulePkeyConnect>>;
-  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
-  connectByNodeId?: Maybe<Array<ActionScheduleNodeIdConnect>>;
-  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
-  deleteById?: Maybe<Array<ActionScheduleActionSchedulePkeyDelete>>;
-  /** The primary key(s) for `actionSchedule` for the far side of the relationship. */
-  deleteByNodeId?: Maybe<Array<ActionScheduleNodeIdDelete>>;
-  /** The primary key(s) and patch data for `actionSchedule` for the far side of the relationship. */
-  updateById?: Maybe<Array<ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate>>;
-  /** The primary key(s) and patch data for `actionSchedule` for the far side of the relationship. */
-  updateByNodeId?: Maybe<Array<TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate>>;
-  /** A `ActionScheduleInput` object that will be created and connected to this object. */
-  create?: Maybe<Array<ActionScheduleTemplateIdFkeyActionScheduleCreateInput>>;
-};
-
-/** The `template` to be created by this mutation. */
-export type ActionScheduleTemplateIdFkeyTemplateCreateInput = {
-  id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
-  namePlural?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-  isLinear?: Maybe<Scalars['Boolean']>;
-  startMessage?: Maybe<Scalars['JSON']>;
-  status?: Maybe<TemplateStatus>;
-  submissionMessage?: Maybe<Scalars['JSON']>;
-  templateCategoryId?: Maybe<Scalars['Int']>;
-  versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
-  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
-  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
-  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
-  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
-  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
-  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
 
 export type Application = Node & {
@@ -990,8 +622,8 @@ export type Application = Node & {
   applicationStageHistories: ApplicationStageHistoriesConnection;
   /** Reads and enables pagination through a set of `ApplicationResponse`. */
   applicationResponses: ApplicationResponsesConnection;
-  /** Reads and enables pagination through a set of `ActionSchedule`. */
-  actionSchedules: ActionSchedulesConnection;
+  /** Reads and enables pagination through a set of `TriggerSchedule`. */
+  triggerSchedules: TriggerSchedulesConnection;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
   /** Reads and enables pagination through a set of `Review`. */
@@ -1044,15 +676,15 @@ export type ApplicationApplicationResponsesArgs = {
 };
 
 
-export type ApplicationActionSchedulesArgs = {
+export type ApplicationTriggerSchedulesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
-  condition?: Maybe<ActionScheduleCondition>;
-  filter?: Maybe<ActionScheduleFilter>;
+  orderBy?: Maybe<Array<TriggerSchedulesOrderBy>>;
+  condition?: Maybe<TriggerScheduleCondition>;
+  filter?: Maybe<TriggerScheduleFilter>;
 };
 
 
@@ -1202,10 +834,10 @@ export type ApplicationFilter = {
   applicationResponses?: Maybe<ApplicationToManyApplicationResponseFilter>;
   /** Some related `applicationResponses` exist. */
   applicationResponsesExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `actionSchedules` relation. */
-  actionSchedules?: Maybe<ApplicationToManyActionScheduleFilter>;
-  /** Some related `actionSchedules` exist. */
-  actionSchedulesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `triggerSchedules` relation. */
+  triggerSchedules?: Maybe<ApplicationToManyTriggerScheduleFilter>;
+  /** Some related `triggerSchedules` exist. */
+  triggerSchedulesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignments` relation. */
   reviewAssignments?: Maybe<ApplicationToManyReviewAssignmentFilter>;
   /** Some related `reviewAssignments` exist. */
@@ -1264,7 +896,7 @@ export type ApplicationInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -1589,28 +1221,6 @@ export type ApplicationNodeIdDelete = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
-export type ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `actionSchedule` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `actionSchedule` being updated. */
-  patch: ActionSchedulePatch;
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The fields on `application` to look up the row to update. */
-export type ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
-  /** An object where the defined keys will be set on the `application` being updated. */
-  patch: UpdateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
-  serial: Scalars['String'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `organisation` to be connected. */
   nodeId: Scalars['ID'];
@@ -1831,6 +1441,28 @@ export type ApplicationOnReviewForReviewApplicationIdFkeyUsingApplicationSerialK
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `triggerSchedule` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `triggerSchedule` being updated. */
+  patch: TriggerSchedulePatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `verification` to be connected. */
   nodeId: Scalars['ID'];
@@ -1869,7 +1501,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -1999,7 +1631,7 @@ export type ApplicationPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -2073,7 +1705,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -2563,7 +2195,7 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -2945,7 +2577,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -3867,7 +3499,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -3940,19 +3572,9 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
-};
-
-/** A filter to be used against many `ActionSchedule` object types. All fields are combined with a logical ‘and.’ */
-export type ApplicationToManyActionScheduleFilter = {
-  /** Every related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ActionScheduleFilter>;
-  /** Some related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ActionScheduleFilter>;
-  /** No related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ActionScheduleFilter>;
 };
 
 /** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -4025,6 +3647,16 @@ export type ApplicationToManyReviewFilter = {
   none?: Maybe<ReviewFilter>;
 };
 
+/** A filter to be used against many `TriggerSchedule` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyTriggerScheduleFilter = {
+  /** Every related `TriggerSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<TriggerScheduleFilter>;
+  /** Some related `TriggerSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<TriggerScheduleFilter>;
+  /** No related `TriggerSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<TriggerScheduleFilter>;
+};
+
 /** A filter to be used against many `Verification` object types. All fields are combined with a logical ‘and.’ */
 export type ApplicationToManyVerificationFilter = {
   /** Every related `Verification` matches the filter criteria. All fields are combined with a logical ‘and.’ */
@@ -4052,7 +3684,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -4636,43 +4268,6 @@ export type CreateActionQueuePayload = {
 /** The output of our create `ActionQueue` mutation. */
 export type CreateActionQueuePayloadActionQueueEdgeArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
-};
-
-/** All input for the create `ActionSchedule` mutation. */
-export type CreateActionScheduleInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ActionSchedule` to be created by this mutation. */
-  actionSchedule: ActionScheduleInput;
-};
-
-/** The output of our create `ActionSchedule` mutation. */
-export type CreateActionSchedulePayload = {
-  __typename?: 'CreateActionSchedulePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ActionSchedule` that was created by this mutation. */
-  actionSchedule?: Maybe<ActionSchedule>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `Application` that is related to this `ActionSchedule`. */
-  application?: Maybe<Application>;
-  /** Reads a single `Template` that is related to this `ActionSchedule`. */
-  template?: Maybe<Template>;
-  /** An edge for our `ActionSchedule`. May be used by Relay 1. */
-  actionScheduleEdge?: Maybe<ActionSchedulesEdge>;
-};
-
-
-/** The output of our create `ActionSchedule` mutation. */
-export type CreateActionSchedulePayloadActionScheduleEdgeArgs = {
-  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
 };
 
 /** All input for the create `Application` mutation. */
@@ -5975,6 +5570,43 @@ export type CreateTriggerQueuePayloadTriggerQueueEdgeArgs = {
   orderBy?: Maybe<Array<TriggerQueuesOrderBy>>;
 };
 
+/** All input for the create `TriggerSchedule` mutation. */
+export type CreateTriggerScheduleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TriggerSchedule` to be created by this mutation. */
+  triggerSchedule: TriggerScheduleInput;
+};
+
+/** The output of our create `TriggerSchedule` mutation. */
+export type CreateTriggerSchedulePayload = {
+  __typename?: 'CreateTriggerSchedulePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TriggerSchedule` that was created by this mutation. */
+  triggerSchedule?: Maybe<TriggerSchedule>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `TriggerSchedule`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Template` that is related to this `TriggerSchedule`. */
+  template?: Maybe<Template>;
+  /** An edge for our `TriggerSchedule`. May be used by Relay 1. */
+  triggerScheduleEdge?: Maybe<TriggerSchedulesEdge>;
+};
+
+
+/** The output of our create `TriggerSchedule` mutation. */
+export type CreateTriggerSchedulePayloadTriggerScheduleEdgeArgs = {
+  orderBy?: Maybe<Array<TriggerSchedulesOrderBy>>;
+};
+
 /** All input for the create `User` mutation. */
 export type CreateUserInput = {
   /**
@@ -6242,54 +5874,6 @@ export type DeleteActionQueuePayload = {
 /** The output of our delete `ActionQueue` mutation. */
 export type DeleteActionQueuePayloadActionQueueEdgeArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
-};
-
-/** All input for the `deleteActionScheduleByNodeId` mutation. */
-export type DeleteActionScheduleByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ActionSchedule` to be deleted. */
-  nodeId: Scalars['ID'];
-};
-
-/** All input for the `deleteActionSchedule` mutation. */
-export type DeleteActionScheduleInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  id: Scalars['Int'];
-};
-
-/** The output of our delete `ActionSchedule` mutation. */
-export type DeleteActionSchedulePayload = {
-  __typename?: 'DeleteActionSchedulePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ActionSchedule` that was deleted by this mutation. */
-  actionSchedule?: Maybe<ActionSchedule>;
-  deletedActionScheduleNodeId?: Maybe<Scalars['ID']>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `Application` that is related to this `ActionSchedule`. */
-  application?: Maybe<Application>;
-  /** Reads a single `Template` that is related to this `ActionSchedule`. */
-  template?: Maybe<Template>;
-  /** An edge for our `ActionSchedule`. May be used by Relay 1. */
-  actionScheduleEdge?: Maybe<ActionSchedulesEdge>;
-};
-
-
-/** The output of our delete `ActionSchedule` mutation. */
-export type DeleteActionSchedulePayloadActionScheduleEdgeArgs = {
-  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
 };
 
 /** All input for the `deleteApplicationByNodeId` mutation. */
@@ -8056,6 +7640,54 @@ export type DeleteTriggerQueuePayloadTriggerQueueEdgeArgs = {
   orderBy?: Maybe<Array<TriggerQueuesOrderBy>>;
 };
 
+/** All input for the `deleteTriggerScheduleByNodeId` mutation. */
+export type DeleteTriggerScheduleByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `TriggerSchedule` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteTriggerSchedule` mutation. */
+export type DeleteTriggerScheduleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `TriggerSchedule` mutation. */
+export type DeleteTriggerSchedulePayload = {
+  __typename?: 'DeleteTriggerSchedulePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TriggerSchedule` that was deleted by this mutation. */
+  triggerSchedule?: Maybe<TriggerSchedule>;
+  deletedTriggerScheduleNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `TriggerSchedule`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Template` that is related to this `TriggerSchedule`. */
+  template?: Maybe<Template>;
+  /** An edge for our `TriggerSchedule`. May be used by Relay 1. */
+  triggerScheduleEdge?: Maybe<TriggerSchedulesEdge>;
+};
+
+
+/** The output of our delete `TriggerSchedule` mutation. */
+export type DeleteTriggerSchedulePayloadTriggerScheduleEdgeArgs = {
+  orderBy?: Maybe<Array<TriggerSchedulesOrderBy>>;
+};
+
 /** All input for the `deleteUserByNodeId` mutation. */
 export type DeleteUserByNodeIdInput = {
   /**
@@ -8471,7 +8103,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -8923,7 +8555,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -9369,8 +9001,6 @@ export type Mutation = {
   createActionPlugin?: Maybe<CreateActionPluginPayload>;
   /** Creates a single `ActionQueue`. */
   createActionQueue?: Maybe<CreateActionQueuePayload>;
-  /** Creates a single `ActionSchedule`. */
-  createActionSchedule?: Maybe<CreateActionSchedulePayload>;
   /** Creates a single `Application`. */
   createApplication?: Maybe<CreateApplicationPayload>;
   /** Creates a single `ApplicationListShape`. */
@@ -9443,6 +9073,8 @@ export type Mutation = {
   createTemplateStageReviewLevel?: Maybe<CreateTemplateStageReviewLevelPayload>;
   /** Creates a single `TriggerQueue`. */
   createTriggerQueue?: Maybe<CreateTriggerQueuePayload>;
+  /** Creates a single `TriggerSchedule`. */
+  createTriggerSchedule?: Maybe<CreateTriggerSchedulePayload>;
   /** Creates a single `User`. */
   createUser?: Maybe<CreateUserPayload>;
   /** Creates a single `UserOrganisation`. */
@@ -9459,10 +9091,6 @@ export type Mutation = {
   updateActionQueueByNodeId?: Maybe<UpdateActionQueuePayload>;
   /** Updates a single `ActionQueue` using a unique key and a patch. */
   updateActionQueue?: Maybe<UpdateActionQueuePayload>;
-  /** Updates a single `ActionSchedule` using its globally unique id and a patch. */
-  updateActionScheduleByNodeId?: Maybe<UpdateActionSchedulePayload>;
-  /** Updates a single `ActionSchedule` using a unique key and a patch. */
-  updateActionSchedule?: Maybe<UpdateActionSchedulePayload>;
   /** Updates a single `Application` using its globally unique id and a patch. */
   updateApplicationByNodeId?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `Application` using a unique key and a patch. */
@@ -9625,6 +9253,10 @@ export type Mutation = {
   updateTriggerQueueByNodeId?: Maybe<UpdateTriggerQueuePayload>;
   /** Updates a single `TriggerQueue` using a unique key and a patch. */
   updateTriggerQueue?: Maybe<UpdateTriggerQueuePayload>;
+  /** Updates a single `TriggerSchedule` using its globally unique id and a patch. */
+  updateTriggerScheduleByNodeId?: Maybe<UpdateTriggerSchedulePayload>;
+  /** Updates a single `TriggerSchedule` using a unique key and a patch. */
+  updateTriggerSchedule?: Maybe<UpdateTriggerSchedulePayload>;
   /** Updates a single `User` using its globally unique id and a patch. */
   updateUserByNodeId?: Maybe<UpdateUserPayload>;
   /** Updates a single `User` using a unique key and a patch. */
@@ -9651,10 +9283,6 @@ export type Mutation = {
   deleteActionQueueByNodeId?: Maybe<DeleteActionQueuePayload>;
   /** Deletes a single `ActionQueue` using a unique key. */
   deleteActionQueue?: Maybe<DeleteActionQueuePayload>;
-  /** Deletes a single `ActionSchedule` using its globally unique id. */
-  deleteActionScheduleByNodeId?: Maybe<DeleteActionSchedulePayload>;
-  /** Deletes a single `ActionSchedule` using a unique key. */
-  deleteActionSchedule?: Maybe<DeleteActionSchedulePayload>;
   /** Deletes a single `Application` using its globally unique id. */
   deleteApplicationByNodeId?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `Application` using a unique key. */
@@ -9817,6 +9445,10 @@ export type Mutation = {
   deleteTriggerQueueByNodeId?: Maybe<DeleteTriggerQueuePayload>;
   /** Deletes a single `TriggerQueue` using a unique key. */
   deleteTriggerQueue?: Maybe<DeleteTriggerQueuePayload>;
+  /** Deletes a single `TriggerSchedule` using its globally unique id. */
+  deleteTriggerScheduleByNodeId?: Maybe<DeleteTriggerSchedulePayload>;
+  /** Deletes a single `TriggerSchedule` using a unique key. */
+  deleteTriggerSchedule?: Maybe<DeleteTriggerSchedulePayload>;
   /** Deletes a single `User` using its globally unique id. */
   deleteUserByNodeId?: Maybe<DeleteUserPayload>;
   /** Deletes a single `User` using a unique key. */
@@ -9845,12 +9477,6 @@ export type MutationCreateActionPluginArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateActionQueueArgs = {
   input: CreateActionQueueInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationCreateActionScheduleArgs = {
-  input: CreateActionScheduleInput;
 };
 
 
@@ -10071,6 +9697,12 @@ export type MutationCreateTriggerQueueArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateTriggerScheduleArgs = {
+  input: CreateTriggerScheduleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateUserArgs = {
   input: CreateUserInput;
 };
@@ -10115,18 +9747,6 @@ export type MutationUpdateActionQueueByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateActionQueueArgs = {
   input: UpdateActionQueueInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateActionScheduleByNodeIdArgs = {
-  input: UpdateActionScheduleByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateActionScheduleArgs = {
-  input: UpdateActionScheduleInput;
 };
 
 
@@ -10617,6 +10237,18 @@ export type MutationUpdateTriggerQueueArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTriggerScheduleByNodeIdArgs = {
+  input: UpdateTriggerScheduleByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateTriggerScheduleArgs = {
+  input: UpdateTriggerScheduleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateUserByNodeIdArgs = {
   input: UpdateUserByNodeIdInput;
 };
@@ -10691,18 +10323,6 @@ export type MutationDeleteActionQueueByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteActionQueueArgs = {
   input: DeleteActionQueueInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteActionScheduleByNodeIdArgs = {
-  input: DeleteActionScheduleByNodeIdInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteActionScheduleArgs = {
-  input: DeleteActionScheduleInput;
 };
 
 
@@ -11193,6 +10813,18 @@ export type MutationDeleteTriggerQueueArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTriggerScheduleByNodeIdArgs = {
+  input: DeleteTriggerScheduleByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteTriggerScheduleArgs = {
+  input: DeleteTriggerScheduleInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteUserByNodeIdArgs = {
   input: DeleteUserByNodeIdInput;
 };
@@ -11285,7 +10917,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -14031,8 +13663,6 @@ export type Query = Node & {
   actionPlugins?: Maybe<ActionPluginsConnection>;
   /** Reads and enables pagination through a set of `ActionQueue`. */
   actionQueues?: Maybe<ActionQueuesConnection>;
-  /** Reads and enables pagination through a set of `ActionSchedule`. */
-  actionSchedules?: Maybe<ActionSchedulesConnection>;
   /** Reads and enables pagination through a set of `Application`. */
   applications?: Maybe<ApplicationsConnection>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
@@ -14115,6 +13745,8 @@ export type Query = Node & {
   templateStageReviewLevels?: Maybe<TemplateStageReviewLevelsConnection>;
   /** Reads and enables pagination through a set of `TriggerQueue`. */
   triggerQueues?: Maybe<TriggerQueuesConnection>;
+  /** Reads and enables pagination through a set of `TriggerSchedule`. */
+  triggerSchedules?: Maybe<TriggerSchedulesConnection>;
   /** Reads and enables pagination through a set of `User`. */
   users?: Maybe<UsersConnection>;
   /** Reads and enables pagination through a set of `UserOrgJoin`. */
@@ -14126,7 +13758,6 @@ export type Query = Node & {
   actionPlugin?: Maybe<ActionPlugin>;
   actionPluginByCode?: Maybe<ActionPlugin>;
   actionQueue?: Maybe<ActionQueue>;
-  actionSchedule?: Maybe<ActionSchedule>;
   application?: Maybe<Application>;
   applicationBySerial?: Maybe<Application>;
   applicationResponse?: Maybe<ApplicationResponse>;
@@ -14173,6 +13804,7 @@ export type Query = Node & {
   templateStage?: Maybe<TemplateStage>;
   templateStageReviewLevel?: Maybe<TemplateStageReviewLevel>;
   triggerQueue?: Maybe<TriggerQueue>;
+  triggerSchedule?: Maybe<TriggerSchedule>;
   user?: Maybe<User>;
   userByUsername?: Maybe<User>;
   userOrganisation?: Maybe<UserOrganisation>;
@@ -14208,8 +13840,6 @@ export type Query = Node & {
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
   actionQueueByNodeId?: Maybe<ActionQueue>;
-  /** Reads a single `ActionSchedule` using its globally unique `ID`. */
-  actionScheduleByNodeId?: Maybe<ActionSchedule>;
   /** Reads a single `Application` using its globally unique `ID`. */
   applicationByNodeId?: Maybe<Application>;
   /** Reads a single `ApplicationResponse` using its globally unique `ID`. */
@@ -14280,6 +13910,8 @@ export type Query = Node & {
   templateStageReviewLevelByNodeId?: Maybe<TemplateStageReviewLevel>;
   /** Reads a single `TriggerQueue` using its globally unique `ID`. */
   triggerQueueByNodeId?: Maybe<TriggerQueue>;
+  /** Reads a single `TriggerSchedule` using its globally unique `ID`. */
+  triggerScheduleByNodeId?: Maybe<TriggerSchedule>;
   /** Reads a single `User` using its globally unique `ID`. */
   userByNodeId?: Maybe<User>;
   /** Reads a single `UserOrganisation` using its globally unique `ID`. */
@@ -14318,19 +13950,6 @@ export type QueryActionQueuesArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
   condition?: Maybe<ActionQueueCondition>;
   filter?: Maybe<ActionQueueFilter>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryActionSchedulesArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
-  condition?: Maybe<ActionScheduleCondition>;
-  filter?: Maybe<ActionScheduleFilter>;
 };
 
 
@@ -14868,6 +14487,19 @@ export type QueryTriggerQueuesArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryTriggerSchedulesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<TriggerSchedulesOrderBy>>;
+  condition?: Maybe<TriggerScheduleCondition>;
+  filter?: Maybe<TriggerScheduleFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryUsersArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -14933,12 +14565,6 @@ export type QueryActionPluginByCodeArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryActionQueueArgs = {
-  id: Scalars['Int'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryActionScheduleArgs = {
   id: Scalars['Int'];
 };
 
@@ -15222,6 +14848,12 @@ export type QueryTriggerQueueArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryTriggerScheduleArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryUserArgs = {
   id: Scalars['Int'];
 };
@@ -15477,12 +15109,6 @@ export type QueryActionQueueByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
-export type QueryActionScheduleByNodeIdArgs = {
-  nodeId: Scalars['ID'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
 export type QueryApplicationByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -15693,6 +15319,12 @@ export type QueryTriggerQueueByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryTriggerScheduleByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryUserByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -15808,7 +15440,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -15979,7 +15611,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -17494,7 +17126,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -20246,8 +19878,8 @@ export type Template = Node & {
   actionQueues: ActionQueuesConnection;
   /** Reads and enables pagination through a set of `TemplateAction`. */
   templateActions: TemplateActionsConnection;
-  /** Reads and enables pagination through a set of `ActionSchedule`. */
-  actionSchedules: ActionSchedulesConnection;
+  /** Reads and enables pagination through a set of `TriggerSchedule`. */
+  triggerSchedules: TriggerSchedulesConnection;
   /** Reads and enables pagination through a set of `ReviewAssignment`. */
   reviewAssignments: ReviewAssignmentsConnection;
   /** Reads and enables pagination through a set of `File`. */
@@ -20339,15 +19971,15 @@ export type TemplateTemplateActionsArgs = {
 };
 
 
-export type TemplateActionSchedulesArgs = {
+export type TemplateTriggerSchedulesArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['Cursor']>;
   after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
-  condition?: Maybe<ActionScheduleCondition>;
-  filter?: Maybe<ActionScheduleFilter>;
+  orderBy?: Maybe<Array<TriggerSchedulesOrderBy>>;
+  condition?: Maybe<TriggerScheduleCondition>;
+  filter?: Maybe<TriggerScheduleFilter>;
 };
 
 
@@ -20380,6 +20012,7 @@ export type TemplateAction = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   eventCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
@@ -20399,6 +20032,8 @@ export type TemplateActionCondition = {
   id?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `templateId` field. */
   templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `code` field. */
+  code?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `actionCode` field. */
   actionCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `eventCode` field. */
@@ -20419,6 +20054,8 @@ export type TemplateActionFilter = {
   id?: Maybe<IntFilter>;
   /** Filter by the object’s `templateId` field. */
   templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `code` field. */
+  code?: Maybe<StringFilter>;
   /** Filter by the object’s `actionCode` field. */
   actionCode?: Maybe<StringFilter>;
   /** Filter by the object’s `eventCode` field. */
@@ -20447,6 +20084,7 @@ export type TemplateActionFilter = {
 export type TemplateActionInput = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   eventCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
@@ -20487,6 +20125,7 @@ export type TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyUsingTe
 export type TemplateActionPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   eventCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
@@ -20525,6 +20164,8 @@ export enum TemplateActionsOrderBy {
   IdDesc = 'ID_DESC',
   TemplateIdAsc = 'TEMPLATE_ID_ASC',
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  CodeAsc = 'CODE_ASC',
+  CodeDesc = 'CODE_DESC',
   ActionCodeAsc = 'ACTION_CODE_ASC',
   ActionCodeDesc = 'ACTION_CODE_DESC',
   EventCodeAsc = 'EVENT_CODE_ASC',
@@ -20592,6 +20233,7 @@ export type TemplateActionTemplateIdFkeyInverseInput = {
 /** The `templateAction` to be created by this mutation. */
 export type TemplateActionTemplateIdFkeyTemplateActionCreateInput = {
   id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   eventCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
@@ -20622,7 +20264,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -21442,10 +21084,10 @@ export type TemplateFilter = {
   templateActions?: Maybe<TemplateToManyTemplateActionFilter>;
   /** Some related `templateActions` exist. */
   templateActionsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `actionSchedules` relation. */
-  actionSchedules?: Maybe<TemplateToManyActionScheduleFilter>;
-  /** Some related `actionSchedules` exist. */
-  actionSchedulesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `triggerSchedules` relation. */
+  triggerSchedules?: Maybe<TemplateToManyTriggerScheduleFilter>;
+  /** Some related `triggerSchedules` exist. */
+  triggerSchedulesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignments` relation. */
   reviewAssignments?: Maybe<TemplateToManyReviewAssignmentFilter>;
   /** Some related `reviewAssignments` exist. */
@@ -21742,7 +21384,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -21776,7 +21418,7 @@ export type TemplateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -21805,21 +21447,6 @@ export type TemplateOnActionQueueForActionQueueTemplateIdFkeyNodeIdUpdate = {
 export type TemplateOnActionQueueForActionQueueTemplateIdFkeyUsingTemplatePkeyUpdate = {
   /** An object where the defined keys will be set on the `template` being updated. */
   patch: UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch;
-  id: Scalars['Int'];
-};
-
-/** The globally unique `ID` look up for the row to update. */
-export type TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate = {
-  /** The globally unique `ID` which identifies a single `actionSchedule` to be connected. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `actionSchedule` being updated. */
-  patch: ActionSchedulePatch;
-};
-
-/** The fields on `template` to look up the row to update. */
-export type TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate = {
-  /** An object where the defined keys will be set on the `template` being updated. */
-  patch: UpdateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -21958,6 +21585,21 @@ export type TemplateOnTemplateStageForTemplateStageTemplateIdFkeyUsingTemplatePk
   id: Scalars['Int'];
 };
 
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `triggerSchedule` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `triggerSchedule` being updated. */
+  patch: TriggerSchedulePatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
 /** Represents an update to a `Template`. Fields that are set will be updated. */
 export type TemplatePatch = {
   id?: Maybe<Scalars['Int']>;
@@ -21979,7 +21621,7 @@ export type TemplatePatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -22310,7 +21952,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -22621,7 +22263,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -23275,7 +22917,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -23438,7 +23080,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -23461,16 +23103,6 @@ export type TemplateToManyActionQueueFilter = {
   some?: Maybe<ActionQueueFilter>;
   /** No related `ActionQueue` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<ActionQueueFilter>;
-};
-
-/** A filter to be used against many `ActionSchedule` object types. All fields are combined with a logical ‘and.’ */
-export type TemplateToManyActionScheduleFilter = {
-  /** Every related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  every?: Maybe<ActionScheduleFilter>;
-  /** Some related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  some?: Maybe<ActionScheduleFilter>;
-  /** No related `ActionSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
-  none?: Maybe<ActionScheduleFilter>;
 };
 
 /** A filter to be used against many `Application` object types. All fields are combined with a logical ‘and.’ */
@@ -23553,6 +23185,16 @@ export type TemplateToManyTemplateStageFilter = {
   none?: Maybe<TemplateStageFilter>;
 };
 
+/** A filter to be used against many `TriggerSchedule` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateToManyTriggerScheduleFilter = {
+  /** Every related `TriggerSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<TriggerScheduleFilter>;
+  /** Some related `TriggerSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<TriggerScheduleFilter>;
+  /** No related `TriggerSchedule` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<TriggerScheduleFilter>;
+};
+
 export enum Trigger {
   OnApplicationCreate = 'ON_APPLICATION_CREATE',
   OnApplicationRestart = 'ON_APPLICATION_RESTART',
@@ -23607,6 +23249,7 @@ export type TriggerQueue = Node & {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   eventCode?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
@@ -23641,6 +23284,8 @@ export type TriggerQueueCondition = {
   recordId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `eventCode` field. */
   eventCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `data` field. */
+  data?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `timestamp` field. */
   timestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `status` field. */
@@ -23661,6 +23306,8 @@ export type TriggerQueueFilter = {
   recordId?: Maybe<IntFilter>;
   /** Filter by the object’s `eventCode` field. */
   eventCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `data` field. */
+  data?: Maybe<JsonFilter>;
   /** Filter by the object’s `timestamp` field. */
   timestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `status` field. */
@@ -23686,6 +23333,7 @@ export type TriggerQueueInput = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   eventCode?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
@@ -23726,6 +23374,7 @@ export type TriggerQueuePatch = {
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   eventCode?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
@@ -23767,6 +23416,8 @@ export enum TriggerQueuesOrderBy {
   RecordIdDesc = 'RECORD_ID_DESC',
   EventCodeAsc = 'EVENT_CODE_ASC',
   EventCodeDesc = 'EVENT_CODE_DESC',
+  DataAsc = 'DATA_ASC',
+  DataDesc = 'DATA_DESC',
   TimestampAsc = 'TIMESTAMP_ASC',
   TimestampDesc = 'TIMESTAMP_DESC',
   StatusAsc = 'STATUS_ASC',
@@ -23826,6 +23477,364 @@ export type TriggerQueueTriggerQueuePkeyConnect = {
 
 /** The fields on `triggerQueue` to look up the row to delete. */
 export type TriggerQueueTriggerQueuePkeyDelete = {
+  id: Scalars['Int'];
+};
+
+export type TriggerSchedule = Node & {
+  __typename?: 'TriggerSchedule';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  eventCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId: Scalars['Int'];
+  templateId?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  /** Reads a single `Application` that is related to this `TriggerSchedule`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Template` that is related to this `TriggerSchedule`. */
+  template?: Maybe<Template>;
+};
+
+/** The `application` to be created by this mutation. */
+export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `application` in the `TriggerScheduleInput` mutation. */
+export type TriggerScheduleApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<TriggerScheduleApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** Input for the nested mutation of `triggerSchedule` in the `ApplicationInput` mutation. */
+export type TriggerScheduleApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `triggerSchedule` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  connectById?: Maybe<Array<TriggerScheduleTriggerSchedulePkeyConnect>>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<TriggerScheduleNodeIdConnect>>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  deleteById?: Maybe<Array<TriggerScheduleTriggerSchedulePkeyDelete>>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<TriggerScheduleNodeIdDelete>>;
+  /** The primary key(s) and patch data for `triggerSchedule` for the far side of the relationship. */
+  updateById?: Maybe<Array<TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingTriggerSchedulePkeyUpdate>>;
+  /** The primary key(s) and patch data for `triggerSchedule` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate>>;
+  /** A `TriggerScheduleInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput>>;
+};
+
+/** The `triggerSchedule` to be created by this mutation. */
+export type TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  eventCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  templateId?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+};
+
+/**
+ * A condition to be used against `TriggerSchedule` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type TriggerScheduleCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `eventCode` field. */
+  eventCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `timeScheduled` field. */
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `data` field. */
+  data?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `isActive` field. */
+  isActive?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `trigger` field. */
+  trigger?: Maybe<Trigger>;
+};
+
+/** A filter to be used against `TriggerSchedule` object types. All fields are combined with a logical ‘and.’ */
+export type TriggerScheduleFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `eventCode` field. */
+  eventCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `timeScheduled` field. */
+  timeScheduled?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `data` field. */
+  data?: Maybe<JsonFilter>;
+  /** Filter by the object’s `isActive` field. */
+  isActive?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `trigger` field. */
+  trigger?: Maybe<TriggerFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** A related `template` exists. */
+  templateExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<TriggerScheduleFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<TriggerScheduleFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<TriggerScheduleFilter>;
+};
+
+/** An input for mutations affecting `TriggerSchedule` */
+export type TriggerScheduleInput = {
+  id?: Maybe<Scalars['Int']>;
+  eventCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type TriggerScheduleNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `triggerSchedule` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type TriggerScheduleNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `triggerSchedule` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The fields on `triggerSchedule` to look up the row to update. */
+export type TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingTriggerSchedulePkeyUpdate = {
+  /** An object where the defined keys will be set on the `triggerSchedule` being updated. */
+  patch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `template` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: TemplatePatch;
+};
+
+/** The fields on `triggerSchedule` to look up the row to update. */
+export type TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTriggerSchedulePkeyUpdate = {
+  /** An object where the defined keys will be set on the `triggerSchedule` being updated. */
+  patch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `TriggerSchedule`. Fields that are set will be updated. */
+export type TriggerSchedulePatch = {
+  id?: Maybe<Scalars['Int']>;
+  eventCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+};
+
+/** A connection to a list of `TriggerSchedule` values. */
+export type TriggerSchedulesConnection = {
+  __typename?: 'TriggerSchedulesConnection';
+  /** A list of `TriggerSchedule` objects. */
+  nodes: Array<Maybe<TriggerSchedule>>;
+  /** A list of edges which contains the `TriggerSchedule` and cursor to aid in pagination. */
+  edges: Array<TriggerSchedulesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `TriggerSchedule` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `TriggerSchedule` edge in the connection. */
+export type TriggerSchedulesEdge = {
+  __typename?: 'TriggerSchedulesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `TriggerSchedule` at the end of the edge. */
+  node?: Maybe<TriggerSchedule>;
+};
+
+/** Methods to use when ordering `TriggerSchedule`. */
+export enum TriggerSchedulesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  EventCodeAsc = 'EVENT_CODE_ASC',
+  EventCodeDesc = 'EVENT_CODE_DESC',
+  TimeScheduledAsc = 'TIME_SCHEDULED_ASC',
+  TimeScheduledDesc = 'TIME_SCHEDULED_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  DataAsc = 'DATA_ASC',
+  DataDesc = 'DATA_DESC',
+  IsActiveAsc = 'IS_ACTIVE_ASC',
+  IsActiveDesc = 'IS_ACTIVE_DESC',
+  TriggerAsc = 'TRIGGER_ASC',
+  TriggerDesc = 'TRIGGER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** Input for the nested mutation of `template` in the `TriggerScheduleInput` mutation. */
+export type TriggerScheduleTemplateIdFkeyInput = {
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectById?: Maybe<TemplateTemplatePkeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateNodeIdConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateTemplatePkeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateById?: Maybe<TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByNodeId?: Maybe<TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate>;
+  /** A `TemplateInput` object that will be created and connected to this object. */
+  create?: Maybe<TriggerScheduleTemplateIdFkeyTemplateCreateInput>;
+};
+
+/** Input for the nested mutation of `triggerSchedule` in the `TemplateInput` mutation. */
+export type TriggerScheduleTemplateIdFkeyInverseInput = {
+  /** Flag indicating whether all other `triggerSchedule` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  connectById?: Maybe<Array<TriggerScheduleTriggerSchedulePkeyConnect>>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<TriggerScheduleNodeIdConnect>>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  deleteById?: Maybe<Array<TriggerScheduleTriggerSchedulePkeyDelete>>;
+  /** The primary key(s) for `triggerSchedule` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<TriggerScheduleNodeIdDelete>>;
+  /** The primary key(s) and patch data for `triggerSchedule` for the far side of the relationship. */
+  updateById?: Maybe<Array<TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTriggerSchedulePkeyUpdate>>;
+  /** The primary key(s) and patch data for `triggerSchedule` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate>>;
+  /** A `TriggerScheduleInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput>>;
+};
+
+/** The `template` to be created by this mutation. */
+export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+};
+
+/** The `triggerSchedule` to be created by this mutation. */
+export type TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  eventCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+};
+
+/** The fields on `triggerSchedule` to look up the row to connect. */
+export type TriggerScheduleTriggerSchedulePkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `triggerSchedule` to look up the row to delete. */
+export type TriggerScheduleTriggerSchedulePkeyDelete = {
   id: Scalars['Int'];
 };
 
@@ -23977,85 +23986,6 @@ export type UpdateActionQueuePayloadActionQueueEdgeArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
 };
 
-/** All input for the `updateActionScheduleByNodeId` mutation. */
-export type UpdateActionScheduleByNodeIdInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The globally unique `ID` which will identify a single `ActionSchedule` to be updated. */
-  nodeId: Scalars['ID'];
-  /** An object where the defined keys will be set on the `ActionSchedule` being updated. */
-  patch: ActionSchedulePatch;
-};
-
-/** All input for the `updateActionSchedule` mutation. */
-export type UpdateActionScheduleInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `ActionSchedule` being updated. */
-  patch: ActionSchedulePatch;
-  id: Scalars['Int'];
-};
-
-/** An object where the defined keys will be set on the `actionSchedule` being updated. */
-export type UpdateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  table?: Maybe<Scalars['String']>;
-  entityId?: Maybe<Scalars['Int']>;
-  eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
-  templateId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
-};
-
-/** An object where the defined keys will be set on the `actionSchedule` being updated. */
-export type UpdateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  table?: Maybe<Scalars['String']>;
-  entityId?: Maybe<Scalars['Int']>;
-  eventCode?: Maybe<Scalars['String']>;
-  timeScheduled?: Maybe<Scalars['Datetime']>;
-  applicationId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  applicationToApplicationId?: Maybe<ActionScheduleApplicationIdFkeyInput>;
-  templateToTemplateId?: Maybe<ActionScheduleTemplateIdFkeyInput>;
-};
-
-/** The output of our update `ActionSchedule` mutation. */
-export type UpdateActionSchedulePayload = {
-  __typename?: 'UpdateActionSchedulePayload';
-  /**
-   * The exact same `clientMutationId` that was provided in the mutation input,
-   * unchanged and unused. May be used by a client to track mutations.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** The `ActionSchedule` that was updated by this mutation. */
-  actionSchedule?: Maybe<ActionSchedule>;
-  /** Our root query field type. Allows us to run any query from our mutation payload. */
-  query?: Maybe<Query>;
-  /** Reads a single `Application` that is related to this `ActionSchedule`. */
-  application?: Maybe<Application>;
-  /** Reads a single `Template` that is related to this `ActionSchedule`. */
-  template?: Maybe<Template>;
-  /** An edge for our `ActionSchedule`. May be used by Relay 1. */
-  actionScheduleEdge?: Maybe<ActionSchedulesEdge>;
-};
-
-
-/** The output of our update `ActionSchedule` mutation. */
-export type UpdateActionSchedulePayloadActionScheduleEdgeArgs = {
-  orderBy?: Maybe<Array<ActionSchedulesOrderBy>>;
-};
-
 /** All input for the `updateApplicationByNodeId` mutation. */
 export type UpdateApplicationByNodeIdInput = {
   /**
@@ -24094,32 +24024,6 @@ export type UpdateApplicationInput = {
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
-export type UpdateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
-  orgId?: Maybe<Scalars['Int']>;
-  sessionId?: Maybe<Scalars['String']>;
-  serial?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  outcome?: Maybe<ApplicationOutcome>;
-  isActive?: Maybe<Scalars['Boolean']>;
-  trigger?: Maybe<Trigger>;
-  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
-  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
-  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
-  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
-  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
-  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
-  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
-  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
-  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -24136,7 +24040,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -24161,7 +24065,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -24186,7 +24090,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -24212,7 +24116,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -24238,7 +24142,7 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -24264,7 +24168,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -24290,7 +24194,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -24316,7 +24220,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -24342,7 +24246,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -24368,7 +24272,33 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -24394,7 +24324,7 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -26909,6 +26839,7 @@ export type UpdateTemplateActionInput = {
 /** An object where the defined keys will be set on the `templateAction` being updated. */
 export type UpdateTemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   eventCode?: Maybe<Scalars['String']>;
   trigger?: Maybe<Trigger>;
@@ -27285,33 +27216,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
-  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
-  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
-};
-
-/** An object where the defined keys will be set on the `template` being updated. */
-export type UpdateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch = {
-  id?: Maybe<Scalars['Int']>;
-  name?: Maybe<Scalars['String']>;
-  namePlural?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
-  isLinear?: Maybe<Scalars['Boolean']>;
-  startMessage?: Maybe<Scalars['JSON']>;
-  status?: Maybe<TemplateStatus>;
-  submissionMessage?: Maybe<Scalars['JSON']>;
-  templateCategoryId?: Maybe<Scalars['Int']>;
-  versionTimestamp?: Maybe<Scalars['Datetime']>;
-  version?: Maybe<Scalars['Int']>;
-  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
-  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
-  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
-  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
-  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
-  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
-  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
-  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -27337,7 +27242,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -27363,7 +27268,7 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -27389,7 +27294,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -27415,7 +27320,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -27441,7 +27346,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -27466,7 +27371,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -27492,7 +27397,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -27518,7 +27423,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -27544,7 +27449,33 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
   actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
   templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `template` being updated. */
+export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
 };
@@ -27942,6 +27873,7 @@ export type UpdateTriggerQueueOnActionQueueForActionQueueTriggerEventFkeyPatch =
   table?: Maybe<Scalars['String']>;
   recordId?: Maybe<Scalars['Int']>;
   eventCode?: Maybe<Scalars['String']>;
+  data?: Maybe<Scalars['JSON']>;
   timestamp?: Maybe<Scalars['Datetime']>;
   status?: Maybe<TriggerQueueStatus>;
   log?: Maybe<Scalars['JSON']>;
@@ -27968,6 +27900,83 @@ export type UpdateTriggerQueuePayload = {
 /** The output of our update `TriggerQueue` mutation. */
 export type UpdateTriggerQueuePayloadTriggerQueueEdgeArgs = {
   orderBy?: Maybe<Array<TriggerQueuesOrderBy>>;
+};
+
+/** All input for the `updateTriggerScheduleByNodeId` mutation. */
+export type UpdateTriggerScheduleByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `TriggerSchedule` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `TriggerSchedule` being updated. */
+  patch: TriggerSchedulePatch;
+};
+
+/** All input for the `updateTriggerSchedule` mutation. */
+export type UpdateTriggerScheduleInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `TriggerSchedule` being updated. */
+  patch: TriggerSchedulePatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `triggerSchedule` being updated. */
+export type UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  eventCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  templateId?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `triggerSchedule` being updated. */
+export type UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  eventCode?: Maybe<Scalars['String']>;
+  timeScheduled?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  data?: Maybe<Scalars['JSON']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  applicationToApplicationId?: Maybe<TriggerScheduleApplicationIdFkeyInput>;
+  templateToTemplateId?: Maybe<TriggerScheduleTemplateIdFkeyInput>;
+};
+
+/** The output of our update `TriggerSchedule` mutation. */
+export type UpdateTriggerSchedulePayload = {
+  __typename?: 'UpdateTriggerSchedulePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `TriggerSchedule` that was updated by this mutation. */
+  triggerSchedule?: Maybe<TriggerSchedule>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `TriggerSchedule`. */
+  application?: Maybe<Application>;
+  /** Reads a single `Template` that is related to this `TriggerSchedule`. */
+  template?: Maybe<Template>;
+  /** An edge for our `TriggerSchedule`. May be used by Relay 1. */
+  triggerScheduleEdge?: Maybe<TriggerSchedulesEdge>;
+};
+
+
+/** The output of our update `TriggerSchedule` mutation. */
+export type UpdateTriggerSchedulePayloadTriggerScheduleEdgeArgs = {
+  orderBy?: Maybe<Array<TriggerSchedulesOrderBy>>;
 };
 
 /** All input for the `updateUserByNodeId` mutation. */
@@ -29448,7 +29457,7 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   applicationSectionsUsingId?: Maybe<ApplicationSectionApplicationIdFkeyInverseInput>;
   applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
   applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
-  actionSchedulesUsingId?: Maybe<ActionScheduleApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
   reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
@@ -29884,7 +29893,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ActionSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['Application'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['ReviewResponse'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -29994,8 +30003,8 @@ export type ResolversTypes = {
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
   ApplicationStatusHistoryFilter: ApplicationStatusHistoryFilter;
   ApplicationToManyApplicationResponseFilter: ApplicationToManyApplicationResponseFilter;
-  ApplicationToManyActionScheduleFilter: ApplicationToManyActionScheduleFilter;
-  ActionScheduleFilter: ActionScheduleFilter;
+  ApplicationToManyTriggerScheduleFilter: ApplicationToManyTriggerScheduleFilter;
+  TriggerScheduleFilter: TriggerScheduleFilter;
   ApplicationToManyReviewAssignmentFilter: ApplicationToManyReviewAssignmentFilter;
   ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
@@ -30025,7 +30034,7 @@ export type ResolversTypes = {
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateActionFilter: TemplateActionFilter;
-  TemplateToManyActionScheduleFilter: TemplateToManyActionScheduleFilter;
+  TemplateToManyTriggerScheduleFilter: TemplateToManyTriggerScheduleFilter;
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
   TemplateToManyFileFilter: TemplateToManyFileFilter;
   TemplateCategoryFilter: TemplateCategoryFilter;
@@ -30134,11 +30143,11 @@ export type ResolversTypes = {
   ApplicationStatusHistory: ResolverTypeWrapper<ApplicationStatusHistory>;
   ApplicationStatusHistoriesEdge: ResolverTypeWrapper<ApplicationStatusHistoriesEdge>;
   ApplicationStageHistoriesEdge: ResolverTypeWrapper<ApplicationStageHistoriesEdge>;
-  ActionSchedulesOrderBy: ActionSchedulesOrderBy;
-  ActionScheduleCondition: ActionScheduleCondition;
-  ActionSchedulesConnection: ResolverTypeWrapper<ActionSchedulesConnection>;
-  ActionSchedule: ResolverTypeWrapper<ActionSchedule>;
-  ActionSchedulesEdge: ResolverTypeWrapper<ActionSchedulesEdge>;
+  TriggerSchedulesOrderBy: TriggerSchedulesOrderBy;
+  TriggerScheduleCondition: TriggerScheduleCondition;
+  TriggerSchedulesConnection: ResolverTypeWrapper<TriggerSchedulesConnection>;
+  TriggerSchedule: ResolverTypeWrapper<TriggerSchedule>;
+  TriggerSchedulesEdge: ResolverTypeWrapper<TriggerSchedulesEdge>;
   ReviewsOrderBy: ReviewsOrderBy;
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ResolverTypeWrapper<ReviewsConnection>;
@@ -30495,16 +30504,16 @@ export type ResolversTypes = {
   TemplateActionTemplateIdFkeyInput: TemplateActionTemplateIdFkeyInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
-  ActionScheduleTemplateIdFkeyInverseInput: ActionScheduleTemplateIdFkeyInverseInput;
-  ActionScheduleActionSchedulePkeyConnect: ActionScheduleActionSchedulePkeyConnect;
-  ActionScheduleNodeIdConnect: ActionScheduleNodeIdConnect;
-  ActionScheduleActionSchedulePkeyDelete: ActionScheduleActionSchedulePkeyDelete;
-  ActionScheduleNodeIdDelete: ActionScheduleNodeIdDelete;
-  ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate: ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate;
-  updateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch: UpdateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
-  ActionScheduleApplicationIdFkeyInput: ActionScheduleApplicationIdFkeyInput;
-  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch: UpdateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
+  TriggerScheduleTemplateIdFkeyInverseInput: TriggerScheduleTemplateIdFkeyInverseInput;
+  TriggerScheduleTriggerSchedulePkeyConnect: TriggerScheduleTriggerSchedulePkeyConnect;
+  TriggerScheduleNodeIdConnect: TriggerScheduleNodeIdConnect;
+  TriggerScheduleTriggerSchedulePkeyDelete: TriggerScheduleTriggerSchedulePkeyDelete;
+  TriggerScheduleNodeIdDelete: TriggerScheduleNodeIdDelete;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTriggerSchedulePkeyUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTriggerSchedulePkeyUpdate;
+  updateTriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch;
+  TriggerScheduleApplicationIdFkeyInput: TriggerScheduleApplicationIdFkeyInput;
+  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch: UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch;
   ApplicationUserIdFkeyInput: ApplicationUserIdFkeyInput;
   UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnApplicationForApplicationUserIdFkeyPatch: UpdateUserOnApplicationForApplicationUserIdFkeyPatch;
@@ -30565,12 +30574,12 @@ export type ResolversTypes = {
   ApplicationResponseApplicationIdFkeyInput: ApplicationResponseApplicationIdFkeyInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
-  ActionScheduleApplicationIdFkeyInverseInput: ActionScheduleApplicationIdFkeyInverseInput;
-  ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate: ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate;
-  updateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch: UpdateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
-  ActionScheduleTemplateIdFkeyInput: ActionScheduleTemplateIdFkeyInput;
-  TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate;
-  updateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch: UpdateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
+  TriggerScheduleApplicationIdFkeyInverseInput: TriggerScheduleApplicationIdFkeyInverseInput;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingTriggerSchedulePkeyUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingTriggerSchedulePkeyUpdate;
+  updateTriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch;
+  TriggerScheduleTemplateIdFkeyInput: TriggerScheduleTemplateIdFkeyInput;
+  TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch: UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch;
   ReviewAssignmentTemplateIdFkeyInverseInput: ReviewAssignmentTemplateIdFkeyInverseInput;
   ReviewAssignmentReviewAssignmentPkeyConnect: ReviewAssignmentReviewAssignmentPkeyConnect;
   ReviewAssignmentNodeIdConnect: ReviewAssignmentNodeIdConnect;
@@ -30995,11 +31004,11 @@ export type ResolversTypes = {
   ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
   TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate: TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate;
   ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput: ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput;
-  ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate: ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate;
-  ActionScheduleTemplateIdFkeyTemplateCreateInput: ActionScheduleTemplateIdFkeyTemplateCreateInput;
-  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate;
-  ActionSchedulePatch: ActionSchedulePatch;
-  ActionScheduleApplicationIdFkeyActionScheduleCreateInput: ActionScheduleApplicationIdFkeyActionScheduleCreateInput;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate;
+  TriggerScheduleTemplateIdFkeyTemplateCreateInput: TriggerScheduleTemplateIdFkeyTemplateCreateInput;
+  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
+  TriggerSchedulePatch: TriggerSchedulePatch;
+  TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput: TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationCreateInput: ApplicationResponseApplicationIdFkeyApplicationCreateInput;
@@ -31050,11 +31059,11 @@ export type ResolversTypes = {
   UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate;
   ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyUserCreateInput: ApplicationUserIdFkeyUserCreateInput;
-  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate: ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate;
-  ActionScheduleApplicationIdFkeyApplicationCreateInput: ActionScheduleApplicationIdFkeyApplicationCreateInput;
-  TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate: TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate;
-  ActionScheduleTemplateIdFkeyActionScheduleCreateInput: ActionScheduleTemplateIdFkeyActionScheduleCreateInput;
+  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
+  TriggerScheduleApplicationIdFkeyApplicationCreateInput: TriggerScheduleApplicationIdFkeyApplicationCreateInput;
+  TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate: TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate;
+  TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput: TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput;
   TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
   TemplateActionTemplateIdFkeyTemplateCreateInput: TemplateActionTemplateIdFkeyTemplateCreateInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
@@ -31157,9 +31166,6 @@ export type ResolversTypes = {
   TriggerQueuePatch: TriggerQueuePatch;
   ActionQueueTriggerEventFkeyTriggerQueueCreateInput: ActionQueueTriggerEventFkeyTriggerQueueCreateInput;
   CreateActionQueuePayload: ResolverTypeWrapper<CreateActionQueuePayload>;
-  CreateActionScheduleInput: CreateActionScheduleInput;
-  ActionScheduleInput: ActionScheduleInput;
-  CreateActionSchedulePayload: ResolverTypeWrapper<CreateActionSchedulePayload>;
   CreateApplicationInput: CreateApplicationInput;
   ApplicationInput: ApplicationInput;
   CreateApplicationPayload: ResolverTypeWrapper<CreateApplicationPayload>;
@@ -31307,6 +31313,9 @@ export type ResolversTypes = {
   CreateTriggerQueueInput: CreateTriggerQueueInput;
   TriggerQueueInput: TriggerQueueInput;
   CreateTriggerQueuePayload: ResolverTypeWrapper<CreateTriggerQueuePayload>;
+  CreateTriggerScheduleInput: CreateTriggerScheduleInput;
+  TriggerScheduleInput: TriggerScheduleInput;
+  CreateTriggerSchedulePayload: ResolverTypeWrapper<CreateTriggerSchedulePayload>;
   CreateUserInput: CreateUserInput;
   UserInput: UserInput;
   CreateUserPayload: ResolverTypeWrapper<CreateUserPayload>;
@@ -31324,9 +31333,6 @@ export type ResolversTypes = {
   UpdateActionQueueByNodeIdInput: UpdateActionQueueByNodeIdInput;
   UpdateActionQueuePayload: ResolverTypeWrapper<UpdateActionQueuePayload>;
   UpdateActionQueueInput: UpdateActionQueueInput;
-  UpdateActionScheduleByNodeIdInput: UpdateActionScheduleByNodeIdInput;
-  UpdateActionSchedulePayload: ResolverTypeWrapper<UpdateActionSchedulePayload>;
-  UpdateActionScheduleInput: UpdateActionScheduleInput;
   UpdateApplicationByNodeIdInput: UpdateApplicationByNodeIdInput;
   UpdateApplicationPayload: ResolverTypeWrapper<UpdateApplicationPayload>;
   UpdateApplicationInput: UpdateApplicationInput;
@@ -31446,6 +31452,9 @@ export type ResolversTypes = {
   UpdateTriggerQueueByNodeIdInput: UpdateTriggerQueueByNodeIdInput;
   UpdateTriggerQueuePayload: ResolverTypeWrapper<UpdateTriggerQueuePayload>;
   UpdateTriggerQueueInput: UpdateTriggerQueueInput;
+  UpdateTriggerScheduleByNodeIdInput: UpdateTriggerScheduleByNodeIdInput;
+  UpdateTriggerSchedulePayload: ResolverTypeWrapper<UpdateTriggerSchedulePayload>;
+  UpdateTriggerScheduleInput: UpdateTriggerScheduleInput;
   UpdateUserByNodeIdInput: UpdateUserByNodeIdInput;
   UpdateUserPayload: ResolverTypeWrapper<UpdateUserPayload>;
   UpdateUserInput: UpdateUserInput;
@@ -31464,9 +31473,6 @@ export type ResolversTypes = {
   DeleteActionQueueByNodeIdInput: DeleteActionQueueByNodeIdInput;
   DeleteActionQueuePayload: ResolverTypeWrapper<DeleteActionQueuePayload>;
   DeleteActionQueueInput: DeleteActionQueueInput;
-  DeleteActionScheduleByNodeIdInput: DeleteActionScheduleByNodeIdInput;
-  DeleteActionSchedulePayload: ResolverTypeWrapper<DeleteActionSchedulePayload>;
-  DeleteActionScheduleInput: DeleteActionScheduleInput;
   DeleteApplicationByNodeIdInput: DeleteApplicationByNodeIdInput;
   DeleteApplicationPayload: ResolverTypeWrapper<DeleteApplicationPayload>;
   DeleteApplicationInput: DeleteApplicationInput;
@@ -31583,6 +31589,9 @@ export type ResolversTypes = {
   DeleteTriggerQueueByNodeIdInput: DeleteTriggerQueueByNodeIdInput;
   DeleteTriggerQueuePayload: ResolverTypeWrapper<DeleteTriggerQueuePayload>;
   DeleteTriggerQueueInput: DeleteTriggerQueueInput;
+  DeleteTriggerScheduleByNodeIdInput: DeleteTriggerScheduleByNodeIdInput;
+  DeleteTriggerSchedulePayload: ResolverTypeWrapper<DeleteTriggerSchedulePayload>;
+  DeleteTriggerScheduleInput: DeleteTriggerScheduleInput;
   DeleteUserByNodeIdInput: DeleteUserByNodeIdInput;
   DeleteUserPayload: ResolverTypeWrapper<DeleteUserPayload>;
   DeleteUserInput: DeleteUserInput;
@@ -31599,7 +31608,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ActionSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['Application'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -31692,8 +31701,8 @@ export type ResolversParentTypes = {
   ApplicationStageHistoryToManyApplicationStatusHistoryFilter: ApplicationStageHistoryToManyApplicationStatusHistoryFilter;
   ApplicationStatusHistoryFilter: ApplicationStatusHistoryFilter;
   ApplicationToManyApplicationResponseFilter: ApplicationToManyApplicationResponseFilter;
-  ApplicationToManyActionScheduleFilter: ApplicationToManyActionScheduleFilter;
-  ActionScheduleFilter: ActionScheduleFilter;
+  ApplicationToManyTriggerScheduleFilter: ApplicationToManyTriggerScheduleFilter;
+  TriggerScheduleFilter: TriggerScheduleFilter;
   ApplicationToManyReviewAssignmentFilter: ApplicationToManyReviewAssignmentFilter;
   ApplicationToManyReviewFilter: ApplicationToManyReviewFilter;
   ApplicationToManyFileFilter: ApplicationToManyFileFilter;
@@ -31723,7 +31732,7 @@ export type ResolversParentTypes = {
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
   TemplateToManyTemplateActionFilter: TemplateToManyTemplateActionFilter;
   TemplateActionFilter: TemplateActionFilter;
-  TemplateToManyActionScheduleFilter: TemplateToManyActionScheduleFilter;
+  TemplateToManyTriggerScheduleFilter: TemplateToManyTriggerScheduleFilter;
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
   TemplateToManyFileFilter: TemplateToManyFileFilter;
   TemplateCategoryFilter: TemplateCategoryFilter;
@@ -31812,10 +31821,10 @@ export type ResolversParentTypes = {
   ApplicationStatusHistory: ApplicationStatusHistory;
   ApplicationStatusHistoriesEdge: ApplicationStatusHistoriesEdge;
   ApplicationStageHistoriesEdge: ApplicationStageHistoriesEdge;
-  ActionScheduleCondition: ActionScheduleCondition;
-  ActionSchedulesConnection: ActionSchedulesConnection;
-  ActionSchedule: ActionSchedule;
-  ActionSchedulesEdge: ActionSchedulesEdge;
+  TriggerScheduleCondition: TriggerScheduleCondition;
+  TriggerSchedulesConnection: TriggerSchedulesConnection;
+  TriggerSchedule: TriggerSchedule;
+  TriggerSchedulesEdge: TriggerSchedulesEdge;
   ReviewCondition: ReviewCondition;
   ReviewsConnection: ReviewsConnection;
   ReviewsEdge: ReviewsEdge;
@@ -32145,16 +32154,16 @@ export type ResolversParentTypes = {
   TemplateActionTemplateIdFkeyInput: TemplateActionTemplateIdFkeyInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch: UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch;
-  ActionScheduleTemplateIdFkeyInverseInput: ActionScheduleTemplateIdFkeyInverseInput;
-  ActionScheduleActionSchedulePkeyConnect: ActionScheduleActionSchedulePkeyConnect;
-  ActionScheduleNodeIdConnect: ActionScheduleNodeIdConnect;
-  ActionScheduleActionSchedulePkeyDelete: ActionScheduleActionSchedulePkeyDelete;
-  ActionScheduleNodeIdDelete: ActionScheduleNodeIdDelete;
-  ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate: ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyUsingActionSchedulePkeyUpdate;
-  updateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch: UpdateActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
-  ActionScheduleApplicationIdFkeyInput: ActionScheduleApplicationIdFkeyInput;
-  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch: UpdateApplicationOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
+  TriggerScheduleTemplateIdFkeyInverseInput: TriggerScheduleTemplateIdFkeyInverseInput;
+  TriggerScheduleTriggerSchedulePkeyConnect: TriggerScheduleTriggerSchedulePkeyConnect;
+  TriggerScheduleNodeIdConnect: TriggerScheduleNodeIdConnect;
+  TriggerScheduleTriggerSchedulePkeyDelete: TriggerScheduleTriggerSchedulePkeyDelete;
+  TriggerScheduleNodeIdDelete: TriggerScheduleNodeIdDelete;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTriggerSchedulePkeyUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTriggerSchedulePkeyUpdate;
+  updateTriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch;
+  TriggerScheduleApplicationIdFkeyInput: TriggerScheduleApplicationIdFkeyInput;
+  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch: UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch;
   ApplicationUserIdFkeyInput: ApplicationUserIdFkeyInput;
   UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserPkeyUpdate;
   updateUserOnApplicationForApplicationUserIdFkeyPatch: UpdateUserOnApplicationForApplicationUserIdFkeyPatch;
@@ -32215,12 +32224,12 @@ export type ResolversParentTypes = {
   ApplicationResponseApplicationIdFkeyInput: ApplicationResponseApplicationIdFkeyInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch: UpdateApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyPatch;
-  ActionScheduleApplicationIdFkeyInverseInput: ActionScheduleApplicationIdFkeyInverseInput;
-  ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate: ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyUsingActionSchedulePkeyUpdate;
-  updateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch: UpdateActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyPatch;
-  ActionScheduleTemplateIdFkeyInput: ActionScheduleTemplateIdFkeyInput;
-  TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnActionScheduleForActionScheduleTemplateIdFkeyUsingTemplatePkeyUpdate;
-  updateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch: UpdateTemplateOnActionScheduleForActionScheduleTemplateIdFkeyPatch;
+  TriggerScheduleApplicationIdFkeyInverseInput: TriggerScheduleApplicationIdFkeyInverseInput;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingTriggerSchedulePkeyUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingTriggerSchedulePkeyUpdate;
+  updateTriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch: UpdateTriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyPatch;
+  TriggerScheduleTemplateIdFkeyInput: TriggerScheduleTemplateIdFkeyInput;
+  TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch: UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch;
   ReviewAssignmentTemplateIdFkeyInverseInput: ReviewAssignmentTemplateIdFkeyInverseInput;
   ReviewAssignmentReviewAssignmentPkeyConnect: ReviewAssignmentReviewAssignmentPkeyConnect;
   ReviewAssignmentNodeIdConnect: ReviewAssignmentNodeIdConnect;
@@ -32645,11 +32654,11 @@ export type ResolversParentTypes = {
   ReviewAssignmentAssignerIdFkeyUserCreateInput: ReviewAssignmentAssignerIdFkeyUserCreateInput;
   TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate: TemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyNodeIdUpdate;
   ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput: ReviewAssignmentTemplateIdFkeyReviewAssignmentCreateInput;
-  ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate: ActionScheduleOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate;
-  ActionScheduleTemplateIdFkeyTemplateCreateInput: ActionScheduleTemplateIdFkeyTemplateCreateInput;
-  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate;
-  ActionSchedulePatch: ActionSchedulePatch;
-  ActionScheduleApplicationIdFkeyActionScheduleCreateInput: ActionScheduleApplicationIdFkeyActionScheduleCreateInput;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate;
+  TriggerScheduleTemplateIdFkeyTemplateCreateInput: TriggerScheduleTemplateIdFkeyTemplateCreateInput;
+  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
+  TriggerSchedulePatch: TriggerSchedulePatch;
+  TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput: TriggerScheduleApplicationIdFkeyTriggerScheduleCreateInput;
   ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnApplicationResponseForApplicationResponseApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate: ApplicationResponseOnApplicationResponseForApplicationResponseApplicationIdFkeyNodeIdUpdate;
   ApplicationResponseApplicationIdFkeyApplicationCreateInput: ApplicationResponseApplicationIdFkeyApplicationCreateInput;
@@ -32700,11 +32709,11 @@ export type ResolversParentTypes = {
   UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate: UserOnApplicationForApplicationUserIdFkeyUsingUserUsernameKeyUpdate;
   ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate: ApplicationOnApplicationForApplicationUserIdFkeyNodeIdUpdate;
   ApplicationUserIdFkeyUserCreateInput: ApplicationUserIdFkeyUserCreateInput;
-  ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnActionScheduleForActionScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate: ActionScheduleOnActionScheduleForActionScheduleApplicationIdFkeyNodeIdUpdate;
-  ActionScheduleApplicationIdFkeyApplicationCreateInput: ActionScheduleApplicationIdFkeyApplicationCreateInput;
-  TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate: TemplateOnActionScheduleForActionScheduleTemplateIdFkeyNodeIdUpdate;
-  ActionScheduleTemplateIdFkeyActionScheduleCreateInput: ActionScheduleTemplateIdFkeyActionScheduleCreateInput;
+  ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate: TriggerScheduleOnTriggerScheduleForTriggerScheduleApplicationIdFkeyNodeIdUpdate;
+  TriggerScheduleApplicationIdFkeyApplicationCreateInput: TriggerScheduleApplicationIdFkeyApplicationCreateInput;
+  TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate: TemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyNodeIdUpdate;
+  TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput: TriggerScheduleTemplateIdFkeyTriggerScheduleCreateInput;
   TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateActionOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
   TemplateActionTemplateIdFkeyTemplateCreateInput: TemplateActionTemplateIdFkeyTemplateCreateInput;
   TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateActionForTemplateActionTemplateIdFkeyNodeIdUpdate;
@@ -32807,9 +32816,6 @@ export type ResolversParentTypes = {
   TriggerQueuePatch: TriggerQueuePatch;
   ActionQueueTriggerEventFkeyTriggerQueueCreateInput: ActionQueueTriggerEventFkeyTriggerQueueCreateInput;
   CreateActionQueuePayload: CreateActionQueuePayload;
-  CreateActionScheduleInput: CreateActionScheduleInput;
-  ActionScheduleInput: ActionScheduleInput;
-  CreateActionSchedulePayload: CreateActionSchedulePayload;
   CreateApplicationInput: CreateApplicationInput;
   ApplicationInput: ApplicationInput;
   CreateApplicationPayload: CreateApplicationPayload;
@@ -32957,6 +32963,9 @@ export type ResolversParentTypes = {
   CreateTriggerQueueInput: CreateTriggerQueueInput;
   TriggerQueueInput: TriggerQueueInput;
   CreateTriggerQueuePayload: CreateTriggerQueuePayload;
+  CreateTriggerScheduleInput: CreateTriggerScheduleInput;
+  TriggerScheduleInput: TriggerScheduleInput;
+  CreateTriggerSchedulePayload: CreateTriggerSchedulePayload;
   CreateUserInput: CreateUserInput;
   UserInput: UserInput;
   CreateUserPayload: CreateUserPayload;
@@ -32974,9 +32983,6 @@ export type ResolversParentTypes = {
   UpdateActionQueueByNodeIdInput: UpdateActionQueueByNodeIdInput;
   UpdateActionQueuePayload: UpdateActionQueuePayload;
   UpdateActionQueueInput: UpdateActionQueueInput;
-  UpdateActionScheduleByNodeIdInput: UpdateActionScheduleByNodeIdInput;
-  UpdateActionSchedulePayload: UpdateActionSchedulePayload;
-  UpdateActionScheduleInput: UpdateActionScheduleInput;
   UpdateApplicationByNodeIdInput: UpdateApplicationByNodeIdInput;
   UpdateApplicationPayload: UpdateApplicationPayload;
   UpdateApplicationInput: UpdateApplicationInput;
@@ -33096,6 +33102,9 @@ export type ResolversParentTypes = {
   UpdateTriggerQueueByNodeIdInput: UpdateTriggerQueueByNodeIdInput;
   UpdateTriggerQueuePayload: UpdateTriggerQueuePayload;
   UpdateTriggerQueueInput: UpdateTriggerQueueInput;
+  UpdateTriggerScheduleByNodeIdInput: UpdateTriggerScheduleByNodeIdInput;
+  UpdateTriggerSchedulePayload: UpdateTriggerSchedulePayload;
+  UpdateTriggerScheduleInput: UpdateTriggerScheduleInput;
   UpdateUserByNodeIdInput: UpdateUserByNodeIdInput;
   UpdateUserPayload: UpdateUserPayload;
   UpdateUserInput: UpdateUserInput;
@@ -33114,9 +33123,6 @@ export type ResolversParentTypes = {
   DeleteActionQueueByNodeIdInput: DeleteActionQueueByNodeIdInput;
   DeleteActionQueuePayload: DeleteActionQueuePayload;
   DeleteActionQueueInput: DeleteActionQueueInput;
-  DeleteActionScheduleByNodeIdInput: DeleteActionScheduleByNodeIdInput;
-  DeleteActionSchedulePayload: DeleteActionSchedulePayload;
-  DeleteActionScheduleInput: DeleteActionScheduleInput;
   DeleteApplicationByNodeIdInput: DeleteApplicationByNodeIdInput;
   DeleteApplicationPayload: DeleteApplicationPayload;
   DeleteApplicationInput: DeleteApplicationInput;
@@ -33233,6 +33239,9 @@ export type ResolversParentTypes = {
   DeleteTriggerQueueByNodeIdInput: DeleteTriggerQueueByNodeIdInput;
   DeleteTriggerQueuePayload: DeleteTriggerQueuePayload;
   DeleteTriggerQueueInput: DeleteTriggerQueueInput;
+  DeleteTriggerScheduleByNodeIdInput: DeleteTriggerScheduleByNodeIdInput;
+  DeleteTriggerSchedulePayload: DeleteTriggerSchedulePayload;
+  DeleteTriggerScheduleInput: DeleteTriggerScheduleInput;
   DeleteUserByNodeIdInput: DeleteUserByNodeIdInput;
   DeleteUserPayload: DeleteUserPayload;
   DeleteUserInput: DeleteUserInput;
@@ -33308,36 +33317,6 @@ export type ActionQueuesEdgeResolvers<ContextType = any, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type ActionScheduleResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionSchedule'] = ResolversParentTypes['ActionSchedule']> = {
-  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  table?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  entityId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  timeScheduled?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
-  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
-  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ActionSchedulesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionSchedulesConnection'] = ResolversParentTypes['ActionSchedulesConnection']> = {
-  nodes?: Resolver<Array<Maybe<ResolversTypes['ActionSchedule']>>, ParentType, ContextType>;
-  edges?: Resolver<Array<ResolversTypes['ActionSchedulesEdge']>, ParentType, ContextType>;
-  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
-  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type ActionSchedulesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActionSchedulesEdge'] = ResolversParentTypes['ActionSchedulesEdge']> = {
-  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
-  node?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type ApplicationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Application'] = ResolversParentTypes['Application']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -33356,7 +33335,7 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   applicationSections?: Resolver<ResolversTypes['ApplicationSectionsConnection'], ParentType, ContextType, RequireFields<ApplicationApplicationSectionsArgs, 'orderBy'>>;
   applicationStageHistories?: Resolver<ResolversTypes['ApplicationStageHistoriesConnection'], ParentType, ContextType, RequireFields<ApplicationApplicationStageHistoriesArgs, 'orderBy'>>;
   applicationResponses?: Resolver<ResolversTypes['ApplicationResponsesConnection'], ParentType, ContextType, RequireFields<ApplicationApplicationResponsesArgs, 'orderBy'>>;
-  actionSchedules?: Resolver<ResolversTypes['ActionSchedulesConnection'], ParentType, ContextType, RequireFields<ApplicationActionSchedulesArgs, 'orderBy'>>;
+  triggerSchedules?: Resolver<ResolversTypes['TriggerSchedulesConnection'], ParentType, ContextType, RequireFields<ApplicationTriggerSchedulesArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewAssignmentsArgs, 'orderBy'>>;
   reviews?: Resolver<ResolversTypes['ReviewsConnection'], ParentType, ContextType, RequireFields<ApplicationReviewsArgs, 'orderBy'>>;
   filesByApplicationSerial?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationFilesByApplicationSerialArgs, 'orderBy'>>;
@@ -33783,16 +33762,6 @@ export type CreateActionQueuePayloadResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type CreateActionSchedulePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateActionSchedulePayload'] = ResolversParentTypes['CreateActionSchedulePayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  actionSchedule?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  actionScheduleEdge?: Resolver<Maybe<ResolversTypes['ActionSchedulesEdge']>, ParentType, ContextType, RequireFields<CreateActionSchedulePayloadActionScheduleEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type CreateApplicationListShapePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateApplicationListShapePayload'] = ResolversParentTypes['CreateApplicationListShapePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationListShape?: Resolver<Maybe<ResolversTypes['ApplicationListShape']>, ParentType, ContextType>;
@@ -34137,6 +34106,16 @@ export type CreateTriggerQueuePayloadResolvers<ContextType = any, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateTriggerSchedulePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateTriggerSchedulePayload'] = ResolversParentTypes['CreateTriggerSchedulePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  triggerSchedule?: Resolver<Maybe<ResolversTypes['TriggerSchedule']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  triggerScheduleEdge?: Resolver<Maybe<ResolversTypes['TriggerSchedulesEdge']>, ParentType, ContextType, RequireFields<CreateTriggerSchedulePayloadTriggerScheduleEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateUserOrganisationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateUserOrganisationPayload'] = ResolversParentTypes['CreateUserOrganisationPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType>;
@@ -34189,17 +34168,6 @@ export type DeleteActionQueuePayloadResolvers<ContextType = any, ParentType exte
   triggerQueueByTriggerEvent?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   actionQueueEdge?: Resolver<Maybe<ResolversTypes['ActionQueuesEdge']>, ParentType, ContextType, RequireFields<DeleteActionQueuePayloadActionQueueEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type DeleteActionSchedulePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteActionSchedulePayload'] = ResolversParentTypes['DeleteActionSchedulePayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  actionSchedule?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType>;
-  deletedActionScheduleNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  actionScheduleEdge?: Resolver<Maybe<ResolversTypes['ActionSchedulesEdge']>, ParentType, ContextType, RequireFields<DeleteActionSchedulePayloadActionScheduleEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -34574,6 +34542,17 @@ export type DeleteTriggerQueuePayloadResolvers<ContextType = any, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteTriggerSchedulePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteTriggerSchedulePayload'] = ResolversParentTypes['DeleteTriggerSchedulePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  triggerSchedule?: Resolver<Maybe<ResolversTypes['TriggerSchedule']>, ParentType, ContextType>;
+  deletedTriggerScheduleNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  triggerScheduleEdge?: Resolver<Maybe<ResolversTypes['TriggerSchedulesEdge']>, ParentType, ContextType, RequireFields<DeleteTriggerSchedulePayloadTriggerScheduleEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteUserOrganisationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteUserOrganisationPayload'] = ResolversParentTypes['DeleteUserOrganisationPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType>;
@@ -34721,7 +34700,6 @@ export type LookupTablesEdgeResolvers<ContextType = any, ParentType extends Reso
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createActionPlugin?: Resolver<Maybe<ResolversTypes['CreateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateActionPluginArgs, 'input'>>;
   createActionQueue?: Resolver<Maybe<ResolversTypes['CreateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateActionQueueArgs, 'input'>>;
-  createActionSchedule?: Resolver<Maybe<ResolversTypes['CreateActionSchedulePayload']>, ParentType, ContextType, RequireFields<MutationCreateActionScheduleArgs, 'input'>>;
   createApplication?: Resolver<Maybe<ResolversTypes['CreateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationArgs, 'input'>>;
   createApplicationListShape?: Resolver<Maybe<ResolversTypes['CreateApplicationListShapePayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationListShapeArgs, 'input'>>;
   createApplicationResponse?: Resolver<Maybe<ResolversTypes['CreateApplicationResponsePayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationResponseArgs, 'input'>>;
@@ -34758,6 +34736,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createTemplateStage?: Resolver<Maybe<ResolversTypes['CreateTemplateStagePayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateStageArgs, 'input'>>;
   createTemplateStageReviewLevel?: Resolver<Maybe<ResolversTypes['CreateTemplateStageReviewLevelPayload']>, ParentType, ContextType, RequireFields<MutationCreateTemplateStageReviewLevelArgs, 'input'>>;
   createTriggerQueue?: Resolver<Maybe<ResolversTypes['CreateTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateTriggerQueueArgs, 'input'>>;
+  createTriggerSchedule?: Resolver<Maybe<ResolversTypes['CreateTriggerSchedulePayload']>, ParentType, ContextType, RequireFields<MutationCreateTriggerScheduleArgs, 'input'>>;
   createUser?: Resolver<Maybe<ResolversTypes['CreateUserPayload']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
   createUserOrganisation?: Resolver<Maybe<ResolversTypes['CreateUserOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationCreateUserOrganisationArgs, 'input'>>;
   createVerification?: Resolver<Maybe<ResolversTypes['CreateVerificationPayload']>, ParentType, ContextType, RequireFields<MutationCreateVerificationArgs, 'input'>>;
@@ -34766,8 +34745,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateActionPluginByCode?: Resolver<Maybe<ResolversTypes['UpdateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionPluginByCodeArgs, 'input'>>;
   updateActionQueueByNodeId?: Resolver<Maybe<ResolversTypes['UpdateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionQueueByNodeIdArgs, 'input'>>;
   updateActionQueue?: Resolver<Maybe<ResolversTypes['UpdateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionQueueArgs, 'input'>>;
-  updateActionScheduleByNodeId?: Resolver<Maybe<ResolversTypes['UpdateActionSchedulePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionScheduleByNodeIdArgs, 'input'>>;
-  updateActionSchedule?: Resolver<Maybe<ResolversTypes['UpdateActionSchedulePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionScheduleArgs, 'input'>>;
   updateApplicationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationByNodeIdArgs, 'input'>>;
   updateApplication?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationArgs, 'input'>>;
   updateApplicationBySerial?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationBySerialArgs, 'input'>>;
@@ -34849,6 +34826,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateTemplateStageReviewLevel?: Resolver<Maybe<ResolversTypes['UpdateTemplateStageReviewLevelPayload']>, ParentType, ContextType, RequireFields<MutationUpdateTemplateStageReviewLevelArgs, 'input'>>;
   updateTriggerQueueByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTriggerQueueByNodeIdArgs, 'input'>>;
   updateTriggerQueue?: Resolver<Maybe<ResolversTypes['UpdateTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTriggerQueueArgs, 'input'>>;
+  updateTriggerScheduleByNodeId?: Resolver<Maybe<ResolversTypes['UpdateTriggerSchedulePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTriggerScheduleByNodeIdArgs, 'input'>>;
+  updateTriggerSchedule?: Resolver<Maybe<ResolversTypes['UpdateTriggerSchedulePayload']>, ParentType, ContextType, RequireFields<MutationUpdateTriggerScheduleArgs, 'input'>>;
   updateUserByNodeId?: Resolver<Maybe<ResolversTypes['UpdateUserPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserByNodeIdArgs, 'input'>>;
   updateUser?: Resolver<Maybe<ResolversTypes['UpdateUserPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'input'>>;
   updateUserByUsername?: Resolver<Maybe<ResolversTypes['UpdateUserPayload']>, ParentType, ContextType, RequireFields<MutationUpdateUserByUsernameArgs, 'input'>>;
@@ -34862,8 +34841,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteActionPluginByCode?: Resolver<Maybe<ResolversTypes['DeleteActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionPluginByCodeArgs, 'input'>>;
   deleteActionQueueByNodeId?: Resolver<Maybe<ResolversTypes['DeleteActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionQueueByNodeIdArgs, 'input'>>;
   deleteActionQueue?: Resolver<Maybe<ResolversTypes['DeleteActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionQueueArgs, 'input'>>;
-  deleteActionScheduleByNodeId?: Resolver<Maybe<ResolversTypes['DeleteActionSchedulePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionScheduleByNodeIdArgs, 'input'>>;
-  deleteActionSchedule?: Resolver<Maybe<ResolversTypes['DeleteActionSchedulePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionScheduleArgs, 'input'>>;
   deleteApplicationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationByNodeIdArgs, 'input'>>;
   deleteApplication?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationArgs, 'input'>>;
   deleteApplicationBySerial?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationBySerialArgs, 'input'>>;
@@ -34945,6 +34922,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteTemplateStageReviewLevel?: Resolver<Maybe<ResolversTypes['DeleteTemplateStageReviewLevelPayload']>, ParentType, ContextType, RequireFields<MutationDeleteTemplateStageReviewLevelArgs, 'input'>>;
   deleteTriggerQueueByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTriggerQueueByNodeIdArgs, 'input'>>;
   deleteTriggerQueue?: Resolver<Maybe<ResolversTypes['DeleteTriggerQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTriggerQueueArgs, 'input'>>;
+  deleteTriggerScheduleByNodeId?: Resolver<Maybe<ResolversTypes['DeleteTriggerSchedulePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTriggerScheduleByNodeIdArgs, 'input'>>;
+  deleteTriggerSchedule?: Resolver<Maybe<ResolversTypes['DeleteTriggerSchedulePayload']>, ParentType, ContextType, RequireFields<MutationDeleteTriggerScheduleArgs, 'input'>>;
   deleteUserByNodeId?: Resolver<Maybe<ResolversTypes['DeleteUserPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserByNodeIdArgs, 'input'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['DeleteUserPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'input'>>;
   deleteUserByUsername?: Resolver<Maybe<ResolversTypes['DeleteUserPayload']>, ParentType, ContextType, RequireFields<MutationDeleteUserByUsernameArgs, 'input'>>;
@@ -34956,7 +34935,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ActionSchedule' | 'Verification' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ReviewAssignment' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'Application' | 'ApplicationSection' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'ReviewResponse' | 'ReviewQuestionAssignment' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'TriggerSchedule' | 'Verification' | 'ReviewAssignmentAssignerJoin' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -35228,7 +35207,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   node?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<QueryNodeArgs, 'nodeId'>>;
   actionPlugins?: Resolver<Maybe<ResolversTypes['ActionPluginsConnection']>, ParentType, ContextType, RequireFields<QueryActionPluginsArgs, 'orderBy'>>;
   actionQueues?: Resolver<Maybe<ResolversTypes['ActionQueuesConnection']>, ParentType, ContextType, RequireFields<QueryActionQueuesArgs, 'orderBy'>>;
-  actionSchedules?: Resolver<Maybe<ResolversTypes['ActionSchedulesConnection']>, ParentType, ContextType, RequireFields<QueryActionSchedulesArgs, 'orderBy'>>;
   applications?: Resolver<Maybe<ResolversTypes['ApplicationsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationsArgs, 'orderBy'>>;
   applicationListShapes?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListShapesArgs, 'orderBy'>>;
   applicationResponses?: Resolver<Maybe<ResolversTypes['ApplicationResponsesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationResponsesArgs, 'orderBy'>>;
@@ -35270,6 +35248,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateStages?: Resolver<Maybe<ResolversTypes['TemplateStagesConnection']>, ParentType, ContextType, RequireFields<QueryTemplateStagesArgs, 'orderBy'>>;
   templateStageReviewLevels?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevelsConnection']>, ParentType, ContextType, RequireFields<QueryTemplateStageReviewLevelsArgs, 'orderBy'>>;
   triggerQueues?: Resolver<Maybe<ResolversTypes['TriggerQueuesConnection']>, ParentType, ContextType, RequireFields<QueryTriggerQueuesArgs, 'orderBy'>>;
+  triggerSchedules?: Resolver<Maybe<ResolversTypes['TriggerSchedulesConnection']>, ParentType, ContextType, RequireFields<QueryTriggerSchedulesArgs, 'orderBy'>>;
   users?: Resolver<Maybe<ResolversTypes['UsersConnection']>, ParentType, ContextType, RequireFields<QueryUsersArgs, 'orderBy'>>;
   userOrgJoins?: Resolver<Maybe<ResolversTypes['UserOrgJoinsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrgJoinsArgs, 'orderBy'>>;
   userOrganisations?: Resolver<Maybe<ResolversTypes['UserOrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryUserOrganisationsArgs, 'orderBy'>>;
@@ -35277,7 +35256,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginArgs, 'id'>>;
   actionPluginByCode?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByCodeArgs, 'code'>>;
   actionQueue?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueArgs, 'id'>>;
-  actionSchedule?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType, RequireFields<QueryActionScheduleArgs, 'id'>>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationArgs, 'id'>>;
   applicationBySerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationBySerialArgs, 'serial'>>;
   applicationResponse?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType, RequireFields<QueryApplicationResponseArgs, 'id'>>;
@@ -35324,6 +35302,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateStage?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType, RequireFields<QueryTemplateStageArgs, 'id'>>;
   templateStageReviewLevel?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevel']>, ParentType, ContextType, RequireFields<QueryTemplateStageReviewLevelArgs, 'id'>>;
   triggerQueue?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType, RequireFields<QueryTriggerQueueArgs, 'id'>>;
+  triggerSchedule?: Resolver<Maybe<ResolversTypes['TriggerSchedule']>, ParentType, ContextType, RequireFields<QueryTriggerScheduleArgs, 'id'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'id'>>;
   userByUsername?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByUsernameArgs, 'username'>>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationArgs, 'id'>>;
@@ -35356,7 +35335,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryTemplateQuestionsCountArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
   actionQueueByNodeId?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueByNodeIdArgs, 'nodeId'>>;
-  actionScheduleByNodeId?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType, RequireFields<QueryActionScheduleByNodeIdArgs, 'nodeId'>>;
   applicationByNodeId?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationByNodeIdArgs, 'nodeId'>>;
   applicationResponseByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType, RequireFields<QueryApplicationResponseByNodeIdArgs, 'nodeId'>>;
   applicationSectionByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationSection']>, ParentType, ContextType, RequireFields<QueryApplicationSectionByNodeIdArgs, 'nodeId'>>;
@@ -35392,6 +35370,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   templateStageByNodeId?: Resolver<Maybe<ResolversTypes['TemplateStage']>, ParentType, ContextType, RequireFields<QueryTemplateStageByNodeIdArgs, 'nodeId'>>;
   templateStageReviewLevelByNodeId?: Resolver<Maybe<ResolversTypes['TemplateStageReviewLevel']>, ParentType, ContextType, RequireFields<QueryTemplateStageReviewLevelByNodeIdArgs, 'nodeId'>>;
   triggerQueueByNodeId?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType, RequireFields<QueryTriggerQueueByNodeIdArgs, 'nodeId'>>;
+  triggerScheduleByNodeId?: Resolver<Maybe<ResolversTypes['TriggerSchedule']>, ParentType, ContextType, RequireFields<QueryTriggerScheduleByNodeIdArgs, 'nodeId'>>;
   userByNodeId?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserByNodeIdArgs, 'nodeId'>>;
   userOrganisationByNodeId?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType, RequireFields<QueryUserOrganisationByNodeIdArgs, 'nodeId'>>;
   verificationByNodeId?: Resolver<Maybe<ResolversTypes['Verification']>, ParentType, ContextType, RequireFields<QueryVerificationByNodeIdArgs, 'nodeId'>>;
@@ -35699,7 +35678,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   applications?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<TemplateApplicationsArgs, 'orderBy'>>;
   actionQueues?: Resolver<ResolversTypes['ActionQueuesConnection'], ParentType, ContextType, RequireFields<TemplateActionQueuesArgs, 'orderBy'>>;
   templateActions?: Resolver<ResolversTypes['TemplateActionsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateActionsArgs, 'orderBy'>>;
-  actionSchedules?: Resolver<ResolversTypes['ActionSchedulesConnection'], ParentType, ContextType, RequireFields<TemplateActionSchedulesArgs, 'orderBy'>>;
+  triggerSchedules?: Resolver<ResolversTypes['TriggerSchedulesConnection'], ParentType, ContextType, RequireFields<TemplateTriggerSchedulesArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateReviewAssignmentsArgs, 'orderBy'>>;
   files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<TemplateFilesArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -35709,6 +35688,7 @@ export type TemplateActionResolvers<ContextType = any, ParentType extends Resolv
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   actionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
@@ -35954,6 +35934,7 @@ export type TriggerQueueResolvers<ContextType = any, ParentType extends Resolver
   table?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   recordId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   timestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['TriggerQueueStatus']>, ParentType, ContextType>;
   log?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -35975,6 +35956,35 @@ export type TriggerQueuesEdgeResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type TriggerScheduleResolvers<ContextType = any, ParentType extends ResolversParentTypes['TriggerSchedule'] = ResolversParentTypes['TriggerSchedule']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  timeScheduled?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  data?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TriggerSchedulesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TriggerSchedulesConnection'] = ResolversParentTypes['TriggerSchedulesConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['TriggerSchedule']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['TriggerSchedulesEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type TriggerSchedulesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['TriggerSchedulesEdge'] = ResolversParentTypes['TriggerSchedulesEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['TriggerSchedule']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateActionPluginPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateActionPluginPayload'] = ResolversParentTypes['UpdateActionPluginPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType>;
@@ -35990,16 +36000,6 @@ export type UpdateActionQueuePayloadResolvers<ContextType = any, ParentType exte
   triggerQueueByTriggerEvent?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   actionQueueEdge?: Resolver<Maybe<ResolversTypes['ActionQueuesEdge']>, ParentType, ContextType, RequireFields<UpdateActionQueuePayloadActionQueueEdgeArgs, 'orderBy'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type UpdateActionSchedulePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateActionSchedulePayload'] = ResolversParentTypes['UpdateActionSchedulePayload']> = {
-  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  actionSchedule?: Resolver<Maybe<ResolversTypes['ActionSchedule']>, ParentType, ContextType>;
-  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
-  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
-  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
-  actionScheduleEdge?: Resolver<Maybe<ResolversTypes['ActionSchedulesEdge']>, ParentType, ContextType, RequireFields<UpdateActionSchedulePayloadActionScheduleEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36339,6 +36339,16 @@ export type UpdateTriggerQueuePayloadResolvers<ContextType = any, ParentType ext
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateTriggerSchedulePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateTriggerSchedulePayload'] = ResolversParentTypes['UpdateTriggerSchedulePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  triggerSchedule?: Resolver<Maybe<ResolversTypes['TriggerSchedule']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  triggerScheduleEdge?: Resolver<Maybe<ResolversTypes['TriggerSchedulesEdge']>, ParentType, ContextType, RequireFields<UpdateTriggerSchedulePayloadTriggerScheduleEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateUserOrganisationPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateUserOrganisationPayload'] = ResolversParentTypes['UpdateUserOrganisationPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userOrganisation?: Resolver<Maybe<ResolversTypes['UserOrganisation']>, ParentType, ContextType>;
@@ -36498,9 +36508,6 @@ export type Resolvers<ContextType = any> = {
   ActionQueue?: ActionQueueResolvers<ContextType>;
   ActionQueuesConnection?: ActionQueuesConnectionResolvers<ContextType>;
   ActionQueuesEdge?: ActionQueuesEdgeResolvers<ContextType>;
-  ActionSchedule?: ActionScheduleResolvers<ContextType>;
-  ActionSchedulesConnection?: ActionSchedulesConnectionResolvers<ContextType>;
-  ActionSchedulesEdge?: ActionSchedulesEdgeResolvers<ContextType>;
   Application?: ApplicationResolvers<ContextType>;
   ApplicationListFilterApplicantConnection?: ApplicationListFilterApplicantConnectionResolvers<ContextType>;
   ApplicationListFilterApplicantEdge?: ApplicationListFilterApplicantEdgeResolvers<ContextType>;
@@ -36551,7 +36558,6 @@ export type Resolvers<ContextType = any> = {
   CountersEdge?: CountersEdgeResolvers<ContextType>;
   CreateActionPluginPayload?: CreateActionPluginPayloadResolvers<ContextType>;
   CreateActionQueuePayload?: CreateActionQueuePayloadResolvers<ContextType>;
-  CreateActionSchedulePayload?: CreateActionSchedulePayloadResolvers<ContextType>;
   CreateApplicationListShapePayload?: CreateApplicationListShapePayloadResolvers<ContextType>;
   CreateApplicationPayload?: CreateApplicationPayloadResolvers<ContextType>;
   CreateApplicationResponsePayload?: CreateApplicationResponsePayloadResolvers<ContextType>;
@@ -36588,6 +36594,7 @@ export type Resolvers<ContextType = any> = {
   CreateTemplateStagePayload?: CreateTemplateStagePayloadResolvers<ContextType>;
   CreateTemplateStageReviewLevelPayload?: CreateTemplateStageReviewLevelPayloadResolvers<ContextType>;
   CreateTriggerQueuePayload?: CreateTriggerQueuePayloadResolvers<ContextType>;
+  CreateTriggerSchedulePayload?: CreateTriggerSchedulePayloadResolvers<ContextType>;
   CreateUserOrganisationPayload?: CreateUserOrganisationPayloadResolvers<ContextType>;
   CreateUserPayload?: CreateUserPayloadResolvers<ContextType>;
   CreateVerificationPayload?: CreateVerificationPayloadResolvers<ContextType>;
@@ -36595,7 +36602,6 @@ export type Resolvers<ContextType = any> = {
   Datetime?: GraphQLScalarType;
   DeleteActionPluginPayload?: DeleteActionPluginPayloadResolvers<ContextType>;
   DeleteActionQueuePayload?: DeleteActionQueuePayloadResolvers<ContextType>;
-  DeleteActionSchedulePayload?: DeleteActionSchedulePayloadResolvers<ContextType>;
   DeleteApplicationPayload?: DeleteApplicationPayloadResolvers<ContextType>;
   DeleteApplicationResponsePayload?: DeleteApplicationResponsePayloadResolvers<ContextType>;
   DeleteApplicationSectionPayload?: DeleteApplicationSectionPayloadResolvers<ContextType>;
@@ -36631,6 +36637,7 @@ export type Resolvers<ContextType = any> = {
   DeleteTemplateStagePayload?: DeleteTemplateStagePayloadResolvers<ContextType>;
   DeleteTemplateStageReviewLevelPayload?: DeleteTemplateStageReviewLevelPayloadResolvers<ContextType>;
   DeleteTriggerQueuePayload?: DeleteTriggerQueuePayloadResolvers<ContextType>;
+  DeleteTriggerSchedulePayload?: DeleteTriggerSchedulePayloadResolvers<ContextType>;
   DeleteUserOrganisationPayload?: DeleteUserOrganisationPayloadResolvers<ContextType>;
   DeleteUserPayload?: DeleteUserPayloadResolvers<ContextType>;
   DeleteVerificationPayload?: DeleteVerificationPayloadResolvers<ContextType>;
@@ -36736,9 +36743,11 @@ export type Resolvers<ContextType = any> = {
   TriggerQueue?: TriggerQueueResolvers<ContextType>;
   TriggerQueuesConnection?: TriggerQueuesConnectionResolvers<ContextType>;
   TriggerQueuesEdge?: TriggerQueuesEdgeResolvers<ContextType>;
+  TriggerSchedule?: TriggerScheduleResolvers<ContextType>;
+  TriggerSchedulesConnection?: TriggerSchedulesConnectionResolvers<ContextType>;
+  TriggerSchedulesEdge?: TriggerSchedulesEdgeResolvers<ContextType>;
   UpdateActionPluginPayload?: UpdateActionPluginPayloadResolvers<ContextType>;
   UpdateActionQueuePayload?: UpdateActionQueuePayloadResolvers<ContextType>;
-  UpdateActionSchedulePayload?: UpdateActionSchedulePayloadResolvers<ContextType>;
   UpdateApplicationPayload?: UpdateApplicationPayloadResolvers<ContextType>;
   UpdateApplicationResponsePayload?: UpdateApplicationResponsePayloadResolvers<ContextType>;
   UpdateApplicationSectionPayload?: UpdateApplicationSectionPayloadResolvers<ContextType>;
@@ -36774,6 +36783,7 @@ export type Resolvers<ContextType = any> = {
   UpdateTemplateStagePayload?: UpdateTemplateStagePayloadResolvers<ContextType>;
   UpdateTemplateStageReviewLevelPayload?: UpdateTemplateStageReviewLevelPayloadResolvers<ContextType>;
   UpdateTriggerQueuePayload?: UpdateTriggerQueuePayloadResolvers<ContextType>;
+  UpdateTriggerSchedulePayload?: UpdateTriggerSchedulePayloadResolvers<ContextType>;
   UpdateUserOrganisationPayload?: UpdateUserOrganisationPayloadResolvers<ContextType>;
   UpdateUserPayload?: UpdateUserPayloadResolvers<ContextType>;
   UpdateVerificationPayload?: UpdateVerificationPayloadResolvers<ContextType>;
