@@ -524,6 +524,105 @@ exports.queries = [
                 }
                 parameterQueries: { newOutcome: { value: "REJECTED" } }
               }
+              {
+                actionCode: "generateTextString"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 100
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.outcome"]
+                    }
+                    "APPROVED"
+                  ]
+                }
+                parameterQueries: {
+                  pattern: "PR-[A-Z]{3}-<+ddd>"
+                  counterName: "product"
+                }
+              }
+              {
+                actionCode: "modifyRecord"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 101
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.outcome"]
+                    }
+                    "APPROVED"
+                  ]
+                }
+                parameterQueries: {
+                  tableName: "product"
+                  name: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q20.text"]
+                  }
+                  type: {
+                    operator: "objectProperties"
+                    children: ["applicationData.responses.Q21.text"]
+                  }
+                  # We don't have a way to generate this yet!
+                  expiry_date: "31/01/2022"
+                  serial: {
+                    operator: "objectProperties"
+                    children: ["outputCumulative.generatedText"]
+                  }
+#                   application_id: {
+#                     operator: "objectProperties"
+#                     children: ["applicationData.applicationId"]
+#                   }
+                }
+              }
+              {
+                actionCode: "scheduleAction"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 102
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.outcome"]
+                    }
+                    "APPROVED"
+                  ]
+                }
+                parameterQueries:{
+                  eventCode: "prod_exp1"
+                  duration: { minute: 10 }
+                }
+              }
+              {
+                actionCode: "sendNotification"
+                trigger: ON_SCHEDULE
+                eventCode: "prod_exp1"
+                # This should get cancelled if product is renewed
+                parameterQueries: {
+                  fromName: "Application Manager"
+                  fromEmail: "no-reply@sussol.net"
+                  email: {
+                    operator: "objectProperties"
+                    children: ["applicationData.email", ""]
+                  }
+                  subject: {
+                    operator: "stringSubstitution"
+                    children: [
+                      "Your product %1 has expired",
+                      {
+                        operator: "objectProperties"
+                        children: [ "outputCumulative.product.name", ""]
+                      }
+                    ]
+                  }
+                  message: "Your product registration has expired. If you wish to continue, you'll need to re-apply.\\n(Note: this is just a test to check the notification worked. Nothing proper has actually changed)"
+                }
+              }
             ]
           }
           templatePermissionsUsingId: {

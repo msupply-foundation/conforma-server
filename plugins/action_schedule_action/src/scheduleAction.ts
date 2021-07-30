@@ -22,6 +22,7 @@ const scheduleAction: ActionPluginType = async ({
   try {
     if (cancel) {
       const cancelledEvent = await db.cancelTriggerSchedule({ applicationId, eventCode })
+      console.log('Event cancelled:', { applicationId, eventCode })
       return {
         status: ActionQueueStatus.Success,
         error_log: '',
@@ -46,7 +47,16 @@ const scheduleAction: ActionPluginType = async ({
     return {
       status: ActionQueueStatus.Success,
       error_log: '',
-      output: { scheduledEvent },
+      output: {
+        scheduledEvent: {
+          id: scheduledEvent.id,
+          eventCode: scheduledEvent.event_code,
+          applicationId: scheduledEvent.application_id,
+          templateId: scheduledEvent.template_id,
+          timeScheduled: scheduledEvent.time_scheduled,
+          isActive: scheduledEvent.is_active,
+        },
+      },
     }
   } catch (error) {
     console.log(error.message)
