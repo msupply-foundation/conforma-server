@@ -91,9 +91,8 @@ const databaseMethods = (DBConnect: any) => {
       tableName: string,
       fieldsToCreate: { fieldName: string; fieldType: string }[]
     ) => {
-      const getType = (fieldType: string) => (fieldType === 'object' ? 'jsonb' : 'varchar')
       const newColumns = fieldsToCreate.map(
-        ({ fieldName, fieldType }) => `ADD COLUMN "${fieldName}" ${getType(fieldType)}`
+        ({ fieldName, fieldType }) => `ADD COLUMN "${fieldName}" ${fieldType}`
       )
       const text = `ALTER TABLE "${tableName}" ${newColumns.join(',')};`
       console.log('creating new columns with statement: ', text)
@@ -119,7 +118,7 @@ const databaseMethods = (DBConnect: any) => {
 const getKeys = (record: { [key: string]: { value: any } }) => {
   const keys = Object.keys(record)
   const keyString = keys.map((key) => `"${key}"`).join(',')
-  return keys.length === 1 ? keyString : `(${keyString})`
+  return `(${keyString})`
 }
 
 export type DatabaseMethodsType = ReturnType<typeof databaseMethods>

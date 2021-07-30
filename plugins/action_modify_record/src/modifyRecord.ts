@@ -65,9 +65,21 @@ const createOrUpdateTable = async (
 
   const fieldsToCreate = Object.entries(record)
     .filter(([fieldName]) => !tableAndFields.find(({ column_name }) => column_name === fieldName))
-    .map(([fieldName, value]) => ({ fieldName, fieldType: typeof value }))
+    .map(([fieldName, value]) => ({ fieldName, fieldType: getPostgresType(value) }))
 
   if (fieldsToCreate.length > 0) await db.createFields(tableName, fieldsToCreate)
 }
 
 export default modifyRecord
+
+const getPostgresType = (value: any): string => {
+  if (Array.isArray(value)) {
+    const elementType = value.length > 0 ? getPostgresType(value[0]) : 'varchar'
+    return `${elementType}[]`
+  }
+  if (value instanceof Date) return 'timestamptz'
+  if (value instanceof Object) return 'jsonb'
+  if (typeof value === 'boolean') return 'boolean'
+  if (typeof value === 'number') return Number.isInteger(value) ? 'integer' : 'double precision'
+  return 'varchar'
+}
