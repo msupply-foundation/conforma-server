@@ -160,7 +160,7 @@ exports.queries = [
         },
         review_assignment: {
           view: {
-            reviewer_id: 'jwtUserDetails_bigint_userId',
+            template_id: 'jwtPermission_bigint_templateId',
           },
         },
       },
