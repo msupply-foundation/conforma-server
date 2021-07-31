@@ -725,7 +725,7 @@ testData.getApplicationName = {
       value: 'SELECT name FROM application WHERE template_id = $1 LIMIT 1',
     },
     {
-      value: 4,
+      value: 5,
     },
   ],
 }
