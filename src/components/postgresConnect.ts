@@ -51,14 +51,18 @@ class PostgresDB {
         console.log(`Notification ${channel} received with no payload!`)
         return
       }
+      const payloadObject = JSON.parse(payload)
+      // "data" is stored output from scheduled trigger or verification
+      const data = payloadObject?.trigger_payload?.data
       switch (channel) {
         case 'trigger_notifications':
-          processTrigger(JSON.parse(payload))
+          processTrigger(payloadObject)
           break
         case 'action_notifications':
           // For Async Actions only
           try {
-            await executeAction(JSON.parse(payload), actionLibrary)
+            console.log('payloadObject', payloadObject)
+            await executeAction(payloadObject, actionLibrary, data)
           } catch (err) {
             console.log(err.message)
           } finally {

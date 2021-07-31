@@ -116,7 +116,9 @@ export async function processTrigger(payload: TriggerPayload) {
   // Get sequential Actions from database
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
-  let outputCumulative = data // Collect output properties of actions in sequence
+  // Collect output properties of actions in sequence
+  // "data" is stored output from scheduled triggers or verifications
+  let outputCumulative = { ...data }
 
   // Execute sequential Actions one by one
   let actionFailed = ''
@@ -139,6 +141,7 @@ export async function processTrigger(payload: TriggerPayload) {
         parameter_queries: action.parameter_queries,
         trigger_payload: action.trigger_payload,
       }
+      console.log('outputCumulative', outputCumulative)
       const result = await executeAction(actionPayload, actionLibrary, {
         outputCumulative,
       })
@@ -185,6 +188,8 @@ export async function executeAction(
 
   // Debug helper console.log to inspect applicationData:
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)
+
+  console.log('additionalObjects', additionalObjects)
 
   const evaluatorParams = {
     objects: { applicationData, functions, ...additionalObjects },
