@@ -571,7 +571,7 @@ exports.queries = [
                     operator: "objectFunctions"
                     children: [
                       "functions.generateExpiry"
-                      { duration: { minute: 10 } }
+                      { minute: 2 }
                     ]
                   }
                   serial: {
@@ -600,14 +600,36 @@ exports.queries = [
                 }
                 parameterQueries:{
                   eventCode: "prod_exp1"
-                  duration: { minute: 10 }
+                  duration: { minute: 2 }
                 }
               }
               {
                 actionCode: "sendNotification"
                 trigger: ON_SCHEDULE
                 eventCode: "prod_exp1"
-                # This should get cancelled if product is renewed
+                condition: {
+                  operator: "=",
+                  children: [
+                    {
+                      operator: "graphQL",
+                      children: [
+                        "query CheckExpired($id: Int!) {products(filter: {id: {equalTo: $id}, expiryDate: {lessThan: \\"now()\\"}}) {totalCount}}",
+                        "graphQLEndpoint",
+                        [
+                          "id"
+                        ],
+                        {
+                          operator: "objectProperties",
+                          children: [
+                            "outputCumulative.product.id"
+                          ]
+                        },
+                        "products.totalCount"
+                      ]
+                    },
+                    1
+                  ]
+                }
                 parameterQueries: {
                   fromName: "Application Manager"
                   fromEmail: "no-reply@sussol.net"

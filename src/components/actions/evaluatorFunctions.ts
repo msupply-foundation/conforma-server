@@ -1,5 +1,5 @@
 // Utility functions to extend capabilities of expression evaluator via the
-// "objectFunctions"
+// "objectFunctions" operator
 
 import { DateTime, Duration } from 'luxon'
 

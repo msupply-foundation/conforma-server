@@ -9,6 +9,7 @@ import {
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import functions from './evaluatorFunctions'
 import DBConnect from '../databaseConnect'
+import fetch from 'node-fetch'
 import { actionLibrary } from '../pluginsConnect'
 import {
   BasicObject,
@@ -27,6 +28,8 @@ import { DateTime } from 'luxon'
 const showApplicationDataLog = false
 const showActionOutcomeLog = false
 const schedulerMode = 'test'
+
+const graphQLEndpoint = config.graphQLendpoint
 
 // Load actions from Database at server startup
 export const loadActions = async function (actionLibrary: ActionLibrary) {
@@ -185,7 +188,9 @@ export async function executeAction(
 
   const evaluatorParams = {
     objects: { applicationData, functions, ...additionalObjects },
-    pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
+    pgConnection: DBConnect,
+    APIfetch: fetch,
+    graphQLConnection: { fetch, endpoint: graphQLEndpoint },
   }
 
   // Evaluate condition
@@ -200,6 +205,8 @@ export async function executeAction(
         payload.parameter_queries,
         evaluatorParams
       )
+
+      console.log('parametersEvaluated', parametersEvaluated)
 
       // TO-DO: Check all required parameters are present
 
