@@ -61,7 +61,6 @@ class PostgresDB {
         case 'action_notifications':
           // For Async Actions only
           try {
-            console.log('payloadObject', payloadObject)
             await executeAction(payloadObject, actionLibrary, data)
           } catch (err) {
             console.log(err.message)

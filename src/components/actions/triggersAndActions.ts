@@ -141,7 +141,6 @@ export async function processTrigger(payload: TriggerPayload) {
         parameter_queries: action.parameter_queries,
         trigger_payload: action.trigger_payload,
       }
-      console.log('outputCumulative', outputCumulative)
       const result = await executeAction(actionPayload, actionLibrary, {
         outputCumulative,
       })
@@ -188,8 +187,6 @@ export async function executeAction(
 
   // Debug helper console.log to inspect applicationData:
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)
-
-  console.log('additionalObjects', additionalObjects)
 
   const evaluatorParams = {
     objects: { applicationData, functions, ...additionalObjects },
