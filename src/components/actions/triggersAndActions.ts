@@ -7,6 +7,7 @@ import {
   ActionQueueExecutePayload,
 } from '../../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import functions from './evaluatorFunctions'
 import DBConnect from '../databaseConnect'
 import { actionLibrary } from '../pluginsConnect'
 import {
@@ -183,7 +184,7 @@ export async function executeAction(
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)
 
   const evaluatorParams = {
-    objects: { applicationData, ...additionalObjects },
+    objects: { applicationData, functions, ...additionalObjects },
     pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
   }
 

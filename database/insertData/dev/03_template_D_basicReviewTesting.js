@@ -567,8 +567,13 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q21.text"]
                   }
-                  # We don't have a way to generate this yet!
-                  expiry_date: { duration: { minute: 10 } }
+                  expiry_date: {
+                    operator: "objectFunctions"
+                    children: [
+                      "functions.generateExpiry"
+                      { duration: { minute: 10 } }
+                    ]
+                  }
                   serial: {
                     operator: "objectProperties"
                     children: ["outputCumulative.generatedText"]
