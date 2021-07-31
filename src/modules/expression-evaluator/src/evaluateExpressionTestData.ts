@@ -1144,7 +1144,7 @@ testData.complexValidation = {
 // objectFunctions operator
 
 testData.functions = {
-  fDouble: (args: any) => args.map((e: any) => e + e),
+  fDouble: (...args: any) => args.map((e: any) => e + e),
   fDate: (dateString: string) => new Date(dateString),
 }
 

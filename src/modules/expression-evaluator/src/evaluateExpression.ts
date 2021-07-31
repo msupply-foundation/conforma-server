@@ -166,7 +166,7 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
       const funcName = childrenResolved[0]
       const args = childrenResolved.slice(1)
       const func = extractProperty(inputObject, funcName, 'Function not found') as Function
-      return await func(args)
+      return await func(...args)
 
     // etc. for as many other operators as we want/need.
   }
