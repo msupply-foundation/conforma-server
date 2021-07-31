@@ -161,6 +161,13 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
     case 'buildObject':
       return buildObject(inputQuery as BuildObjectQuery, evaluationExpressionInstance)
 
+    case 'objectFunctions':
+      const inputObject = params?.objects ? params.objects : {}
+      const funcName = childrenResolved[0]
+      const args = childrenResolved.slice(1)
+      const func = extractProperty(inputObject, funcName, 'Function not found') as Function
+      return await func(args)
+
     // etc. for as many other operators as we want/need.
   }
 
@@ -262,7 +269,7 @@ const extractProperty = (
   data: BasicObject | BasicObject[],
   node: string | string[],
   fallback: any = "Can't resolve object"
-): BasicObject | string | number | boolean | BasicObject[] => {
+): BasicObject | string | number | boolean | BasicObject[] | Function => {
   if (typeof data === 'undefined') return fallback
   const propertyPathArray = Array.isArray(node) ? node : node.split('.')
   // ie. "application.template.name" => ["applcation", "template", "name"]
