@@ -16,6 +16,7 @@ exports.queries = [
           namePlural: "Test -- Renewals"
           status: AVAILABLE
           startMessage: "## Product renewal demonstration\\nOnly use this if your product has not yet expired. If it has expired, you'll need to reapply as a new product."
+          submissionMessage: "Thanks, your product has been renewed."
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
