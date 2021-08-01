@@ -93,8 +93,18 @@ exports.queries = [
                   }
                   matchField: "serial"
                   matchValue: {
-                    operator: "objectProperties"
-                    children: [ "outputCumulative.product.serial" ]
+                    # ugly hack to get value from array
+                    type: "string",
+                    operator: "+",
+                    children: [
+                      {
+                        operator: "objectProperties",
+                        children: [
+                          "applicationData.responses.Q1.selection.serial"
+                        ]
+                      },
+                      ""
+                    ]
                   }
                 }
               }

@@ -119,7 +119,7 @@ const getKeys = (record: { [key: string]: { value: any } }, update = false) => {
   const keys = Object.keys(record)
   const keyString = keys.map((key) => `"${key}"`).join(',')
   // UPDATE with only one field can't have brackets around key
-  if (update) return keys.length === 1 ? keyString : `(${keyString})`
+  if (update && keys.length === 1) return keyString
   else return `(${keyString})`
 }
 
