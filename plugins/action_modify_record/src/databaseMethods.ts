@@ -118,7 +118,8 @@ const databaseMethods = (DBConnect: any) => {
 const getKeys = (record: { [key: string]: { value: any } }, update = false) => {
   const keys = Object.keys(record)
   const keyString = keys.map((key) => `"${key}"`).join(',')
-  if (update) return ''
+  // UPDATE with only one field can't have brackets around key
+  if (update) return keys.length === 1 ? keyString : `(${keyString})`
   else return `(${keyString})`
 }
 
