@@ -20,7 +20,7 @@ CREATE TABLE public.application (
     TRIGGER public.trigger
 );
 
---FUNCTION to update `is_active` to false
+--FUNCTION to update `is_active` to false and application status to "COMPLETED"
 CREATE OR REPLACE FUNCTION public.outcome_changed ()
     RETURNS TRIGGER
     AS $application_event$
@@ -31,6 +31,16 @@ BEGIN
         is_active = FALSE
     WHERE
         id = NEW.id;
+    INSERT INTO public.application_status_history (application_stage_history_id, status)
+        VALUES ((
+                SELECT
+                    id
+                FROM
+                    application_stage_history
+                WHERE
+                    application_id = NEW.id
+                    AND is_current = TRUE),
+                'COMPLETED');
     RETURN NULL;
 END;
 $application_event$

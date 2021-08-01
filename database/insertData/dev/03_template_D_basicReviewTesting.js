@@ -267,7 +267,7 @@ exports.queries = [
                 sequence: 100
                 parameterQueries:{
                   eventCode: "warn1"
-                  duration: { minute: 10 }
+                  duration: { minute: 5 }
                 }
               }
               {
@@ -276,25 +276,7 @@ exports.queries = [
                 sequence: 101
                 parameterQueries:{
                   eventCode: "exp1"
-                  duration: { minute: 15 }
-                }
-              }
-              {
-                actionCode: "scheduleAction"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 100
-                parameterQueries:{
-                  eventCode: "warn1"
                   duration: { minute: 10 }
-                }
-              }
-              {
-                actionCode: "scheduleAction"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 101
-                parameterQueries:{
-                  eventCode: "exp1"
-                  duration: { minute: 15 }
                 }
               }
               {

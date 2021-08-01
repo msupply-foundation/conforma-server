@@ -27,7 +27,7 @@ import { DateTime } from 'luxon'
 // Dev configs
 const showApplicationDataLog = false
 const showActionOutcomeLog = false
-const schedulerMode = 'test'
+const schedulerTestMode = true // Runs scheduler every 30 seconds
 
 const graphQLEndpoint = config.graphQLendpoint
 
@@ -55,7 +55,7 @@ const checkActionSchedule = new scheduler.RecurrenceRule()
 
 const hoursSchedule = config.hoursSchedule
 checkActionSchedule.hour = hoursSchedule
-if (schedulerMode === 'test') checkActionSchedule.second = [0, 30]
+if (schedulerTestMode) checkActionSchedule.second = [0, 30]
 else checkActionSchedule.minute = 0
 
 scheduler.scheduleJob(checkActionSchedule, () => {
@@ -207,9 +207,6 @@ export async function executeAction(
         payload.parameter_queries,
         evaluatorParams
       )
-
-      console.log('parametersEvaluated', parametersEvaluated)
-
       // TO-DO: Check all required parameters are present
 
       // TO-DO: If Scheduled, create a Job instead
