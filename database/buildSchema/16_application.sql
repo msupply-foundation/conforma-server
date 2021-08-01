@@ -20,7 +20,8 @@ CREATE TABLE public.application (
     TRIGGER public.trigger
 );
 
---FUNCTION to update `is_active` to false and application status to "COMPLETED"
+--FUNCTION to update `is_active` to false
+-- and application status to "COMPLETED"
 CREATE OR REPLACE FUNCTION public.outcome_changed ()
     RETURNS TRIGGER
     AS $application_event$

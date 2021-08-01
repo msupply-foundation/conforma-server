@@ -553,7 +553,7 @@ exports.queries = [
                     operator: "objectFunctions"
                     children: [
                       "functions.generateExpiry"
-                      { minute: 2 }
+                      { minute: 5 }
                     ]
                   }
                   serial: {
@@ -582,7 +582,7 @@ exports.queries = [
                 }
                 parameterQueries:{
                   eventCode: "prod_exp1"
-                  duration: { minute: 2 }
+                  duration: { minute: 5 }
                 }
               }
               {

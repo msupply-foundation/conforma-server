@@ -15,7 +15,7 @@ exports.queries = [
           name: "Test -- Renewal Process"
           namePlural: "Test -- Renewals"
           status: AVAILABLE
-          startMessage: "## No documents required, this is meant to be a fast process"
+          startMessage: "## Product renewal demonstration\\nOnly use this if your product has not yet expired. If it has expired, you'll need to reapply as a new product."
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -37,7 +37,7 @@ exports.queries = [
                         source: {
                           operator: "graphQL",
                           children: [
-                            "query GetProducts($product: String!) {products(filter: { name: { includesInsensitive: $product } }) {nodes {name, type, serial }}}",
+                            "query GetProducts($product: String!) {products(filter: { name: { includesInsensitive: $product }, expiryDate: { greaterThan: \\"now()\\" } }) {nodes {name, type, serial }}}",
                             "graphQLEndpoint",
                             [
                               "product"
@@ -52,6 +52,7 @@ exports.queries = [
                           ]
                         }
                       }
+                      helpText: "Only non-expired products will show in the search results"
                     }
                   ]
                 }
@@ -75,39 +76,84 @@ exports.queries = [
               ${coreActions}
               ${devActions}
               # ON_APPLICATION_SUBMIT:
-              # - Cancel previous expiry
               # - Update Product record (and app join)
-              # - Set new expiry?
+              # - Set new expiry
+              {
+                actionCode: "modifyRecord"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 101
+                parameterQueries: {
+                  tableName: "product"
+                  expiry_date: {
+                    operator: "objectFunctions"
+                    children: [
+                      "functions.generateExpiry"
+                      { minute: 5 }
+                    ]
+                  }
+                  matchField: "serial"
+                  matchValue: {
+                    operator: "objectProperties"
+                    children: [ "outputCumulative.product.serial" ]
+                  }
+                }
+              }
               {
                 actionCode: "scheduleAction"
                 trigger: ON_APPLICATION_SUBMIT
-                sequence: 100
+                sequence: 102
                 parameterQueries:{
-                  applicationId: {
-                    operator: "objectProperties"
-                    children: [
-                      "outputCumulative.scheduledEvent.applicationId"
-                    ]
-                  }
                   eventCode: "prod_exp1"
-                  cancel: true
+                  duration: { minute: 10 }
                 }
               }
-#              {
-#                actionCode: "modifyRecord"
-#                trigger: ON_APPLICATION_SUBMIT
-#                sequence: 101
-#                parameterQueries: {
-#                  tableName: "product"
-#                  # We don't have a way to generate this yet!
-#                  expiry_date: "31/01/2023"
-#                  matchField: "serial"
-#                  matchValue: {
-#                    operator: "objectProperties"
-#                    children: [ "outputCumulative.product.serial" ]
-#                  }
-#                }
-#              }
+              {
+                actionCode: "sendNotification"
+                trigger: ON_SCHEDULE
+                eventCode: "prod_exp1"
+                condition: {
+                  operator: "=",
+                  children: [
+                    {
+                      operator: "graphQL",
+                      children: [
+                        "query CheckExpired($id: Int!) {products(filter: {id: {equalTo: $id}, expiryDate: {lessThan: \\"now()\\"}}) {totalCount}}",
+                        "graphQLEndpoint",
+                        [
+                          "id"
+                        ],
+                        {
+                          operator: "objectProperties",
+                          children: [
+                            "outputCumulative.product.id"
+                          ]
+                        },
+                        "products.totalCount"
+                      ]
+                    },
+                    1
+                  ]
+                }
+                parameterQueries: {
+                  fromName: "Application Manager"
+                  fromEmail: "no-reply@sussol.net"
+                  email: {
+                    operator: "objectProperties"
+                    children: ["applicationData.email", ""]
+                  }
+                  subject: {
+                    operator: "stringSubstitution"
+                    children: [
+                      "Your product %1 has expired",
+                      {
+                        operator: "objectProperties"
+                        children: [ "outputCumulative.product.name", ""]
+                      }
+                    ]
+                  }
+                  message: "Your product registration has expired. If you wish to continue, you'll need to re-apply.\\n(Note: this is just a test to check the notification worked. Nothing proper has actually changed)"
+                }
+              }
             ]
           }
           templatePermissionsUsingId: {
