@@ -34,7 +34,7 @@ const databaseMethods = (DBConnect: any) => {
       const matchValuePlaceholder = `$${placeholders.length + 1}`
 
       const text = `
-      UPDATE "${tableName}" SET ${getKeys(record)}
+      UPDATE "${tableName}" SET ${getKeys(record, true)}
       = (${placeholders})
       WHERE id = ${matchValuePlaceholder}
       RETURNING *
@@ -115,10 +115,11 @@ const databaseMethods = (DBConnect: any) => {
   }
 }
 
-const getKeys = (record: { [key: string]: { value: any } }) => {
+const getKeys = (record: { [key: string]: { value: any } }, update = false) => {
   const keys = Object.keys(record)
   const keyString = keys.map((key) => `"${key}"`).join(',')
-  return `(${keyString})`
+  if (update) return ''
+  else return `(${keyString})`
 }
 
 export type DatabaseMethodsType = ReturnType<typeof databaseMethods>
