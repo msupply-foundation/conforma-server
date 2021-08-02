@@ -35,3 +35,8 @@ ORDER BY
     columns_info.table_name,
     columns_info.column_name;
 
+CREATE VIEW postgres_row_level AS
+SELECT
+    *
+FROM
+    pg_policies

@@ -13,7 +13,7 @@ import {
 
 const insertFromObject = async (
   records: ObjectRecords,
-  { includeTables, excludeTables }: ExportAndImportOptions,
+  { includeTables, excludeTables, tablesToUpdateOnInsertFail = [] }: ExportAndImportOptions,
   preserveIds: boolean = false
 ) => {
   const databaseTables = (await getDatabaseInfo()).filter(({ isView }) => !isView)
@@ -27,14 +27,19 @@ const insertFromObject = async (
     if (!recordsForTable || recordsForTable.length === 0) continue
 
     for (let record of recordsForTable) {
-      const { gql, getter, variables } = constructInsertAndGetter(
-        record,
-        table,
-        insertedRecords,
-        preserveIds
-      )
-      const result = await databaseConnect.gqlQuery(gql, variables)
-      const row = getter(result)
+      const { insertQuery, updateQuery, insertGetter, updateGetter, variables } =
+        constructInsertAndGetter(record, table, insertedRecords, preserveIds)
+      let result = {}
+      let row = {}
+      try {
+        result = await databaseConnect.gqlQuery(insertQuery, variables)
+        row = insertGetter(result)
+      } catch (e) {
+        if (!tablesToUpdateOnInsertFail.includes(tableName)) throw e
+        result = await databaseConnect.gqlQuery(updateQuery, variables)
+        row = updateGetter(result)
+      }
+
       if (!insertedRecords[tableName]) insertedRecords[tableName] = []
       insertedRecords[tableName].push({ old: record, new: row })
     }
@@ -59,7 +64,8 @@ const constructInsertAndGetter = (
     insertableValues[columnName] = values[columnName]
   })
 
-  const mutationName = camelCase(`create ${tableName}`)
+  const insertMutationName = camelCase(`create ${tableName}`)
+  const updateMutationName = camelCase(`update ${tableName}`)
   const { keyValues, variables, variableDeclarations } = getInsertKeyValues(
     insertableValues,
     columns
@@ -67,8 +73,8 @@ const constructInsertAndGetter = (
 
   const resultQuery = `${tableName} { ${columns.map(({ columnName }) => columnName).join(' ')} }`
 
-  const gql = `mutation ${mutationName} ${variableDeclarations} {
-        ${mutationName} (
+  const insertQuery = `mutation ${insertMutationName} ${variableDeclarations} {
+        ${insertMutationName} (
             input: {
                 ${tableName}: {
                     ${keyValues}
@@ -77,8 +83,20 @@ const constructInsertAndGetter = (
         ) { ${resultQuery} }
     }`
 
-  const getter = (gqlResult: any) => gqlResult[mutationName][tableName]
-  return { gql, getter, variables }
+  const updateQuery = `mutation ${updateMutationName} ${variableDeclarations} {
+      ${updateMutationName} (
+          input: {
+              patch: {
+                  ${keyValues}
+              },
+              id: ${record.id}
+          }
+      ) { ${resultQuery} }
+  }`
+
+  const insertGetter = (gqlResult: any) => gqlResult[insertMutationName][tableName]
+  const updateGetter = (gqlResult: any) => gqlResult[updateMutationName][tableName]
+  return { insertQuery, updateQuery, insertGetter, updateGetter, variables }
 }
 
 const getForeignKeyReplacements = (

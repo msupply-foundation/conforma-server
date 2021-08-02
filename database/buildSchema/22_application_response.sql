@@ -41,3 +41,29 @@ CREATE TRIGGER application_response_timestamp_trigger
     FOR EACH ROW
     EXECUTE FUNCTION public.update_response_timestamp ();
 
+CREATE OR REPLACE FUNCTION delete_whole_application (application_id int)
+    RETURNS boolean
+    AS $$
+BEGIN
+    DELETE FROM application_status_history
+    WHERE application_stage_history_id IN (
+            SELECT
+                id
+            FROM
+                application_stage_history
+            WHERE
+                application_stage_history.application_id = $1);
+    DELETE FROM application_stage_history
+    WHERE application_stage_history.application_id = $1;
+    DELETE FROM application_response
+    WHERE application_response.application_id = $1;
+    DELETE FROM application_section
+    WHERE application_section.application_id = $1;
+    DELETE FROM "application"
+    WHERE "application".id = $1;
+    RETURN TRUE;
+END;
+$$
+LANGUAGE plpgsql
+VOLATILE;
+
