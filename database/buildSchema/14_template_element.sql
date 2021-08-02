@@ -57,3 +57,16 @@ CREATE TABLE public.template_element (
     UNIQUE (template_code, code, template_version)
 );
 
+CREATE FUNCTION public.template_element_parameters_string (template_element public.template_element)
+    RETURNS text
+    AS $$
+    SELECT
+        parameters::text
+    FROM
+        public.template_element
+    WHERE
+        id = $1.id
+$$
+LANGUAGE sql
+STABLE;
+
