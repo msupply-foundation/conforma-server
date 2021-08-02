@@ -58,6 +58,8 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
     LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
     LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+WHERE
+    app.is_config = FALSE
 $$
 LANGUAGE sql
 STABLE;

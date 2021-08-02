@@ -130,6 +130,8 @@ class DBConnect {
 
   public getDatabaseInfo = PostgresDB.getDatabaseInfo
 
+  public getPermissionPolicies = PostgresDB.getPermissionPolicies
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery

@@ -34,14 +34,14 @@ const useSnapshot: SnapshotOperation = async ({
     })
     const snapshotObject = JSON.parse(snapshotRaw)
 
-    if (options.shouldReInitilise) {
+    if (options.shouldReInitialise) {
       await initiliseDatabase(options, snapshotFolder)
     }
 
     copyFiles(snapshotFolder, options)
 
     console.log('inserting from snapshot ... ')
-    await importFromJson(snapshotObject, options, options.shouldReInitilise)
+    await importFromJson(snapshotObject, options, options.shouldReInitialise)
     console.log('inserting from snapshot ... done')
 
     // Update serials
@@ -59,7 +59,7 @@ const useSnapshot: SnapshotOperation = async ({
       console.log('running post data insert ... done')
     }
 
-    if (options.shouldReInitilise) {
+    if (options.shouldReInitialise) {
       console.log('enable row level policies ... ')
       execSync('./database/turn_on_row_level_security.sh', { cwd: ROOT_FOLDER })
       console.log('enable row level policies ... done')

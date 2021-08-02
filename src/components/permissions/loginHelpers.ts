@@ -63,6 +63,8 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const returnSessionId = sessionId ?? nanoid(16)
 
+  const isAdmin = !!templatePermissionRows.find((row) => !!row?.isAdmin)
+
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getSignedJWT({
@@ -81,6 +83,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       organisation: selectedOrg?.[0],
       sessionId: returnSessionId,
     },
+    isAdmin,
     orgList,
   }
 }

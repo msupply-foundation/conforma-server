@@ -2,6 +2,23 @@
 Basic permissionNames, and associate with policies 
 */
 exports.queries = [
+  // admin user
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "admin"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "admin" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
   // applyUserRegistration
   `mutation createPermissionName {
     createPermissionName(
