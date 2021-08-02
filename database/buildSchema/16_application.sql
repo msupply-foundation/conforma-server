@@ -17,6 +17,7 @@ CREATE TABLE public.application (
     name varchar,
     outcome public.application_outcome,
     is_active bool,
+    is_config bool DEFAULT FALSE,
     TRIGGER public.trigger
 );
 

@@ -25,6 +25,7 @@ CREATE VIEW permissions_all AS (
         template_permission.restrictions AS "restrictions",
         permission_policy.name AS "policyName",
         permission_policy.type AS "permissionType",
+        permission_policy.is_admin AS "isAdmin",
         permission_policy.id AS "permissionPolicyId",
         permission_policy.rules AS "permissionPolicyRules",
         permission_name.id AS "permissionNameId",
