@@ -1556,7 +1556,9 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
 export enum ApplicationOutcome {
   Pending = 'PENDING',
   Approved = 'APPROVED',
-  Rejected = 'REJECTED'
+  Rejected = 'REJECTED',
+  Expired = 'EXPIRED',
+  Withdrawn = 'WITHDRAWN'
 }
 
 /** A filter to be used against ApplicationOutcome fields. All fields are combined with a logical ‘and.’ */
@@ -3211,12 +3213,10 @@ export enum ApplicationStageStatusLatestsOrderBy {
 
 export enum ApplicationStatus {
   Draft = 'DRAFT',
-  Withdrawn = 'WITHDRAWN',
   Submitted = 'SUBMITTED',
   ChangesRequired = 'CHANGES_REQUIRED',
   ReSubmitted = 'RE_SUBMITTED',
-  Completed = 'COMPLETED',
-  Expired = 'EXPIRED'
+  Completed = 'COMPLETED'
 }
 
 /** A filter to be used against ApplicationStatus fields. All fields are combined with a logical ‘and.’ */

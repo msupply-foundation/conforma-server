@@ -1,12 +1,10 @@
 -- application status history
 CREATE TYPE public.application_status AS ENUM (
   'DRAFT',
-  'WITHDRAWN',
   'SUBMITTED',
   'CHANGES_REQUIRED',
   'RE_SUBMITTED',
-  'COMPLETED',
-  'EXPIRED'
+  'COMPLETED'
 );
 
 CREATE TABLE public.application_status_history (
