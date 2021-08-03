@@ -166,6 +166,64 @@ exports.queries = [
       },
     },
   },
+    // reviewAdvanced - can see others reviews
+    {
+      query: `mutation createPolicy($rules: JSON) {
+        createPermissionPolicy(
+          input: {
+            permissionPolicy: {
+              name: "reviewAdvanced"
+              rules: $rules
+              type: REVIEW
+            }
+          }
+        ) {
+          permissionPolicy {
+            name
+          }
+        }
+      }`,
+      variables: {
+        rules: {
+          application: {
+            view: {
+              template_id: 'jwtPermission_array_bigint_template_ids',
+              id: {
+                $in: {
+                  $select: {
+                    application_id: true,
+                    $from: 'review_assignment',
+                    $where: {
+                      reviewer_id: 'jwtUserDetails_bigint_userId',
+                    },
+                  },
+                },
+              },
+            },
+          },
+          review: {
+            view: {
+              application_id: {
+                $in: {
+                  $select: {
+                    application_id: true,
+                    $from: 'review_assignment',
+                    $where: {
+                      reviewer_id: 'jwtUserDetails_bigint_userId',
+                    },
+                  },
+                },
+              },
+            },
+          },
+          review_assignment: {
+            view: {
+              template_id: 'jwtPermission_array_bigint_template_ids',
+            },
+          },
+        },
+      },
+    },
   // assignBasic
   {
     query: `mutation createPolicy($rules: JSON) {

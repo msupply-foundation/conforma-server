@@ -255,7 +255,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "reviewReviewTestApproval", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "reviewBasic" }
+            connectByName: { name: "reviewAdvanced" }
           }
         }
       }

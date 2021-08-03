@@ -3,6 +3,7 @@ import {
   ActionQueueStatus,
   ApplicationOutcome,
   ApplicationStatus,
+  Review,
   Trigger,
   TriggerQueueStatus,
 } from './generated/graphql'
@@ -94,15 +95,8 @@ export interface ActionApplicationData {
   responses: {
     [key: string]: any
   }
-  reviewData: {
-    reviewId?: number
-    levelNumber?: number
-    isLastLevel?: boolean
-    status?: string
-    latestDecision?: {
-      decision: string
-      comment: string | null
-    }
+  reviewData: Review & {
+    reviewId: number
   }
   environmentData: {
     appRootFolder: string
