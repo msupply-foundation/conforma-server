@@ -35,6 +35,11 @@ exports.queries = [
                   connectByName: { name: "reviewJoinOrg" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
+              }
             ]
           }
         }
@@ -76,6 +81,11 @@ exports.queries = [
                   connectByName: { name: "reviewJoinOrg" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
+              }
             ]
           }
         }
@@ -110,6 +120,11 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyOrgRego" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
@@ -148,6 +163,11 @@ exports.queries = [
                   connectByName: { name: "applyOrgRego" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
+              }
             ]
           }
         }
@@ -177,6 +197,11 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyOrgRego" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
@@ -210,6 +235,11 @@ exports.queries = [
                   connectByName: { name: "reviewReviewTestAssessmentLvl1Section1" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
+              }
             ]
           }
         }
@@ -239,6 +269,11 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "reviewReviewTestAssessmentLvl1Section2" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
@@ -272,6 +307,11 @@ exports.queries = [
                   connectByName: { name: "reviewReviewTestAssessmentLvl2" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
+              }
             ]
           }
         }
@@ -296,6 +336,11 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "reviewReviewTestAssessmentLvl2" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
@@ -331,6 +376,11 @@ exports.queries = [
                   connectByName: { name: "canAssignDrugRego" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
+              }
             ]
           }
         }
@@ -356,6 +406,11 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "assignGeneral" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
@@ -390,6 +445,11 @@ exports.queries = [
                   connectByName: { name: "canScreenDrugRego" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
+              }
             ]
           }
         }
@@ -420,6 +480,11 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "canScreenDrugRego" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
@@ -454,6 +519,11 @@ exports.queries = [
                   connectByName: { name: "canAssessDrugRego" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
+              }
             ]
           }
         }
@@ -486,6 +556,11 @@ exports.queries = [
                   connectByName: { name: "canAssessDrugRego" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
+              }
             ]
           }
         }
@@ -512,6 +587,11 @@ exports.queries = [
                   connectByName: { name: "reviewReviewTestApproval" }
                 }
               }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
+                }
+              }
             ]
           }
         }
@@ -535,6 +615,11 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "reviewReviewTestApproval" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
@@ -577,6 +662,11 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "admin" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
