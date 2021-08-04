@@ -12602,6 +12602,7 @@ export type PermissionJoin = Node & {
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   /** Reads a single `User` that is related to this `PermissionJoin`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `PermissionJoin`. */
@@ -12623,6 +12624,8 @@ export type PermissionJoinCondition = {
   organisationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `permissionNameId` field. */
   permissionNameId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `isActive` field. */
+  isActive?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -12635,6 +12638,8 @@ export type PermissionJoinFilter = {
   organisationId?: Maybe<IntFilter>;
   /** Filter by the object’s `permissionNameId` field. */
   permissionNameId?: Maybe<IntFilter>;
+  /** Filter by the object’s `isActive` field. */
+  isActive?: Maybe<BooleanFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -12661,6 +12666,7 @@ export type PermissionJoinInput = {
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -12792,6 +12798,7 @@ export type PermissionJoinOrganisationIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -12803,6 +12810,7 @@ export type PermissionJoinPatch = {
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -12867,6 +12875,7 @@ export type PermissionJoinPermissionNameIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -12915,6 +12924,8 @@ export enum PermissionJoinsOrderBy {
   OrganisationIdDesc = 'ORGANISATION_ID_DESC',
   PermissionNameIdAsc = 'PERMISSION_NAME_ID_ASC',
   PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
+  IsActiveAsc = 'IS_ACTIVE_ASC',
+  IsActiveDesc = 'IS_ACTIVE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -12968,6 +12979,7 @@ export type PermissionJoinUserIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -25833,6 +25845,7 @@ export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdF
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -25843,6 +25856,7 @@ export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameI
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -25853,6 +25867,7 @@ export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyPatch
   id?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
+  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -35452,6 +35467,7 @@ export type PermissionJoinResolvers<ContextType = any, ParentType extends Resolv
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   organisationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;

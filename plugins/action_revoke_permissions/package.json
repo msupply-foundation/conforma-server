@@ -1,0 +1,13 @@
+{
+  "name": "action_revoke_permissions",
+  "version": "0.1",
+  "description": "Revokes existing permission(s) from user/org -- only sets existing permissions to inactive, doesn't actually delete records",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}

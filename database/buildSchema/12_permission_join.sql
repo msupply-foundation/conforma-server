@@ -3,7 +3,8 @@ CREATE TABLE public.permission_join (
     id serial PRIMARY KEY,
     user_id integer REFERENCES public.user (id),
     organisation_id integer REFERENCES public.organisation (id),
-    permission_name_id integer REFERENCES public.permission_name (id)
+    permission_name_id integer REFERENCES public.permission_name (id),
+    is_active boolean DEFAULT TRUE
 );
 
 -- This enforces a UNIQUE requirement for user_id, org_id, and permission_name_id,
