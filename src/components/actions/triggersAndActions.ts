@@ -7,7 +7,9 @@ import {
   ActionQueueExecutePayload,
 } from '../../types'
 import evaluateExpression from '@openmsupply/expression-evaluator'
+import functions from './evaluatorFunctions'
 import DBConnect from '../databaseConnect'
+import fetch from 'node-fetch'
 import { actionLibrary } from '../pluginsConnect'
 import {
   BasicObject,
@@ -18,9 +20,16 @@ import { getApplicationData } from './getApplicationData'
 import { getAppEntryPointDir } from '../utilityFunctions'
 import path from 'path'
 import { ActionQueueStatus, TriggerQueueStatus } from '../../generated/graphql'
+import scheduler from 'node-schedule'
+import config from '../../config'
+import { DateTime } from 'luxon'
 
-const schedule = require('node-schedule')
+// Dev configs
 const showApplicationDataLog = false
+const showActionOutcomeLog = false
+const schedulerTestMode = true // Runs scheduler every 30 seconds
+
+const graphQLEndpoint = config.graphQLendpoint
 
 // Load actions from Database at server startup
 export const loadActions = async function (actionLibrary: ActionLibrary) {
@@ -41,67 +50,38 @@ export const loadActions = async function (actionLibrary: ActionLibrary) {
   }
 }
 
-// Load scheduled jobs from Database at server startup
-export const loadScheduledActions = async function (
-  actionLibrary: ActionLibrary,
-  actionSchedule: any[]
-) {
-  console.log('Loading Scheduled jobs...')
+// Instantiate node-scheduler to run scheduled actions periodically
+const checkActionSchedule = new scheduler.RecurrenceRule()
 
-  // Load from Database
-  const actions = await DBConnect.getActionsScheduled()
+const hoursSchedule = config.hoursSchedule
+checkActionSchedule.hour = hoursSchedule
+if (schedulerTestMode) checkActionSchedule.second = [0, 30]
+else checkActionSchedule.minute = 0
 
-  let isExecutedAction = true
-  // TO-DO: Implement Scheduled Actions properly -- this code is probably no longer working
-  for await (const scheduledAction of actions)
-    while (isExecutedAction) {
-      const date = new Date(scheduledAction.time_completed)
-      if (date > new Date(Date.now())) {
-        const job = schedule.scheduleJob(date, function () {
-          // TODO: Check if was executed otherwise don't continue
-          executeAction(
-            {
-              id: scheduledAction.id,
-              code: scheduledAction.action_code,
-              condition_expression: scheduledAction.condition_expression as EvaluatorNode,
-              parameter_queries: scheduledAction.parameter_queries,
-            },
-            actionLibrary
-          )
-        })
-        actionSchedule.push(job)
-      } else {
-        // Overdue jobs to be executed immediately
-        console.log(
-          'Executing overdue action:',
-          scheduledAction.action_code,
-          scheduledAction.parameters_evaluated
-        )
-        // TODO: Evaluate parameters at runtime
-        executeAction(
-          {
-            id: scheduledAction.id,
-            code: scheduledAction.action_code,
-            condition_expression: scheduledAction.condition_expression as EvaluatorNode,
-            parameter_queries: scheduledAction.parameter_queries,
-          },
-          actionLibrary
-        )
-      }
-    }
+scheduler.scheduleJob(checkActionSchedule, () => {
+  triggerScheduledActions()
+})
 
-  actionSchedule.length > 0
-    ? console.log(`${actionSchedule.length} scheduled jobs loaded.`)
-    : console.log('There were no jobs to be loaded.')
+export const triggerScheduledActions = async () => {
+  console.log(
+    DateTime.now().toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS),
+    'Checking scheduled actions...'
+  )
+  DBConnect.triggerScheduledActions()
 }
 
 export async function processTrigger(payload: TriggerPayload) {
-  const { trigger_id, trigger, table, record_id } = payload
+  const { trigger_id, trigger, table, record_id, data, event_code } = payload
 
   const templateId = await DBConnect.getTemplateIdFromTrigger(payload.table, payload.record_id)
 
-  // Get Actions from matching Template
-  const actions = await DBConnect.getActionsByTemplateId(templateId, trigger)
+  // Get Actions from matching Template (and match templateActionCode if applicable)
+  const actions = await (
+    await DBConnect.getActionsByTemplateId(templateId, trigger)
+  ).filter((action) => {
+    if (!event_code) return true
+    else return action.event_code === event_code
+  })
 
   // Separate into Sequential and Async actions
   const actionsSequential: ActionSequential[] = []
@@ -136,7 +116,9 @@ export async function processTrigger(payload: TriggerPayload) {
   // Get sequential Actions from database
   const actionsToExecute = await DBConnect.getActionsProcessing(templateId)
 
-  let outputCumulative = {} // Collect output properties of actions in sequence
+  // Collect output properties of actions in sequence
+  // "data" is stored output from scheduled triggers or verifications
+  let outputCumulative = { ...data }
 
   // Execute sequential Actions one by one
   let actionFailed = ''
@@ -163,8 +145,8 @@ export async function processTrigger(payload: TriggerPayload) {
         outputCumulative,
       })
       outputCumulative = { ...outputCumulative, ...result.output }
-      // Enable next line to inspect outputCumulative:
-      // console.log('outputCumulative: ', outputCumulative)
+      // Debug helper console.log to inspect action outputs:
+      if (showActionOutcomeLog) console.log('outputCumulative:', outputCumulative)
       if (result.status === ActionQueueStatus.Fail) console.log(result.error_log)
     } catch (err) {
       actionFailed = action.action_code
@@ -172,6 +154,9 @@ export async function processTrigger(payload: TriggerPayload) {
   }
   // After all done, set Trigger on table back to NULL (or Error)
   DBConnect.resetTrigger(table, record_id, actionFailed !== '')
+  // and set is_active = false if scheduled action
+  if (table === 'trigger_schedule' && actionFailed === '')
+    DBConnect.setScheduledActionDone(table, record_id)
 }
 
 async function evaluateParameters(
@@ -204,8 +189,10 @@ export async function executeAction(
   if (showApplicationDataLog) console.log('ApplicationData: ', applicationData)
 
   const evaluatorParams = {
-    objects: { applicationData, ...additionalObjects },
-    pgConnection: DBConnect, // Add graphQLConnection, Fetch (API) here when required
+    objects: { applicationData, functions, ...additionalObjects },
+    pgConnection: DBConnect,
+    APIfetch: fetch,
+    graphQLConnection: { fetch, endpoint: graphQLEndpoint },
   }
 
   // Evaluate condition
@@ -220,7 +207,6 @@ export async function executeAction(
         payload.parameter_queries,
         evaluatorParams
       )
-
       // TO-DO: Check all required parameters are present
 
       // TO-DO: If Scheduled, create a Job instead
@@ -230,8 +216,6 @@ export async function executeAction(
         outputCumulative: evaluatorParams.objects?.outputCumulative || {},
         DBConnect,
       })
-      // Enable next line to inspect output
-      // console.log('Output', actionResult.output)
 
       return await DBConnect.executedActionStatusUpdate({
         status: actionResult.status,
