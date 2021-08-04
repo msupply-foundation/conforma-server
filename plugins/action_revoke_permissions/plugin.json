@@ -1,0 +1,24 @@
+{
+  "type": "action_revoke_permissions",
+  "code": "revokePermissions",
+  "name": "Revoke Permissions",
+  "description": "Revokes existing permission(s) from user/org -- only sets existing permissions to inactive, doesn't actually delete records",
+  "required_parameters": ["username", "permissionNames"],
+  "optional_parameters": ["orgName", "orgId"],
+  "output_properties": ["permissionJoinIds", "permissionNames"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-08-04"
+  }
+}

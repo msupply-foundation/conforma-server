@@ -1,8 +1,10 @@
 import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
 
-const grantPermissions = async ({ parameters, DBConnect }: ActionPluginInput) => {
-  const { username, orgName, orgId, permissionNames } = parameters
+const grantPermissions = async ({ applicationData, parameters, DBConnect }: ActionPluginInput) => {
+  // Don't specify orgName/Id default because we might be wanting to add a
+  // permission without org restriction on it
+  const { username = applicationData?.username, orgName, orgId, permissionNames } = parameters
   try {
     console.log('\nGranting permissions:')
     console.log({ username, orgName, orgId, permissionNames })
@@ -30,7 +32,7 @@ const grantPermissions = async ({ parameters, DBConnect }: ActionPluginInput) =>
     console.log(error)
     return {
       status: ActionQueueStatus.Fail,
-      error_log: 'There was a problem in grantPermissions Plugin',
+      error_log: error.message,
     }
   }
 }

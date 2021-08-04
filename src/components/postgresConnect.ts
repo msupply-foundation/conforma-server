@@ -711,7 +711,7 @@ class PostgresDB {
     ON CONFLICT (user_id, permission_name_id)
       WHERE organisation_id IS NULL
     DO
-    		UPDATE SET user_id = (select id from "user" where username = $1)
+    		UPDATE SET (user_id, is_active) = ((select id from "user" where username = $1), true)
     returning id
     `
     try {
@@ -737,7 +737,7 @@ class PostgresDB {
     ON CONFLICT (user_id, organisation_id, permission_name_id)
       WHERE organisation_id IS NOT NULL
     DO
-    		UPDATE SET user_id = (select id from "user" where username = $1)
+    		UPDATE SET (user_id, is_active) = ((select id from "user" where username = $1), true)
     RETURNING id
     `
     try {
