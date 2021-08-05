@@ -12,8 +12,8 @@ CREATE TYPE public.trigger AS ENUM (
     'ON_REVIEW_SELF_ASSIGN',
     'ON_APPROVAL_SUBMIT',
     'ON_VERIFICATION',
+    'ON_SCHEDULE',
     'DEV_TEST',
-    'ON_SCHEDULE_TIME',
     'PROCESSING',
     'ERROR'
 );
@@ -29,6 +29,8 @@ CREATE TABLE public.trigger_queue (
     trigger_type public.trigger,
     "table" varchar,
     record_id int,
+    event_code varchar,
+    data jsonb,
     timestamp timestamptz,
     status public.trigger_queue_status,
     log jsonb
@@ -39,10 +41,18 @@ CREATE OR REPLACE FUNCTION public.add_event_to_trigger_queue ()
     RETURNS TRIGGER
     AS $trigger_queue$
 BEGIN
-    INSERT INTO trigger_queue (trigger_type, "table", record_id, timestamp, status)
-        VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, CURRENT_TIMESTAMP, 'TRIGGERED');
-    EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
-    RETURN NULL;
+    --
+    IF TG_TABLE_NAME = 'trigger_schedule' OR TG_TABLE_NAME = 'verification' THEN
+        INSERT INTO trigger_queue (trigger_type, "table", record_id, event_code, data, timestamp, status)
+            VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, NEW.event_code, NEW.data, CURRENT_TIMESTAMP, 'TRIGGERED');
+        EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
+        RETURN NULL;
+    ELSE
+        INSERT INTO trigger_queue (trigger_type, "table", record_id, timestamp, status)
+            VALUES (NEW.trigger::public.trigger, TG_TABLE_NAME, NEW.id, CURRENT_TIMESTAMP, 'TRIGGERED');
+        EXECUTE format('UPDATE %s SET trigger = %L WHERE id = %s', TG_TABLE_NAME, 'PROCESSING', NEW.id);
+        RETURN NULL;
+    END IF;
 END;
 $trigger_queue$
 LANGUAGE plpgsql;
@@ -53,7 +63,7 @@ CREATE OR REPLACE FUNCTION public.notify_trigger_queue ()
     AS $trigger_event$
 BEGIN
     PERFORM
-        pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id)::text);
+        pg_notify('trigger_notifications', json_build_object('trigger_id', NEW.id, 'trigger', NEW.trigger_type, 'table', NEW.table, 'record_id', NEW.record_id, 'event_code', NEW.event_code, 'data', NEW.data)::text);
     RETURN NULL;
 END;
 $trigger_event$

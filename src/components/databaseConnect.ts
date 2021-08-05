@@ -22,13 +22,15 @@ class DBConnect {
 
   public executedActionStatusUpdate = PostgresDB.executedActionStatusUpdate
 
-  public getActionsScheduled = PostgresDB.getActionsScheduled
-
   public getActionsProcessing = PostgresDB.getActionsProcessing
 
   public updateActionParametersEvaluated = PostgresDB.updateActionParametersEvaluated
 
+  public triggerScheduledActions = PostgresDB.triggerScheduledActions
+
   public resetTrigger = PostgresDB.resetTrigger
+
+  public setScheduledActionDone = PostgresDB.setScheduledActionDone
 
   public addFile = PostgresDB.addFile
 
@@ -70,6 +72,7 @@ class DBConnect {
       case 'review':
       case 'review_assignment':
       case 'verification':
+      case 'trigger_schedule':
         templateId = await PostgresDB.getTemplateIdFromTrigger(tableName, record_id)
         break
       // TO-DO: Implement these queries once we have more data in database

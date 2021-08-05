@@ -290,7 +290,7 @@ exports.coreActions = `
     }
     #
     # Change outcome of application to APPROVED/REJECT acording with
-    # last level & last stage reviewr decision is CONFORM/NON_CONFORM
+    # last level & last stage reviewer decision is CONFORM/NON_CONFORM
     #
     {
       actionCode: "changeOutcome"
