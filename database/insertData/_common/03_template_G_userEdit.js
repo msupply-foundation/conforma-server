@@ -394,7 +394,7 @@ exports.queries = [
               # Apply User Edit
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
+                  connectByName: { name: "applyGeneral" }
                 }
               }
             ]
