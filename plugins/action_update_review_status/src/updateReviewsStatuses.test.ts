@@ -195,133 +195,34 @@ describe('Update review_responses after updating changes_requested to reviewer1'
   })
 })
 
-describe('Update review_responses for second review submission by reviewer2 when consolidation already in progress', () => {
-  // Setup database
-  beforeAll(async (done) => {
-    await DBConnect.query({
-      text: `
-  INSERT INTO public.review_status_history (id, review_id, status)
-  VALUES (DEFAULT, 6005, 'DRAFT');
-  UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 56;
-  UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 57;
-  UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 58;
-  UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 59;
-  UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 60;
-  INSERT INTO public.review_decision (id, decision, review_id)
-    VALUES (DEFAULT, 'CONFORM', 6004);
-  INSERT INTO public.review_status_history (id, review_id, status)
-    VALUES (DEFAULT, 6004, 'SUBMITTED');
-  `,
-      values: [],
-    })
-
-    done()
-  })
-
-  test('Second review is resubmitted to upper level => Update upper review status to PENDING', () => {
-    return updateReviewsStatuses({
-      parameters: {
-        triggeredBy: 'REVIEW',
-        changedResponses: [
-          { applicationResponseId: 4025, templateElementId: 4008 },
-          { applicationResponseId: 4026, templateElementId: 4009 },
-          { applicationResponseId: 4027, templateElementId: 4010 },
-          { applicationResponseId: 4028, templateElementId: 4011 },
-          { applicationResponseId: 4029, templateElementId: 4012 },
-        ],
-      },
-      // @ts-ignore -- ignore missing properties on applicationData
-      applicationData: {
-        applicationId: 4002,
-        stageId: 6,
-        reviewData: {
-          reviewId: 6004,
-          levelNumber: 1,
-          isLastLevel: false,
-        },
-      },
-      DBConnect,
-    }).then((result: any) => {
-      expect(result).toEqual({
-        status: ActionQueueStatus.Success,
-        error_log: '',
-        output: {
-          updatedReviews: [
-            {
-              reviewId: 6005,
-              reviewAssignmentId: 1010,
-              applicationId: 4002,
-              reviewerId: 10,
-              levelNumber: 2,
-              reviewStatus: ReviewStatus.Pending,
-            },
-          ],
-          updatedReviewAssignments: [],
-        },
-      })
-    })
-  })
-})
-
 describe('Update review_response to submit review with LOQ to applicant by consolidator2', () => {
   // Setup database
   beforeAll(async (done) => {
     await DBConnect.query({
       text: `
-      UPDATE public.review_response SET is_visible_to_applicant = true WHERE id = 5004;
-      UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5020;
-      UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5021;
-      UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5022;
-      UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5023;
-      UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5024;
-      INSERT INTO public.review_decision (id, decision, review_id)
-        VALUES (DEFAULT, 'LIST_OF_QUESTIONS', 7004);
+      UPDATE public.review_response SET is_visible_to_applicant = 'True' WHERE id = 4000;
+      UPDATE public.review_response SET (status, decision) = ('SUBMITTED', 'AGREE') WHERE id = 5029;
+      UPDATE public.review_decision SET decision = 'LIST_OF_QUESTIONS' WHERE review_id = 6005;
       INSERT INTO public.review_status_history (id, review_id, status)
-        VALUES (DEFAULT, 7004, 'SUBMITTED');
+        VALUES (DEFAULT, 6005, 'SUBMITTED');
       `,
       values: [],
     })
     done()
   })
 
-  test('Consolidation submitted to applicant with List of questions => Lock other lower review assignments', () => {
+  test('Consolidation submitted Application ID#4002 to applicant with LOQ => Lock other lower review assignments', () => {
     return updateReviewsStatuses({
       parameters: {
         triggeredBy: 'REVIEW',
-        changedResponses: [
-          {
-            applicationResponseId: 4150,
-            templateElementId: 4001,
-            reviewResponseDecision: 'APPROVED',
-          },
-          {
-            applicationResponseId: 4151,
-            templateElementId: 4002,
-            reviewResponseDecision: 'APPROVED',
-          },
-          {
-            applicationResponseId: 4152,
-            templateElementId: 4003,
-            reviewResponseDecision: 'APPROVED',
-          },
-          {
-            applicationResponseId: 4153,
-            templateElementId: 4004,
-            reviewResponseDecision: 'APPROVED',
-          },
-          {
-            applicationResponseId: 4154,
-            templateElementId: 4005,
-            reviewResponseDecision: 'DECLINED',
-          },
-        ],
+        changedResponses: [],
       },
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
-        applicationId: 4003,
+        applicationId: 4002,
         stageId: 6,
         reviewData: {
-          reviewId: 7004,
+          reviewId: 6005,
           levelNumber: 2,
           isLastLevel: true,
           latestDecision: { decision: Decision.ListOfQuestions, comment: null },
@@ -336,7 +237,7 @@ describe('Update review_response to submit review with LOQ to applicant by conso
           updatedReviews: [],
           updatedReviewAssignments: [
             {
-              reviewAssignmentId: 1032,
+              reviewAssignmentId: 1008,
               isLocked: true,
             },
           ],
