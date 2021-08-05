@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #copy folder with snapshot_basic for inital Application manager setup
-cp -rf ./database/snapshot_basic ./database/_templates
+cp -rf ./database/snapshot_basic ./database/_snapshots
 
 #update submodule with existing templates
 echo -e "\nUpdating snapshots folder with lastest application-manager-templates main"
