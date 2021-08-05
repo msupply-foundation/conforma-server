@@ -4,6 +4,6 @@
 	url = https://github.com/openmsupply/application-manager-server.wiki.git
 	branch = master
 
-[submodule "_snapshots"]
-	path = _snapshots
+[submodule "database/_snapshots"]
+	path = database/_snapshots
 	url = https://github.com/openmsupply/application-manager-templates.git
