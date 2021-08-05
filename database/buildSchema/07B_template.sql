@@ -38,6 +38,7 @@ BEGIN
                 TEMPLATE
             WHERE
                 code = NEW.code);
+        NEW.version_timestamp = CURRENT_TIMESTAMP;
     END IF;
     RETURN NEW;
 END
@@ -63,9 +64,9 @@ END
 $template_event$
 LANGUAGE plpgsql;
 
---TRIGGER to generate new version of template on insertion
+--TRIGGER to generate new version of template on insertion or update
 CREATE TRIGGER set_template_version_trigger
-    BEFORE INSERT ON public.template
+    BEFORE INSERT OR UPDATE ON public.template
     FOR EACH ROW
     EXECUTE FUNCTION public.set_template_verision ();
 

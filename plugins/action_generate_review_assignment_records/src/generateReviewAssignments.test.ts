@@ -61,14 +61,14 @@ describe('Submit new application on first stage to generate reviewAssignments on
       parameters: { applicationId: 1000 },
       DBConnect,
     }).then((result: any) => {
-      expect(result).toEqual({
+      expect(clearResult(result)).toEqual({
         status: ActionQueueStatus.Success,
         error_log: '',
         output: {
           reviewAssignments: [
             {
               reviewerId: 2,
-              orgId: null,
+              organisationId: null,
               stageId: 5,
               stageNumber: 1,
               status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -81,7 +81,7 @@ describe('Submit new application on first stage to generate reviewAssignments on
             },
             {
               reviewerId: 3,
-              orgId: null,
+              organisationId: null,
               stageId: 5,
               stageNumber: 1,
               status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -94,7 +94,7 @@ describe('Submit new application on first stage to generate reviewAssignments on
             },
             {
               reviewerId: 4,
-              orgId: null,
+              organisationId: null,
               stageId: 5,
               stageNumber: 1,
               status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -107,7 +107,7 @@ describe('Submit new application on first stage to generate reviewAssignments on
             },
             {
               reviewerId: 5,
-              orgId: null,
+              organisationId: null,
               stageId: 5,
               stageNumber: 1,
               status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -120,7 +120,7 @@ describe('Submit new application on first stage to generate reviewAssignments on
             },
             {
               reviewerId: 7,
-              orgId: null,
+              organisationId: null,
               stageId: 5,
               stageNumber: 1,
               status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -133,7 +133,7 @@ describe('Submit new application on first stage to generate reviewAssignments on
             },
             {
               reviewerId: 8,
-              orgId: null,
+              organisationId: null,
               stageId: 5,
               stageNumber: 1,
               status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -146,7 +146,7 @@ describe('Submit new application on first stage to generate reviewAssignments on
             },
             {
               reviewerId: 9,
-              orgId: null,
+              organisationId: null,
               stageId: 5,
               stageNumber: 1,
               status: ReviewAssignmentStatus.AvailableForSelfAssignment,
@@ -196,7 +196,7 @@ describe('Re-submit new application on second stage to generate new reviewAssign
           reviewAssignments: [
             {
               reviewerId: 7,
-              orgId: null,
+              organisationId: null,
               stageId: 6,
               stageNumber: 2,
               status: ReviewAssignmentStatus.Available,
@@ -209,7 +209,7 @@ describe('Re-submit new application on second stage to generate new reviewAssign
             },
             {
               reviewerId: 8,
-              orgId: null,
+              organisationId: null,
               stageId: 6,
               stageNumber: 2,
               status: ReviewAssignmentStatus.Available,
@@ -267,7 +267,7 @@ test('Test: Submit Review ID#7002 for Application ID#4003 - Stage 2 Lvl 1 to gen
         reviewAssignments: [
           {
             reviewerId: 9,
-            orgId: null,
+            organisationId: null,
             stageId: 6,
             stageNumber: 2,
             levelNumber: 2,
@@ -280,7 +280,7 @@ test('Test: Submit Review ID#7002 for Application ID#4003 - Stage 2 Lvl 1 to gen
           },
           {
             reviewerId: 10,
-            orgId: null,
+            organisationId: null,
             stageId: 6,
             stageNumber: 2,
             levelNumber: 2,
@@ -335,7 +335,7 @@ describe('Create new Review to simulate application moving to last stage (Final 
           reviewAssignments: [
             {
               reviewerId: 17,
-              orgId: null,
+              organisationId: null,
               stageId: 7,
               stageNumber: 3,
               levelNumber: 1,
@@ -348,7 +348,7 @@ describe('Create new Review to simulate application moving to last stage (Final 
             },
             {
               reviewerId: 18,
-              orgId: null,
+              organisationId: null,
               stageId: 7,
               stageNumber: 3,
               levelNumber: 1,

@@ -8,7 +8,7 @@
     "elementTypePlugin",
     "notification"
   ],
-  "shouldReInitilise": true,
+  "shouldReInitialise": true,
   "insertScriptsLocale": "dev",
   "includeInsertScripts": ["none"],
   "excludeInsertScripts": []

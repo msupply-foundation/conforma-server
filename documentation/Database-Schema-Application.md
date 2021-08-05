@@ -26,7 +26,7 @@ The `is_active` is set to `'false'` for applications that have finished the revi
 
 The `trigger` is updated everytime the application has changes done by users or a scheduler. See more about [triggers](Triggers-and-Actions.md)
 
-The `outcome` is either `'PENDING'`, `'APPROVED'`, `'REJECTED'`. The application is 'PENDING' during the review process, each stage will store also the outcome, so it will only be updated to here once the review process is finished resulting in either 'APPROVED' or 'REJECTED'.
+The `outcome` is either `'PENDING'`, `'APPROVED'`, `'REJECTED'`, `'EXPIRED'`, `'WITHDRAWN'`. The application is 'PENDING' during the review process, each stage will store also the outcome, so it will only be updated here once the review process is finished, resulting in either 'APPROVED' or 'REJECTED', or if the applicant doesn't finish in time, in which case it will be 'EXPIRED'. ('WITHDRAWN' not currently implemented)
 
 ### application_section
 
@@ -57,7 +57,7 @@ application changed to each particular status of a stage.
 
 The `application_stage_history_id` links to the application stage (and the application itself).
 
-The `status` is either `'DRAFT'`, `'WITHDRAWN'`, `'SUBMITTED'`, `'CHANGES_REQUIRED'`, `'RE_SUBMITTED'`, `'COMPLETED'`.
+The `status` is either `'DRAFT'`, `'SUBMITTED'`, `'CHANGES_REQUIRED'`, `'RE_SUBMITTED'`, `'COMPLETED'`.
 
 The `time_created` defined when this status of a stage was created.
 

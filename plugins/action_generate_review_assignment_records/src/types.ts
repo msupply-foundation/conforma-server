@@ -18,7 +18,7 @@ export interface Reviewer {
 
 export interface ReviewAssignment {
   reviewerId: number
-  orgId: number | null
+  organisationId: number | null
   stageId: number
   stageNumber: number
   timeStageCreated?: Date
