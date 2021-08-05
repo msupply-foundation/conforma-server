@@ -41,22 +41,22 @@ exports.queries = [
             create: [
               {
                 code: "S1"
-                title: "Section 1"
+                title: "Section 1 - Basics"
                 index: 0
                 templateElementsUsingId: {
                   create: [
                     {
                       code: "Q1"
-                      index: 1
+                      index: 0
                       title: "First Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
-                      helpText: "Please fill in these **details** to the best of your ability, with as much **accuracy** as possible.\\n\\nThis application will be thoroughly **reviewed** before approval."
+                      helpText: "Markdown text can be added to questions with tips to users about important **details**"
                       parameters: { label: "First Name" }
                     }
                     {
                       code: "Q2"
-                      index: 2
+                      index: 1
                       title: "Last Name"
                       elementTypePluginCode: "shortText"
                       category: QUESTION
@@ -98,10 +98,11 @@ exports.queries = [
                           ]
                         }
                       }
+                      isRequired: false
                     }
                     {
-                      code: "Text2"
-                      index: 3
+                      code: "Text1"
+                      index: 2
                       title: "User Info"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -139,77 +140,35 @@ exports.queries = [
                     }
                     {
                       code: "Q3"
-                      index: 4
-                      title: "Username"
-                      elementTypePluginCode: "shortText"
+                      index: 3
+                      title: "LongText Demo"
+                      elementTypePluginCode: "longText"
                       category: QUESTION
-                      visibilityCondition: {
-                        operator: "!="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.Q1.text"]
-                          }
-                          { value: "" }
-                        ]
+                      isRequired: false
+                      helpText: "Try entering more than 100 characters to see validation message!"
+                      parameters: {
+                        label: "Description"
+                        lines: 8
+                        placeholder: "Enter here..."
+                        maxLength: 101
                       }
-                      validation: {
-                        operator: "API"
-                        children: [
-                          {
-                            operator: "+"
-                            children: [
-                              {
-                                operator: "objectProperties"
-                                children: ["applicationData.config.serverREST"]
-                              }
-                              "/check-unique"
-                            ]
-                          }
-                          { value: ["type", "value"] }
-                          { value: "username" }
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
-                          }
-                          { value: "unique" }
-                        ]
-                      }
-                      validationMessage: "Username must be unique"
-                      parameters: { label: "Select a username" }
-                    }
-                    {
-                      code: "Q4"
-                      index: 5
-                      title: "Email"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
                       validation: {
                         operator: "REGEX"
                         children: [
                           {
-                            operator: "objectProperties"
-                            children: ["responses.thisResponse"]
+                            operator: "objectProperties",
+                            children: [
+                              "responses.thisResponse"
+                            ]
                           }
-                          {
-                            value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
-                          }
+                          "^[\\\\s\\\\S]{0,100}$"
                         ]
                       }
-                      validationMessage: "Not a valid email address"
-                      parameters: { label: "Email" }
+                      validationMessage: "Response must be less than 100 characters"
                     }
                     {
-                      code: "DOB"
-                      index: 6
-                      title: "Date of Birth"
-                      elementTypePluginCode: "datePicker"
-                      category: QUESTION
-                      parameters: { label: "What is your date of birth?" }
-                    }
-                    {
-                      code: "Q5"
-                      index: 7
+                      code: "Q4"
+                      index: 4
                       title: "Password"
                       elementTypePluginCode: "password"
                       category: QUESTION
@@ -229,33 +188,44 @@ exports.queries = [
                         }
                         validationMessageInternal: "Password must be at least 8 characters"
                       }
+                      isRequired: false
                     }
                     {
                       code: "PB1"
-                      index: 8
+                      index: 5
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
-                      code: "Q6"
-                      index: 9
+                      code: "Text2"
+                      index: 6
+                      title: "Page2"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "### This page demonstrates selectors options"
+                        text: "Shows other selectors as a result of your **selection** which can be **dynamically defined**"
+                      }
+                    }
+                    {
+                      code: "Q5"
+                      index: 7
                       title: "Organisation Category"
                       elementTypePluginCode: "radioChoice"
                       category: QUESTION
-                      helpText: "This page demonstrates some of the selectors available, and shows that both the **options** and what shows as a result of your **selection** can be **dynamically defined**"
+                      helpText: "Next displayed specific dropdown showing based on selection to pick one specific from a static list"
                       parameters: {
                         label: "Organisation Type"
                         description: "_Select which type of organisation you belong to._"
                         options: ["Manufacturer", "Distributor", "Importer"]
                         validation: { value: true }
-                        default: 1
                       }
                       isRequired: false
                     }
                     {
-                      code: "Q7"
-                      index: 10
+                      code: "Q6"
+                      index: 8
                       title: "Select Manufacturer"
                       elementTypePluginCode: "dropdownChoice"
                       visibilityCondition: {
@@ -263,7 +233,7 @@ exports.queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: ["responses.Q6.text"]
+                            children: ["responses.Q5.text"]
                           }
                           { value: "Manufacturer" }
                         ]
@@ -280,8 +250,8 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "Q8"
-                      index: 11
+                      code: "Q7"
+                      index: 9
                       title: "Select Distributor"
                       elementTypePluginCode: "dropdownChoice"
                       # Remember to pass Responses object into visibilityCondition
@@ -290,7 +260,7 @@ exports.queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: ["responses.Q6.text"]
+                            children: ["responses.Q5.text"]
                           }
                           { value: "Distributor" }
                         ]
@@ -305,11 +275,10 @@ exports.queries = [
                           "Distributor C"
                         ]
                       }
-                      isRequired: false
                     }
                     {
-                      code: "Q9"
-                      index: 12
+                      code: "Q8"
+                      index: 10
                       title: "Select Importer"
                       elementTypePluginCode: "dropdownChoice"
                       # Remember to pass Responses object into visibilityCondition
@@ -318,7 +287,7 @@ exports.queries = [
                         children: [
                           {
                             operator: "objectProperties"
-                            children: ["responses.Q6.text"]
+                            children: ["responses.Q5.text"]
                           }
                           { value: "Importer" }
                         ]
@@ -327,86 +296,23 @@ exports.queries = [
                       parameters: {
                         label: "Select Importer"
                         placeholder: "Select"
-                        options: ["Importer A", "Importer B", "Importer C"]
-                      }
-                      isRequired: false
-                    }
-                    {
-                      code: "Q10"
-                      index: 13
-                      title: "API Selection demo"
-                      elementTypePluginCode: "dropdownChoice"
-                      category: QUESTION
-                      parameters: {
-                        label: "API Lookup: Choose a name from this list"
-                        placeholder: "Select"
-                        search: true
-                        options: {
-                          operator: "API"
-                          children: [
-                            {
-                              value: "https://jsonplaceholder.typicode.com/users"
-                            }
-                            { value: [] }
-                            { value: "name" }
-                          ]
-                        }
-                      }
-                      isRequired: false
-                    }
-                    {
-                      code: "Q11"
-                      index: 14
-                      title: "Test Visibility"
-                      elementTypePluginCode: "shortText"
-                      category: QUESTION
-                      parameters: { label: "Enter 'magicword' to see text box" }
-                    }
-                    {
-                      code: "TextTest"
-                      index: 15
-                      title: "Intro"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
-                      visibilityCondition: {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.Q11.text"]
-                          }
-                          { value: "magicword" }
+                        options: [
+                          "Importer A"
+                          "Importer B"
+                          "Importer C"
                         ]
-                      }
-                      parameters: {
-                        title: "This has appeared because you typed \\"magicword\\" above."
-                        text: {
-                          operator: "stringSubstitution"
-                          children: [
-                            "You chose %1 (index number %2) in the API lookup"
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q10.text"]
-                            }
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q10.optionIndex"]
-                            }
-                          ]
-                        }
-                        style: "success"
                       }
                     }
                     {
                       code: "PB3"
-                      index: 16
+                      index: 12
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
-                      code: "Qradio"
-                      index: 17
+                      code: "Q10"
+                      index: 13
                       title: "Testing Radio buttons"
                       elementTypePluginCode: "radioChoice"
                       category: QUESTION
@@ -417,47 +323,11 @@ exports.queries = [
                         hasOther: true
                         otherPlaceholder: "Enter other answer"
                       }
-                      isRequired: true
-                    }
-                    {
-                      code: "Q12"
-                      index: 18
-                      title: "Role"
-                      elementTypePluginCode: "dropdownChoice"
-                      category: QUESTION
-                      parameters: {
-                        label: "What is your role?"
-                        options: ["Owner", "Supplier", "Other"]
-                        placeholder: "Select one"
-                        default: 1
-                      }
                       isRequired: false
                     }
                     {
-                      code: "Q13"
-                      index: 19
-                      title: "Other description"
-                      elementTypePluginCode: "longText"
-                      category: QUESTION
-                      isEditable: {
-                        operator: "="
-                        children: [
-                          "Other"
-                          {
-                            operator: "objectProperties"
-                            children: ["responses.Q12.text"]
-                          }
-                        ]
-                      }
-                      isRequired: false
-                      parameters: {
-                        label: "If Other, please describe"
-                        description: "Please use as much detail as necessary"
-                      }
-                    }
-                    {
-                      code: "QGraphQLTest"
-                      index: 20
+                      code: "Q11"
+                      index: 14
                       title: "GraphQL query"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
@@ -478,14 +348,14 @@ exports.queries = [
                     }
                     {
                       code: "PB4"
-                      index: 21
+                      index: 15
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
                       category: INFORMATION
                     }
                     {
                       code: "CheckboxShowcase"
-                      index: 22
+                      index: 16
                       title: "Checkbox demonstration"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -497,7 +367,7 @@ exports.queries = [
                     }
                     {
                       code: "CB1"
-                      index: 23
+                      index: 17
                       title: "Single checkbox"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -510,7 +380,7 @@ exports.queries = [
                     }
                     {
                       code: "CB2"
-                      index: 24
+                      index: 18
                       title: "Three checkboxes"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -526,7 +396,7 @@ exports.queries = [
                     }
                     {
                       code: "CB3"
-                      index: 25
+                      index: 19
                       title: "Toggle switch"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -539,7 +409,7 @@ exports.queries = [
                     }
                     {
                       code: "TXTON-OFF"
-                      index: 26
+                      index: 20
                       title: "Checkbox ON"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -571,7 +441,7 @@ exports.queries = [
                     }
                     {
                       code: "CB4"
-                      index: 27
+                      index: 21
                       title: "Slider switch"
                       elementTypePluginCode: "checkbox"
                       category: QUESTION
@@ -587,10 +457,11 @@ exports.queries = [
                         ]
                         type: "slider"
                       }
+                      isRequired: false
                     }
                     {
                       code: "TXT_LIKE"
-                      index: 28
+                      index: 22
                       title: "Display Likes"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
@@ -627,7 +498,7 @@ exports.queries = [
                     }
                     {
                       code: "CB5"
-                      index: 29
+                      index: 23
                       title: "Many checkboxes"
                       isRequired: false
                       elementTypePluginCode: "checkbox"
@@ -649,50 +520,123 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "Q2GraphQL"
-                      index: 30
-                      title: "Country code"
+                      code: "PB5"
+                      index: 24
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "D1"
+                      index: 25
+                      title: "API Selection demo"
                       elementTypePluginCode: "dropdownChoice"
                       category: QUESTION
-                      isRequired: false
                       parameters: {
-                        label: "Country code"
+                        label: "API Lookup: Choose a name from this list"
+                        placeholder: "Select"
                         search: true
                         options: {
-                          operator: "graphQL",
+                          operator: "API"
                           children: [
-                            "query countries { countries { code name } }"
-                            "https://countries.trevorblades.com"
-                            []
-                            "countries"
+                            {
+                              value: "https://jsonplaceholder.typicode.com/users"
+                            }
+                            { value: [] }
+                            { value: "name" }
                           ]
                         }
-                        optionsDisplayProperty: "code"
-                        placeholder: "Type one country code (2 digits)"
+                      }
+                      isRequired: false
+                    }
+                    {
+                      code: "D2"
+                      index: 26
+                      title: "Test Visibility"
+                      elementTypePluginCode: "shortText"
+                      category: QUESTION
+                      parameters: { label: "Enter 'magicword' to see a text box" }
+                      isRequired: false
+                    }
+                    {
+                      code: "Text3"
+                      index: 27
+                      title: "Intro"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["responses.D2.text"]
+                          }
+                          { value: "magicword" }
+                        ]
+                      }
+                      parameters: {
+                        title: "This has appeared because you typed \\"magicword\\" above."
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "You chose %1 (index number %2) in the API lookup"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.D1.text"]
+                            }
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.D1.optionIndex"]
+                            }
+                          ]
+                        }
+                        style: "success"
                       }
                     }
                     {
-                      index: 31
-                      code: "TextCountryName"
-                      title: "Country Name"
+                      code: "Text4"
+                      index: 28
+                      title: "Text Showcase"
                       elementTypePluginCode: "textInfo"
                       category: INFORMATION
                       parameters: {
-                        text: {
+                        title: "## Many ways to deliver information!"
+                        text: "A text info box can be presented in a number of **styles**.\\n\\n\*Please select one below*"
+                        style: {
                           operator: "objectProperties"
-                          children: [
-                            "responses.Q2GraphQL.selection.name"
-                            ""
-                          ]
+                          children: ["responses.D3.text"]
                         }
                       }
+                    }
+                    {
+                      code: "D3"
+                      index: 29
+                      title: "Selector for TextInfo showcase"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select a style"
+                        placeholder: "Select"
+                        options: [
+                          "none"
+                          "basic"
+                          "info"
+                          "warning"
+                          "success"
+                          "positive"
+                          "error"
+                          "negative"
+                        ]
+                        default: "none"
+                      }
+                      isRequired: false
                     }
                   ]
                 }
               }
               {
                 code: "S2"
-                title: "Section 2 - Documents"
+                title: "Section 2 - File Upload"
                 index: 2
                 templateElementsUsingId: {
                   create: [
@@ -708,6 +652,7 @@ exports.queries = [
                         text: "A demonstration of the File Upload plugin"
                         style: "info"
                       }
+                      isRequired: false
                     }
                     {
                       code: "Q_upload1"
@@ -722,9 +667,10 @@ exports.queries = [
                         fileExtensions: ["pdf", "png", "jpg"]
                         fileSizeLimit: 5000
                       }
+                      isRequired: false
                     }
                     {
-                      code: "PB10"
+                      code: "PB6"
                       index: 102
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
@@ -745,7 +691,10 @@ exports.queries = [
                             "No restrictions on this one, but we're testing dynamic description:\\n\\n_The files uploaded in the last page were:_  \\n- _%1_"
                             {
                               operator: "objectProperties"
-                              children: ["responses.Q_upload1.text"]
+                              children: [
+                                "responses.Q_upload1.text"
+                                "No files uploaded"
+                              ]
                             }
                           ]
                         }
@@ -753,7 +702,7 @@ exports.queries = [
                       }
                     }
                     {
-                      code: "PB11"
+                      code: "PB7"
                       index: 104
                       title: "Page Break"
                       elementTypePluginCode: "pageBreak"
@@ -849,6 +798,7 @@ exports.queries = [
                           "massive"
                         ]
                       }
+                      isRequired: false
                     }
                     {
                       code: "ImgOpt2"
@@ -875,95 +825,17 @@ exports.queries = [
                           "right"
                         ]
                       }
-                    }
-                    {
-                      code: "PB12"
-                      index: 110
-                      title: "Page Break"
-                      elementTypePluginCode: "pageBreak"
-                      category: INFORMATION
-                    }
-                    {
-                      code: "LongText1"
-                      index: 111
-                      title: "LongText Demo"
-                      elementTypePluginCode: "longText"
-                      category: QUESTION
                       isRequired: false
-                      parameters: {
-                        label: "Any final comments?"
-                        lines: 8
-                        placeholder: "Enter here..."
-                        maxLength: 101
-                      }
-                      validation: {
-                        operator: "REGEX"
-                        children: [
-                          {
-                            operator: "objectProperties",
-                            children: [
-                              "responses.thisResponse"
-                            ]
-                          }
-                          "^[\\\\s\\\\S]{0,100}$"
-                        ]
-                      }
-                      validationMessage: "Response must be less than 100 characters"
                     }
                   ]
                 }
               }
               {
                 code: "S3"
-                title: "Section 3"
+                title: "Section 3 - Lists & Search"
                 index: 3
                 templateElementsUsingId: {
                   create: [
-                    {
-                      code: "TextShowcase"
-                      index: 0
-                      title: "Text Showcase"
-                      elementTypePluginCode: "textInfo"
-                      category: INFORMATION
-                      parameters: {
-                        title: "## Many ways to deliver information!"
-                        text: "A text info box can be presented in a number of **styles**.\\n\\n\*Please select one below*"
-                        style: {
-                          operator: "objectProperties"
-                          children: ["responses.StyleChoice.text"]
-                        }
-                      }
-                    }
-                    {
-                      code: "StyleChoice"
-                      index: 1
-                      title: "Selector for TextInfo showcase"
-                      elementTypePluginCode: "dropdownChoice"
-                      category: QUESTION
-                      parameters: {
-                        label: "Select a style"
-                        placeholder: "Select"
-                        options: [
-                          "none"
-                          "basic"
-                          "info"
-                          "warning"
-                          "success"
-                          "positive"
-                          "error"
-                          "negative"
-                        ]
-                        default: "none"
-                      }
-                      isRequired: false
-                    }
-                    {
-                      code: "PB13"
-                      index: 2
-                      title: "Page Break"
-                      elementTypePluginCode: "pageBreak"
-                      category: INFORMATION
-                    }
                     {
                       code: "IngredientsHeader"
                       index: 3
@@ -1741,11 +1613,32 @@ exports.queries = [
             create: [
               {
                 number: 1
-                title: "Automatic"
-                description: "Please check your email to confirm your account."
-                colour: "#1E14DB" #dark blue
+                title: "Screening"
+                description: "This application will go through the Screening stage before it can be accessed."
+                colour: "#24B5DF" #teal blue
                 templateStageReviewLevelsUsingId: {
                   create: [{ number: 1, name: "Review" }]
+                }
+              }
+              {
+                number: 2
+                title: "Assessment"
+                description: "This phase is where your documents will be revised before the application can get the final approval."
+                colour: "#E17E48" #orange
+                templateStageReviewLevelsUsingId: {
+                  create: [
+                    { number: 1, name: "Review" }
+                    { number: 2, name: "Consolidation" }
+                  ]
+                }
+              }
+              {
+                number: 3
+                title: "Final Decision"
+                description: "This is the final step and will change the outcome of this applications."
+                colour: "#1E14DB" #dark blue
+                templateStageReviewLevelsUsingId: {
+                  create: [{ number: 1, name: "Approval" }]
                 }
               }
             ]
@@ -1854,94 +1747,6 @@ exports.queries = [
               }
               {
                 actionCode: "cLog"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 100
-                parameterQueries: {
-                  message: {
-                    value: "Sequential logger -- this message should appear before new user and application approval messages."
-                  }
-                }
-              }
-              {
-                actionCode: "modifyRecord"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 101
-                parameterQueries: {
-                  tableName: "user"
-                  first_name: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q1.text"]
-                  }
-                  last_name: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q2.text"]
-                  }
-                  username: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q3.text"]
-                  }
-                  email: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q4.text"]
-                  }
-                  password_hash: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q5.hash"]
-                  }
-                }
-              }
-              {
-                actionCode: "grantPermissions"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 102
-                parameterQueries: {
-                  username: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q3.text"]
-                  }
-                  permissionNames: { value: ["applyOrgRego"] }
-                }
-              }
-              # Because it is later in sequence, this Action should over-ride the Core one
-              {
-                actionCode: "changeStatus"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 103
-                parameterQueries: {
-                  newStatus: { value: "COMPLETED" }
-                }
-              }
-              {
-                actionCode: "changeOutcome"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 104
-                parameterQueries: {
-                  newOutcome: { value: "APPROVED" }
-                }
-              }
-              {
-                actionCode: "cLog"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 105
-                parameterQueries: {
-                  message: {
-                    operator: "stringSubstitution"
-                    children: [
-                      "Output concatenation: The user %1's registration has been %2"
-                      {
-                        operator: "objectProperties"
-                        children: ["outputCumulative.username"]
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: ["outputCumulative.newOutcome"]
-                      }
-                    ]
-                  }
-                }
-              }
-              {
-                actionCode: "cLog"
                 condition: { value: true }
                 trigger: ON_APPLICATION_SUBMIT
                 parameterQueries: {
@@ -1958,6 +1763,53 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                 connectByName: { name: "applyGeneral" } }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewScreening" }
+                }
+                stageNumber: 1
+                levelNumber: 1
+                canSelfAssign: true
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewAssessmentSection1Level1" }
+                }
+                stageNumber: 2
+                levelNumber: 1
+                allowedSections: ["S1"]
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewAssessmentSection2Level1" }
+                }
+                stageNumber: 2
+                levelNumber: 1
+                allowedSections: ["S2"]
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewAssessmentLevel2" }
+                }
+                stageNumber: 2
+                levelNumber: 2
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewFinalDecision" }
+                }
+                stageNumber: 3
+                levelNumber: 1
+                canMakeFinalDecision: true
+              }
+              # Assign general
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "assignGeneral" }
+                }
+                stageNumber: 2
+                levelNumber: 1
               }
             ]
           }
