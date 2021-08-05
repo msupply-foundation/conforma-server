@@ -4,7 +4,7 @@ import config from '../../config'
 
 export const DEFAULT_SNAPSHOT_NAME = 'current'
 export const DEFAULT_OPTIONS_NAME = 'default'
-export const SNAPSHOT_SUBFOLDER = 'snapshots'
+export const SNAPSHOT_SUBFOLDER = '_templates'
 export const OPTIONS_SUBFOLDER = 'snapshotOptions'
 export const SNAPSHOT_FILE_NAME = 'snapshot'
 export const OPTIONS_FILE_NAME = 'options'
