@@ -280,6 +280,48 @@ exports.queries = [
                   updateRecord: true
                 }
               }
+              #
+              # Change outcome of application to REJECT if decision in stage Screening is NON_CONFORM
+              # Note: There is a generic core action to change an application outcome 
+              # after the last level reviewer on the last stage submits a decision!
+              #
+              {
+                actionCode: "changeOutcome"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 10
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "NON_CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.stage"]
+                        }
+                        "Screening"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
+                parameterQueries: { newOutcome: { value: "REJECTED" } }
+              }
             ]
           }
           templatePermissionsUsingId: {

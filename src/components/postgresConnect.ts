@@ -742,6 +742,7 @@ class PostgresDB {
       throw err
     }
   }
+
   public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
       SELECT review.level_number AS "levelNumber", stage_number as "stageNumber"
@@ -819,16 +820,36 @@ class PostgresDB {
         text: 'SELECT * FROM schema_columns where table_name like $1',
         values: [tableName],
       })
-      const responses = result.rows as schema_column[]
+      const responses = result.rows as schemaColumn[]
       return responses
     } catch (err) {
       console.log(err.message)
       throw new Error('Problem getting database info')
     }
   }
+
+  public getPermissionPolicies: GetPermissionPolicies = async () => {
+    try {
+      const result = await this.query({
+        text: 'SELECT id, rules FROM permission_policy',
+      })
+      const responses = result.rows as permissionPolicyColumns[]
+      return responses
+    } catch (err) {
+      console.log(err.message)
+      throw new Error('Problem getting permission policies')
+    }
+  }
 }
 
-type schema_column = {
+export type permissionPolicyColumns = {
+  id: number
+  rules: object
+}
+
+type GetPermissionPolicies = () => Promise<permissionPolicyColumns[]>
+
+type schemaColumn = {
   table_name: string
   table_type: 'BASE TABLE' | 'VIEW'
   column_name: string
@@ -839,7 +860,7 @@ type schema_column = {
   fk_to_table_name: string | null
   fk_to_column_name: string | null
 }
-type GetDatabaseInfo = (tableName?: string) => Promise<schema_column[]>
+type GetDatabaseInfo = (tableName?: string) => Promise<schemaColumn[]>
 
 const postgressDBInstance = PostgresDB.Instance
 export default postgressDBInstance

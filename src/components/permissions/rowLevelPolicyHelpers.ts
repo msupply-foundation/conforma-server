@@ -1,13 +1,9 @@
 import databaseConnect from '../databaseConnect'
-import { UserInfo, PermissionRow } from './types'
-import {
-  getPermissionNameAbbreviation,
-  getTemplatePermissionAbbreviation,
-  remapObjectKeysWithPrefix,
-  getSqlConditionFromJSON,
-} from './helpersUtilities'
+import { PermissionRow } from './types'
+import { getSqlConditionFromJSON } from './helpersUtilities'
 
 import { compileRowLevelPolicyRuleTypes } from './helpersConstants'
+import { permissionPolicyColumns } from '../postgresConnect'
 
 export const baseJWT = { aud: 'postgraphile' }
 
@@ -37,29 +33,23 @@ export const baseJWT = { aud: 'postgraphile' }
 const compileJWT = (JWTelements: any) => {
   const { userId, orgId, templatePermissionRows, sessionId } = JWTelements
 
-  let JWT = { ...baseJWT, userId, orgId, sessionId }
+  let JWT: any = { ...baseJWT, userId, orgId, sessionId }
+  const templateIdsForPolicy: { [policyAbbreviation: string]: number[] } = {}
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
-    const { restrictions, templateId, templatePermissionId } = permissionRow
+    const { templateId, permissionPolicyId } = permissionRow
 
-    const permissionAbbreviation = getPermissionNameAbbreviation(permissionRow)
-    // Add just the basic permission_policy -> permission_name key
-    JWT = {
-      [permissionAbbreviation]: true,
-      ...JWT,
-    }
-    // It's possible to have permission name given to user without any templatePermissionIds
-    if (!templatePermissionId) return // 'continue' syntax for for each
+    const permissionPolicyAbbreviation = `pp${permissionPolicyId}`
 
-    // Add permission_policy -> permission->name -> template_permission properties
-    const templatePermissionAbbreviation = getTemplatePermissionAbbreviation(permissionRow)
+    const templateIdsKey = `${permissionPolicyAbbreviation}_template_ids`
+    if (!templateIdsForPolicy[templateIdsKey]) templateIdsForPolicy[templateIdsKey] = []
+    if (!templateIdsForPolicy[templateIdsKey].includes(templateId || 0))
+      templateIdsForPolicy[templateIdsKey].push(templateId || 0)
+
     JWT = {
-      [templatePermissionAbbreviation]: true,
-      ...remapObjectKeysWithPrefix(templatePermissionAbbreviation, {
-        ...restrictions,
-        templateId,
-      }),
       ...JWT,
+      [permissionPolicyAbbreviation]: 't',
+      [templateIdsKey]: templateIdsForPolicy[templateIdsKey].join(','),
     }
   })
   return JWT
@@ -68,7 +58,7 @@ const compileJWT = (JWTelements: any) => {
 // Removes previously generated row level policies and reinstates them based on current permission settings
 // out: [ 'CREATE POLICY "view_pp3pn3" ON "application" FOR SELECT USING (jwt_get_boolean('pp3pn3') = true and user_id = jwt_get_text('currentUser') AND template_id = jwt_get_bigint('pp3pn3_templateId')' ]
 const updateRowPolicies = async () => {
-  const permissionRows = await databaseConnect.getAllPermissions()
+  const permissionRows = await databaseConnect.getPermissionPolicies()
   // this will get all of the policies from pg_policies table that start with (view_ or update_ or delete_ or create_)
   const existingPolicies = await databaseConnect.getAllGeneratedRowPolicies()
   // returns an array of 'CREATE POLICY' strings
@@ -81,9 +71,8 @@ const updateRowPolicies = async () => {
       .map(({ policyname, tablename }: any) => `DROP POLICY "${policyname}" ON "${tablename}"`)
       .join(';'),
   })
-
+  console.log(newPolicies.join(';'))
   // Reinstate policies
-
   await databaseConnect.query({
     text: newPolicies.join(';'),
   })
@@ -93,64 +82,33 @@ const updateRowPolicies = async () => {
     text: `
     CREATE POLICY "create_all_application" ON application FOR INSERT WITH CHECK (true);
     CREATE POLICY "update_all_application" ON application FOR UPDATE USING(true) WITH CHECK (true);
+    CREATE POLICY "delete_all_application" ON application FOR DELETE USING(true);
     CREATE POLICY "create_all_application_response" ON application_response FOR INSERT WITH CHECK (true);
     CREATE POLICY "update_all_application_response" ON application_response FOR UPDATE USING(true) WITH CHECK (true);
+    CREATE POLICY "delete_all_application_response" ON application_response FOR DELETE USING(true);
     CREATE POLICY "create_all_review" ON review FOR INSERT WITH CHECK (true);
     CREATE POLICY "update_all_review" ON review FOR UPDATE USING(true) WITH CHECK (true);
+    CREATE POLICY "delete_all_revew" ON review FOR DELETE USING(true);
     CREATE POLICY "create_all_review_assignment" ON review_assignment FOR INSERT WITH CHECK (true);
     CREATE POLICY "update_all_review_assignment" ON review_assignment FOR UPDATE USING(true) WITH CHECK (true);
+    CREATE POLICY "delete_all_review_assignment" ON review_assignment FOR DELETE USING(true);
     `,
   })
 
   return newPolicies
 }
 
-/* Generates row level policies based on PermissionRows
-  in [
-  {
-    permissionPolicyId: 2,
-    permissionNameId: 2,
-    templatePermissionId: 2,
-    permissionPolicyRules: {
-      application: {
-        view: {
-          template_id: 'jwtPermission_bigint_templateId',
-          user_id: 'jwtUserDetails_bigint_userId',
-        },
-      },
-    },
-  }]
-
-  out [
-    `CREATE POLICY "view_pp2pn2" ON "application" FOR SELECT USING (jwt_get_boolean('pp2pn2') = true and user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2_templateId'))`,
-    `CREATE POLICY "view_pp2pn2tp2" ON "application" FOR SELECT USING (jwt_get_boolean('pp2pn2tp2') = true and user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2tp2_templateId'))`
-  ]
-*/
-const generateRowLevelPolicies = (permissionRows: Array<PermissionRow>) => {
+const generateRowLevelPolicies = (permissionRows: permissionPolicyColumns[]) => {
   let policiesObject: { [index: string]: Array<string> } = {}
 
-  permissionRows.forEach((permissionRow: PermissionRow) => {
-    const { permissionPolicyRules, templatePermissionId } = permissionRow
-    if (!permissionPolicyRules) return
+  permissionRows.forEach((permissionRow: permissionPolicyColumns) => {
+    const { id, rules } = permissionRow
+    if (!rules) return
 
-    const permissionNameAbbreviation = getPermissionNameAbbreviation(permissionRow)
+    const permissionPolicyAbbreviation = `pp${id}`
     policiesObject = {
       ...policiesObject,
-      [permissionNameAbbreviation]: compileRowLevelPolicies(
-        permissionNameAbbreviation,
-        permissionPolicyRules
-      ),
-    }
-    // It's possible to have permission policy linked to permission name without any templatePermissionIds
-    if (!templatePermissionId) return
-
-    const templatePermissionAbbreviation = getTemplatePermissionAbbreviation(permissionRow)
-    policiesObject = {
-      ...policiesObject,
-      [templatePermissionAbbreviation]: compileRowLevelPolicies(
-        templatePermissionAbbreviation,
-        permissionPolicyRules
-      ),
+      [permissionPolicyAbbreviation]: compileRowLevelPolicies(permissionPolicyAbbreviation, rules),
     }
   })
   // Turn from object (of keys and arrays) to flattened array
@@ -159,20 +117,10 @@ const generateRowLevelPolicies = (permissionRows: Array<PermissionRow>) => {
   return policies
 }
 
-/* Generates row level policies, for one set of rules (for one PermissionRow)
-  in "pp2pn2tp2", {
-      application: {
-        view: {
-          template_id: 'jwtPermission_bigint_templateId',
-          user_id: 'jwtUserDetails_bigint_userId',
-        },
-      },
-    }
-  out [
-    CREATE POLICY "view_pp2pn2tp2" ON "application" FOR SELECT USING (jwt_get_boolean('pp2pn2tp2') = true and user_id = jwt_get_bigint('userId') AND template_id = jwt_get_bigint('pp2pn2tp2_templateId'))
-  ]
-*/
-const compileRowLevelPolicies = (permissionAbbreviation: string, permissionPolicyRules: object) => {
+export const compileRowLevelPolicies = (
+  permissionAbbreviation: string,
+  permissionPolicyRules: object
+) => {
   const policies: Array<string> = []
 
   Object.entries(permissionPolicyRules).forEach(([tableName, rulesByType]) => {
@@ -221,7 +169,7 @@ const compileRowLevelPolicy = (
   // so we add a check for "policy": true, i.e. jwt_get_boolean('pp2pn2tp2') = true
   // this will become first condition in both USING and WITH CHECK of every row level rule
   const addBracketsAndPermissionCheck = (condition: string) =>
-    `(jwt_get_boolean('${permissionAbbreviation}') = true and ${condition})`
+    `(COALESCE(current_setting('jwt.claims.${permissionAbbreviation}', true),'') != '' and ${condition})`
 
   // If using clause is not used return nothing
   // otherwise return USING from usingCondition (view rule, see compileRowLevelPolicies) or condition (current rule condition)
@@ -258,18 +206,23 @@ const replacePlaceholders = (sql: string, permissionAbbreviation: string) => {
   const replacements = [
     {
       prefix: 'jwtUserDetails_bigint_',
-      prefixReplacement: "jwt_get_bigint('",
-      postfix: "')",
+      prefixReplacement: `COALESCE(current_setting('jwt.claims.`,
+      postfix: `', true),'0')::integer`,
     },
     {
       prefix: 'jwtUserDetails_text_',
-      prefixReplacement: "jwt_get_text('",
-      postfix: "')",
+      prefixReplacement: `COALESCE(current_setting('jwt.claims.`,
+      postfix: `', true),'')`,
     },
     {
       prefix: 'jwtPermission_bigint_',
-      prefixReplacement: `jwt_get_bigint('${permissionAbbreviation}_`,
-      postfix: "')",
+      prefixReplacement: `COALESCE(current_setting('jwt.claims.${permissionAbbreviation}_`,
+      postfix: `', true),'0')::integer`,
+    },
+    {
+      prefix: 'jwtPermission_array_bigint_',
+      prefixReplacement: `any (string_to_array(COALESCE(current_setting('jwt.claims.${permissionAbbreviation}_`,
+      postfix: `', true), '0'), ',')::integer[])`,
     },
   ]
 

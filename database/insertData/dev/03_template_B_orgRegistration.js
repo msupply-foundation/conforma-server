@@ -310,35 +310,35 @@ exports.queries = [
                   message: { value: "Organisation Registration submission" }
                 }
               }
-              {
-                actionCode: "changeOutcome"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 100
-                condition: {
-                  operator: "AND"
-                  children: [
-                    {
-                      operator: "="
-                      children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
-                      ]
-                    }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
-                  ]
-                }
-                parameterQueries: {
-                  newOutcome: { value: "APPROVED" }
-                }
-              }
+#             {
+#               actionCode: "changeOutcome"
+#               trigger: ON_REVIEW_SUBMIT
+#               sequence: 100
+#               condition: {
+#                 operator: "AND"
+#                 children: [
+#                   {
+#                     operator: "="
+#                     children: [
+#                       {
+#                         operator: "objectProperties"
+#                         children: [
+#                           "applicationData.reviewData.latestDecision.decision"
+#                         ]
+#                       }
+#                       "CONFORM"
+#                     ]
+#                   }
+#                   {
+#                     operator: "objectProperties"
+#                     children: ["applicationData.reviewData.isLastLevel"]
+#                   }
+#                 ]
+#               }
+#               parameterQueries: {
+#                 newOutcome: { value: "APPROVED" }
+#               }
+#             }
               {
                 actionCode: "modifyRecord"
                 trigger: ON_REVIEW_SUBMIT
