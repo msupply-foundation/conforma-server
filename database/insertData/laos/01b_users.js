@@ -25,6 +25,11 @@ exports.queries = [
                     connectByName: { name: "applyUserEdit" }
                   }
                 }
+                {
+                  permissionNameToPermissionNameId: {
+                    connectByName: { name: "applyProceedureVerification" }
+                  }
+                }
               ]
             }
           }
@@ -235,6 +240,136 @@ exports.queries = [
                   {
                     permissionNameToPermissionNameId: {
                       connectByName: { name: "admin" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ) {
+          user {
+            username
+          }
+        }
+      }`,
+      `mutation {
+        createUser(
+          input: {
+            user: {
+              email: "screenproceedure@sussol.net"
+              username: "screenproceedure"
+              firstName: "Screen"
+              lastName: "Proceedure"
+              passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+              permissionJoinsUsingId: {
+                create: [
+                  {
+                    permissionNameToPermissionNameId: {
+                      connectByName: { name: "screenProceedure" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ) {
+          user {
+            username
+          }
+        }
+      }`,
+    `mutation {
+        createUser(
+          input: {
+            user: {
+              email: "assesspayment@sussol.net"
+              username: "assesspayment"
+              firstName: "Assess"
+              lastName: "Payment"
+              passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+              permissionJoinsUsingId: {
+                create: [
+                  {
+                    permissionNameToPermissionNameId: {
+                      connectByName: { name: "assessPayment" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ) {
+          user {
+            username
+          }
+        }
+      }`,
+    `mutation {
+        createUser(
+          input: {
+            user: {
+              email: "consolidateproceedure@sussol.net"
+              username: "consolidateproceedure"
+              firstName: "Consolidate"
+              lastName: "Proceedure"
+              passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+              permissionJoinsUsingId: {
+                create: [
+                  {
+                    permissionNameToPermissionNameId: {
+                      connectByName: { name: "consolidateProceedure" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ) {
+          user {
+            username
+          }
+        }
+      }`,
+    `mutation {
+        createUser(
+          input: {
+            user: {
+              email: "reviewproceedure1@sussol.net"
+              username: "reviewproceedure1"
+              firstName: "Review Proceedure"
+              lastName: "1"
+              passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+              permissionJoinsUsingId: {
+                create: [
+                  {
+                    permissionNameToPermissionNameId: {
+                      connectByName: { name: "reviewProceedure" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ) {
+          user {
+            username
+          }
+        }
+      }`,
+    `mutation {
+        createUser(
+          input: {
+            user: {
+              email: "reviewproceedure2@sussol.net"
+              username: "reviewproceedure2"
+              firstName: "Review Proceedure"
+              lastName: "2"
+              passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
+              permissionJoinsUsingId: {
+                create: [
+                  {
+                    permissionNameToPermissionNameId: {
+                      connectByName: { name: "reviewProceedure" }
                     }
                   }
                 ]
