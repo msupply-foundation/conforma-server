@@ -61,6 +61,7 @@ const constructInsertAndGetter = (
   columns.forEach(({ isPrimary, isGenerated, columnName }) => {
     if (!preserveIds && isPrimary) return
     if (isGenerated) return
+    if (values[columnName] === undefined) return
     insertableValues[columnName] = values[columnName]
   })
 
