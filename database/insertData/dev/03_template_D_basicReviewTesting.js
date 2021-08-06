@@ -645,7 +645,7 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewSelfAssignable" }
+                  connectByName: { name: "reviewScreening" }
                 }
                 stageNumber: 1
                 levelNumber: 1
@@ -653,7 +653,7 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestAssessmentLvl1Section1" }
+                  connectByName: { name: "reviewAssessmentSection1Level1" }
                 }
                 stageNumber: 2
                 levelNumber: 1
@@ -661,7 +661,7 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestAssessmentLvl1Section2" }
+                  connectByName: { name: "reviewAssessmentSection2Level1" }
                 }
                 stageNumber: 2
                 levelNumber: 1
@@ -669,14 +669,14 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestAssessmentLvl2" }
+                  connectByName: { name: "reviewAssessmentLevel2" }
                 }
                 stageNumber: 2
                 levelNumber: 2
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestApproval" }
+                  connectByName: { name: "reviewFinalDecision" }
                 }
                 stageNumber: 3
                 levelNumber: 1

@@ -561,7 +561,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3Username.text"]
                   }
-                  permissionNames: ["applyUserEdit", "applyOrgRego"  ]
+                  permissionNames: ["applyGeneral" ]
                 }
               }
             ]
