@@ -20,8 +20,8 @@ async function generateTextString({
     numberFormat,
     fallbackText = 'Missing_data_property',
     updateRecord = false,
-    tableName = 'application',
-    fieldName = 'name',
+    tableName,
+    fieldName,
     matchField = 'id',
     matchValue = applicationData?.applicationId,
   } = parameters

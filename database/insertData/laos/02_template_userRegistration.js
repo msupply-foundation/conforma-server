@@ -450,6 +450,7 @@ exports.queries = [
                       # TBD
                     }
                     updateRecord: true
+                    tableName: "application"
                     fieldName: "serial"
                   }
               }
@@ -464,6 +465,8 @@ exports.queries = [
                       serial: "applicationData.applicationSerial"
                     }
                     updateRecord: true
+                    tableName: "application"
+                    fieldName: "name"
                   }
               }
               {
