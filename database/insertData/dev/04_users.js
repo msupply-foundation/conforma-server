@@ -20,26 +20,6 @@ exports.queries = [
                   connectByName: { name: "applyGeneral" }
                 }
               }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewSelfAssignable" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyOrgRego" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewJoinOrg" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
-                }
-              }
             ]
           }
         }
@@ -64,26 +44,6 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyGeneral" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewSelfAssignable" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyOrgRego" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewJoinOrg" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
@@ -112,21 +72,6 @@ exports.queries = [
                   connectByName: { name: "applyGeneral" }
                 }
               }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewSelfAssignable" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyOrgRego" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
-                }
-              }
             ]
           }
         }
@@ -153,57 +98,6 @@ exports.queries = [
                   connectByName: { name: "applyGeneral" }
                 }
               }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewSelfAssignable" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyOrgRego" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
-                }
-              }
-            ]
-          }
-        }
-      }
-    ) {
-      user {
-        username
-      }
-    }
-  }`,
-  `mutation {
-    createUser(
-      input: {
-        user: {
-          email: "js@nowhere.com"
-          passwordHash: "$2a$10$WQ5VMHB6bOVwjyE8Vhh64.TLQKcUOeJpfU6ZUSqYq3tlts3vCN2mG"
-          username: "js"
-          firstName: "John"
-          lastName: "Smith"
-          permissionJoinsUsingId: {
-            create: [
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyGeneral" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyOrgRego" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
-                }
-              }
             ]
           }
         }
@@ -227,12 +121,12 @@ exports.queries = [
             create: [
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewSelfAssignable" }
+                  connectByName: { name: "reviewScreening" }
                 }
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestAssessmentLvl1Section1" }
+                  connectByName: { name: "reviewAssessmentSection1Level1" }
                 }
               }
               {
@@ -263,12 +157,12 @@ exports.queries = [
             create: [
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewSelfAssignable" }
+                  connectByName: { name: "reviewScreening" }
                 }
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestAssessmentLvl1Section2" }
+                  connectByName: { name: "reviewAssessmentSection2Level1" }
                 }
               }
               {
@@ -299,12 +193,12 @@ exports.queries = [
             create: [
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewSelfAssignable" }
+                  connectByName: { name: "reviewScreening" }
                 }
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestAssessmentLvl2" }
+                  connectByName: { name: "reviewAssessmentLevel2" }
                 }
               }
               {
@@ -335,7 +229,7 @@ exports.queries = [
             create: [
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestAssessmentLvl2" }
+                  connectByName: { name: "reviewAssessmentLevel2" }
                 }
               }
               {
@@ -370,12 +264,7 @@ exports.queries = [
                   connectByName: { name: "assignGeneral" }
                 }
               }
-              # Assign DrugRegoGen
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "canAssignDrugRego" }
-                }
-              }
+              # Apply UserEdit
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyUserEdit" }
@@ -408,6 +297,7 @@ exports.queries = [
                   connectByName: { name: "assignGeneral" }
                 }
               }
+              # Apply UserEdit
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyUserEdit" }
@@ -433,18 +323,13 @@ exports.queries = [
           passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
           permissionJoinsUsingId: {
             create: [
-              # Review General
+              # Review General Screening (Stage 1)
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewGeneral" }
+                  connectByName: { name: "reviewScreening" }
                 }
               }
-              # Review DrugRego Screening (Stage 1)
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "canScreenDrugRego" }
-                }
-              }
+              # Apply UserEdit
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyUserEdit" }
@@ -470,18 +355,13 @@ exports.queries = [
           passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
           permissionJoinsUsingId: {
             create: [
-              # Review General
+              # Review General Screening (Stage 1)
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewGeneral" }
+                  connectByName: { name: "reviewScreening" }
                 }
               }
-              # Review DrugRego Screening (Stage 1)
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "canScreenDrugRego" }
-                }
-              }
+              # Apply UserEdit
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyUserEdit" }
@@ -507,18 +387,19 @@ exports.queries = [
           passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
           permissionJoinsUsingId: {
             create: [
-              # Review General
+              # Review General Assessment (Stage 2) - sectin 1
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewGeneral" }
+                  connectByName: { name: "reviewAssessmentSection1Level1" }
                 }
               }
-              # Review DrugRego Assessment (Stage 2)
+              # Review General Assessment (Stage 2) - section 2
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "canAssessDrugRego" }
+                  connectByName: { name: "reviewAssessmentSection2Level1" }
                 }
               }
+              # Apply UserEdit
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyUserEdit" }
@@ -544,18 +425,19 @@ exports.queries = [
           passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
           permissionJoinsUsingId: {
             create: [
-              # Review General
+              # Review General Assessment (Stage 2) - sectin 1
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewGeneral" }
+                  connectByName: { name: "reviewAssessmentSection1Level1" }
                 }
               }
-              # Review DrugRego Assessment (Stage 2)
+              # Review General Assessment (Stage 2) - section 2
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "canAssessDrugRego" }
+                  connectByName: { name: "reviewAssessmentSection2Level1" }
                 }
               }
+              # Apply UserEdit
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyUserEdit" }
@@ -582,11 +464,13 @@ exports.queries = [
           passwordHash: "$2a$10$5SZSiEj2RqgZzKu4.aCeFOicNo8f9cgXfCqK0k5ioNgGwTJvC42jG"
           permissionJoinsUsingId: {
             create: [
+              # Review General - Final decision
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestApproval" }
+                  connectByName: { name: "reviewFinalDecision" }
                 }
               }
+              # Apply UserEdit
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyUserEdit" }
@@ -612,11 +496,13 @@ exports.queries = [
           passwordHash: "$2a$10$DHIKam/EQItFhIBA5I4wduldlnc4n/0w42RJ9.SBA5htb4cZ/iEvi"
           permissionJoinsUsingId: {
             create: [
+              # Review General - Final decision
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewReviewTestApproval" }
+                  connectByName: { name: "reviewFinalDecision" }
                 }
               }
+              # Apply UserEdit
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "applyUserEdit" }
@@ -651,22 +537,22 @@ exports.queries = [
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyOrgRego" }
+                  connectByName: { name: "applyGeneral" }
                 }
               }
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "reviewOrgRego" }
+                  connectByName: { name: "assignGeneral" }
+                }
+              }
+              {
+                permissionNameToPermissionNameId: {
+                  connectByName: { name: "reviewGeneral" }
                 }
               }
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "admin" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]

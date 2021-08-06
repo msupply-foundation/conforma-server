@@ -198,24 +198,4 @@ exports.queries = [
       }
     }
   }`,
-  `mutation {
-    createUserOrganisation(
-      input: {
-        userOrganisation: {
-          userRole: "Owner"
-          organisationToOrganisationId: {
-            connectByName: { name: "Drug Dealers West" }
-          }
-          userToUserId: { connectByUsername: { username: "js" } }
-        }
-      }
-    ) {
-      user {
-        username
-      }
-      organisation {
-        name
-      }
-    }
-  }`,
 ]

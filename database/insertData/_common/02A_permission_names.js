@@ -36,6 +36,23 @@ exports.queries = [
       }
     }
   }`,
+  // applyEditUser
+  `mutation applyUserEditPermission {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyUserEdit"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
   // applyGeneral (associated with multiple templates)
   `mutation applyGeneralPermission {
     createPermissionName(
