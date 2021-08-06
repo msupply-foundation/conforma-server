@@ -9,11 +9,13 @@ git submodule update --init
 
 #insert data from
 echo -e "\nInserting data..."
-cd ./database
 
 echo $1
-if [ $1 != '' ]; then yarn ts-node ./database/snapshotCLI.ts use $1 &
-else yarn ts-node ./database/snapshotCLI.ts use "snapshot_basic" &
+if [ $1 != '' ]
+then 
+    yarn ts-node ./database/snapshotCLI.ts use $1 &
+else 
+    yarn ts-node ./database/snapshotCLI.ts use "snapshot_basic" &
 fi
 
 # yarn ts-node ./database/insertDataCLI.ts $1 &
