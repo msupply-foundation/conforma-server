@@ -52,7 +52,6 @@ export async function saveFiles(data: any, queryParams: HttpQueryParameters) {
       const ext = path.extname(file.filename)
       const basename = path.basename(file.filename, ext)
       const unique_id = queryParams?.uid ?? nanoid()
-      console.log('queryParams', queryParams)
       const subfolder =
         queryParams?.sub_folder ?? queryParams?.subfolder ?? queryParams?.application_serial ?? ''
 
