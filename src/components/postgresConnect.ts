@@ -424,7 +424,7 @@ class PostgresDB {
   }
 
   // Used by triggers/actions -- please don't modify
-  public getUserData = async (userId: number) => {
+  public getUserData = async (userId: number, orgId: number) => {
     const text = `
       SELECT first_name as "firstName",
       last_name as "lastName",
@@ -433,9 +433,18 @@ class PostgresDB {
       FROM "user"
       WHERE id = $1
       `
+    const text2 = `
+      SELECT name as "orgName"
+      FROM organisation
+      WHERE id = $1
+      `
     try {
       const result = await this.query({ text, values: [userId] })
-      const userData = result.rows[0]
+      const userData = { ...result.rows[0], orgName: null }
+      if (orgId) {
+        const orgResult = await this.query({ text: text2, values: [orgId] })
+        userData.orgName = orgResult.rows[0].orgName
+      }
       return userData
     } catch (err) {
       throw err
