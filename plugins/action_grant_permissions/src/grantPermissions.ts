@@ -2,18 +2,19 @@ import { ActionQueueStatus } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
 
 const grantPermissions = async ({ parameters, DBConnect }: ActionPluginInput) => {
-  const { username, orgName, permissionNames } = parameters
+  const { username, orgName, orgId, permissionNames } = parameters
   try {
-    console.log('\nGranting permission/s:')
-    console.log({ username, orgName, permissionNames })
+    console.log('\nGranting permissions:')
+    console.log({ username, orgName, orgId, permissionNames })
 
     const permissionJoinIds = []
     const outputNames = []
 
     for (const permissionName of permissionNames) {
-      const permissionJoinId = orgName
-        ? await DBConnect.joinPermissionNameToUserOrg(username, orgName, permissionName)
-        : await DBConnect.joinPermissionNameToUser(username, permissionName)
+      const permissionJoinId =
+        orgName || orgId // Can use either one to create a permission_join with a company
+          ? await DBConnect.joinPermissionNameToUserOrg(username, orgName || orgId, permissionName)
+          : await DBConnect.joinPermissionNameToUser(username, permissionName)
       permissionJoinIds.push(permissionJoinId)
       if (permissionJoinId) outputNames.push(permissionName)
     }

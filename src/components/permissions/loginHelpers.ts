@@ -1,10 +1,10 @@
 import databaseConnect from '../databaseConnect'
-import config from '../../config.json'
+import config from '../../config'
 import { verify, sign } from 'jsonwebtoken'
 import { promisify } from 'util'
 import { nanoid } from 'nanoid'
 import { PermissionRow, TemplatePermissions } from './types'
-import { compileJWT } from './rowLevelPolicyHelpers'
+import { baseJWT, compileJWT } from './rowLevelPolicyHelpers'
 import { Organisation, UserOrg } from '../../types'
 
 const verifyPromise: any = promisify(verify)
@@ -63,13 +63,15 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
 
   const returnSessionId = sessionId ?? nanoid(16)
 
+  const isAdmin = !!templatePermissionRows.find((row) => !!row?.isAdmin)
+
   return {
     templatePermissions: buildTemplatePermissions(templatePermissionRows),
     JWT: await getSignedJWT({
       userId: userId || newUserId,
       orgId,
       templatePermissionRows,
-      sessionId: returnSessionId
+      sessionId: returnSessionId,
     }),
     user: {
       userId: userId || newUserId,
@@ -79,8 +81,9 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       email,
       dateOfBirth,
       organisation: selectedOrg?.[0],
-      sessionId: returnSessionId
+      sessionId: returnSessionId,
     },
+    isAdmin,
     orgList,
   }
 }
@@ -102,4 +105,8 @@ const getSignedJWT = async (JWTelements: object) => {
   return await signPromise(compileJWT(JWTelements), config.jwtSecret)
 }
 
-export { extractJWTfromHeader, getUserInfo, getTokenData }
+const getAdminJWT = async () => {
+  return await signPromise({ ...baseJWT, role: 'postgres' }, config.jwtSecret)
+}
+
+export { extractJWTfromHeader, getUserInfo, getTokenData, getAdminJWT }

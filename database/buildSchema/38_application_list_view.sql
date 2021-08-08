@@ -6,9 +6,6 @@ CREATE TABLE application_list_shape (
     "name" varchar,
     template_code varchar,
     template_name varchar,
-    applicant_username varchar,
-    applicant_first_name varchar,
-    applicant_last_name varchar,
     applicant varchar,
     org_name varchar,
     stage varchar,
@@ -16,8 +13,8 @@ CREATE TABLE application_list_shape (
     "status" public.application_status,
     outcome public.application_outcome,
     last_active_date timestamptz,
-    assigner_usernames varchar[],
-    reviewer_usernames varchar[],
+    assigners varchar[],
+    reviewers varchar[],
     reviewer_action public.reviewer_action,
     assigner_action public.assigner_action,
     is_fully_assigned_level_1 boolean,
@@ -34,9 +31,6 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         app.name,
         template.code AS template_code,
         template.name AS template_name,
-        username AS applicant_username,
-        first_name AS applicant_first_name,
-        last_name AS applicant_last_name,
         CONCAT(first_name, ' ', last_name) AS applicant,
         org.name AS org_name,
         stage_status.stage,
@@ -44,11 +38,15 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         stage_status.status,
         app.outcome,
         status_history_time_created AS last_active_date,
-        assigner_usernames,
-        reviewer_usernames,
+        assigners,
+        reviewers,
         reviewer_action,
         assigner_action,
-        is_fully_assigned_level_1,
+        CASE WHEN is_fully_assigned_level_1 IS NULL THEN
+            FALSE
+        ELSE
+            is_fully_assigned_level_1
+        END,
         assigned_questions_level_1,
         total_questions
     FROM
@@ -60,6 +58,8 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
     LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
     LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
+WHERE
+    app.is_config = FALSE
 $$
 LANGUAGE sql
 STABLE;

@@ -9,25 +9,25 @@ describe('Duplicate application responses for re-submission with 2 modifications
   beforeAll(async (done) => {
     await DBConnect.query({
       text: `
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated)
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_submitted)
       VALUES (DEFAULT, 4001, 4001, '{"text": "Valerio"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated)
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_submitted)
       VALUES (DEFAULT, 4002, 4001, '{"text": "Red"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated)
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_submitted)
       VALUES (DEFAULT, 4003, 4001, '{"text": "jj@nowhere.com"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated)
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_submitted)
       VALUES (DEFAULT, 4005, 4001, '{"text": "42"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated)
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_submitted)
       VALUES (DEFAULT, 4006, 4001, '{"text": "Tonga"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated)
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_submitted)
       VALUES (DEFAULT, 4008, 4001, '{"text": "Vitamin B"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated)
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_submitted)
       VALUES (DEFAULT, 4009, 4001, '{"text": "Natural Product", "optionIndex": 1}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated)
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_submitted)
       VALUES (DEFAULT, 4011, 4001, '{"text": "100mg"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated)
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_submitted)
       VALUES (DEFAULT, 4012, 4001, '{"text": "250"}', 'True', 'NOW()');
-    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_updated)
+    INSERT INTO public.application_response (id, template_element_id, application_id, "value", is_valid, time_submitted)
       VALUES (DEFAULT, 4013, 4001, '{"text": "Nausea"}', 'True', 'NOW()');
   `,
       values: [],
@@ -47,7 +47,7 @@ describe('Duplicate application responses for re-submission with 2 modifications
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4001,
-        stageId: 4,
+        stageId: 5,
       },
       DBConnect,
     }).then((result: any) => {
@@ -57,7 +57,7 @@ describe('Duplicate application responses for re-submission with 2 modifications
         output: {
           updatedReviews: [
             {
-              reviewId: 5,
+              reviewId: 6001,
               reviewAssignmentId: 1005,
               applicationId: 4001,
               reviewerId: 7,
@@ -78,11 +78,11 @@ describe('Update review_response to required changes_requested by consolidator1'
     await DBConnect.query({
       text: `
       INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status)
-        VALUES (DEFAULT, 4, 1022, 4001, 4000, 'DISAGREE', 'SUBMITTED');
+        VALUES (DEFAULT, 5003, 1022, 4001, 4000, 'DISAGREE', 'SUBMITTED');
       INSERT INTO public.review_decision (id, decision, review_id)
-        VALUES (DEFAULT, 'CHANGES_REQUESTED', 4);
+        VALUES (DEFAULT, 'CHANGES_REQUESTED', 5003);
       INSERT INTO public.review_status_history (id, review_id, status)
-        VALUES (DEFAULT, 4, 'SUBMITTED');
+        VALUES (DEFAULT, 5003, 'SUBMITTED');
       `,
       values: [],
     })
@@ -104,9 +104,9 @@ describe('Update review_response to required changes_requested by consolidator1'
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4000,
-        stageId: 5,
+        stageId: 6,
         reviewData: {
-          reviewId: 4,
+          reviewId: 5003,
           levelNumber: 2,
           isLastLevel: true,
           latestDecision: { decision: Decision.ChangesRequested, comment: null },
@@ -120,7 +120,7 @@ describe('Update review_response to required changes_requested by consolidator1'
         output: {
           updatedReviews: [
             {
-              reviewId: 2,
+              reviewId: 5001,
               reviewAssignmentId: 1001,
               applicationId: 4000,
               reviewerId: 7,
@@ -141,12 +141,12 @@ describe('Update review_responses after updating changes_requested to reviewer1'
     await DBConnect.query({
       text: `
     INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status)
-      VALUES (DEFAULT, 7, 3010, 4001, 4020, 'APPROVE', 'SUBMITTED');
+      VALUES (DEFAULT, 6003, 3010, 4001, 4020, 'APPROVE', 'SUBMITTED');
     INSERT INTO public.review_response (id, review_id, review_question_assignment_id, template_element_id, application_response_id, decision, status)
-      VALUES (DEFAULT, 7, 3011, 4002, 4021, 'APPROVE', 'SUBMITTED');
-    UPDATE public.review_decision SET decision = 'CONFORM', comment = NULL, time_updated = 'NOW()' WHERE id = 6;
+      VALUES (DEFAULT, 6003, 3011, 4002, 4021, 'APPROVE', 'SUBMITTED');
+    UPDATE public.review_decision SET decision = 'CONFORM', comment = NULL, time_updated = 'NOW()' WHERE id = 6002;
     INSERT INTO public.review_status_history (id, review_id, status)
-      VALUES (DEFAULT, 7, 'SUBMITTED');
+      VALUES (DEFAULT, 6003, 'SUBMITTED');
     `,
       values: [],
     })
@@ -165,9 +165,9 @@ describe('Update review_responses after updating changes_requested to reviewer1'
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4002,
-        stageId: 5,
+        stageId: 6,
         reviewData: {
-          reviewId: 6,
+          reviewId: 6003,
           levelNumber: 1,
           isLastLevel: false,
         },
@@ -180,7 +180,7 @@ describe('Update review_responses after updating changes_requested to reviewer1'
         output: {
           updatedReviews: [
             {
-              reviewId: 9,
+              reviewId: 6005,
               reviewAssignmentId: 1010,
               applicationId: 4002,
               reviewerId: 10,
@@ -201,16 +201,16 @@ describe('Update review_responses for second review submission by reviewer2 when
     await DBConnect.query({
       text: `
   INSERT INTO public.review_status_history (id, review_id, status)
-  VALUES (DEFAULT, 9, 'DRAFT');
+  VALUES (DEFAULT, 6005, 'DRAFT');
   UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 56;
   UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 57;
   UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 58;
   UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 59;
   UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 60;
   INSERT INTO public.review_decision (id, decision, review_id)
-    VALUES (DEFAULT, 'CONFORM', 8);
+    VALUES (DEFAULT, 'CONFORM', 6004);
   INSERT INTO public.review_status_history (id, review_id, status)
-    VALUES (DEFAULT, 8, 'SUBMITTED');
+    VALUES (DEFAULT, 6004, 'SUBMITTED');
   `,
       values: [],
     })
@@ -233,9 +233,9 @@ describe('Update review_responses for second review submission by reviewer2 when
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
         applicationId: 4002,
-        stageId: 5,
+        stageId: 6,
         reviewData: {
-          reviewId: 3002,
+          reviewId: 6004,
           levelNumber: 1,
           isLastLevel: false,
         },
@@ -248,7 +248,7 @@ describe('Update review_responses for second review submission by reviewer2 when
         output: {
           updatedReviews: [
             {
-              reviewId: 9,
+              reviewId: 6005,
               reviewAssignmentId: 1010,
               applicationId: 4002,
               reviewerId: 10,
@@ -275,9 +275,9 @@ describe('Update review_response to submit review with LOQ to applicant by conso
       UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5023;
       UPDATE public.review_response SET status = 'SUBMITTED' WHERE id = 5024;
       INSERT INTO public.review_decision (id, decision, review_id)
-        VALUES (DEFAULT, 'LIST_OF_QUESTIONS', 12);
+        VALUES (DEFAULT, 'LIST_OF_QUESTIONS', 7004);
       INSERT INTO public.review_status_history (id, review_id, status)
-        VALUES (DEFAULT, 12, 'SUBMITTED');
+        VALUES (DEFAULT, 7004, 'SUBMITTED');
       `,
       values: [],
     })
@@ -318,10 +318,10 @@ describe('Update review_response to submit review with LOQ to applicant by conso
       },
       // @ts-ignore -- ignore missing properties on applicationData
       applicationData: {
-        applicationId: 4004,
-        stageId: 5,
+        applicationId: 4003,
+        stageId: 6,
         reviewData: {
-          reviewId: 12,
+          reviewId: 7004,
           levelNumber: 2,
           isLastLevel: true,
           latestDecision: { decision: Decision.ListOfQuestions, comment: null },

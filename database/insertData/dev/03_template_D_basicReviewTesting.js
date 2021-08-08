@@ -13,6 +13,7 @@ exports.queries = [
         template: {
           code: "ReviewTest"
           name: "Test -- Review Process"
+          namePlural: "Test -- Reviews Processes"
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- Proof of your identity\\n- Pictures of product\\n- Product licence document"
           versionTimestamp: "NOW()"
@@ -266,6 +267,63 @@ exports.queries = [
                 sequence: 2
                 parameterQueries: { message: "Application Submitted" }
               }
+              {
+                actionCode: "generateTextString"
+                trigger: ON_APPLICATION_SUBMIT
+                sequence: 100
+                parameterQueries: {
+                  pattern: "<?templateName>—<?productName>"
+                  customFields: {
+                    templateName: "applicationData.templateName",
+                    productName: "applicationData.responses.Q20.text"
+                  }
+                  updateRecord: true
+                  tableName: "application"
+                  fieldName: "name"
+                }
+              }
+              #
+              # Change outcome of application to REJECT if decision in stage Screening is NON_CONFORM
+              # Note: There is a generic core action to change an application outcome 
+              # after the last level reviewer on the last stage submits a decision!
+              #
+              {
+                actionCode: "changeOutcome"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 10
+                condition: {
+                  operator: "AND"
+                  children: [
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: [
+                            "applicationData.reviewData.latestDecision.decision"
+                          ]
+                        }
+                        "NON_CONFORM"
+                      ]
+                    }
+                    {
+                      operator: "="
+                      children: [
+                        {
+                          operator: "objectProperties"
+                          children: ["applicationData.stage"]
+                        }
+                        "Screening"
+                      ]
+                    }
+                    {
+                      operator: "objectProperties"
+                      children: ["applicationData.reviewData.isLastLevel"]
+                    }
+                  ]
+                }
+                parameterQueries: { newOutcome: { value: "REJECTED" } }
+              }
             ]
           }
           templatePermissionsUsingId: {
@@ -312,6 +370,7 @@ exports.queries = [
                 }
                 stageNumber: 3
                 levelNumber: 1
+                canMakeFinalDecision: true
               }
               # Assign general
               {

@@ -1,10 +1,12 @@
 import fetch from 'node-fetch'
-import * as config from '../config.json'
+import config from '../config'
+import { getAdminJWT } from './permissions/loginHelpers'
 
 const endpoint = config.graphQLendpoint
 
 class GraphQLdb {
   private static _instance: GraphQLdb
+  adminJWT: string = ''
 
   // constructor() {}
 
@@ -13,11 +15,13 @@ class GraphQLdb {
   }
 
   public gqlQuery = async (query: string, variables = {}) => {
+    if (this.adminJWT === '') this.adminJWT = await getAdminJWT()
     const queryResult = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
+        Authorization: `Bearer ${this.adminJWT}`,
       },
       body: JSON.stringify({
         query: query,
@@ -25,6 +29,14 @@ class GraphQLdb {
       }),
     })
     const data = await queryResult.json()
+    if (data.errors)
+      throw new Error(
+        `problem executing gql: ${query} variables: ${variables} errors: ${JSON.stringify(
+          data.errors,
+          null,
+          ' '
+        )}`
+      )
     return data.data
   }
 
@@ -35,6 +47,7 @@ class GraphQLdb {
         review(id: $id) {
           levelNumber
           isLastLevel
+          isLastStage
           status
           latestDecision {
               decision

@@ -1,5 +1,7 @@
 # Docker
 
+**minimum version** of docker 18.09 is required
+
 In Docker folder you will find scripts to build an overall image of both front and back end. Typically individual images are built and composed via docker compose. The reason behind single image was to list all of the steps needed to build and deploy app on a fresh ubuntu instance
 
 ## Container internals overview

@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "createVerification",
+  "name": "Create Verification",
+  "description": "Adds a record to verification table",
+  "required_parameters": ["applicationId"],
+  "optional_parameters": ["uniqueId", "expiry", "message", "code", "data"],
+  "output_properties": ["verification"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-06-23"
+  }
+}

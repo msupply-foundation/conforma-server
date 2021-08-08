@@ -13,6 +13,7 @@ exports.queries = [
         template: {
           code: "UserRegistration"
           name: "User Registration"
+          namePlural: "User Registations"
           submissionMessage: "Your registration has been completed. Please follow the link sent via email to confirm."
           status: AVAILABLE
           versionTimestamp: "NOW()"
@@ -60,7 +61,7 @@ exports.queries = [
                       category: QUESTION
                       parameters: { 
                         label: "Select a username" 
-                        description: "You can use letters, numbers and - . _ or @"
+                        description: "You can use 3 or more letters, numbers and - . _ or @"
                       }
                       validation: {
                         operator: "AND"
@@ -68,7 +69,16 @@ exports.queries = [
                           {
                             operator: "API"
                             children: [
-                              "http://localhost:8080/check-unique"
+                              {
+                                operator: "+"
+                                children: [
+                                  {
+                                    operator: "objectProperties"
+                                    children: ["applicationData.config.serverREST"]
+                                  }
+                                  "/check-unique"
+                                ]
+                              }
                               ["type", "value"]
                               "username"
                               {
@@ -136,11 +146,11 @@ exports.queries = [
                               operator: "objectProperties"
                               children: ["responses.thisResponse"]
                             }
-                            { value: "^[\\\\S]{8,}$" }
+                            { value: "^[\\\\S]{6,}$" }
                           ]
                         }
-                        # Validation:Currently just checks 8 chars, needs more complexity
-                        validationMessageInternal: "Password must be at least 8 characters"
+                        # Validation:Currently just checks 6 chars, needs more complexity
+                        validationMessageInternal: "Password must be at least 6 characters"
                       }
                     }
                     {
@@ -425,6 +435,45 @@ exports.queries = [
           templateActionsUsingId: {
             create: [
               # No Core Actions for this one
+                {
+                  actionCode: "generateTextString"
+                  sequence: 1
+                  trigger: ON_APPLICATION_CREATE
+                  parameterQueries: {
+                    pattern: "S-[A-Z]{3}-<+dddd>"
+                    counterName: {
+                      operator: "objectProperties"
+                      children: [ "applicationData.templateCode" ]
+                    }
+                    counterInit: 100
+                    customFields: {
+                      # TBD
+                    }
+                    updateRecord: true
+                    tableName: "application"
+                    fieldName: "serial"
+                  }
+              }
+              {
+                  actionCode: "generateTextString"
+                  sequence: 2
+                  trigger: ON_APPLICATION_CREATE
+                  parameterQueries: {
+                    pattern: "<?templateName> - <?serial>"
+                    customFields: {
+                      templateName: "applicationData.templateName"
+                      serial: "applicationData.applicationSerial"
+                    }
+                    updateRecord: true
+                    tableName: "application"
+                    fieldName: "name"
+                  }
+              }
+              {
+                actionCode: "incrementStage"
+                sequence: 1
+                trigger: ON_APPLICATION_CREATE
+              }
               {
                 actionCode: "modifyRecord"
                 trigger: ON_APPLICATION_SUBMIT
@@ -482,7 +531,7 @@ exports.queries = [
                   }
                   education_level: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q1EducationLevel", ""]
+                    children: ["applicationData.responses.Q1EducationLevel", {}]
                   }
                   secondary: {
                     operator: "objectProperties"
@@ -490,14 +539,9 @@ exports.queries = [
                   }
                   university_history: {
                     operator: "objectProperties"
-                    children: ["applicationData.responses.Q3UniversityHistory", ""]
+                    children: ["applicationData.responses.Q3UniversityHistory", {}]
                   }
                 }
-              }
-              {
-                actionCode: "incrementStage"
-                sequence: 1
-                trigger: ON_APPLICATION_CREATE
               }
               {
                 actionCode: "changeStatus"
@@ -520,19 +564,7 @@ exports.queries = [
                     operator: "objectProperties"
                     children: ["applicationData.responses.Q3Username.text"]
                   }
-                  permissionNames: ["applyUserEdit"]
-                }
-              }
-              {
-                actionCode: "grantPermissions"
-                trigger: ON_APPLICATION_SUBMIT
-                sequence: 4
-                parameterQueries: {
-                  username: {
-                    operator: "objectProperties"
-                    children: ["applicationData.responses.Q3Username.text"]
-                  }
-                  permissionNames: [ "applyOrgRego" ]
+                  permissionNames: ["applyUserEdit", "applyOrgRego"  ]
                 }
               }
             ]

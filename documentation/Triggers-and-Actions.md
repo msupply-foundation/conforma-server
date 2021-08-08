@@ -9,6 +9,7 @@
 - [Actions](#actions)
 - [Action parameters](#action-parameters)
 - [Passing information to Actions](#passing-information-to-actions)
+- [Running actions via REST endpoint]()
 
 <!-- tocstop -->
 
@@ -31,20 +32,37 @@ Actions also return an **output** object (e.g. `changeStatus` Action returns the
 
 ![](images/triggers-and-actions-diagram.png)
 
-## List of available Triggers and the "listener" associated with it.
+### List of available Triggers
 
-| Trigger Name               | Listener                                                         |
-| -------------------------- | ---------------------------------------------------------------- |
-| `ON_APPLICATION_CREATE`    | Postgres trigger on `Application` table                          |
-| `ON_APPLICATION_SUBMIT`    | Postgres trigger on `Application` table                          |
-| `ON_APPLICATION_SAVE`      | Postgres trigger on `Application` table                          |
-| `ON_APPLICATION_WITHDRAWn` | Postgres trigger on `Application` table                          |
-| `ON_REVIEW_CREATE`         | Postgres trigger on `Review` table                               |
-| `ON_REVIEW_START`          | Postgres trigger on `Review` table                               |
-| `ON_REVIEW_SUBMIT`         | Postgres trigger on `Review` table                               |
-| `ON_REVIEW_ASSIGN`         | To be decided                                                    |
-| `ON_APPROVAL_SUBMIT`       | To be decided                                                    |
-| `ON_SCHEDULE_TIME`         | Server scheduled service (see [here](link to Scheduled actions)) |
+- `ON_APPLICATION_CREATE`
+- `ON_APPLICATION_RESTART`
+- `ON_APPLICATION_SUBMIT`
+- `ON_APPLICATION_SAVE`
+- `ON_APPLICATION_WITHDRAW`
+- `ON_REVIEW_CREATE`
+- `ON_REVIEW_SUBMIT`
+- `ON_REVIEW_RESTART`
+- `ON_REVIEW_START`
+- `ON_REVIEW_ASSIGN`
+- `ON_REVIEW_SELF_ASSIGN`
+- `ON_APPROVAL_SUBMIT`
+- `ON_VERIFICATION`
+- `DEV_TEST` (For testing purposes)
+- `ON_SCHEDULE_TIME` (Not yet implemented)
+
+Two other possible Trigger states are `PROCESSING` and `ERROR`. The state of triggers goes through the following steps:
+
+1. Trigger is set by front-end (usually) to one of the above values
+2. Back-end listener starts processing the actions associated with the trigger (for that template); Trigger is set to `PROCESSING` while this happens.
+3. On completion of Actions, trigger is set back to `NULL`
+4. If any Actions fail, trigger is set to `ERROR`
+
+### Database tables that have a TRIGGER field that is listened to:
+
+- `application`
+- `review`
+- `review_assignment`
+- `verification`
 
 ## Actions
 
@@ -133,3 +151,24 @@ Note that `applicationData` is regenerated between each Action in a sequence, so
     }
 }
 ```
+
+### Running Actions via REST endpoint
+
+There is a endpoint on the server which can be used to invoke single actions on demand. This may be useful if, for example, the front-end needs to run an action, such as generating a new serial number (using `generateTextString` action)
+
+Endpoint: `/run-action`
+Type: `POST`
+Parameters (via body JSON):
+
+```js
+{
+    "actionCode": "generateTextString", // Code of the action
+    "applicationId": 4001, // for generating applicationData, so not required for all actions
+    "parameters": {
+        <...input parameters for the action itself>
+    }
+}
+
+```
+
+TO-DO: Add authentication to Endpoint (and most other endpoints)

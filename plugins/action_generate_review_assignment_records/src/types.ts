@@ -13,18 +13,22 @@ export interface Reviewer {
   restrictions: { [key: string]: object }
   allowedSections: string[] | null
   canSelfAssign: boolean
+  canMakeFinalDecision: boolean
 }
 
-interface ReviewAssignment {
+export interface ReviewAssignment {
   reviewerId: number
-  orgId: number | null
+  organisationId: number | null
   stageId: number
   stageNumber: number
+  timeStageCreated?: Date
   status: ReviewAssignmentStatus
   applicationId: number
   allowedSections: string[] | null
   levelNumber: number
   isLastLevel: boolean
+  isLastStage: boolean
+  isFinalDecision: boolean
 }
 
 export interface ReviewAssignmentObject {

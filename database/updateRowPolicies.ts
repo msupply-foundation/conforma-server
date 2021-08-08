@@ -1,7 +1,5 @@
-const fetch = require('node-fetch')
-const config = require('../src/config.json')
-
-if (process.argv[2] === '--from_insert_data.sh') updateRowPolicies()
+import fetch from 'node-fetch'
+import config from '../src/config'
 
 async function updateRowPolicies() {
   console.log('updating row level policies ... ')
@@ -17,4 +15,4 @@ async function updateRowPolicies() {
   console.log('updating row level policies ... done')
 }
 
-exports.updateRowPolicies = updateRowPolicies
+export default updateRowPolicies

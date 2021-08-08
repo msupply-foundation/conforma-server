@@ -3,6 +3,7 @@ import {
   ActionQueueStatus,
   ApplicationOutcome,
   ApplicationStatus,
+  Review,
   Trigger,
   TriggerQueueStatus,
 } from './generated/graphql'
@@ -71,7 +72,10 @@ export interface ActionApplicationData {
   action_payload: ActionPayload
   applicationId: number
   applicationSerial: string
+  applicationName: string
   templateId: number
+  templateName: string
+  templateCode: string
   stageId: number
   stageNumber: number
   stage: string
@@ -81,25 +85,19 @@ export interface ActionApplicationData {
   status: ApplicationStatus
   statusHistoryTimeCreated: Date
   userId: number
-  orgId: number
+  orgId: number | null
   outcome: ApplicationOutcome
   firstName: string
   lastName: string
   username: string
   dateOfBirth: Date | null
   email: string
+  orgName: string | null
   responses: {
     [key: string]: any
   }
-  reviewData: {
-    reviewId?: number
-    levelNumber?: number
-    isLastLevel?: boolean
-    status?: string
-    latestDecision?: {
-      decision: string
-      comment: string | null
-    }
+  reviewData: Review & {
+    reviewId: number
   }
   environmentData: {
     appRootFolder: string
@@ -143,6 +141,7 @@ export interface FilePayload {
   user_id: number
   unique_id: string
   original_filename: string
+  template_id: number
   application_serial: string
   application_response_id: number
   file_path: string

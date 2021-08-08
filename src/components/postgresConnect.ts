@@ -1,6 +1,6 @@
-import { processTrigger, executeAction } from './triggersAndActions'
+import { processTrigger, executeAction } from './actions/triggersAndActions'
 import { actionLibrary } from './pluginsConnect'
-import * as config from '../config.json'
+import config from '../config'
 import { Client, Pool, QueryResult } from 'pg'
 import {
   ActionInTemplate,
@@ -92,6 +92,20 @@ class PostgresDB {
 
   public end = () => {
     this.pool.end()
+  }
+
+  public getCounter = async (counterName: string, increment = true) => {
+    const textSelect = 'SELECT value FROM counter WHERE name = $1;'
+    const textUpdate = 'UPDATE counter SET value = value + 1 WHERE name = $1;'
+    try {
+      await this.query({ text: 'BEGIN TRANSACTION;' })
+      const result: any = await this.query({ text: textSelect, values: [counterName] })
+      if (increment) await this.query({ text: textUpdate, values: [counterName] })
+      await this.query({ text: 'COMMIT TRANSACTION;' })
+      return result.rows[0]?.value
+    } catch (err) {
+      throw err
+    }
   }
 
   public addActionQueue = async (action: ActionQueuePayload): Promise<boolean> => {
@@ -240,7 +254,10 @@ class PostgresDB {
     const text = `
       SELECT application_id as "applicationId",
       serial as "applicationSerial",
+      name as "applicationName",
       template_id as "templateId",
+      template_name as "templateName",
+      template_code as "templateCode",
       stage_id as "stageId", stage_number as "stageNumber", stage,
       stage_history_id as "stageHistoryId",
       stage_history_time_created as "stageHistoryTimeCreated",
@@ -248,10 +265,8 @@ class PostgresDB {
       user_id as "userId",
       org_id as "orgId",
       outcome
-      FROM application_stage_status_all
+      FROM application_stage_status_latest
       WHERE application_id = $1
-      AND stage_is_current = true
-      AND status_is_current = true
     `
     const result = await this.query({ text, values: [applicationId] })
     const applicationData = result.rows[0]
@@ -283,6 +298,9 @@ class PostgresDB {
       case 'review_assignment':
         text = 'SELECT application_id FROM review_assignment WHERE id = $1'
         break
+      case 'verification':
+        text = 'SELECT application_id FROM verification WHERE id = $1'
+        break
       // To-Do: queries for other trigger tables
       default:
         throw new Error('Table name not valid')
@@ -308,6 +326,10 @@ class PostgresDB {
       case 'review_assignment':
         text =
           'SELECT template_id FROM application WHERE id = (SELECT application_id FROM review_assignment WHERE id = $1)'
+        break
+      case 'verification':
+        text =
+          'SELECT template_id FROM application WHERE id = (SELECT application_id FROM verification WHERE id = $1)'
         break
       default:
         throw new Error('Table name not valid')
@@ -362,6 +384,32 @@ class PostgresDB {
     }
   }
 
+  public getVerification = async (uid: string) => {
+    const text = `
+      SELECT unique_id, time_expired, is_verified, message
+        FROM verification
+        WHERE unique_id = $1`
+    try {
+      const result = await this.query({ text, values: [uid] })
+      return result.rows[0]
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public setVerification = async (uid: string) => {
+    const text = `
+      UPDATE verification
+      SET is_verified = true, trigger = 'ON_VERIFICATION'
+      WHERE unique_id = $1;`
+    try {
+      await this.query({ text, values: [uid] })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
   // Join a user to an org in user_organisation table
   public addUserOrg = async (userOrg: any): Promise<object> => {
     const text = `INSERT INTO user_organisation (${Object.keys(userOrg)}) 
@@ -376,7 +424,7 @@ class PostgresDB {
   }
 
   // Used by triggers/actions -- please don't modify
-  public getUserData = async (userId: number) => {
+  public getUserData = async (userId: number, orgId: number) => {
     const text = `
       SELECT first_name as "firstName",
       last_name as "lastName",
@@ -385,9 +433,18 @@ class PostgresDB {
       FROM "user"
       WHERE id = $1
       `
+    const text2 = `
+      SELECT name as "orgName"
+      FROM organisation
+      WHERE id = $1
+      `
     try {
       const result = await this.query({ text, values: [userId] })
-      const userData = result.rows[0]
+      const userData = { ...result.rows[0], orgName: null }
+      if (orgId) {
+        const orgResult = await this.query({ text: text2, values: [orgId] })
+        userData.orgName = orgResult.rows[0].orgName
+      }
       return userData
     } catch (err) {
       throw err
@@ -648,23 +705,23 @@ class PostgresDB {
 
   public joinPermissionNameToUserOrg = async (
     username: string,
-    orgName: string,
+    org: string | number,
     permissionName: string
   ) => {
     const text = `
-    insert into permission_join (user_id, organisation_id, permission_name_id) 
+    INSERT INTO permission_join (user_id, organisation_id, permission_name_id) 
     values (
         (select id from "user" where username = $1),
-        (select id from organisation where name = $2),
+        ${typeof org === 'number' ? '$2' : '(select id from organisation where name = $2)'},
         (select id from permission_name where name = $3))
     ON CONFLICT (user_id, organisation_id, permission_name_id)
       WHERE organisation_id IS NOT NULL
     DO
     		UPDATE SET user_id = (select id from "user" where username = $1)
-    returning id
+    RETURNING id
     `
     try {
-      const result = await this.query({ text, values: [username, orgName, permissionName] })
+      const result = await this.query({ text, values: [username, org, permissionName] })
       return result.rows[0].id
     } catch (err) {
       console.log(err.message)
@@ -685,6 +742,7 @@ class PostgresDB {
       throw err
     }
   }
+
   public getReviewStageAndLevel = async (reviewId: number) => {
     const text = `
       SELECT review.level_number AS "levelNumber", stage_number as "stageNumber"
@@ -762,16 +820,36 @@ class PostgresDB {
         text: 'SELECT * FROM schema_columns where table_name like $1',
         values: [tableName],
       })
-      const responses = result.rows as schema_column[]
+      const responses = result.rows as schemaColumn[]
       return responses
     } catch (err) {
       console.log(err.message)
       throw new Error('Problem getting database info')
     }
   }
+
+  public getPermissionPolicies: GetPermissionPolicies = async () => {
+    try {
+      const result = await this.query({
+        text: 'SELECT id, rules FROM permission_policy',
+      })
+      const responses = result.rows as permissionPolicyColumns[]
+      return responses
+    } catch (err) {
+      console.log(err.message)
+      throw new Error('Problem getting permission policies')
+    }
+  }
 }
 
-type schema_column = {
+export type permissionPolicyColumns = {
+  id: number
+  rules: object
+}
+
+type GetPermissionPolicies = () => Promise<permissionPolicyColumns[]>
+
+type schemaColumn = {
   table_name: string
   table_type: 'BASE TABLE' | 'VIEW'
   column_name: string
@@ -782,7 +860,7 @@ type schema_column = {
   fk_to_table_name: string | null
   fk_to_column_name: string | null
 }
-type GetDatabaseInfo = (tableName?: string) => Promise<schema_column[]>
+type GetDatabaseInfo = (tableName?: string) => Promise<schemaColumn[]>
 
 const postgressDBInstance = PostgresDB.Instance
 export default postgressDBInstance

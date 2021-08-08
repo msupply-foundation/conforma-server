@@ -11,8 +11,9 @@ exports.queries = [
     createTemplate(
       input: {
           template: {
-            code: "CompanyLicense1"
-            name: "Company License for Modern medicines or Medical devices"
+            code: "CompanyLicense"
+            name: "Company License -- Modern medicines or Medical devices"
+            namePlural: "Companies Licenses -- Modern medicines or Medical devices"
             isLinear: false # CHANGE THIS
             status: AVAILABLE
             startMessage: "## Apply for a company license for:\\n\\n Modern medicines or Medical devices.\\n\\n**You will be required to upload the following documents:**\\n- **LMMD01**: Letter of request \\n- **LMMD12**: Letter from mother-company authorizing establishment of branch\\n- **LMMD15**: Site inspection report by F&D unit\\n- **LMMD16**: Company/manufacturer profile (including site master file and GMP certification where applicable)"
@@ -30,8 +31,7 @@ exports.queries = [
                         index: 10
                         title: "Applicant first name"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "First name" }
                         defaultValue: {
                           operator: "buildObject"
@@ -51,8 +51,7 @@ exports.queries = [
                         index: 20
                         title: "Applicant last name"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "Last name" }
                         defaultValue: {
                           operator: "buildObject"
@@ -72,8 +71,7 @@ exports.queries = [
                         index: 30
                         title: "Applicant DOB"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "Date of Birth" }
                         defaultValue: {
                           operator: "buildObject",
@@ -106,8 +104,7 @@ exports.queries = [
                         index: 40
                         title: "National ID number"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "National ID number" }
                         defaultValue: {
                           operator: "buildObject",
@@ -140,8 +137,7 @@ exports.queries = [
                         index: 50
                         title: "Date issued"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "Date issued" }
                         defaultValue: {
                           operator: "buildObject",
@@ -192,8 +188,7 @@ exports.queries = [
                         index: 80
                         title: "Village"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "Village" }
                         defaultValue: {
@@ -227,8 +222,7 @@ exports.queries = [
                         index: 90
                         title: "District"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "District/Province" }
                         defaultValue: {
@@ -273,8 +267,7 @@ exports.queries = [
                         index: 120
                         title: "Village"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "Village" }
                         defaultValue: {
@@ -308,8 +301,7 @@ exports.queries = [
                         index: 140
                         title: "District"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         isRequired: false
                         parameters: { label: "District/Province" }
                         defaultValue: {
@@ -361,8 +353,7 @@ exports.queries = [
                         index: 170
                         title: "Organisation Category"
                         elementTypePluginCode: "radioChoice"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: {
                           label: "Education Level"
                           layout: "inline"
@@ -391,8 +382,7 @@ exports.queries = [
                         index: 180
                         title: "Secondary"
                         elementTypePluginCode: "longText"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: { label: "Please enter details for secondary"}
                         visibilityCondition: {
                           operator: "="
@@ -435,8 +425,7 @@ exports.queries = [
                         index: 190
                         title: "Education List"
                         elementTypePluginCode: "listBuilder"
-                        category: QUESTION
-                        isEditable: false
+                        category: INFORMATION
                         parameters: {
                           label: "Education history"
                           displayType: "table"
@@ -510,27 +499,27 @@ exports.queries = [
                         index: 20
                         title: "Professional ID"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
-                        isEditable: false
+                        defaultValue: {
+                          operator: "graphQL",
+                          children: [
+                            "query getOrganisation($id: Int!){organisation(id: $id) {professionalId}}",
+                            "",
+                            [
+                              "id"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "currentUser.organisation.orgId"
+                              ]
+                            },
+                            "organisation.professionalId"
+                          ]
+                        }
+                        category: INFORMATION
                         parameters: {
                           label: "Professional ID"
-                          defaultValue: {
-                            operator: "graphQL",
-                            children: [
-                              "query getOrganisation($id: Int!){organisation(id: $id) {professionalId}}",
-                              "",
-                              [
-                                "id"
-                              ],
-                              {
-                                operator: "objectProperties",
-                                children: [
-                                  "currentUser.organisation.orgId"
-                                ]
-                              },
-                              "user.professionalId"
-                            ]
-                          }
+                          
                         }
                       }
                       {
@@ -538,28 +527,141 @@ exports.queries = [
                         index: 30
                         title: "Professional experience"
                         elementTypePluginCode: "listBuilder"
-                        category: QUESTION
-                        isEditable: false
+                        defaultValue: {
+                          operator: "graphQL",
+                          children: [
+                            "query getOrganisation($id: Int!){organisation(id: $id) {professionalExperience}}",
+                            "",
+                            [
+                              "id"
+                            ],
+                            {
+                              operator: "objectProperties",
+                              children: [
+                                "currentUser.organisation.orgId"
+                              ]
+                            },
+                            "organisation.professionalExperience"
+                          ]
+                        }
+                        category: INFORMATION
                         parameters: {
-                          label: "Professional experience"
-                          defaultValue: {
-                            operator: "graphQL",
-                            children: [
-                              "query getOrganisation($id: Int!){organisation(id: $id) {professionalExperience}}",
-                              "",
-                              [
-                                "id"
-                              ],
-                              {
-                                operator: "objectProperties",
-                                children: [
-                                  "currentUser.organisation.orgId"
-                                ]
-                              },
-                              "user.professionalExperience"
-                            ]
+                        label: "Professional experience"
+                        description: "Please create a list outlining your professional experience"
+                        createModalButtonText: "Add role"
+                        modalText: "Please enter details for **one** previous role"
+                        displayType: {
+                          operator: "objectProperties"
+                          children: ["responses.listDisplay.text"]
+                        }
+                        displayFormat: {
+                          title: "\${PEname}"
+                          subtitle: "\${PEtype}  \\n\${PEorgTel} \${PEorgEmail}"
+                          description: "**Role**: \${PErole}  \\n\${PEfrom} – \${PEto}"
+                        }
+                        inputFields: [
+                          {
+                            code: "PEtype"
+                            title: "Type of role"
+                            elementTypePluginCode: "radioChoice"
+                            category: QUESTION
+                            parameters: {
+                              label: "Type of role"
+                              options: ["Government", "Private Sector"]
+                              layout: "inline"
+                            }
                           }
-                       }
+                          {
+                            code: "PEname"
+                            title: "Org name"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "Name of institution or company"
+                              maxLength: 120
+                            }
+                          }
+                          {
+                            code: "PEorgTel"
+                            title: "Org telephone"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            isRequired: false
+                            parameters: {
+                              label: "Telephone"
+                              maxLength: 120
+                            }
+                            validation: {
+                              operator: "REGEX"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.thisResponse"]
+                                }
+                                "^[0-9()\\\\-\+]*$"
+                              ]
+                            }
+                            validationMessage: "Not a valid phone number"
+                          }
+                          {
+                            code: "PEorgEmail"
+                            title: "Org email"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            isRequired: false
+                            parameters: {
+                              label: "Email"
+                              maxLength: 120
+                            }
+                            validation: {
+                              operator: "REGEX"
+                              children: [
+                                {
+                                  operator: "objectProperties"
+                                  children: ["responses.thisResponse"]
+                                }
+                                {
+                                  value: "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\\\.[A-Za-z0-9.]+$"
+                                }
+                              ]
+                            }
+                            validationMessage: "Not a valid email address"
+                          }
+                          {
+                            code: "PErole"
+                            title: "Role"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "Your role"
+                              maxLength: 120
+                            }
+                          }
+                          {
+                            code: "PEfrom"
+                            title: "From"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            parameters: {
+                              label: "From"
+                              maxLength: 120
+                              maxWidth: 200
+                            }
+                          }
+                          {
+                            code: "PEto"
+                            title: "To"
+                            elementTypePluginCode: "shortText"
+                            category: QUESTION
+                            isRequired: false
+                            parameters: {
+                              label: "To"
+                              maxLength: 120
+                              maxWidth: 200
+                            }
+                          }
+                        ]
+                      }
                      }
                    ]
                   }
@@ -575,9 +677,8 @@ exports.queries = [
                         index: 20
                         title: "Name of company/branch/wholesaler (in Lao) "
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Name of company/branch/wholesaler (in Lao) " }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -609,9 +710,8 @@ exports.queries = [
                         index: 30
                         title: "Name of company/branch/wholesaler (in English)"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Name of company/branch/wholesaler (in English)" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -643,9 +743,8 @@ exports.queries = [
                         index: 40
                         title: "Address street"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Address" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -654,7 +753,7 @@ exports.queries = [
                               value: {
                                 operator: "graphQL",
                                 children: [
-                                  "query getOrganisation($id: Int!){organisation(id: $id) {“addressStreet”}}",
+                                  "query getOrganisation($id: Int!){organisation(id: $id) {addressStreet}}",
                                   "",
                                   [
                                     "id"
@@ -665,7 +764,7 @@ exports.queries = [
                                       "currentUser.organisation.orgId"
                                     ]
                                   },
-                                  "organisation.“addressStreet”"
+                                  "organisation.addressStreet"
                                 ]
                               }
                             }
@@ -677,9 +776,8 @@ exports.queries = [
                         index: 50
                         title: "Adress village"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Village" }
-                        isEditable: false
                         isRequired: false
                         defaultValue: {
                           operator: "buildObject",
@@ -712,9 +810,8 @@ exports.queries = [
                         index: 60
                         title: "District"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "District/Province" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -742,6 +839,26 @@ exports.queries = [
                         }
                       }
                       {
+                        code: "S3OutcomeLink"
+                        index: 65
+                        title: "Link to Company Registration application"
+                        elementTypePluginCode: "textInfo"
+                        category: INFORMATION
+                        parameters: { 
+                          text: {
+                            operator: "stringSubstitution",
+                            children: [
+                              "**Link: [Company details](/outcomes/organisation/%1)**  \\n(including original application)",
+                              {
+                                operator: "objectProperties",
+                                children: [ "applicationData.org.id", "" ]
+                              }
+                            ]
+                          }
+                          style: "none"
+                        }
+                      }
+                      {
                         code: "S3PB1"
                         index: 70
                         title: "Page Break"
@@ -764,9 +881,8 @@ exports.queries = [
                         index: 90
                         title: "Phone"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Phone" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -798,9 +914,8 @@ exports.queries = [
                         index: 100
                         title: "Fax"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Fax" }
-                        isEditable: false
                         isRequired: false
                         defaultValue: {
                           operator: "buildObject",
@@ -833,9 +948,8 @@ exports.queries = [
                         index: 110
                         title: "Email"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Email" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -885,9 +999,8 @@ exports.queries = [
                         index: 140
                         title: "Domestic"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Domestic" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -919,9 +1032,8 @@ exports.queries = [
                         index: 150
                         title: "Foreign"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Foreign" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -964,12 +1076,11 @@ exports.queries = [
                         index: 170
                         title: "Owner name"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { 
                           label: "Company owner"
                           helpText: "Full name of company owner (as licensed at M. of Commerce)"
                         }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -1001,9 +1112,8 @@ exports.queries = [
                         index: 180
                         title: "Owner phone"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Owner phone" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -1035,9 +1145,8 @@ exports.queries = [
                         index: 190
                         title: "Owner fax"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Owner fax" }
-                        isEditable: false
                         isRequired: false
                         defaultValue: {
                           operator: "buildObject",
@@ -1070,9 +1179,8 @@ exports.queries = [
                         index: 200
                         title: "Owner email"
                         elementTypePluginCode: "shortText"
-                        category: QUESTION
+                        category: INFORMATION
                         parameters: { label: "Owner email" }
-                        isEditable: false
                         defaultValue: {
                           operator: "buildObject",
                           properties: [
@@ -1155,6 +1263,7 @@ exports.queries = [
                         title: "File upload LMMD01"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Letter of request"
                           description: "The physical submission for this form is also required.\\nFile uploaded must be **image** files or **PDF** and under 5MB."
@@ -1176,6 +1285,7 @@ exports.queries = [
                         title: "File upload LMMD01"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Letter from mother-company authorizing establishment of branch"
                           description: "File uploaded must be **image** files or **PDF** and under 5MB."
@@ -1197,6 +1307,7 @@ exports.queries = [
                         title: "File upload LMMD15"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Site inspection report by F&D unit"
                           description: "File uploaded must be **image** files or **PDF** and under 5MB."
@@ -1217,6 +1328,7 @@ exports.queries = [
                         title: "File upload LMMD15"
                         elementTypePluginCode: "fileUpload"
                         category: QUESTION
+                        isRequired: false
                         parameters: {
                           label: "Company/manufacturer profile (including site master file and GMP certification where applicable)"
                           description: "describing origin of products, staff and qualifications, facilities and equipment, business experience, business development plan.\\nFile uploaded must be **image** files or **PDF** and under 5MB."
@@ -1264,36 +1376,36 @@ exports.queries = [
                   actionCode: "cLog"
                   trigger: ON_APPLICATION_SUBMIT
                   parameterQueries: {
-                    message: { value: "Organisation Registration submission" }
+                    message: { value: "Company License submission" }
                   }
                 }
-                {
-                  actionCode: "changeOutcome"
-                  trigger: ON_REVIEW_SUBMIT
-                  sequence: 100
-                  condition: {
-                    operator: "AND"
-                    children: [
-                      {
-                        operator: "="
-                        children: [
-                          {
-                            operator: "objectProperties"
-                            children: [
-                              "applicationData.reviewData.latestDecision.decision"
-                            ]
-                          }
-                          "CONFORM"
-                        ]
-                      }
-                      {
-                        operator: "objectProperties"
-                        children: ["applicationData.reviewData.isLastLevel"]
-                      }
-                    ]
-                  }
-                  parameterQueries: { newOutcome: { value: "APPROVED" } }
-                }
+#               {
+#                 actionCode: "changeOutcome"
+#                 trigger: ON_REVIEW_SUBMIT
+#                 sequence: 100
+#                 condition: {
+#                   operator: "AND"
+#                   children: [
+#                     {
+#                       operator: "="
+#                       children: [
+#                         {
+#                           operator: "objectProperties"
+#                           children: [
+#                             "applicationData.reviewData.latestDecision.decision"
+#                           ]
+#                         }
+#                         "CONFORM"
+#                       ]
+#                     }
+#                     {
+#                       operator: "objectProperties"
+#                       children: ["applicationData.reviewData.isLastLevel"]
+#                     }
+#                   ]
+#                 }
+#                 parameterQueries: { newOutcome: { value: "APPROVED" } }
+#               }
                 # TODO: Generate the expiry and serial before this
                 {
                   actionCode: "modifyRecord"
@@ -1311,15 +1423,19 @@ exports.queries = [
                   }
                   parameterQueries: {
                     tableName: "license"
+                    product_type: {
+                      operator: "objectProperties"
+                      children: ["applicationData.responses.Q1ProductType.text"]
+                    }
                     type: {
                       operator: "objectProperties"
                       children: ["applicationData.responses.Q2LicenseType.text"]
                     }
                     expiry_date: "31/01/2022"
-#                   company_id: {
-#                     operator: "objectProperties"
-#                     children: ["currentUser.organisation.orgId"]
-#                   }
+                    company_id: {
+                      operator: "objectProperties"
+                      children: ["applicationData.orgId"]
+                    }
                     company_name: {
                       operator: "objectProperties"
                       children: ["applicationData.responses.Q1CompanyNameLao.text"]
@@ -1344,17 +1460,48 @@ exports.queries = [
                 {
                   actionCode: "grantPermissions"
                   trigger: ON_REVIEW_SUBMIT
-                  sequence: 103
+                  sequence: 102
+                  parameterQueries: {
+                    username: {
+                      operator: "objectProperties"
+                      children: ["applicationData.username"]
+                    }
+                    orgId: {
+                      operator: "objectProperties"
+                      children: ["applicationData.orgId"]
+                    }
+                    permissionNames: ["applyRenewLicense"]
+                  }
+                }
+                {
+                  actionCode: "grantPermissions"
+                  trigger: ON_REVIEW_SUBMIT
+                  sequence: 104
                   # TO-DO -- update condition to just check Outcome
                   # (from applicationData)
                   condition: {
-                    operator: "="
+                    operator: "AND"
                     children: [
                       {
-                        operator: "objectProperties"
-                        children: ["applicationData.outcome"]
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.outcome"]
+                          }
+                          "APPROVED"
+                        ]
                       }
-                      "APPROVED"
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q2LicenseType.text"]
+                          }
+                          "import/export medicines and medical devices"
+                        ]
+                      }
                     ]
                   }
                   parameterQueries: {
@@ -1362,23 +1509,123 @@ exports.queries = [
                       operator: "objectProperties"
                       children: ["applicationData.username"]
                     }
-                    orgName: {
+                    orgId: {
                       operator: "objectProperties"
-                      children: ["outputCumulative.organisation.name"]
+                      children: ["applicationData.orgId"]
                     }
-                    permissionNames: ["reviewJoinOrg"]
+                    permissionNames: ["applyImportPermit"]
+                  }
+                }
+                {
+                  actionCode: "grantPermissions"
+                  trigger: ON_REVIEW_SUBMIT
+                  sequence: 105
+                  # TO-DO -- update condition to just check Outcome
+                  # (from applicationData)
+                  condition: {
+                    operator: "AND"
+                    children: [
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.outcome"]
+                          }
+                          "APPROVED"
+                        ]
+                      }
+                      {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q2LicenseType.text"]
+                          }
+                          "import/export medicines and medical devices"
+                        ]
+                      }
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q1ProductType.text"]
+                          }
+                          "modern medicines"
+                        ]
+                      }
+                    ]
+                  }
+                  parameterQueries: {
+                    username: {
+                      operator: "objectProperties"
+                      children: ["applicationData.username"]
+                    }
+                    orgId: {
+                      operator: "objectProperties"
+                      children: ["applicationData.orgId"]
+                    }
+                    permissionNames: ["applyDrugRegoMMC"]
+                  }
+                }
+                {
+                  actionCode: "grantPermissions"
+                  trigger: ON_REVIEW_SUBMIT
+                  sequence: 105
+                  # TO-DO -- update condition to just check Outcome
+                  # (from applicationData)
+                  condition: {
+                    operator: "AND"
+                    children: [
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.outcome"]
+                          }
+                          "APPROVED"
+                        ]
+                      }
+                      {
+                        operator: "!="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q2LicenseType.text"]
+                          }
+                          "import/export medicines and medical devices"
+                        ]
+                      }
+                      {
+                        operator: "="
+                        children: [
+                          {
+                            operator: "objectProperties"
+                            children: ["applicationData.responses.Q1ProductType.text"]
+                          }
+                          "medical devices"
+                        ]
+                      }
+                    ]
+                  }
+                  parameterQueries: {
+                    username: {
+                      operator: "objectProperties"
+                      children: ["applicationData.username"]
+                    }
+                    orgId: {
+                      operator: "objectProperties"
+                      children: ["applicationData.orgId"]
+                    }
+                    permissionNames: ["applyDrugRegoMMD"]
                   }
                 }
               ]
             }
             templatePermissionsUsingId: {
               create: [
-                # TODO: Remove this - used to allow new user to apply
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "applyUserEdit" }
-                  }
-                }
                 # Apply Company license (granted on Company registration)
                 {
                   permissionNameToPermissionNameId: {
@@ -1388,7 +1635,7 @@ exports.queries = [
                 # Review General - Stage 1
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewSelfAssignable" }
+                    connectByName: { name: "reviewOrgLicence" }
                   }
                   stageNumber: 1
                   levelNumber: 1
@@ -1400,15 +1647,6 @@ exports.queries = [
                   }
                   stageNumber: 1
                   levelNumber: 1
-                }
-                # Self assignable - Stage 1
-                {
-                  permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewSelfAssignable" }
-                  }
-                  stageNumber: 1
-                  levelNumber: 1
-                  canSelfAssign: true
                 }
               ]
             }

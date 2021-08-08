@@ -2,6 +2,23 @@
 Basic permissionNames, and associate with policies 
 */
 exports.queries = [
+  // admin user
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "admin"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "admin" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
   // applyUserRegistration
   `mutation createPermissionName {
     createPermissionName(
@@ -42,6 +59,74 @@ exports.queries = [
       input: {
         permissionName: {
           name: "applyOrgLicense"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyOrgLicense
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyRenewLicense"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyImportPermit
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyImportPermit"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyDrugRegoMMC
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyDrugRegoMMC"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyDrugRegoMMD
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyDrugRegoMMD"
           permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "applyUserRestricted" }
           }
@@ -170,7 +255,7 @@ exports.queries = [
       input: {
         permissionName: { 
           name: "reviewReviewTestApproval", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "reviewBasic" }
+            connectByName: { name: "reviewAdvanced" }
           }
         }
       }
@@ -306,4 +391,19 @@ exports.queries = [
       }
     }
   }`,
+  `mutation reviewOrgLicence {
+      createPermissionName(
+        input: {
+          permissionName: { 
+            name: "reviewOrgLicence",  permissionPolicyToPermissionPolicyId: {
+              connectByName: { name: "reviewBasic" }
+            }
+          }
+        }
+      ) {
+        permissionName {
+          name
+        }
+      }
+    }`,
 ]

@@ -29,10 +29,11 @@ async function generateReviewAssignments({
   console.log('Generating review assignment records...')
   try {
     // Get template information and current stage for application
-    const { templateId, stageNumber, stageId } =
+    const { templateId, stageNumber, stageId, stageHistoryTimeCreated } =
       applicationData ?? (await DBConnect.getApplicationData(applicationId))
 
     const numReviewLevels: number = (await DBConnect.getNumReviewLevels(stageId)) || 0
+    const lastStageNumber: number = await db.getLastStageNumber(applicationId)
 
     let nextReviewLevel = 1
 
@@ -67,7 +68,13 @@ async function generateReviewAssignments({
             output: {},
           }
         }
-        console.log('New stage - total levels: ', numReviewLevels, stageNumber, previousStage)
+        console.log(
+          'New stage - total levels: ',
+          numReviewLevels,
+          stageNumber,
+          '\n Last Stage: ',
+          lastStageNumber
+        )
       }
       // Review in same stage - for next level
       else {
@@ -86,14 +93,17 @@ async function generateReviewAssignments({
       }
     }
     const isLastLevel = nextReviewLevel === numReviewLevels
+    const isLastStage = stageNumber === lastStageNumber
     return generateNextReviewAssignments({
       db,
       applicationId,
       templateId,
       nextReviewLevel,
-      nextStageNumber: stageNumber,
-      nextStageId: stageId,
+      stageNumber,
+      stageId,
+      timeStageCreated: stageHistoryTimeCreated,
       isLastLevel,
+      isLastStage,
     })
   } catch (error) {
     console.log(error.message)
@@ -109,9 +119,11 @@ interface GenerateNextReviewAssignmentsProps {
   applicationId: number
   templateId: number
   nextReviewLevel: number
-  nextStageNumber: number
-  nextStageId: number
+  stageNumber: number
+  stageId: number
+  timeStageCreated: Date
   isLastLevel: boolean
+  isLastStage: boolean
 }
 
 const generateNextReviewAssignments = async ({
@@ -119,13 +131,15 @@ const generateNextReviewAssignments = async ({
   applicationId,
   templateId,
   nextReviewLevel,
-  nextStageNumber,
-  nextStageId,
+  stageNumber,
+  stageId,
+  timeStageCreated,
   isLastLevel,
+  isLastStage,
 }: GenerateNextReviewAssignmentsProps) => {
   const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
     templateId,
-    nextStageNumber,
+    stageNumber,
     nextReviewLevel,
     PermissionPolicyType.Review
   )
@@ -135,12 +149,14 @@ const generateNextReviewAssignments = async ({
   // Build reviewers into object map so we can combine duplicate user_orgs
   // and merge their section code restrictions
   nextLevelReviewers.forEach((reviewer: Reviewer) => {
-    const { userId, orgId, allowedSections, canSelfAssign } = reviewer
+    const { userId, orgId, allowedSections, canSelfAssign, canMakeFinalDecision } = reviewer
 
-    const status =
-      canSelfAssign || nextReviewLevel > 1
-        ? ReviewAssignmentStatus.AvailableForSelfAssignment
-        : ReviewAssignmentStatus.Available
+    const getAssignmentStatus = () => {
+      if (canMakeFinalDecision) return ReviewAssignmentStatus.Assigned
+      if (canSelfAssign || nextReviewLevel > 1)
+        return ReviewAssignmentStatus.AvailableForSelfAssignment
+      return ReviewAssignmentStatus.Available
+    }
 
     const userOrgKey = `${userId}_${orgId ? orgId : 0}`
     if (reviewAssignments[userOrgKey])
@@ -149,15 +165,18 @@ const generateNextReviewAssignments = async ({
     else
       reviewAssignments[userOrgKey] = {
         reviewerId: userId,
-        orgId,
-        stageId: nextStageId,
-        stageNumber: nextStageNumber,
+        organisationId: orgId,
+        stageId,
+        stageNumber,
+        timeStageCreated,
         // TO-DO: allow STATUS to be configurable in template
-        status,
+        status: getAssignmentStatus(),
         applicationId,
         allowedSections: allowedSections || null,
         levelNumber: nextReviewLevel,
         isLastLevel,
+        isLastStage,
+        isFinalDecision: canMakeFinalDecision,
       }
   })
   // Save review_assignment records to database
@@ -168,7 +187,7 @@ const generateNextReviewAssignments = async ({
   console.log('Generating review_assignment_assigner_join records...')
   const availableAssigners = await db.getPersonnelForApplicationStageLevel(
     templateId,
-    nextStageNumber,
+    stageNumber,
     nextReviewLevel,
     PermissionPolicyType.Assign
   )
@@ -192,11 +211,11 @@ const generateNextReviewAssignments = async ({
     status: ActionQueueStatus.Success,
     error_log: '',
     output: {
-      reviewAssignments: Object.values(reviewAssignments),
+      reviewAssignments,
       reviewAssignmentIds,
       reviewAssignmentAssignerJoins,
       reviewAssignmentAssignerJoinIds,
-      nextStageNumber,
+      nextStageNumber: stageNumber,
       nextReviewLevel,
     },
   }

@@ -14,7 +14,7 @@ exports.queries = [
       input: {
         template: {
           code: "OrgJoin"
-          name: "Join Organisation"
+          name: "Join Company"
           isLinear: false
           status: AVAILABLE
           startMessage: "## You will need the following documents ready for upload:\\n- PhotoID"
@@ -169,35 +169,35 @@ exports.queries = [
                   }
                 }
               }
-              {
-                actionCode: "changeOutcome"
-                trigger: ON_REVIEW_SUBMIT
-                sequence: 100
-                condition: {
-                  operator: "AND"
-                  children: [
-                    {
-                      operator: "="
-                      children: [
-                        {
-                          operator: "objectProperties"
-                          children: [
-                            "applicationData.reviewData.latestDecision.decision"
-                          ]
-                        }
-                        "CONFORM"
-                      ]
-                    }
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.reviewData.isLastLevel"]
-                    }
-                  ]
-                }
-                parameterQueries: {
-                  newOutcome: "APPROVED"
-                }
-              }
+#             {
+#               actionCode: "changeOutcome"
+#               trigger: ON_REVIEW_SUBMIT
+#               sequence: 100
+#               condition: {
+#                 operator: "AND"
+#                 children: [
+#                   {
+#                     operator: "="
+#                     children: [
+#                       {
+#                         operator: "objectProperties"
+#                         children: [
+#                           "applicationData.reviewData.latestDecision.decision"
+#                         ]
+#                       }
+#                       "CONFORM"
+#                     ]
+#                   }
+#                   {
+#                     operator: "objectProperties"
+#                     children: ["applicationData.reviewData.isLastLevel"]
+#                   }
+#                 ]
+#               }
+#               parameterQueries: {
+#                 newOutcome: "APPROVED"
+#               }
+#             }
               {
                 actionCode: "joinUserOrg"
                 trigger: ON_REVIEW_SUBMIT
@@ -273,6 +273,58 @@ exports.queries = [
                   newStatus: "COMPLETED"
                 }
               }
+              {
+                actionCode: "sendNotification"
+                trigger: ON_REVIEW_SUBMIT
+                sequence: 120
+                condition: {
+                  operator: "="
+                  children: [
+                    {
+                      operator: "objectProperties"
+                      children: [
+                        "applicationData.outcome"
+                      ]
+                    }
+                    "APPROVED"
+                  ]
+                }
+                parameterQueries: {
+                  fromName: "Application Manager"
+                  fromEmail: "no-reply@sussol.net"
+                  subject: {
+                    operator: "stringSubstitution"
+                    children: [
+                      "Application approved: %1"
+                      {
+                        operator: "objectProperties"
+                        children: ["applicationData.applicationSerial", ""]
+                      }
+                    ]
+                  }
+                  message: {
+                    operator: "stringSubstitution"
+                    children: [
+                      "### Congratulations, %1!\\n\\nYour application to join organisation %2 has been APPROVED.\\n\\n[Application Dashboard](%3)\\n\\nPlease find attached the ID file you uploaded (testing attachment handling)"
+                      {
+                        operator: "objectProperties"
+                        children: ["applicationData.firstName", ""]
+                      }
+                      {
+                        operator: "objectProperties"
+                        children: ["applicationData.responses.S1Q1.text", ""]
+                      }
+                      "http://localhost:3000" #TO-DO: add website URL to back-end config
+                    ]
+                  }
+                  attachments: {
+                    operator: "objectProperties",
+                    children: [
+                      "applicationData.responses.IDUpload.files.uniqueId"
+                    ]
+                  }
+                }
+              }
             ]
           }
           templatePermissionsUsingId: {
@@ -298,7 +350,7 @@ exports.queries = [
                 }
                 stageNumber: 1
                 levelNumber: 1
-                restrictions: { canSelfAssign: true }
+                canSelfAssign: true
               }
             ]
           }

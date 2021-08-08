@@ -5,7 +5,7 @@ import { DBConnectType } from '../../../src/components/databaseConnect'
 
 const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBConnect }) => {
   const db = databaseMethods(DBConnect)
-  const { tableName, matchField, matchValue, ...record } = parameters
+  const { tableName, matchField, matchValue, shouldCreateJoinTable = true, ...record } = parameters
 
   const fieldToMatch = matchField ?? 'id'
   const valueToMatch = matchValue ?? record[fieldToMatch]
@@ -34,11 +34,11 @@ const modifyRecord: ActionPluginType = async ({ parameters, applicationData, DBC
       recordId = result.recordId
     }
 
-    await db.createJoinTableAndRecord(tableName, applicationId, recordId)
+    if (shouldCreateJoinTable) await db.createJoinTableAndRecord(tableName, applicationId, recordId)
 
     if (!result.success) throw new Error('Problem creating or updating record')
 
-    console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableName} record, ID: `, result.recordId)
+    console.log(`${isUpdate ? 'Updated' : 'Created'} ${tableName} record, ID: `, recordId)
     return {
       status: ActionQueueStatus.Success,
       error_log: '',

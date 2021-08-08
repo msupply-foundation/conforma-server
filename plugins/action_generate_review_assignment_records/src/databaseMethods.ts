@@ -1,6 +1,23 @@
-import { PermissionPolicyType } from '../../../src/generated/graphql'
+import { PermissionPolicyType, ReviewAssignment } from '../../../src/generated/graphql'
 
 const databaseMethods = (DBConnect: any) => ({
+  getLastStageNumber: async (applicationId: number) => {
+    const text = `
+    SELECT MAX(number)
+    FROM application 
+    INNER JOIN template_stage ON template_stage.template_id = application.template_id 
+    WHERE application.id = $1`
+
+    try {
+      const result = await DBConnect.query({ text, values: [applicationId] })
+      const responses = result.rows[0].max
+      return responses
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+
   getPersonnelForApplicationStageLevel: async (
     templateId: number,
     stageNumber: number,
@@ -9,7 +26,7 @@ const databaseMethods = (DBConnect: any) => ({
   ) => {
     const text = `
     SELECT
-      "userId", "orgId", "restrictions", "allowedSections", "canSelfAssign"
+      "userId", "orgId", "restrictions", "allowedSections", "canSelfAssign", "canMakeFinalDecision"
       FROM permissions_all
       WHERE "templateId" = $1
       AND "stageNumber" = $2
@@ -27,19 +44,22 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
-  addReviewAssignments: async (reviewAssignments: any) => {
+  addReviewAssignments: async (reviewAssignments: ReviewAssignment[]) => {
     const reviewAssignmentIds = []
     for (const reviewAssignment of reviewAssignments) {
       const {
         reviewerId,
-        orgId,
+        organisationId,
         stageId,
         stageNumber,
+        timeStageCreated,
         status,
         applicationId,
         allowedSections,
         levelNumber,
         isLastLevel,
+        isLastStage,
+        isFinalDecision,
       } = reviewAssignment
       // Needs a slightly different query with different CONFLICT restrictions
       // depending on whether orgId exists or not.
@@ -47,17 +67,18 @@ const databaseMethods = (DBConnect: any) => ({
       // but assignment status remains unchanged.
       const text = `
         INSERT INTO review_assignment (
-          reviewer_id, stage_id, stage_number,
+          reviewer_id, stage_id, stage_number, time_stage_created,
           status, application_id, allowed_sections,
-          level_number, is_last_level, organisation_id
+          level_number, is_last_level, is_last_stage,
+          is_final_decision, organisation_id
           )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-        ON CONFLICT (reviewer_id,${
-          orgId ? ' organisation_id,' : ''
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        ON CONFLICT (reviewer_id, ${
+          organisationId ? ' organisation_id,' : ''
         } stage_number, application_id, level_number)
-          WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
+          WHERE organisation_id IS ${organisationId ? 'NOT ' : ''}NULL
         DO
-          UPDATE SET allowed_sections = $6
+          UPDATE SET allowed_sections = $7
         RETURNING id`
 
       try {
@@ -67,12 +88,15 @@ const databaseMethods = (DBConnect: any) => ({
             reviewerId,
             stageId,
             stageNumber,
+            timeStageCreated,
             status,
             applicationId,
             allowedSections,
             levelNumber,
             isLastLevel,
-            orgId,
+            isLastStage,
+            isFinalDecision,
+            organisationId,
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
@@ -105,7 +129,7 @@ const databaseMethods = (DBConnect: any) => ({
           ${orgId ? ', organisation_id' : ''} 
         )
           WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
-        DO UPDATE SET organisation_id = ${orgId ? 'orgId' : 'NULL'}
+        DO UPDATE SET organisation_id = ${orgId ? '$3' : 'NULL'}
         RETURNING id
       `
       try {

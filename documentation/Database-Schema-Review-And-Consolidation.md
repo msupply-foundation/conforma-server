@@ -47,17 +47,51 @@ They can be queried to:
 
 `is_last_level` -> last level for current stage (determine if review_decision is present in UI)
 
-`allowable_section_ids` -> an array of section IDs that reviewer has permission to review (would typically have all sections), assigner can only assign questions from sections that are in this list
+`is_locked` -> when assignment has `Assigned` status, but review cannot be submitted - usually related to a consolidation with LOQ submitted based on another review done regardig the same application. When re-submitted by Applicant this assignment will be unlocked.
+
+`allowable_sections` -> an array of section IDs that reviewer has permission to review (would typically have all sections), assigner can only assign questions from sections that are in this list
+
+## Review Response
+
+See diagram (responses flow). Always created by front end, but duplicates are trimmed on back end.
+
+Each review_responses is associated to one review and can be either for a:
+
+- **Review** of applications questions (base review, level 1), or
+- **Consolidation** of reviews (consolidation review, level > 1).
+
+- `review_id` - reference to the review, which doesn't change when the review is updated (just new `review_responses` and `review_status_history` that are created)
+
+- `application_response_id` - reference to which application response this review applies to
+- `review_response_link_id` - reference to which review this review applies to (only for review > 1)
+- `original_review_response_id` - reference to original review (level 1 or self-reference to `id` in case this is the same review level 1). This can change, if the reviewer level 1 update their review_response. So it's always the latest one done by reviewer level 1.
+- `is_visible_to_applicant` - set only for `original_review_response` that are selected in the LOQ (currently any with a DECLINED decision - and if there is consolidation with an AGREE decision linked to the review_response level 1).
+
+### Duplicates and timestamps
+
+When does a `review_response`gets duplicated?
+
+- If the review needs updates (`PENDING`status) or changes (`CHANGES_REQUESTED` status). When the review starts - by user - the front-end creates a mutation with all assigned review_responses duplicated.
+- On consolidation ? - **TODO**: not sure
+
+The reason we need 3 fields for dates is because we used to store everything in the `time_update`, but with the duplicatiion system we also need to update the timeStamp of all oldest `review_responses` to match the latest `review_status_history`. Keeping the `time_updated` for when the review_response was actually changed.
+
+So now we use 3 different ones to keep this clearer. The use for each is described bellow:
+
+- `time_created` - when the review was created (on click `start`, `make changes` or `update` by user)
+- `time_updated` - when the response was updated by the user - used to display on the History panel
+- `time_submitted` - when the review was submitted (even though not changed by user in this update) all latest `review_responses` need to be aligned with `review_status_history` to be used in a few places for duplication of responses and assignment.
+
+### Review response decision
+
+- `comment` - something that the reviewer wanted to comment about this particular response
+- `decision` - Approval or rejection of a particular response. Can be used to agree or disagree on overall review_decision.
+  The decision is referencing one of the `review_reponse_decision` values: `APPROVE`, `DECLINE`, `AGREE` or `DISAGREE`. But what iis displayed for each decision is based on localisation settings on front-end.
 
 ## Review Question Assignment
 
 Identifies which questions, from the application can be reviewed by the reviewer.
 These records are created upon assignment, and should only be created for level 1 reviewer ? (to confirm)
-
-## Review Response
-
-Either a review of applications questions (base review, level 1) or review of review (consolidation, level > 1). See diagram (responses flow). Always created by front end, but duplicates are trimmed on back end.
-Can be used to agree or disagree on overall review_decision.
 
 ## Review Assignment Assigner Join
 

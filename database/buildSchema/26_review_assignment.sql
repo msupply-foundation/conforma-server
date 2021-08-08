@@ -28,6 +28,7 @@ CREATE TABLE public.review_assignment (
     organisation_id integer REFERENCES public.organisation (id),
     stage_id integer REFERENCES public.template_stage (id),
     stage_number integer,
+    time_stage_created timestamptz,
     status public.review_assignment_status NOT NULL,
     application_id integer REFERENCES public.application (id),
     template_id integer GENERATED ALWAYS AS (public.review_assignment_template_id (application_id)) STORED REFERENCES public.template (id),
@@ -37,7 +38,9 @@ CREATE TABLE public.review_assignment (
     level_number integer,
     level_id integer REFERENCES public.template_stage_review_level (id),
     is_last_level boolean,
-    is_locked boolean DEFAULT false
+    is_last_stage boolean,
+    is_locked boolean DEFAULT FALSE,
+    is_final_decision boolean DEFAULT FALSE
 );
 
 -- TRIGGER (Listener) on review_assignment table

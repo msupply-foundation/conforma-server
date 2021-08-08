@@ -16,6 +16,8 @@ class DBConnect {
 
   public getValuesPlaceholders = PostgresDB.getValuesPlaceholders
 
+  public getCounter = PostgresDB.getCounter
+
   public addActionQueue = PostgresDB.addActionQueue
 
   public executedActionStatusUpdate = PostgresDB.executedActionStatusUpdate
@@ -44,6 +46,10 @@ class DBConnect {
 
   public updateTriggerQueueStatus = PostgresDB.updateTriggerQueueStatus
 
+  public getVerification = PostgresDB.getVerification
+
+  public setVerification = PostgresDB.setVerification
+
   public addUserOrg = PostgresDB.addUserOrg
 
   public isUnique = PostgresDB.isUnique
@@ -63,6 +69,7 @@ class DBConnect {
       case 'application':
       case 'review':
       case 'review_assignment':
+      case 'verification':
         templateId = await PostgresDB.getTemplateIdFromTrigger(tableName, record_id)
         break
       // TO-DO: Implement these queries once we have more data in database
@@ -119,6 +126,8 @@ class DBConnect {
   public getAllReviewResponses = PostgresDB.getAllReviewResponses
 
   public getDatabaseInfo = PostgresDB.getDatabaseInfo
+
+  public getPermissionPolicies = PostgresDB.getPermissionPolicies
 
   // GraphQL
 
