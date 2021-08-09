@@ -1525,7 +1525,8 @@ exports.queries = [
                         description: "Must be a **positive** number less than 10 million"
                         type: "integer"
                         minValue: 0
-                        maxValue: 10000000                  
+                        maxValue: 10000000
+                        simple: false                
                       }
                     } 
                     {
@@ -1536,14 +1537,34 @@ exports.queries = [
                       category: QUESTION
                       isRequired: false
                       parameters: {
-                        label: "Enter a real number between –10,000,000 and 10,000,000"
+                        label: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Enter a real number between %1 and %2",
+                            {
+                              operator: "objectProperties"
+                              children: [ "responses.numMin.text", "–10,000,000"]
+                            }
+                            {
+                              operator: "objectProperties"
+                              children: [ "responses.numMax.text", "10,000,000"]
+                            }
+                          ]
+                        }
                         description: "Switch locale in the subsequent dropdown"
                         locale: {
                           operator: "objectProperties"
-                          children: [ "responses.localeSelect.text", "" ]
+                          children: [ "responses.localeSelect.text", "en-US" ]
                         }
-                        minValue: -10000000
-                        maxValue: 10000000                  
+                        minValue: {
+                          operator: "objectProperties"
+                          children: [ "responses.numMin.number", -10000000 ]
+                        }
+                        maxValue: {
+                          operator: "objectProperties"
+                          children: [ "responses.numMax.number", 10000000 ]
+                        }
+                        simple: false               
                       }
                     }
                     {
@@ -1570,10 +1591,11 @@ exports.queries = [
                       elementTypePluginCode: "number"
                       category: QUESTION
                       isRequired: false
-                      defaultValue: 10000000
                       parameters: {
                         label: "Set the upper bound for the above"
-                        type: "integer"       
+                        type: "integer"
+                        default: 10000000
+                        simple: false  
                       }
                     } 
                     {
@@ -1583,25 +1605,133 @@ exports.queries = [
                       elementTypePluginCode: "number"
                       category: QUESTION
                       isRequired: false
-                      defaultValue: -10000000
+                      defaultValue: {
+                        value: -10000000
+                        text: "-10000000"
+                      }
                       parameters: {
                         label: "Set the lower bound"
-                        type: "integer"       
+                        type: "integer"
+                        simple: false
                       }
-                    } 
+                    }
                     {
-                      code: "numMin"
-                      index: 94
-                      title: "Number Set Minimum"
+                      code: "numSimple1"
+                      index: 96
+                      title: "Simple stepper"
                       elementTypePluginCode: "number"
                       category: QUESTION
                       isRequired: false
-                      defaultValue: -10000000
                       parameters: {
-                        label: "Set the lower bound"
-                        type: "integer"       
+                        label: "Use the stepper to select an integer"
+                        type: "integer"
+                        maxWidth: "200px"
                       }
-                    } 
+                    }
+                    {
+                      code: "numSimple2"
+                      index: 97
+                      title: "Simple stepper 2"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Use the stepper to select a decimal"
+                        minValue: 0
+                        step: 0.1
+                        maxWidth: "200px"
+                      }
+                    }
+                    {
+                      code: "PB17"
+                      index: 100
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "TXT_Number_2"
+                      index: 101
+                      title: "More number examples"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "### More Number Input examples"
+                        style: "info"
+                      }
+                    }
+                    {
+                      code: "numCurr1"
+                      index: 102
+                      title: "Currency"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Enter an amount"
+                        description: "Use the selector below to specify the currency"
+                        simple: false
+                        maxWidth: "150px"
+                        currency: {
+                          operator: "objectProperties"
+                          children: [ "responses.currSelect.text", "USD" ]
+                        }  
+                      }
+                    }
+                    {
+                      code: "currSelect"
+                      index: 103
+                      title: "Currency selector"
+                      isRequired: false
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select currency"
+                        default: 0
+                        options: [
+                          "USD"
+                          "EUR"
+                          "JPY"
+                          "NZD"
+                        ]
+                      }
+                    }
+                    {
+                      code: "num3"
+                      index: 104
+                      title: "Suffix with maxSignificantDigits"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "How far is your home from here?"
+                        description: "Your response will be expressed in the units selected below, rounded to 3 significant digits"
+                      maxSignificantDigits: 3
+                      simple: false
+                      suffix: {
+                          operator: "objectProperties"
+                          children: [ "responses.unitSelect.selection.unit", "" ]
+                        }        
+                      }
+                    }
+                    {
+                      code: "unitSelect"
+                      index: 105
+                      title: "Units selector"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Select distance unit"
+                        default: 0
+                        options: [
+                         {display: "kilometers", unit: " km"}
+                         {display: "meters", unit: " m"}
+                         {display: "miles", unit: " mi"}
+                        ]
+                        optionsDisplayProperty: "display"
+                      }
+                    }
                   ]
                 }
               }
