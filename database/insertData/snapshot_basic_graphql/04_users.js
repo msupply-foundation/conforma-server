@@ -9,7 +9,7 @@ exports.queries = [
     createUser(
       input: {
         user: {
-          username: "userWithMultiplePermissions"
+          username: "admin"
           firstName: "Admin"
           lastName: "Admin"
           passwordHash: "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW."
