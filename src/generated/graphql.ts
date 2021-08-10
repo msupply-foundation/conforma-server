@@ -20338,7 +20338,7 @@ export type TemplateCategory = Node & {
   code: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   icon?: Maybe<Scalars['String']>;
-  uiLocation?: Maybe<Array<Maybe<UiLocation>>>;
+  uiLocation: Array<Maybe<UiLocation>>;
   /** Reads and enables pagination through a set of `Template`. */
   templates: TemplatesConnection;
 };
@@ -35316,7 +35316,7 @@ export type TemplateCategoryResolvers<ContextType = any, ParentType extends Reso
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   icon?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  uiLocation?: Resolver<Maybe<Array<Maybe<ResolversTypes['UiLocation']>>>, ParentType, ContextType>;
+  uiLocation?: Resolver<Array<Maybe<ResolversTypes['UiLocation']>>, ParentType, ContextType>;
   templates?: Resolver<ResolversTypes['TemplatesConnection'], ParentType, ContextType, RequireFields<TemplateCategoryTemplatesArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
