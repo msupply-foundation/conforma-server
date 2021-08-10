@@ -11,7 +11,7 @@ git submodule update --init
 echo -e "\nInserting data..."
 
 echo $1
-if [ $1 != '' ]
+if [ '$1' != '' ]
 then 
     yarn ts-node ./database/snapshotCLI.ts use $1 &
 else 
