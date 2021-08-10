@@ -1,5 +1,5 @@
 import { ActionPluginInput } from '../../types'
-import { Reviewer, ReviewAssignmentObject } from './types'
+import { Reviewer, ReviewAssignmentObject, ExistingReviewAssignment } from './types'
 import databaseMethods from './databaseMethods'
 import {
   ActionQueueStatus,
@@ -146,17 +146,47 @@ const generateNextReviewAssignments = async ({
   console.log('Next level reviewers', nextLevelReviewers)
   const reviewAssignments: ReviewAssignmentObject = {}
 
+  // Check if other reviewAssignmet is already assigned to create new ones LOCKED
+  const existingReviewAssignments: ExistingReviewAssignment[] =
+    await db.getExistingReviewAssignments(applicationId, stageNumber, nextReviewLevel)
+
+  const getNewOrExistingAssignmentStatus = (
+    userId: number,
+    canMakeFinalDecision: boolean,
+    canSelfAssign: boolean
+  ) => {
+    // Temporarly final decision shouldn't be locked if there are other reviewAssignemt assigned
+    if (canMakeFinalDecision) return { status: ReviewAssignmentStatus.Assigned, isLocked: false }
+
+    // Check if existing review assignment
+    const existingAssignment = existingReviewAssignments.find(
+      (reviewAssignment) => reviewAssignment.userId === userId
+    )
+    // If user already has reviewAssignment return same status and isLocked flag
+    if (existingAssignment)
+      return { status: existingAssignment.status, isLocked: existingAssignment.isLocked }
+
+    // Non-existing review assignments
+    const isLocked = existingReviewAssignments.some(
+      ({ status }) => status == ReviewAssignmentStatus.Assigned
+    )
+    if (canSelfAssign || nextReviewLevel > 1)
+      return { status: ReviewAssignmentStatus.AvailableForSelfAssignment, isLocked }
+    return {
+      status: ReviewAssignmentStatus.Available,
+      isLocked,
+    }
+  }
+
   // Build reviewers into object map so we can combine duplicate user_orgs
   // and merge their section code restrictions
   nextLevelReviewers.forEach((reviewer: Reviewer) => {
     const { userId, orgId, allowedSections, canSelfAssign, canMakeFinalDecision } = reviewer
-
-    const getAssignmentStatus = () => {
-      if (canMakeFinalDecision) return ReviewAssignmentStatus.Assigned
-      if (canSelfAssign || nextReviewLevel > 1)
-        return ReviewAssignmentStatus.AvailableForSelfAssignment
-      return ReviewAssignmentStatus.Available
-    }
+    const { status, isLocked } = getNewOrExistingAssignmentStatus(
+      userId,
+      canMakeFinalDecision,
+      canSelfAssign
+    )
 
     const userOrgKey = `${userId}_${orgId ? orgId : 0}`
     if (reviewAssignments[userOrgKey])
@@ -170,13 +200,14 @@ const generateNextReviewAssignments = async ({
         stageNumber,
         timeStageCreated,
         // TO-DO: allow STATUS to be configurable in template
-        status: getAssignmentStatus(),
+        status,
         applicationId,
         allowedSections: allowedSections || null,
         levelNumber: nextReviewLevel,
         isLastLevel,
         isLastStage,
         isFinalDecision: canMakeFinalDecision,
+        isLocked,
       }
   })
   // Save review_assignment records to database
