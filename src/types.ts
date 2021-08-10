@@ -85,18 +85,26 @@ export interface ActionApplicationData {
   status: ApplicationStatus
   statusHistoryTimeCreated: Date
   userId: number
-  orgId: number
+  orgId: number | null
   outcome: ApplicationOutcome
   firstName: string
   lastName: string
   username: string
   dateOfBirth: Date | null
   email: string
+  orgName: string | null
   responses: {
     [key: string]: any
   }
-  reviewData: Review & {
-    reviewId: number
+  reviewData: {
+    reviewId?: number
+    levelNumber?: number
+    isLastLevel?: boolean
+    status?: string
+    latestDecision?: {
+      decision: string
+      comment: string | null
+    }
   }
   environmentData: {
     appRootFolder: string

@@ -44,6 +44,31 @@ const databaseMethods = (DBConnect: any) => ({
       throw err
     }
   },
+
+  getExistingReviewAssignments: async (
+    applicationId: number,
+    stageNumber: number,
+    levelNumber: number
+  ) => {
+    const text = `
+    SELECT status, reviewer_id as "userId", is_locked as "isLocked"
+      FROM review_assignment
+      WHERE application_id = $1
+      AND stage_number = $2
+      AND level_number = $3
+      `
+    try {
+      const result = await DBConnect.query({
+        text,
+        values: [applicationId, stageNumber, levelNumber],
+      })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+
   addReviewAssignments: async (reviewAssignments: ReviewAssignment[]) => {
     const reviewAssignmentIds = []
     for (const reviewAssignment of reviewAssignments) {
@@ -60,6 +85,7 @@ const databaseMethods = (DBConnect: any) => ({
         isLastLevel,
         isLastStage,
         isFinalDecision,
+        isLocked,
       } = reviewAssignment
       // Needs a slightly different query with different CONFLICT restrictions
       // depending on whether orgId exists or not.
@@ -69,10 +95,11 @@ const databaseMethods = (DBConnect: any) => ({
         INSERT INTO review_assignment (
           reviewer_id, stage_id, stage_number, time_stage_created,
           status, application_id, allowed_sections,
-          level_number, is_last_level, is_last_stage,
-          is_final_decision, organisation_id
+          level_number, organisation_id, 
+          is_last_level, is_last_stage,
+          is_final_decision, is_locked
           )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
         ON CONFLICT (reviewer_id, ${
           organisationId ? ' organisation_id,' : ''
         } stage_number, application_id, level_number)
@@ -93,10 +120,11 @@ const databaseMethods = (DBConnect: any) => ({
             applicationId,
             allowedSections,
             levelNumber,
+            organisationId,
             isLastLevel,
             isLastStage,
             isFinalDecision,
-            organisationId,
+            isLocked,
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
