@@ -1,0 +1,8 @@
+{
+  "shouldReInitialise": false,
+  "includeTables": ["permissionName", "permissionPolicy"],
+  "excludeTables": [],
+  "insertScriptsLocale": "dev",
+  "includeInsertScripts": [],
+  "excludeInsertScripts": []
+}
