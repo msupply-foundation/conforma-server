@@ -19784,6 +19784,7 @@ export type SchemaColumn = {
   isNullable?: Maybe<Scalars['YesOrNo']>;
   isGenerated?: Maybe<Scalars['CharacterData']>;
   dataType?: Maybe<Scalars['CharacterData']>;
+  subDataType?: Maybe<Scalars['CharacterData']>;
   constraintType?: Maybe<Scalars['CharacterData']>;
   fkToTableName?: Maybe<Scalars['SqlIdentifier']>;
   fkToColumnName?: Maybe<Scalars['SqlIdentifier']>;
@@ -19806,6 +19807,8 @@ export type SchemaColumnCondition = {
   isGenerated?: Maybe<Scalars['CharacterData']>;
   /** Checks for equality with the object’s `dataType` field. */
   dataType?: Maybe<Scalars['CharacterData']>;
+  /** Checks for equality with the object’s `subDataType` field. */
+  subDataType?: Maybe<Scalars['CharacterData']>;
   /** Checks for equality with the object’s `constraintType` field. */
   constraintType?: Maybe<Scalars['CharacterData']>;
   /** Checks for equality with the object’s `fkToTableName` field. */
@@ -19828,6 +19831,8 @@ export type SchemaColumnFilter = {
   isGenerated?: Maybe<CharacterDataFilter>;
   /** Filter by the object’s `dataType` field. */
   dataType?: Maybe<CharacterDataFilter>;
+  /** Filter by the object’s `subDataType` field. */
+  subDataType?: Maybe<CharacterDataFilter>;
   /** Filter by the object’s `constraintType` field. */
   constraintType?: Maybe<CharacterDataFilter>;
   /** Filter by the object’s `fkToTableName` field. */
@@ -19879,6 +19884,8 @@ export enum SchemaColumnsOrderBy {
   IsGeneratedDesc = 'IS_GENERATED_DESC',
   DataTypeAsc = 'DATA_TYPE_ASC',
   DataTypeDesc = 'DATA_TYPE_DESC',
+  SubDataTypeAsc = 'SUB_DATA_TYPE_ASC',
+  SubDataTypeDesc = 'SUB_DATA_TYPE_DESC',
   ConstraintTypeAsc = 'CONSTRAINT_TYPE_ASC',
   ConstraintTypeDesc = 'CONSTRAINT_TYPE_DESC',
   FkToTableNameAsc = 'FK_TO_TABLE_NAME_ASC',
@@ -36161,6 +36168,7 @@ export type SchemaColumnResolvers<ContextType = any, ParentType extends Resolver
   isNullable?: Resolver<Maybe<ResolversTypes['YesOrNo']>, ParentType, ContextType>;
   isGenerated?: Resolver<Maybe<ResolversTypes['CharacterData']>, ParentType, ContextType>;
   dataType?: Resolver<Maybe<ResolversTypes['CharacterData']>, ParentType, ContextType>;
+  subDataType?: Resolver<Maybe<ResolversTypes['CharacterData']>, ParentType, ContextType>;
   constraintType?: Resolver<Maybe<ResolversTypes['CharacterData']>, ParentType, ContextType>;
   fkToTableName?: Resolver<Maybe<ResolversTypes['SqlIdentifier']>, ParentType, ContextType>;
   fkToColumnName?: Resolver<Maybe<ResolversTypes['SqlIdentifier']>, ParentType, ContextType>;
