@@ -155,7 +155,7 @@ const generateNextReviewAssignments = async ({
     canMakeFinalDecision: boolean,
     canSelfAssign: boolean
   ) => {
-    // Temporarly final decision shouldn't be locked if there are other reviewAssignemt assigned
+    // temporarily final decision shouldn't be locked if there are other reviewAssignemt assigned
     if (canMakeFinalDecision) return { status: ReviewAssignmentStatus.Assigned, isLocked: false }
 
     // Check if existing review assignment
