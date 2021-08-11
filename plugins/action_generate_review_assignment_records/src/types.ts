@@ -29,8 +29,15 @@ export interface ReviewAssignment {
   isLastLevel: boolean
   isLastStage: boolean
   isFinalDecision: boolean
+  isLocked: boolean
 }
 
 export interface ReviewAssignmentObject {
   [key: string]: ReviewAssignment
+}
+
+export interface ExistingReviewAssignment {
+  status: ReviewAssignmentStatus
+  userId: number
+  isLocked: boolean
 }

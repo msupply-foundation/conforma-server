@@ -22,11 +22,11 @@ exports.queries = [
                   }
                   {
                     userRole: "worker"
-                    userToUserId: { connectByUsername: { username: "allReviewer" } }
+                    userToUserId: { connectByUsername: { username: "orgRegoReviewer2" } }
                   }
                   {
                     userRole: "worker"
-                    userToUserId: { connectByUsername: { username: "reviewOrgLicence1" } }
+                    userToUserId: { connectByUsername: { username: "allReviewer" } }
                   }
                   {
                     userRole: "worker"
@@ -157,6 +157,24 @@ exports.queries = [
             connectByName: { name: "Food and Drug Department" }
           }
           permissionNameToPermissionNameId: {
+            connectByName: { name: "applyForOrganisationPermissions" }
+          }
+          userToUserId: { connectByUsername: { username: "orgRegoReviewer2" } }
+        }
+      }
+    ) {
+      clientMutationId
+    }
+  }
+  `,
+  `mutation {
+    createPermissionJoin(
+      input: {
+        permissionJoin: {
+          organisationToOrganisationId: {
+            connectByName: { name: "Food and Drug Department" }
+          }
+          permissionNameToPermissionNameId: {
             connectByName: { name: "reviewOrgRego" }
           }
           userToUserId: { connectByUsername: { username: "allReviewer" } }
@@ -178,60 +196,6 @@ exports.queries = [
             connectByName: { name: "applyForOrganisationPermissions" }
           }
           userToUserId: { connectByUsername: { username: "allReviewer" } }
-        }
-      }
-    ) {
-      clientMutationId
-    }
-  }
-  `,
-  `mutation {
-    createPermissionJoin(
-      input: {
-        permissionJoin: {
-          organisationToOrganisationId: {
-            connectByName: { name: "Food and Drug Department" }
-          }
-          permissionNameToPermissionNameId: {
-            connectByName: { name: "reviewOrgLicence" }
-          }
-          userToUserId: { connectByUsername: { username: "allReviewer" } }
-        }
-      }
-    ) {
-      clientMutationId
-    }
-  }
-  `,
-  `mutation {
-    createPermissionJoin(
-      input: {
-        permissionJoin: {
-          organisationToOrganisationId: {
-            connectByName: { name: "Food and Drug Department" }
-          }
-          permissionNameToPermissionNameId: {
-            connectByName: { name: "applyForOrganisationPermissions" }
-          }
-          userToUserId: { connectByUsername: { username: "reviewOrgLicence1" } }
-        }
-      }
-    ) {
-      clientMutationId
-    }
-  }
-  `,
-  `mutation {
-    createPermissionJoin(
-      input: {
-        permissionJoin: {
-          organisationToOrganisationId: {
-            connectByName: { name: "Food and Drug Department" }
-          }
-          permissionNameToPermissionNameId: {
-            connectByName: { name: "reviewOrgLicence" }
-          }
-          userToUserId: { connectByUsername: { username: "reviewOrgLicence1" } }
         }
       }
     ) {
