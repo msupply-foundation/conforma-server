@@ -146,7 +146,7 @@ const generateNextReviewAssignments = async ({
   console.log('Next level reviewers', nextLevelReviewers)
   const reviewAssignments: ReviewAssignmentObject = {}
 
-  // Check if other reviewAssignmet is already assigned to create new ones LOCKED
+  // Check if other reviewAssignment is already assigned to create new ones LOCKED
   const existingReviewAssignments: ExistingReviewAssignment[] =
     await db.getExistingReviewAssignments(applicationId, stageNumber, nextReviewLevel)
 
