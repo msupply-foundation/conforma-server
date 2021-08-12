@@ -1,6 +1,14 @@
 {
-  "shouldReInitialise": false,
-  "includeTables": ["permissionName", "permissionPolicy"],
+  "shouldReInitialise": true,
+  "includeTables": [
+    "user",
+    "organisation",
+    "userOrganisation",
+    "file",
+    "permissionName",
+    "permissionPolicy",
+    "permissionJoin"
+  ],
   "excludeTables": [],
   "insertScriptsLocale": "dev",
   "includeInsertScripts": [],

@@ -1,0 +1,14 @@
+{
+  "shouldReInitialise": false,
+  "includeTables": [
+    "templateCategory",
+    "filter",
+    "outcomeDisplay",
+    "outcomeDisplayDetail",
+    "outcomeDisplayTable"
+  ],
+  "excludeTables": [],
+  "insertScriptsLocale": "dev",
+  "includeInsertScripts": [],
+  "excludeInsertScripts": []
+}
