@@ -150,6 +150,10 @@ const generateNextReviewAssignments = async ({
   const existingReviewAssignments: ExistingReviewAssignment[] =
     await db.getExistingReviewAssignments(applicationId, stageNumber, nextReviewLevel)
 
+  const isLocked = existingReviewAssignments.some(
+    ({ status }) => status == ReviewAssignmentStatus.Assigned
+  )
+
   const getNewOrExistingAssignmentStatus = (
     userId: number,
     canMakeFinalDecision: boolean,
@@ -167,9 +171,6 @@ const generateNextReviewAssignments = async ({
       return { status: existingAssignment.status, isLocked: existingAssignment.isLocked }
 
     // Non-existing review assignments
-    const isLocked = existingReviewAssignments.some(
-      ({ status }) => status == ReviewAssignmentStatus.Assigned
-    )
     if (canSelfAssign || nextReviewLevel > 1)
       return { status: ReviewAssignmentStatus.AvailableForSelfAssignment, isLocked }
     return {
