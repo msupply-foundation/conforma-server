@@ -835,7 +835,7 @@ class PostgresDB {
   }
 
   public getDatabaseInfo: GetDatabaseInfo = async (tableName = '') => {
-    const whereClause = tableName ? `where table_name = "${tableName}"` : ''
+    const whereClause = tableName ? `where table_name = '${tableName}'` : ''
     const values = tableName ? [tableName] : []
     try {
       const result = await this.query({
