@@ -122,7 +122,10 @@ const copyFiles = (
   ) {
     console.log('copying files ...')
     try {
-      execSync(`rm -rf filesFolder`)
+      execSync(`rm -rf ${FILES_FOLDER}`)
+    } catch (e) {}
+    try {
+      execSync(`mkdir ${FILES_FOLDER}`)
     } catch (e) {}
     execSync(`cp -R ${snapshotFolder}/files/* ${FILES_FOLDER}`)
     console.log('copying files ... done')
