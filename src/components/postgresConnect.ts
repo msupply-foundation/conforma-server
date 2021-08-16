@@ -17,10 +17,8 @@ import {
   ActionQueueStatus,
   ApplicationOutcome,
   ApplicationStatus,
-  Organisation,
   ReviewStatus,
   Trigger,
-  User,
 } from '../generated/graphql'
 
 class PostgresDB {
@@ -814,13 +812,15 @@ class PostgresDB {
     }
   }
 
-  public getDatabaseInfo: GetDatabaseInfo = async (tableName = '%') => {
+  public getDatabaseInfo: GetDatabaseInfo = async (tableName = '') => {
+    const whereClause = tableName ? `where table_name = $1` : ''
+    const values = tableName ? [tableName] : []
     try {
       const result = await this.query({
-        text: 'SELECT * FROM schema_columns where table_name like $1',
-        values: [tableName],
+        text: `SELECT * FROM schema_columns ${whereClause}`,
+        values,
       })
-      const responses = result.rows as schemaColumn[]
+      const responses = result.rows as SchemaColumn[]
       return responses
     } catch (err) {
       console.log(err.message)
@@ -849,7 +849,7 @@ export type permissionPolicyColumns = {
 
 type GetPermissionPolicies = () => Promise<permissionPolicyColumns[]>
 
-type schemaColumn = {
+type SchemaColumn = {
   table_name: string
   table_type: 'BASE TABLE' | 'VIEW'
   column_name: string
@@ -860,7 +860,7 @@ type schemaColumn = {
   fk_to_table_name: string | null
   fk_to_column_name: string | null
 }
-type GetDatabaseInfo = (tableName?: string) => Promise<schemaColumn[]>
+type GetDatabaseInfo = (tableName?: string) => Promise<SchemaColumn[]>
 
 const postgressDBInstance = PostgresDB.Instance
 export default postgressDBInstance
