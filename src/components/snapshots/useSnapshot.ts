@@ -107,9 +107,9 @@ const initiliseDatabase = async (
     console.log('adding changes to schema ... done')
   }
 
-  // console.log('inserting core data ... ')
-  // await insertData(insertScriptsLocale, includeInsertScripts, excludeInsertScripts)
-  // console.log('inserting core data ... done')
+  console.log('inserting core data ... ')
+  await insertData(insertScriptsLocale, includeInsertScripts, excludeInsertScripts)
+  console.log('inserting core data ... done')
 }
 
 const copyFiles = (
