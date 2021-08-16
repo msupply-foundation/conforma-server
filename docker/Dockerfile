@@ -26,6 +26,13 @@ RUN apt-get install lsof -y
 # --- NGINX
 RUN apt-get install nginx -y
 
+# --- LIBRE OFFICE
+# software-properties-common needed to add-apt-repository
+RUN apt-get install software-properties-common -y
+RUN add-apt-repository ppa:libreoffice/ppa -y
+RUN apt-get update
+RUN apt-get install libreoffice -y
+
 # --- NODE and NPX
 ARG NODE_VERSION=14
 # https://github.com/nodesource/distributions/blob/master/README.md -> Node.js LTS (v14.x): -> # Using Debian, as root
@@ -75,7 +82,7 @@ RUN git pull
 RUN cp .npmrc .npmrc_backup
 RUN echo "" >> .npmrc
 RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
-RUN sed -i "s/version: dev/front: ${SERVER_BRANCH} back: ${WEB_APP_BRANCH}/g" public/index.html 
+RUN sed -i "s/dev/front: ${SERVER_BRANCH} back: ${WEB_APP_BRANCH}/g" src/config.ts 
 RUN yarn install
 RUN yarn build
 RUN rm .npmrc && mv .npmrc_backup .npmrc

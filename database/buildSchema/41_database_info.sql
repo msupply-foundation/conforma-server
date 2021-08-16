@@ -20,12 +20,15 @@ SELECT
     columns_info.is_nullable,
     columns_info.is_generated,
     columns_info.data_type,
+    element_types.data_type AS sub_data_type,
     constraints_info.constraint_type,
     constraints_info.to_table_name AS fk_to_table_name,
     constraints_info.to_column_name AS fk_to_column_name
 FROM
     information_schema.tables AS tables_info
     JOIN information_schema.columns AS columns_info ON tables_info.table_name = columns_info.table_name
+    LEFT JOIN information_schema.element_types AS element_types ON columns_info.dtd_identifier = element_types.collection_type_identifier
+        AND columns_info.table_name = element_types.object_name
     LEFT JOIN constraints_info ON columns_info.table_name = constraints_info.from_table_name
         AND columns_info.column_name = constraints_info.from_column_name
 WHERE

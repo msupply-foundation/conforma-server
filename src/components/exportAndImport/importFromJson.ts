@@ -61,6 +61,7 @@ const constructInsertAndGetter = (
   columns.forEach(({ isPrimary, isGenerated, columnName }) => {
     if (!preserveIds && isPrimary) return
     if (isGenerated) return
+    if (values[columnName] === undefined) return
     insertableValues[columnName] = values[columnName]
   })
 
@@ -153,6 +154,8 @@ const getInsertKeyValues = (values: ObjectRecord, columns: DatabaseColumn[]) => 
       if (column) {
         // Make sure enum values are not quoted
         if (column.isEnum) gqlValue = value
+        // Make sure enum values are not quoted in an array
+        if (column.isEnumArray) gqlValue = gqlValue.replace(/"/g, '')
         // Add quotes around object
         if (column.isJson && value instanceof Object) {
           const variableName = `$${columnName}`
