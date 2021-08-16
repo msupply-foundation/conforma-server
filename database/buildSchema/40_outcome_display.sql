@@ -17,7 +17,7 @@ CREATE TABLE outcome_display_table (
     -- Text or full value from form element plugin
     is_text_column boolean,
     title varchar,
-    outcome_display_id integer REFERENCES outcome_display (id)
+    outcome_display_id integer REFERENCES outcome_display (id) ON DELETE CASCADE
 );
 
 -- Details display when outcome is pressed in the table
@@ -28,6 +28,6 @@ CREATE TABLE outcome_display_detail (
     element_type_plugin_code varchar,
     is_text_column boolean,
     parameters jsonb,
-    outcome_display_id integer REFERENCES outcome_display (id)
+    outcome_display_id integer REFERENCES outcome_display (id) ON DELETE CASCADE
 );
 
