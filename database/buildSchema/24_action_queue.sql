@@ -11,7 +11,7 @@ CREATE TABLE public.action_queue (
     id serial PRIMARY KEY,
     trigger_event integer REFERENCES public.trigger_queue (id),
     trigger_payload jsonb,
-    template_id integer REFERENCES public.template (id),
+    template_id integer REFERENCES public.template (id) ON DELETE CASCADE,
     sequence integer
 ,
         action_code varchar,

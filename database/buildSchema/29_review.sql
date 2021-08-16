@@ -121,12 +121,12 @@ IMMUTABLE;
 -- review
 CREATE TABLE public.review (
     id serial PRIMARY KEY,
-    review_assignment_id integer REFERENCES public.review_assignment (id),
+    review_assignment_id integer REFERENCES public.review_assignment (id) ON DELETE CASCADE,
     -- status via review_status_history
     -- time_status_created via review_status_history
     TRIGGER public.trigger,
-    application_id integer GENERATED ALWAYS AS (public.review_application_id (review_assignment_id)) STORED REFERENCES public.application (id),
-    reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id (review_assignment_id)) STORED REFERENCES public.user (id),
+    application_id integer GENERATED ALWAYS AS (public.review_application_id (review_assignment_id)) STORED REFERENCES public.application (id) ON DELETE CASCADE,
+    reviewer_id integer GENERATED ALWAYS AS (public.review_reviewer_id (review_assignment_id)) STORED REFERENCES public.user (id) ON DELETE CASCADE,
     level_number integer GENERATED ALWAYS AS (public.review_level (review_assignment_id)) STORED,
     stage_number integer GENERATED ALWAYS AS (public.review_stage (review_assignment_id)) STORED,
     time_stage_created timestamptz GENERATED ALWAYS AS (public.review_time_stage_created (review_assignment_id)) STORED,

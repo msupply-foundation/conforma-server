@@ -2,10 +2,10 @@
 CREATE TABLE public.template_permission (
     id serial PRIMARY KEY,
     permission_name_id integer REFERENCES public.permission_name (id),
-    template_id integer REFERENCES public.template (id),
+    template_id integer REFERENCES public.template (id) ON DELETE CASCADE,
     allowed_sections varchar[] DEFAULT NULL,
-    can_self_assign boolean NOT NULL DEFAULT false,
-    can_make_final_decision boolean NOT NULL DEFAULT false,
+    can_self_assign boolean NOT NULL DEFAULT FALSE,
+    can_make_final_decision boolean NOT NULL DEFAULT FALSE,
     stage_number integer,
     level_number integer,
     restrictions jsonb
@@ -18,7 +18,7 @@ CREATE VIEW permissions_all AS (
         "template".code AS "templateCode",
         permission_name.name AS "permissionName",
         template_permission.stage_number AS "stageNumber",
-        template_permission.level_number AS "reviewLevel", 
+        template_permission.level_number AS "reviewLevel",
         template_permission.allowed_sections AS "allowedSections",
         template_permission.can_self_assign AS "canSelfAssign",
         template_permission.can_make_final_decision AS "canMakeFinalDecision",
