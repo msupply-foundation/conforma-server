@@ -1365,25 +1365,6 @@ exports.queries = [
                 }
               }
               {
-                actionCode: "changeStatus"
-                trigger: ON_SCHEDULE
-                eventCode: "exp1"
-                sequence: 2
-                condition: {
-                  operator: "="
-                  children: [
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.status"]
-                    }
-                    "DRAFT"
-                  ]
-                }
-                parameterQueries:{
-                  newStatus: "COMPLETED"
-                }
-              }
-              {
                 actionCode: "sendNotification"
                 trigger: ON_SCHEDULE
                 eventCode: "exp1"
