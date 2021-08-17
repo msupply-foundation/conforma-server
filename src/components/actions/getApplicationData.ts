@@ -27,7 +27,7 @@ export const getApplicationData = async (input: {
   const applicationData = applicationResult ? applicationResult : { applicationId }
 
   const userData = applicationData?.userId
-    ? await DBConnect.getUserData(applicationData?.userId)
+    ? await DBConnect.getUserData(applicationData?.userId, applicationData?.orgId)
     : null
 
   const responses = await DBConnect.getApplicationResponses(applicationId)

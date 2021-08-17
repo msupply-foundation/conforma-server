@@ -444,7 +444,7 @@ class PostgresDB {
   }
 
   // Used by triggers/actions -- please don't modify
-  public getUserData = async (userId: number) => {
+  public getUserData = async (userId: number, orgId: number) => {
     const text = `
       SELECT first_name as "firstName",
       last_name as "lastName",
@@ -453,9 +453,18 @@ class PostgresDB {
       FROM "user"
       WHERE id = $1
       `
+    const text2 = `
+      SELECT name as "orgName"
+      FROM organisation
+      WHERE id = $1
+      `
     try {
       const result = await this.query({ text, values: [userId] })
-      const userData = result.rows[0]
+      const userData = { ...result.rows[0], orgName: null }
+      if (orgId) {
+        const orgResult = await this.query({ text: text2, values: [orgId] })
+        userData.orgName = orgResult.rows[0].orgName
+      }
       return userData
     } catch (err) {
       throw err
@@ -831,7 +840,7 @@ class PostgresDB {
         text: 'SELECT * FROM schema_columns where table_name like $1',
         values: [tableName],
       })
-      const responses = result.rows as schemaColumn[]
+      const responses = result.rows as SchemaColumn[]
       return responses
     } catch (err) {
       console.log(err.message)
@@ -860,18 +869,19 @@ export type permissionPolicyColumns = {
 
 type GetPermissionPolicies = () => Promise<permissionPolicyColumns[]>
 
-type schemaColumn = {
+type SchemaColumn = {
   table_name: string
   table_type: 'BASE TABLE' | 'VIEW'
   column_name: string
   is_nullable: 'YES' | 'NO'
   is_generated: 'ALWAYS' | 'NEVER'
-  data_type: 'USER-DEFINED' | 'jsonb' | string // only interested in USER-DEFINED (enum) and jsonb
+  data_type: 'USER-DEFINED' | 'jsonb' | 'ARRAY' | string // only interested in USER-DEFINED (enum), jsonb and array
+  sub_data_type: 'USER-DEFINED' | string // this is for arry type, only interested in USER-DEFINED (enum)
   constraint_type: 'PRIMARY KEY' | 'FOREIGN KEY' | 'UNIQUE' | null
   fk_to_table_name: string | null
   fk_to_column_name: string | null
 }
-type GetDatabaseInfo = (tableName?: string) => Promise<schemaColumn[]>
+type GetDatabaseInfo = (tableName?: string) => Promise<SchemaColumn[]>
 
 const postgressDBInstance = PostgresDB.Instance
 export default postgressDBInstance

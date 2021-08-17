@@ -13,6 +13,7 @@ exports.queries = [
           namePlural: "Edit Users Details" 
           submissionMessage: "Thanks for updating your details. You will need to log out and log back into the system for the changes to take effect."
           status: AVAILABLE
+          icon: "edit" # For User dropdown menu
           versionTimestamp: "NOW()"
           templateSectionsUsingId: {
             create: [
@@ -300,7 +301,7 @@ exports.queries = [
                   sequence: 1
                   trigger: ON_APPLICATION_CREATE
                   parameterQueries: {
-                    pattern: "U-[A-Z]{3}-<+dddd>"
+                    pattern: "UE-[A-Z]{3}-<+dddd>"
                     counterName: {
                       operator: "objectProperties"
                       children: [ "applicationData.templateCode" ]
@@ -310,6 +311,7 @@ exports.queries = [
                       # TBD
                     }
                     updateRecord: true
+                    tableName: "application"
                     fieldName: "serial"
                   }
               }
@@ -324,11 +326,13 @@ exports.queries = [
                       serial: "applicationData.applicationSerial"
                     }
                     updateRecord: true
+                    tableName: "application"
+                    fieldName: "name"
                   }
               }
               {
                 actionCode: "incrementStage"
-                sequence: 1
+                sequence: 3
                 trigger: ON_APPLICATION_CREATE
               }
               {

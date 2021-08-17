@@ -1,5 +1,4 @@
-import { PermissionPolicyType } from '../../../src/generated/graphql'
-import { ReviewAssignment } from './types'
+import { PermissionPolicyType, ReviewAssignment } from '../../../src/generated/graphql'
 
 const databaseMethods = (DBConnect: any) => ({
   getLastStageNumber: async (applicationId: number) => {
@@ -50,7 +49,7 @@ const databaseMethods = (DBConnect: any) => ({
     for (const reviewAssignment of reviewAssignments) {
       const {
         reviewerId,
-        orgId,
+        organisationId,
         stageId,
         stageNumber,
         timeStageCreated,
@@ -71,13 +70,13 @@ const databaseMethods = (DBConnect: any) => ({
           reviewer_id, stage_id, stage_number, time_stage_created,
           status, application_id, allowed_sections,
           level_number, is_last_level, is_last_stage,
-          organisation_id, is_final_decision
+          is_final_decision, organisation_id
           )
         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         ON CONFLICT (reviewer_id, ${
-          orgId ? ' organisation_id,' : ''
+          organisationId ? ' organisation_id,' : ''
         } stage_number, application_id, level_number)
-          WHERE organisation_id IS ${orgId ? 'NOT ' : ''}NULL
+          WHERE organisation_id IS ${organisationId ? 'NOT ' : ''}NULL
         DO
           UPDATE SET allowed_sections = $7
         RETURNING id`
@@ -96,8 +95,8 @@ const databaseMethods = (DBConnect: any) => ({
             levelNumber,
             isLastLevel,
             isLastStage,
-            orgId,
             isFinalDecision,
+            organisationId,
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
