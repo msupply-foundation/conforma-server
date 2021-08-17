@@ -52,6 +52,13 @@ This repo has the following functionality implemented in basic form:
   - Create scheduled actions (using `node-schedule` which I'm not sure is the best way to go)
 - `evaluateExpression` module
 
+## Development
+
+* `main` branch - only has features which have been released (on a demo-tag)
+* `develop` - to be used for development (to create a feature-branch before making a new PR) and selected as base for PRs
+
+The organisation-team will transfer approved changes from `develop` into the `main` periodically once all new features are stable and tested.
+
 ## Docker
 
 To build image: `cd Docker` -> `./dockerise.sh` (you can edit `Docker/dockerise.sh` to change build prefs)

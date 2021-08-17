@@ -50,6 +50,7 @@ export const getApplicationData = async (input: {
   const environmentData = {
     appRootFolder: getAppEntryPointDir(),
     filesFolder: config.filesFolder,
+    webHostUrl: process.env.WEB_HOST,
   }
 
   return {
