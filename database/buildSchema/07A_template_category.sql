@@ -4,7 +4,8 @@
 CREATE TYPE public.ui_location AS ENUM (
     'DASHBOARD',
     'MENU',
-    'USER'
+    'USER',
+    'ADMIN'
 );
 
 CREATE TABLE public.template_category (
