@@ -24191,8 +24191,9 @@ export type TriggerScheduleTriggerSchedulePkeyDelete = {
 
 export enum UiLocation {
   Dashboard = 'DASHBOARD',
-  Menu = 'MENU',
-  User = 'USER'
+  List = 'LIST',
+  User = 'USER',
+  Admin = 'ADMIN'
 }
 
 /** A filter to be used against UiLocation List fields. All fields are combined with a logical ‘and.’ */
