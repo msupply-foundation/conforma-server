@@ -1,8 +1,8 @@
 -- review question assignment
 CREATE TABLE public.review_question_assignment (
     id serial PRIMARY KEY,
-    template_element_id integer REFERENCES public.template_element (id) ON DELETE CASCADE,
-    review_assignment_id integer REFERENCES public.review_assignment (id) ON DELETE CASCADE
+    template_element_id integer REFERENCES public.template_element (id) ON DELETE CASCADE NOT NULL,
+    review_assignment_id integer REFERENCES public.review_assignment (id) ON DELETE CASCADE NOT NULL
 );
 
 -- Function to return count of assigned questions for current stage/level

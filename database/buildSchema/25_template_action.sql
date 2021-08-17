@@ -1,7 +1,7 @@
 -- template action
 CREATE TABLE public.template_action (
     id serial PRIMARY KEY,
-    template_id integer REFERENCES public.template (id) ON DELETE CASCADE,
+    template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
     action_code varchar,
     TRIGGER public.trigger,
     condition jsonb DEFAULT 'true' ::jsonb,
