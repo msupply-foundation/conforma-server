@@ -38,7 +38,7 @@ const useSnapshot: SnapshotOperation = async ({
       await initiliseDatabase(options, snapshotFolder)
     }
 
-    copyFiles(snapshotFolder, options)
+    copyFiles(snapshotFolder)
 
     console.log('inserting from snapshot ... ')
     await importFromJson(snapshotObject, options, options.shouldReInitialise)
@@ -105,21 +105,12 @@ const initiliseDatabase = async (
   console.log('inserting core data ... done')
 }
 
-const copyFiles = (
-  snapshotFolder: string,
-  { includeTables, excludeTables }: ExportAndImportOptions
-) => {
-  if (
-    (includeTables.includes('file') || includeTables.length === 0) &&
-    !excludeTables.includes('file')
-  ) {
-    console.log('copying files ...')
-    try {
-      execSync(`rm -rf filesFolder`)
-    } catch (e) {}
-    execSync(`cp -R ${snapshotFolder}/files/* ${FILES_FOLDER}`)
-    console.log('copying files ... done')
-  }
+const copyFiles = (snapshotFolder: string) => {
+  console.log('copying files ...')
+  // -p = no error if exists
+  execSync(`mkdir -p ${FILES_FOLDER}`)
+  execSync(`cp -R ${snapshotFolder}/files ${FILES_FOLDER}`)
+  console.log('copying files ... done')
 }
 
 export default useSnapshot
