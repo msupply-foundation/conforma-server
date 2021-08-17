@@ -5,7 +5,7 @@
   "description": "Adds a record to action_schedule table to schedule an action for some time in the future",
   "required_parameters": ["duration"],
   "optional_parameters": ["tableName", "entityId", "applicationId", "templateId"],
-  "output_properties": ["??"],
+  "output_properties": ["scheduledEvent"],
   "info": {
     "author": {
       "name": "The mSupply Foundation",

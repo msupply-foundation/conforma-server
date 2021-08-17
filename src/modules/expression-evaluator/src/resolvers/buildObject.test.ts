@@ -117,7 +117,7 @@ test('Testing buildObject with evaluations and nesting', () => {
   }
 
   return evaluateExpression(testIn, params).then((result: any) => {
-    console.log(result)
+    // console.log(result)
     expect(result).toEqual(testOut)
   })
 })
