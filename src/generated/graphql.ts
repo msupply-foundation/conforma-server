@@ -602,7 +602,7 @@ export type Application = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   sessionId?: Maybe<Scalars['String']>;
@@ -866,8 +866,6 @@ export type ApplicationFilter = {
   notificationsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -1653,8 +1651,8 @@ export type ApplicationResponse = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateElementId?: Maybe<Scalars['Int']>;
-  applicationId?: Maybe<Scalars['Int']>;
+  templateElementId: Scalars['Int'];
+  applicationId: Scalars['Int'];
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationResponseStatus>;
   value?: Maybe<Scalars['JSON']>;
@@ -1853,12 +1851,8 @@ export type ApplicationResponseFilter = {
   filesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateElement` relation. */
   templateElement?: Maybe<TemplateElementFilter>;
-  /** A related `templateElement` exists. */
-  templateElementExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationResponseFilter>>;
   /** Checks for any expressions in this list. */
@@ -2179,8 +2173,8 @@ export type ApplicationSection = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  applicationId?: Maybe<Scalars['Int']>;
-  templateSectionId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
+  templateSectionId: Scalars['Int'];
   /** Reads a single `Application` that is related to this `ApplicationSection`. */
   application?: Maybe<Application>;
   /** Reads a single `TemplateSection` that is related to this `ApplicationSection`. */
@@ -2299,12 +2293,8 @@ export type ApplicationSectionFilter = {
   templateSectionId?: Maybe<IntFilter>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateSection` relation. */
   templateSection?: Maybe<TemplateSectionFilter>;
-  /** A related `templateSection` exists. */
-  templateSectionExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationSectionFilter>>;
   /** Checks for any expressions in this list. */
@@ -2554,8 +2544,8 @@ export type ApplicationStageHistory = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  applicationId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
+  stageId: Scalars['Int'];
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
   /** Reads a single `Application` that is related to this `ApplicationStageHistory`. */
@@ -2705,12 +2695,8 @@ export type ApplicationStageHistoryFilter = {
   applicationStatusHistoriesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `stage` relation. */
   stage?: Maybe<TemplateStageFilter>;
-  /** A related `stage` exists. */
-  stageExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationStageHistoryFilter>>;
   /** Checks for any expressions in this list. */
@@ -3329,7 +3315,7 @@ export type ApplicationStatusHistory = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  applicationStageHistoryId?: Maybe<Scalars['Int']>;
+  applicationStageHistoryId: Scalars['Int'];
   status?: Maybe<ApplicationStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
@@ -3443,8 +3429,6 @@ export type ApplicationStatusHistoryFilter = {
   applicationId?: Maybe<IntFilter>;
   /** Filter by the object’s `applicationStageHistory` relation. */
   applicationStageHistory?: Maybe<ApplicationStageHistoryFilter>;
-  /** A related `applicationStageHistory` exists. */
-  applicationStageHistoryExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationStatusHistoryFilter>>;
   /** Checks for any expressions in this list. */
@@ -12605,8 +12589,7 @@ export type PermissionJoin = Node & {
   id: Scalars['Int'];
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
-  permissionNameId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
+  permissionNameId: Scalars['Int'];
   /** Reads a single `User` that is related to this `PermissionJoin`. */
   user?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `PermissionJoin`. */
@@ -12628,8 +12611,6 @@ export type PermissionJoinCondition = {
   organisationId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `permissionNameId` field. */
   permissionNameId?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `isActive` field. */
-  isActive?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -12642,8 +12623,6 @@ export type PermissionJoinFilter = {
   organisationId?: Maybe<IntFilter>;
   /** Filter by the object’s `permissionNameId` field. */
   permissionNameId?: Maybe<IntFilter>;
-  /** Filter by the object’s `isActive` field. */
-  isActive?: Maybe<BooleanFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
   /** A related `user` exists. */
@@ -12654,8 +12633,6 @@ export type PermissionJoinFilter = {
   organisationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `permissionName` relation. */
   permissionName?: Maybe<PermissionNameFilter>;
-  /** A related `permissionName` exists. */
-  permissionNameExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<PermissionJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -12670,7 +12647,6 @@ export type PermissionJoinInput = {
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -12802,7 +12778,6 @@ export type PermissionJoinOrganisationIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -12814,7 +12789,6 @@ export type PermissionJoinPatch = {
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -12879,7 +12853,6 @@ export type PermissionJoinPermissionNameIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -12928,8 +12901,6 @@ export enum PermissionJoinsOrderBy {
   OrganisationIdDesc = 'ORGANISATION_ID_DESC',
   PermissionNameIdAsc = 'PERMISSION_NAME_ID_ASC',
   PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
-  IsActiveAsc = 'IS_ACTIVE_ASC',
-  IsActiveDesc = 'IS_ACTIVE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -12983,7 +12954,6 @@ export type PermissionJoinUserIdFkeyPermissionJoinCreateInput = {
   id?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -15768,13 +15738,13 @@ export type ReviewAssignment = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   assignerId?: Maybe<Scalars['Int']>;
-  reviewerId?: Maybe<Scalars['Int']>;
+  reviewerId: Scalars['Int'];
   organisationId?: Maybe<Scalars['Int']>;
-  stageId?: Maybe<Scalars['Int']>;
+  stageId: Scalars['Int'];
   stageNumber?: Maybe<Scalars['Int']>;
   timeStageCreated?: Maybe<Scalars['Datetime']>;
   status: ReviewAssignmentStatus;
-  applicationId?: Maybe<Scalars['Int']>;
+  applicationId: Scalars['Int'];
   templateId?: Maybe<Scalars['Int']>;
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   trigger?: Maybe<Trigger>;
@@ -16049,7 +16019,7 @@ export type ReviewAssignmentAssignerJoin = Node & {
   id: Scalars['Int'];
   assignerId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  reviewAssignmentId: Scalars['Int'];
   /** Reads a single `User` that is related to this `ReviewAssignmentAssignerJoin`. */
   assigner?: Maybe<User>;
   /** Reads a single `Organisation` that is related to this `ReviewAssignmentAssignerJoin`. */
@@ -16167,8 +16137,6 @@ export type ReviewAssignmentAssignerJoinFilter = {
   organisationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignment` relation. */
   reviewAssignment?: Maybe<ReviewAssignmentFilter>;
-  /** A related `reviewAssignment` exists. */
-  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewAssignmentAssignerJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -16561,20 +16529,14 @@ export type ReviewAssignmentFilter = {
   assignerExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewer` relation. */
   reviewer?: Maybe<UserFilter>;
-  /** A related `reviewer` exists. */
-  reviewerExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `organisation` relation. */
   organisation?: Maybe<OrganisationFilter>;
   /** A related `organisation` exists. */
   organisationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `stage` relation. */
   stage?: Maybe<TemplateStageFilter>;
-  /** A related `stage` exists. */
-  stageExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `application` relation. */
   application?: Maybe<ApplicationFilter>;
-  /** A related `application` exists. */
-  applicationExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** A related `template` exists. */
@@ -17444,7 +17406,7 @@ export type ReviewDecision = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  reviewId?: Maybe<Scalars['Int']>;
+  reviewId: Scalars['Int'];
   decision?: Maybe<Decision>;
   comment?: Maybe<Scalars['String']>;
   timeUpdated?: Maybe<Scalars['Datetime']>;
@@ -17483,8 +17445,6 @@ export type ReviewDecisionFilter = {
   timeUpdated?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `review` relation. */
   review?: Maybe<ReviewFilter>;
-  /** A related `review` exists. */
-  reviewExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewDecisionFilter>>;
   /** Checks for any expressions in this list. */
@@ -17965,8 +17925,8 @@ export type ReviewQuestionAssignment = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateElementId?: Maybe<Scalars['Int']>;
-  reviewAssignmentId?: Maybe<Scalars['Int']>;
+  templateElementId: Scalars['Int'];
+  reviewAssignmentId: Scalars['Int'];
   /** Reads a single `TemplateElement` that is related to this `ReviewQuestionAssignment`. */
   templateElement?: Maybe<TemplateElement>;
   /** Reads a single `ReviewAssignment` that is related to this `ReviewQuestionAssignment`. */
@@ -18014,12 +17974,8 @@ export type ReviewQuestionAssignmentFilter = {
   reviewResponsesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateElement` relation. */
   templateElement?: Maybe<TemplateElementFilter>;
-  /** A related `templateElement` exists. */
-  templateElementExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `reviewAssignment` relation. */
   reviewAssignment?: Maybe<ReviewAssignmentFilter>;
-  /** A related `reviewAssignment` exists. */
-  reviewAssignmentExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewQuestionAssignmentFilter>>;
   /** Checks for any expressions in this list. */
@@ -19561,7 +19517,7 @@ export type ReviewStatusHistory = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  reviewId?: Maybe<Scalars['Int']>;
+  reviewId: Scalars['Int'];
   status?: Maybe<ReviewStatus>;
   timeCreated?: Maybe<Scalars['Datetime']>;
   isCurrent?: Maybe<Scalars['Boolean']>;
@@ -19600,8 +19556,6 @@ export type ReviewStatusHistoryFilter = {
   isCurrent?: Maybe<BooleanFilter>;
   /** Filter by the object’s `review` relation. */
   review?: Maybe<ReviewFilter>;
-  /** A related `review` exists. */
-  reviewExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ReviewStatusHistoryFilter>>;
   /** Checks for any expressions in this list. */
@@ -20284,7 +20238,7 @@ export type TemplateAction = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
   code?: Maybe<Scalars['String']>;
   actionCode?: Maybe<Scalars['String']>;
   eventCode?: Maybe<Scalars['String']>;
@@ -20351,8 +20305,6 @@ export type TemplateActionFilter = {
   parametersQueriesString?: Maybe<StringFilter>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateActionFilter>>;
   /** Checks for any expressions in this list. */
@@ -20781,7 +20733,7 @@ export type TemplateElement = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  sectionId?: Maybe<Scalars['Int']>;
+  sectionId: Scalars['Int'];
   code: Scalars['String'];
   index?: Maybe<Scalars['Int']>;
   title?: Maybe<Scalars['String']>;
@@ -20968,8 +20920,6 @@ export type TemplateElementFilter = {
   reviewResponsesExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `section` relation. */
   section?: Maybe<TemplateSectionFilter>;
-  /** A related `section` exists. */
-  sectionExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateElementFilter>>;
   /** Checks for any expressions in this list. */
@@ -21422,8 +21372,8 @@ export type TemplateFilterJoin = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
-  filterId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
+  filterId: Scalars['Int'];
   /** Reads a single `Template` that is related to this `TemplateFilterJoin`. */
   template?: Maybe<Template>;
   /** Reads a single `Filter` that is related to this `TemplateFilterJoin`. */
@@ -21453,12 +21403,8 @@ export type TemplateFilterJoinFilter = {
   filterId?: Maybe<IntFilter>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `filter` relation. */
   filter?: Maybe<FilterFilter>;
-  /** A related `filter` exists. */
-  filterExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateFilterJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -21944,7 +21890,7 @@ export type TemplatePermission = Node & {
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
   permissionNameId?: Maybe<Scalars['Int']>;
-  templateId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
   allowedSections?: Maybe<Array<Maybe<Scalars['String']>>>;
   canSelfAssign: Scalars['Boolean'];
   canMakeFinalDecision: Scalars['Boolean'];
@@ -22008,8 +21954,6 @@ export type TemplatePermissionFilter = {
   permissionNameExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplatePermissionFilter>>;
   /** Checks for any expressions in this list. */
@@ -22312,7 +22256,7 @@ export type TemplateSection = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  templateId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   index?: Maybe<Scalars['Int']>;
@@ -22387,8 +22331,6 @@ export type TemplateSectionFilter = {
   applicationSectionsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateSectionFilter>>;
   /** Checks for any expressions in this list. */
@@ -22714,7 +22656,7 @@ export type TemplateStage = Node & {
   title?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   colour?: Maybe<Scalars['String']>;
-  templateId?: Maybe<Scalars['Int']>;
+  templateId: Scalars['Int'];
   /** Reads a single `Template` that is related to this `TemplateStage`. */
   template?: Maybe<Template>;
   /** Reads and enables pagination through a set of `TemplateStageReviewLevel`. */
@@ -22808,8 +22750,6 @@ export type TemplateStageFilter = {
   reviewAssignmentsByStageIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
-  /** A related `template` exists. */
-  templateExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateStageFilter>>;
   /** Checks for any expressions in this list. */
@@ -22923,7 +22863,7 @@ export type TemplateStageReviewLevel = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  stageId?: Maybe<Scalars['Int']>;
+  stageId: Scalars['Int'];
   number: Scalars['Int'];
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
@@ -22980,8 +22920,6 @@ export type TemplateStageReviewLevelFilter = {
   reviewAssignmentsByLevelIdExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `stage` relation. */
   stage?: Maybe<TemplateStageFilter>;
-  /** A related `stage` exists. */
-  stageExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<TemplateStageReviewLevelFilter>>;
   /** Checks for any expressions in this list. */
@@ -25952,7 +25890,6 @@ export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinOrganisationIdF
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -25963,7 +25900,6 @@ export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinPermissionNameI
   id?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -25974,7 +25910,6 @@ export type UpdatePermissionJoinOnPermissionJoinForPermissionJoinUserIdFkeyPatch
   id?: Maybe<Scalars['Int']>;
   organisationId?: Maybe<Scalars['Int']>;
   permissionNameId?: Maybe<Scalars['Int']>;
-  isActive?: Maybe<Scalars['Boolean']>;
   userToUserId?: Maybe<PermissionJoinUserIdFkeyInput>;
   organisationToOrganisationId?: Maybe<PermissionJoinOrganisationIdFkeyInput>;
   permissionNameToPermissionNameId?: Maybe<PermissionJoinPermissionNameIdFkeyInput>;
@@ -29273,8 +29208,8 @@ export type UserOrganisation = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  userId?: Maybe<Scalars['Int']>;
-  organisationId?: Maybe<Scalars['Int']>;
+  userId: Scalars['Int'];
+  organisationId: Scalars['Int'];
   userRole?: Maybe<Scalars['String']>;
   /** Reads a single `User` that is related to this `UserOrganisation`. */
   user?: Maybe<User>;
@@ -29309,12 +29244,8 @@ export type UserOrganisationFilter = {
   userRole?: Maybe<StringFilter>;
   /** Filter by the object’s `user` relation. */
   user?: Maybe<UserFilter>;
-  /** A related `user` exists. */
-  userExists?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `organisation` relation. */
   organisation?: Maybe<OrganisationFilter>;
-  /** A related `organisation` exists. */
-  organisationExists?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserOrganisationFilter>>;
   /** Checks for any expressions in this list. */
@@ -33812,7 +33743,7 @@ export type ActionQueuesEdgeResolvers<ContextType = any, ParentType extends Reso
 export type ApplicationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Application'] = ResolversParentTypes['Application']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   sessionId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -33945,8 +33876,8 @@ export type ApplicationListShapesEdgeResolvers<ContextType = any, ParentType ext
 export type ApplicationResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationResponse'] = ResolversParentTypes['ApplicationResponse']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  templateElementId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateElementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ApplicationResponseStatus']>, ParentType, ContextType>;
   value?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
@@ -33986,8 +33917,8 @@ export type ApplicationsConnectionResolvers<ContextType = any, ParentType extend
 export type ApplicationSectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationSection'] = ResolversParentTypes['ApplicationSection']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  templateSectionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  templateSectionId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
   templateSection?: Resolver<Maybe<ResolversTypes['TemplateSection']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -34030,8 +33961,8 @@ export type ApplicationStageHistoriesEdgeResolvers<ContextType = any, ParentType
 export type ApplicationStageHistoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStageHistory'] = ResolversParentTypes['ApplicationStageHistory']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  stageId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   isCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
@@ -34133,7 +34064,7 @@ export type ApplicationStatusHistoriesEdgeResolvers<ContextType = any, ParentTyp
 export type ApplicationStatusHistoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['ApplicationStatusHistory'] = ResolversParentTypes['ApplicationStatusHistory']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  applicationStageHistoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  applicationStageHistoryId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   isCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -35595,8 +35526,7 @@ export type PermissionJoinResolvers<ContextType = any, ParentType extends Resolv
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   organisationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  permissionNameId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
   permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
@@ -35941,13 +35871,13 @@ export type ReviewAssignmentResolvers<ContextType = any, ParentType extends Reso
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   assignerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewerId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   organisationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stageId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   timeStageCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   status?: Resolver<ResolversTypes['ReviewAssignmentStatus'], ParentType, ContextType>;
-  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  applicationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   allowedSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   trigger?: Resolver<Maybe<ResolversTypes['Trigger']>, ParentType, ContextType>;
@@ -35976,7 +35906,7 @@ export type ReviewAssignmentAssignerJoinResolvers<ContextType = any, ParentType 
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   assignerId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   organisationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewAssignmentId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   assigner?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
   reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
@@ -36014,7 +35944,7 @@ export type ReviewAssignmentsEdgeResolvers<ContextType = any, ParentType extends
 export type ReviewDecisionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewDecision'] = ResolversParentTypes['ReviewDecision']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   decision?: Resolver<Maybe<ResolversTypes['Decision']>, ParentType, ContextType>;
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   timeUpdated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
@@ -36058,8 +35988,8 @@ export type ReviewListRecordResolvers<ContextType = any, ParentType extends Reso
 export type ReviewQuestionAssignmentResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewQuestionAssignment'] = ResolversParentTypes['ReviewQuestionAssignment']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  templateElementId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  reviewAssignmentId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateElementId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  reviewAssignmentId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   templateElement?: Resolver<Maybe<ResolversTypes['TemplateElement']>, ParentType, ContextType>;
   reviewAssignment?: Resolver<Maybe<ResolversTypes['ReviewAssignment']>, ParentType, ContextType>;
   reviewResponses?: Resolver<ResolversTypes['ReviewResponsesConnection'], ParentType, ContextType, RequireFields<ReviewQuestionAssignmentReviewResponsesArgs, 'orderBy'>>;
@@ -36154,7 +36084,7 @@ export type ReviewStatusHistoriesEdgeResolvers<ContextType = any, ParentType ext
 export type ReviewStatusHistoryResolvers<ContextType = any, ParentType extends ResolversParentTypes['ReviewStatusHistory'] = ResolversParentTypes['ReviewStatusHistory']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  reviewId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  reviewId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ReviewStatus']>, ParentType, ContextType>;
   timeCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   isCurrent?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
@@ -36225,7 +36155,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
 export type TemplateActionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateAction'] = ResolversParentTypes['TemplateAction']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   actionCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   eventCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -36281,7 +36211,7 @@ export type TemplateCategoryResolvers<ContextType = any, ParentType extends Reso
 export type TemplateElementResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateElement'] = ResolversParentTypes['TemplateElement']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  sectionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  sectionId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   index?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -36322,8 +36252,8 @@ export type TemplateElementsEdgeResolvers<ContextType = any, ParentType extends 
 export type TemplateFilterJoinResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateFilterJoin'] = ResolversParentTypes['TemplateFilterJoin']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  filterId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  filterId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -36347,7 +36277,7 @@ export type TemplatePermissionResolvers<ContextType = any, ParentType extends Re
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   allowedSections?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   canSelfAssign?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   canMakeFinalDecision?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
@@ -36384,7 +36314,7 @@ export type TemplatesConnectionResolvers<ContextType = any, ParentType extends R
 export type TemplateSectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateSection'] = ResolversParentTypes['TemplateSection']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   index?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -36421,7 +36351,7 @@ export type TemplateStageResolvers<ContextType = any, ParentType extends Resolve
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   colour?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  templateId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   templateStageReviewLevelsByStageId?: Resolver<ResolversTypes['TemplateStageReviewLevelsConnection'], ParentType, ContextType, RequireFields<TemplateStageTemplateStageReviewLevelsByStageIdArgs, 'orderBy'>>;
   applicationStageHistoriesByStageId?: Resolver<ResolversTypes['ApplicationStageHistoriesConnection'], ParentType, ContextType, RequireFields<TemplateStageApplicationStageHistoriesByStageIdArgs, 'orderBy'>>;
@@ -36432,7 +36362,7 @@ export type TemplateStageResolvers<ContextType = any, ParentType extends Resolve
 export type TemplateStageReviewLevelResolvers<ContextType = any, ParentType extends ResolversParentTypes['TemplateStageReviewLevel'] = ResolversParentTypes['TemplateStageReviewLevel']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  stageId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  stageId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   number?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -36942,8 +36872,8 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type UserOrganisationResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserOrganisation'] = ResolversParentTypes['UserOrganisation']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  organisationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  organisationId?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   userRole?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType>;
