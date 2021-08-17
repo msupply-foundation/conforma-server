@@ -1,7 +1,7 @@
 -- permission_join table
 CREATE TABLE public.permission_join (
     id serial PRIMARY KEY,
-    user_id integer REFERENCES public.user (id) ON DELETE CASCADE NOT NULL,
+    user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
     organisation_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
     permission_name_id integer REFERENCES public.permission_name (id) ON DELETE CASCADE NOT NULL
 );
