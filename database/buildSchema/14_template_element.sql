@@ -38,7 +38,7 @@ IMMUTABLE;
 
 CREATE TABLE public.template_element (
     id serial PRIMARY KEY,
-    section_id integer REFERENCES public.template_section (id) ON DELETE CASCADE,
+    section_id integer REFERENCES public.template_section (id) ON DELETE CASCADE NOT NULL,
     code varchar NOT NULL,
     index integer,
     title varchar,

@@ -3,8 +3,7 @@ CREATE TABLE public.permission_join (
     id serial PRIMARY KEY,
     user_id integer REFERENCES public.user (id),
     organisation_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
-    permission_name_id integer REFERENCES public.permission_name (id) ON DELETE CASCADE,
-    is_active boolean DEFAULT TRUE
+    permission_name_id integer REFERENCES public.permission_name (id) ON DELETE CASCADE NOT NULL
 );
 
 -- This enforces a UNIQUE requirement for user_id, org_id, and permission_name_id,
