@@ -641,9 +641,11 @@ class PostgresDB {
   }
 
   public getUserTemplatePermissions = async (username: string, orgId: number | null) => {
+    const orgMatch = `"orgId" ${orgId === null ? 'IS NULL' : '= $2'}`
+
     const text = `SELECT * FROM permissions_all
       WHERE username = $1
-      AND "orgId" ${orgId === null ? 'IS NULL' : '= $2'}
+      AND (${orgMatch} OR "isUserCategory" = true)
       `
     const values: (string | number)[] = [username]
     if (orgId) values.push(orgId)
