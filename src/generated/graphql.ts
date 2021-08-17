@@ -1580,6 +1580,7 @@ export type ApplicationOrgIdFkeyOrganisationCreateInput = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -11452,6 +11453,7 @@ export type Organisation = Node & {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
   /** Reads and enables pagination through a set of `PermissionJoin`. */
@@ -11539,6 +11541,8 @@ export type OrganisationCondition = {
   address?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `logoUrl` field. */
   logoUrl?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isSystemOrg` field. */
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `Organisation` object types. All fields are combined with a logical ‘and.’ */
@@ -11553,6 +11557,8 @@ export type OrganisationFilter = {
   address?: Maybe<StringFilter>;
   /** Filter by the object’s `logoUrl` field. */
   logoUrl?: Maybe<StringFilter>;
+  /** Filter by the object’s `isSystemOrg` field. */
+  isSystemOrg?: Maybe<BooleanFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
   userOrganisations?: Maybe<OrganisationToManyUserOrganisationFilter>;
   /** Some related `userOrganisations` exist. */
@@ -11588,6 +11594,7 @@ export type OrganisationInput = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -11789,6 +11796,7 @@ export type OrganisationPatch = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -11831,6 +11839,8 @@ export enum OrganisationsOrderBy {
   AddressDesc = 'ADDRESS_DESC',
   LogoUrlAsc = 'LOGO_URL_ASC',
   LogoUrlDesc = 'LOGO_URL_DESC',
+  IsSystemOrgAsc = 'IS_SYSTEM_ORG_ASC',
+  IsSystemOrgDesc = 'IS_SYSTEM_ORG_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -12784,6 +12794,7 @@ export type PermissionJoinOrganisationIdFkeyOrganisationCreateInput = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -16290,6 +16301,7 @@ export type ReviewAssignmentAssignerJoinOrganisationIdFkeyOrganisationCreateInpu
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -16912,6 +16924,7 @@ export type ReviewAssignmentOrganisationIdFkeyOrganisationCreateInput = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -25624,6 +25637,7 @@ export type UpdateOrganisationOnApplicationForApplicationOrgIdFkeyPatch = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -25638,6 +25652,7 @@ export type UpdateOrganisationOnPermissionJoinForPermissionJoinOrganisationIdFke
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -25652,6 +25667,7 @@ export type UpdateOrganisationOnReviewAssignmentAssignerJoinForReviewAssignmentA
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -25666,6 +25682,7 @@ export type UpdateOrganisationOnReviewAssignmentForReviewAssignmentOrganisationI
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -25680,6 +25697,7 @@ export type UpdateOrganisationOnUserOrganisationForUserOrganisationOrganisationI
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -29417,6 +29435,7 @@ export type UserOrganisationOrganisationIdFkeyOrganisationCreateInput = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationOrganisationIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinOrganisationIdFkeyInverseInput>;
   applicationsUsingId?: Maybe<ApplicationOrgIdFkeyInverseInput>;
@@ -29578,6 +29597,7 @@ export type UserOrgJoin = {
   registration?: Maybe<Scalars['String']>;
   address?: Maybe<Scalars['String']>;
   logoUrl?: Maybe<Scalars['String']>;
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
 };
 
 /**
@@ -29611,6 +29631,8 @@ export type UserOrgJoinCondition = {
   address?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `logoUrl` field. */
   logoUrl?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isSystemOrg` field. */
+  isSystemOrg?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `UserOrgJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -29641,6 +29663,8 @@ export type UserOrgJoinFilter = {
   address?: Maybe<StringFilter>;
   /** Filter by the object’s `logoUrl` field. */
   logoUrl?: Maybe<StringFilter>;
+  /** Filter by the object’s `isSystemOrg` field. */
+  isSystemOrg?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<UserOrgJoinFilter>>;
   /** Checks for any expressions in this list. */
@@ -29699,7 +29723,9 @@ export enum UserOrgJoinsOrderBy {
   AddressAsc = 'ADDRESS_ASC',
   AddressDesc = 'ADDRESS_DESC',
   LogoUrlAsc = 'LOGO_URL_ASC',
-  LogoUrlDesc = 'LOGO_URL_DESC'
+  LogoUrlDesc = 'LOGO_URL_DESC',
+  IsSystemOrgAsc = 'IS_SYSTEM_ORG_ASC',
+  IsSystemOrgDesc = 'IS_SYSTEM_ORG_DESC'
 }
 
 /** Represents an update to a `User`. Fields that are set will be updated. */
@@ -35466,6 +35492,7 @@ export type OrganisationResolvers<ContextType = any, ParentType extends Resolver
   registration?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   logoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isSystemOrg?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<OrganisationUserOrganisationsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<OrganisationPermissionJoinsArgs, 'orderBy'>>;
   applicationsByOrgId?: Resolver<ResolversTypes['ApplicationsConnection'], ParentType, ContextType, RequireFields<OrganisationApplicationsByOrgIdArgs, 'orderBy'>>;
@@ -36962,6 +36989,7 @@ export type UserOrgJoinResolvers<ContextType = any, ParentType extends Resolvers
   registration?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   logoUrl?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isSystemOrg?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
