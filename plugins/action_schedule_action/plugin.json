@@ -1,0 +1,24 @@
+{
+  "type": "action_plugin",
+  "code": "scheduleAction",
+  "name": "Create Scheduled Action",
+  "description": "Adds a record to action_schedule table to schedule an action for some time in the future",
+  "required_parameters": ["duration"],
+  "optional_parameters": ["tableName", "entityId", "applicationId", "templateId"],
+  "output_properties": ["scheduledEvent"],
+  "info": {
+    "author": {
+      "name": "The mSupply Foundation",
+      "url": "http://msupply.foundation"
+    },
+    "keywords": ["action", "insert"],
+    "logos": {
+      "small": "",
+      "large": ""
+    },
+    "links": [],
+    "screenshots": [],
+    "version": "1.0.0",
+    "updated": "2021-07-28"
+  }
+}

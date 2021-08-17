@@ -11,7 +11,7 @@ const createVerification: ActionPluginType = async ({ parameters, applicationDat
     expiry = null, // duration in hours
     uniqueId = nanoid(24),
     message = '## Verification successful\n\nThank you',
-    code = null,
+    eventCode = null,
     data = null,
   } = parameters
 
@@ -22,7 +22,7 @@ const createVerification: ActionPluginType = async ({ parameters, applicationDat
       uniqueId,
       applicationId,
       expiryTime,
-      code,
+      eventCode,
       message,
       data,
     })

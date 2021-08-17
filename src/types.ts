@@ -13,6 +13,7 @@ export interface ActionInTemplate {
   path: string
   name: string
   trigger: string
+  event_code: null | string
   sequence: number | null
   condition: EvaluatorNode
   parameter_queries: { [key: string]: any }
@@ -170,6 +171,8 @@ export interface TriggerPayload {
   table: string
   record_id: number
   application_id?: number
+  event_code?: string
+  data?: { [key: string]: any }
 }
 
 export interface TriggerQueueUpdatePayload {

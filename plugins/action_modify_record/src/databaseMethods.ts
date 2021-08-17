@@ -34,7 +34,7 @@ const databaseMethods = (DBConnect: any) => {
       const matchValuePlaceholder = `$${placeholders.length + 1}`
 
       const text = `
-      UPDATE "${tableName}" SET ${getKeys(record)}
+      UPDATE "${tableName}" SET ${getKeys(record, true)}
       = (${placeholders})
       WHERE id = ${matchValuePlaceholder}
       RETURNING *
@@ -91,9 +91,8 @@ const databaseMethods = (DBConnect: any) => {
       tableName: string,
       fieldsToCreate: { fieldName: string; fieldType: string }[]
     ) => {
-      const getType = (fieldType: string) => (fieldType === 'object' ? 'jsonb' : 'varchar')
       const newColumns = fieldsToCreate.map(
-        ({ fieldName, fieldType }) => `ADD COLUMN "${fieldName}" ${getType(fieldType)}`
+        ({ fieldName, fieldType }) => `ADD COLUMN "${fieldName}" ${fieldType}`
       )
       const text = `ALTER TABLE "${tableName}" ${newColumns.join(',')};`
       console.log('creating new columns with statement: ', text)
@@ -116,10 +115,12 @@ const databaseMethods = (DBConnect: any) => {
   }
 }
 
-const getKeys = (record: { [key: string]: { value: any } }) => {
+const getKeys = (record: { [key: string]: { value: any } }, update = false) => {
   const keys = Object.keys(record)
   const keyString = keys.map((key) => `"${key}"`).join(',')
-  return keys.length === 1 ? keyString : `(${keyString})`
+  // UPDATE with only one field can't have brackets around key
+  if (update && keys.length === 1) return keyString
+  else return `(${keyString})`
 }
 
 export type DatabaseMethodsType = ReturnType<typeof databaseMethods>
