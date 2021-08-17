@@ -52,13 +52,6 @@ const useSnapshot: SnapshotOperation = async ({
     // Regenerate row level policies
     await updateRowPolicies()
 
-    if (process.env.NODE_ENV !== 'production') {
-      // Post data insert (restart server (for dev) )
-      console.log('running post data insert ... ')
-      execSync('./database/post_data_insert.sh', { cwd: ROOT_FOLDER })
-      console.log('running post data insert ... done')
-    }
-
     if (options.shouldReInitialise) {
       console.log('enable row level policies ... ')
       execSync('./database/turn_on_row_level_security.sh', { cwd: ROOT_FOLDER })
