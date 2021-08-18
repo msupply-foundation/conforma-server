@@ -17,10 +17,8 @@ import {
   ActionQueueStatus,
   ApplicationOutcome,
   ApplicationStatus,
-  Organisation,
   ReviewStatus,
   Trigger,
-  User,
 } from '../generated/graphql'
 
 class PostgresDB {
@@ -834,11 +832,13 @@ class PostgresDB {
     }
   }
 
-  public getDatabaseInfo: GetDatabaseInfo = async (tableName = '%') => {
+  public getDatabaseInfo: GetDatabaseInfo = async (tableName = '') => {
+    const whereClause = tableName ? `where table_name = $1` : ''
+    const values = tableName ? [tableName] : []
     try {
       const result = await this.query({
-        text: 'SELECT * FROM schema_columns where table_name like $1',
-        values: [tableName],
+        text: `SELECT * FROM schema_columns ${whereClause}`,
+        values,
       })
       const responses = result.rows as SchemaColumn[]
       return responses
