@@ -198,6 +198,7 @@ export interface Organisation {
   registration?: string
   address?: string
   logoUrl?: string
+  isSystemOrg?: boolean
 }
 
 export interface UserOrg extends User, Organisation {}

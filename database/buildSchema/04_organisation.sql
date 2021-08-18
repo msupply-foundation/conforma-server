@@ -4,6 +4,7 @@ CREATE TABLE public.organisation (
     name varchar UNIQUE,
     registration varchar UNIQUE,
     address varchar,
-    logo_url varchar
+    logo_url varchar,
+    is_system_org boolean DEFAULT FALSE
 );
 
