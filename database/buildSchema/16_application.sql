@@ -52,5 +52,5 @@ LANGUAGE plpgsql;
 CREATE TRIGGER outcome_trigger
     AFTER UPDATE OF outcome ON public.application
     FOR EACH ROW
-    WHEN (NEW.outcome <> 'PENDING')
+    WHEN (OLD.outcome = 'PENDING' AND NEW.outcome <> 'PENDING')
     EXECUTE FUNCTION public.outcome_changed ()
