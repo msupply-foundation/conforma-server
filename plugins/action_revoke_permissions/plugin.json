@@ -1,8 +1,8 @@
 {
-  "type": "action_grant_permissions",
-  "code": "grantPermissions",
-  "name": "Grant Permissions",
-  "description": "Grants permission to user/org, creates permission join from user/org to permission name. If org not provided, the permission will be granted to the user only.",
+  "type": "action_revoke_permissions",
+  "code": "revokePermissions",
+  "name": "Revoke Permissions",
+  "description": "Revokes existing permission(s) from user/org -- only sets existing permissions to inactive, doesn't actually delete records",
   "required_parameters": ["permissionNames"],
   "optional_parameters": ["username", "orgName", "orgId"],
   "output_properties": ["permissionJoinIds", "permissionNames"],
@@ -19,6 +19,6 @@
     "links": [],
     "screenshots": [],
     "version": "1.0.0",
-    "updated": "2020-11-20"
+    "updated": "2021-08-04"
   }
 }

@@ -10,6 +10,7 @@
 - [Generate Text String](#generate-text-string)
 - [Join User to Organsation](#join-user-to-organsation)
 - [Grant Permissions](#grant-permissions)
+- [Revoke Permissions](#revoke-permissions)
 - [Generate Review Assignments](#generate-review-assignments)
 - [Update Review Assignments](#update-review-assignments)
 - [Trim Responses](#trim-responses)
@@ -303,14 +304,31 @@ Creates a link between a user and an organisation -- i.e. user is a "member" of 
 
 Grants permission to user/org -- i.e. creates `permission_join` from user/org to permission name. If org not provided, the permission will be granted to the user only.
 
-- _Action Code:_ **`grantPermission`**
+- _Action Code:_ **`grantPermissions`**
 
 | Input parameters<br />(\*required) <br/> | Output properties   |
 | ---------------------------------------- | ------------------- |
-| `username`\*                             | `permissionJoinIds` |
+| `username`                               | `permissionJoinIds` |
 | `permissionNames`\* [Array of names]     | `permissionNames`   |
 | `orgName`                                |                     |
 | `orgId`                                  |                     |
+
+---
+
+### Revoke Permissions
+
+Revokes permissions from to user/org -- i.e. sets the `is_active` field to `false` on `permission_join` for a given user/org and permission name.
+
+`permission_join`s are never actually removed, they just get set to inactive -- this ensures that a user can still _read_ previous applications, even if they've lost permissions for that type, they just can't create new ones. _**NOTE**: This functionality not actually implemented yet in policies/front-end -- TO-DO_
+
+- _Action Code:_ **`revokePermissions`**
+
+| Input parameters<br />(\*required) <br/> | Output properties                                                                    |
+| ---------------------------------------- | ------------------------------------------------------------------------------------ |
+| `username`                               | `revokedPermissions: { permissionJoinId, permissionNameId, permissionName } [Array]` |
+| `permissionNames`\* [Array of names]     |                                                                                      |
+| `orgName`                                |                                                                                      |
+| `orgId`                                  |                                                                                      |
 
 ---
 
