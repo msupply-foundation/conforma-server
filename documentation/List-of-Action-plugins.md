@@ -471,7 +471,13 @@ SMTP_PASSWORD=<password>
 
 `sendEmail` -- if `true` (this is default), an email will be sent, otherwise a notification record will be created with no email sent.
 
-`attachments` -- any files to attach with the email. Files should already be in the system and have an associated uniqueId. This parameter should be either a single string with the uniqueId, or an array of uniqueId strings if there is more than one attachment. (It is possible to send external files by using a url, but this is not fully reliable as yet -- please see the "prepareAttachments" comment in `sendNotification.ts` if you'd like to try that.)
+`attachments` -- any files to attach with the email.
+
+- Files should already be in the system and have an associated uniqueId.
+- Use a _single string_ with the uniqueId if only one attachment - example sending the generated pdf from the outputCumulative object
+- Use an array of uniqueId strings if there is more than one attachment. (Although it would require using something specific to generate an array of objects key/value since the objectProperty is not to be used inside arrays -- in order to get outputCumulative results for example).
+
+**Note**: It is possible to send external files by using a url, but this is not fully reliable as yet -- please see the "prepareAttachments" comment in `sendNotification.ts` if you'd like to try that.
 
 The output object `notification` contains all the fields from the notification record:
 
