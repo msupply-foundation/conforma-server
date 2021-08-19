@@ -303,7 +303,7 @@ Grants permission to user/org -- i.e. creates `permission_join` from user/org to
 
 | Input parameters<br />(\*required) <br/> | Output properties   |
 | ---------------------------------------- | ------------------- |
-| `username`\*                             | `permissionJoinIds` |
+| `username`                               | `permissionJoinIds` |
 | `permissionNames`\* [Array of names]     | `permissionNames`   |
 | `orgName`                                |                     |
 | `orgId`                                  |                     |
