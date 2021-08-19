@@ -1,8 +1,25 @@
 #!/bin/bash
+
+#update submodule with existing templates
+echo -e "\nUpdating snapshots folder with lastest application-manager-templates main"
+git submodule update --init 
+
+#copy folder with snapshot_basic for inital Application manager setup
+cp -rf ./database/basic_snapshot ./database/_snapshots
+
 #insert data from
 echo -e "\nInserting data..."
 
-yarn ts-node ./database/insertDataCLI.ts $1 &
+echo $1
+if [ $1 != '' ]
+then 
+    yarn ts-node ./database/snapshotCLI.ts use $1 &
+else 
+    yarn ts-node ./database/snapshotCLI.ts use "basic_snapshot" &
+fi
+
+# Comment all lines above this ^ and uncomment one bellow to load from js files!
+# yarn ts-node ./database/insertDataCLI.ts $1 &
 
 # Makes script wait until async node script has completed
 PID=$!

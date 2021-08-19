@@ -1099,7 +1099,7 @@ exports.queries = [
               # Apply OrgRegistration
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyOrgRego" }
+                  connectByName: { name: "applyGeneral" }
                 }
               }
               # Review Org rego
