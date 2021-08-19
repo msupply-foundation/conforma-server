@@ -222,6 +222,27 @@ returns:
 }
 ```
 
+#### Generate PDF
+
+POST: `/generate-pdf`
+
+Endpoint to generate PDF files based on a [Carbone template](https://carbone.io/api-reference.html).
+
+**Parameters** (as body JSON):
+
+- `fileId` -- uniqueId of the carbone template file (from the "file" table)
+- `data` -- object containing all the data to be used for substitutions in the carbone template
+- `userId` / `applicationSerial` / `templateId` -- not required, but will be added to the resulting "file" record of the generated document. Note: it is not recommended to add `templateId` to files generated for applications; it should be reserved for files directly associated with templates, such as carbone document templates.
+- `subfolder` -- will save output file into a subfolder if `applicationSerial` is not supplied
+
+The return object contains:
+
+```
+{ uniqueId, filename, filePath }
+```
+
+The internal function called by this endpoint is the same one run by the ["generateDoc" action](List-of-Action).
+
 ---
 
 **To-do**: authorisation of some sort (use JWT, and some way to define ADMIN user, maybe boolean on permission_policy)

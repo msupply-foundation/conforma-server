@@ -17,10 +17,8 @@ import {
   ActionQueueStatus,
   ApplicationOutcome,
   ApplicationStatus,
-  Organisation,
   ReviewStatus,
   Trigger,
-  User,
 } from '../generated/graphql'
 
 class PostgresDB {

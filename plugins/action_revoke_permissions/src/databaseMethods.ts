@@ -8,8 +8,9 @@ const databaseMethods = (DBConnect: any) => ({
         SELECT id from permission_name WHERE name = ANY($2)
       ) AND organisation_id IS NULL
       RETURNING
-        permission_name_id,
-        (SELECT name FROM permission_name WHERE id = permission_name_id)
+        id as "permissionJoinId",
+        permission_name_id as "permissionNameId",
+        (SELECT name FROM permission_name WHERE id = permission_name_id) as "permissionName"
       `
     try {
       const result = await DBConnect.query({ text, values: [username, permissionNames] })
@@ -34,8 +35,9 @@ const databaseMethods = (DBConnect: any) => ({
         SELECT id from permission_name WHERE name = ANY($3)
       ) 
       RETURNING
-        permission_name_id,
-        (SELECT name FROM permission_name WHERE id = permission_name_id)
+        id as "permissionJoinId",
+        permission_name_id as "permissionNameId",
+        (SELECT name FROM permission_name WHERE id = permission_name_id) as "permissionName"
       `
     try {
       const result = await DBConnect.query({ text, values: [username, org, permissionNames] })
