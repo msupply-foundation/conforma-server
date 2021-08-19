@@ -32,7 +32,12 @@ CREATE VIEW permissions_all AS (
         template_permission.id AS "templatePermissionId",
         "template".id AS "templateId",
         "user".id AS "userId",
-        permission_join.organisation_id AS "orgId"
+        permission_join.organisation_id AS "orgId",
+        CASE WHEN template_category.ui_location @> (ARRAY['USER']::public.ui_location[]) THEN
+            TRUE
+        ELSE
+            FALSE
+        END AS "isUserCategory"
     FROM
         permission_name
         JOIN permission_join ON permission_join.permission_name_id = permission_name.id
@@ -40,5 +45,6 @@ CREATE VIEW permissions_all AS (
         LEFT JOIN "user" ON permission_join.user_id = "user".id
         LEFT JOIN organisation ON permission_join.organisation_id = organisation.id
         LEFT JOIN template_permission ON template_permission.permission_name_id = permission_name.id
-        LEFT JOIN "template" ON "template".id = template_permission.template_id);
+        LEFT JOIN "template" ON "template".id = template_permission.template_id
+        LEFT JOIN template_category ON "template".template_category_id = template_category.id);
 

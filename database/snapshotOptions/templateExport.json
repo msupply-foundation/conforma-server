@@ -12,9 +12,10 @@
     "templateSection",
     "templateStageReviewLevel",
     "permissionName",
-    "permissionPoliy"
+    "permissionPoliy",
+    "file"
   ],
-  "tablesToUpdateOnInsertFail": ["permissionName", "permissionPolicy", "filter"],
+  "tablesToUpdateOnInsertFail": ["permissionName", "permissionPolicy", "filter", "file"],
   "excludeTables": [],
   "insertScriptsLocale": "dev",
   "includeInsertScripts": [],

@@ -129,11 +129,6 @@ exports.queries = [
                   connectByName: { name: "reviewAssessmentSection1Level1" }
                 }
               }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
-                }
-              }
             ]
           }
         }
@@ -163,11 +158,6 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "reviewAssessmentSection2Level1" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
@@ -201,11 +191,6 @@ exports.queries = [
                   connectByName: { name: "reviewAssessmentLevel2" }
                 }
               }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
-                }
-              }
             ]
           }
         }
@@ -230,11 +215,6 @@ exports.queries = [
               {
                 permissionNameToPermissionNameId: {
                   connectByName: { name: "reviewAssessmentLevel2" }
-                }
-              }
-              {
-                permissionNameToPermissionNameId: {
-                  connectByName: { name: "applyUserEdit" }
                 }
               }
             ]
