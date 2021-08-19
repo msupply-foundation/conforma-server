@@ -15,6 +15,8 @@
 - [Trim Responses](#trim-responses)
 - [Update Review Visibility](#update-review-visibility)
 - [Update Review Statuses](#update-review-statuses)
+- [Generate Document](#generate-document)
+- [Send Notification](#send-notification)
 
 * [Core Actions](#core-actions)
 
@@ -403,6 +405,82 @@ The list of changed review/responses submitted is passed as `changedResponses` t
 - For application submission all related reviews assigned to the same `templateIds` will have status updated to **PENDING**.
 - For review submission to lower level reviewer (when review decision is **CHANGES_REQUEST**) all related reviews assigned to the same `templateIds` and that have a `reviewResponseDecision` as **DISAGREE** will have status updated to **PENDING**. Other reviews in same level will have status updated to **LOCKED**.
 - For review submission to upper level reviewer (not **CHANGES_REQUEST** and not last-level review) all reviews with **SUBMITTED** status will be updated to **PENDING**.
+
+---
+
+### Generate Document
+
+Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html) document template.
+
+- _Action Code:_ **`generateDoc`**
+
+| Input parameters<br />(\*required) <br/> | Output properties                          |
+| ---------------------------------------- | ------------------------------------------ |
+| `docTemplateId`\*                        | `document: {uniqueId, filename, filepath}` |
+| `appicationSerial`                       |                                            |
+| `additionalData`                         |                                            |
+| `userId`                                 |                                            |
+
+The Action utilises the internal `generatePDF` function, which is also accessible via the [`/generate-pdf` endpoint](API.md)
+
+`docTemplateId` specifies the uniqueId of the carbone template file (from the "file" table)
+
+The data used by the action primarily comes from `applicationData` and `outputCumulative`, which are flattened/spread into a combined object to the carbone processer. However, if you wish to supply extra data, this can be added within an `additionalData` parameter. It gets sent to the carbone processer's "data" field like so:
+
+```
+data: { ...applicationData, ...outputCumulative, additionalData }
+```
+
+`userId` and `applicationSerial` are not required for functioning, but will be stored as fields in the resulting "file" record. If `applicationSerial` is supplied, the output PDF file will be stored in a subfolder named for the application serial.
+
+The output object `document` provides the `uniqueId`, `filename`, and `filepath` (relative to server root) of the generated document, so it can be accessed by subsequent actions
+
+---
+
+### Send Notification
+
+Generates notifications and sends email. For now, there is no UI for notifications in the app, so emails are the primary means of notifying users. A notification record is stored in the database though ("notification" table).
+
+- _Action Code:_ **`sendNotification`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `subject`\*                              | `notification`    |
+| `message`\*                              |                   |
+| `email`                                  |                   |
+| `userId`                                 |                   |
+| `fromName`                               |                   |
+| `fromEmail`                              |                   |
+| `attachments`                            |                   |
+| `sendEmail`                              |                   |
+
+This action requires the use of an external SMTP server for sending the emails. You'll need to provide configuration details for this in the `config.json` file within this actions folder. The SMTP password needs to be stored seperately in the system's (non-shared) `.env` or passed in as an argument at runtime (when running on production server). When storing it in .env, use this format:
+
+```
+SMTP_PASSWORD=<password>
+```
+
+`subject` and `message` are just the email subject line and message
+
+`email` -- the email address(es) to send the email to. Can be a string (single email address) or an array of strings if multiple recipients. If not supplied, will use the "email" field from `applicationData`.
+
+`userId` for the notification recipient. If not supplied, it will be taken from `applicationData`.
+
+`fromName` / `fromEmail` refer to who the apparent sender of the email is. Default value(s) should be supplied in `config.json`, but can be over-ridden on a case-by-case basis.
+
+`sendEmail` -- if `true` (this is default), an email will be sent, otherwise a notification record will be created with no email sent.
+
+`attachments` -- any files to attach with the email.
+
+- Files should already be in the system and have an associated uniqueId.
+- Use a _single string_ with the uniqueId if only one attachment - example sending the generated pdf from the outputCumulative object
+- Use an array of uniqueId strings if there is more than one attachment. (Although it would require using something specific to generate an array of objects key/value since the objectProperty is not to be used inside arrays -- in order to get outputCumulative results for example).
+
+**Note**: It is possible to send external files by using a url, but this is not fully reliable as yet -- please see the "prepareAttachments" comment in `sendNotification.ts` if you'd like to try that.
+
+The output object `notification` contains all the fields from the notification record:
+
+`id, user_id, application_id, review_id, email_recipients, subject, message, attachments, email_sent, is_read`
 
 ---
 
