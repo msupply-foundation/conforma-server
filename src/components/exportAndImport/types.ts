@@ -5,6 +5,7 @@ export type DatabaseColumn = {
   isGenerated: boolean
   isReference: boolean
   isEnum: boolean
+  isEnumArray: boolean
   isJson: boolean
   reference: {
     tableName: string

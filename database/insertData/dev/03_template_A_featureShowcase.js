@@ -200,8 +200,16 @@ exports.queries = [
                       parameters: { label: "Email" }
                     }
                     {
-                      code: "Q5"
+                      code: "DOB"
                       index: 6
+                      title: "Date of Birth"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      parameters: { label: "What is your date of birth?" }
+                    }
+                    {
+                      code: "Q5"
+                      index: 7
                       title: "Password"
                       elementTypePluginCode: "password"
                       category: QUESTION
@@ -221,40 +229,6 @@ exports.queries = [
                         }
                         validationMessageInternal: "Password must be at least 8 characters"
                       }
-                    }
-                    {
-                      code: "Q5B"
-                      index: 7
-                      title: "Dynamic Options demo"
-                      elementTypePluginCode: "dropdownChoice"
-                      category: QUESTION
-                      parameters: {
-                        label: "Which is your favourite response?"
-                        placeholder: "Select"
-                        options: {
-                          operator: "CONCAT"
-                          type: "array"
-                          children: [
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q1.text"]
-                            }
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q2.text"]
-                            }
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q3.text"]
-                            }
-                            {
-                              operator: "objectProperties"
-                              children: ["responses.Q4.text"]
-                            }
-                          ]
-                        }
-                      }
-                      isRequired: false
                     }
                     {
                       code: "PB1"
@@ -1269,6 +1243,495 @@ exports.queries = [
                         # no display format -- will use default 
                       }
                     }
+                    {
+                      code: "PB15"
+                      index: 12
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "TXT_Date1"
+                      index: 20
+                      title: "Date Picker Info"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "### Date picker examples"
+                        style: "info"
+                      }
+                    }
+                    {
+                      code: "Date1"
+                      index: 30
+                      title: "Date Picker 1"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Select a date _range_"
+                        allowRange: true                      
+                      }
+                    } 
+                    {
+                      code: "TextDate1"
+                      index: 35
+                      title: "Date Display 1"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!=",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.Date1.text",
+                              ""
+                            ]
+                          },
+                          ""
+                        ]
+                      }
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Selected date: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Date1.text", ""]
+                            }
+                          ]
+                        }
+                        style: "none"
+                      }
+                    }    
+                    {
+                      code: "Date2"
+                      index: 40
+                      title: "Date Picker 2"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      isRequired: false
+                      helpText: "Can be displayed with different locales, and with a limit on the date range -- this one allows 1 year either side of today"
+                      parameters: {
+                        label: "Français?"
+                        maxAge: 1
+                        minAge: -1
+                        displayFormat: "huge" 
+                        locale: "fr"                 
+                      }
+                    }
+                    {
+                      code: "TextDate2"
+                      index: 45
+                      title: "Date Display 1"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!=",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.Date2.text",
+                              ""
+                            ]
+                          },
+                          ""
+                        ]
+                      }
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Selected date: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Date2.text", ""]
+                            }
+                          ]
+                        }
+                        style: "none"
+                      }
+                    }
+                    {
+                      code: "Date3"
+                      index: 50
+                      title: "Date Picker 3"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Different input format"
+                        description: "Output (Summary view) is different too  \\nThis also requires date to be at least 18 years ago (useful for Date of Birth restrictions)"
+                        minAge: 18 
+                        displayFormat: "full"
+                        entryFormat: "DD-MM-YYYY"                
+                      }
+                    }
+                    {
+                      code: "TextDate3"
+                      index: 55
+                      title: "Date Display 3"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!=",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.Date3.text",
+                              ""
+                            ]
+                          },
+                          ""
+                        ]
+                      }
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Selected date: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Date3.text", ""]
+                            }
+                          ]
+                        }
+                        style: "none"
+                      }
+                    }
+                    {
+                      code: "Date4"
+                      index: 60
+                      title: "Date Picker 4"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "This one has a default date"
+                        default: "1976-12-23"
+                        displayFormat: "med"                  
+                      }
+                    }
+                    {
+                      code: "TextDate4"
+                      index: 65
+                      title: "Date Display 4"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!=",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.Date4.text",
+                              ""
+                            ]
+                          },
+                          ""
+                        ]
+                      }
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Selected date: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Date4.text", ""]
+                            }
+                          ]
+                        }
+                        style: "none"
+                      }
+                    }
+                    {
+                      code: "Date5"
+                      index: 70
+                      title: "Date Picker 5"
+                      elementTypePluginCode: "datePicker"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "This one has a default range"
+                        default: ["1976-12-23", "1977-12-04"]
+                        displayFormat: "med"
+                      }
+                    }
+                    {
+                      code: "TextDate5"
+                      index: 75
+                      title: "Date Display 5"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      visibilityCondition: {
+                        operator: "!=",
+                        children: [
+                          {
+                            operator: "objectProperties",
+                            children: [
+                              "responses.Date5.text",
+                              ""
+                            ]
+                          },
+                          ""
+                        ]
+                      }
+                      parameters: {
+                        text: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Selected date: %1"
+                            {
+                              operator: "objectProperties"
+                              children: ["responses.Date5.text", ""]
+                            }
+                          ]
+                        }
+                        style: "none"
+                      }
+                    }
+                    {
+                      code: "PB16"
+                      index: 80
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "TXT_Number_1"
+                      index: 85
+                      title: "Number example 1"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "### Number Input examples"
+                        style: "info"
+                      }
+                    }
+                    {
+                      code: "num1"
+                      index: 90
+                      title: "Number Input 1"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Enter an integer"
+                        description: "Must be a **positive** number less than 10 million"
+                        type: "integer"
+                        minValue: 0
+                        maxValue: 10000000
+                        simple: false                
+                      }
+                    } 
+                    {
+                      code: "num2"
+                      index: 91
+                      title: "Number Input French"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: {
+                          operator: "stringSubstitution"
+                          children: [
+                            "Enter a real number between %1 and %2",
+                            {
+                              operator: "objectProperties"
+                              children: [ "responses.numMin.text", "–10,000,000"]
+                            }
+                            {
+                              operator: "objectProperties"
+                              children: [ "responses.numMax.text", "10,000,000"]
+                            }
+                          ]
+                        }
+                        description: "Switch locale in the subsequent dropdown"
+                        locale: {
+                          operator: "objectProperties"
+                          children: [ "responses.localeSelect.text", "en-US" ]
+                        }
+                        minValue: {
+                          operator: "objectProperties"
+                          children: [ "responses.numMin.number", -10000000 ]
+                        }
+                        maxValue: {
+                          operator: "objectProperties"
+                          children: [ "responses.numMax.number", 10000000 ]
+                        }
+                        simple: false               
+                      }
+                    }
+                    {
+                      code: "localeSelect"
+                      index: 92
+                      title: "Locale selector"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select locale for previous number input"
+                        default: 0
+                        options: [
+                          "en-US"
+                          "fr-FR"
+                          "hi-IN"
+                          "ja-JP"
+                        ]
+                      }
+                    }
+                    {
+                      code: "numMax"
+                      index: 94
+                      title: "Number Set Maximum"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Set the upper bound for the above"
+                        type: "integer"
+                        default: 10000000
+                        simple: false  
+                      }
+                    } 
+                    {
+                      code: "numMin"
+                      index: 95
+                      title: "Number Set Minimum"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      defaultValue: {
+                        value: -10000000
+                        text: "-10000000"
+                      }
+                      parameters: {
+                        label: "Set the lower bound"
+                        type: "integer"
+                        simple: false
+                      }
+                    }
+                    {
+                      code: "numSimple1"
+                      index: 96
+                      title: "Simple stepper"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Use the stepper to select an integer"
+                        type: "integer"
+                        maxWidth: "200px"
+                      }
+                    }
+                    {
+                      code: "numSimple2"
+                      index: 97
+                      title: "Simple stepper 2"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Use the stepper to select a decimal"
+                        minValue: 0
+                        step: 0.1
+                        maxWidth: "200px"
+                      }
+                    }
+                    {
+                      code: "PB17"
+                      index: 100
+                      title: "Page Break"
+                      elementTypePluginCode: "pageBreak"
+                      category: INFORMATION
+                    }
+                    {
+                      code: "TXT_Number_2"
+                      index: 101
+                      title: "More number examples"
+                      elementTypePluginCode: "textInfo"
+                      category: INFORMATION
+                      parameters: {
+                        title: "### More Number Input examples"
+                        style: "info"
+                      }
+                    }
+                    {
+                      code: "numCurr1"
+                      index: 102
+                      title: "Currency"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Enter an amount"
+                        description: "Use the selector below to specify the currency"
+                        simple: false
+                        maxWidth: "150px"
+                        currency: {
+                          operator: "objectProperties"
+                          children: [ "responses.currSelect.text", "USD" ]
+                        }  
+                      }
+                    }
+                    {
+                      code: "currSelect"
+                      index: 103
+                      title: "Currency selector"
+                      isRequired: false
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      parameters: {
+                        label: "Select currency"
+                        default: 0
+                        options: [
+                          "USD"
+                          "EUR"
+                          "JPY"
+                          "NZD"
+                        ]
+                      }
+                    }
+                    {
+                      code: "num3"
+                      index: 104
+                      title: "Suffix with maxSignificantDigits"
+                      elementTypePluginCode: "number"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "How far is your home from here?"
+                        description: "Your response will be expressed in the units selected below, rounded to 3 significant digits"
+                      maxSignificantDigits: 3
+                      simple: false
+                      suffix: {
+                          operator: "objectProperties"
+                          children: [ "responses.unitSelect.selection.unit", "" ]
+                        }        
+                      }
+                    }
+                    {
+                      code: "unitSelect"
+                      index: 105
+                      title: "Units selector"
+                      elementTypePluginCode: "dropdownChoice"
+                      category: QUESTION
+                      isRequired: false
+                      parameters: {
+                        label: "Select distance unit"
+                        default: 0
+                        options: [
+                         {display: "kilometers", unit: " km"}
+                         {display: "meters", unit: " m"}
+                         {display: "miles", unit: " mi"}
+                        ]
+                        optionsDisplayProperty: "display"
+                      }
+                    }
                   ]
                 }
               }
@@ -1362,25 +1825,6 @@ exports.queries = [
                 }
                 parameterQueries:{
                   newOutcome: "EXPIRED"
-                }
-              }
-              {
-                actionCode: "changeStatus"
-                trigger: ON_SCHEDULE
-                eventCode: "exp1"
-                sequence: 2
-                condition: {
-                  operator: "="
-                  children: [
-                    {
-                      operator: "objectProperties"
-                      children: ["applicationData.status"]
-                    }
-                    "DRAFT"
-                  ]
-                }
-                parameterQueries:{
-                  newStatus: "COMPLETED"
                 }
               }
               {

@@ -47,6 +47,7 @@ class GraphQLdb {
         review(id: $id) {
           levelNumber
           isLastLevel
+          isLastStage
           status
           latestDecision {
               decision

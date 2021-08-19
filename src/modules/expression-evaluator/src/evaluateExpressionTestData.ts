@@ -725,7 +725,7 @@ testData.getApplicationName = {
       value: 'SELECT name FROM application WHERE template_id = $1 LIMIT 1',
     },
     {
-      value: 4,
+      value: 5,
     },
   ],
 }
@@ -1139,4 +1139,21 @@ testData.complexValidation = {
     },
     { value: 0 },
   ],
+}
+
+// objectFunctions operator
+
+testData.functions = {
+  fDouble: (...args: any) => args.map((e: any) => e + e),
+  fDate: (dateString: string) => new Date(dateString),
+}
+
+testData.obFunc1 = {
+  operator: 'objectFunctions',
+  children: ['functions.fDouble', 1, 2, 3, 'four'],
+}
+
+testData.obFunc2 = {
+  operator: 'objectFunctions',
+  children: ['functions.fDate', { operator: '+', children: ['December 17, ', '1995 03:24:00'] }],
 }

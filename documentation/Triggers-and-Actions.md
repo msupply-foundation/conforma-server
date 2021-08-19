@@ -63,6 +63,7 @@ Two other possible Trigger states are `PROCESSING` and `ERROR`. The state of tri
 - `review`
 - `review_assignment`
 - `verification`
+- `trigger_schedule`
 
 ## Actions
 

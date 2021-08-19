@@ -50,13 +50,14 @@ exports.queries = [
         code: "user"
         icon: "user"
         title: "User settings"
+        uiLocation: [ USER ]
       }
     }
   ) {
     clientMutationId
   }
 }`,
-`mutation licenseCategory {
+  `mutation licenseCategory {
   createTemplateCategory(
     input: {
       templateCategory: {

@@ -17,11 +17,9 @@ exports.coreActions = `
             operator: "objectProperties"
             children: [ "applicationData.templateCode" ]
           }
-          counterInit: 100
-          customFields: {
-            # TBD
-          }
+          # counterInit: 100
           updateRecord: true
+          tableName: "application"
           fieldName: "serial"
         }
     }
@@ -36,6 +34,8 @@ exports.coreActions = `
             serial: "applicationData.applicationSerial"
           }
           updateRecord: true
+          tableName: "application"
+          fieldName: "name"
         }
     }
     {
