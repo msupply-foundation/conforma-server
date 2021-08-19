@@ -37,34 +37,34 @@ beforeAll(async (done) => {
     text: `
     INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (1000, NULL, 'APPROVE', 2000, 4010, NULL, 5, 'NOW()', 'SUBMITTED');
+      VALUES (10000, NULL, 'APPROVE', 2000, 4010, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (1001, NULL, 'APPROVE', 2001, 4011, NULL, 5, 'NOW()', 'SUBMITTED');
+      VALUES (10001, NULL, 'APPROVE', 2001, 4011, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (1002, NULL, 'APPROVE', 2002, 4012, NULL, 5, 'NOW()', 'SUBMITTED');
+      VALUES (10002, NULL, 'APPROVE', 2002, 4012, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (1003, 'This not right', 'DECLINE', 2003, 4013, NULL, 5, 'NOW()', 'SUBMITTED');
+      VALUES (10003, 'This not right', 'DECLINE', 2003, 4013, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (1004, NULL, 'APPROVE', 2004, 4014, NULL, 5, 'NOW()', 'SUBMITTED');
+      VALUES (10004, NULL, 'APPROVE', 2004, 4014, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (1005, NULL, 'APPROVE', 2006, 4015, NULL, 5, 'NOW()', 'SUBMITTED');
+      VALUES (10005, NULL, 'APPROVE', 2006, 4015, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (1006, NULL, 'APPROVE', 2007, 4016, NULL, 5, 'NOW()', 'SUBMITTED');
+      VALUES (10006, NULL, 'APPROVE', 2007, 4016, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (1007, NULL, 'APPROVE', 2008, 4017, NULL, 5, 'NOW()', 'SUBMITTED');
+      VALUES (10007, NULL, 'APPROVE', 2008, 4017, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (1008, NULL, 'APPROVE', 2009, 4018, NULL, 5, 'NOW()', 'SUBMITTED');
+      VALUES (10008, NULL, 'APPROVE', 2009, 4018, NULL, 6003, 'NOW()', 'SUBMITTED');
     INSERT INTO "public".review_response (id, "comment", decision, review_question_assignment_id, 
     application_response_id, review_response_link_id, review_id, time_submitted, status) 
-      VALUES (1009, NULL, 'APPROVE', 2010, 4019, NULL, 5, 'NOW()', 'SUBMITTED');
+      VALUES (10009, NULL, 'APPROVE', 2010, 4019, NULL, 6003, 'NOW()', 'SUBMITTED');
     `,
     values: [],
   })
@@ -98,7 +98,7 @@ test('Test: remove unchanged application_response duplicates', () => {
 
 test('Test: remove unchanged review_response duplicates, with custom timestamp', () => {
   return trimResponses({
-    parameters: { reviewId: 5, timestamp: '2021-03-09T00:01:00.0Z' },
+    parameters: { reviewId: 6003, timestamp: '2021-03-09T00:01:00.0Z' },
     DBConnect,
   }).then((result: any) => {
     expect(result).toEqual({
@@ -106,24 +106,24 @@ test('Test: remove unchanged review_response duplicates, with custom timestamp',
       error_log: '',
       output: {
         deletedResponses: [
-          { reviewResponseId: 1000, templateElementId: 4001 },
-          { reviewResponseId: 1001, templateElementId: 4002 },
-          { reviewResponseId: 1002, templateElementId: 4003 },
-          { reviewResponseId: 1004, templateElementId: 4006 },
-          { reviewResponseId: 1005, templateElementId: 4008 },
-          { reviewResponseId: 1006, templateElementId: 4009 },
-          { reviewResponseId: 1007, templateElementId: 4011 },
-          { reviewResponseId: 1008, templateElementId: 4012 },
+          { reviewResponseId: 10000, templateElementId: 4001 },
+          { reviewResponseId: 10001, templateElementId: 4002 },
+          { reviewResponseId: 10002, templateElementId: 4003 },
+          { reviewResponseId: 10004, templateElementId: 4006 },
+          { reviewResponseId: 10005, templateElementId: 4008 },
+          { reviewResponseId: 10006, templateElementId: 4009 },
+          { reviewResponseId: 10007, templateElementId: 4011 },
+          { reviewResponseId: 10008, templateElementId: 4012 },
         ],
         updatedResponses: [
           {
             reviewResponseDecision: 'DECLINE',
-            reviewResponseId: 1003,
+            reviewResponseId: 10003,
             templateElementId: 4005,
           },
           {
             reviewResponseDecision: 'APPROVE',
-            reviewResponseId: 1009,
+            reviewResponseId: 10009,
             templateElementId: 4013,
           },
         ],

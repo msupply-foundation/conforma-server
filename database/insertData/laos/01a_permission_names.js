@@ -1,47 +1,13 @@
 /*
-Basic permissionNames, and associate with policies 
+Laos specific permissionNames, and associate with policies 
 */
 exports.queries = [
-  // admin user
-  `mutation createPermissionName {
+// applyOrgLicense
+`mutation createPermissionName {
     createPermissionName(
       input: {
         permissionName: {
-          name: "admin"
-          permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "admin" }
-          }
-        }
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  // applyUserRegistration
-  `mutation createPermissionName {
-    createPermissionName(
-      input: {
-        permissionName: {
-          name: "applyUserRegistration"
-          permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "applyNonRegistered" }
-          }
-        }
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  // applyEditUser
-  `mutation applyUserEditPermission {
-    createPermissionName(
-      input: {
-        permissionName: {
-          name: "applyUserEdit"
+          name: "applyOrgLicense"
           permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "applyUserRestricted" }
           }
@@ -53,12 +19,13 @@ exports.queries = [
       }
     }
   }`,
-  // applyGeneral (associated with multiple templates)
-  `mutation applyGeneralPermission {
+  // applyDrugRegoMMD
+  `mutation createPermissionName {
     createPermissionName(
       input: {
-        permissionName: { 
-          name: "applyGeneral",  permissionPolicyToPermissionPolicyId: {
+        permissionName: {
+          name: "applyDrugRegoMMD"
+          permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "applyUserRestricted" }
           }
         }
@@ -69,12 +36,147 @@ exports.queries = [
       }
     }
   }`,
-  // reviewOrgRego
-  `mutation reviewOrgRegoPermission {
+  
+  // applyDrugRegoMMD
+  `mutation createPermissionName {
     createPermissionName(
       input: {
         permissionName: {
-          name: "reviewOrgRego"
+          name: "applyDrugRegoMMC"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyImportPermit
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyImportPermit"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyRenewLicense
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyRenewLicense"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyForOrganisationPermissions
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyForOrganisationPermissions"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // applyJoinOrg
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyJoinOrg"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // Apply to proceedure verification (ReviewTest)
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "applyProceedureVerification"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  // All review permissions bellow
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "joinUserToFDD"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "grantUserFDDpermissions"
+          permissionPolicyToPermissionPolicyId: {
+            connectByName: { name: "applyUserRestricted" }
+          }
+        }
+      }
+    ) {
+      permissionName {
+        name
+      }
+    }
+  }`,
+  `mutation createPermissionName {
+    createPermissionName(
+      input: {
+        permissionName: {
+          name: "screenProceedure"
           permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "reviewBasic" }
           }
@@ -86,60 +188,12 @@ exports.queries = [
       }
     }
   }`,
-  // reviewJoinOrg
-  `mutation reviewJoinOrgPermission {
-    createPermissionName(
-      input: {
-        permissionName: { 
-          name: "reviewJoinOrg", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "reviewOrgRestricted" }
-          }
-        }
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  // assignGeneral (associated with multiple templates)
-  `mutation assignGeneralPermission {
-    createPermissionName(
-      input: {
-        permissionName: { 
-          name: "assignGeneral", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "assignBasic" }
-          }
-        }
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  // reviewGeneral (associated with multiple templates)
-  `mutation reviewGeneralPermission {
-    createPermissionName(
-      input: {
-        permissionName: { 
-          name: "reviewGeneral", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "reviewBasic" }
-          }
-        }
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  // review permissions specific to each stage/level/sections
   `mutation createPermissionName {
     createPermissionName(
       input: {
-        permissionName: { 
-          name: "reviewScreening", permissionPolicyToPermissionPolicyId: {
+        permissionName: {
+          name: "reviewProceedure"
+          permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "reviewBasic" }
           }
         }
@@ -153,8 +207,9 @@ exports.queries = [
   `mutation createPermissionName {
     createPermissionName(
       input: {
-        permissionName: { 
-          name: "reviewAssessmentSection1Level1", permissionPolicyToPermissionPolicyId: {
+        permissionName: {
+          name: "consolidateProceedure"
+          permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "reviewBasic" }
           }
         }
@@ -168,39 +223,10 @@ exports.queries = [
   `mutation createPermissionName {
     createPermissionName(
       input: {
-        permissionName: { 
-          name: "reviewAssessmentSection2Level1", permissionPolicyToPermissionPolicyId: {
+        permissionName: {
+          name: "assessPayment"
+          permissionPolicyToPermissionPolicyId: {
             connectByName: { name: "reviewBasic" }
-          }
-        }
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  `mutation createPermissionName {
-    createPermissionName(
-      input: {
-        permissionName: { 
-          name: "reviewAssessmentLevel2", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "reviewBasic" }
-          }
-        }
-      }
-    ) {
-      permissionName {
-        name
-      }
-    }
-  }`,
-  `mutation createPermissionName {
-    createPermissionName(
-      input: {
-        permissionName: { 
-          name: "reviewFinalDecision", permissionPolicyToPermissionPolicyId: {
-            connectByName: { name: "reviewAdvanced" }
           }
         }
       }
