@@ -455,7 +455,11 @@ Generates notifications and sends email. For now, there is no UI for notificatio
 | `attachments`                            |                   |
 | `sendEmail`                              |                   |
 
-This action requires the use of an external SMTP server for sending the emails. You'll need to provide configuration details for this in the `config.json` file within this actions folder. The SMTP password needs to be stored in the systems (non-shared) `.env` or passed in as an argument at runtime (when running on production server)
+This action requires the use of an external SMTP server for sending the emails. You'll need to provide configuration details for this in the `config.json` file within this actions folder. The SMTP password needs to be stored seperately in the system's (non-shared) `.env` or passed in as an argument at runtime (when running on production server). When storing it in .env, use this format:
+
+```
+SMTP_PASSWORD=<password>
+```
 
 `subject` and `message` are just the email subject line and message
 
