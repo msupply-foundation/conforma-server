@@ -3,8 +3,8 @@
 # This command requires githubtoken.txt, in the repo root (it's git ingored btw).
 # githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
 
-SERVER_BRANCH='demo-11-08-2021-with-snapshots'
-WEB_APP_BRANCH='demo-11-08-2021'
+SERVER_BRANCH='demo-19-08-2021'
+WEB_APP_BRANCH='demo-19-08-2021'
 IMAGE_NAME='mflow-demo'
 INITIAL_DATA_LOCALE=''
 
