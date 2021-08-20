@@ -118,7 +118,7 @@ export async function processTrigger(payload: TriggerPayload) {
 
   // Collect output properties of actions in sequence
   // "data" is stored output from scheduled triggers or verifications
-  let outputCumulative = { ...data }
+  let outputCumulative = { ...data?.outputCumulative }
 
   // Execute sequential Actions one by one
   let actionFailed = ''
