@@ -196,10 +196,23 @@ export async function executeAction(
   }
 
   // Evaluate condition
-  const condition = await evaluateExpression(
-    payload.condition_expression as EvaluatorNode,
-    evaluatorParams
-  )
+  let condition
+  try {
+    condition = await evaluateExpression(
+      payload.condition_expression as EvaluatorNode,
+      evaluatorParams
+    )
+  } catch (err) {
+    console.log('>> Error evaluating condition for action:', payload.code)
+    return await DBConnect.executedActionStatusUpdate({
+      status: ActionQueueStatus.Fail,
+      error_log: 'Problem evaluating condition: ' + err,
+      parameters_evaluated: null,
+      output: null,
+      id: payload.id,
+    })
+  }
+
   if (condition) {
     try {
       // Evaluate parameters
