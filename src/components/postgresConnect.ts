@@ -483,7 +483,8 @@ class PostgresDB {
         user_role as "userRole",
         registration,
         address,
-        logo_url as "logoUrl"
+        logo_url as "logoUrl",
+        is_system_org as "isSystemOrg"
         FROM user_org_join`
     const text = userId ? `${queryText} WHERE user_id = $1` : `${queryText} WHERE username = $1`
     try {
