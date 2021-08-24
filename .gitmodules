@@ -1,9 +1,4 @@
-
 [submodule "documentation/_wiki"]
-	path = documentation/_wiki
-	url = https://github.com/openmsupply/application-manager-server.wiki.git
-	branch = master
-
-[submodule "database/_snapshots"]
-	path = database/_snapshots
-	url = https://github.com/openmsupply/application-manager-templates.git
+path = documentation/_wiki
+url = https://github.com/openmsupply/application-manager-server.wiki.git
+branch = master
