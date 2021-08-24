@@ -30,6 +30,10 @@ Please see [ReadMe](__README.md) for information about maintaining this document
   - [List of Action plugins](List-of-Action-plugins.md)
 - [Dynamic Expressions/Queries](Query-Syntax.md)
 
+**Build and Demo Server**
+
+- [Demo Server Guide](demo_server_guide.md)
+
 **Misc**
 
 - [List of useful Database functions (to be added)](Funcions.md)
