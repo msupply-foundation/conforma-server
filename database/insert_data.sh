@@ -1,9 +1,5 @@
 #!/bin/bash
 
-#update submodule with existing templates
-echo -e "\nUpdating snapshots folder with lastest application-manager-templates main"
-git submodule update --init 
-
 #copy folder with snapshot_basic for inital Application manager setup
 cp -rf ./database/basic_snapshot ./database/_snapshots
 
@@ -11,10 +7,9 @@ cp -rf ./database/basic_snapshot ./database/_snapshots
 echo -e "\nInserting data..."
 
 echo $1
-if [ $1 != '' ]
-then 
+if [ $1 != '' ]; then
     yarn ts-node ./database/snapshotCLI.ts use $1 &
-else 
+else
     yarn ts-node ./database/snapshotCLI.ts use "basic_snapshot" &
 fi
 
