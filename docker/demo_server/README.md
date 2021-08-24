@@ -33,9 +33,9 @@ After changing config as per above, run
 
 Logs are in /var/log/nginx
 
-### Docker Compose
+### docker-compose
 
-Docker compose will complain if directories are not present, create them if needed (they will persist when restarting image, even if `docker compose down` was run)
+docker-compose will complain if directories are not present, create them if needed (they will persist when restarting image, even if `docker-compose down` was run)
 
 ```bash
 mkdir app_snapshots_on_port_8000
@@ -53,12 +53,12 @@ mkdir grafana_on_port_8009
 export TAG='front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14'
 
 # -d is for detached, if you want to see all output then start without -d
-PORT_APP=8000 PORT_DASH=8001 sudo docker compose --project-name 'mflow-on-8000' up -d
+PORT_APP=8000 PORT_DASH=8001 sudo docker-compose --project-name 'mflow-on-8000' up -d
 
-PORT_APP=8002 PORT_DASH=8003 sudo docker compose --project-name 'mflow-on-8002' up -d
-PORT_APP=8004 PORT_DASH=8005 sudo docker compose --project-name 'mflow-on-8004' up -d
-PORT_APP=8006 PORT_DASH=8007 sudo docker compose --project-name 'mflow-on-8006' up -d
-PORT_APP=8008 PORT_DASH=8009 sudo docker compose --project-name 'mflow-on-8008' up -d
+PORT_APP=8002 PORT_DASH=8003 sudo docker-compose --project-name 'mflow-on-8002' up -d
+PORT_APP=8004 PORT_DASH=8005 sudo docker-compose --project-name 'mflow-on-8004' up -d
+PORT_APP=8006 PORT_DASH=8007 sudo docker-compose --project-name 'mflow-on-8006' up -d
+PORT_APP=8008 PORT_DASH=8009 sudo docker-compose --project-name 'mflow-on-8008' up -d
 ```
 
 <ins>list container</ins>
@@ -81,14 +81,14 @@ sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/graphi
 
 ```bash
 # to stop
-sudo docker compose --project-name 'mflow-on-8000' stop
+sudo docker-compose --project-name 'mflow-on-8000' stop
 # to remove (when new version is out)
-sudo docker compose --project-name 'mflow-on-8000' rm
+sudo docker-compose --project-name 'mflow-on-8000' rm
 ```
 
 Have t
 
-### Prior To Docker Compose
+### Prior To docker-compose
 
 <ins>list local images</ins>
 

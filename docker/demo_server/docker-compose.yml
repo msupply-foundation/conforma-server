@@ -3,7 +3,7 @@
 version: '3.9'
 services:
   app:
-    image: 'mflow-demo:${TAG}'
+    image: 'msupplyfoundation/mflow-demo:${TAG}'
     ports:
       - '${PORT_APP}:3000'
     expose:
