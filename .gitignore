@@ -58,5 +58,5 @@ githubtoken.txt
 src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluator/
 
 #Snapshots working folder
-/database/_snapshots
-/database/snapshot_path_aliases.json
+database/_snapshots
+database/snapshot_path_aliases.json
