@@ -39,11 +39,23 @@ docker-compose will complain if directories are not present, create them if need
 
 ```bash
 mkdir app_snapshots_on_port_8000
+mkdir app_postgres_on_port_8000
 mkdir grafana_on_port_8001
 
+mkdir app_snapshots_on_port_8002
+mkdir app_postgres_on_port_8002
 mkdir grafana_on_port_8003
+
+mkdir app_snapshots_on_port_8004
+mkdir app_postgres_on_port_8004
 mkdir grafana_on_port_8005
+
+mkdir app_snapshots_on_port_8006
+mkdir app_postgres_on_port_8006
 mkdir grafana_on_port_8007
+
+mkdir app_snapshots_on_port_8008
+mkdir app_postgres_on_port_8008
 mkdir grafana_on_port_8009
 ```
 
@@ -83,7 +95,7 @@ sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/graphi
 # to stop
 sudo docker-compose --project-name 'mflow-on-8000' stop
 # to remove (when new version is out)
-sudo docker-compose --project-name 'mflow-on-8000' rm
+sudo docker-compose --project-name 'mflow-on-8000' down
 ```
 
 Have t
