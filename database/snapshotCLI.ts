@@ -1,6 +1,7 @@
 import takeSnapshot from '../src/components/snapshots/takeSnapshot'
 import useSnapshot from '../src/components/snapshots/useSnapshot'
 import { DEFAULT_SNAPSHOT_NAME, DEFAULT_OPTIONS_NAME } from '../src/components/snapshots/constants'
+import aliases from './snapshot_path_aliases.json'
 
 /* Note: this file should have the same relative path route to `database` as server (i.e. ../database) */
 
@@ -31,6 +32,11 @@ const getSnapshotName = (lastParameterAlreadyRead: boolean) => {
   if (lastParameterAlreadyRead) return undefined
   if (process.argv.length <= 3) return undefined
 
+  const name = process.argv[process.argv.length - 1]
+  const aliasList: { [key: string]: string } = aliases
+  if (name in aliases) return aliasList[name]
+  else return name
+
   return process.argv[process.argv.length - 1]
 }
 
@@ -43,7 +49,6 @@ const doOperation = async () => {
   const optionsParameterResult = getParameter('--options')
 
   const snapshotName = getSnapshotName(optionsParameterResult.isLastParameter)
-  console.log(process.argv.length)
   if (!isTake && !isUse) printUsageMessageAndQuit()
 
   console.log(snapshotName, optionsParameterResult)
