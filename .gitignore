@@ -56,3 +56,6 @@ githubtoken.txt
 
 # Temp for expression-evaluator gui
 src/modules/expression-evaluator/expression-evaluate-gui/src/expression-evaluator/
+
+#Snapshots working folder
+/database/_snapshots
