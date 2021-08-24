@@ -91,7 +91,9 @@ RUN rm .npmrc && mv .npmrc_backup .npmrc
 COPY nginx_config/application_manager.conf /etc/nginx/conf.d/
 
 # --- ADD POSTGRES CONFIG
+WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main6
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
+RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
 ARG INITIAL_DATA_LOCALE=dev
@@ -104,6 +106,7 @@ RUN ./database.sh ${INITIAL_DATA_LOCALE}
 WORKDIR /var/log/application_manager
 
 # --- PREPARING ENTRY
+WORKDIR /usr/src/entry6
 WORKDIR /usr/src/entry
 COPY entry.sh .
 WORKDIR /usr/src/application-manager-server

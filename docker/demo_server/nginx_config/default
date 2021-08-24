@@ -1,0 +1,153 @@
+# copy to /etc/nginx/sites-enabled/default, using "scp" (might need to copy to /home/ubuntu/default first then log in to server and copy with sudo)
+
+server {
+    gzip_types text/plain application/xml text/css application/javascript; 
+
+    listen [::]:50000 ssl ipv6only=on; # managed by Certbot
+    listen 50000 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+     proxy_pass http://127.0.0.1:8000/;
+	}
+}
+
+server {
+    gzip_types text/plain application/xml text/css application/javascript; 
+
+    listen [::]:50001 ssl ipv6only=on; # managed by Certbot
+    listen 50001 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+     proxy_pass http://127.0.0.1:8001/;
+	}
+}
+
+server {
+    gzip_types text/plain application/xml text/css application/javascript; 
+
+    listen [::]:50002 ssl ipv6only=on; # managed by Certbot
+    listen 50002 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+     proxy_pass http://127.0.0.1:8002/;
+	}
+}
+
+
+server {
+    gzip_types text/plain application/xml text/css application/javascript; 
+
+    listen [::]:50003 ssl ipv6only=on; # managed by Certbot
+    listen 50003 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+     proxy_pass http://127.0.0.1:8003/;
+	}
+}
+
+server {
+    gzip_types text/plain application/xml text/css application/javascript; 
+
+    listen [::]:50004 ssl ipv6only=on; # managed by Certbot
+    listen 50004 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+     proxy_pass http://127.0.0.1:8004/;
+	}
+}
+
+server {
+    gzip_types text/plain application/xml text/css application/javascript; 
+
+    listen [::]:50005 ssl ipv6only=on; # managed by Certbot
+    listen 50005 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+     proxy_pass http://127.0.0.1:8005/;
+	}
+}
+
+server {
+    gzip_types text/plain application/xml text/css application/javascript; 
+
+    listen [::]:50006 ssl ipv6only=on; # managed by Certbot
+    listen 50000 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+     proxy_pass http://127.0.0.1:8006/;
+	}
+}
+
+server {
+    gzip_types text/plain application/xml text/css application/javascript; 
+
+    listen [::]:50007 ssl ipv6only=on; # managed by Certbot
+    listen 50001 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+     proxy_pass http://127.0.0.1:8007/;
+	}
+}
+
+server {
+    gzip_types text/plain application/xml text/css application/javascript; 
+
+    listen [::]:50008 ssl ipv6only=on; # managed by Certbot
+    listen 50002 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+     proxy_pass http://127.0.0.1:8008/;
+	}
+}
+
+
+server {
+    gzip_types text/plain application/xml text/css application/javascript; 
+
+    listen [::]:50009 ssl ipv6only=on; # managed by Certbot
+    listen 50003 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+	location / {
+     proxy_pass http://127.0.0.1:8009/;
+	}
+}
