@@ -27,7 +27,7 @@ import { DateTime } from 'luxon'
 // Dev configs
 const showApplicationDataLog = false
 const showActionOutcomeLog = false
-const schedulerTestMode = true // Runs scheduler every 30 seconds
+const schedulerTestMode = false // Runs scheduler every 30 seconds
 
 const graphQLEndpoint = config.graphQLendpoint
 
