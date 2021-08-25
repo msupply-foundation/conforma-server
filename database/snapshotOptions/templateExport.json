@@ -12,7 +12,6 @@
     "templateSection",
     "templateStageReviewLevel",
     "permissionName",
-    "permissionPoliy",
     "file"
   ],
   "tablesToUpdateOnInsertFail": ["permissionName", "permissionPolicy", "filter", "file"],
