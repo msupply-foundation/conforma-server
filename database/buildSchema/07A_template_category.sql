@@ -3,8 +3,9 @@
 -- places in ui where template_categories can show up
 CREATE TYPE public.ui_location AS ENUM (
     'DASHBOARD',
-    'MENU',
-    'USER'
+    'LIST',
+    'USER',
+    'ADMIN'
 );
 
 CREATE TABLE public.template_category (
@@ -12,6 +13,6 @@ CREATE TABLE public.template_category (
     code varchar NOT NULL UNIQUE,
     title varchar,
     icon varchar,
-    ui_location public.ui_location[] DEFAULT '{DASHBOARD, MENU}'
+    ui_location public.ui_location[] DEFAULT '{DASHBOARD, LIST}'
 );
 

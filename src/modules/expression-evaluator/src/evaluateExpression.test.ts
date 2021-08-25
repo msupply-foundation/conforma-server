@@ -456,13 +456,13 @@ test('Test Postgres get array of template names', () => {
   return evaluateExpression(testData.getListOfTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
       expect(result).toEqual([
-        'Demo -- Feature Showcase',
-        'Organisation Registration',
+        'Edit User Details',
         'User Registration',
+        'Demo -- Feature Showcase',
+        'Company Registration',
         'Test -- Review Process',
         'Drug Registration - General Medicines Procedure',
-        'Join Organisation',
-        'Edit User Details',
+        'Join Company',
       ])
     }
   )
@@ -480,13 +480,13 @@ test('Test Postgres get template names -- no type', () => {
   return evaluateExpression(testData.getListOfTemplates_noType, { pgConnection: pgConnect }).then(
     (result: any) => {
       expect(result).toEqual([
-        { name: 'Demo -- Feature Showcase' },
-        { name: 'Organisation Registration' },
+        { name: 'Edit User Details' },
         { name: 'User Registration' },
+        { name: 'Demo -- Feature Showcase' },
+        { name: 'Company Registration' },
         { name: 'Test -- Review Process' },
         { name: 'Drug Registration - General Medicines Procedure' },
-        { name: 'Join Organisation' },
-        { name: 'Edit User Details' },
+        { name: 'Join Company' },
       ])
     }
   )
@@ -500,7 +500,9 @@ test('Test Postgres get application list with IDs', () => {
       { id: 4000, name: 'Test Review -- Vitamin C' },
       { id: 4001, name: 'Test Review -- Vitamin B' },
       { id: 4002, name: 'Test Review -- Amoxicillin' },
-      { id: 4003, name: 'Test Review -- Paracetamol' },
+      { id: 4003, name: 'Test Review -- Ibuprofen' },
+      { id: 4004, name: 'Test Review -- Paracetamol' },
+      { id: 4005, name: 'Test Review -- Oxygen' },
     ])
   })
 })
@@ -529,7 +531,9 @@ test('Test GraphQL -- List of Application Names', () => {
       'Test Review -- Vitamin C',
       'Test Review -- Vitamin B',
       'Test Review -- Amoxicillin',
+      'Test Review -- Ibuprofen',
       'Test Review -- Paracetamol',
+      'Test Review -- Oxygen',
     ])
   })
 })
@@ -542,22 +546,12 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
     },
   }).then((result: any) => {
     expect(result).toEqual([
-      {
-        name: 'Test Review -- Vitamin C',
-        id: 4000,
-      },
-      {
-        name: 'Test Review -- Vitamin B',
-        id: 4001,
-      },
-      {
-        name: 'Test Review -- Amoxicillin',
-        id: 4002,
-      },
-      {
-        name: 'Test Review -- Paracetamol',
-        id: 4003,
-      },
+      { id: 4000, name: 'Test Review -- Vitamin C' },
+      { id: 4001, name: 'Test Review -- Vitamin B' },
+      { id: 4002, name: 'Test Review -- Amoxicillin' },
+      { id: 4003, name: 'Test Review -- Ibuprofen' },
+      { id: 4004, name: 'Test Review -- Paracetamol' },
+      { id: 4005, name: 'Test Review -- Oxygen' },
     ])
   })
 })
@@ -572,13 +566,13 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
     expect(result).toEqual({
       templates: {
         edges: [
-          { node: { name: 'Demo -- Feature Showcase' } },
-          { node: { name: 'Organisation Registration' } },
+          { node: { name: 'Edit User Details' } },
           { node: { name: 'User Registration' } },
+          { node: { name: 'Demo -- Feature Showcase' } },
+          { node: { name: 'Company Registration' } },
           { node: { name: 'Test -- Review Process' } },
           { node: { name: 'Drug Registration - General Medicines Procedure' } },
-          { node: { name: 'Join Organisation' } },
-          { node: { name: 'Edit User Details' } },
+          { node: { name: 'Join Company' } },
         ],
       },
     })
@@ -774,8 +768,25 @@ test('Compare null vs undefined', () => {
   })
 })
 
+// objectFunctions operator
+test('Object functions -- double elements in array', () => {
+  return evaluateExpression(testData.obFunc1, {
+    objects: { functions: testData.functions },
+  }).then((result: any) => {
+    expect(result).toEqual([2, 4, 6, 'fourfour'])
+  })
+})
+
+test('Object functions -- generate a date from two strings', () => {
+  return evaluateExpression(testData.obFunc2, {
+    objects: { functions: testData.functions },
+  }).then((result: any) => {
+    expect(result).toEqual(new Date('December 17, 1995 03:24:00'))
+  })
+})
+
+// TO-DO: Write some tests for showing error conditions
+
 afterAll(() => {
   pgConnect.end()
 })
-
-// Write some tests for showing error conditions

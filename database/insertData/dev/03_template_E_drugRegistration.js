@@ -996,24 +996,24 @@ exports.queries = [
               # Review Drug Registration Stage 1
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "canScreenDrugRego" }
+                  connectByName: { name: "reviewGeneral" }
                 }
                 levelNumber: 1
                 stageNumber: 1
                 canSelfAssign: true
               }
-              # Assign Drug Registration Stage 2
+              # Review Drug Registration Stage 2
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "canAssignDrugRego" }
+                  connectByName: { name: "reviewAssessmentLevel2" }
                 }
                 levelNumber: 1
                 stageNumber: 2
               }
-              # Review Drug Registration Stage 2
+              # Assign Drug Registration Stage 2
               {
                 permissionNameToPermissionNameId: {
-                  connectByName: { name: "canAssessDrugRego" }
+                  connectByName: { name: "assignGeneral" }
                 }
                 levelNumber: 1
                 stageNumber: 2

@@ -2,7 +2,9 @@
 CREATE TABLE public.template_action (
     id serial PRIMARY KEY,
     template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
+    code varchar,
     action_code varchar,
+    event_code varchar,
     TRIGGER public.trigger,
     condition jsonb DEFAULT 'true' ::jsonb,
     parameter_queries jsonb,

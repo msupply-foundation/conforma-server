@@ -17,10 +17,8 @@ import {
   ActionQueueStatus,
   ApplicationOutcome,
   ApplicationStatus,
-  Organisation,
   ReviewStatus,
   Trigger,
-  User,
 } from '../generated/graphql'
 
 class PostgresDB {
@@ -51,14 +49,17 @@ class PostgresDB {
         console.log(`Notification ${channel} received with no payload!`)
         return
       }
+      const payloadObject = JSON.parse(payload)
+      // "data" is stored output from scheduled trigger or verification
+      const data = payloadObject?.trigger_payload?.data
       switch (channel) {
         case 'trigger_notifications':
-          processTrigger(JSON.parse(payload))
+          processTrigger(payloadObject)
           break
         case 'action_notifications':
           // For Async Actions only
           try {
-            await executeAction(JSON.parse(payload), actionLibrary)
+            await executeAction(payloadObject, actionLibrary, data)
           } catch (err) {
             console.log(err.message)
           } finally {
@@ -133,22 +134,6 @@ class PostgresDB {
     }
   }
 
-  public getActionsScheduled = async (
-    payload: ActionQueueGetPayload = { status: ActionQueueStatus.Scheduled }
-  ): Promise<ActionQueue[]> => {
-    const text =
-      'SELECT id, action_code, parameter_queries, time_completed FROM action_queue WHERE status = $1 ORDER BY time_completed'
-    try {
-      const result = await this.query({
-        text,
-        values: Object.values(payload),
-      })
-      return result.rows as ActionQueue[]
-    } catch (err) {
-      throw err
-    }
-  }
-
   public getActionsProcessing = async (templateId: number): Promise<ActionQueue[]> => {
     const text =
       "SELECT id, action_code, trigger_payload, condition_expression, parameter_queries FROM action_queue WHERE template_id = $1 AND status = 'PROCESSING' ORDER BY sequence"
@@ -176,6 +161,20 @@ class PostgresDB {
     }
   }
 
+  public triggerScheduledActions = async () => {
+    const text = `
+      UPDATE trigger_schedule SET trigger = 'ON_SCHEDULE'
+        WHERE time_scheduled < NOW()
+        AND is_active = true
+    `
+    try {
+      const result = await this.query({ text })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
   public resetTrigger = async (
     table: string,
     record_id: number,
@@ -187,6 +186,19 @@ class PostgresDB {
       const result = await this.query({
         text,
         values: [triggerStatus, record_id],
+      })
+      return true
+    } catch (err) {
+      throw err
+    }
+  }
+
+  public setScheduledActionDone = async (table: string, record_id: number): Promise<boolean> => {
+    const text = `UPDATE ${table} SET is_active = false WHERE id = $1`
+    try {
+      const result = await this.query({
+        text,
+        values: [record_id],
       })
       return true
     } catch (err) {
@@ -301,6 +313,9 @@ class PostgresDB {
       case 'verification':
         text = 'SELECT application_id FROM verification WHERE id = $1'
         break
+      case 'trigger_schedule':
+        text = 'SELECT application_id FROM trigger_schedule WHERE id = $1'
+        break
       // To-Do: queries for other trigger tables
       default:
         throw new Error('Table name not valid')
@@ -331,6 +346,9 @@ class PostgresDB {
         text =
           'SELECT template_id FROM application WHERE id = (SELECT application_id FROM verification WHERE id = $1)'
         break
+      case 'trigger_schedule':
+        text = 'SELECT template_id FROM trigger_schedule WHERE id = $1'
+        break
       default:
         throw new Error('Table name not valid')
     }
@@ -342,7 +360,7 @@ class PostgresDB {
     templateId: number,
     trigger: Trigger
   ): Promise<ActionInTemplate[]> => {
-    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, sequence, condition, parameter_queries 
+    const text = `SELECT action_plugin.code, action_plugin.path, action_plugin.name, trigger, template_action.event_code AS event_code, sequence, condition, parameter_queries 
     FROM template 
     JOIN template_action ON template.id = template_action.template_id 
     JOIN action_plugin ON template_action.action_code = action_plugin.code 
@@ -465,7 +483,8 @@ class PostgresDB {
         user_role as "userRole",
         registration,
         address,
-        logo_url as "logoUrl"
+        logo_url as "logoUrl",
+        is_system_org as "isSystemOrg"
         FROM user_org_join`
     const text = userId ? `${queryText} WHERE user_id = $1` : `${queryText} WHERE username = $1`
     try {
@@ -691,7 +710,7 @@ class PostgresDB {
     ON CONFLICT (user_id, permission_name_id)
       WHERE organisation_id IS NULL
     DO
-    		UPDATE SET user_id = (select id from "user" where username = $1)
+    		UPDATE SET (user_id, is_active) = ((select id from "user" where username = $1), true)
     returning id
     `
     try {
@@ -717,7 +736,7 @@ class PostgresDB {
     ON CONFLICT (user_id, organisation_id, permission_name_id)
       WHERE organisation_id IS NOT NULL
     DO
-    		UPDATE SET user_id = (select id from "user" where username = $1)
+    		UPDATE SET (user_id, is_active) = ((select id from "user" where username = $1), true)
     RETURNING id
     `
     try {
@@ -814,11 +833,13 @@ class PostgresDB {
     }
   }
 
-  public getDatabaseInfo: GetDatabaseInfo = async (tableName = '%') => {
+  public getDatabaseInfo: GetDatabaseInfo = async (tableName = '') => {
+    const whereClause = tableName ? `where table_name = $1` : ''
+    const values = tableName ? [tableName] : []
     try {
       const result = await this.query({
-        text: 'SELECT * FROM schema_columns where table_name like $1',
-        values: [tableName],
+        text: `SELECT * FROM schema_columns ${whereClause}`,
+        values,
       })
       const responses = result.rows as SchemaColumn[]
       return responses

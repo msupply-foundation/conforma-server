@@ -13,6 +13,7 @@ export interface ActionInTemplate {
   path: string
   name: string
   trigger: string
+  event_code: null | string
   sequence: number | null
   condition: EvaluatorNode
   parameter_queries: { [key: string]: any }
@@ -96,8 +97,15 @@ export interface ActionApplicationData {
   responses: {
     [key: string]: any
   }
-  reviewData: Review & {
-    reviewId: number
+  reviewData: {
+    reviewId?: number
+    levelNumber?: number
+    isLastLevel?: boolean
+    status?: string
+    latestDecision?: {
+      decision: string
+      comment: string | null
+    }
   }
   environmentData: {
     appRootFolder: string
@@ -163,6 +171,8 @@ export interface TriggerPayload {
   table: string
   record_id: number
   application_id?: number
+  event_code?: string
+  data?: { [key: string]: any }
 }
 
 export interface TriggerQueueUpdatePayload {
@@ -188,6 +198,7 @@ export interface Organisation {
   registration?: string
   address?: string
   logoUrl?: string
+  isSystemOrg?: boolean
 }
 
 export interface UserOrg extends User, Organisation {}

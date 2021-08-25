@@ -1635,7 +1635,7 @@ exports.queries = [
                 # Review General - Stage 1
                 {
                   permissionNameToPermissionNameId: {
-                    connectByName: { name: "reviewOrgLicence" }
+                    connectByName: { name: "reviewGeneral" }
                   }
                   stageNumber: 1
                   levelNumber: 1

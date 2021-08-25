@@ -21,7 +21,8 @@ SELECT
     user_role,
     registration,
     address,
-    logo_url
+    logo_url,
+    is_system_org
 FROM
     "user"
     LEFT JOIN user_organisation ON "user".id = user_id

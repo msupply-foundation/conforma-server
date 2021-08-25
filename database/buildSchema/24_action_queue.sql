@@ -1,6 +1,5 @@
 -- action queue
 CREATE TYPE public.action_queue_status AS ENUM (
-    'SCHEDULED',
     'QUEUED',
     'PROCESSING',
     'SUCCESS',
@@ -23,7 +22,6 @@ CREATE TABLE public.action_queue (
         output jsonb,
         time_queued timestamptz,
         time_completed timestamptz,
-        time_scheduled timestamptz,
         error_log varchar
 );
 

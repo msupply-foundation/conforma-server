@@ -40,7 +40,7 @@ const changeApplicationStatus = async (
 ): Promise<ActionPluginOutput> => {
   const returnObject: ActionPluginOutput = {
     status: ActionQueueStatus.Fail,
-    error_log: 'uknown error',
+    error_log: '',
   }
   console.log(`Changing the Status of Application ${applicationId}...`)
 
