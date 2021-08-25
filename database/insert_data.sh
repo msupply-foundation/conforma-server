@@ -7,14 +7,14 @@ cp -rf ./database/basic_snapshot ./database/_snapshots
 echo -e "\nInserting data..."
 
 echo $1
-if [ $1 != '' ]; then
+
+if [ $1 = 'js' ]; then
+    yarn ts-node ./database/insertDataCLI.ts $2 &
+elif [ $1 != '' ]; then
     yarn ts-node ./database/snapshotCLI.ts use $1 &
 else
     yarn ts-node ./database/snapshotCLI.ts use "basic_snapshot" &
 fi
-
-# Comment all lines above this ^ and uncomment one bellow to load from js files!
-# yarn ts-node ./database/insertDataCLI.ts $1 &
 
 # Makes script wait until async node script has completed
 PID=$!
