@@ -53,7 +53,7 @@ const takeSnapshot: SnapshotOperation = async ({
 
     if (options.shouldReInitialise) await getSchemaDiff(newSnapshotFolder)
 
-    copyFiles(newSnapshotFolder, options)
+    copyFiles(newSnapshotFolder)
 
     await zipSnapshot(newSnapshotFolder, snapshotName)
 
@@ -127,18 +127,10 @@ const getSchemaDiff = async (newSnapshotFolder: string) => {
   console.log('creating schema diff ... done ')
 }
 
-const copyFiles = (
-  newSnapshotFolder: string,
-  { includeTables, excludeTables }: ExportAndImportOptions
-) => {
-  if (
-    (includeTables.includes('file') || includeTables.length === 0) &&
-    !excludeTables.includes('file')
-  ) {
-    console.log('copying files ...')
-    execSync(`cp -R ${FILES_FOLDER} ${newSnapshotFolder}`)
-    console.log('copying files ... done')
-  }
+const copyFiles = (newSnapshotFolder: string) => {
+  console.log('copying files ...')
+  execSync(`cp -R ${FILES_FOLDER} ${newSnapshotFolder}`)
+  console.log('copying files ... done')
 }
 
 export default takeSnapshot
