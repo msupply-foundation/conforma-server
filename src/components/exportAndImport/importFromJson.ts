@@ -2,6 +2,7 @@ import { camelCase } from 'lodash'
 import databaseConnect from '../databaseConnect'
 import getDatabaseInfo from './getDatabaseInfo'
 import { filterByIncludeAndExclude } from './helpers'
+import { singular } from 'pluralize'
 import {
   DatabaseColumn,
   DatabaseTable,
@@ -65,19 +66,23 @@ const constructInsertAndGetter = (
     insertableValues[columnName] = values[columnName]
   })
 
-  const insertMutationName = camelCase(`create ${tableName}`)
-  const updateMutationName = camelCase(`update ${tableName}`)
+  // Postgraphile will make all plural table names singular for mutations
+  const singularTableName = singular(tableName)
+  const insertMutationName = camelCase(`create ${singularTableName}`)
+  const updateMutationName = camelCase(`update ${singularTableName}`)
   const { keyValues, variables, variableDeclarations } = getInsertKeyValues(
     insertableValues,
     columns
   )
 
-  const resultQuery = `${tableName} { ${columns.map(({ columnName }) => columnName).join(' ')} }`
+  const resultQuery = `${singularTableName} { ${columns
+    .map(({ columnName }) => columnName)
+    .join(' ')} }`
 
   const insertQuery = `mutation ${insertMutationName} ${variableDeclarations} {
         ${insertMutationName} (
             input: {
-                ${tableName}: {
+                ${singularTableName}: {
                     ${keyValues}
                 }
             }
@@ -95,8 +100,8 @@ const constructInsertAndGetter = (
       ) { ${resultQuery} }
   }`
 
-  const insertGetter = (gqlResult: any) => gqlResult[insertMutationName][tableName]
-  const updateGetter = (gqlResult: any) => gqlResult[updateMutationName][tableName]
+  const insertGetter = (gqlResult: any) => gqlResult[insertMutationName][singularTableName]
+  const updateGetter = (gqlResult: any) => gqlResult[updateMutationName][singularTableName]
   return { insertQuery, updateQuery, insertGetter, updateGetter, variables }
 }
 
