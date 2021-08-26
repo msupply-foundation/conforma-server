@@ -1,8 +1,14 @@
 import takeSnapshot from '../src/components/snapshots/takeSnapshot'
 import useSnapshot from '../src/components/snapshots/useSnapshot'
 import { DEFAULT_SNAPSHOT_NAME, DEFAULT_OPTIONS_NAME } from '../src/components/snapshots/constants'
-import aliases from './snapshot_path_aliases.json'
 
+let aliases: { [key: string]: string }
+try {
+  aliases = require('./snapshot_path_aliases.json')
+} catch {
+  console.log('\nWARNING: Missing snapshot_path_aliases.json file\n')
+  aliases = {}
+}
 /* Note: this file should have the same relative path route to `database` as server (i.e. ../database) */
 
 const printUsageMessageAndQuit = (isError = true) => {
@@ -33,8 +39,7 @@ const getSnapshotName = (lastParameterAlreadyRead: boolean) => {
   if (process.argv.length <= 3) return undefined
 
   const name = process.argv[process.argv.length - 1]
-  const aliasList: { [key: string]: string } = aliases
-  if (name in aliases) return aliasList[name]
+  if (name in aliases) return aliases[name]
   else return name
 
   return process.argv[process.argv.length - 1]
