@@ -35,7 +35,7 @@ CREATE FUNCTION public.template_questions_count (app_id int)
         COUNT(*)
     FROM
         application app
-        JOIN TEMPLATE ON app.template_id = template.id
+        JOIN template ON app.template_id = template.id
         JOIN template_section ON template.id = template_section.template_id
         JOIN template_element ON template_section.id = template_element.section_id
     WHERE
