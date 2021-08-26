@@ -9,9 +9,9 @@ CREATE TYPE public.application_outcome AS ENUM (
 
 CREATE TABLE public.application (
     id serial PRIMARY KEY,
-    template_id integer REFERENCES public.template (id),
-    user_id integer REFERENCES public.user (id),
-    org_id integer REFERENCES public.organisation (id),
+    template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
+    user_id integer REFERENCES public.user (id) ON DELETE CASCADE,
+    org_id integer REFERENCES public.organisation (id) ON DELETE CASCADE,
     session_id varchar,
     serial varchar UNIQUE,
     name varchar,

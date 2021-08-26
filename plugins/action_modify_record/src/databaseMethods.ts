@@ -73,8 +73,8 @@ const databaseMethods = (DBConnect: any) => {
       const joinTableName = `${tableName}_application_join`
       const text = `CREATE TABLE IF NOT EXISTS ${joinTableName}( 
                   id serial PRIMARY KEY, 
-                  application_id integer references application(id),
-                  ${tableName}_id integer references "${tableName}"(id));`
+                  application_id integer references application(id) ON DELETE CASCADE NOT NULL,
+                  ${tableName}_id integer references "${tableName}"(id) ON DELETE CASCADE NOT NULL);`
 
       console.log('creating join table with statement: ', text)
       try {

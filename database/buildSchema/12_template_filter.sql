@@ -9,7 +9,7 @@ CREATE TABLE public.filter (
 
 CREATE TABLE public.template_filter_join (
     id serial PRIMARY KEY,
-    template_id integer REFERENCES public.template (id),
-    filter_id integer REFERENCES public.filter (id)
+    template_id integer REFERENCES public.template (id) ON DELETE CASCADE NOT NULL,
+    filter_id integer REFERENCES public.filter (id) NOT NULL
 );
 
