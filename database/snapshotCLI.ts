@@ -41,8 +41,6 @@ const getSnapshotName = (lastParameterAlreadyRead: boolean) => {
   const name = process.argv[process.argv.length - 1]
   if (name in aliases) return aliases[name]
   else return name
-
-  return process.argv[process.argv.length - 1]
 }
 
 const doOperation = async () => {
