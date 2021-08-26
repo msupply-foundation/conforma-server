@@ -38,7 +38,7 @@ const useSnapshot: SnapshotOperation = async ({
       await initiliseDatabase(options, snapshotFolder)
     }
 
-    copyFiles(snapshotFolder, options)
+    copyFiles(snapshotFolder)
 
     console.log('inserting from snapshot ... ')
     await importFromJson(snapshotObject, options, options.shouldReInitialise)
@@ -51,13 +51,6 @@ const useSnapshot: SnapshotOperation = async ({
 
     // Regenerate row level policies
     await updateRowPolicies()
-
-    if (process.env.NODE_ENV !== 'production') {
-      // Post data insert (restart server (for dev) )
-      console.log('running post data insert ... ')
-      execSync('./database/post_data_insert.sh', { cwd: ROOT_FOLDER })
-      console.log('running post data insert ... done')
-    }
 
     if (options.shouldReInitialise) {
       console.log('enable row level policies ... ')
@@ -112,21 +105,12 @@ const initiliseDatabase = async (
   console.log('inserting core data ... done')
 }
 
-const copyFiles = (
-  snapshotFolder: string,
-  { includeTables, excludeTables }: ExportAndImportOptions
-) => {
-  if (
-    (includeTables.includes('file') || includeTables.length === 0) &&
-    !excludeTables.includes('file')
-  ) {
-    console.log('copying files ...')
-    try {
-      execSync(`rm -rf filesFolder`)
-    } catch (e) {}
-    execSync(`cp -R ${snapshotFolder}/files/* ${FILES_FOLDER}`)
-    console.log('copying files ... done')
-  }
+const copyFiles = (snapshotFolder: string) => {
+  console.log('copying files ...')
+  // -p = no error if exists
+  execSync(`mkdir -p ${FILES_FOLDER}`)
+  execSync(`cp -R ${snapshotFolder}/files ${FILES_FOLDER}`)
+  console.log('copying files ... done')
 }
 
 export default useSnapshot
