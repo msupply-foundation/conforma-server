@@ -280,7 +280,7 @@ const extractProperty = (
   const currentProperty = propertyPathArray[0]
   if (propertyPathArray.length === 1)
     return data?.[currentProperty] === undefined ? fallback : data[currentProperty]
-  else return extractProperty(data[currentProperty], propertyPathArray.slice(1), fallback)
+  else return extractProperty(data?.[currentProperty], propertyPathArray.slice(1), fallback)
 }
 
 // If Object has only 1 property, return just the value of that property,

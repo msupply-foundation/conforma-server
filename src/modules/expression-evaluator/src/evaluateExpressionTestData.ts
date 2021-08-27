@@ -600,7 +600,7 @@ testData.objectPropertyUnresolved = {
 
 testData.objectPropertyUnresolvedWithNullFallback = {
   operator: 'objectProperties',
-  children: ['application.querstions.q2', null],
+  children: ['application.querstions.q2.go.even.deeper', null],
 }
 
 testData.objectPropertyUnresolvedDeepWithNullFallback = {
