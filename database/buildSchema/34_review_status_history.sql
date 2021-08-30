@@ -69,3 +69,40 @@ $$
 LANGUAGE sql
 STABLE;
 
+-- Function to return count of application assignable questions for given application
+CREATE FUNCTION public.assignable_questions_count (app_id int)
+    RETURNS bigint
+    AS $$
+    SELECT
+        COUNT(*)
+    FROM
+        application_response ar
+        JOIN application app ON ar.application_id = app.id
+        JOIN template_element te ON ar.template_element_id = te.id
+    WHERE
+        ar.application_id = $1
+        AND te.category = 'QUESTION'
+$$
+LANGUAGE sql
+STABLE;
+
+-- Function to return count of assigned questions that can't be re-assigned (review has been submitted)
+CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_number int, level_number int)
+    RETURNS bigint
+    AS $$
+    SELECT
+        COUNT(DISTINCT (rqa.template_element_id))
+    FROM
+        review
+    LEFT JOIN review_assignment ra ON review.review_assignment_id = ra.id
+    LEFT JOIN review_question_assignment rqa ON ra.id = rqa.review_assignment_id
+    LEFT JOIN review_status_history rsh ON review.id = rsh.review_id
+WHERE
+    ra.application_id = $1
+    AND ra.stage_number = $2
+    AND ra.level_number = $3
+    AND ra.status = 'ASSIGNED'
+    AND rsh.status = 'SUBMITTED'
+$$
+LANGUAGE sql
+STABLE;

@@ -19,7 +19,10 @@ CREATE TABLE application_list_shape (
     assigner_action public.assigner_action,
     is_fully_assigned_level_1 boolean,
     assigned_questions_level_1 bigint,
-    total_questions bigint
+    total_questions bigint,
+    total_assigned bigint,
+    total_assign_locked bigint,
+    level_number int
 );
 
 CREATE FUNCTION application_list (userid int DEFAULT 0)
@@ -48,7 +51,10 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
             is_fully_assigned_level_1
         END,
         assigned_questions_level_1,
-        total_questions
+        total_questions,
+        total_assigned,
+        total_assign_locked,
+        level_number
     FROM
         application app
     LEFT JOIN TEMPLATE ON app.template_id = template.id

@@ -20,29 +20,9 @@ CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level
 WHERE
     ra.application_id = $1
     AND ra.stage_id = $2
-    AND ra.level_number = $3 -- currently restrict partial assignment to level 1
+    AND ra.level_number = $3
     AND ra.status = 'ASSIGNED'
     AND template_element.category = 'QUESTION'
-$$
-LANGUAGE sql
-STABLE;
-
--- Function to return count of template questions for a given application/template
-CREATE FUNCTION public.template_questions_count (app_id int)
-    RETURNS bigint
-    AS $$
-    SELECT
-        COUNT(*)
-    FROM
-        application app
-        JOIN template ON app.template_id = template.id
-        JOIN template_section ON template.id = template_section.template_id
-        JOIN template_element ON template_section.id = template_element.section_id
-    WHERE
-        app.id = $1
-        -- TODO: Add check for template version
-        AND template_section.template_id = app.template_id
-        AND template_element.category = 'QUESTION'
 $$
 LANGUAGE sql
 STABLE;
