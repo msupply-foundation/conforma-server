@@ -1,0 +1,22 @@
+# mkdir grafana_on_port_(port)
+
+version: '3.9'
+services:
+  app:
+    image: 'mflow-demo:${TAG}'
+    ports:
+      - '${PORT_APP}:3000'
+    expose:
+      - '5432'
+    environment:
+      SMTP_PASSWORD: 'smt_password_goes_here'
+    volumes:
+      - ./app_postgres_on_port_${PORT_APP}:/var/lib/postgresql/12/main/
+      - ./app_snapshots_on_port_${PORT_APP}:/usr/src/application-manager-server/build/database/_snapshots
+    tty: true
+  grafana:
+    image: 'grafana/grafana'
+    ports:
+      - '${PORT_DASH}:3000'
+    volumes:
+      - ./grafana_on_port_${PORT_DASH}:/var/lib/grafana
