@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# This command requires githubtoken.txt, in the repo root (it's git ingored btw). 
+# This command requires githubtoken.txt, in the repo root (it's git ingored btw).
 # githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
 
-SERVER_BRANCH='b0-0-1' 
-WEB_APP_BRANCH='b0-0-1'  
-IMAGE_NAME='irims-demo'
-INITIAL_DATA_LOCALE='laos'
+SERVER_BRANCH='develop'
+WEB_APP_BRANCH='develop'
+IMAGE_NAME='mflow-demo'
+INITIAL_DATA_LOCALE=''
 
 NODE_VERSION='14'
 POSTGRES_VERSION='12'
@@ -18,7 +18,7 @@ echo "building image: ${IMAGE_TAG}"
 docker build \
    --progress plain \
    -t "${IMAGE_NAME}:${IMAGE_TAG}" \
-   --build-arg SERVER_BRANCH="$SERVER_BRANCH"\
+   --build-arg SERVER_BRANCH="$SERVER_BRANCH" \
    --build-arg WEB_APP_BRANCH="$WEB_APP_BRANCH" \
    --build-arg NODE_VERSION="$NODE_VERSION" \
    --build-arg POSTGRES_VERSION="$POSTGRES_VERSION" \

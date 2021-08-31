@@ -66,8 +66,6 @@ RUN git clone -b ${WEB_APP_BRANCH} https://github.com/openmsupply/application-ma
 
 # --- BUILD SERVER
 WORKDIR /usr/src/application-manager-server
-RUN git fetch
-RUN git pull
 RUN cp .npmrc .npmrc_backup
 RUN echo "" >> .npmrc
 RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
@@ -77,8 +75,6 @@ RUN rm .npmrc && mv .npmrc_backup .npmrc
 
 # --- BUILD WEB APP
 WORKDIR /usr/src/application-manager-web-app
-RUN git fetch
-RUN git pull
 RUN cp .npmrc .npmrc_backup
 RUN echo "" >> .npmrc
 RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
@@ -92,6 +88,7 @@ COPY nginx_config/application_manager.conf /etc/nginx/conf.d/
 
 # --- ADD POSTGRES CONFIG
 WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
+RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
 ARG INITIAL_DATA_LOCALE=dev

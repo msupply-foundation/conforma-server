@@ -109,8 +109,12 @@ const copyFiles = (snapshotFolder: string) => {
   console.log('copying files ...')
   // -p = no error if exists
   execSync(`mkdir -p ${FILES_FOLDER}`)
-  execSync(`cp -R ${snapshotFolder}/files ${FILES_FOLDER}`)
-  console.log('copying files ... done')
+  try {
+    execSync(`cp -R ${snapshotFolder}/files/* ${FILES_FOLDER}`)
+    console.log('copying files ... done')
+  } catch {
+    console.log('No files to copy')
+  }
 }
 
 export default useSnapshot

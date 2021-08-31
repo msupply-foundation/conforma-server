@@ -10,8 +10,8 @@ echo 'copying database related files'
 cp -R database/buildSchema ./build/database/
 cp -R database/insertData ./build/database/
 cp -R database/snapshotOptions ./build/database/
-cp -R database/snapshots ./build/database/
-#cp -R database/snapshotScripts/*.html ./build/database/snapshotScripts
+cp -R database/basic_snapshot ./build/database/
+echo 'copying import/export scripts for snapshots'
 cp -R database/*.sh build/database
 cp -R database/*.sql build/database
 echo 'building plugins'
