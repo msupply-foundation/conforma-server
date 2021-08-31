@@ -74,7 +74,26 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
 - Remove container: `sudo docker rm <name>`
 - Re-run as above. Note: this resets the container to initial state, including database reset. If you want to preserve existing data, you’ll need to take a snapshot first, then reload after restart.
 
-### Other:
+### Other image/container commands
+
+- List local images
+
+`sudo docker images`
+
+- Remove all containers
+
+`sudo docker rm $(sudo docker ps -a -q)`
+
+- Remove all images
+
+`sudo docker rmi -f $(sudo docker images -a -q)`
+
+- Remove all images
+
+`sudo docker volume prune`
+
+
+### Access command line within container:
 
 You can access the command line of a particular container instance with the following:
 
@@ -168,13 +187,6 @@ PORT_APP=8006 PORT_DASH=8007 sudo -E docker-compose --project-name 'mflow-on-800
 PORT_APP=8008 PORT_DASH=8009 sudo -E docker-compose --project-name 'mflow-on-8008' up -d
 ```
 
-### List container
-
-`sudo docker container ls`
-
-### Command line inside container
-
-`sudo docker exec -ti mflow-on-8000_app_1 /bin/bash`
 
 ### View logs
 
@@ -192,23 +204,3 @@ sudo docker-compose --project-name 'mflow-on-8000' stop
 # to remove (when new version is out)
 sudo docker-compose --project-name 'mflow-on-8000' down
 ```
-
-Have t
-
-### Prior To docker-compose
-
-<ins>list local images</ins>
-
-`sudo docker images`
-
-<ins>remove all containers</ins>
-
-`sudo docker rm $(sudo docker ps -a -q)`
-
-<ins>remove all images</ins>
-
-`sudo docker rmi -f $(sudo docker images -a -q)`
-
-<ins>remove all images</ins>
-
-`sudo docker volume prune`
