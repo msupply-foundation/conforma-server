@@ -1,6 +1,7 @@
 #!/bin/bash
 
 #copy folder with snapshot_basic for inital Application manager setup
+mkdir ./database/_snapshots
 cp -rf ./database/basic_snapshot ./database/_snapshots
 
 #insert data from
