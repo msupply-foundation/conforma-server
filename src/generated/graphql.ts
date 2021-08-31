@@ -1030,6 +1030,10 @@ export type ApplicationListShape = {
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   totalQuestions?: Maybe<Scalars['BigInt']>;
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
 };
 
 /**
@@ -1075,6 +1079,14 @@ export type ApplicationListShapeCondition = {
   assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   /** Checks for equality with the object’s `totalQuestions` field. */
   totalQuestions?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `totalAssigned` field. */
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `totalAssignLocked` field. */
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
+  /** Checks for equality with the object’s `stageNumber` field. */
+  stageNumber?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `levelNumber` field. */
+  levelNumber?: Maybe<Scalars['Int']>;
 };
 
 /** A filter to be used against `ApplicationListShape` object types. All fields are combined with a logical ‘and.’ */
@@ -1117,6 +1129,14 @@ export type ApplicationListShapeFilter = {
   assignedQuestionsLevel1?: Maybe<BigIntFilter>;
   /** Filter by the object’s `totalQuestions` field. */
   totalQuestions?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalAssigned` field. */
+  totalAssigned?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalAssignLocked` field. */
+  totalAssignLocked?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `levelNumber` field. */
+  levelNumber?: Maybe<IntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<ApplicationListShapeFilter>>;
   /** Checks for any expressions in this list. */
@@ -1146,6 +1166,10 @@ export type ApplicationListShapeInput = {
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   totalQuestions?: Maybe<Scalars['BigInt']>;
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
 };
 
 /** A connection to a list of `ApplicationListShape` values. */
@@ -1210,7 +1234,15 @@ export enum ApplicationListShapesOrderBy {
   AssignedQuestionsLevel_1Asc = 'ASSIGNED_QUESTIONS_LEVEL_1_ASC',
   AssignedQuestionsLevel_1Desc = 'ASSIGNED_QUESTIONS_LEVEL_1_DESC',
   TotalQuestionsAsc = 'TOTAL_QUESTIONS_ASC',
-  TotalQuestionsDesc = 'TOTAL_QUESTIONS_DESC'
+  TotalQuestionsDesc = 'TOTAL_QUESTIONS_DESC',
+  TotalAssignedAsc = 'TOTAL_ASSIGNED_ASC',
+  TotalAssignedDesc = 'TOTAL_ASSIGNED_DESC',
+  TotalAssignLockedAsc = 'TOTAL_ASSIGN_LOCKED_ASC',
+  TotalAssignLockedDesc = 'TOTAL_ASSIGN_LOCKED_DESC',
+  StageNumberAsc = 'STAGE_NUMBER_ASC',
+  StageNumberDesc = 'STAGE_NUMBER_DESC',
+  LevelNumberAsc = 'LEVEL_NUMBER_ASC',
+  LevelNumberDesc = 'LEVEL_NUMBER_DESC'
 }
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -3772,8 +3804,8 @@ export type ApplicationUserIdFkeyUserCreateInput = {
 
 export enum AssignerAction {
   Assign = 'ASSIGN',
-  ReAssign = 'RE_ASSIGN',
-  ReAssignLocked = 'RE_ASSIGN_LOCKED'
+  AssignLocked = 'ASSIGN_LOCKED',
+  ReAssign = 'RE_ASSIGN'
 }
 
 /** A filter to be used against AssignerAction fields. All fields are combined with a logical ‘and.’ */
@@ -3830,6 +3862,10 @@ export type AssignerListRecord = {
   isFullyAssignedLevel1?: Maybe<Scalars['Boolean']>;
   assignedQuestionsLevel1?: Maybe<Scalars['BigInt']>;
   totalQuestions?: Maybe<Scalars['BigInt']>;
+  totalAssigned?: Maybe<Scalars['BigInt']>;
+  totalAssignLocked?: Maybe<Scalars['BigInt']>;
+  stageNumber?: Maybe<Scalars['Int']>;
+  levelNumber?: Maybe<Scalars['Int']>;
 };
 
 /** A filter to be used against `AssignerListRecord` object types. All fields are combined with a logical ‘and.’ */
@@ -3844,6 +3880,14 @@ export type AssignerListRecordFilter = {
   assignedQuestionsLevel1?: Maybe<BigIntFilter>;
   /** Filter by the object’s `totalQuestions` field. */
   totalQuestions?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalAssigned` field. */
+  totalAssigned?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `totalAssignLocked` field. */
+  totalAssignLocked?: Maybe<BigIntFilter>;
+  /** Filter by the object’s `stageNumber` field. */
+  stageNumber?: Maybe<IntFilter>;
+  /** Filter by the object’s `levelNumber` field. */
+  levelNumber?: Maybe<IntFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<AssignerListRecordFilter>>;
   /** Checks for any expressions in this list. */
@@ -14660,6 +14704,7 @@ export type Query = Node & {
   applicationListFilterReviewer?: Maybe<ApplicationListFilterReviewerConnection>;
   applicationListFilterStage?: Maybe<ApplicationListFilterStageConnection>;
   applicationStatusHistoryApplicationId?: Maybe<Scalars['Int']>;
+  assignableQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignedQuestionsCount?: Maybe<Scalars['BigInt']>;
   assignerList?: Maybe<AssignerListConnection>;
   assignmentList?: Maybe<AssignmentListConnection>;
@@ -14679,7 +14724,6 @@ export type Query = Node & {
   reviewStage?: Maybe<Scalars['Int']>;
   reviewTimeStageCreated?: Maybe<Scalars['Datetime']>;
   submittedAssignedQuestionsCount?: Maybe<Scalars['BigInt']>;
-  templateQuestionsCount?: Maybe<Scalars['BigInt']>;
   /** Reads a single `ActionPlugin` using its globally unique `ID`. */
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
@@ -15894,6 +15938,12 @@ export type QueryApplicationStatusHistoryApplicationIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryAssignableQuestionsCountArgs = {
+  appId?: Maybe<Scalars['Int']>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryAssignedQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
   stageId?: Maybe<Scalars['Int']>;
@@ -16028,12 +16078,6 @@ export type QuerySubmittedAssignedQuestionsCountArgs = {
   appId?: Maybe<Scalars['Int']>;
   stageNumber?: Maybe<Scalars['Int']>;
   levelNumber?: Maybe<Scalars['Int']>;
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryTemplateQuestionsCountArgs = {
-  appId?: Maybe<Scalars['Int']>;
 };
 
 
@@ -34850,6 +34894,10 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   isFullyAssignedLevel1?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   assignedQuestionsLevel1?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   totalQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  totalAssigned?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  totalAssignLocked?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  levelNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -35086,6 +35134,10 @@ export type AssignerListRecordResolvers<ContextType = any, ParentType extends Re
   isFullyAssignedLevel1?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   assignedQuestionsLevel1?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
   totalQuestions?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  totalAssigned?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  totalAssignLocked?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType>;
+  stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  levelNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36914,6 +36966,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   applicationListFilterReviewer?: Resolver<Maybe<ResolversTypes['ApplicationListFilterReviewerConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterReviewerArgs, never>>;
   applicationListFilterStage?: Resolver<Maybe<ResolversTypes['ApplicationListFilterStageConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListFilterStageArgs, never>>;
   applicationStatusHistoryApplicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryApplicationStatusHistoryApplicationIdArgs, never>>;
+  assignableQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryAssignableQuestionsCountArgs, never>>;
   assignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryAssignedQuestionsCountArgs, never>>;
   assignerList?: Resolver<Maybe<ResolversTypes['AssignerListConnection']>, ParentType, ContextType, RequireFields<QueryAssignerListArgs, never>>;
   assignmentList?: Resolver<Maybe<ResolversTypes['AssignmentListConnection']>, ParentType, ContextType, RequireFields<QueryAssignmentListArgs, never>>;
@@ -36933,7 +36986,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   reviewStage?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType, RequireFields<QueryReviewStageArgs, never>>;
   reviewTimeStageCreated?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType, RequireFields<QueryReviewTimeStageCreatedArgs, never>>;
   submittedAssignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QuerySubmittedAssignedQuestionsCountArgs, never>>;
-  templateQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QueryTemplateQuestionsCountArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
   actionQueueByNodeId?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueByNodeIdArgs, 'nodeId'>>;
   applicationByNodeId?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationByNodeIdArgs, 'nodeId'>>;
