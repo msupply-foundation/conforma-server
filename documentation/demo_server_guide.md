@@ -46,9 +46,12 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
 
 ## Log in to demo server with ssh
 
-- Get key file from Bitwarden (openstack-irims-demo-keypair) and save locally
+- Get key file from Bitwarden (openstack-irims-demo-keypair) and save locally (e.g. in `~/Documents/private/mflowkey.pem`)
 - SSH login to server:  
-  `sudo ssh -i <path/to/keyfile> ubuntu@irims-demo.msupply.org`
+  ```bash
+  export KEY_LOC='~/Documents/private/mflowkey.pem' (or your local location)
+  sudo ssh -i <path/to/keyfile> ubuntu@irims-demo.msupply.org
+  ```
 - View commit hashes of currently running images:  
   `sudo docker container ls`
 - Stop all instances:  
