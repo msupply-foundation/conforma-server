@@ -50,7 +50,7 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
 - SSH login to server:  
   ```bash
   export KEY_LOC='~/Documents/private/mflowkey.pem' (or your local location)
-  sudo ssh -i <path/to/keyfile> ubuntu@irims-demo.msupply.org
+  sudo ssh -i $KEY_LOC ubuntu@irims-demo.msupply.org
   ```
 - View commit hashes of currently running images:  
   `sudo docker container ls`
@@ -84,3 +84,131 @@ From there the following commands might be useful:
 
 - view environment variables: `printenv`
 - check the server log: `tail -n 100 /var/log/application_manager/server.log`
+
+## Move files/folder to/from instance
+
+Edit scripts in `./docker/demo_server/`, then:
+
+### Upload demo server scripts
+```bash
+scp -r -i $KEY_LOC ./demo_server ubuntu@irims-demo.msupply.org:/home/ubuntu/
+```
+
+### Download nginx config from demo server to local
+```bash
+scp -i $KEY_LOC ubuntu@irims-demo.msupply.org:/etc/nginx/sites-enabled/default ./demo_server/nginx_config
+```
+
+### Upload nginx config back to demo server
+
+```bash
+# cannot directly replace default config, need to do it as sudo, so from within docker instance
+sudo mv demo_server/nginx_config/default /etc/nginx/sites-enabled/
+```
+
+## NGINX
+
+Everything should be configured via `default` config. Cert bot was installed and should auto update certs (https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx).
+
+After changing config as per above, run
+
+`sudo service nginx restart`
+
+Logs are in `/var/log/nginx`
+
+## docker-compose
+
+docker-compose will complain if directories are not present, create them if needed (they will persist when restarting image, even if `docker-compose down` was run)
+
+```bash
+mkdir app_snapshots_on_port_8000
+mkdir app_postgres_on_port_8000
+
+mkdir grafana_on_port_8001
+# grafana user has to own the local directory that's mounted to volume
+# https://community.grafana.com/t/new-docker-install-with-persistent-storage-permission-problem/10896/2
+sudo chown 472 grafana_on_port_8001
+
+mkdir app_snapshots_on_port_8002
+mkdir app_postgres_on_port_8002
+
+mkdir grafana_on_port_8003
+sudo chown 472 grafana_on_port_8003
+
+mkdir app_snapshots_on_port_8004
+mkdir app_postgres_on_port_8004
+
+mkdir grafana_on_port_8005
+sudo chown 472 grafana_on_port_8005
+
+mkdir app_snapshots_on_port_8006
+mkdir app_postgres_on_port_8006
+
+mkdir grafana_on_port_8007
+sudo chown 472 grafana_on_port_8007
+
+mkdir app_snapshots_on_port_8008
+mkdir app_postgres_on_port_8008
+
+mkdir grafana_on_port_8009
+sudo chown 472 grafana_on_port_8009
+```
+
+### Launching all
+
+```bash
+export TAG='front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14'
+
+# -d is for detached, if you want to see all output then start without -d
+PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'mflow-on-8000' up -d
+
+PORT_APP=8002 PORT_DASH=8003 sudo -E docker-compose --project-name 'mflow-on-8002' up -d
+PORT_APP=8004 PORT_DASH=8005 sudo -E docker-compose --project-name 'mflow-on-8004' up -d
+PORT_APP=8006 PORT_DASH=8007 sudo -E docker-compose --project-name 'mflow-on-8006' up -d
+PORT_APP=8008 PORT_DASH=8009 sudo -E docker-compose --project-name 'mflow-on-8008' up -d
+```
+
+### List container
+
+`sudo docker container ls`
+
+### Command line inside container
+
+`sudo docker exec -ti mflow-on-8000_app_1 /bin/bash`
+
+### View logs
+
+```bash
+# don't need bash inside contiainer for this
+sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/server.log
+sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/graphile.log
+```
+
+### Stop or remove
+
+```bash
+# to stop
+sudo docker-compose --project-name 'mflow-on-8000' stop
+# to remove (when new version is out)
+sudo docker-compose --project-name 'mflow-on-8000' down
+```
+
+Have t
+
+### Prior To docker-compose
+
+<ins>list local images</ins>
+
+`sudo docker images`
+
+<ins>remove all containers</ins>
+
+`sudo docker rm $(sudo docker ps -a -q)`
+
+<ins>remove all images</ins>
+
+`sudo docker rmi -f $(sudo docker images -a -q)`
+
+<ins>remove all images</ins>
+
+`sudo docker volume prune`
