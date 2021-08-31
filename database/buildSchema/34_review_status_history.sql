@@ -87,7 +87,7 @@ LANGUAGE sql
 STABLE;
 
 -- Function to return count of assigned questions that can't be re-assigned (review has been submitted)
-CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_number int, level_number int)
+CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_id int, level_number int)
     RETURNS bigint
     AS $$
     SELECT
@@ -99,7 +99,7 @@ CREATE FUNCTION public.submitted_assigned_questions_count (app_id int, stage_num
     LEFT JOIN review_status_history rsh ON review.id = rsh.review_id
 WHERE
     ra.application_id = $1
-    AND ra.stage_number = $2
+    AND ra.stage_id = $2
     AND ra.level_number = $3
     AND ra.status = 'ASSIGNED'
     AND rsh.status = 'SUBMITTED'

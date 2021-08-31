@@ -9,12 +9,11 @@ CREATE FUNCTION assigner_list (stage_id int, assigner_id int)
     RETURNS TABLE (
         application_id int,
         assigner_action public.assigner_action,
-        is_fully_assigned_level_1 boolean,
-        assigned_questions_level_1 bigint,
+        -- is_fully_assigned_level_1 boolean,
+        -- assigned_questions_level_1 bigint,
         total_questions bigint,
         total_assigned bigint,
-        total_assign_locked bigint,
-        level_number int
+        total_assign_locked bigint
     )
     AS $$
     SELECT
@@ -27,18 +26,17 @@ CREATE FUNCTION assigner_list (stage_id int, assigner_id int)
             WHEN COUNT(DISTINCT (review_assignment.id)) != 0 
                 AND assigned_questions_count(application_id, $1, level_number) >= assignable_questions_count(application_id)
                 AND submitted_assigned_questions_count(application_id, $1, level_number) >= assigned_questions_count(application_id, $1, level_number)
-                THEN 'ASSIGNING_LOCKED'
+                THEN 'ASSIGN_LOCKED'
             WHEN COUNT(DISTINCT (review_assignment.id)) != 0 
                 AND assigned_questions_count(application_id, $1, level_number) < assignable_questions_count(application_id)
                 THEN 'ASSIGN'
             ELSE NULL
         END::assigner_action,
-        assigned_questions_count(application_id, $1, 1) = assignable_questions_count(application_id) AS is_fully_assigned_level_1,
-        assigned_questions_count(application_id, $1, 1) AS assigned_questions_level_1,
+        -- assigned_questions_count(application_id, $1, 1) = assignable_questions_count(application_id) AS is_fully_assigned_level_1,
+        -- assigned_questions_count(application_id, $1, 1) AS assigned_questions_level_1,
         assignable_questions_count(application_id) AS total_questions,
         assigned_questions_count(application_id, $1, level_number) AS total_assigned,
-        submitted_assigned_questions_count(application_id, $1, level_number) AS total_assign_locked,
-        level_number
+        submitted_assigned_questions_count(application_id, $1, level_number) AS total_assign_locked
     FROM
         review_assignment
     LEFT JOIN review_assignment_assigner_join ON review_assignment.id = review_assignment_assigner_join.review_assignment_id
