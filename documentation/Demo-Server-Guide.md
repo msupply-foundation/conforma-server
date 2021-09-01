@@ -11,7 +11,10 @@
 `cd docker`  
 `./dockerise.sh`
 
-Should take a while to run, will build a local image
+Should take a while to run, will build a local image.
+**Note**: If build doesn't work
+After making changes to files used during build of Docker file you will need required to add a **new** branch or tag and commit to test!
+Example: While working on develop make a quick branch `test-demo-2021-09-01` and use in the `develop` branch dockerise.sh TAG.
 
 ## Test locally
 
@@ -29,7 +32,7 @@ Should take a while to run, will build a local image
 - Create tag:  
   `docker tag <image_id> <account-name>/<docker-repo>:<tag-name>`
 - Push new tag:  
-   `docker push <image_id> <account-name>/<docker-repo>:<tag-name>`  
+   `docker push <account-name>/<docker-repo>:<tag-name>`  
   Image will upload to Docker hub
 
 Example:
@@ -47,9 +50,9 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
 ## Log in to demo server with ssh
 
 - Get key file from Bitwarden (openstack-irims-demo-keypair) and save locally (e.g. in `~/Documents/private/mflowkey.pem`)
-- SSH login to server:  
+- SSH login to server:
   ```bash
-  export KEY_LOC='~/Documents/private/mflowkey.pem' (or your local location)
+  export KEY_LOC='/Users/<you>/Documents/private/mflowkey.pem' (or your local location)
   sudo ssh -i $KEY_LOC ubuntu@irims-demo.msupply.org
   ```
 - View commit hashes of currently running images:  
@@ -58,6 +61,7 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
   `sudo docker stop <hashes… >`
 - Pull image from docker hub:  
   `sudo docker pull <full-image-name>`
+  Example: `sudo docker pull msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14`
 - Run image:  
   `sudo docker run -dti -p 8000:3000 -e 'SMTP_PASSWORD=<password>' -e 'WEB_HOST=https://irims-demo.msupply.org:50000' --name mflow-demo-on-8000 msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14`  
    This will launch one instance. To launch other instances in their own container, run the same command, but change:
@@ -68,53 +72,30 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
 
   The system will be launched with “basic_snapshot” data. Upload and run a new snapshot as required
 
-## To restart an instance
-
-- Run `sudo docker stop <name>` (name from above, or can use container id)
-- Remove container: `sudo docker rm <name>`
-- Re-run as above. Note: this resets the container to initial state, including database reset. If you want to preserve existing data, you’ll need to take a snapshot first, then reload after restart.
-
-### Other image/container commands
-
-- List local images
-
-`sudo docker images`
-
-- Remove all containers
-
-`sudo docker rm $(sudo docker ps -a -q)`
-
-- Remove all images
-
-`sudo docker rmi -f $(sudo docker images -a -q)`
-
-- Remove all images
-
-`sudo docker volume prune`
-
-
-### Access command line within container:
-
-You can access the command line of a particular container instance with the following:
-
-`sudo docker exec -ti <name-or-container-id> /bin/bash`
-
-From there the following commands might be useful:
-
-- view environment variables: `printenv`
-- check the server log: `tail -n 100 /var/log/application_manager/server.log`
-
 ## Move files/folder to/from instance
 
-Edit scripts in `./docker/demo_server/`, then:
+Edit script in `./docker/demo_server/docker-compose.yml`
 
-### Upload demo server scripts
+- only to change the image name (if required)
+- don't change SMTP_PASSOWRD!
+
+### Copy script folder demo server scripts
+
+**Note**: You are sending local changes to the server
+
 ```bash
+cd application-manager-server/docker
 scp -r -i $KEY_LOC ./demo_server ubuntu@irims-demo.msupply.org:/home/ubuntu/
 ```
 
+## Now jump to section docker-compose if this is just a server upgrade :)
+
 ### Download nginx config from demo server to local
+
+**Note**: These steps doesn't seem required for a sever upgrade
+
 ```bash
+cd application-manager-server/docker
 scp -i $KEY_LOC ubuntu@irims-demo.msupply.org:/etc/nginx/sites-enabled/default ./demo_server/nginx_config
 ```
 
@@ -177,16 +158,19 @@ sudo chown 472 grafana_on_port_8009
 
 ```bash
 export TAG='front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14'
+export SMTP_SECRET='add_smtp_secret_here'
 
 # -d is for detached, if you want to see all output then start without -d
 PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'mflow-on-8000' up -d
 
+# currently running with snapshot demo-2021-08-27
 PORT_APP=8002 PORT_DASH=8003 sudo -E docker-compose --project-name 'mflow-on-8002' up -d
+
+# currently running with basic_snapshot
 PORT_APP=8004 PORT_DASH=8005 sudo -E docker-compose --project-name 'mflow-on-8004' up -d
 PORT_APP=8006 PORT_DASH=8007 sudo -E docker-compose --project-name 'mflow-on-8006' up -d
 PORT_APP=8008 PORT_DASH=8009 sudo -E docker-compose --project-name 'mflow-on-8008' up -d
 ```
-
 
 ### View logs
 
@@ -204,3 +188,38 @@ sudo docker-compose --project-name 'mflow-on-8000' stop
 # to remove (when new version is out)
 sudo docker-compose --project-name 'mflow-on-8000' down
 ```
+
+## To restart an instance
+
+- Run `sudo docker stop <name>` (name from above, or can use container id)
+- Remove container: `sudo docker rm <name>`
+- Re-run as above. Note: this resets the container to initial state, including database reset. If you want to preserve existing data, you’ll need to take a snapshot first, then reload after restart.
+
+### Other image/container commands
+
+- List local images
+
+`sudo docker images`
+
+- Remove all containers
+
+`sudo docker rm $(sudo docker ps -a -q)`
+
+- Remove all images
+
+`sudo docker rmi -f $(sudo docker images -a -q)`
+
+- Remove all images
+
+`sudo docker volume prune`
+
+### Access command line within container:
+
+You can access the command line of a particular container instance with the following:
+
+`sudo docker exec -ti <name-or-container-id> /bin/bash`
+
+From there the following commands might be useful:
+
+- view environment variables: `printenv`
+- check the server log: `tail -n 100 /var/log/application_manager/server.log`
