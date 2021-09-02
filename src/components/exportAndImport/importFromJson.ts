@@ -70,22 +70,18 @@ const constructInsertAndGetter = (
     if (!preserveIds && isPrimary) return
     if (isGenerated) return
     if (values[columnName] === undefined) return
-    if (isUnique) uniqueField = columnName
+    if (isUnique) uniqueField = camelCase(columnName)
     insertableValues[columnName] = values[columnName]
   })
 
   // Postgraphile will make all plural table names singular for mutations
   const singularTableName = singular(tableName)
   const insertMutationName = camelCase(`create ${singularTableName}`)
-  const getRecordQueryName = camelCase(`update ${singularTableName}_on_${uniqueField}`)
+  const getRecordQueryName = camelCase(`${singularTableName} by ${uniqueField}`)
   const { keyValues, variables, variableDeclarations } = getInsertKeyValues(
     insertableValues,
     columns
   )
-
-  const resultQuery = `${singularTableName} { ${columns
-    .map(({ columnName }) => columnName)
-    .join(' ')} }`
 
   const insertQuery = `mutation ${insertMutationName} ${variableDeclarations} {
         ${insertMutationName} (
@@ -94,21 +90,17 @@ const constructInsertAndGetter = (
                     ${keyValues}
                 }
             }
-        ) { ${resultQuery} }
+        ) { ${singularTableName} { id } }
     }`
 
   const getRecordQuery =
     uniqueField &&
     `query ${getRecordQueryName} { 
-    ${getRecordQueryName}(code: "${record[uniqueField]})" {
-        nodes {
-            ${columns.map(({ columnName }) => columnName).join(' ')}
-        }
-    }
+      ${getRecordQueryName}(${uniqueField}: "${record[uniqueField]}") { id } 
   }`
 
   const insertGetter = (gqlResult: any) => gqlResult[insertMutationName][singularTableName]
-  const getRecordGetter = (gqlResult: any) => gqlResult[getRecordQueryName][getRecordQueryName]
+  const getRecordGetter = (gqlResult: any) => gqlResult[getRecordQueryName]
   return { insertQuery, getRecordQuery, insertGetter, getRecordGetter, variables }
 }
 
