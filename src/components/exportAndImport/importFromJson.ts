@@ -12,10 +12,16 @@ import {
   ObjectRecords,
 } from './types'
 
-const insertFromObject = async (
+type InsertFromObject = (
   records: ObjectRecords,
-  { includeTables, excludeTables, skipTableOnInsertFail = [] }: ExportAndImportOptions,
-  preserveIds: boolean = false
+  options: ExportAndImportOptions,
+  preserveIds?: boolean
+) => Promise<InsertedRecords>
+
+const insertFromObject: InsertFromObject = async (
+  records,
+  { includeTables, excludeTables, skipTableOnInsertFail = [] },
+  preserveIds = false
 ) => {
   const databaseTables = (await getDatabaseInfo()).filter(({ isView }) => !isView)
 

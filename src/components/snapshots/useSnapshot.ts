@@ -4,7 +4,7 @@ import path from 'path'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
 import updateRowPolicies from '../../../database/updateRowPolicies'
-import { SnapshotOperation, ExportAndImportOptions } from '../exportAndImport/types'
+import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
 import importFromJson from '../exportAndImport/importFromJson'
 
 import {
@@ -38,11 +38,15 @@ const useSnapshot: SnapshotOperation = async ({
       await initiliseDatabase(options, snapshotFolder)
     }
 
-    copyFiles(snapshotFolder)
-
     console.log('inserting from snapshot ... ')
-    await importFromJson(snapshotObject, options, options.shouldReInitialise)
+    const insertedRecords = await importFromJson(
+      snapshotObject,
+      options,
+      options.shouldReInitialise
+    )
     console.log('inserting from snapshot ... done')
+
+    await copyFiles(snapshotFolder, insertedRecords.file)
 
     // Update serials
     console.log('running serial update ... ')
@@ -114,15 +118,43 @@ const initiliseDatabase = async (
   console.log('inserting core data ... done')
 }
 
-const copyFiles = (snapshotFolder: string) => {
-  console.log('copying files ...')
-  // -p = no error if exists
-  execSync(`mkdir -p ${FILES_FOLDER}`)
+export const getDirectoryFromPath = (filePath: string) => {
+  const [_, ...directory] = filePath.split('/').reverse()
+  return directory.join('/')
+}
+// Get base files (thumbnails)
+export const getBaseFiles = async (filesFolder: string) => {
   try {
-    execSync(`cp -R ${snapshotFolder}/files/* ${FILES_FOLDER}`)
-    console.log('copying files ... done')
+    let dirents = await fs.readdir(filesFolder, {
+      encoding: 'utf-8',
+      withFileTypes: true,
+    })
+    return dirents
+      .filter((dirent) => !dirent.isDirectory() && !dirent.name.startsWith('.'))
+      .map((dirent) => dirent.name)
   } catch {
-    console.log('No files to copy')
+    return []
+  }
+}
+
+const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
+  // copy only files that associated with import file records and base filed in snapshot folder (thumbnails)
+  let filePaths = fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.filePath)
+  let snapshotFilesFolder = `${snapshotFolder}/files`
+  let baseFilePaths = await getBaseFiles(snapshotFilesFolder)
+
+  for (const filePath of [...filePaths, ...baseFilePaths]) {
+    try {
+      console.log('copying file', filePath)
+
+      const destinationDirectory = `${FILES_FOLDER}/${getDirectoryFromPath(filePath)}`
+      // -p = no error if exists, create parent
+      execSync(`mkdir -p '${destinationDirectory}'`)
+
+      execSync(`cp '${snapshotFilesFolder}/${filePath}' '${destinationDirectory}'`)
+    } catch (e) {
+      console.log('failed to copy file', e)
+    }
   }
 }
 

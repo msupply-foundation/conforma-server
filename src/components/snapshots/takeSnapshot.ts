@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import fsSync from 'fs'
-import { ExportAndImportOptions, SnapshotOperation } from '../exportAndImport/types'
+import { ExportAndImportOptions, ObjectRecord, SnapshotOperation } from '../exportAndImport/types'
 import path from 'path'
 import { execSync } from 'child_process'
 import rimraf from 'rimraf'
@@ -21,6 +21,7 @@ import {
   FILES_FOLDER,
   PG_DFF_JS_LOCATION,
 } from './constants'
+import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
 const asyncRimRaf = promisify(rimraf)
 
 const takeSnapshot: SnapshotOperation = async ({
@@ -53,7 +54,7 @@ const takeSnapshot: SnapshotOperation = async ({
 
     if (options.shouldReInitialise) await getSchemaDiff(newSnapshotFolder)
 
-    copyFiles(newSnapshotFolder)
+    await copyFiles(newSnapshotFolder, snapshotObject.file)
 
     await zipSnapshot(newSnapshotFolder, snapshotName)
 
@@ -127,10 +128,23 @@ const getSchemaDiff = async (newSnapshotFolder: string) => {
   console.log('creating schema diff ... done ')
 }
 
-const copyFiles = (newSnapshotFolder: string) => {
-  console.log('copying files ...')
-  execSync(`cp -R ${FILES_FOLDER} ${newSnapshotFolder}`)
-  console.log('copying files ... done')
+const copyFiles = async (newSnapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
+  // copy only files that associated with exported file records and base filed in files directory (thumbnails)
+  let filePaths = fileRecords.map((fileRecord) => fileRecord.filePath)
+  let baseFilePaths = await getBaseFiles(FILES_FOLDER)
+
+  for (const filePath of [...filePaths, ...baseFilePaths]) {
+    try {
+      console.log('copying file', filePath)
+      const destinationDirectory = `${newSnapshotFolder}/files/${getDirectoryFromPath(filePath)}`
+      // -p = no error if exists, create parent
+      execSync(`mkdir -p '${destinationDirectory}'`)
+
+      execSync(`cp '${FILES_FOLDER}/${filePath}' '${destinationDirectory}'`)
+    } catch (e) {
+      console.log('failed to copy file', e)
+    }
+  }
 }
 
 export default takeSnapshot
