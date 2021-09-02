@@ -63,6 +63,15 @@ const useSnapshot: SnapshotOperation = async ({
     return { success: false, message: 'error while loading snapshot', error: e.toString() }
   }
 }
+
+const convertDeprecated = (options: ExportAndImportOptions) => {
+  // see comment in ExportAndImportOptions type
+  return {
+    ...options,
+    skipTableOnInsertFail: options.skipTableOnInsertFail || options.tablesToUpdateOnInsertFail,
+  }
+}
+
 const getOptions = async (
   snapshotFolder: string,
   optionsName?: string,
@@ -70,7 +79,7 @@ const getOptions = async (
 ) => {
   if (options) {
     console.log('use options passed as a parameter')
-    return options
+    return convertDeprecated(options)
   }
   let optionsFile = path.join(snapshotFolder, `${OPTIONS_FILE_NAME}.json`)
 
@@ -80,7 +89,7 @@ const getOptions = async (
     encoding: 'utf-8',
   })
 
-  return JSON.parse(optionsRaw) as ExportAndImportOptions
+  return convertDeprecated(JSON.parse(optionsRaw) as ExportAndImportOptions)
 }
 
 const initiliseDatabase = async (

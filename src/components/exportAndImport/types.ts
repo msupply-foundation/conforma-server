@@ -32,7 +32,9 @@ export type ExportAndImportOptions = {
   insertScriptsLocale: string
   includeInsertScripts: string[]
   excludeInsertScripts: string[]
+  // tablesToUpdateOnInsertFail is deprecated, but values are still required (for existing snapshots), they key is change to skipTableOnInsertFail in useSnapshot
   tablesToUpdateOnInsertFail: string[]
+  skipTableOnInsertFail: string[]
 }
 
 export type ObjectRecord = { [columnName: string]: any }
