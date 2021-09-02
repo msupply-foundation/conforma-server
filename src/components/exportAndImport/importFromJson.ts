@@ -83,6 +83,8 @@ const constructInsertAndGetter = (
     columns
   )
 
+  const resultFields = ` ${columns.map(({ columnName }) => columnName).join(' ')}`
+
   const insertQuery = `mutation ${insertMutationName} ${variableDeclarations} {
         ${insertMutationName} (
             input: {
@@ -90,13 +92,13 @@ const constructInsertAndGetter = (
                     ${keyValues}
                 }
             }
-        ) { ${singularTableName} { id } }
+        ) { ${singularTableName} { ${resultFields} } }
     }`
 
   const getRecordQuery =
     uniqueField &&
     `query ${getRecordQueryName} { 
-      ${getRecordQueryName}(${uniqueField}: "${record[uniqueField]}") { id } 
+      ${getRecordQueryName}(${uniqueField}: "${record[uniqueField]}") { ${resultFields} }
   }`
 
   const insertGetter = (gqlResult: any) => gqlResult[insertMutationName][singularTableName]
