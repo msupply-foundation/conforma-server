@@ -10,9 +10,11 @@ services:
       - '5432'
     environment:
       SMTP_PASSWORD: '${SMTP_SECRET}'
+      WEB_HOST: '${WEB_URL}'
     volumes:
       - ./app_postgres_on_port_${PORT_APP}:/var/lib/postgresql/12/main/
       - ./app_snapshots_on_port_${PORT_APP}:/usr/src/application-manager-server/build/database/_snapshots
+      - ./app_file_on_port_${PORT_APP}:/usr/src/application-manager-web-app/build/files
     tty: true
   grafana:
     image: 'grafana/grafana'

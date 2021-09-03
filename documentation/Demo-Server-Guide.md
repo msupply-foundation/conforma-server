@@ -76,7 +76,7 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
 
 Edit script in `./docker/demo_server/docker-compose.yml`
 
-- only to change the image name (if required)
+- only change the image name (if required)
 - don't change SMTP_PASSOWRD!
 
 ### Copy script folder demo server scripts
@@ -88,7 +88,7 @@ cd application-manager-server/docker
 scp -r -i $KEY_LOC ./demo_server ubuntu@irims-demo.msupply.org:/home/ubuntu/
 ```
 
-## Now jump to section docker-compose if this is just a server upgrade :)
+## Now jump to section docker-compose if this is just a server upgrade
 
 ### Download nginx config from demo server to local
 
@@ -159,6 +159,7 @@ sudo chown 472 grafana_on_port_8009
 ```bash
 export TAG='front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14'
 export SMTP_SECRET='add_smtp_secret_here'
+export WEB_URL='https://irims-demo.msupply.org:<replace port>'
 
 # -d is for detached, if you want to see all output then start without -d
 PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'mflow-on-8000' up -d
@@ -184,10 +185,12 @@ sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/graphi
 
 ```bash
 # to stop
-sudo docker-compose --project-name 'mflow-on-8000' stop
+PORT_APP=8000 PORT_DASH=8001 sudo docker-compose -E --project-name 'mflow-on-8000' stop
 # to remove (when new version is out)
-sudo docker-compose --project-name 'mflow-on-8000' down
+PORT_APP=8000 PORT_DASH=8001 sudo docker-compose -E --project-name 'mflow-on-8000' down
 ```
+
+Note: the variables at the start of those commands (PORT_APP, etc) are not actually required for the command, but they're needed to that the .yml file has suitable substitutions, otherwise it will be interpreted as "invalid".
 
 ## To restart an instance
 
