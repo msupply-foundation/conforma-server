@@ -1,17 +1,16 @@
 {
- "filters": {},
- "includeTables": [],
- "excludeTables": [
-  "actionQueue",
-  "triggerQueue",
-  "applicationListShape",
-  "elementTypePlugin",
-  "notification"
- ],
- "shouldReInitialise": true,
- "insertScriptsLocale": "dev",
- "includeInsertScripts": [
-  "none"
- ],
- "excludeInsertScripts": []
+  "filters": {},
+  "includeTables": [],
+  "excludeTables": [
+    "actionQueue",
+    "triggerQueue",
+    "applicationListShape",
+    "elementTypePlugin",
+    "notification"
+  ],
+  "shouldReInitialise": true,
+  "insertScriptsLocale": "dev",
+  "includeInsertScripts": ["none"],
+  "excludeInsertScripts": [],
+  "resetFiles": true
 }
