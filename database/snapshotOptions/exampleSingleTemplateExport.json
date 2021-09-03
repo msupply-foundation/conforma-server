@@ -13,5 +13,6 @@
   "excludeTables": [],
   "insertScriptsLocale": "dev",
   "includeInsertScripts": [],
-  "excludeInsertScripts": []
+  "excludeInsertScripts": [],
+  "resetFiles": false
 }

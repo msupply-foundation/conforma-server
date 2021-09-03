@@ -11,5 +11,6 @@
   "shouldReInitialise": true,
   "insertScriptsLocale": "dev",
   "includeInsertScripts": ["none"],
-  "excludeInsertScripts": []
+  "excludeInsertScripts": [],
+  "resetFiles": true
 }
