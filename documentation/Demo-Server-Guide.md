@@ -185,10 +185,12 @@ sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/graphi
 
 ```bash
 # to stop
-sudo docker-compose -E --project-name 'mflow-on-8000' stop
+PORT_APP=8000 PORT_DASH=8001 sudo docker-compose -E --project-name 'mflow-on-8000' stop
 # to remove (when new version is out)
-sudo docker-compose -E --project-name 'mflow-on-8000' down
+PORT_APP=8000 PORT_DASH=8001 sudo docker-compose -E --project-name 'mflow-on-8000' down
 ```
+
+Note: the variables at the start of those commands (PORT_APP, etc) are not actually required for the command, but they're needed to that the .yml file has suitable substitutions, otherwise it will be interpreted as "invalid".
 
 ## To restart an instance
 
