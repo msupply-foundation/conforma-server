@@ -35,7 +35,11 @@ const useSnapshot: SnapshotOperation = async ({
     const snapshotObject = JSON.parse(snapshotRaw)
 
     if (options.shouldReInitialise) {
-      await initiliseDatabase(options, snapshotFolder)
+      await initialiseDatabase(options, snapshotFolder)
+    }
+
+    if (options.resetFiles) {
+      execSync(`rm -rf ${FILES_FOLDER}/*`)
     }
 
     console.log('inserting from snapshot ... ')
@@ -96,7 +100,7 @@ const getOptions = async (
   return convertDeprecated(JSON.parse(optionsRaw) as ExportAndImportOptions)
 }
 
-const initiliseDatabase = async (
+const initialiseDatabase = async (
   { insertScriptsLocale, includeInsertScripts, excludeInsertScripts }: ExportAndImportOptions,
   snapshotFolder: string
 ) => {
