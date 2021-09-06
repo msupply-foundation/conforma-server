@@ -7,6 +7,7 @@ export type DatabaseColumn = {
   isEnum: boolean
   isEnumArray: boolean
   isJson: boolean
+  isJsonArray: boolean
   reference: {
     tableName: string
     columnName: string
