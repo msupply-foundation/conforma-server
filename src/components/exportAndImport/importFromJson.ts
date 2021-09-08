@@ -1,4 +1,4 @@
-import { camelCase } from 'lodash'
+import { camelCase, mapValues } from 'lodash'
 import databaseConnect from '../databaseConnect'
 import getDatabaseInfo from './getDatabaseInfo'
 import { filterByIncludeAndExclude } from './helpers'
@@ -153,7 +153,7 @@ const findReferenceValues = (
   if (!referencedRecord) return null
   return referencedRecord.new[referenceColumnName]
 }
-type JsonVariables = { [variableName: string]: string }
+type JsonVariables = { [variableName: string]: { value: JSON; type: 'JSON!' | '[JSON!]' } }
 
 const getInsertKeyValues = (values: ObjectRecord, columns: DatabaseColumn[]) => {
   const jsonVariables: JsonVariables = {}
@@ -169,9 +169,10 @@ const getInsertKeyValues = (values: ObjectRecord, columns: DatabaseColumn[]) => 
         // Make sure enum values are not quoted in an array
         if (column.isEnumArray) gqlValue = gqlValue.replace(/"/g, '')
         // Add quotes around object
-        if (column.isJson && value instanceof Object) {
+        if ((column.isJson || column.isJsonArray) && value instanceof Object) {
           const variableName = `$${columnName}`
-          jsonVariables[columnName] = value
+          const type = column.isJson ? 'JSON!' : '[JSON!]'
+          jsonVariables[columnName] = { value, type }
 
           gqlValue = variableName
         }
@@ -181,13 +182,13 @@ const getInsertKeyValues = (values: ObjectRecord, columns: DatabaseColumn[]) => 
     })
     .join(',')
 
-  const variableDeclarations = Object.keys(jsonVariables).map(
-    (variableName) => `$${variableName}: JSON!`
+  const variableDeclarations = Object.entries(jsonVariables).map(
+    ([variableName, { type }]) => `$${variableName}: ${type}`
   )
 
   return {
     keyValues,
-    variables: jsonVariables,
+    variables: mapValues(jsonVariables, ({ value }) => value),
     variableDeclarations:
       variableDeclarations.length === 0 ? '' : `(${variableDeclarations.join(',')})`,
   }

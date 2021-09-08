@@ -113,7 +113,13 @@ const initialiseDatabase = async (
   const diffFile = path.join(snapshotFolder, `${PG_SCHEMA_DIFF_FILE_NAME}.sql`)
   if (fsSync.existsSync(diffFile)) {
     console.log('adding changes to schema ... ')
-    execSync(`psql -U postgres -q -b -d ${databaseName} -f "${diffFile}"`, { cwd: ROOT_FOLDER })
+
+    let dbPatch = `psql -v -U postgres -q -b -d ${databaseName} -f "${diffFile}"`
+
+    // run db patch twice (in silenced error mode), to make sure references that were not met the first time will be met the second time
+    execSync(dbPatch, { cwd: ROOT_FOLDER })
+    execSync(dbPatch, { cwd: ROOT_FOLDER })
+
     console.log('adding changes to schema ... done')
   }
 
