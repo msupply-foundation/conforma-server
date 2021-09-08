@@ -155,6 +155,7 @@
    "id": 9,
    "name": "Grant Permissions",
    "optionalParameters": [
+    "username",
     "orgName",
     "orgId"
    ],
@@ -164,7 +165,6 @@
    ],
    "path": "../plugins/action_grant_permissions/src/index.ts",
    "requiredParameters": [
-    "username",
     "permissionNames"
    ]
   },
@@ -310,6 +310,44 @@
    ],
    "path": "../plugins/action_update_review_visibility/src/index.ts",
    "requiredParameters": []
+  },
+  {
+   "code": "revokePermissions",
+   "description": "Revokes existing permission(s) from user/org -- only sets existing permissions to inactive, doesn't actually delete records",
+   "id": 18,
+   "name": "Revoke Permissions",
+   "optionalParameters": [
+    "username",
+    "orgName",
+    "orgId"
+   ],
+   "outputProperties": [
+    "permissionJoinIds",
+    "permissionNames"
+   ],
+   "path": "../plugins/action_revoke_permissions/src/index.ts",
+   "requiredParameters": [
+    "permissionNames"
+   ]
+  },
+  {
+   "code": "scheduleAction",
+   "description": "Adds a record to action_schedule table to schedule an action for some time in the future",
+   "id": 19,
+   "name": "Create Scheduled Action",
+   "optionalParameters": [
+    "tableName",
+    "entityId",
+    "applicationId",
+    "templateId"
+   ],
+   "outputProperties": [
+    "scheduledEvent"
+   ],
+   "path": "../plugins/action_schedule_action/src/index.ts",
+   "requiredParameters": [
+    "duration"
+   ]
   }
  ],
  "counter": [
@@ -321,12 +359,22 @@
   {
    "id": 2,
    "name": "Demo",
-   "value": 2
+   "value": 3
   },
   {
    "id": 3,
    "name": "OrgRegistration",
-   "value": 6
+   "value": 7
+  },
+  {
+   "id": 4,
+   "name": "OrgJoin",
+   "value": 3
+  },
+  {
+   "id": 5,
+   "name": "CoreActions",
+   "value": 2
   }
  ],
  "filter": [
@@ -684,31 +732,51 @@
    "code": "dev",
    "icon": "code",
    "id": 1,
-   "title": "Dev"
+   "title": "Dev",
+   "uiLocation": [
+    "DASHBOARD",
+    "LIST"
+   ]
   },
   {
    "code": "org",
    "icon": "building",
    "id": 2,
-   "title": "Organisation"
+   "title": "Organisation",
+   "uiLocation": [
+    "DASHBOARD",
+    "LIST"
+   ]
   },
   {
    "code": "drugRego",
    "icon": "pills",
    "id": 3,
-   "title": "Drug Registration"
+   "title": "Drug Registration",
+   "uiLocation": [
+    "DASHBOARD",
+    "LIST"
+   ]
   },
   {
    "code": "user",
    "icon": "user",
    "id": 4,
-   "title": "User settings"
+   "title": "User settings",
+   "uiLocation": [
+    "DASHBOARD",
+    "LIST"
+   ]
   },
   {
    "code": "license",
    "icon": "certificate",
    "id": 5,
-   "title": "Company license"
+   "title": "Company license",
+   "uiLocation": [
+    "DASHBOARD",
+    "LIST"
+   ]
   }
  ],
  "user": [
@@ -1135,6 +1203,7 @@
  "template": [
   {
    "code": "UserEdit",
+   "icon": null,
    "id": 1,
    "isLinear": true,
    "name": "Edit User Details",
@@ -1148,6 +1217,7 @@
   },
   {
    "code": "UserRegistration",
+   "icon": null,
    "id": 2,
    "isLinear": true,
    "name": "User Registration",
@@ -1161,7 +1231,114 @@
   },
   {
    "code": "Demo",
+   "icon": null,
    "id": 3,
+   "isLinear": false,
+   "name": "Demo -- Feature Showcase",
+   "namePlural": "Demo -- Feature Showcases",
+   "startMessage": {
+    "children": [
+     "## This is the general registration for feature showcase\nHi, %1. You will need to provide:\n- Proof of identity (Passport, Drivers license)\n- Proof of your medical certification\n- Drug ingredient list\n- Product images\n- Packging images",
+     {
+      "children": [
+       "currentUser.firstName"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "stringSubstitution"
+   },
+   "status": "DISABLED",
+   "submissionMessage": {
+    "children": [
+     "### Application Submitted!\nThanks, %1.",
+     {
+      "children": [
+       "currentUser.firstName"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "stringSubstitution"
+   },
+   "templateCategoryId": 1,
+   "version": 1,
+   "versionTimestamp": "2021-08-10T14:13:37.199264+12:00"
+  },
+  {
+   "code": "CoreActions",
+   "icon": null,
+   "id": 4,
+   "isLinear": true,
+   "name": "Core-actions Templates",
+   "namePlural": "Companies Registrations",
+   "startMessage": "## You will need the following documents ready for upload:\n- <Add list of documents to upload>",
+   "status": "DISABLED",
+   "submissionMessage": "Thank you! Your application has been submitted.",
+   "templateCategoryId": 1,
+   "version": 1,
+   "versionTimestamp": "2021-08-10T14:13:37.578612+12:00"
+  },
+  {
+   "code": "OrgJoin",
+   "icon": null,
+   "id": 5,
+   "isLinear": false,
+   "name": "Join Company",
+   "namePlural": null,
+   "startMessage": "## You will need the following documents ready for upload:\n- PhotoID",
+   "status": "DISABLED",
+   "submissionMessage": "Thank you! Your application has been submitted.",
+   "templateCategoryId": 2,
+   "version": 1,
+   "versionTimestamp": "2021-08-10T14:13:37.786454+12:00"
+  },
+  {
+   "code": "OrgRegistration",
+   "icon": null,
+   "id": 6,
+   "isLinear": true,
+   "name": "Company Registration",
+   "namePlural": "Companies Registrations",
+   "startMessage": "## You will need the following documents ready for upload:\n- Proof of organisation name\n- Proof of organisation address\n- Organisation licence document",
+   "status": "DRAFT",
+   "submissionMessage": "Thank you! Your application has been submitted.",
+   "templateCategoryId": 2,
+   "version": 2,
+   "versionTimestamp": "2021-08-11T11:49:12.945914+12:00"
+  },
+  {
+   "code": "OrgRegistration",
+   "icon": null,
+   "id": 7,
+   "isLinear": true,
+   "name": "Company Registration",
+   "namePlural": "Companies Registrations",
+   "startMessage": "## You will need the following documents ready for upload:\n- Proof of organisation name\n- Proof of organisation address\n- Organisation licence document",
+   "status": "AVAILABLE",
+   "submissionMessage": "Thank you! Your application has been submitted.",
+   "templateCategoryId": 2,
+   "version": 3,
+   "versionTimestamp": "2021-09-08T19:31:58.620695+12:00"
+  },
+  {
+   "code": "OrgJoin",
+   "icon": null,
+   "id": 8,
+   "isLinear": false,
+   "name": "Join Company",
+   "namePlural": null,
+   "startMessage": "## You will need the following documents ready for upload:\n- PhotoID",
+   "status": "AVAILABLE",
+   "submissionMessage": "Thank you! Your application has been submitted.",
+   "templateCategoryId": 2,
+   "version": 2,
+   "versionTimestamp": "2021-09-08T19:32:36.975294+12:00"
+  },
+  {
+   "code": "Demo",
+   "icon": null,
+   "id": 9,
    "isLinear": false,
    "name": "Demo -- Feature Showcase",
    "namePlural": "Demo -- Feature Showcases",
@@ -1191,12 +1368,13 @@
     "operator": "stringSubstitution"
    },
    "templateCategoryId": 1,
-   "version": 1,
-   "versionTimestamp": "2021-08-10T14:13:37.199264+12:00"
+   "version": 2,
+   "versionTimestamp": "2021-09-08T19:33:01.96505+12:00"
   },
   {
    "code": "CoreActions",
-   "id": 4,
+   "icon": null,
+   "id": 10,
    "isLinear": true,
    "name": "Core-actions Templates",
    "namePlural": "Companies Registrations",
@@ -1204,34 +1382,8 @@
    "status": "AVAILABLE",
    "submissionMessage": "Thank you! Your application has been submitted.",
    "templateCategoryId": 1,
-   "version": 1,
-   "versionTimestamp": "2021-08-10T14:13:37.578612+12:00"
-  },
-  {
-   "code": "OrgJoin",
-   "id": 5,
-   "isLinear": false,
-   "name": "Join Company",
-   "namePlural": null,
-   "startMessage": "## You will need the following documents ready for upload:\n- PhotoID",
-   "status": "AVAILABLE",
-   "submissionMessage": "Thank you! Your application has been submitted.",
-   "templateCategoryId": 2,
-   "version": 1,
-   "versionTimestamp": "2021-08-10T14:13:37.786454+12:00"
-  },
-  {
-   "code": "OrgRegistration",
-   "id": 6,
-   "isLinear": true,
-   "name": "Company Registration",
-   "namePlural": "Companies Registrations",
-   "startMessage": "## You will need the following documents ready for upload:\n- Proof of organisation name\n- Proof of organisation address\n- Organisation licence document",
-   "status": "DRAFT",
-   "submissionMessage": "Thank you! Your application has been submitted.",
-   "templateCategoryId": 2,
    "version": 2,
-   "versionTimestamp": "2021-08-11T11:49:12.945914+12:00"
+   "versionTimestamp": "2021-09-08T19:33:33.648821+12:00"
   }
  ],
  "userOrganisation": [],
@@ -1339,65 +1491,140 @@
    "templateId": 6,
    "trigger": null,
    "userId": 2
+  },
+  {
+   "id": 9,
+   "isActive": true,
+   "isConfig": true,
+   "name": "Join Company - S-AVU-0001",
+   "orgId": null,
+   "outcome": "PENDING",
+   "serial": "S-AVU-0001",
+   "sessionId": "WXsvhggdwhlsHadx",
+   "templateId": 5,
+   "trigger": null,
+   "userId": 2
+  },
+  {
+   "id": 10,
+   "isActive": true,
+   "isConfig": true,
+   "name": "Core-actions Templates - S-EMF-0001",
+   "orgId": null,
+   "outcome": "PENDING",
+   "serial": "S-EMF-0001",
+   "sessionId": "WXsvhggdwhlsHadx",
+   "templateId": 10,
+   "trigger": null,
+   "userId": 2
+  },
+  {
+   "id": 11,
+   "isActive": true,
+   "isConfig": true,
+   "name": "Demo -- Feature Showcase - S-XHH-0002",
+   "orgId": null,
+   "outcome": "PENDING",
+   "serial": "S-XHH-0002",
+   "sessionId": "WXsvhggdwhlsHadx",
+   "templateId": 9,
+   "trigger": null,
+   "userId": 2
+  },
+  {
+   "id": 12,
+   "isActive": true,
+   "isConfig": true,
+   "name": "Join Company - S-RDR-0002",
+   "orgId": null,
+   "outcome": "PENDING",
+   "serial": "S-RDR-0002",
+   "sessionId": "WXsvhggdwhlsHadx",
+   "templateId": 8,
+   "trigger": null,
+   "userId": 2
+  },
+  {
+   "id": 13,
+   "isActive": true,
+   "isConfig": true,
+   "name": "Company Registration - S-TNQ-0006",
+   "orgId": null,
+   "outcome": "PENDING",
+   "serial": "S-TNQ-0006",
+   "sessionId": "WXsvhggdwhlsHadx",
+   "templateId": 7,
+   "trigger": null,
+   "userId": 2
   }
  ],
  "permissionJoin": [
   {
    "id": 1,
+   "isActive": true,
    "organisationId": null,
    "permissionNameId": 2,
    "userId": 1
   },
   {
    "id": 2,
+   "isActive": true,
    "organisationId": null,
    "permissionNameId": 4,
    "userId": 2
   },
   {
    "id": 3,
+   "isActive": true,
    "organisationId": null,
    "permissionNameId": 7,
    "userId": 2
   },
   {
    "id": 4,
+   "isActive": true,
    "organisationId": null,
    "permissionNameId": 5,
    "userId": 2
   },
   {
    "id": 5,
+   "isActive": true,
    "organisationId": null,
    "permissionNameId": 9,
    "userId": 2
   },
   {
    "id": 6,
+   "isActive": true,
    "organisationId": null,
    "permissionNameId": 10,
    "userId": 2
   },
   {
    "id": 7,
+   "isActive": true,
    "organisationId": null,
    "permissionNameId": 11,
    "userId": 2
   },
   {
    "id": 8,
+   "isActive": true,
    "organisationId": null,
    "permissionNameId": 12,
    "userId": 2
   },
   {
    "id": 9,
+   "isActive": true,
    "organisationId": null,
    "permissionNameId": 13,
    "userId": 2
   },
   {
    "id": 10,
+   "isActive": true,
    "organisationId": null,
    "permissionNameId": 1,
    "userId": 2
@@ -1406,8 +1633,10 @@
  "templateAction": [
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 1,
    "parameterQueries": {
     "pattern": "UE-[A-Z]{3}-<+dddd>",
@@ -1429,8 +1658,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 2,
    "parameterQueries": {
     "pattern": "<?templateName> - <?serial>",
@@ -1448,8 +1679,10 @@
   },
   {
    "actionCode": "incrementStage",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 3,
    "parameterQueries": null,
    "sequence": 3,
@@ -1458,8 +1691,10 @@
   },
   {
    "actionCode": "modifyRecord",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 4,
    "parameterQueries": {
     "id": {
@@ -1518,8 +1753,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 5,
    "parameterQueries": {
     "newStatus": {
@@ -1532,8 +1769,10 @@
   },
   {
    "actionCode": "changeOutcome",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 6,
    "parameterQueries": {
     "newOutcome": {
@@ -1546,8 +1785,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 7,
    "parameterQueries": {
     "pattern": "UR-[A-Z]{3}-<+dddd>",
@@ -1569,8 +1810,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 8,
    "parameterQueries": {
     "pattern": "<?templateName> - <?serial>",
@@ -1588,8 +1831,10 @@
   },
   {
    "actionCode": "incrementStage",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 9,
    "parameterQueries": null,
    "sequence": 1,
@@ -1598,8 +1843,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 10,
    "parameterQueries": {
     "newStatus": "SUBMITTED"
@@ -1610,8 +1857,10 @@
   },
   {
    "actionCode": "createVerification",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 11,
    "parameterQueries": {
     "expiry": 4,
@@ -1635,8 +1884,10 @@
   },
   {
    "actionCode": "sendNotification",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 12,
    "parameterQueries": {
     "email": {
@@ -1676,8 +1927,10 @@
   },
   {
    "actionCode": "modifyRecord",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 13,
    "parameterQueries": {
     "email": {
@@ -1718,8 +1971,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 14,
    "parameterQueries": {
     "newStatus": {
@@ -1732,8 +1987,10 @@
   },
   {
    "actionCode": "changeOutcome",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 15,
    "parameterQueries": {
     "newOutcome": {
@@ -1746,8 +2003,10 @@
   },
   {
    "actionCode": "grantPermissions",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 16,
    "parameterQueries": {
     "username": {
@@ -1766,8 +2025,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 17,
    "parameterQueries": {
     "pattern": "S-[A-Z]{3}-<+dddd>",
@@ -1787,8 +2048,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 18,
    "parameterQueries": {
     "pattern": "<?templateName> - <?serial>",
@@ -1806,8 +2069,10 @@
   },
   {
    "actionCode": "incrementStage",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 19,
    "parameterQueries": null,
    "sequence": 3,
@@ -1816,8 +2081,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 20,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -1828,8 +2095,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 21,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -1840,8 +2109,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 22,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -1852,6 +2123,7 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": {
     "children": [
      "applicationData.reviewData.reviewAssignment.isLocked"
@@ -1859,6 +2131,7 @@
     "operator": "objectProperties"
    },
    "description": null,
+   "eventCode": null,
    "id": 23,
    "parameterQueries": {
     "newStatus": "LOCKED"
@@ -1869,8 +2142,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 24,
    "parameterQueries": {
     "newStatus": "SUBMITTED"
@@ -1881,8 +2156,10 @@
   },
   {
    "actionCode": "trimResponses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 25,
    "parameterQueries": null,
    "sequence": 2,
@@ -1891,8 +2168,10 @@
   },
   {
    "actionCode": "generateReviewAssignments",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 26,
    "parameterQueries": null,
    "sequence": 3,
@@ -1901,8 +2180,10 @@
   },
   {
    "actionCode": "updateReviewsStatuses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 27,
    "parameterQueries": {
     "changedResponses": {
@@ -1918,8 +2199,10 @@
   },
   {
    "actionCode": "cleanupFiles",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 28,
    "parameterQueries": null,
    "sequence": 5,
@@ -1928,8 +2211,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 29,
    "parameterQueries": {
     "newStatus": "SUBMITTED"
@@ -1940,8 +2225,10 @@
   },
   {
    "actionCode": "trimResponses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 30,
    "parameterQueries": {
     "timestamp": {
@@ -1957,8 +2244,10 @@
   },
   {
    "actionCode": "updateReviewsStatuses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 31,
    "parameterQueries": {
     "triggeredBy": "REVIEW",
@@ -1981,6 +2270,7 @@
   },
   {
    "actionCode": "incrementStage",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2022,6 +2312,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 32,
    "parameterQueries": null,
    "sequence": 53,
@@ -2030,8 +2321,10 @@
   },
   {
    "actionCode": "generateReviewAssignments",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 33,
    "parameterQueries": null,
    "sequence": 54,
@@ -2040,6 +2333,7 @@
   },
   {
    "actionCode": "updateReviewVisibility",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2064,6 +2358,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 34,
    "parameterQueries": null,
    "sequence": 6,
@@ -2072,6 +2367,7 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2096,6 +2392,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 35,
    "parameterQueries": {
     "isReview": false,
@@ -2107,6 +2404,7 @@
   },
   {
    "actionCode": "changeOutcome",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2138,6 +2436,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 36,
    "parameterQueries": {
     "newOutcome": {
@@ -2167,8 +2466,10 @@
   },
   {
    "actionCode": "updateReviewAssignmentsStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 37,
    "parameterQueries": {
     "trigger": {
@@ -2190,8 +2491,10 @@
   },
   {
    "actionCode": "generateName",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 38,
    "parameterQueries": {
     "formatExpression": "${applicationData.templateName} — ${applicationData.applicationSerial}"
@@ -2202,10 +2505,12 @@
   },
   {
    "actionCode": "cLog",
+   "code": null,
    "condition": {
     "value": true
    },
    "description": null,
+   "eventCode": null,
    "id": 39,
    "parameterQueries": {
     "message": {
@@ -2218,8 +2523,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Generate serial for application when created",
+   "eventCode": null,
    "id": 40,
    "parameterQueries": {
     "pattern": "S-[A-Z]{3}-<+dddd>",
@@ -2239,8 +2546,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Generate name for application wen created",
+   "eventCode": null,
    "id": 41,
    "parameterQueries": {
     "pattern": "<?templateName> - <?serial>",
@@ -2258,8 +2567,10 @@
   },
   {
    "actionCode": "incrementStage",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Increment to first stage when application is created",
+   "eventCode": null,
    "id": 42,
    "parameterQueries": {},
    "sequence": 3,
@@ -2268,8 +2579,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Change application status from CHANGES REQUIRED to DRAFT when the applicant restarts one application with  to do updates (as requested in review).",
+   "eventCode": null,
    "id": 43,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -2280,8 +2593,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Change review status to DRAFT when the reviewer clicks to re-review a previous review made which has new status as PENDING or CHANGES REQUESTED. Previous status depends if is coming from lower level or applicant (PENDING) or if is coming back from upper level reviewer (CHANGES REQUESTED)",
+   "eventCode": null,
    "id": 44,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -2292,8 +2607,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Change review status to DRAFT when the reviewer clicks to start one assignment (and not locked) new review",
+   "eventCode": null,
    "id": 45,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -2304,6 +2621,7 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": {
     "children": [
      "applicationData.reviewData.reviewAssignment.isLocked"
@@ -2311,6 +2629,7 @@
     "operator": "objectProperties"
    },
    "description": "**CORE-ACTION** Change review status to LOCKED when the reviewer clicks to start one assignment with has flag isLocked as true",
+   "eventCode": null,
    "id": 46,
    "parameterQueries": {
     "newStatus": "LOCKED"
@@ -2321,8 +2640,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Change application status from DRAFT to SUBMITTED when the applicant submits the application",
+   "eventCode": null,
    "id": 47,
    "parameterQueries": {
     "newStatus": "SUBMITTED"
@@ -2333,8 +2654,10 @@
   },
   {
    "actionCode": "trimResponses",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Remove duplicated and unchanged responses when application is re-submitted by the applicant.",
+   "eventCode": null,
    "id": 48,
    "parameterQueries": {},
    "sequence": 2,
@@ -2343,8 +2666,10 @@
   },
   {
    "actionCode": "generateReviewAssignments",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Generate level 1 review assignments in current stage after application is submitted by the applicant ",
+   "eventCode": null,
    "id": 49,
    "parameterQueries": {},
    "sequence": 3,
@@ -2353,8 +2678,10 @@
   },
   {
    "actionCode": "updateReviewsStatuses",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Update reviews status with review assignment linked to changed responses by applicant when application is resubmitted.",
+   "eventCode": null,
    "id": 50,
    "parameterQueries": {
     "changedResponses": {
@@ -2370,8 +2697,10 @@
   },
   {
    "actionCode": "cleanupFiles",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Garbage collector for files uploaded and removed by the applicant",
+   "eventCode": null,
    "id": 51,
    "parameterQueries": {},
    "sequence": 5,
@@ -2380,8 +2709,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Change review status to SUBMITTED when the reviewer submits",
+   "eventCode": null,
    "id": 52,
    "parameterQueries": {
     "newStatus": "SUBMITTED"
@@ -2392,8 +2723,10 @@
   },
   {
    "actionCode": "trimResponses",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Remove duplicated and unchanged responses or ones without a decision made when review is re-submitted by the reviewer.",
+   "eventCode": null,
    "id": 53,
    "parameterQueries": {
     "timestamp": {
@@ -2409,8 +2742,10 @@
   },
   {
    "actionCode": "updateReviewsStatuses",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Update other review status to PENDING or CHANGES REQUESTED after one review is submitted to another reviewer in the chain of review-levels",
+   "eventCode": null,
    "id": 54,
    "parameterQueries": {
     "triggeredBy": "REVIEW",
@@ -2433,6 +2768,7 @@
   },
   {
    "actionCode": "incrementStage",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2474,6 +2810,7 @@
     "operator": "AND"
    },
    "description": "**CORE-ACTION** Increment stage of application when last level reviewer submits review with decision of CONFORM or NON_CONFORM",
+   "eventCode": null,
    "id": 55,
    "parameterQueries": {},
    "sequence": 53,
@@ -2482,8 +2819,10 @@
   },
   {
    "actionCode": "generateReviewAssignments",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Generate next level (in current stage) of review assignments after one reviewer submits a review to next level - when applicable",
+   "eventCode": null,
    "id": 56,
    "parameterQueries": {},
    "sequence": 54,
@@ -2492,6 +2831,7 @@
   },
   {
    "actionCode": "updateReviewVisibility",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2516,6 +2856,7 @@
     "operator": "AND"
    },
    "description": "**CORE-ACTION** Allow visibility to review responses (always level 1) on the current stage that were DECLINED to show to applicant after review is submitted with decision of LIST_OF_QUESTIONS",
+   "eventCode": null,
    "id": 57,
    "parameterQueries": {},
    "sequence": 6,
@@ -2524,6 +2865,7 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2548,6 +2890,7 @@
     "operator": "AND"
    },
    "description": "**CORE-ACTION** Change application status to CHANGES_REQUIRED once a last level reviewer submits with decision of LIST_OF_QUESTIONS",
+   "eventCode": null,
    "id": 58,
    "parameterQueries": {
     "isReview": false,
@@ -2559,6 +2902,7 @@
   },
   {
    "actionCode": "changeOutcome",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2590,6 +2934,7 @@
     "operator": "AND"
    },
    "description": "**CORE-ACTION** Change application outcome when last level and last stage - usually a final decision - submits a review as CONFORM or NON_CONFORM. Outcome will be APPROVED or REJECTED accordingly",
+   "eventCode": null,
    "id": 59,
    "parameterQueries": {
     "newOutcome": {
@@ -2619,8 +2964,10 @@
   },
   {
    "actionCode": "updateReviewAssignmentsStatus",
+   "code": null,
    "condition": true,
    "description": "**CORE-ACTION** Change other review assignment statuses to SELF_ASSIGNED_BY_ANOTHER after one of the review assignment with AVAILABLE_FOR_SELF_ASSIGNMENT is self-assigned by the reviewer",
+   "eventCode": null,
    "id": 60,
    "parameterQueries": {
     "trigger": {
@@ -2642,8 +2989,10 @@
   },
   {
    "actionCode": "cLog",
+   "code": null,
    "condition": true,
    "description": "Example: console log with application serial and template code",
+   "eventCode": null,
    "id": 62,
    "parameterQueries": {
     "message": {
@@ -2661,6 +3010,7 @@
   },
   {
    "actionCode": "modifyRecord",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2674,6 +3024,7 @@
     "operator": "="
    },
    "description": "Example: action to modify record in database using fields from application when outcome is change to APPROVED ",
+   "eventCode": null,
    "id": 63,
    "parameterQueries": {
     "name": {
@@ -2720,6 +3071,7 @@
   },
   {
    "actionCode": "joinUserOrg",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2733,6 +3085,7 @@
     "operator": "="
    },
    "description": "Example: action to connect user to organisation when application outcome is APPROVED",
+   "eventCode": null,
    "id": 64,
    "parameterQueries": {
     "user_id": {
@@ -2755,6 +3108,7 @@
   },
   {
    "actionCode": "grantPermissions",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -2768,6 +3122,7 @@
     "operator": "="
    },
    "description": "Example: action to grant permissions to user when logged in with organisation joined when application outcome is APPROVED",
+   "eventCode": null,
    "id": 65,
    "parameterQueries": {
     "orgName": {
@@ -2792,8 +3147,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 66,
    "parameterQueries": {
     "pattern": "S-[A-Z]{3}-<+dddd>",
@@ -2813,8 +3170,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 67,
    "parameterQueries": {
     "pattern": "<?templateName> - <?serial>",
@@ -2832,8 +3191,10 @@
   },
   {
    "actionCode": "incrementStage",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 68,
    "parameterQueries": null,
    "sequence": 3,
@@ -2842,8 +3203,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 69,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -2854,8 +3217,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 70,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -2866,8 +3231,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 71,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -2878,6 +3245,7 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": {
     "children": [
      "applicationData.reviewData.reviewAssignment.isLocked"
@@ -2885,6 +3253,7 @@
     "operator": "objectProperties"
    },
    "description": null,
+   "eventCode": null,
    "id": 72,
    "parameterQueries": {
     "newStatus": "LOCKED"
@@ -2895,8 +3264,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 73,
    "parameterQueries": {
     "newStatus": "SUBMITTED"
@@ -2907,8 +3278,10 @@
   },
   {
    "actionCode": "trimResponses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 74,
    "parameterQueries": null,
    "sequence": 2,
@@ -2917,8 +3290,10 @@
   },
   {
    "actionCode": "generateReviewAssignments",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 75,
    "parameterQueries": null,
    "sequence": 3,
@@ -2927,8 +3302,10 @@
   },
   {
    "actionCode": "updateReviewsStatuses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 76,
    "parameterQueries": {
     "changedResponses": {
@@ -2944,8 +3321,10 @@
   },
   {
    "actionCode": "cleanupFiles",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 77,
    "parameterQueries": null,
    "sequence": 5,
@@ -2954,8 +3333,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 78,
    "parameterQueries": {
     "newStatus": "SUBMITTED"
@@ -2966,8 +3347,10 @@
   },
   {
    "actionCode": "trimResponses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 79,
    "parameterQueries": {
     "timestamp": {
@@ -2983,8 +3366,10 @@
   },
   {
    "actionCode": "updateReviewsStatuses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 80,
    "parameterQueries": {
     "triggeredBy": "REVIEW",
@@ -3007,6 +3392,7 @@
   },
   {
    "actionCode": "incrementStage",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3048,6 +3434,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 81,
    "parameterQueries": null,
    "sequence": 53,
@@ -3056,8 +3443,10 @@
   },
   {
    "actionCode": "generateReviewAssignments",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 82,
    "parameterQueries": null,
    "sequence": 54,
@@ -3066,6 +3455,7 @@
   },
   {
    "actionCode": "updateReviewVisibility",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3090,6 +3480,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 83,
    "parameterQueries": null,
    "sequence": 6,
@@ -3098,6 +3489,7 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3122,6 +3514,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 84,
    "parameterQueries": {
     "isReview": false,
@@ -3133,6 +3526,7 @@
   },
   {
    "actionCode": "changeOutcome",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3164,6 +3558,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 85,
    "parameterQueries": {
     "newOutcome": {
@@ -3193,8 +3588,10 @@
   },
   {
    "actionCode": "updateReviewAssignmentsStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 86,
    "parameterQueries": {
     "trigger": {
@@ -3216,8 +3613,10 @@
   },
   {
    "actionCode": "generateName",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 87,
    "parameterQueries": {
     "formatExpression": "${applicationData.templateName} — ${applicationData.applicationSerial}"
@@ -3228,8 +3627,10 @@
   },
   {
    "actionCode": "cLog",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 88,
    "parameterQueries": {
     "message": {
@@ -3242,8 +3643,10 @@
   },
   {
    "actionCode": "modifyRecord",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 89,
    "parameterQueries": {
     "id": {
@@ -3266,6 +3669,7 @@
   },
   {
    "actionCode": "joinUserOrg",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3279,6 +3683,7 @@
     "operator": "="
    },
    "description": null,
+   "eventCode": null,
    "id": 90,
    "parameterQueries": {
     "user_id": {
@@ -3300,6 +3705,7 @@
   },
   {
    "actionCode": "grantPermissions",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3313,6 +3719,7 @@
     "operator": "="
    },
    "description": null,
+   "eventCode": null,
    "id": 91,
    "parameterQueries": {
     "orgName": {
@@ -3337,6 +3744,7 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3350,6 +3758,7 @@
     "operator": "="
    },
    "description": null,
+   "eventCode": null,
    "id": 92,
    "parameterQueries": {
     "newStatus": "COMPLETED"
@@ -3360,6 +3769,7 @@
   },
   {
    "actionCode": "sendNotification",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3373,6 +3783,7 @@
     "operator": "="
    },
    "description": null,
+   "eventCode": null,
    "id": 93,
    "parameterQueries": {
     "message": {
@@ -3424,8 +3835,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 94,
    "parameterQueries": {
     "pattern": "S-[A-Z]{3}-<+dddd>",
@@ -3445,8 +3858,10 @@
   },
   {
    "actionCode": "generateTextString",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 95,
    "parameterQueries": {
     "pattern": "<?templateName> - <?serial>",
@@ -3464,8 +3879,10 @@
   },
   {
    "actionCode": "incrementStage",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 96,
    "parameterQueries": null,
    "sequence": 3,
@@ -3474,8 +3891,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 97,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -3486,8 +3905,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 98,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -3498,8 +3919,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 99,
    "parameterQueries": {
     "newStatus": "DRAFT"
@@ -3510,6 +3933,7 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": {
     "children": [
      "applicationData.reviewData.reviewAssignment.isLocked"
@@ -3517,6 +3941,7 @@
     "operator": "objectProperties"
    },
    "description": null,
+   "eventCode": null,
    "id": 100,
    "parameterQueries": {
     "newStatus": "LOCKED"
@@ -3527,8 +3952,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 101,
    "parameterQueries": {
     "newStatus": "SUBMITTED"
@@ -3539,8 +3966,10 @@
   },
   {
    "actionCode": "trimResponses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 102,
    "parameterQueries": null,
    "sequence": 2,
@@ -3549,8 +3978,10 @@
   },
   {
    "actionCode": "generateReviewAssignments",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 103,
    "parameterQueries": null,
    "sequence": 3,
@@ -3559,8 +3990,10 @@
   },
   {
    "actionCode": "updateReviewsStatuses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 104,
    "parameterQueries": {
     "changedResponses": {
@@ -3576,8 +4009,10 @@
   },
   {
    "actionCode": "cleanupFiles",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 105,
    "parameterQueries": null,
    "sequence": 5,
@@ -3586,8 +4021,10 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 106,
    "parameterQueries": {
     "newStatus": "SUBMITTED"
@@ -3598,8 +4035,10 @@
   },
   {
    "actionCode": "trimResponses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 107,
    "parameterQueries": {
     "timestamp": {
@@ -3615,8 +4054,10 @@
   },
   {
    "actionCode": "updateReviewsStatuses",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 108,
    "parameterQueries": {
     "triggeredBy": "REVIEW",
@@ -3639,6 +4080,7 @@
   },
   {
    "actionCode": "incrementStage",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3680,6 +4122,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 109,
    "parameterQueries": null,
    "sequence": 53,
@@ -3688,8 +4131,10 @@
   },
   {
    "actionCode": "generateReviewAssignments",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 110,
    "parameterQueries": null,
    "sequence": 54,
@@ -3698,6 +4143,7 @@
   },
   {
    "actionCode": "updateReviewVisibility",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3722,6 +4168,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 111,
    "parameterQueries": null,
    "sequence": 6,
@@ -3730,6 +4177,7 @@
   },
   {
    "actionCode": "changeStatus",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3754,6 +4202,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 112,
    "parameterQueries": {
     "isReview": false,
@@ -3765,6 +4214,7 @@
   },
   {
    "actionCode": "changeOutcome",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3796,6 +4246,7 @@
     "operator": "AND"
    },
    "description": null,
+   "eventCode": null,
    "id": 113,
    "parameterQueries": {
     "newOutcome": {
@@ -3825,8 +4276,10 @@
   },
   {
    "actionCode": "updateReviewAssignmentsStatus",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 114,
    "parameterQueries": {
     "trigger": {
@@ -3848,8 +4301,10 @@
   },
   {
    "actionCode": "generateName",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 115,
    "parameterQueries": {
     "formatExpression": "${applicationData.templateName} — ${applicationData.applicationSerial}"
@@ -3860,8 +4315,10 @@
   },
   {
    "actionCode": "cLog",
+   "code": null,
    "condition": true,
    "description": null,
+   "eventCode": null,
    "id": 116,
    "parameterQueries": {
     "message": {
@@ -3874,6 +4331,7 @@
   },
   {
    "actionCode": "modifyRecord",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3887,6 +4345,7 @@
     "operator": "="
    },
    "description": null,
+   "eventCode": null,
    "id": 117,
    "parameterQueries": {
     "name": {
@@ -3933,6 +4392,7 @@
   },
   {
    "actionCode": "joinUserOrg",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3946,6 +4406,7 @@
     "operator": "="
    },
    "description": null,
+   "eventCode": null,
    "id": 118,
    "parameterQueries": {
     "user_id": {
@@ -3968,6 +4429,7 @@
   },
   {
    "actionCode": "grantPermissions",
+   "code": null,
    "condition": {
     "children": [
      {
@@ -3981,6 +4443,7 @@
     "operator": "="
    },
    "description": null,
+   "eventCode": null,
    "id": 119,
    "parameterQueries": {
     "orgName": {
@@ -4001,6 +4464,2481 @@
    },
    "sequence": 103,
    "templateId": 6,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "generateTextString",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 120,
+   "parameterQueries": {
+    "pattern": "S-[A-Z]{3}-<+dddd>",
+    "fieldName": "serial",
+    "tableName": "application",
+    "counterName": {
+     "children": [
+      "applicationData.templateCode"
+     ],
+     "operator": "objectProperties"
+    },
+    "updateRecord": true
+   },
+   "sequence": 1,
+   "templateId": 7,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "generateTextString",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 121,
+   "parameterQueries": {
+    "pattern": "<?templateName> - <?serial>",
+    "fieldName": "name",
+    "tableName": "application",
+    "customFields": {
+     "serial": "applicationData.applicationSerial",
+     "templateName": "applicationData.templateName"
+    },
+    "updateRecord": true
+   },
+   "sequence": 2,
+   "templateId": 7,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "incrementStage",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 122,
+   "parameterQueries": null,
+   "sequence": 3,
+   "templateId": 7,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 123,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 7,
+   "trigger": "ON_APPLICATION_RESTART"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 124,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_RESTART"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 125,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": {
+    "children": [
+     "applicationData.reviewData.reviewAssignment.isLocked"
+    ],
+    "operator": "objectProperties"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 126,
+   "parameterQueries": {
+    "newStatus": "LOCKED"
+   },
+   "sequence": 2,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 127,
+   "parameterQueries": {
+    "newStatus": "SUBMITTED"
+   },
+   "sequence": 1,
+   "templateId": 7,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "trimResponses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 128,
+   "parameterQueries": null,
+   "sequence": 2,
+   "templateId": 7,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "generateReviewAssignments",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 129,
+   "parameterQueries": null,
+   "sequence": 3,
+   "templateId": 7,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewsStatuses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 130,
+   "parameterQueries": {
+    "changedResponses": {
+     "children": [
+      "outputCumulative.updatedResponses"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 4,
+   "templateId": 7,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "cleanupFiles",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 131,
+   "parameterQueries": null,
+   "sequence": 5,
+   "templateId": 7,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 132,
+   "parameterQueries": {
+    "newStatus": "SUBMITTED"
+   },
+   "sequence": 50,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "trimResponses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 133,
+   "parameterQueries": {
+    "timestamp": {
+     "children": [
+      "outputCumulative.reviewStatusHistoryTimestamp"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 51,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewsStatuses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 134,
+   "parameterQueries": {
+    "triggeredBy": "REVIEW",
+    "applicationId": {
+     "children": [
+      "applicationData.applicationId"
+     ],
+     "operator": "objectProperties"
+    },
+    "changedResponses": {
+     "children": [
+      "outputCumulative.updatedResponses"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 52,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "incrementStage",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         {
+          "children": [
+           "applicationData.reviewData.latestDecision.decision"
+          ],
+          "operator": "objectProperties"
+         },
+         "CONFORM"
+        ],
+        "operator": "="
+       },
+       {
+        "children": [
+         {
+          "children": [
+           "applicationData.reviewData.latestDecision.decision"
+          ],
+          "operator": "objectProperties"
+         },
+         "NON_CONFORM"
+        ],
+        "operator": "="
+       }
+      ],
+      "operator": "OR"
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 135,
+   "parameterQueries": null,
+   "sequence": 53,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "generateReviewAssignments",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 136,
+   "parameterQueries": null,
+   "sequence": 54,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewVisibility",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision"
+        ],
+        "operator": "objectProperties"
+       },
+       "LIST_OF_QUESTIONS"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 137,
+   "parameterQueries": null,
+   "sequence": 6,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision"
+        ],
+        "operator": "objectProperties"
+       },
+       "LIST_OF_QUESTIONS"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 138,
+   "parameterQueries": {
+    "isReview": false,
+    "newStatus": "CHANGES_REQUIRED"
+   },
+   "sequence": 55,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeOutcome",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision",
+         null
+        ],
+        "operator": "objectProperties"
+       },
+       {
+        "type": "string",
+        "children": [
+         "CONFORM",
+         "NON_CONFORM"
+        ],
+        "operator": "OR"
+       }
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastStage",
+       null
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": "**CORE-ACTION** Change application outcome when last level and last stage - usually a final decision - submits a review as CONFORM or NON_CONFORM. Outcome will be APPROVED or REJECTED accordingly",
+   "eventCode": "",
+   "id": 139,
+   "parameterQueries": {
+    "newOutcome": {
+     "children": [
+      {
+       "children": [
+        {
+         "children": [
+          "applicationData.reviewData.latestDecision.decision",
+          null
+         ],
+         "operator": "objectProperties"
+        },
+        "CONFORM"
+       ],
+       "operator": "="
+      },
+      "APPROVED",
+      "REJECTED"
+     ],
+     "operator": "?"
+    }
+   },
+   "sequence": 56,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewAssignmentsStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 140,
+   "parameterQueries": {
+    "trigger": {
+     "children": [
+      "applicationData.action_payload.trigger_payload.trigger"
+     ],
+     "operator": "objectProperties"
+    },
+    "reviewAssignmentId": {
+     "children": [
+      "applicationData.action_payload.trigger_payload.record_id"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": null,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SELF_ASSIGN"
+  },
+  {
+   "actionCode": "generateName",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 141,
+   "parameterQueries": {
+    "formatExpression": "${applicationData.templateName} — ${applicationData.applicationSerial}"
+   },
+   "sequence": 1,
+   "templateId": 7,
+   "trigger": "DEV_TEST"
+  },
+  {
+   "actionCode": "cLog",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 142,
+   "parameterQueries": {
+    "message": {
+     "value": "Organisation Registration submission"
+    }
+   },
+   "sequence": null,
+   "templateId": 7,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "modifyRecord",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 143,
+   "parameterQueries": {
+    "name": {
+     "children": [
+      "applicationData.responses.name.text"
+     ],
+     "operator": "objectProperties"
+    },
+    "address": {
+     "children": [
+      "applicationData.responses.physAdd.text"
+     ],
+     "operator": "objectProperties"
+    },
+    "logo_url": {
+     "children": [
+      "",
+      {
+       "children": [
+        "applicationData.responses.logo.files.fileUrl"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "CONCAT"
+    },
+    "tableName": "organisation",
+    "registration": {
+     "children": [
+      "applicationData.responses.rego.text"
+     ],
+     "operator": "objectProperties"
+    },
+    "registration_documentation": {
+     "children": [
+      "applicationData.responses.regoDoc"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 101,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "joinUserOrg",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 144,
+   "parameterQueries": {
+    "user_id": {
+     "children": [
+      "applicationData.userId"
+     ],
+     "operator": "objectProperties"
+    },
+    "user_role": "Owner",
+    "organisation_id": {
+     "children": [
+      "outputCumulative.organisation.id"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 102,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "grantPermissions",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 145,
+   "parameterQueries": {
+    "orgName": {
+     "children": [
+      "outputCumulative.organisation.name"
+     ],
+     "operator": "objectProperties"
+    },
+    "username": {
+     "children": [
+      "applicationData.username"
+     ],
+     "operator": "objectProperties"
+    },
+    "permissionNames": [
+     "reviewJoinOrg"
+    ]
+   },
+   "sequence": 103,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "generateTextString",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 146,
+   "parameterQueries": {
+    "pattern": "S-[A-Z]{3}-<+dddd>",
+    "fieldName": "serial",
+    "tableName": "application",
+    "counterName": {
+     "children": [
+      "applicationData.templateCode"
+     ],
+     "operator": "objectProperties"
+    },
+    "updateRecord": true
+   },
+   "sequence": 1,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "generateTextString",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 147,
+   "parameterQueries": {
+    "pattern": "<?templateName> - <?serial>",
+    "fieldName": "name",
+    "tableName": "application",
+    "customFields": {
+     "serial": "applicationData.applicationSerial",
+     "templateName": "applicationData.templateName"
+    },
+    "updateRecord": true
+   },
+   "sequence": 2,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "incrementStage",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 148,
+   "parameterQueries": null,
+   "sequence": 3,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 149,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_RESTART"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 150,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_RESTART"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 151,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": {
+    "children": [
+     "applicationData.reviewData.reviewAssignment.isLocked"
+    ],
+    "operator": "objectProperties"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 152,
+   "parameterQueries": {
+    "newStatus": "LOCKED"
+   },
+   "sequence": 2,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 153,
+   "parameterQueries": {
+    "newStatus": "SUBMITTED"
+   },
+   "sequence": 1,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "trimResponses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 154,
+   "parameterQueries": null,
+   "sequence": 2,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "generateReviewAssignments",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 155,
+   "parameterQueries": null,
+   "sequence": 3,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewsStatuses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 156,
+   "parameterQueries": {
+    "changedResponses": {
+     "children": [
+      "outputCumulative.updatedResponses"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 4,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "cleanupFiles",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 157,
+   "parameterQueries": null,
+   "sequence": 5,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 158,
+   "parameterQueries": {
+    "newStatus": "SUBMITTED"
+   },
+   "sequence": 50,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "trimResponses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 159,
+   "parameterQueries": {
+    "timestamp": {
+     "children": [
+      "outputCumulative.reviewStatusHistoryTimestamp"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 51,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewsStatuses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 160,
+   "parameterQueries": {
+    "triggeredBy": "REVIEW",
+    "applicationId": {
+     "children": [
+      "applicationData.applicationId"
+     ],
+     "operator": "objectProperties"
+    },
+    "changedResponses": {
+     "children": [
+      "outputCumulative.updatedResponses"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 52,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "incrementStage",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         {
+          "children": [
+           "applicationData.reviewData.latestDecision.decision"
+          ],
+          "operator": "objectProperties"
+         },
+         "CONFORM"
+        ],
+        "operator": "="
+       },
+       {
+        "children": [
+         {
+          "children": [
+           "applicationData.reviewData.latestDecision.decision"
+          ],
+          "operator": "objectProperties"
+         },
+         "NON_CONFORM"
+        ],
+        "operator": "="
+       }
+      ],
+      "operator": "OR"
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 161,
+   "parameterQueries": null,
+   "sequence": 53,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "generateReviewAssignments",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 162,
+   "parameterQueries": null,
+   "sequence": 54,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewVisibility",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision"
+        ],
+        "operator": "objectProperties"
+       },
+       "LIST_OF_QUESTIONS"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 163,
+   "parameterQueries": null,
+   "sequence": 6,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision"
+        ],
+        "operator": "objectProperties"
+       },
+       "LIST_OF_QUESTIONS"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 164,
+   "parameterQueries": {
+    "isReview": false,
+    "newStatus": "CHANGES_REQUIRED"
+   },
+   "sequence": 55,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeOutcome",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision",
+         null
+        ],
+        "operator": "objectProperties"
+       },
+       {
+        "type": "string",
+        "children": [
+         "CONFORM",
+         "NON_CONFORM"
+        ],
+        "operator": "OR"
+       }
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastStage",
+       null
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": "**CORE-ACTION** Change application outcome when last level and last stage - usually a final decision - submits a review as CONFORM or NON_CONFORM. Outcome will be APPROVED or REJECTED accordingly",
+   "eventCode": "",
+   "id": 165,
+   "parameterQueries": {
+    "newOutcome": {
+     "children": [
+      {
+       "children": [
+        {
+         "children": [
+          "applicationData.reviewData.latestDecision.decision",
+          null
+         ],
+         "operator": "objectProperties"
+        },
+        "CONFORM"
+       ],
+       "operator": "="
+      },
+      "APPROVED",
+      "REJECTED"
+     ],
+     "operator": "?"
+    }
+   },
+   "sequence": 56,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewAssignmentsStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 166,
+   "parameterQueries": {
+    "trigger": {
+     "children": [
+      "applicationData.action_payload.trigger_payload.trigger"
+     ],
+     "operator": "objectProperties"
+    },
+    "reviewAssignmentId": {
+     "children": [
+      "applicationData.action_payload.trigger_payload.record_id"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": null,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SELF_ASSIGN"
+  },
+  {
+   "actionCode": "generateName",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 167,
+   "parameterQueries": {
+    "formatExpression": "${applicationData.templateName} — ${applicationData.applicationSerial}"
+   },
+   "sequence": 1,
+   "templateId": 8,
+   "trigger": "DEV_TEST"
+  },
+  {
+   "actionCode": "cLog",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 168,
+   "parameterQueries": {
+    "message": {
+     "value": "Organisation Registration submission"
+    }
+   },
+   "sequence": null,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "modifyRecord",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 169,
+   "parameterQueries": {
+    "id": {
+     "children": [
+      "applicationData.applicationId"
+     ],
+     "operator": "objectProperties"
+    },
+    "org_id": {
+     "children": [
+      "applicationData.responses.S1Q1.selection.id"
+     ],
+     "operator": "objectProperties"
+    },
+    "tableName": "application"
+   },
+   "sequence": null,
+   "templateId": 8,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "joinUserOrg",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 170,
+   "parameterQueries": {
+    "user_id": {
+     "children": [
+      "applicationData.userId"
+     ],
+     "operator": "objectProperties"
+    },
+    "organisation_id": {
+     "children": [
+      "applicationData.responses.S1Q1.selection.id"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 120,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "grantPermissions",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 171,
+   "parameterQueries": {
+    "orgName": {
+     "children": [
+      "applicationData.responses.S1Q1.selection.name"
+     ],
+     "operator": "objectProperties"
+    },
+    "username": {
+     "children": [
+      "applicationData.username"
+     ],
+     "operator": "objectProperties"
+    },
+    "permissionNames": [
+     "canApplyDrugRego"
+    ]
+   },
+   "sequence": 130,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 172,
+   "parameterQueries": {
+    "newStatus": "COMPLETED"
+   },
+   "sequence": 110,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 173,
+   "parameterQueries": {
+    "message": {
+     "children": [
+      "### Congratulations, %1!\n\nYour application to join organisation %2 has been APPROVED.\n\n[Application Dashboard](%3)\n\nPlease find attached the ID file you uploaded (testing attachment handling)",
+      {
+       "children": [
+        "applicationData.firstName",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.responses.S1Q1.text",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      "http://localhost:3000"
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Application approved: %1",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        ""
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "fromName": "Application Manager",
+    "fromEmail": "no-reply@sussol.net",
+    "attachments": {
+     "children": [
+      "applicationData.responses.IDUpload.files.uniqueId"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 120,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "generateTextString",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 174,
+   "parameterQueries": {
+    "pattern": "S-[A-Z]{3}-<+dddd>",
+    "fieldName": "serial",
+    "tableName": "application",
+    "counterName": {
+     "children": [
+      "applicationData.templateCode"
+     ],
+     "operator": "objectProperties"
+    },
+    "updateRecord": true
+   },
+   "sequence": 1,
+   "templateId": 9,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "generateTextString",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 175,
+   "parameterQueries": {
+    "pattern": "<?templateName> - <?serial>",
+    "fieldName": "name",
+    "tableName": "application",
+    "customFields": {
+     "serial": "applicationData.applicationSerial",
+     "templateName": "applicationData.templateName"
+    },
+    "updateRecord": true
+   },
+   "sequence": 2,
+   "templateId": 9,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "incrementStage",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 176,
+   "parameterQueries": null,
+   "sequence": 3,
+   "templateId": 9,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 177,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 9,
+   "trigger": "ON_APPLICATION_RESTART"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 178,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_RESTART"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 179,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": {
+    "children": [
+     "applicationData.reviewData.reviewAssignment.isLocked"
+    ],
+    "operator": "objectProperties"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 180,
+   "parameterQueries": {
+    "newStatus": "LOCKED"
+   },
+   "sequence": 2,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 181,
+   "parameterQueries": {
+    "newStatus": "SUBMITTED"
+   },
+   "sequence": 1,
+   "templateId": 9,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "trimResponses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 182,
+   "parameterQueries": null,
+   "sequence": 2,
+   "templateId": 9,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "generateReviewAssignments",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 183,
+   "parameterQueries": null,
+   "sequence": 3,
+   "templateId": 9,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewsStatuses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 184,
+   "parameterQueries": {
+    "changedResponses": {
+     "children": [
+      "outputCumulative.updatedResponses"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 4,
+   "templateId": 9,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "cleanupFiles",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 185,
+   "parameterQueries": null,
+   "sequence": 5,
+   "templateId": 9,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 186,
+   "parameterQueries": {
+    "newStatus": "SUBMITTED"
+   },
+   "sequence": 50,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "trimResponses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 187,
+   "parameterQueries": {
+    "timestamp": {
+     "children": [
+      "outputCumulative.reviewStatusHistoryTimestamp"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 51,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewsStatuses",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 188,
+   "parameterQueries": {
+    "triggeredBy": "REVIEW",
+    "applicationId": {
+     "children": [
+      "applicationData.applicationId"
+     ],
+     "operator": "objectProperties"
+    },
+    "changedResponses": {
+     "children": [
+      "outputCumulative.updatedResponses"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 52,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "incrementStage",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         {
+          "children": [
+           "applicationData.reviewData.latestDecision.decision"
+          ],
+          "operator": "objectProperties"
+         },
+         "CONFORM"
+        ],
+        "operator": "="
+       },
+       {
+        "children": [
+         {
+          "children": [
+           "applicationData.reviewData.latestDecision.decision"
+          ],
+          "operator": "objectProperties"
+         },
+         "NON_CONFORM"
+        ],
+        "operator": "="
+       }
+      ],
+      "operator": "OR"
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 189,
+   "parameterQueries": null,
+   "sequence": 53,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "generateReviewAssignments",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 190,
+   "parameterQueries": null,
+   "sequence": 54,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewVisibility",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision"
+        ],
+        "operator": "objectProperties"
+       },
+       "LIST_OF_QUESTIONS"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 191,
+   "parameterQueries": null,
+   "sequence": 6,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision"
+        ],
+        "operator": "objectProperties"
+       },
+       "LIST_OF_QUESTIONS"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 192,
+   "parameterQueries": {
+    "isReview": false,
+    "newStatus": "CHANGES_REQUIRED"
+   },
+   "sequence": 55,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeOutcome",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision",
+         null
+        ],
+        "operator": "objectProperties"
+       },
+       {
+        "type": "string",
+        "children": [
+         "CONFORM",
+         "NON_CONFORM"
+        ],
+        "operator": "OR"
+       }
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastStage",
+       null
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": "**CORE-ACTION** Change application outcome when last level and last stage - usually a final decision - submits a review as CONFORM or NON_CONFORM. Outcome will be APPROVED or REJECTED accordingly",
+   "eventCode": "",
+   "id": 193,
+   "parameterQueries": {
+    "newOutcome": {
+     "children": [
+      {
+       "children": [
+        {
+         "children": [
+          "applicationData.reviewData.latestDecision.decision",
+          null
+         ],
+         "operator": "objectProperties"
+        },
+        "CONFORM"
+       ],
+       "operator": "="
+      },
+      "APPROVED",
+      "REJECTED"
+     ],
+     "operator": "?"
+    }
+   },
+   "sequence": 56,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewAssignmentsStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 194,
+   "parameterQueries": {
+    "trigger": {
+     "children": [
+      "applicationData.action_payload.trigger_payload.trigger"
+     ],
+     "operator": "objectProperties"
+    },
+    "reviewAssignmentId": {
+     "children": [
+      "applicationData.action_payload.trigger_payload.record_id"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": null,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SELF_ASSIGN"
+  },
+  {
+   "actionCode": "generateName",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 195,
+   "parameterQueries": {
+    "formatExpression": "${applicationData.templateName} — ${applicationData.applicationSerial}"
+   },
+   "sequence": 1,
+   "templateId": 9,
+   "trigger": "DEV_TEST"
+  },
+  {
+   "actionCode": "cLog",
+   "code": null,
+   "condition": {
+    "value": true
+   },
+   "description": null,
+   "eventCode": null,
+   "id": 196,
+   "parameterQueries": {
+    "message": {
+     "value": "Testing parallel actions -- This message is Asynchronous. \nEven though it is last in the Actions list, it'll probably appear first."
+    }
+   },
+   "sequence": null,
+   "templateId": 9,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "generateTextString",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Generate serial for application when created",
+   "eventCode": null,
+   "id": 197,
+   "parameterQueries": {
+    "pattern": "S-[A-Z]{3}-<+dddd>",
+    "fieldName": "serial",
+    "tableName": "application",
+    "counterName": {
+     "children": [
+      "applicationData.templateCode"
+     ],
+     "operator": "objectProperties"
+    },
+    "updateRecord": true
+   },
+   "sequence": 1,
+   "templateId": 10,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "generateTextString",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Generate name for application wen created",
+   "eventCode": null,
+   "id": 198,
+   "parameterQueries": {
+    "pattern": "<?templateName> - <?serial>",
+    "fieldName": "name",
+    "tableName": "application",
+    "customFields": {
+     "serial": "applicationData.applicationSerial",
+     "templateName": "applicationData.templateName"
+    },
+    "updateRecord": true
+   },
+   "sequence": 2,
+   "templateId": 10,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "incrementStage",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Increment to first stage when application is created",
+   "eventCode": null,
+   "id": 199,
+   "parameterQueries": {},
+   "sequence": 3,
+   "templateId": 10,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Change application status from CHANGES REQUIRED to DRAFT when the applicant restarts one application with  to do updates (as requested in review).",
+   "eventCode": null,
+   "id": 200,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 10,
+   "trigger": "ON_APPLICATION_RESTART"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Change review status to DRAFT when the reviewer clicks to re-review a previous review made which has new status as PENDING or CHANGES REQUESTED. Previous status depends if is coming from lower level or applicant (PENDING) or if is coming back from upper level reviewer (CHANGES REQUESTED)",
+   "eventCode": null,
+   "id": 201,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_RESTART"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Change review status to DRAFT when the reviewer clicks to start one assignment (and not locked) new review",
+   "eventCode": null,
+   "id": 202,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 1,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": {
+    "children": [
+     "applicationData.reviewData.reviewAssignment.isLocked"
+    ],
+    "operator": "objectProperties"
+   },
+   "description": "**CORE-ACTION** Change review status to LOCKED when the reviewer clicks to start one assignment with has flag isLocked as true",
+   "eventCode": null,
+   "id": 203,
+   "parameterQueries": {
+    "newStatus": "LOCKED"
+   },
+   "sequence": 2,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Change application status from DRAFT to SUBMITTED when the applicant submits the application",
+   "eventCode": null,
+   "id": 204,
+   "parameterQueries": {
+    "newStatus": "SUBMITTED"
+   },
+   "sequence": 1,
+   "templateId": 10,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "trimResponses",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Remove duplicated and unchanged responses when application is re-submitted by the applicant.",
+   "eventCode": null,
+   "id": 205,
+   "parameterQueries": {},
+   "sequence": 2,
+   "templateId": 10,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "generateReviewAssignments",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Generate level 1 review assignments in current stage after application is submitted by the applicant ",
+   "eventCode": null,
+   "id": 206,
+   "parameterQueries": {},
+   "sequence": 3,
+   "templateId": 10,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewsStatuses",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Update reviews status with review assignment linked to changed responses by applicant when application is resubmitted.",
+   "eventCode": null,
+   "id": 207,
+   "parameterQueries": {
+    "changedResponses": {
+     "children": [
+      "outputCumulative.updatedResponses"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 4,
+   "templateId": 10,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "cleanupFiles",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Garbage collector for files uploaded and removed by the applicant",
+   "eventCode": null,
+   "id": 208,
+   "parameterQueries": {},
+   "sequence": 5,
+   "templateId": 10,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Change review status to SUBMITTED when the reviewer submits",
+   "eventCode": null,
+   "id": 209,
+   "parameterQueries": {
+    "newStatus": "SUBMITTED"
+   },
+   "sequence": 50,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "trimResponses",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Remove duplicated and unchanged responses or ones without a decision made when review is re-submitted by the reviewer.",
+   "eventCode": null,
+   "id": 210,
+   "parameterQueries": {
+    "timestamp": {
+     "children": [
+      "outputCumulative.reviewStatusHistoryTimestamp"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 51,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewsStatuses",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Update other review status to PENDING or CHANGES REQUESTED after one review is submitted to another reviewer in the chain of review-levels",
+   "eventCode": null,
+   "id": 211,
+   "parameterQueries": {
+    "triggeredBy": "REVIEW",
+    "applicationId": {
+     "children": [
+      "applicationData.applicationId"
+     ],
+     "operator": "objectProperties"
+    },
+    "changedResponses": {
+     "children": [
+      "outputCumulative.updatedResponses"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 52,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "incrementStage",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         {
+          "children": [
+           "applicationData.reviewData.latestDecision.decision"
+          ],
+          "operator": "objectProperties"
+         },
+         "CONFORM"
+        ],
+        "operator": "="
+       },
+       {
+        "children": [
+         {
+          "children": [
+           "applicationData.reviewData.latestDecision.decision"
+          ],
+          "operator": "objectProperties"
+         },
+         "NON_CONFORM"
+        ],
+        "operator": "="
+       }
+      ],
+      "operator": "OR"
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": "**CORE-ACTION** Increment stage of application when last level reviewer submits review with decision of CONFORM or NON_CONFORM",
+   "eventCode": null,
+   "id": 212,
+   "parameterQueries": {},
+   "sequence": 53,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "generateReviewAssignments",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Generate next level (in current stage) of review assignments after one reviewer submits a review to next level - when applicable",
+   "eventCode": null,
+   "id": 213,
+   "parameterQueries": {},
+   "sequence": 54,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewVisibility",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision"
+        ],
+        "operator": "objectProperties"
+       },
+       "LIST_OF_QUESTIONS"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": "**CORE-ACTION** Allow visibility to review responses (always level 1) on the current stage that were DECLINED to show to applicant after review is submitted with decision of LIST_OF_QUESTIONS",
+   "eventCode": null,
+   "id": 214,
+   "parameterQueries": {},
+   "sequence": 6,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision"
+        ],
+        "operator": "objectProperties"
+       },
+       "LIST_OF_QUESTIONS"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": "**CORE-ACTION** Change application status to CHANGES_REQUIRED once a last level reviewer submits with decision of LIST_OF_QUESTIONS",
+   "eventCode": null,
+   "id": 215,
+   "parameterQueries": {
+    "isReview": false,
+    "newStatus": "CHANGES_REQUIRED"
+   },
+   "sequence": 55,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeOutcome",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision",
+         null
+        ],
+        "operator": "objectProperties"
+       },
+       {
+        "type": "string",
+        "children": [
+         "CONFORM",
+         "NON_CONFORM"
+        ],
+        "operator": "OR"
+       }
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastStage",
+       null
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": "**CORE-ACTION** Change application outcome when last level and last stage - usually a final decision - submits a review as CONFORM or NON_CONFORM. Outcome will be APPROVED or REJECTED accordingly",
+   "eventCode": "",
+   "id": 216,
+   "parameterQueries": {
+    "newOutcome": {
+     "children": [
+      {
+       "children": [
+        {
+         "children": [
+          "applicationData.reviewData.latestDecision.decision",
+          null
+         ],
+         "operator": "objectProperties"
+        },
+        "CONFORM"
+       ],
+       "operator": "="
+      },
+      "APPROVED",
+      "REJECTED"
+     ],
+     "operator": "?"
+    }
+   },
+   "sequence": 56,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "updateReviewAssignmentsStatus",
+   "code": null,
+   "condition": true,
+   "description": "**CORE-ACTION** Change other review assignment statuses to SELF_ASSIGNED_BY_ANOTHER after one of the review assignment with AVAILABLE_FOR_SELF_ASSIGNMENT is self-assigned by the reviewer",
+   "eventCode": null,
+   "id": 217,
+   "parameterQueries": {
+    "trigger": {
+     "children": [
+      "applicationData.action_payload.trigger_payload.trigger"
+     ],
+     "operator": "objectProperties"
+    },
+    "reviewAssignmentId": {
+     "children": [
+      "applicationData.action_payload.trigger_payload.record_id"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": null,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SELF_ASSIGN"
+  },
+  {
+   "actionCode": "cLog",
+   "code": null,
+   "condition": true,
+   "description": "Example: console log with application serial and template code",
+   "eventCode": null,
+   "id": 218,
+   "parameterQueries": {
+    "message": {
+     "children": [
+      "Application %1 was submitted of template code %2",
+      "applicationData.applicationSerial",
+      "applicationData.templateCode"
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sequence": null,
+   "templateId": 10,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "modifyRecord",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": "Example: action to modify record in database using fields from application when outcome is change to APPROVED ",
+   "eventCode": null,
+   "id": 219,
+   "parameterQueries": {
+    "name": {
+     "children": [
+      "applicationData.responses.name.text"
+     ],
+     "operator": "objectProperties"
+    },
+    "address": {
+     "children": [
+      "applicationData.responses.physAdd.text"
+     ],
+     "operator": "objectProperties"
+    },
+    "logo_url": {
+     "children": [
+      "",
+      {
+       "children": [
+        "applicationData.responses.logo.files.fileUrl"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "CONCAT"
+    },
+    "tableName": "organisation",
+    "registration": {
+     "children": [
+      "applicationData.responses.rego.text"
+     ],
+     "operator": "objectProperties"
+    },
+    "registration_documentation": {
+     "children": [
+      "applicationData.responses.regoDoc"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 101,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "joinUserOrg",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": "Example: action to connect user to organisation when application outcome is APPROVED",
+   "eventCode": null,
+   "id": 220,
+   "parameterQueries": {
+    "user_id": {
+     "children": [
+      "applicationData.userId"
+     ],
+     "operator": "objectProperties"
+    },
+    "user_role": "Owner",
+    "organisation_id": {
+     "children": [
+      "outputCumulative.organisation.id"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 102,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "grantPermissions",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": "Example: action to grant permissions to user when logged in with organisation joined when application outcome is APPROVED",
+   "eventCode": null,
+   "id": 221,
+   "parameterQueries": {
+    "orgName": {
+     "children": [
+      "outputCumulative.organisation.name"
+     ],
+     "operator": "objectProperties"
+    },
+    "username": {
+     "children": [
+      "applicationData.username"
+     ],
+     "operator": "objectProperties"
+    },
+    "permissionNames": [
+     "reviewJoinOrg"
+    ]
+   },
+   "sequence": 103,
+   "templateId": 10,
    "trigger": "ON_REVIEW_SUBMIT"
   }
  ],
@@ -4224,6 +7162,226 @@
    "filterId": 11,
    "id": 44,
    "templateId": 6
+  },
+  {
+   "filterId": 1,
+   "id": 45,
+   "templateId": 7
+  },
+  {
+   "filterId": 2,
+   "id": 46,
+   "templateId": 7
+  },
+  {
+   "filterId": 3,
+   "id": 47,
+   "templateId": 7
+  },
+  {
+   "filterId": 4,
+   "id": 48,
+   "templateId": 7
+  },
+  {
+   "filterId": 5,
+   "id": 49,
+   "templateId": 7
+  },
+  {
+   "filterId": 6,
+   "id": 50,
+   "templateId": 7
+  },
+  {
+   "filterId": 7,
+   "id": 51,
+   "templateId": 7
+  },
+  {
+   "filterId": 8,
+   "id": 52,
+   "templateId": 7
+  },
+  {
+   "filterId": 9,
+   "id": 53,
+   "templateId": 7
+  },
+  {
+   "filterId": 10,
+   "id": 54,
+   "templateId": 7
+  },
+  {
+   "filterId": 11,
+   "id": 55,
+   "templateId": 7
+  },
+  {
+   "filterId": 1,
+   "id": 56,
+   "templateId": 8
+  },
+  {
+   "filterId": 2,
+   "id": 57,
+   "templateId": 8
+  },
+  {
+   "filterId": 3,
+   "id": 58,
+   "templateId": 8
+  },
+  {
+   "filterId": 4,
+   "id": 59,
+   "templateId": 8
+  },
+  {
+   "filterId": 5,
+   "id": 60,
+   "templateId": 8
+  },
+  {
+   "filterId": 6,
+   "id": 61,
+   "templateId": 8
+  },
+  {
+   "filterId": 7,
+   "id": 62,
+   "templateId": 8
+  },
+  {
+   "filterId": 8,
+   "id": 63,
+   "templateId": 8
+  },
+  {
+   "filterId": 9,
+   "id": 64,
+   "templateId": 8
+  },
+  {
+   "filterId": 10,
+   "id": 65,
+   "templateId": 8
+  },
+  {
+   "filterId": 11,
+   "id": 66,
+   "templateId": 8
+  },
+  {
+   "filterId": 1,
+   "id": 67,
+   "templateId": 9
+  },
+  {
+   "filterId": 2,
+   "id": 68,
+   "templateId": 9
+  },
+  {
+   "filterId": 3,
+   "id": 69,
+   "templateId": 9
+  },
+  {
+   "filterId": 4,
+   "id": 70,
+   "templateId": 9
+  },
+  {
+   "filterId": 5,
+   "id": 71,
+   "templateId": 9
+  },
+  {
+   "filterId": 6,
+   "id": 72,
+   "templateId": 9
+  },
+  {
+   "filterId": 7,
+   "id": 73,
+   "templateId": 9
+  },
+  {
+   "filterId": 8,
+   "id": 74,
+   "templateId": 9
+  },
+  {
+   "filterId": 9,
+   "id": 75,
+   "templateId": 9
+  },
+  {
+   "filterId": 10,
+   "id": 76,
+   "templateId": 9
+  },
+  {
+   "filterId": 11,
+   "id": 77,
+   "templateId": 9
+  },
+  {
+   "filterId": 1,
+   "id": 78,
+   "templateId": 10
+  },
+  {
+   "filterId": 2,
+   "id": 79,
+   "templateId": 10
+  },
+  {
+   "filterId": 3,
+   "id": 80,
+   "templateId": 10
+  },
+  {
+   "filterId": 4,
+   "id": 81,
+   "templateId": 10
+  },
+  {
+   "filterId": 5,
+   "id": 82,
+   "templateId": 10
+  },
+  {
+   "filterId": 6,
+   "id": 83,
+   "templateId": 10
+  },
+  {
+   "filterId": 7,
+   "id": 84,
+   "templateId": 10
+  },
+  {
+   "filterId": 8,
+   "id": 85,
+   "templateId": 10
+  },
+  {
+   "filterId": 9,
+   "id": 86,
+   "templateId": 10
+  },
+  {
+   "filterId": 10,
+   "id": 87,
+   "templateId": 10
+  },
+  {
+   "filterId": 11,
+   "id": 88,
+   "templateId": 10
   }
  ],
  "templatePermission": [
@@ -4428,6 +7586,186 @@
    "restrictions": null,
    "stageNumber": 1,
    "templateId": 4
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 20,
+   "levelNumber": null,
+   "permissionNameId": 4,
+   "restrictions": null,
+   "stageNumber": null,
+   "templateId": 7
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": true,
+   "id": 21,
+   "levelNumber": 1,
+   "permissionNameId": 5,
+   "restrictions": null,
+   "stageNumber": 1,
+   "templateId": 7
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 22,
+   "levelNumber": 1,
+   "permissionNameId": 7,
+   "restrictions": null,
+   "stageNumber": 1,
+   "templateId": 7
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 23,
+   "levelNumber": null,
+   "permissionNameId": 4,
+   "restrictions": null,
+   "stageNumber": null,
+   "templateId": 8
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 24,
+   "levelNumber": 1,
+   "permissionNameId": 7,
+   "restrictions": null,
+   "stageNumber": 1,
+   "templateId": 8
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": true,
+   "id": 25,
+   "levelNumber": 1,
+   "permissionNameId": 6,
+   "restrictions": null,
+   "stageNumber": 1,
+   "templateId": 8
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 26,
+   "levelNumber": null,
+   "permissionNameId": 4,
+   "restrictions": null,
+   "stageNumber": null,
+   "templateId": 9
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": true,
+   "id": 27,
+   "levelNumber": 1,
+   "permissionNameId": 9,
+   "restrictions": null,
+   "stageNumber": 1,
+   "templateId": 9
+  },
+  {
+   "allowedSections": [
+    "S1"
+   ],
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 28,
+   "levelNumber": 1,
+   "permissionNameId": 10,
+   "restrictions": null,
+   "stageNumber": 2,
+   "templateId": 9
+  },
+  {
+   "allowedSections": [
+    "S2"
+   ],
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 29,
+   "levelNumber": 1,
+   "permissionNameId": 11,
+   "restrictions": null,
+   "stageNumber": 2,
+   "templateId": 9
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 30,
+   "levelNumber": 2,
+   "permissionNameId": 12,
+   "restrictions": null,
+   "stageNumber": 2,
+   "templateId": 9
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": true,
+   "canSelfAssign": false,
+   "id": 31,
+   "levelNumber": 1,
+   "permissionNameId": 13,
+   "restrictions": null,
+   "stageNumber": 3,
+   "templateId": 9
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 32,
+   "levelNumber": 1,
+   "permissionNameId": 7,
+   "restrictions": null,
+   "stageNumber": 2,
+   "templateId": 9
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 33,
+   "levelNumber": null,
+   "permissionNameId": 4,
+   "restrictions": null,
+   "stageNumber": null,
+   "templateId": 10
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": false,
+   "id": 34,
+   "levelNumber": 1,
+   "permissionNameId": 7,
+   "restrictions": null,
+   "stageNumber": 1,
+   "templateId": 10
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": true,
+   "id": 35,
+   "levelNumber": 1,
+   "permissionNameId": 8,
+   "restrictions": null,
+   "stageNumber": 1,
+   "templateId": 10
   }
  ],
  "templateSection": [
@@ -4500,6 +7838,62 @@
    "index": 1,
    "templateId": 6,
    "title": "Section 2: Documentation"
+  },
+  {
+   "code": "S1",
+   "id": 11,
+   "index": 0,
+   "templateId": 7,
+   "title": "Section 1: Organisation Details"
+  },
+  {
+   "code": "S2",
+   "id": 12,
+   "index": 1,
+   "templateId": 7,
+   "title": "Section 2: Documentation"
+  },
+  {
+   "code": "S1",
+   "id": 13,
+   "index": 0,
+   "templateId": 8,
+   "title": "Personal Information"
+  },
+  {
+   "code": "S1",
+   "id": 14,
+   "index": 0,
+   "templateId": 9,
+   "title": "Section 1 - Basics"
+  },
+  {
+   "code": "S2",
+   "id": 15,
+   "index": 2,
+   "templateId": 9,
+   "title": "Section 2 - File Upload"
+  },
+  {
+   "code": "S3",
+   "id": 16,
+   "index": 3,
+   "templateId": 9,
+   "title": "Section 3 - Lists & Search"
+  },
+  {
+   "code": "S1",
+   "id": 17,
+   "index": 0,
+   "templateId": 10,
+   "title": "Section 1: Organisation Details"
+  },
+  {
+   "code": "S2",
+   "id": 18,
+   "index": 1,
+   "templateId": 10,
+   "title": "Section 2: Documentation"
   }
  ],
  "templateStage": [
@@ -4566,6 +7960,54 @@
    "number": 1,
    "templateId": 6,
    "title": "Approval"
+  },
+  {
+   "colour": "#1E14DB",
+   "description": "This application will be approved by a Reviewer",
+   "id": 9,
+   "number": 1,
+   "templateId": 7,
+   "title": "Approval"
+  },
+  {
+   "colour": "#1E14DB",
+   "description": "This application will be approved by a Reviewer",
+   "id": 10,
+   "number": 1,
+   "templateId": 8,
+   "title": "Approval"
+  },
+  {
+   "colour": "#24B5DF",
+   "description": "This application will go through the Screening stage before it can be accessed.",
+   "id": 11,
+   "number": 1,
+   "templateId": 9,
+   "title": "Screening"
+  },
+  {
+   "colour": "#E17E48",
+   "description": "This phase is where your documents will be revised before the application can get the final approval.",
+   "id": 12,
+   "number": 2,
+   "templateId": 9,
+   "title": "Assessment"
+  },
+  {
+   "colour": "#1E14DB",
+   "description": "This is the final step and will change the outcome of this applications.",
+   "id": 13,
+   "number": 3,
+   "templateId": 9,
+   "title": "Final Decision"
+  },
+  {
+   "colour": "#1E14DB",
+   "description": "This application will be approved by a Reviewer",
+   "id": 14,
+   "number": 1,
+   "templateId": 10,
+   "title": "Approval"
   }
  ],
  "applicationSection": [],
@@ -4618,6 +8060,41 @@
    "isCurrent": true,
    "stageId": 8,
    "timeCreated": "2021-08-11T12:00:04.290919+12:00"
+  },
+  {
+   "applicationId": 9,
+   "id": 8,
+   "isCurrent": true,
+   "stageId": 7,
+   "timeCreated": "2021-09-08T19:32:05.746785+12:00"
+  },
+  {
+   "applicationId": 10,
+   "id": 9,
+   "isCurrent": true,
+   "stageId": 14,
+   "timeCreated": "2021-09-08T19:33:44.722138+12:00"
+  },
+  {
+   "applicationId": 11,
+   "id": 10,
+   "isCurrent": true,
+   "stageId": 11,
+   "timeCreated": "2021-09-08T19:34:27.120166+12:00"
+  },
+  {
+   "applicationId": 12,
+   "id": 11,
+   "isCurrent": true,
+   "stageId": 10,
+   "timeCreated": "2021-09-08T19:35:08.026157+12:00"
+  },
+  {
+   "applicationId": 13,
+   "id": 12,
+   "isCurrent": true,
+   "stageId": 9,
+   "timeCreated": "2021-09-08T19:35:33.781415+12:00"
   }
  ],
  "templateElement": [
@@ -7887,6 +11364,2687 @@
    "validation": true,
    "validationMessage": null,
    "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "S1T1",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 94,
+   "index": 10,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "style": "info",
+    "title": "## Organisation details"
+   },
+   "sectionId": 11,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Intro Section 1",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "name",
+   "defaultValue": null,
+   "elementTypePluginCode": "shortText",
+   "helpText": null,
+   "id": 95,
+   "index": 20,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "What is the name of your organisation?"
+   },
+   "sectionId": 11,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Organisation Name",
+   "validation": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.config.serverREST"
+        ],
+        "operator": "objectProperties"
+       },
+       "/check-unique"
+      ],
+      "operator": "CONCAT"
+     },
+     [
+      "type",
+      "value"
+     ],
+     "organisation",
+     {
+      "children": [
+       "responses.thisResponse"
+      ],
+      "operator": "objectProperties"
+     },
+     "unique"
+    ],
+    "operator": "API"
+   },
+   "validationMessage": "An organisation with that name already exists",
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "rego",
+   "defaultValue": null,
+   "elementTypePluginCode": "shortText",
+   "helpText": "The details entered here should match with the documents issued by the governing body in your jurisdiction. You will attach evidence of these documents in the following section.",
+   "id": 96,
+   "index": 30,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Please enter your organisation registration code"
+   },
+   "sectionId": 11,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Registration",
+   "validation": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.config.serverREST"
+        ],
+        "operator": "objectProperties"
+       },
+       "/check-unique"
+      ],
+      "operator": "CONCAT"
+     },
+     [
+      "table",
+      "field",
+      "value"
+     ],
+     "organisation",
+     "registration",
+     {
+      "children": [
+       "responses.thisResponse"
+      ],
+      "operator": "objectProperties"
+     },
+     "unique"
+    ],
+    "operator": "API"
+   },
+   "validationMessage": "An organisation with that registration code already exists",
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "physAdd",
+   "defaultValue": null,
+   "elementTypePluginCode": "longText",
+   "helpText": null,
+   "id": 97,
+   "index": 40,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Organisation **physical** address"
+   },
+   "sectionId": 11,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Address",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "addressCheckbox",
+   "defaultValue": null,
+   "elementTypePluginCode": "checkbox",
+   "helpText": null,
+   "id": 98,
+   "index": 50,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Is the organisation **postal** address *different* to the physical address?",
+    "checkboxes": [
+     {
+      "key": "1",
+      "label": "Yes",
+      "selected": false
+     }
+    ]
+   },
+   "sectionId": 11,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Postal Address Checkbox",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "postAdd",
+   "defaultValue": null,
+   "elementTypePluginCode": "longText",
+   "helpText": null,
+   "id": 99,
+   "index": 60,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Organisation **postal** address",
+    "description": "*Note: in the current schema only one address value is actually saved to the database. This is just for demonstration purposes.*"
+   },
+   "sectionId": 11,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Address",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": {
+    "children": [
+     {
+      "children": [
+       "responses.addressCheckbox.text"
+      ],
+      "operator": "objectProperties"
+     },
+     "Yes"
+    ],
+    "operator": "="
+   }
+  },
+  {
+   "category": "INFORMATION",
+   "code": "PB1",
+   "defaultValue": null,
+   "elementTypePluginCode": "pageBreak",
+   "helpText": null,
+   "id": 100,
+   "index": 70,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": null,
+   "sectionId": 11,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Page Break",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "logo",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": null,
+   "id": 101,
+   "index": 80,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Upload a logo for your organisation",
+    "description": "File must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
+    "fileSizeLimit": 5000,
+    "fileCountLimit": 1,
+    "fileExtensions": [
+     "jpg",
+     "jpeg",
+     "png",
+     "gif",
+     "svg"
+    ]
+   },
+   "sectionId": 11,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Logo upload",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "activity",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 102,
+   "index": 90,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "What is your organisation's primary activity",
+    "options": [
+     "Manufacturer",
+     "Importer",
+     "Producer"
+    ]
+   },
+   "sectionId": 11,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Organisation Activity",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "orgInfo",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 103,
+   "index": 10,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "text": {
+     "children": [
+      "Registration no. **%1**",
+      {
+       "children": [
+        "responses.rego.text"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "style": "basic",
+    "title": {
+     "children": [
+      "**Documentation for Organisation: %1**",
+      {
+       "children": [
+        "responses.name.text"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sectionId": 12,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Intro Section 2 - Page 1/2",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "logoShow",
+   "defaultValue": null,
+   "elementTypePluginCode": "imageDisplay",
+   "helpText": null,
+   "id": 104,
+   "index": 20,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "url": {
+     "children": [
+      {
+       "children": [
+        "applicationData.config.serverREST"
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "responses.logo.files.fileUrl"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "CONCAT"
+    },
+    "size": "tiny",
+    "altText": "Organisation logo",
+    "alignment": "center"
+   },
+   "sectionId": 12,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Show uploaded logo",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "regoDoc",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": "Certification from your country's registration body is required.",
+   "id": 105,
+   "index": 30,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Please provide proof of your organisation registration",
+    "description": "Allowed formats: .pdf, .doc, .jpg, .png",
+    "fileSizeLimit": 5000,
+    "fileCountLimit": 1,
+    "fileExtensions": [
+     "jpg",
+     "jpeg",
+     "png",
+     "pdf",
+     "doc",
+     "docx"
+    ]
+   },
+   "sectionId": 12,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Registration upload",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "otherDoc",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": "Examples might include import permits.",
+   "id": 106,
+   "index": 40,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Please provide any other documentation pertinent to your organisation's activities",
+    "description": "Allowed formats: .pdf, .doc, .jpg, .png",
+    "fileSizeLimit": 5000,
+    "fileExtensions": [
+     "jpg",
+     "jpeg",
+     "png",
+     "pdf",
+     "doc",
+     "docx"
+    ]
+   },
+   "sectionId": 12,
+   "templateCode": "OrgRegistration",
+   "templateVersion": 3,
+   "title": "Other documentation upload",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "S1T1",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 107,
+   "index": 0,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "style": "basic",
+    "title": {
+     "children": [
+      "### Welcome, **%1**.",
+      {
+       "children": [
+        "applicationData.user.firstName"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sectionId": 13,
+   "templateCode": "OrgJoin",
+   "templateVersion": 2,
+   "title": "Intro Section 1",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "S1Q1",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 108,
+   "index": 1,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Please select the organisation you wish to join",
+    "search": true,
+    "options": {
+     "children": [
+      "query getOrgs {organisations {nodes {name, id}}}",
+      "",
+      [],
+      "organisations.nodes"
+     ],
+     "operator": "graphQL"
+    },
+    "optionsDisplayProperty": "name"
+   },
+   "sectionId": 13,
+   "templateCode": "OrgJoin",
+   "templateVersion": 2,
+   "title": "Select Organisation",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "S1Q2",
+   "defaultValue": null,
+   "elementTypePluginCode": "longText",
+   "helpText": null,
+   "id": 109,
+   "index": 2,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Reason for joining",
+    "description": "Please provide a brief summary of your relationship to this organisation"
+   },
+   "sectionId": 13,
+   "templateCode": "OrgJoin",
+   "templateVersion": 2,
+   "title": "Reason",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "PB01",
+   "defaultValue": null,
+   "elementTypePluginCode": "pageBreak",
+   "helpText": null,
+   "id": 110,
+   "index": 3,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": null,
+   "sectionId": 13,
+   "templateCode": "OrgJoin",
+   "templateVersion": 2,
+   "title": "Page Break",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "T2",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 111,
+   "index": 4,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "style": "basic",
+    "title": "### Documentation"
+   },
+   "sectionId": 13,
+   "templateCode": "OrgJoin",
+   "templateVersion": 2,
+   "title": "Documentation Info",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "IDUpload",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": null,
+   "id": 112,
+   "index": 5,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Please provide photo ID",
+    "description": "Please upload a copy of your photo ID. Must be in **image** or **PDF** format and under 5MB.",
+    "fileSizeLimit": 5000,
+    "fileCountLimit": 1,
+    "fileExtensions": [
+     "pdf",
+     "png",
+     "jpg",
+     "jpeg"
+    ]
+   },
+   "sectionId": 13,
+   "templateCode": "OrgJoin",
+   "templateVersion": 2,
+   "title": "Upload ID",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "DocUpload",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": null,
+   "id": 113,
+   "index": 6,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Please upload additional documentation",
+    "description": "If necessary, please provide additional documentation showing your relationship to this organisation.\nYou can upload more than one file if necessary, with same restrictions as above.",
+    "fileSizeLimit": 5000,
+    "fileCountLimit": 5,
+    "fileExtensions": [
+     "pdf",
+     "png",
+     "jpg",
+     "jpeg"
+    ]
+   },
+   "sectionId": 13,
+   "templateCode": "OrgJoin",
+   "templateVersion": 2,
+   "title": "Upload Doc",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q1",
+   "defaultValue": null,
+   "elementTypePluginCode": "shortText",
+   "helpText": "Markdown text can be added to questions with tips to users about important **details**",
+   "id": 114,
+   "index": 0,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "First Name"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "First Name",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q2",
+   "defaultValue": null,
+   "elementTypePluginCode": "shortText",
+   "helpText": null,
+   "id": 115,
+   "index": 1,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": {
+     "children": [
+      "%1, what is your last name?",
+      {
+       "children": [
+        "responses.Q1.text",
+        ""
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Last Name",
+   "validation": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "responses.Q1.text"
+        ],
+        "operator": "objectProperties"
+       },
+       {
+        "value": null
+       }
+      ],
+      "operator": "!="
+     },
+     {
+      "children": [
+       {
+        "children": [
+         "responses.Q1.text"
+        ],
+        "operator": "objectProperties"
+       },
+       {
+        "value": ""
+       }
+      ],
+      "operator": "!="
+     }
+    ],
+    "operator": "AND"
+   },
+   "validationMessage": "You need a first name.",
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "Text1",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 116,
+   "index": 2,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "text": {
+     "children": [
+      "The new user's name is: %1 %2",
+      {
+       "children": [
+        "responses.Q1.text",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "responses.Q2.text",
+        ""
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "style": "basic",
+    "title": {
+     "children": [
+      "**Current User: %1 %2**",
+      {
+       "children": [
+        "applicationData.user.firstName"
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.user.lastName",
+        ""
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "User Info",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q3",
+   "defaultValue": null,
+   "elementTypePluginCode": "longText",
+   "helpText": "Try entering more than 100 characters to see validation message!",
+   "id": 117,
+   "index": 3,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Description",
+    "lines": 8,
+    "maxLength": 101,
+    "placeholder": "Enter here..."
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "LongText Demo",
+   "validation": {
+    "children": [
+     {
+      "children": [
+       "responses.thisResponse"
+      ],
+      "operator": "objectProperties"
+     },
+     "^[\\s\\S]{0,100}$"
+    ],
+    "operator": "REGEX"
+   },
+   "validationMessage": "Response must be less than 100 characters",
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q4",
+   "defaultValue": null,
+   "elementTypePluginCode": "password",
+   "helpText": null,
+   "id": 118,
+   "index": 4,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Password",
+    "placeholder": "Password must be at least 8 chars long",
+    "confirmPlaceholder": "Enter password again",
+    "validationInternal": {
+     "children": [
+      {
+       "children": [
+        "responses.thisResponse"
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "value": "^[\\S]{8,}$"
+      }
+     ],
+     "operator": "REGEX"
+    },
+    "validationMessageInternal": "Password must be at least 8 characters"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Password",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "PB1",
+   "defaultValue": null,
+   "elementTypePluginCode": "pageBreak",
+   "helpText": null,
+   "id": 119,
+   "index": 5,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": null,
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Page Break",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "Text2",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 120,
+   "index": 6,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "text": "Shows other selectors as a result of your **selection** which can be **dynamically defined**",
+    "title": "### This page demonstrates selectors options"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Page2",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q5",
+   "defaultValue": null,
+   "elementTypePluginCode": "radioChoice",
+   "helpText": "Next displayed specific dropdown showing based on selection to pick one specific from a static list",
+   "id": 121,
+   "index": 7,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Organisation Type",
+    "options": [
+     "Manufacturer",
+     "Distributor",
+     "Importer"
+    ],
+    "validation": {
+     "value": true
+    },
+    "description": "_Select which type of organisation you belong to._"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Organisation Category",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q6",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 122,
+   "index": 8,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Select Manufacturer",
+    "options": [
+     "Manufacturer A",
+     "Manufacturer B",
+     "Manufacturer C"
+    ],
+    "placeholder": "Select"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Select Manufacturer",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": {
+    "children": [
+     {
+      "children": [
+       "responses.Q5.text"
+      ],
+      "operator": "objectProperties"
+     },
+     {
+      "value": "Manufacturer"
+     }
+    ],
+    "operator": "="
+   }
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q7",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 123,
+   "index": 9,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Select Distributor",
+    "options": [
+     "Distributor A",
+     "Distributor B",
+     "Distributor C"
+    ],
+    "placeholder": "Select"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Select Distributor",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": {
+    "children": [
+     {
+      "children": [
+       "responses.Q5.text"
+      ],
+      "operator": "objectProperties"
+     },
+     {
+      "value": "Distributor"
+     }
+    ],
+    "operator": "="
+   }
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q8",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 124,
+   "index": 10,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Select Importer",
+    "options": [
+     "Importer A",
+     "Importer B",
+     "Importer C"
+    ],
+    "placeholder": "Select"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Select Importer",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": {
+    "children": [
+     {
+      "children": [
+       "responses.Q5.text"
+      ],
+      "operator": "objectProperties"
+     },
+     {
+      "value": "Importer"
+     }
+    ],
+    "operator": "="
+   }
+  },
+  {
+   "category": "INFORMATION",
+   "code": "PB3",
+   "defaultValue": null,
+   "elementTypePluginCode": "pageBreak",
+   "helpText": null,
+   "id": 125,
+   "index": 12,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": null,
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Page Break",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q10",
+   "defaultValue": null,
+   "elementTypePluginCode": "radioChoice",
+   "helpText": null,
+   "id": 126,
+   "index": 13,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "This Radio button group has no default",
+    "options": [
+     "Option A",
+     "Option B",
+     "Option C"
+    ],
+    "hasOther": true,
+    "otherPlaceholder": "Enter other answer"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Testing Radio buttons",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q11",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 127,
+   "index": 14,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Select an organisation (GraphQL query)",
+    "options": {
+     "children": [
+      "query getOrgs {organisations {nodes {name}}}",
+      "graphQLEndpoint",
+      [],
+      "organisations.nodes"
+     ],
+     "operator": "graphQL"
+    },
+    "placeholder": "Select one"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "GraphQL query",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "PB4",
+   "defaultValue": null,
+   "elementTypePluginCode": "pageBreak",
+   "helpText": null,
+   "id": 128,
+   "index": 15,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": null,
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Page Break",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "CheckboxShowcase",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 129,
+   "index": 16,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "text": "Different types and settings for Checkbox plugin",
+    "style": "basic",
+    "title": "## Checkbox demonstration"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Checkbox demonstration",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "CB1",
+   "defaultValue": null,
+   "elementTypePluginCode": "checkbox",
+   "helpText": "",
+   "id": 130,
+   "index": 17,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "This is a single checkbox",
+    "checkboxes": [
+     "Tick me"
+    ]
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Single checkbox",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "CB2",
+   "defaultValue": null,
+   "elementTypePluginCode": "checkbox",
+   "helpText": null,
+   "id": 131,
+   "index": 18,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Three checkboxes, one pre-selected",
+    "checkboxes": [
+     {
+      "key": 0,
+      "label": "Option 1",
+      "selected": true
+     },
+     "Option 2",
+     "Option 3"
+    ]
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Three checkboxes",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "CB3",
+   "defaultValue": null,
+   "elementTypePluginCode": "checkbox",
+   "helpText": null,
+   "id": 132,
+   "index": 19,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "type": "toggle",
+    "label": "Behold! a **toggle** switch:",
+    "checkboxes": [
+     "ON"
+    ]
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Toggle switch",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "TXTON-OFF",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 133,
+   "index": 20,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "title": {
+     "children": [
+      "The switch is toggled %1",
+      {
+       "children": [
+        {
+         "children": [
+          {
+           "children": [
+            "responses.CB3.text"
+           ],
+           "operator": "objectProperties"
+          },
+          "ON"
+         ],
+         "operator": "="
+        },
+        "ON",
+        "OFF"
+       ],
+       "operator": "?"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Checkbox ON",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "CB4",
+   "defaultValue": null,
+   "elementTypePluginCode": "checkbox",
+   "helpText": null,
+   "id": 134,
+   "index": 21,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "type": "slider",
+    "label": "And a couple of **sliders**:",
+    "checkboxes": [
+     {
+      "key": "Opt1",
+      "text": "Ice-cream",
+      "label": "I like ice-cream"
+     },
+     {
+      "key": "Opt2",
+      "text": "Cake",
+      "label": "I like cake"
+     }
+    ]
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Slider switch",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "TXT_LIKE",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 135,
+   "index": 22,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "text": {
+     "children": [
+      "You like: %1%2",
+      {
+       "children": [
+        {
+         "children": [
+          "responses.CB4.values.Opt1.selected"
+         ],
+         "operator": "objectProperties"
+        },
+        "\n- Ice Cream",
+        ""
+       ],
+       "operator": "?"
+      },
+      {
+       "children": [
+        {
+         "children": [
+          "responses.CB4.values.Opt2.selected"
+         ],
+         "operator": "objectProperties"
+        },
+        "\n- Cake",
+        ""
+       ],
+       "operator": "?"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Display Likes",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "CB5",
+   "defaultValue": null,
+   "elementTypePluginCode": "checkbox",
+   "helpText": null,
+   "id": 136,
+   "index": 23,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Lotsa boxes",
+    "layout": "inline",
+    "checkboxes": {
+     "children": [
+      {
+       "value": "https://jsonplaceholder.typicode.com/users"
+      },
+      {
+       "value": []
+      },
+      {
+       "value": "name"
+      }
+     ],
+     "operator": "API"
+    },
+    "description": "If you have a lot of checkboxes, you may wish to use `layout: \"inline\"`.  \n_This selection is dynamically created from an online API._"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Many checkboxes",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "PB5",
+   "defaultValue": null,
+   "elementTypePluginCode": "pageBreak",
+   "helpText": null,
+   "id": 137,
+   "index": 24,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": null,
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Page Break",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "D1",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 138,
+   "index": 25,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "API Lookup: Choose a name from this list",
+    "search": true,
+    "options": {
+     "children": [
+      {
+       "value": "https://jsonplaceholder.typicode.com/users"
+      },
+      {
+       "value": []
+      },
+      {
+       "value": "name"
+      }
+     ],
+     "operator": "API"
+    },
+    "placeholder": "Select"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "API Selection demo",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "D2",
+   "defaultValue": null,
+   "elementTypePluginCode": "shortText",
+   "helpText": null,
+   "id": 139,
+   "index": 26,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Enter 'magicword' to see a text box"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Test Visibility",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "Text3",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 140,
+   "index": 27,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "text": {
+     "children": [
+      "You chose %1 (index number %2) in the API lookup",
+      {
+       "children": [
+        "responses.D1.text"
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "responses.D1.optionIndex"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "style": "success",
+    "title": "This has appeared because you typed \"magicword\" above."
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Intro",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": {
+    "children": [
+     {
+      "children": [
+       "responses.D2.text"
+      ],
+      "operator": "objectProperties"
+     },
+     {
+      "value": "magicword"
+     }
+    ],
+    "operator": "="
+   }
+  },
+  {
+   "category": "INFORMATION",
+   "code": "Text4",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 141,
+   "index": 28,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "text": "A text info box can be presented in a number of **styles**.\n\n*Please select one below*",
+    "style": {
+     "children": [
+      "responses.D3.text"
+     ],
+     "operator": "objectProperties"
+    },
+    "title": "## Many ways to deliver information!"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Text Showcase",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "D3",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 142,
+   "index": 29,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Select a style",
+    "default": "none",
+    "options": [
+     "none",
+     "basic",
+     "info",
+     "warning",
+     "success",
+     "positive",
+     "error",
+     "negative"
+    ],
+    "placeholder": "Select"
+   },
+   "sectionId": 14,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Selector for TextInfo showcase",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "DocText1",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": "This section provides a demonstration of the different ways the file upload element can be used",
+   "id": 143,
+   "index": 100,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "text": "A demonstration of the File Upload plugin",
+    "style": "info",
+    "title": "### This sections allows you to upload files"
+   },
+   "sectionId": 15,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Document Intro",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q_upload1",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": null,
+   "id": 144,
+   "index": 101,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Please upload your documentation",
+    "description": "You can provide multiple files.  \nFiles must be **image** files or **PDF** and under 5MB.",
+    "fileSizeLimit": 5000,
+    "fileCountLimit": 6,
+    "fileExtensions": [
+     "pdf",
+     "png",
+     "jpg"
+    ]
+   },
+   "sectionId": 15,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "File upload demo 1",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "PB6",
+   "defaultValue": null,
+   "elementTypePluginCode": "pageBreak",
+   "helpText": null,
+   "id": 145,
+   "index": 102,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": null,
+   "sectionId": 15,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Page Break",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q_upload2",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": null,
+   "id": 146,
+   "index": 103,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Please add some more files",
+    "description": {
+     "children": [
+      "No restrictions on this one, but we're testing dynamic description:\n\n_The files uploaded in the last page were:_  \n- _%1_",
+      {
+       "children": [
+        "responses.Q_upload1.text",
+        "No files uploaded"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "fileCountLimit": 99
+   },
+   "sectionId": 15,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "File upload demo 2",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "PB7",
+   "defaultValue": null,
+   "elementTypePluginCode": "pageBreak",
+   "helpText": null,
+   "id": 147,
+   "index": 104,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": null,
+   "sectionId": 15,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Page Break",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "Q_upload3",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": null,
+   "id": 148,
+   "index": 105,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Please upload an image file to display",
+    "description": "Only 1 file allowed, must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
+    "fileSizeLimit": 5000,
+    "fileCountLimit": 1,
+    "fileExtensions": [
+     "jpg",
+     "jpeg",
+     "png",
+     "gif",
+     "svg"
+    ]
+   },
+   "sectionId": 15,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "File image upload",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "Img01",
+   "defaultValue": null,
+   "elementTypePluginCode": "imageDisplay",
+   "helpText": null,
+   "id": 149,
+   "index": 106,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "url": {
+     "children": [
+      {
+       "children": [
+        "applicationData.config.serverREST"
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "responses.Q_upload3.files.fileUrl"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "CONCAT"
+    },
+    "size": {
+     "children": [
+      "responses.ImgOpt1.text"
+     ],
+     "operator": "objectProperties"
+    },
+    "altText": "This is the image you uploaded",
+    "alignment": {
+     "children": [
+      "responses.ImgOpt2.text"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sectionId": 15,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Show uploaded image",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": {
+    "children": [
+     {
+      "children": [
+       "responses.Q_upload3.text"
+      ],
+      "operator": "objectProperties"
+     },
+     ""
+    ],
+    "operator": "!="
+   }
+  },
+  {
+   "category": "QUESTION",
+   "code": "ImgOpt1",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 150,
+   "index": 107,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Select image size",
+    "default": 3,
+    "options": [
+     "mini",
+     "tiny",
+     "small",
+     "medium",
+     "large",
+     "big",
+     "huge",
+     "massive"
+    ]
+   },
+   "sectionId": 15,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Image size control",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": {
+    "children": [
+     {
+      "children": [
+       "responses.Q_upload3.text"
+      ],
+      "operator": "objectProperties"
+     },
+     ""
+    ],
+    "operator": "!="
+   }
+  },
+  {
+   "category": "QUESTION",
+   "code": "ImgOpt2",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 151,
+   "index": 108,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Select image alignment",
+    "default": 1,
+    "options": [
+     "left",
+     "center",
+     "right"
+    ]
+   },
+   "sectionId": 15,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Image alignment control",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": {
+    "children": [
+     {
+      "children": [
+       "responses.Q_upload3.text"
+      ],
+      "operator": "objectProperties"
+     },
+     ""
+    ],
+    "operator": "!="
+   }
+  },
+  {
+   "category": "INFORMATION",
+   "code": "IngredientsHeader",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": "Add items one by one to create an **Ingredients list**",
+   "id": 152,
+   "index": 3,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "text": "List items can be displayed in **Card** or **Table** form",
+    "style": "info",
+    "title": "## Ingredients list demonstration"
+   },
+   "sectionId": 16,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Ingredients list demonstration",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "listDemo",
+   "defaultValue": null,
+   "elementTypePluginCode": "listBuilder",
+   "helpText": null,
+   "id": 153,
+   "index": 4,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Ingredients list",
+    "modalText": "## Ingredient item \n\nPlease enter details for **one** ingredient",
+    "displayType": {
+     "children": [
+      "responses.listDisplay.text"
+     ],
+     "operator": "objectProperties"
+    },
+    "inputFields": [
+     {
+      "code": "LB1",
+      "title": "Substance Name",
+      "isRequired": true,
+      "parameters": {
+       "label": "Substance name"
+      },
+      "elementTypePluginCode": "shortText"
+     },
+     {
+      "code": "LB2",
+      "title": "Complementary information",
+      "isRequired": false,
+      "parameters": {
+       "label": "Complementary information"
+      },
+      "elementTypePluginCode": "shortText"
+     },
+     {
+      "code": "LB3",
+      "title": "Quantity",
+      "parameters": {
+       "label": "Quantity",
+       "maxWidth": 130,
+       "description": "Enter a number and select units below"
+      },
+      "validation": {
+       "children": [
+        {
+         "children": [
+          "responses.thisResponse"
+         ],
+         "operator": "objectProperties"
+        },
+        "^[0-9.]+$"
+       ],
+       "operator": "REGEX"
+      },
+      "validationMessage": "Must be a number",
+      "elementTypePluginCode": "shortText"
+     },
+     {
+      "code": "LB4",
+      "title": "Unit",
+      "parameters": {
+       "label": "Unit",
+       "options": [
+        "Milligram",
+        "Microgram",
+        "International Unit"
+       ],
+       "hasOther": true
+      },
+      "elementTypePluginCode": "radioChoice"
+     },
+     {
+      "code": "LB5",
+      "title": "Type",
+      "parameters": {
+       "label": "Type",
+       "default": 0,
+       "options": [
+        "Active",
+        "Inactive"
+       ]
+      },
+      "elementTypePluginCode": "dropdownChoice"
+     },
+     {
+      "code": "LB6",
+      "title": "Included",
+      "parameters": {
+       "label": "Substance present in end product",
+       "layout": "inline",
+       "options": [
+        "Yes",
+        "No"
+       ]
+      },
+      "elementTypePluginCode": "radioChoice"
+     }
+    ],
+    "displayFormat": {
+     "title": "${LB1}",
+     "subtitle": "${LB2}",
+     "description": "**Quantity**: ${LB4} ${LB5}  \n**Substance present?**: ${LB3}  \n**Type**: ${LB6}"
+    },
+    "createModalButtonText": "Add ingredient"
+   },
+   "sectionId": 16,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Ingredients List Demo",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "listDisplay",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 154,
+   "index": 5,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Display style for Ingredients list",
+    "default": "cards",
+    "options": [
+     "cards",
+     "table"
+    ],
+    "placeholder": "Select"
+   },
+   "sectionId": 16,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "List Display Selector",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "PB14",
+   "defaultValue": null,
+   "elementTypePluginCode": "pageBreak",
+   "helpText": null,
+   "id": 155,
+   "index": 6,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": null,
+   "sectionId": 16,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Page Break",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "searchUsers",
+   "defaultValue": null,
+   "elementTypePluginCode": "search",
+   "helpText": "This page contain examples of the **Search** element. It can make API queries in response to user input and display the results, which can be selected.",
+   "id": 156,
+   "index": 7,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "icon": "user",
+    "label": "Search for users",
+    "source": {
+     "children": [
+      "query GetUsers($user: String!) { users(filter: { username: {includesInsensitive: $user } }) {nodes { username, firstName, lastName }}}",
+      "graphQLEndpoint",
+      [
+       "user"
+      ],
+      {
+       "children": [
+        "search.text"
+       ],
+       "operator": "objectProperties"
+      },
+      "users.nodes"
+     ],
+     "operator": "graphQL"
+    },
+    "description": "Start typing to search database for usernames",
+    "placeholder": "Search usernames",
+    "displayFormat": {
+     "title": "${firstName} ${lastName}",
+     "description": "${username}"
+    }
+   },
+   "sectionId": 16,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Search Demo (users)",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "searchCountries",
+   "defaultValue": null,
+   "elementTypePluginCode": "search",
+   "helpText": null,
+   "id": 157,
+   "index": 8,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "icon": "world",
+    "label": "Search for countries",
+    "source": {
+     "children": [
+      "query countries($code: ID!) {country(code: $code) {name, capital, emoji, code}}",
+      "https://countries.trevorblades.com",
+      [
+       "code"
+      ],
+      {
+       "children": [
+        "search.text"
+       ],
+       "operator": "objectProperties"
+      },
+      "country"
+     ],
+     "operator": "graphQL"
+    },
+    "description": "Type the two-character country code (must be CAPS sorry)",
+    "multiSelect": true,
+    "placeholder": "Search countries",
+    "displayFormat": {
+     "title": "${emoji} ${name}",
+     "description": "Capital: ${capital}"
+    },
+    "minCharacters": 2
+   },
+   "sectionId": 16,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Search Demo (countries)",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "searchUC",
+   "defaultValue": null,
+   "elementTypePluginCode": "search",
+   "helpText": null,
+   "id": 158,
+   "index": 9,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "icon": "pills",
+    "label": "Lookup mSupply Universal Codes",
+    "source": {
+     "children": [
+      "query GetEntitiesByName($search: String!) {entities (filter: { code: \"\" description: $search type: \"[drug]\" match: \"contains\"},offset: 0,first: 25) {data {        code,     description,        type,        uid  }, totalLength }}",
+      "https://codes.msupply.foundation:2048/graphql",
+      [
+       "search"
+      ],
+      {
+       "children": [
+        "search.text"
+       ],
+       "operator": "objectProperties"
+      },
+      "entities.data"
+     ],
+     "operator": "graphQL"
+    },
+    "description": "Start typing a drug name",
+    "multiSelect": true,
+    "placeholder": "Search medicines",
+    "resultFormat": {
+     "title": "${description}",
+     "description": "${code}"
+    },
+    "displayFormat": {
+     "title": "${description}",
+     "description": "Universal Code: ${code}"
+    },
+    "minCharacters": 3
+   },
+   "sectionId": 16,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Search Universal Codes",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "searchOrg",
+   "defaultValue": null,
+   "elementTypePluginCode": "search",
+   "helpText": "This one has no `displayFormat` prop, so it falls back to a generic \"default\" display",
+   "id": 159,
+   "index": 11,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "icon": "building",
+    "label": "Search for an organisation",
+    "source": {
+     "children": [
+      "query GetOrgs($registration: String!) { organisations(filter: {registration: {startsWithInsensitive: $registration}}) { nodes { name registration } } }",
+      "graphQLEndpoint",
+      [
+       "registration"
+      ],
+      {
+       "children": [
+        "search.text"
+       ],
+       "operator": "objectProperties"
+      },
+      "organisations.nodes"
+     ],
+     "operator": "graphQL"
+    },
+    "description": "Please enter the organisation's registration code (min 6 chars)",
+    "placeholder": "Search organisations",
+    "minCharacters": 6
+   },
+   "sectionId": 16,
+   "templateCode": "Demo",
+   "templateVersion": 2,
+   "title": "Search Demo (organisations)",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "S1T1",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": "",
+   "id": 160,
+   "index": 10,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "style": "basic",
+    "title": "## Organisation details"
+   },
+   "sectionId": 17,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Intro Section 1",
+   "validation": true,
+   "validationMessage": "",
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "name",
+   "defaultValue": null,
+   "elementTypePluginCode": "shortText",
+   "helpText": null,
+   "id": 161,
+   "index": 20,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "What is the name of your organisation?"
+   },
+   "sectionId": 17,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Organisation Name",
+   "validation": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.config.serverREST"
+        ],
+        "operator": "objectProperties"
+       },
+       "/check-unique"
+      ],
+      "operator": "CONCAT"
+     },
+     [
+      "type",
+      "value"
+     ],
+     "organisation",
+     {
+      "children": [
+       "responses.thisResponse"
+      ],
+      "operator": "objectProperties"
+     },
+     "unique"
+    ],
+    "operator": "API"
+   },
+   "validationMessage": "An organisation with that name already exists",
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "rego",
+   "defaultValue": null,
+   "elementTypePluginCode": "shortText",
+   "helpText": "The details entered here should match with the documents issued by the governing body in your jurisdiction. You will attach evidence of these documents in the following section.",
+   "id": 162,
+   "index": 30,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Please enter your organisation registration code"
+   },
+   "sectionId": 17,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Registration",
+   "validation": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.config.serverREST"
+        ],
+        "operator": "objectProperties"
+       },
+       "/check-unique"
+      ],
+      "operator": "CONCAT"
+     },
+     [
+      "table",
+      "field",
+      "value"
+     ],
+     "organisation",
+     "registration",
+     {
+      "children": [
+       "responses.thisResponse"
+      ],
+      "operator": "objectProperties"
+     },
+     "unique"
+    ],
+    "operator": "API"
+   },
+   "validationMessage": "An organisation with that registration code already exists",
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "physAdd",
+   "defaultValue": null,
+   "elementTypePluginCode": "longText",
+   "helpText": null,
+   "id": 163,
+   "index": 40,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Organisation **physical** address"
+   },
+   "sectionId": 17,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Address",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "addressCheckbox",
+   "defaultValue": null,
+   "elementTypePluginCode": "checkbox",
+   "helpText": null,
+   "id": 164,
+   "index": 50,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Is the organisation **postal** address *different* to the physical address?",
+    "checkboxes": [
+     {
+      "key": "1",
+      "label": "Yes",
+      "selected": false
+     }
+    ]
+   },
+   "sectionId": 17,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Postal Address Checkbox",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "postAdd",
+   "defaultValue": null,
+   "elementTypePluginCode": "longText",
+   "helpText": null,
+   "id": 165,
+   "index": 60,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Organisation **postal** address",
+    "description": "*Note: in the current schema only one address value is actually saved to the database. This is just for demonstration purposes.*"
+   },
+   "sectionId": 17,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Address",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": {
+    "children": [
+     {
+      "children": [
+       "responses.addressCheckbox.text"
+      ],
+      "operator": "objectProperties"
+     },
+     "Yes"
+    ],
+    "operator": "="
+   }
+  },
+  {
+   "category": "INFORMATION",
+   "code": "PB1",
+   "defaultValue": null,
+   "elementTypePluginCode": "pageBreak",
+   "helpText": null,
+   "id": 166,
+   "index": 70,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": null,
+   "sectionId": 17,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Page Break",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "logo",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": null,
+   "id": 167,
+   "index": 80,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Upload a logo for your organisation",
+    "description": "File must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
+    "fileSizeLimit": 5000,
+    "fileCountLimit": 1,
+    "fileExtensions": [
+     "jpg",
+     "jpeg",
+     "png",
+     "gif",
+     "svg"
+    ]
+   },
+   "sectionId": 17,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Logo upload",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "activity",
+   "defaultValue": null,
+   "elementTypePluginCode": "dropdownChoice",
+   "helpText": null,
+   "id": 168,
+   "index": 90,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "What is your organisation's primary activity",
+    "options": [
+     "Manufacturer",
+     "Importer",
+     "Producer"
+    ]
+   },
+   "sectionId": 17,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Organisation Activity",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "orgInfo",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": null,
+   "id": 169,
+   "index": 10,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "text": {
+     "children": [
+      "Registration no. **%1**",
+      {
+       "children": [
+        "responses.rego.text"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "style": "basic",
+    "title": {
+     "children": [
+      "**Documentation for Organisation: %1**",
+      {
+       "children": [
+        "responses.name.text"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sectionId": 18,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Intro Section 2 - Page 1/2",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "logoShow",
+   "defaultValue": null,
+   "elementTypePluginCode": "imageDisplay",
+   "helpText": null,
+   "id": 170,
+   "index": 20,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "url": {
+     "children": [
+      {
+       "children": [
+        "applicationData.config.serverREST"
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "responses.logo.files.fileUrl"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "CONCAT"
+    },
+    "size": "tiny",
+    "altText": "Organisation logo",
+    "alignment": "center"
+   },
+   "sectionId": 18,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Show uploaded logo",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "regoDoc",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": "Certification from your country's registration body is required.",
+   "id": 171,
+   "index": 30,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "Please provide proof of your organisation registration",
+    "description": "Allowed formats: .pdf, .doc, .jpg, .png",
+    "fileSizeLimit": 5000,
+    "fileCountLimit": 1,
+    "fileExtensions": [
+     "jpg",
+     "jpeg",
+     "png",
+     "pdf",
+     "doc",
+     "docx"
+    ]
+   },
+   "sectionId": 18,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Registration upload",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "otherDoc",
+   "defaultValue": null,
+   "elementTypePluginCode": "fileUpload",
+   "helpText": "Examples might include import permits.",
+   "id": 172,
+   "index": 40,
+   "isEditable": true,
+   "isRequired": false,
+   "parameters": {
+    "label": "Please provide any other documentation pertinent to your organisation's activities",
+    "description": "Allowed formats: .pdf, .doc, .jpg, .png",
+    "fileSizeLimit": 5000,
+    "fileExtensions": [
+     "jpg",
+     "jpeg",
+     "png",
+     "pdf",
+     "doc",
+     "docx"
+    ]
+   },
+   "sectionId": 18,
+   "templateCode": "CoreActions",
+   "templateVersion": 2,
+   "title": "Other documentation upload",
+   "validation": true,
+   "validationMessage": null,
+   "visibilityCondition": true
   }
  ],
  "templateStageReviewLevel": [
@@ -7938,8 +14096,58 @@
    "name": "Review",
    "number": 1,
    "stageId": 8
+  },
+  {
+   "description": null,
+   "id": 8,
+   "name": "Review",
+   "number": 1,
+   "stageId": 9
+  },
+  {
+   "description": null,
+   "id": 9,
+   "name": "Review",
+   "number": 1,
+   "stageId": 10
+  },
+  {
+   "description": null,
+   "id": 10,
+   "name": "Review",
+   "number": 1,
+   "stageId": 11
+  },
+  {
+   "description": null,
+   "id": 11,
+   "name": "Review",
+   "number": 1,
+   "stageId": 12
+  },
+  {
+   "description": null,
+   "id": 12,
+   "name": "Consolidation",
+   "number": 2,
+   "stageId": 12
+  },
+  {
+   "description": null,
+   "id": 13,
+   "name": "Approval",
+   "number": 1,
+   "stageId": 13
+  },
+  {
+   "description": null,
+   "id": 14,
+   "name": "Review",
+   "number": 1,
+   "stageId": 14
   }
  ],
+ "triggerSchedule": [],
  "verification": [],
  "applicationResponse": [
   {
@@ -9386,6 +15594,906 @@
    "timeSubmitted": null,
    "timeUpdated": "2021-08-11T11:59:59.820653+12:00",
    "value": null
+  },
+  {
+   "applicationId": 9,
+   "id": 120,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 74,
+   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 9,
+   "id": 121,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 75,
+   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 9,
+   "id": 122,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 76,
+   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 9,
+   "id": 123,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 78,
+   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 9,
+   "id": 124,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 79,
+   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 9,
+   "id": 125,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 80,
+   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 126,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 160,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 127,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 161,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 128,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 162,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 129,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 163,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 130,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 164,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 131,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 165,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 132,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 167,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 133,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 168,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 134,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 169,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 135,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 170,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 136,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 171,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 10,
+   "id": 137,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 172,
+   "timeCreated": "2021-09-08T19:33:44.292633+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:33:44.292633+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 138,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 114,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 139,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 115,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 140,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 116,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 141,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 117,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 142,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 118,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 143,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 120,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 144,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 121,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 145,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 122,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 146,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 123,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 147,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 124,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 148,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 126,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 149,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 127,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 150,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 129,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 151,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 130,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 152,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 131,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 153,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 132,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 154,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 133,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 155,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 134,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 156,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 135,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 157,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 136,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 158,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 138,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 159,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 139,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 160,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 140,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 161,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 141,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 162,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 142,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 163,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 143,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 164,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 144,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 165,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 146,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 166,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 148,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 167,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 149,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 168,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 150,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 169,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 151,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 170,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 152,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 171,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 153,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 172,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 154,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 173,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 156,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 174,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 157,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 175,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 158,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 11,
+   "id": 176,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 159,
+   "timeCreated": "2021-09-08T19:34:26.484794+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:34:26.484794+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 12,
+   "id": 177,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 107,
+   "timeCreated": "2021-09-08T19:35:07.304769+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:07.304769+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 12,
+   "id": 178,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 108,
+   "timeCreated": "2021-09-08T19:35:07.304769+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:07.304769+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 12,
+   "id": 179,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 109,
+   "timeCreated": "2021-09-08T19:35:07.304769+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:07.304769+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 12,
+   "id": 180,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 111,
+   "timeCreated": "2021-09-08T19:35:07.304769+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:07.304769+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 12,
+   "id": 181,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 112,
+   "timeCreated": "2021-09-08T19:35:07.304769+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:07.304769+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 12,
+   "id": 182,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 113,
+   "timeCreated": "2021-09-08T19:35:07.304769+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:07.304769+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 183,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 94,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 184,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 95,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 185,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 96,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 186,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 97,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 187,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 98,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 188,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 99,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 189,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 101,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 190,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 102,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 191,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 103,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 192,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 104,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 193,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 105,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
+  },
+  {
+   "applicationId": 13,
+   "id": 194,
+   "isValid": null,
+   "stageNumber": null,
+   "status": "DRAFT",
+   "templateElementId": 106,
+   "timeCreated": "2021-09-08T19:35:33.001937+12:00",
+   "timeSubmitted": null,
+   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
+   "value": null
   }
  ],
  "applicationStatusHistory": [
@@ -9444,6 +16552,46 @@
    "isCurrent": true,
    "status": "DRAFT",
    "timeCreated": "2021-08-11T12:00:04.293664+12:00"
+  },
+  {
+   "applicationId": 9,
+   "applicationStageHistoryId": 8,
+   "id": 8,
+   "isCurrent": true,
+   "status": "DRAFT",
+   "timeCreated": "2021-09-08T19:32:05.748763+12:00"
+  },
+  {
+   "applicationId": 10,
+   "applicationStageHistoryId": 9,
+   "id": 9,
+   "isCurrent": true,
+   "status": "DRAFT",
+   "timeCreated": "2021-09-08T19:33:44.725189+12:00"
+  },
+  {
+   "applicationId": 11,
+   "applicationStageHistoryId": 10,
+   "id": 10,
+   "isCurrent": true,
+   "status": "DRAFT",
+   "timeCreated": "2021-09-08T19:34:27.123407+12:00"
+  },
+  {
+   "applicationId": 12,
+   "applicationStageHistoryId": 11,
+   "id": 11,
+   "isCurrent": true,
+   "status": "DRAFT",
+   "timeCreated": "2021-09-08T19:35:08.02865+12:00"
+  },
+  {
+   "applicationId": 13,
+   "applicationStageHistoryId": 12,
+   "id": 12,
+   "isCurrent": true,
+   "status": "DRAFT",
+   "timeCreated": "2021-09-08T19:35:33.783163+12:00"
   }
  ],
  "reviewAssignment": [],
