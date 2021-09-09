@@ -15,7 +15,7 @@ CREATE TABLE outcome_display (
     detail_view_exclude_columns varchar[] DEFAULT NULL,
     -- Header for detail view
     detail_view_header_column varchar,
-    display_type public.outcome_display_type DEFAULT NULL,
+    display_type public.outcome_display_type DEFAULT NULL
 );
 
 -- For columns that require more detail format or evaluation definitions
@@ -28,7 +28,16 @@ CREATE TABLE outcome_display_column_definition (
     value jsonb NOT NULL
 );
 
--- Details display when outcome is pressed in the table
+-- OLD TABLES -- LEAVING THESE HERE FOR NOW, DELETE ONCE MIGRATION COMPLETE
+CREATE TABLE outcome_display_table (
+    id serial PRIMARY KEY,
+    column_name varchar,
+    -- Text or full value from form element plugin
+    is_text_column boolean,
+    title varchar,
+    outcome_display_id integer REFERENCES outcome_display (id) ON DELETE CASCADE
+);
+
 CREATE TABLE outcome_display_detail (
     id serial PRIMARY KEY,
     column_name varchar,
