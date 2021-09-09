@@ -26,7 +26,7 @@ Authenticates login and returns:
 */
 const routeLogin = async (request: any, reply: any) => {
   try {
-    const { username, password } = request.body
+    const { username, password, sessionId } = request.body
     if (password === undefined) return reply.send({ success: false })
 
     const userOrgInfo: UserOrg[] = (await databaseConnect.getUserOrgData({ username })) || {}
@@ -40,7 +40,7 @@ const routeLogin = async (request: any, reply: any) => {
     // Login successful
     reply.send({
       success: true,
-      ...(await getUserInfo({ userId })),
+      ...(await getUserInfo({ userId, sessionId })),
     })
   } catch (err) {
     return reply.send({ success: false, error: err.message })
@@ -54,12 +54,12 @@ Authenticates user and checks they belong to requested org (id). Returns:
   - JWT (with orgId included)
 */
 const routeLoginOrg = async (request: any, reply: any) => {
-  const { orgId } = request.body
+  const { orgId, sessionId } = request.body
   const token = extractJWTfromHeader(request)
   const { userId, error } = await getTokenData(token)
   if (error) return reply.send({ success: false, message: error })
 
-  const userInfo = await getUserInfo({ userId, orgId })
+  const userInfo = await getUserInfo({ userId, orgId, sessionId })
 
   reply.send({ success: true, ...userInfo })
 }
@@ -69,11 +69,15 @@ Authenticates user using JWT header and returns latest user/org info,
 template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
+  const { sessionId } = request.query
   const token = extractJWTfromHeader(request)
-  const { userId, orgId, sessionId, error } = await getTokenData(token)
+  const { userId, orgId, sessionId: returnSessionId, error } = await getTokenData(token)
   if (error) return reply.send({ success: false, message: error })
 
-  return reply.send({ success: true, ...(await getUserInfo({ userId, orgId, sessionId })) })
+  return reply.send({
+    success: true,
+    ...(await getUserInfo({ userId, orgId, sessionId: sessionId ?? returnSessionId })),
+  })
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
