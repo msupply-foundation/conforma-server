@@ -267,6 +267,7 @@ class PostgresDB {
       SELECT application_id as "applicationId",
       serial as "applicationSerial",
       name as "applicationName",
+      session_id as "sessionId",
       template_id as "templateId",
       template_name as "templateName",
       template_code as "templateCode",
