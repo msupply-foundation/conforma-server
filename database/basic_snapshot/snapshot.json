@@ -1379,7 +1379,7 @@
    "name": "Core-actions Templates",
    "namePlural": "Companies Registrations",
    "startMessage": "## You will need the following documents ready for upload:\n- <Add list of documents to upload>",
-   "status": "AVAILABLE",
+   "status": "DRAFT",
    "submissionMessage": "Thank you! Your application has been submitted.",
    "templateCategoryId": 1,
    "version": 2,
@@ -6939,6 +6939,1218 @@
    },
    "sequence": 103,
    "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeOutcome",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision"
+        ],
+        "operator": "objectProperties"
+       },
+       "NON_CONFORM"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.stage"
+        ],
+        "operator": "objectProperties"
+       },
+       "Screening"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": "Change outcome to REJECT in case of NON_CONFORM decision in first stage of Screening. The next stage Assessment can also change the outcome to APPROVED/REJECTED",
+   "eventCode": "",
+   "id": 222,
+   "parameterQueries": {
+    "newOutcome": {
+     "value": "REJECTED"
+    }
+   },
+   "sequence": 57,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about Demo application to user's email when outcome is APPROVED",
+   "eventCode": "",
+   "id": 223,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# Your company licence has been registered.\n\nHi %1 %2, \n\nYour application %3 to register a licence to apply for Product registrations for company ‘%4’ has been approved. \n\nLog into your mFlow account to view the changes. \n\nMany thanks, \n\n{Regulatory Authority}",
+      {
+       "children": [
+        "applicationData.firstName",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.lastName",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.orgName",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Congratulations, application %1 has been approved",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "fromName": "Application Manager",
+    "fromEmail": "no-reply@sussol.net"
+   },
+   "sequence": 58,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "REJECTED"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about Demo application to user's email when the outcome is REJECTED",
+   "eventCode": "",
+   "id": 224,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit %4/application/%5\n\nMany thanks,\n\n%6",
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.stage",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.reviewData.latestDecision.comment",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.environmentData.webHostUrl",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "query getRegAuth {organisation(id: 1) {name}}",
+        "graphQLEndpoint",
+        [],
+        "organisation.name"
+       ],
+       "operator": "graphQL"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Changes have been made to your application %1",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sequence": 59,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.reviewData.latestDecision.decision",
+       null
+      ],
+      "operator": "objectProperties"
+     },
+     "LIST_OF_QUESTIONS"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about Demo application to user's email when reviewer has submitted a List of Questions",
+   "eventCode": "",
+   "id": 226,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: %3/application/%4\n\nMany thanks,\n\n%5",
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        {
+         "children": [
+          {
+           "children": [
+            "applicationData.reviewData.latestDecision.comment",
+            null
+           ],
+           "operator": "objectProperties"
+          },
+          null
+         ],
+         "operator": "!="
+        },
+        {
+         "children": [
+          "The outline reason for changes required is:\n\n    \"%2\"",
+          {
+           "children": [
+            "applicationData.reviewData.latestDecision.comment",
+            null
+           ],
+           "operator": "objectProperties"
+          }
+         ],
+         "operator": "stringSubstitution"
+        },
+        ""
+       ],
+       "operator": "?"
+      },
+      {
+       "children": [
+        "applicationData.environmentData.webHostUrl",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "query getRegAuth {organisation(id: 1) {name}}",
+        "graphQLEndpoint",
+        [],
+        "organisation.name"
+       ],
+       "operator": "graphQL"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Changes have been made to your application %1",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sequence": 60,
+   "templateId": 9,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "changeOutcome",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.reviewData.latestDecision.decision"
+        ],
+        "operator": "objectProperties"
+       },
+       "NON_CONFORM"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       {
+        "children": [
+         "applicationData.stage"
+        ],
+        "operator": "objectProperties"
+       },
+       "Screening"
+      ],
+      "operator": "="
+     },
+     {
+      "children": [
+       "applicationData.reviewData.isLastLevel"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "AND"
+   },
+   "description": "Example action - Change outcome to REJECT in case of NON_CONFORM decision in first stage of Screening. ",
+   "eventCode": "",
+   "id": 227,
+   "parameterQueries": {
+    "newOutcome": {
+     "value": "REJECTED"
+    }
+   },
+   "sequence": 104,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about Core-action application to user's email when outcome is APPROVED",
+   "eventCode": "",
+   "id": 228,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# Your company licence has been registered.\n\nHi %1 %2, \n\nYour application %3 to register a licence to apply for Product registrations for company ‘%4’ has been approved. \n\nLog into your mFlow account to view the changes. \n\nMany thanks, \n\n{Regulatory Authority}",
+      {
+       "children": [
+        "applicationData.firstName",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.lastName",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.orgName",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Congratulations, application %1 has been approved",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "fromName": "Application Manager",
+    "fromEmail": "no-reply@sussol.net"
+   },
+   "sequence": 105,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "REJECTED"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about Demo application to user's email when the outcome is REJECTED",
+   "eventCode": "",
+   "id": 229,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit %4/application/%5\n\nMany thanks,\n\n%6",
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.stage",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.reviewData.latestDecision.comment",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.environmentData.webHostUrl",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "query getRegAuth {organisation(id: 1) {name}}",
+        "graphQLEndpoint",
+        [],
+        "organisation.name"
+       ],
+       "operator": "graphQL"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Changes have been made to your application %1",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sequence": 106,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.reviewData.latestDecision.decision",
+       null
+      ],
+      "operator": "objectProperties"
+     },
+     "LIST_OF_QUESTIONS"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about Demo application to user's email when reviewer has submitted a List of Questions",
+   "eventCode": "",
+   "id": 230,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: %3/application/%4\n\nMany thanks,\n\n%5",
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        {
+         "children": [
+          {
+           "children": [
+            "applicationData.reviewData.latestDecision.comment",
+            null
+           ],
+           "operator": "objectProperties"
+          },
+          null
+         ],
+         "operator": "!="
+        },
+        {
+         "children": [
+          "The outline reason for changes required is:\n\n    \"%2\"",
+          {
+           "children": [
+            "applicationData.reviewData.latestDecision.comment",
+            null
+           ],
+           "operator": "objectProperties"
+          }
+         ],
+         "operator": "stringSubstitution"
+        },
+        ""
+       ],
+       "operator": "?"
+      },
+      {
+       "children": [
+        "applicationData.environmentData.webHostUrl",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "query getRegAuth {organisation(id: 1) {name}}",
+        "graphQLEndpoint",
+        [],
+        "organisation.name"
+       ],
+       "operator": "graphQL"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Changes have been made to your application %1",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sequence": 107,
+   "templateId": 10,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about Joining organisation to user's email when outcome is APPROVED",
+   "eventCode": "",
+   "id": 231,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# Your request to join organistion has been approved.\n\nHi %1 %2, \n\nYour application %3 to join company ‘%4’ has been approved. \n\nLog into your mFlow account to view the changes. \n\nMany thanks, \n\n{Regulatory Agency}",
+      {
+       "children": [
+        "applicationData.firstName",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.lastName",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.orgName",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Congratulations, application %1 has been approved",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "fromName": "Application Manager",
+    "fromEmail": "no-reply@sussol.net"
+   },
+   "sequence": 131,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "REJECTED"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about Demo application to user's email when the outcome is REJECTED",
+   "eventCode": "",
+   "id": 232,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit %4/application/%5\n\nMany thanks,\n\n{Regulatory Agency}",
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.stage",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.reviewData.latestDecision.comment",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.environmentData.webHostUrl",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Changes have been made to your application %1",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sequence": 132,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.reviewData.latestDecision.decision",
+       null
+      ],
+      "operator": "objectProperties"
+     },
+     "LIST_OF_QUESTIONS"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about Demo application to user's email when reviewer has submitted a List of Questions",
+   "eventCode": "",
+   "id": 233,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: %3/application/%4\n\nMany thanks,\n\n{Regulatory Agency}",
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        {
+         "children": [
+          {
+           "children": [
+            "applicationData.reviewData.latestDecision.comment",
+            null
+           ],
+           "operator": "objectProperties"
+          },
+          null
+         ],
+         "operator": "!="
+        },
+        {
+         "children": [
+          "The outline reason for changes required is:\n\n    \"%2\"",
+          {
+           "children": [
+            "applicationData.reviewData.latestDecision.comment",
+            null
+           ],
+           "operator": "objectProperties"
+          }
+         ],
+         "operator": "stringSubstitution"
+        },
+        ""
+       ],
+       "operator": "?"
+      },
+      {
+       "children": [
+        "applicationData.environmentData.webHostUrl",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Changes have been made to your application %1",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sequence": 133,
+   "templateId": 8,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "APPROVED"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about Create an organisation to user's email when outcome is APPROVED",
+   "eventCode": "",
+   "id": 234,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# Your request to register an organistion has been approved.\n\nHi %1 %2, \n\nYour application %3 to join company ‘%4’ has been approved. \n\nLog into your mFlow account to view the changes. \n\nMany thanks, \n\n{Regulatory Agency}",
+      {
+       "children": [
+        "applicationData.firstName",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.lastName",
+        ""
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.responses.name.text",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Congratulations, application %1 has been approved",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "fromName": "Application Manager",
+    "fromEmail": "no-reply@sussol.net"
+   },
+   "sequence": 104,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.outcome"
+      ],
+      "operator": "objectProperties"
+     },
+     "REJECTED"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about create an organisation application to user's email when the outcome is REJECTED",
+   "eventCode": "",
+   "id": 235,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit %4/application/%5\n\nMany thanks,\n\n{Regulatory Agency}",
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.stage",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.reviewData.latestDecision.comment",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.environmentData.webHostUrl",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Changes have been made to your application %1",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sequence": 105,
+   "templateId": 7,
+   "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     {
+      "children": [
+       "applicationData.reviewData.latestDecision.decision",
+       null
+      ],
+      "operator": "objectProperties"
+     },
+     "LIST_OF_QUESTIONS"
+    ],
+    "operator": "="
+   },
+   "description": "Send notification about create an organisation application to user's email when reviewer has submitted a List of Questions",
+   "eventCode": "",
+   "id": 236,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "applicationData.email",
+      ""
+     ],
+     "operator": "objectProperties"
+    },
+    "message": {
+     "children": [
+      "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: %3/application/%4\n\nMany thanks,\n\n{Regulatory Agency}",
+      {
+       "children": [
+        "applicationData.applicationName",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        {
+         "children": [
+          {
+           "children": [
+            "applicationData.reviewData.latestDecision.comment",
+            null
+           ],
+           "operator": "objectProperties"
+          },
+          null
+         ],
+         "operator": "!="
+        },
+        {
+         "children": [
+          "The outline reason for changes required is:\n\n    \"%2\"",
+          {
+           "children": [
+            "applicationData.reviewData.latestDecision.comment",
+            null
+           ],
+           "operator": "objectProperties"
+          }
+         ],
+         "operator": "stringSubstitution"
+        },
+        ""
+       ],
+       "operator": "?"
+      },
+      {
+       "children": [
+        "applicationData.environmentData.webHostUrl",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": {
+     "children": [
+      "Changes have been made to your application %1",
+      {
+       "children": [
+        "applicationData.applicationSerial",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sequence": 106,
+   "templateId": 7,
    "trigger": "ON_REVIEW_SUBMIT"
   }
  ],
@@ -16402,14 +17614,24 @@
   {
    "applicationId": 13,
    "id": 187,
-   "isValid": null,
-   "stageNumber": null,
+   "isValid": true,
+   "stageNumber": 1,
    "status": "DRAFT",
    "templateElementId": 98,
    "timeCreated": "2021-09-08T19:35:33.001937+12:00",
    "timeSubmitted": null,
-   "timeUpdated": "2021-09-08T19:35:33.001937+12:00",
-   "value": null
+   "timeUpdated": "2021-09-09T12:20:17.219291+12:00",
+   "value": {
+    "text": "*<Nothing Selected>*",
+    "values": {
+     "1": {
+      "text": "Yes",
+      "selected": false,
+      "textNegative": ""
+     }
+    },
+    "selectedValuesArray": []
+   }
   },
   {
    "applicationId": 13,
