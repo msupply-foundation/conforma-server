@@ -910,9 +910,11 @@ class PostgresDB {
     const displayTypeClause = displayType ? 'display_type = $3' : 'display_type IS NULL'
     const text = `
       SELECT * FROM outcome_display
-      WHERE ($1 && permission_names
-      OR permission_names IS NULL
-      OR cardinality(permission_names) = 0)
+      WHERE (
+              $1 && permission_names
+              OR permission_names IS NULL
+              OR cardinality(permission_names) = 0
+            )
       AND table_name LIKE $2
       AND ${displayTypeClause}
     `
@@ -920,6 +922,20 @@ class PostgresDB {
     if (displayType) values.push(displayType)
     try {
       const result = await this.query({ text, values })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getOutcomeColumnDefinitions = async (outcomeDisplayIds: number[]) => {
+    const text = `
+      SELECT * FROM outcome_display_column_definition
+      WHERE outcome_display_id = ANY($1)
+    `
+    try {
+      const result = await this.query({ text, values: [outcomeDisplayIds] })
       return result.rows
     } catch (err) {
       console.log(err.message)

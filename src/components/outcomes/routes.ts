@@ -1,8 +1,9 @@
 import databaseConnect from '../databaseConnect'
 import { getTokenData, extractJWTfromHeader } from '../permissions/loginHelpers'
 import { getDistinctObjects, objectKeysToCamelCase } from '../utilityFunctions'
-import { camelCase, snakeCase } from 'lodash'
+import { camelCase, snakeCase, Dictionary } from 'lodash'
 import { plural } from 'pluralize'
+import { OutcomeDisplay } from '../../generated/graphql'
 
 const routeOutcomes = async (request: any, reply: any) => {
   const permissionNames = await getPermissionNamesFromJWT(request)
@@ -27,29 +28,43 @@ const routeOutcomesTable = async (request: any, reply: any) => {
   const outcomeTables = await databaseConnect.getAllOutcomeTableNames()
   if (!outcomeTables.includes(tableName)) throw new Error('Invalid table name')
 
-  const outcomes = await databaseConnect.getAllowedOutcomeDisplays(permissionNames, tableName)
+  const outcomes = (await databaseConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
+    .map((outcome) => objectKeysToCamelCase(outcome))
+    .sort((a, b) => b.conflictPriority - a.conflictPriority) as OutcomeDisplay[]
+
+  console.log(outcomes)
 
   // Terminology: to avoid confustion "Columns" refers to the names of the table
   // columns that are *output*. "Fields" refers to the names of the
   // columns/fields on the original outcome table.
 
   // Get all Field names (schema query)
-  const fieldNames = await databaseConnect.getOutcomeTableColumns(tableName)
-  const fieldNamesString = fieldNames.map((field) => camelCase(field.name)).join(', ')
+  const fields = (await databaseConnect.getOutcomeTableColumns(tableName)).map(
+    ({ name, dataType }) => ({
+      name: camelCase(name),
+      dataType,
+    })
+  )
+  const fieldNames = fields.map((field) => field.name)
+  const fieldNamesJoined = fields.map((field) => field.name).join(', ')
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const graphQLquery = `query getOutcomeRecords { ${tableNamePlural}(first: ${first}, offset: ${offset}, orderBy: ${snakeCase(
     orderBy
-  ).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}) { nodes { ${fieldNamesString} }}}`
+  ).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}) { nodes { ${fieldNamesJoined} }}}`
 
   const fetchedRecords = (await databaseConnect.gqlQuery(graphQLquery, {}, authHeaders))?.[
     tableNamePlural
   ]?.nodes
 
-  // Get all display_details records
-  console.log('outcomes', outcomes)
+  // Get all associated display column definition records
+  const columnDisplayDefinitions = await databaseConnect.getOutcomeColumnDefinitions(
+    outcomes.map(({ id }) => id)
+  )
 
   // Get all returning columns (include/exclude + details) and identify them as either standard fields or queries
+
+  const allowedColumns = buildColumnList(outcomes, fieldNames, 'TABLE')
 
   // Iterate over returned records:
   // - For each, iterate over columns, and either fill the value from query result, or perform the query (Be good to do some Async evalutation here)
@@ -68,5 +83,21 @@ const getPermissionNamesFromJWT = async (request: any): Promise<string[]> => {
   ).map((result) => result.permissionName)
 }
 
-const createOrderByString = (orderBy: string, ascending: boolean) =>
-  `${orderBy.toUpperCase()}_${ascending ? 'ASC' : 'DESC'}`
+const buildColumnList = (
+  outcomes: OutcomeDisplay[],
+  fieldNames: string[],
+  type: 'TABLE' | 'DETAIL'
+) => {
+  const includeColumns: string[] = []
+  const excludeColumns: string[] = []
+  const includeField = type === 'TABLE' ? 'tableViewIncludeColumns' : 'detailViewIncludeColumns'
+  const excludeField = type === 'TABLE' ? 'tableViewExcludeColumns' : 'detailViewExcludeColumns'
+  outcomes.forEach((outcome) => {
+    if (outcome[includeField] === null) includeColumns.push(...fieldNames)
+    else includeColumns.push(...(outcome[includeField] as string[]))
+    outcome[excludeField] !== null && excludeColumns.push(...(outcome[excludeField] as string[]))
+  })
+  const includeSet = new Set(includeColumns)
+  const excludeSet = new Set(excludeColumns)
+  return [...includeSet].filter((x) => !excludeSet.has(x))
+}

@@ -138,6 +138,8 @@ class DBConnect {
 
   public getAllowedOutcomeDisplays = PostgresDB.getAllowedOutcomeDisplays
 
+  public getOutcomeColumnDefinitions = PostgresDB.getOutcomeColumnDefinitions
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery
