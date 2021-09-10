@@ -17,6 +17,7 @@ import {
   ActionQueueStatus,
   ApplicationOutcome,
   ApplicationStatus,
+  OutcomeDisplayType,
   ReviewStatus,
   Trigger,
 } from '../generated/graphql'
@@ -852,6 +853,38 @@ class PostgresDB {
     }
   }
 
+  public getAllOutcomeTableNames = async () => {
+    const text = `
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema='public'
+      AND table_type='BASE TABLE';
+    `
+    try {
+      const result = await this.query({ text, rowMode: 'array' })
+      return result.rows.map((table) => table[0])
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getOutcomeTableColumns = async (tableName: string) => {
+    const text = `
+      SELECT column_name as name,
+      data_type as "dataType"
+      FROM information_schema.columns
+      WHERE table_name = $1;
+    `
+    try {
+      const result = await this.query({ text, values: [tableName] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getPermissionPolicies: GetPermissionPolicies = async () => {
     try {
       const result = await this.query({
@@ -867,17 +900,26 @@ class PostgresDB {
 
   // OUTCOME QUERIES
 
-  public getAllowedOutcomeDisplays = async (userPermissions: string[]) => {
+  public getAllowedOutcomeDisplays = async (
+    userPermissions: string[],
+    tableName: string = '%',
+    displayType: OutcomeDisplayType | null = null
+  ) => {
     // Returns any records that have ANY permissionNames in common with input
     // userPermissions, or are empty (i.e. public)
+    const displayTypeClause = displayType ? 'display_type = $3' : 'display_type IS NULL'
     const text = `
       SELECT * FROM outcome_display
-      WHERE $1 && permission_names
+      WHERE ($1 && permission_names
       OR permission_names IS NULL
-      OR cardinality(permission_names) = 0
+      OR cardinality(permission_names) = 0)
+      AND table_name LIKE $2
+      AND ${displayTypeClause}
     `
+    const values = [userPermissions, tableName]
+    if (displayType) values.push(displayType)
     try {
-      const result = await this.query({ text, values: [userPermissions] })
+      const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
       console.log(err.message)

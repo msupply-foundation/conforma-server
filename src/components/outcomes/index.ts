@@ -1,3 +1,3 @@
-import { routeOutcomes } from './routes'
+import { routeOutcomes, routeOutcomesTable } from './routes'
 
-export { routeOutcomes }
+export { routeOutcomes, routeOutcomesTable }
