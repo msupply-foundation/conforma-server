@@ -35,6 +35,7 @@ export const routeGeneratePDF = async (request: any, reply: any) => {
 interface GeneratePDFInput {
   fileId: string
   data: object
+  options?: RenderOptions
   userId?: number
   templateId?: number
   applicationSerial?: string
@@ -45,6 +46,7 @@ interface GeneratePDFInput {
 export async function generatePDF({
   fileId,
   data,
+  options,
   userId,
   templateId,
   applicationSerial,
@@ -70,7 +72,7 @@ export async function generatePDF({
   console.log('Generating document: ' + originalFilename)
 
   try {
-    const result = await carboneRender(templateFullPath, data, { convertTo: 'pdf' })
+    const result = await carboneRender(templateFullPath, data, { convertTo: 'pdf', ...options })
     fs.writeFileSync(path.join(appRootFolder, filesFolder, outputFilePath), result)
     await registerFileInDB(
       objectKeysToSnakeCase({

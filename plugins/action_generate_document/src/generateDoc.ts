@@ -18,6 +18,9 @@ const generateDoc: ActionPluginType = async ({
     const result = await generatePDF({
       fileId: docTemplateId,
       data,
+      options: {
+        lang: 'pt-pt',
+      },
       userId,
       templateId,
       applicationSerial,
