@@ -112,7 +112,7 @@ class DBConnect {
 
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
-  public getUserPermissionNames = PostgresDB.getUserPermissionNames
+  public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames
 
   public joinPermissionNameToUser = PostgresDB.joinPermissionNameToUser
 
@@ -131,6 +131,8 @@ class DBConnect {
   public getDatabaseInfo = PostgresDB.getDatabaseInfo
 
   public getPermissionPolicies = PostgresDB.getPermissionPolicies
+
+  public getAllowedOutcomeDisplays = PostgresDB.getAllowedOutcomeDisplays
 
   // GraphQL
 

@@ -12008,10 +12008,12 @@ export type OutcomeDisplay = Node & {
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   displayType?: Maybe<OutcomeDisplayType>;
   /** Reads and enables pagination through a set of `OutcomeDisplayColumnDefinition`. */
@@ -12225,10 +12227,12 @@ export type OutcomeDisplayColumnDefinitionOutcomeDisplayIdFkeyOutcomeDisplayCrea
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   displayType?: Maybe<OutcomeDisplayType>;
   outcomeDisplayColumnDefinitionsUsingId?: Maybe<OutcomeDisplayColumnDefinitionOutcomeDisplayIdFkeyInverseInput>;
@@ -12301,6 +12305,8 @@ export type OutcomeDisplayCondition = {
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `permissionNames` field. */
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `tableViewIncludeColumns` field. */
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `tableViewExcludeColumns` field. */
@@ -12309,6 +12315,8 @@ export type OutcomeDisplayCondition = {
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `detailViewExcludeColumns` field. */
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `conflictPriority` field. */
+  conflictPriority?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `detailViewHeaderColumn` field. */
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `displayType` field. */
@@ -12478,10 +12486,12 @@ export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = 
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   displayType?: Maybe<OutcomeDisplayType>;
   outcomeDisplayColumnDefinitionsUsingId?: Maybe<OutcomeDisplayColumnDefinitionOutcomeDisplayIdFkeyInverseInput>;
@@ -12565,6 +12575,8 @@ export type OutcomeDisplayFilter = {
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
+  /** Filter by the object’s `permissionNames` field. */
+  permissionNames?: Maybe<StringListFilter>;
   /** Filter by the object’s `tableViewIncludeColumns` field. */
   tableViewIncludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `tableViewExcludeColumns` field. */
@@ -12573,6 +12585,8 @@ export type OutcomeDisplayFilter = {
   detailViewIncludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `detailViewExcludeColumns` field. */
   detailViewExcludeColumns?: Maybe<StringListFilter>;
+  /** Filter by the object’s `conflictPriority` field. */
+  conflictPriority?: Maybe<IntFilter>;
   /** Filter by the object’s `detailViewHeaderColumn` field. */
   detailViewHeaderColumn?: Maybe<StringFilter>;
   /** Filter by the object’s `displayType` field. */
@@ -12603,10 +12617,12 @@ export type OutcomeDisplayInput = {
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   displayType?: Maybe<OutcomeDisplayType>;
   outcomeDisplayColumnDefinitionsUsingId?: Maybe<OutcomeDisplayColumnDefinitionOutcomeDisplayIdFkeyInverseInput>;
@@ -12718,10 +12734,12 @@ export type OutcomeDisplayPatch = {
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   displayType?: Maybe<OutcomeDisplayType>;
   outcomeDisplayColumnDefinitionsUsingId?: Maybe<OutcomeDisplayColumnDefinitionOutcomeDisplayIdFkeyInverseInput>;
@@ -12762,6 +12780,8 @@ export enum OutcomeDisplaysOrderBy {
   TitleDesc = 'TITLE_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
+  PermissionNamesAsc = 'PERMISSION_NAMES_ASC',
+  PermissionNamesDesc = 'PERMISSION_NAMES_DESC',
   TableViewIncludeColumnsAsc = 'TABLE_VIEW_INCLUDE_COLUMNS_ASC',
   TableViewIncludeColumnsDesc = 'TABLE_VIEW_INCLUDE_COLUMNS_DESC',
   TableViewExcludeColumnsAsc = 'TABLE_VIEW_EXCLUDE_COLUMNS_ASC',
@@ -12770,6 +12790,8 @@ export enum OutcomeDisplaysOrderBy {
   DetailViewIncludeColumnsDesc = 'DETAIL_VIEW_INCLUDE_COLUMNS_DESC',
   DetailViewExcludeColumnsAsc = 'DETAIL_VIEW_EXCLUDE_COLUMNS_ASC',
   DetailViewExcludeColumnsDesc = 'DETAIL_VIEW_EXCLUDE_COLUMNS_DESC',
+  ConflictPriorityAsc = 'CONFLICT_PRIORITY_ASC',
+  ConflictPriorityDesc = 'CONFLICT_PRIORITY_DESC',
   DetailViewHeaderColumnAsc = 'DETAIL_VIEW_HEADER_COLUMN_ASC',
   DetailViewHeaderColumnDesc = 'DETAIL_VIEW_HEADER_COLUMN_DESC',
   DisplayTypeAsc = 'DISPLAY_TYPE_ASC',
@@ -12919,10 +12941,12 @@ export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   displayType?: Maybe<OutcomeDisplayType>;
   outcomeDisplayColumnDefinitionsUsingId?: Maybe<OutcomeDisplayColumnDefinitionOutcomeDisplayIdFkeyInverseInput>;
@@ -26371,10 +26395,12 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayColumnDefinitionForOutcomeDispla
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   displayType?: Maybe<OutcomeDisplayType>;
   outcomeDisplayColumnDefinitionsUsingId?: Maybe<OutcomeDisplayColumnDefinitionOutcomeDisplayIdFkeyInverseInput>;
@@ -26388,10 +26414,12 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOut
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   displayType?: Maybe<OutcomeDisplayType>;
   outcomeDisplayColumnDefinitionsUsingId?: Maybe<OutcomeDisplayColumnDefinitionOutcomeDisplayIdFkeyInverseInput>;
@@ -26405,10 +26433,12 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutco
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   displayType?: Maybe<OutcomeDisplayType>;
   outcomeDisplayColumnDefinitionsUsingId?: Maybe<OutcomeDisplayColumnDefinitionOutcomeDisplayIdFkeyInverseInput>;
@@ -36178,10 +36208,12 @@ export type OutcomeDisplayResolvers<ContextType = any, ParentType extends Resolv
   tableName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  permissionNames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   tableViewIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   tableViewExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   detailViewIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   detailViewExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  conflictPriority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   detailViewHeaderColumn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   displayType?: Resolver<Maybe<ResolversTypes['OutcomeDisplayType']>, ParentType, ContextType>;
   outcomeDisplayColumnDefinitions?: Resolver<ResolversTypes['OutcomeDisplayColumnDefinitionsConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayOutcomeDisplayColumnDefinitionsArgs, 'orderBy'>>;

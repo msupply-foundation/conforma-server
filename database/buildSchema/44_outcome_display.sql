@@ -9,10 +9,12 @@ CREATE TABLE outcome_display (
     table_name varchar,
     title varchar,
     code varchar UNIQUE,
+    permission_names varchar[] DEFAULT NULL,
     table_view_include_columns varchar[] DEFAULT NULL,
     table_view_exclude_columns varchar[] DEFAULT NULL,
     detail_view_include_columns varchar[] DEFAULT NULL,
     detail_view_exclude_columns varchar[] DEFAULT NULL,
+    conflict_priority integer DEFAULT 1,
     -- Header for detail view
     detail_view_header_column varchar,
     display_type public.outcome_display_type DEFAULT NULL
