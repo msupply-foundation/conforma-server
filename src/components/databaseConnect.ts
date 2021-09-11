@@ -130,7 +130,7 @@ class DBConnect {
 
   public getDatabaseInfo = PostgresDB.getDatabaseInfo
 
-  public getAllOutcomeTableNames = PostgresDB.getAllOutcomeTableNames
+  public getAllTableNames = PostgresDB.getAllTableNames
 
   public getOutcomeTableColumns = PostgresDB.getOutcomeTableColumns
 

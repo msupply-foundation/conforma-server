@@ -16,18 +16,19 @@ CREATE TABLE outcome_display (
     detail_view_exclude_columns varchar[] DEFAULT NULL,
     conflict_priority integer DEFAULT 1,
     -- Header for detail view
-    detail_view_header_column varchar,
-    display_type public.outcome_display_type DEFAULT NULL
+    detail_view_header_column varchar
 );
 
 -- For columns that require more detail format or evaluation definitions
 CREATE TABLE outcome_display_column_definition (
     id serial PRIMARY KEY,
-    outcome_display_id integer REFERENCES outcome_display (id) ON DELETE CASCADE,
+    table_name varchar,
+    column_match varchar,
     title varchar,
     element_type_plugin_code varchar,
     additional_formatting jsonb,
-    value jsonb NOT NULL
+    value_expression jsonb NOT NULL DEFAULT '{}',
+    UNIQUE (table_name, column_match)
 );
 
 -- OLD TABLES -- LEAVING THESE HERE FOR NOW, DELETE ONCE MIGRATION COMPLETE

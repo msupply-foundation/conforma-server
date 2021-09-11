@@ -1,103 +1,106 @@
-import databaseConnect from '../databaseConnect'
-import { getTokenData, extractJWTfromHeader } from '../permissions/loginHelpers'
+import DBConnect from '../databaseConnect'
 import { getDistinctObjects, objectKeysToCamelCase } from '../utilityFunctions'
-import { camelCase, snakeCase, Dictionary } from 'lodash'
-import { plural } from 'pluralize'
+import {
+  getPermissionNamesFromJWT,
+  buildColumnList,
+  buildColumnDisplayDefinitions,
+  queryOutcomeTable,
+  constructResponse,
+} from './helpers'
+import { camelCase } from 'lodash'
 import { OutcomeDisplay } from '../../generated/graphql'
+import { OutcomeResult, OutcomesTableResult } from './types'
 
 const routeOutcomes = async (request: any, reply: any) => {
   const permissionNames = await getPermissionNamesFromJWT(request)
-  const outcomes = await databaseConnect.getAllowedOutcomeDisplays(permissionNames)
+  const outcomes = await DBConnect.getAllowedOutcomeDisplays(permissionNames)
   const distinctOutcomes = getDistinctObjects(outcomes, 'table_name', 'conflict_priority')
-  return reply.send(
-    distinctOutcomes.map(({ table_name, title, code }) => ({ tableName: table_name, title, code }))
-  )
+  const outcomeResponse: OutcomeResult = distinctOutcomes.map(({ table_name, title, code }) => ({
+    tableName: table_name,
+    title,
+    code,
+  }))
+  return reply.send(outcomeResponse)
 }
 
 const routeOutcomesTable = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
-  const { tableName } = request.params
-  const tableNamePlural = plural(tableName)
+  const tableName = camelCase(request.params.tableName)
   const permissionNames = await getPermissionNamesFromJWT(request)
   const query = objectKeysToCamelCase(request.query)
+
+  // GraphQL pagination parameters
   const first = query?.first ? Number(query.first) : 20
   const offset = query?.offset ? Number(query.offset) : 0
   const orderBy = query?.orderBy ?? 'id'
   const ascending = query?.ascending ? Boolean(query.ascending) : true
 
-  const outcomeTables = await databaseConnect.getAllOutcomeTableNames()
+  const outcomesTableResponse: OutcomesTableResult = {
+    headerRow: [],
+    tableRows: [],
+    totalCount: 0,
+  }
+
+  const outcomeTables = await DBConnect.getAllTableNames()
   if (!outcomeTables.includes(tableName)) throw new Error('Invalid table name')
 
-  const outcomes = (await databaseConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
+  const outcomes = (await DBConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
     .map((outcome) => objectKeysToCamelCase(outcome))
     .sort((a, b) => b.conflictPriority - a.conflictPriority) as OutcomeDisplay[]
 
-  console.log(outcomes)
+  if (outcomes.length === 0)
+    return {
+      ...outcomesTableResponse,
+      message: `No outcomes available for table "${tableName}"`,
+    }
 
   // Terminology: to avoid confustion "Columns" refers to the names of the table
   // columns that are *output*. "Fields" refers to the names of the
   // columns/fields on the original outcome table.
 
-  // Get all Field names (schema query)
-  const fields = (await databaseConnect.getOutcomeTableColumns(tableName)).map(
-    ({ name, dataType }) => ({
-      name: camelCase(name),
-      dataType,
-    })
-  )
+  // Get all Fields on Outcome table (schema query)
+  const fields: { name: string; dataType: string }[] = (
+    await DBConnect.getOutcomeTableColumns(tableName)
+  ).map(({ name, dataType }) => ({
+    name: camelCase(name),
+    dataType,
+  }))
   const fieldNames = fields.map((field) => field.name)
-  const fieldNamesJoined = fields.map((field) => field.name).join(', ')
+  const fieldDataTypes = fields.reduce((dataTypeIndex: { [key: string]: string }, field) => {
+    dataTypeIndex[field.name] = field.dataType
+    return dataTypeIndex
+  }, {})
+
+  // Get all returning column names (include/exclude + custom columns)
+  const columnsToReturn: string[] = buildColumnList(outcomes, fieldNames, 'TABLE')
+
+  // Get all associated display column_definition records
+  const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableName, columnsToReturn)
+
+  // Build complete column definition list from the above
+  const fieldNameSet = new Set(fieldNames)
+  const columnDefinitionMasterList = columnsToReturn.map((column) => ({
+    columnName: column,
+    isBasicField: fieldNameSet.has(column),
+    dataType: fieldDataTypes[column],
+    columnDefinition: customDisplayDefinitions[column],
+  }))
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
-  const graphQLquery = `query getOutcomeRecords { ${tableNamePlural}(first: ${first}, offset: ${offset}, orderBy: ${snakeCase(
-    orderBy
-  ).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}) { nodes { ${fieldNamesJoined} }}}`
-
-  const fetchedRecords = (await databaseConnect.gqlQuery(graphQLquery, {}, authHeaders))?.[
-    tableNamePlural
-  ]?.nodes
-
-  // Get all associated display column definition records
-  const columnDisplayDefinitions = await databaseConnect.getOutcomeColumnDefinitions(
-    outcomes.map(({ id }) => id)
+  const { fetchedRecords, totalCount } = await queryOutcomeTable(
+    tableName,
+    fieldNames,
+    first,
+    offset,
+    orderBy,
+    ascending,
+    authHeaders
   )
 
-  // Get all returning columns (include/exclude + details) and identify them as either standard fields or queries
+  // Finally, use all of the above to build a structured Response object
+  const response = await constructResponse(columnDefinitionMasterList, fetchedRecords, totalCount)
 
-  const allowedColumns = buildColumnList(outcomes, fieldNames, 'TABLE')
-
-  // Iterate over returned records:
-  // - For each, iterate over columns, and either fill the value from query result, or perform the query (Be good to do some Async evalutation here)
-
-  // Return constructed object
-
-  return reply.send(fetchedRecords)
+  return reply.send(response)
 }
 
 export { routeOutcomes, routeOutcomesTable }
-
-const getPermissionNamesFromJWT = async (request: any): Promise<string[]> => {
-  const { userId, orgId } = await getTokenData(extractJWTfromHeader(request))
-  return await (
-    await databaseConnect.getUserOrgPermissionNames(userId, orgId)
-  ).map((result) => result.permissionName)
-}
-
-const buildColumnList = (
-  outcomes: OutcomeDisplay[],
-  fieldNames: string[],
-  type: 'TABLE' | 'DETAIL'
-) => {
-  const includeColumns: string[] = []
-  const excludeColumns: string[] = []
-  const includeField = type === 'TABLE' ? 'tableViewIncludeColumns' : 'detailViewIncludeColumns'
-  const excludeField = type === 'TABLE' ? 'tableViewExcludeColumns' : 'detailViewExcludeColumns'
-  outcomes.forEach((outcome) => {
-    if (outcome[includeField] === null) includeColumns.push(...fieldNames)
-    else includeColumns.push(...(outcome[includeField] as string[]))
-    outcome[excludeField] !== null && excludeColumns.push(...(outcome[excludeField] as string[]))
-  })
-  const includeSet = new Set(includeColumns)
-  const excludeSet = new Set(excludeColumns)
-  return [...includeSet].filter((x) => !excludeSet.has(x))
-}

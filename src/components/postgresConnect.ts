@@ -13,14 +13,7 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
 } from '../types'
-import {
-  ActionQueueStatus,
-  ApplicationOutcome,
-  ApplicationStatus,
-  OutcomeDisplayType,
-  ReviewStatus,
-  Trigger,
-} from '../generated/graphql'
+import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -853,7 +846,7 @@ class PostgresDB {
     }
   }
 
-  public getAllOutcomeTableNames = async () => {
+  public getAllTableNames = async () => {
     const text = `
       SELECT table_name
       FROM information_schema.tables
@@ -900,14 +893,9 @@ class PostgresDB {
 
   // OUTCOME QUERIES
 
-  public getAllowedOutcomeDisplays = async (
-    userPermissions: string[],
-    tableName: string = '%',
-    displayType: OutcomeDisplayType | null = null
-  ) => {
+  public getAllowedOutcomeDisplays = async (userPermissions: string[], tableName: string = '%') => {
     // Returns any records that have ANY permissionNames in common with input
     // userPermissions, or are empty (i.e. public)
-    const displayTypeClause = displayType ? 'display_type = $3' : 'display_type IS NULL'
     const text = `
       SELECT * FROM outcome_display
       WHERE (
@@ -916,10 +904,8 @@ class PostgresDB {
               OR cardinality(permission_names) = 0
             )
       AND table_name LIKE $2
-      AND ${displayTypeClause}
     `
     const values = [userPermissions, tableName]
-    if (displayType) values.push(displayType)
     try {
       const result = await this.query({ text, values })
       return result.rows
@@ -929,13 +915,14 @@ class PostgresDB {
     }
   }
 
-  public getOutcomeColumnDefinitions = async (outcomeDisplayIds: number[]) => {
+  public getOutcomeColumnDefinitions = async (tableName: string, columnMatches: string[]) => {
     const text = `
       SELECT * FROM outcome_display_column_definition
-      WHERE outcome_display_id = ANY($1)
+      WHERE table_name = $1
+      AND column_match = ANY($2)
     `
     try {
-      const result = await this.query({ text, values: [outcomeDisplayIds] })
+      const result = await this.query({ text, values: [tableName, columnMatches] })
       return result.rows
     } catch (err) {
       console.log(err.message)
