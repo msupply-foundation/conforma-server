@@ -12,7 +12,7 @@ import {
   routeCreateHash,
   routeVerification,
 } from './components/permissions'
-import { routeOutcomes, routeOutcomesTable } from './components/outcomes'
+import { routeOutcomes, routeOutcomesTable, routeOutcomesDetail } from './components/outcomes'
 import { routeGeneratePDF } from './components/files/documentGenerate'
 import {
   saveFiles,
@@ -71,6 +71,7 @@ const startServer = async () => {
   server.post('/generate-pdf', routeGeneratePDF)
   server.get('/outcomes', routeOutcomes)
   server.get('/outcomes/table/:tableName', routeOutcomesTable)
+  server.get('/outcomes/table/:tableName/item/:id', routeOutcomesDetail)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {

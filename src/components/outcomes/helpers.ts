@@ -4,8 +4,14 @@ import { objectKeysToCamelCase } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import fetch from 'node-fetch'
 import { plural } from 'pluralize'
-import { snakeCase, startCase } from 'lodash'
-import { ColumnDefinitionMasterList, ColumnDisplayDefinitions, OutcomesTableResult } from './types'
+import { snakeCase, camelCase, startCase } from 'lodash'
+import {
+  ColumnDefinitionMasterList,
+  ColumnDisplayDefinitions,
+  DisplayDefinition,
+  OutcomesDetailResponse,
+  OutcomesTableResponse,
+} from './types'
 import { OutcomeDisplay, OutcomeDisplayColumnDefinition } from '../../generated/graphql'
 import config from '../../config'
 
@@ -18,6 +24,56 @@ export const getPermissionNamesFromJWT = async (request: any): Promise<string[]>
   return await (
     await DBConnect.getUserOrgPermissionNames(userId, orgId)
   ).map((result) => result.permissionName)
+}
+
+type ColumnDetailOutput = {
+  columnDefinitionMasterList: ColumnDefinitionMasterList
+  fieldNames: string[]
+}
+export const buildAllColumnDefinitions = async (
+  permissionNames: string[],
+  tableName: string,
+  type: 'TABLE' | 'DETAIL'
+): Promise<ColumnDetailOutput> => {
+  // Look up allowed Outcome displays
+  const outcomeTables = await DBConnect.getAllTableNames()
+  if (!outcomeTables.includes(tableName)) throw new Error('Invalid table name')
+
+  const outcomes = (await DBConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
+    .map((outcome) => objectKeysToCamelCase(outcome))
+    .sort((a, b) => b.conflictPriority - a.conflictPriority) as OutcomeDisplay[]
+
+  if (outcomes.length === 0) throw new Error(`No outcomes available for table "${tableName}"`)
+
+  // Get all Fields on Outcome table (schema query)
+  const fields: { name: string; dataType: string }[] = (
+    await DBConnect.getOutcomeTableColumns(tableName)
+  ).map(({ name, dataType }) => ({
+    name: camelCase(name),
+    dataType,
+  }))
+  const fieldNames = fields.map((field) => field.name)
+  const fieldDataTypes = fields.reduce((dataTypeIndex: { [key: string]: string }, field) => {
+    dataTypeIndex[field.name] = field.dataType
+    return dataTypeIndex
+  }, {})
+
+  // Get all returning column names (include/exclude + custom columns)
+  const columnsToReturn: string[] = buildColumnList(outcomes, fieldNames, type)
+
+  // Get all associated display column_definition records
+  const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableName, columnsToReturn)
+
+  // Build complete column definition list from the above
+  const fieldNameSet = new Set(fieldNames)
+  const columnDefinitionMasterList = columnsToReturn.map((column) => ({
+    columnName: column,
+    isBasicField: fieldNameSet.has(column),
+    dataType: fieldDataTypes[column],
+    columnDefinition: customDisplayDefinitions[column],
+  }))
+
+  return { columnDefinitionMasterList, fieldNames }
 }
 
 export const buildColumnList = (
@@ -59,19 +115,6 @@ export const buildColumnDisplayDefinitions = async (
   return columnDisplayDefinitions
 }
 
-export const buildColumnDefinitionList = (
-  columns: string[],
-  fieldNames: Set<string>,
-  fieldDataTypes: { [key: string]: string },
-  customDisplayDefinitions: ColumnDisplayDefinitions
-): ColumnDefinitionMasterList =>
-  columns.map((column) => ({
-    columnName: column,
-    isBasicField: fieldNames.has(column),
-    dataType: fieldDataTypes[column],
-    columnDefinition: customDisplayDefinitions[column],
-  }))
-
 export const queryOutcomeTable = async (
   tableName: string,
   fieldNames: string[],
@@ -94,11 +137,25 @@ export const queryOutcomeTable = async (
   return { fetchedRecords, totalCount }
 }
 
-export const constructResponse = async (
+export const queryOutcomeTableSingleItem = async (
+  tableName: string,
+  fieldNames: string[],
+  id: number,
+  authHeaders: string
+) => {
+  const graphQLquery = `query getOutcomeRecord($id:Int!){ ${tableName}(id: $id) {${fieldNames.join(
+    ', '
+  )}}}`
+  const queryResult = await DBConnect.gqlQuery(graphQLquery, { id }, authHeaders)
+  const fetchedRecord = queryResult?.[tableName]
+  return fetchedRecord
+}
+
+export const constructTableResponse = async (
   columnDefinitionMasterList: ColumnDefinitionMasterList,
   fetchedRecords: { id: number; [key: string]: any }[],
   totalCount: number
-): Promise<OutcomesTableResult> => {
+): Promise<OutcomesTableResponse> => {
   // Build table headers, which also carry any additional display/format
   // definitions for each column
   const headerRow = columnDefinitionMasterList.map(
@@ -118,9 +175,9 @@ export const constructResponse = async (
   )
 
   // Construct table rows by iterating over outcome records
-  //  - for columns that need evaluation, we put all these into an array
+  //  - for columns that need evaluation, we put all the Promises into an array
   //    (evaluationPromiseArray) so they can all be run asynchronously in
-  //    parallel. We also need to keep track of where they go in the main
+  //    parallel. We also need to keep track of where they belong in the main
   //    structure so we can replace them once all Promises are resolved
   //    (evaluationIndexArray).
   const evaluationPromiseArray: Promise<any>[] = []
@@ -143,7 +200,7 @@ export const constructResponse = async (
       evaluationIndexArray.push({ row: rowIndex, col: colIndex })
       return 'Awaiting promise...'
     })
-    return { id: record.id, rowValues: thisRow, rowAsObject: {} }
+    return { id: record.id, rowValues: thisRow, rowValuesObject: {} }
   })
 
   const resolvedValues = await Promise.all(evaluationPromiseArray)
@@ -156,12 +213,88 @@ export const constructResponse = async (
 
   // Also provide a version of the row entity in Object form, just because
   tableRows.forEach((row: any) => {
-    const rowAsObject: any = {}
+    const rowValuesObject: { [key: string]: any } = {}
     columnDefinitionMasterList.forEach(
-      ({ columnName }, index) => (rowAsObject[columnName] = row.rowValues[index])
+      ({ columnName }, index) => (rowValuesObject[columnName] = row.rowValues[index])
     )
-    row.rowAsObject = rowAsObject
+    row.rowValuesObject = rowValuesObject
   })
 
   return { headerRow, tableRows, totalCount }
+}
+
+export const constructDetailsResponse = async (
+  columnDefinitionMasterList: ColumnDefinitionMasterList,
+  fetchedRecord: { id: number; [key: string]: any },
+  totalCount: number = 0
+): Promise<any> => {
+  const response: OutcomesDetailResponse = {
+    id: fetchedRecord.id,
+    columns: columnDefinitionMasterList.map(({ columnName }) => columnName),
+    item: {},
+    displayDefinitions: {},
+    linkedApplications: [],
+  }
+  // Build display defintions object
+  const displayDefinitions: { [key: string]: DisplayDefinition } =
+    columnDefinitionMasterList.reduce(
+      (
+        displayDef: { [key: string]: DisplayDefinition },
+        { columnName, isBasicField, dataType, columnDefinition = {} }
+      ) => {
+        const { title, elementTypePluginCode, additionalFormatting } = columnDefinition
+        displayDef[columnName] = {
+          title: title ?? startCase(columnName),
+          isBasicField,
+          dataType,
+          formatting: {
+            elementTypePluginCode: elementTypePluginCode || undefined,
+            ...additionalFormatting,
+          },
+        }
+        return displayDef
+      },
+      {}
+    )
+
+  const evaluationPromiseArray: Promise<any>[] = []
+  const evaluationIndexArray: number[] = []
+  const item = columnDefinitionMasterList.map((cell, index) => {
+    const { columnName, isBasicField, columnDefinition } = cell
+    if (isBasicField) return fetchedRecord[columnName]
+    else {
+      evaluationPromiseArray.push(
+        evaluateExpression(columnDefinition?.valueExpression ?? {}, {
+          objects: { ...fetchedRecord, thisRecord: fetchedRecord[columnName] },
+          // pgConnection: DBConnect, probably don't want to allow Postgres
+          APIfetch: fetch,
+          // TO-DO: Need to pass Auth headers to evaluator API calls
+          graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+        })
+      )
+    }
+    evaluationIndexArray.push(index)
+    return 'Awaiting promise...'
+  })
+
+  console.log('item', item)
+
+  const resolvedValues = await Promise.all(evaluationPromiseArray)
+
+  //   // Replace evaluated values in structure
+  //   resolvedValues.forEach((value, index) => {
+  //     const { row, col } = evaluationIndexArray[index]
+  //     tableRows[row].rowValues[col] = value
+  //   })
+
+  //   // Also provide a version of the row entity in Object form, just because
+  //   tableRows.forEach((row: any) => {
+  //     const rowValuesObject: { [key: string]: any } = {}
+  //     columnDefinitionMasterList.forEach(
+  //       ({ columnName }, index) => (rowValuesObject[columnName] = row.rowValues[index])
+  //     )
+  //     row.rowValuesObject = rowValuesObject
+  //   })
+
+  return {}
 }
