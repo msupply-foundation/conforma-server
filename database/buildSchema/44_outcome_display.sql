@@ -1,8 +1,3 @@
-CREATE TYPE public.outcome_display_type AS ENUM (
-    'TABLE',
-    'DETAIL'
-);
-
 -- Outcome display
 CREATE TABLE outcome_display (
     id serial PRIMARY KEY,
