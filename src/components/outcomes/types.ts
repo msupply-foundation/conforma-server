@@ -8,6 +8,8 @@ export type OutcomesResponse = {
 }[]
 
 interface FormatOptions {
+  elementTypePluginCode: string
+  elementParameters: object
   markdown?: boolean
   dateFormat?: string
   // Add more as required
@@ -48,6 +50,13 @@ export interface ColumnDefinition {
   columnDefinition: OutcomeDisplayColumnDefinition | undefined
 }
 export type ColumnDefinitionMasterList = ColumnDefinition[]
+
+export interface ColumnDetailOutput {
+  columnDefinitionMasterList: ColumnDefinitionMasterList
+  fieldNames: string[]
+  headerDefinition: ColumnDefinition | undefined
+  showLinkedApplications: boolean
+}
 
 export interface LinkedApplication {
   name: string

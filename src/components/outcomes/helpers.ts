@@ -1,14 +1,13 @@
 import DBConnect from '../databaseConnect'
 import { getTokenData, extractJWTfromHeader } from '../permissions/loginHelpers'
-import { queryLinkedApplications } from './gqlDynamicQueries'
 import { objectKeysToCamelCase } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import fetch from 'node-fetch'
-import { plural } from 'pluralize'
-import { snakeCase, camelCase, startCase, head } from 'lodash'
+import { camelCase, startCase } from 'lodash'
 import {
   ColumnDefinition,
   ColumnDefinitionMasterList,
+  ColumnDetailOutput,
   ColumnDisplayDefinitions,
   DisplayDefinition,
   LinkedApplication,
@@ -19,7 +18,7 @@ import { OutcomeDisplay, OutcomeDisplayColumnDefinition } from '../../generated/
 import config from '../../config'
 
 // CONSTANTS
-const REST_OF_OUTCOME_FIELDS = '...REST'
+const REST_OF_OUTCOME_FIELDS = '...'
 const graphQLEndpoint = config.graphQLendpoint
 
 export const getPermissionNamesFromJWT = async (request: any): Promise<string[]> => {
@@ -29,12 +28,6 @@ export const getPermissionNamesFromJWT = async (request: any): Promise<string[]>
   ).map((result) => result.permissionName)
 }
 
-type ColumnDetailOutput = {
-  columnDefinitionMasterList: ColumnDefinitionMasterList
-  fieldNames: string[]
-  headerDefinition: ColumnDefinition | undefined
-  showLinkedApplications: boolean
-}
 export const buildAllColumnDefinitions = async (
   permissionNames: string[],
   tableName: string,
@@ -113,13 +106,12 @@ const buildColumnList = (
     else includeColumns.push(...(outcome[includeField] as string[]))
     outcome[excludeField] !== null && excludeColumns.push(...(outcome[excludeField] as string[]))
   })
-  const includeSet = new Set(includeColumns)
-  // '...REST' allows us to include all fields from original outcome table, even
-  // if we've added some custom columns to "include" list
-  if (includeSet.has(REST_OF_OUTCOME_FIELDS)) {
-    includeSet.delete(REST_OF_OUTCOME_FIELDS)
-    fieldNames.forEach((name) => includeSet.add(name))
-  }
+  // Convert to Sets to remove duplicate column names from multiple outcomes and
+  // expand "..." to all fields (so we don't have to enter the full field list
+  // in "includeColumns" when also adding a "custom" field)
+  const includeSet = new Set(
+    includeColumns.map((col) => (col === REST_OF_OUTCOME_FIELDS ? fieldNames : col)).flat()
+  )
   const excludeSet = new Set(excludeColumns)
   return [...includeSet].filter((x) => !excludeSet.has(x))
 }
@@ -147,7 +139,9 @@ export const constructTableResponse = async (
   // definitions for each column
   const headerRow = columnDefinitionMasterList.map(
     ({ columnName, isBasicField, dataType, columnDefinition = {} }) => {
-      const { title, elementTypePluginCode, additionalFormatting } = columnDefinition
+      console.log('columnDefinition', columnDefinition)
+      const { title, elementTypePluginCode, elementParameters, additionalFormatting } =
+        columnDefinition
       return {
         columnName,
         title: title ?? startCase(columnName),
@@ -155,6 +149,7 @@ export const constructTableResponse = async (
         dataType,
         formatting: {
           elementTypePluginCode: elementTypePluginCode || undefined,
+          elementParameters: elementParameters || undefined,
           ...additionalFormatting,
         },
       }
@@ -226,13 +221,15 @@ export const constructDetailsResponse = async (
         displayDef: { [key: string]: DisplayDefinition },
         { columnName, isBasicField, dataType, columnDefinition = {} }
       ) => {
-        const { title, elementTypePluginCode, additionalFormatting } = columnDefinition
+        const { title, elementTypePluginCode, elementParameters, additionalFormatting } =
+          columnDefinition
         displayDef[columnName] = {
           title: title ?? startCase(columnName),
           isBasicField,
           dataType,
           formatting: {
             elementTypePluginCode: elementTypePluginCode || undefined,
+            elementParameters: elementParameters || undefined,
             ...additionalFormatting,
           },
         }
@@ -272,6 +269,7 @@ export const constructDetailsResponse = async (
     dataType: headerDefinition?.dataType,
     formatting: {
       elementTypePluginCode: headerDefinition?.columnDefinition?.elementTypePluginCode || undefined,
+      elementParameters: headerDefinition?.columnDefinition?.elementParameters || undefined,
       ...headerDefinition?.columnDefinition?.additionalFormatting,
     },
   }

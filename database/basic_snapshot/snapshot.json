@@ -483,27 +483,27 @@
  "outcomeDisplay": [
   {
    "code": "user",
-   "detailColumnName": "username",
    "id": 1,
    "pluralTableName": "users",
    "tableName": "user",
-   "title": "Users"
+   "title": "Users",
+   "detailViewHeaderColumn": "username"
   },
   {
    "code": "organisation",
-   "detailColumnName": "name",
    "id": 2,
    "pluralTableName": "organisations",
    "tableName": "organisation",
-   "title": "Organisations"
+   "title": "Organisations",
+   "detailViewHeaderColumn": "name"
   },
   {
    "code": "license",
-   "detailColumnName": "serial",
    "id": 3,
    "pluralTableName": "licenses",
    "tableName": "license",
-   "title": "Licenses"
+   "title": "Licenses",
+   "detailViewHeaderColumn": "serial"
   }
  ],
  "permissionPolicy": [

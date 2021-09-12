@@ -14902,7 +14902,7 @@ export type OutcomeDisplay = Node & {
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications: Scalars['Boolean'];
   /** Reads and enables pagination through a set of `OutcomeDisplayTable`. */
   outcomeDisplayTables: OutcomeDisplayTablesConnection;
@@ -14945,6 +14945,7 @@ export type OutcomeDisplayColumnDefinition = Node & {
   elementTypePluginCode?: Maybe<Scalars['String']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression: Scalars['JSON'];
+  elementParameters?: Maybe<Scalars['JSON']>;
 };
 
 /**
@@ -14966,6 +14967,8 @@ export type OutcomeDisplayColumnDefinitionCondition = {
   additionalFormatting?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `valueExpression` field. */
   valueExpression?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `elementParameters` field. */
+  elementParameters?: Maybe<Scalars['JSON']>;
 };
 
 /** A filter to be used against `OutcomeDisplayColumnDefinition` object types. All fields are combined with a logical ‘and.’ */
@@ -14984,6 +14987,8 @@ export type OutcomeDisplayColumnDefinitionFilter = {
   additionalFormatting?: Maybe<JsonFilter>;
   /** Filter by the object’s `valueExpression` field. */
   valueExpression?: Maybe<JsonFilter>;
+  /** Filter by the object’s `elementParameters` field. */
+  elementParameters?: Maybe<JsonFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<OutcomeDisplayColumnDefinitionFilter>>;
   /** Checks for any expressions in this list. */
@@ -15001,6 +15006,7 @@ export type OutcomeDisplayColumnDefinitionInput = {
   elementTypePluginCode?: Maybe<Scalars['String']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression: Scalars['JSON'];
+  elementParameters?: Maybe<Scalars['JSON']>;
 };
 
 /** Represents an update to a `OutcomeDisplayColumnDefinition`. Fields that are set will be updated. */
@@ -15012,6 +15018,7 @@ export type OutcomeDisplayColumnDefinitionPatch = {
   elementTypePluginCode?: Maybe<Scalars['String']>;
   additionalFormatting?: Maybe<Scalars['JSON']>;
   valueExpression?: Maybe<Scalars['JSON']>;
+  elementParameters?: Maybe<Scalars['JSON']>;
 };
 
 /** A connection to a list of `OutcomeDisplayColumnDefinition` values. */
@@ -15053,6 +15060,8 @@ export enum OutcomeDisplayColumnDefinitionsOrderBy {
   AdditionalFormattingDesc = 'ADDITIONAL_FORMATTING_DESC',
   ValueExpressionAsc = 'VALUE_EXPRESSION_ASC',
   ValueExpressionDesc = 'VALUE_EXPRESSION_DESC',
+  ElementParametersAsc = 'ELEMENT_PARAMETERS_ASC',
+  ElementParametersDesc = 'ELEMENT_PARAMETERS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -15257,7 +15266,7 @@ export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = 
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
@@ -15383,7 +15392,7 @@ export type OutcomeDisplayInput = {
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
@@ -15683,7 +15692,7 @@ export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
-  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
@@ -42149,7 +42158,7 @@ export type OutcomeDisplayResolvers<ContextType = any, ParentType extends Resolv
   detailViewIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   detailViewExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   conflictPriority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  detailViewHeaderColumn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  detailViewHeaderColumn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   showLinkedApplications?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   outcomeDisplayTables?: Resolver<ResolversTypes['OutcomeDisplayTablesConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayOutcomeDisplayTablesArgs, 'orderBy'>>;
   outcomeDisplayDetails?: Resolver<ResolversTypes['OutcomeDisplayDetailsConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayOutcomeDisplayDetailsArgs, 'orderBy'>>;
@@ -42165,6 +42174,7 @@ export type OutcomeDisplayColumnDefinitionResolvers<ContextType = any, ParentTyp
   elementTypePluginCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   additionalFormatting?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   valueExpression?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
+  elementParameters?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
