@@ -3,11 +3,14 @@ import { getDistinctObjects, objectKeysToCamelCase } from '../utilityFunctions'
 import {
   getPermissionNamesFromJWT,
   buildAllColumnDefinitions,
-  queryOutcomeTable,
   constructTableResponse,
-  queryOutcomeTableSingleItem,
   constructDetailsResponse,
 } from './helpers'
+import {
+  queryOutcomeTable,
+  queryOutcomeTableSingleItem,
+  queryLinkedApplications,
+} from './gqlDynamicQueries'
 import { camelCase } from 'lodash'
 import { OutcomesResponse } from './types'
 
@@ -81,9 +84,16 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
     authHeaders
   )
 
-  const response = await constructDetailsResponse(columnDefinitionMasterList, fetchedRecord)
+  // GraphQL query to get linked applications -- this one with Admin JWT!
+  const linkedApplications = await queryLinkedApplications(recordId, tableName)
 
-  // LINKED APPLICATIONS
+  console.log(linkedApplications)
+
+  const response = await constructDetailsResponse(
+    columnDefinitionMasterList,
+    fetchedRecord,
+    linkedApplications
+  )
 
   return reply.send(response)
 }

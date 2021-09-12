@@ -48,11 +48,19 @@ export type ColumnDefinitionMasterList = {
   columnDefinition: OutcomeDisplayColumnDefinition | undefined
 }[]
 
+interface LinkedApplication {
+  name: string
+  serial: string
+  templateName: string
+  templateCode: string
+  dateCompleted: Date
+}
+
 // Response object of /outcomes/table/.../item endpoint
 export interface OutcomesDetailResponse {
   id: number
   columns: string[]
   item: { [key: string]: any }
-  displayDefinitions: { [key: string]: HeaderRowColumn }
-  linkedApplications: Application[]
+  displayDefinitions: { [key: string]: DisplayDefinition }
+  linkedApplications: LinkedApplication[]
 }
