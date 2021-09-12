@@ -1,4 +1,4 @@
-import { Application, OutcomeDisplayColumnDefinition } from '../../generated/graphql'
+import { OutcomeDisplayColumnDefinition } from '../../generated/graphql'
 
 // Response value of /outcomes endpoint
 export type OutcomesResponse = {
@@ -19,7 +19,7 @@ export interface DisplayDefinition {
   dataType?: string
   formatting: FormatOptions
 }
-interface HeaderRowColumn extends DisplayDefinition {
+interface HeaderRow extends DisplayDefinition {
   columnName: string
 }
 
@@ -31,7 +31,7 @@ interface TableRow {
 
 // Response object of /outcomes/table endpoint
 export interface OutcomesTableResponse {
-  headerRow: HeaderRowColumn[]
+  headerRow: HeaderRow[]
   tableRows: TableRow[]
   totalCount: number
   message?: string
@@ -41,14 +41,15 @@ export type ColumnDisplayDefinitions = {
   [key: string]: OutcomeDisplayColumnDefinition
 }
 
-export type ColumnDefinitionMasterList = {
+export interface ColumnDefinition {
   columnName: string
   isBasicField: boolean
   dataType: string | undefined
   columnDefinition: OutcomeDisplayColumnDefinition | undefined
-}[]
+}
+export type ColumnDefinitionMasterList = ColumnDefinition[]
 
-interface LinkedApplication {
+export interface LinkedApplication {
   name: string
   serial: string
   templateName: string
@@ -56,11 +57,20 @@ interface LinkedApplication {
   dateCompleted: Date
 }
 
+interface DetailsHeader {
+  value: any
+  columnName: string
+  isBasicField: boolean
+  dataType: string | undefined
+  formatting: FormatOptions
+}
+
 // Response object of /outcomes/table/.../item endpoint
 export interface OutcomesDetailResponse {
   id: number
+  header: DetailsHeader
   columns: string[]
   item: { [key: string]: any }
   displayDefinitions: { [key: string]: DisplayDefinition }
-  linkedApplications: LinkedApplication[]
+  linkedApplications?: LinkedApplication[]
 }

@@ -16,7 +16,8 @@ CREATE TABLE outcome_display (
     detail_view_exclude_columns varchar[] DEFAULT NULL,
     conflict_priority integer DEFAULT 1,
     -- Header for detail view
-    detail_view_header_column varchar
+    detail_view_header_column varchar,
+    show_linked_applications boolean NOT NULL DEFAULT TRUE
 );
 
 -- For columns that require more detail format or evaluation definitions

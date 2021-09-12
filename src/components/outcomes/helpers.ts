@@ -5,11 +5,13 @@ import { objectKeysToCamelCase } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import fetch from 'node-fetch'
 import { plural } from 'pluralize'
-import { snakeCase, camelCase, startCase } from 'lodash'
+import { snakeCase, camelCase, startCase, head } from 'lodash'
 import {
+  ColumnDefinition,
   ColumnDefinitionMasterList,
   ColumnDisplayDefinitions,
   DisplayDefinition,
+  LinkedApplication,
   OutcomesDetailResponse,
   OutcomesTableResponse,
 } from './types'
@@ -30,6 +32,8 @@ export const getPermissionNamesFromJWT = async (request: any): Promise<string[]>
 type ColumnDetailOutput = {
   columnDefinitionMasterList: ColumnDefinitionMasterList
   fieldNames: string[]
+  headerDefinition: ColumnDefinition | undefined
+  showLinkedApplications: boolean
 }
 export const buildAllColumnDefinitions = async (
   permissionNames: string[],
@@ -45,6 +49,10 @@ export const buildAllColumnDefinitions = async (
     .sort((a, b) => b.conflictPriority - a.conflictPriority) as OutcomeDisplay[]
 
   if (outcomes.length === 0) throw new Error(`No outcomes available for table "${tableName}"`)
+
+  // Only for details view
+  const headerColumnName = outcomes[0]?.detailViewHeaderColumn ?? ''
+  const showLinkedApplications = outcomes[0].showLinkedApplications
 
   // Get all Fields on Outcome table (schema query)
   const fields: { name: string; dataType: string }[] = (
@@ -63,7 +71,10 @@ export const buildAllColumnDefinitions = async (
   const columnsToReturn: string[] = buildColumnList(outcomes, fieldNames, type)
 
   // Get all associated display column_definition records
-  const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableName, columnsToReturn)
+  const customDisplayDefinitions = await buildColumnDisplayDefinitions(tableName, [
+    ...columnsToReturn,
+    headerColumnName,
+  ])
 
   // Build complete column definition list from the above
   const fieldNameSet = new Set(fieldNames)
@@ -74,10 +85,21 @@ export const buildAllColumnDefinitions = async (
     columnDefinition: customDisplayDefinitions[column],
   }))
 
-  return { columnDefinitionMasterList, fieldNames }
+  // Build header definition (only for Detail view)
+  const headerDefinition =
+    type === 'DETAIL'
+      ? {
+          columnName: headerColumnName,
+          isBasicField: fieldNameSet.has(headerColumnName),
+          dataType: fieldDataTypes[headerColumnName],
+          columnDefinition: customDisplayDefinitions[headerColumnName],
+        }
+      : undefined
+
+  return { columnDefinitionMasterList, fieldNames, headerDefinition, showLinkedApplications }
 }
 
-export const buildColumnList = (
+const buildColumnList = (
   outcomes: OutcomeDisplay[],
   fieldNames: string[],
   type: 'TABLE' | 'DETAIL'
@@ -102,7 +124,7 @@ export const buildColumnList = (
   return [...includeSet].filter((x) => !excludeSet.has(x))
 }
 
-export const buildColumnDisplayDefinitions = async (
+const buildColumnDisplayDefinitions = async (
   tableName: string,
   columns: string[]
 ): Promise<ColumnDisplayDefinitions> => {
@@ -190,13 +212,14 @@ export const constructTableResponse = async (
 
 export const constructDetailsResponse = async (
   columnDefinitionMasterList: ColumnDefinitionMasterList,
+  headerDefinition: ColumnDefinition,
   fetchedRecord: { id: number; [key: string]: any },
-  linkedApplications: any
+  linkedApplications: LinkedApplication[] | undefined
 ): Promise<OutcomesDetailResponse> => {
   const id = fetchedRecord.id
   const columns = columnDefinitionMasterList.map(({ columnName }) => columnName)
 
-  // Build display defintions object
+  // Build display definitions object
   const displayDefinitions: { [key: string]: DisplayDefinition } =
     columnDefinitionMasterList.reduce(
       (
@@ -241,13 +264,39 @@ export const constructDetailsResponse = async (
     },
     {}
   )
+  // Build header
+  const header = {
+    value: null,
+    columnName: headerDefinition.columnName,
+    isBasicField: headerDefinition.isBasicField,
+    dataType: headerDefinition?.dataType,
+    formatting: {
+      elementTypePluginCode: headerDefinition?.columnDefinition?.elementTypePluginCode || undefined,
+      ...headerDefinition?.columnDefinition?.additionalFormatting,
+    },
+  }
+  if (headerDefinition.isBasicField) header.value = fetchedRecord[headerDefinition.columnName]
+  else {
+    evaluationPromiseArray.push(
+      evaluateExpression(headerDefinition?.columnDefinition?.valueExpression ?? {}, {
+        objects: { ...fetchedRecord, thisField: fetchedRecord[headerDefinition.columnName] },
+        // pgConnection: DBConnect, probably don't want to allow SQL
+        APIfetch: fetch,
+        // TO-DO: Need to pass Auth headers to evaluator API calls
+        graphQLConnection: { fetch, endpoint: graphQLEndpoint },
+      })
+    )
+    evaluationFieldArray.push('HEADER')
+  }
+
   const resolvedValues = await Promise.all(evaluationPromiseArray)
 
   // Replace evaluated values in item
   resolvedValues.forEach((value, index) => {
     const field = evaluationFieldArray[index]
-    item[field] = value
+    if (field === 'HEADER') header.value = value
+    else item[field] = value
   })
 
-  return { id, columns, displayDefinitions, item, linkedApplications }
+  return { id, header, columns, displayDefinitions, item, linkedApplications }
 }

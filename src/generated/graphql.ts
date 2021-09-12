@@ -14903,6 +14903,7 @@ export type OutcomeDisplay = Node & {
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications: Scalars['Boolean'];
   /** Reads and enables pagination through a set of `OutcomeDisplayTable`. */
   outcomeDisplayTables: OutcomeDisplayTablesConnection;
   /** Reads and enables pagination through a set of `OutcomeDisplayDetail`. */
@@ -15083,6 +15084,8 @@ export type OutcomeDisplayCondition = {
   conflictPriority?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `detailViewHeaderColumn` field. */
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `showLinkedApplications` field. */
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
 };
 
 export type OutcomeDisplayDetail = Node & {
@@ -15255,6 +15258,7 @@ export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = 
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -15349,6 +15353,8 @@ export type OutcomeDisplayFilter = {
   conflictPriority?: Maybe<IntFilter>;
   /** Filter by the object’s `detailViewHeaderColumn` field. */
   detailViewHeaderColumn?: Maybe<StringFilter>;
+  /** Filter by the object’s `showLinkedApplications` field. */
+  showLinkedApplications?: Maybe<BooleanFilter>;
   /** Filter by the object’s `outcomeDisplayTables` relation. */
   outcomeDisplayTables?: Maybe<OutcomeDisplayToManyOutcomeDisplayTableFilter>;
   /** Some related `outcomeDisplayTables` exist. */
@@ -15378,6 +15384,7 @@ export type OutcomeDisplayInput = {
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -15471,6 +15478,7 @@ export type OutcomeDisplayPatch = {
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -15522,6 +15530,8 @@ export enum OutcomeDisplaysOrderBy {
   ConflictPriorityDesc = 'CONFLICT_PRIORITY_DESC',
   DetailViewHeaderColumnAsc = 'DETAIL_VIEW_HEADER_COLUMN_ASC',
   DetailViewHeaderColumnDesc = 'DETAIL_VIEW_HEADER_COLUMN_DESC',
+  ShowLinkedApplicationsAsc = 'SHOW_LINKED_APPLICATIONS_ASC',
+  ShowLinkedApplicationsDesc = 'SHOW_LINKED_APPLICATIONS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -15674,6 +15684,7 @@ export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -30741,6 +30752,7 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOut
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -30758,6 +30770,7 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutco
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   conflictPriority?: Maybe<Scalars['Int']>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -42137,6 +42150,7 @@ export type OutcomeDisplayResolvers<ContextType = any, ParentType extends Resolv
   detailViewExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   conflictPriority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   detailViewHeaderColumn?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  showLinkedApplications?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   outcomeDisplayTables?: Resolver<ResolversTypes['OutcomeDisplayTablesConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayOutcomeDisplayTablesArgs, 'orderBy'>>;
   outcomeDisplayDetails?: Resolver<ResolversTypes['OutcomeDisplayDetailsConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayOutcomeDisplayDetailsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;

@@ -30,15 +30,15 @@ export const queryOutcomeTableSingleItem = async (
   id: number,
   authHeaders: string
 ) => {
-  const graphQLquery = `query getOutcomeRecord($id:Int!){ ${tableName}(id: $id) {${fieldNames.join(
-    ', '
-  )}}}`
+  const fieldNameString = fieldNames.join(', ')
+  const graphQLquery = `query getOutcomeRecord($id:Int!){ ${tableName}(id: $id) {${fieldNameString}}}`
   const queryResult = await DBConnect.gqlQuery(graphQLquery, { id }, authHeaders)
   const fetchedRecord = queryResult?.[tableName]
   return fetchedRecord
 }
 
 export const queryLinkedApplications = async (id: number, tableName: string) => {
+  // NB: Uses Admin authorization
   const joinTableName = `${tableName}ApplicationJoins`
   const idField = `${tableName}Id`
   const graphQLquery = `query getLinkedApplications($id: Int!) { ${joinTableName}(filter: {${idField}: {equalTo: $id}}) { nodes { application { name, serial, stage, template { name, code }, applicationStageHistories(filter: {isCurrent: {equalTo: true}}) { nodes { stage { number, title }, applicationStatusHistories(filter: {isCurrent: {equalTo: true}}) { nodes { status, timeCreated }}}}}}}}`
