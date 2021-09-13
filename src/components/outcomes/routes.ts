@@ -17,7 +17,7 @@ import { ColumnDefinition, OutcomesResponse } from './types'
 const routeOutcomes = async (request: any, reply: any) => {
   const permissionNames = await getPermissionNamesFromJWT(request)
   const outcomes = await DBConnect.getAllowedOutcomeDisplays(permissionNames)
-  const distinctOutcomes = getDistinctObjects(outcomes, 'table_name', 'conflict_priority')
+  const distinctOutcomes = getDistinctObjects(outcomes, 'table_name', 'priority')
   const outcomeResponse: OutcomesResponse = distinctOutcomes.map(({ table_name, title, code }) => ({
     tableName: camelCase(table_name),
     title,

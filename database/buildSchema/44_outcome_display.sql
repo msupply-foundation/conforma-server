@@ -11,7 +11,7 @@ CREATE TABLE outcome_display (
     detail_view_exclude_columns varchar[],
     detail_view_header_column varchar NOT NULL,
     show_linked_applications boolean NOT NULL DEFAULT TRUE,
-    conflict_priority integer DEFAULT 1,
+    priority integer DEFAULT 1,
     UNIQUE (table_name, code)
 );
 

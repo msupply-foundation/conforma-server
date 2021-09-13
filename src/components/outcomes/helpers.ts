@@ -9,6 +9,7 @@ import {
   ColumnDefinitionMasterList,
   ColumnDetailOutput,
   ColumnDisplayDefinitions,
+  DetailsHeader,
   DisplayDefinition,
   LinkedApplication,
   OutcomesDetailResponse,
@@ -39,7 +40,7 @@ export const buildAllColumnDefinitions = async (
 
   const outcomes = (await DBConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
     .map((outcome) => objectKeysToCamelCase(outcome))
-    .sort((a, b) => b.conflictPriority - a.conflictPriority) as OutcomeDisplay[]
+    .sort((a, b) => b.priority - a.priority) as OutcomeDisplay[]
 
   if (outcomes.length === 0) throw new Error(`No outcomes available for table "${tableName}"`)
 
@@ -167,6 +168,7 @@ export const constructTableResponse = async (
     const thisRow = columnDefinitionMasterList.map((cell, colIndex) => {
       const { columnName, isBasicField, columnDefinition } = cell
       if (isBasicField) return record[columnName]
+      if (!columnDefinition?.valueExpression) return 'Field not defined'
       else {
         evaluationPromiseArray.push(
           evaluateExpression(columnDefinition?.valueExpression ?? {}, {
@@ -241,8 +243,9 @@ export const constructDetailsResponse = async (
   const evaluationPromiseArray: Promise<any>[] = []
   const evaluationFieldArray: string[] = []
   const item = columnDefinitionMasterList.reduce(
-    (obj: { [key: string]: any }, { columnName, isBasicField, columnDefinition }, index) => {
+    (obj: { [key: string]: any }, { columnName, isBasicField, columnDefinition }) => {
       if (isBasicField) obj[columnName] = fetchedRecord[columnName]
+      else if (!columnDefinition?.valueExpression) obj[columnName] = 'Field not defined'
       else {
         evaluationPromiseArray.push(
           evaluateExpression(columnDefinition?.valueExpression ?? {}, {
@@ -261,7 +264,7 @@ export const constructDetailsResponse = async (
     {}
   )
   // Build header
-  const header = {
+  const header: DetailsHeader = {
     value: null,
     columnName: headerDefinition.columnName,
     isBasicField: headerDefinition.isBasicField,
@@ -273,6 +276,7 @@ export const constructDetailsResponse = async (
     },
   }
   if (headerDefinition.isBasicField) header.value = fetchedRecord[headerDefinition.columnName]
+  if (!headerDefinition?.columnDefinition?.valueExpression) header.value = 'Field not defined'
   else {
     evaluationPromiseArray.push(
       evaluateExpression(headerDefinition?.columnDefinition?.valueExpression ?? {}, {

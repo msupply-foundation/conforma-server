@@ -67,7 +67,7 @@ export interface LinkedApplication {
   dateCompleted: Date
 }
 
-interface DetailsHeader {
+export interface DetailsHeader {
   value: any
   columnName: string
   isBasicField: boolean
