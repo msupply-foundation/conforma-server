@@ -15,8 +15,8 @@ export const queryOutcomeTable = async (
   const tableNamePlural = plural(tableName)
   const fieldNameString = fieldNames.join(', ')
   const orderByType = `${snakeCase(orderBy).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}`
-  const variables = { first, offset, orderBy: orderByType }
-  const graphQLquery = `query getOutcomeRecords($first: Int!, $offset: Int!, $orderBy: [UsersOrderBy!]) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: $orderBy) { nodes { ${fieldNameString} }, totalCount}}`
+  const variables = { first, offset }
+  const graphQLquery = `query getOutcomeRecords($first: Int!, $offset: Int!) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: ${orderByType}) { nodes { ${fieldNameString} }, totalCount}}`
 
   const queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
