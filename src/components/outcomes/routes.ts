@@ -36,7 +36,7 @@ const routeOutcomesTable = async (request: any, reply: any) => {
   const first = query?.first ? Number(query.first) : 20
   const offset = query?.offset ? Number(query.offset) : 0
   const orderBy = query?.orderBy ?? 'id'
-  const ascending = query?.ascending ? Boolean(query.ascending) : true
+  const ascending = query?.ascending ? query?.ascending === 'true' : true
 
   const { columnDefinitionMasterList, fieldNames, title, code } = await buildAllColumnDefinitions(
     permissionNames,

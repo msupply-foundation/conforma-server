@@ -13,13 +13,12 @@ export const queryOutcomeTable = async (
   authHeaders: string
 ) => {
   const tableNamePlural = plural(tableName)
-  const graphQLquery = `query getOutcomeRecords { ${tableNamePlural}(first: ${first}, offset: ${offset}, orderBy: ${snakeCase(
-    orderBy
-  ).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}) { nodes { ${fieldNames.join(
-    ', '
-  )} }, totalCount}}`
+  const fieldNameString = fieldNames.join(', ')
+  const orderByType = `${snakeCase(orderBy).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}`
+  const variables = { first, offset, orderBy: orderByType }
+  const graphQLquery = `query getOutcomeRecords($first: Int!, $offset: Int!, $orderBy: [UsersOrderBy!]) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: $orderBy) { nodes { ${fieldNameString} }, totalCount}}`
 
-  const queryResult = await DBConnect.gqlQuery(graphQLquery, {}, authHeaders)
+  const queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
   const totalCount = queryResult?.[tableNamePlural]?.totalCount
   return { fetchedRecords, totalCount }
