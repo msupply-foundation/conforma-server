@@ -6539,16 +6539,6 @@ export type DeleteOrganisationPayloadOrganisationEdgeArgs = {
   orderBy?: Maybe<Array<OrganisationsOrderBy>>;
 };
 
-/** All input for the `deleteOutcomeDisplayByCode` mutation. */
-export type DeleteOutcomeDisplayByCodeInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  code: Scalars['String'];
-};
-
 /** All input for the `deleteOutcomeDisplayByNodeId` mutation. */
 export type DeleteOutcomeDisplayByNodeIdInput = {
   /**
@@ -9302,8 +9292,6 @@ export type Mutation = {
   updateOutcomeDisplay?: Maybe<UpdateOutcomeDisplayPayload>;
   /** Updates a single `OutcomeDisplay` using a unique key and a patch. */
   updateOutcomeDisplayByTableNameAndCode?: Maybe<UpdateOutcomeDisplayPayload>;
-  /** Updates a single `OutcomeDisplay` using a unique key and a patch. */
-  updateOutcomeDisplayByCode?: Maybe<UpdateOutcomeDisplayPayload>;
   /** Updates a single `OutcomeDisplayColumnDefinition` using its globally unique id and a patch. */
   updateOutcomeDisplayColumnDefinitionByNodeId?: Maybe<UpdateOutcomeDisplayColumnDefinitionPayload>;
   /** Updates a single `OutcomeDisplayColumnDefinition` using a unique key and a patch. */
@@ -9504,8 +9492,6 @@ export type Mutation = {
   deleteOutcomeDisplay?: Maybe<DeleteOutcomeDisplayPayload>;
   /** Deletes a single `OutcomeDisplay` using a unique key. */
   deleteOutcomeDisplayByTableNameAndCode?: Maybe<DeleteOutcomeDisplayPayload>;
-  /** Deletes a single `OutcomeDisplay` using a unique key. */
-  deleteOutcomeDisplayByCode?: Maybe<DeleteOutcomeDisplayPayload>;
   /** Deletes a single `OutcomeDisplayColumnDefinition` using its globally unique id. */
   deleteOutcomeDisplayColumnDefinitionByNodeId?: Maybe<DeleteOutcomeDisplayColumnDefinitionPayload>;
   /** Deletes a single `OutcomeDisplayColumnDefinition` using a unique key. */
@@ -10121,12 +10107,6 @@ export type MutationUpdateOutcomeDisplayByTableNameAndCodeArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
-export type MutationUpdateOutcomeDisplayByCodeArgs = {
-  input: UpdateOutcomeDisplayByCodeInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateOutcomeDisplayColumnDefinitionByNodeIdArgs = {
   input: UpdateOutcomeDisplayColumnDefinitionByNodeIdInput;
 };
@@ -10723,12 +10703,6 @@ export type MutationDeleteOutcomeDisplayArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteOutcomeDisplayByTableNameAndCodeArgs = {
   input: DeleteOutcomeDisplayByTableNameAndCodeInput;
-};
-
-
-/** The root mutation type which contains root level fields which mutate data. */
-export type MutationDeleteOutcomeDisplayByCodeArgs = {
-  input: DeleteOutcomeDisplayByCodeInput;
 };
 
 
@@ -12055,9 +12029,9 @@ export type OutcomeDisplay = Node & {
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
   nodeId: Scalars['ID'];
   id: Scalars['Int'];
-  tableName?: Maybe<Scalars['String']>;
+  tableName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -12065,7 +12039,7 @@ export type OutcomeDisplay = Node & {
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications: Scalars['Boolean'];
-  conflictPriority?: Maybe<Scalars['Int']>;
+  priority?: Maybe<Scalars['Int']>;
   /** Reads and enables pagination through a set of `OutcomeDisplayTable`. */
   outcomeDisplayTables: OutcomeDisplayTablesConnection;
   /** Reads and enables pagination through a set of `OutcomeDisplayDetail`. */
@@ -12255,8 +12229,8 @@ export type OutcomeDisplayCondition = {
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `showLinkedApplications` field. */
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  /** Checks for equality with the object’s `conflictPriority` field. */
-  conflictPriority?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `priority` field. */
+  priority?: Maybe<Scalars['Int']>;
 };
 
 export type OutcomeDisplayDetail = Node & {
@@ -12379,23 +12353,17 @@ export type OutcomeDisplayDetailOutcomeDisplayIdFkeyInput = {
   /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
   connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
   /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectByCode?: Maybe<OutcomeDisplayOutcomeDisplayCodeKeyConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
   connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
   /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
   deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
   /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
   deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
   /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteByCode?: Maybe<OutcomeDisplayOutcomeDisplayCodeKeyDelete>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
   deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
   /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
   updateById?: Maybe<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
   /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
   updateByTableNameAndCode?: Maybe<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateByCode?: Maybe<OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate>;
   /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
   updateByNodeId?: Maybe<OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate>;
   /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
@@ -12425,9 +12393,9 @@ export type OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput = {
 /** The `outcomeDisplay` to be created by this mutation. */
 export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
+  tableName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -12435,7 +12403,7 @@ export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = 
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  conflictPriority?: Maybe<Scalars['Int']>;
+  priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -12530,8 +12498,8 @@ export type OutcomeDisplayFilter = {
   detailViewHeaderColumn?: Maybe<StringFilter>;
   /** Filter by the object’s `showLinkedApplications` field. */
   showLinkedApplications?: Maybe<BooleanFilter>;
-  /** Filter by the object’s `conflictPriority` field. */
-  conflictPriority?: Maybe<IntFilter>;
+  /** Filter by the object’s `priority` field. */
+  priority?: Maybe<IntFilter>;
   /** Filter by the object’s `outcomeDisplayTables` relation. */
   outcomeDisplayTables?: Maybe<OutcomeDisplayToManyOutcomeDisplayTableFilter>;
   /** Some related `outcomeDisplayTables` exist. */
@@ -12551,9 +12519,9 @@ export type OutcomeDisplayFilter = {
 /** An input for mutations affecting `OutcomeDisplay` */
 export type OutcomeDisplayInput = {
   id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
+  tableName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -12561,7 +12529,7 @@ export type OutcomeDisplayInput = {
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  conflictPriority?: Maybe<Scalars['Int']>;
+  priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -12584,13 +12552,6 @@ export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDi
   nodeId: Scalars['ID'];
   /** An object where the defined keys will be set on the `outcomeDisplayDetail` being updated. */
   patch: OutcomeDisplayDetailPatch;
-};
-
-/** The fields on `outcomeDisplay` to look up the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  code: Scalars['String'];
 };
 
 /** The fields on `outcomeDisplay` to look up the row to update. */
@@ -12617,13 +12578,6 @@ export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisp
 };
 
 /** The fields on `outcomeDisplay` to look up the row to update. */
-export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate = {
-  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
-  patch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  code: Scalars['String'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to update. */
 export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate = {
   /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
   patch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
@@ -12635,16 +12589,6 @@ export type OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisp
   /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
   patch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
   tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to connect. */
-export type OutcomeDisplayOutcomeDisplayCodeKeyConnect = {
-  code: Scalars['String'];
-};
-
-/** The fields on `outcomeDisplay` to look up the row to delete. */
-export type OutcomeDisplayOutcomeDisplayCodeKeyDelete = {
   code: Scalars['String'];
 };
 
@@ -12683,7 +12627,7 @@ export type OutcomeDisplayPatch = {
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  conflictPriority?: Maybe<Scalars['Int']>;
+  priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -12735,8 +12679,8 @@ export enum OutcomeDisplaysOrderBy {
   DetailViewHeaderColumnDesc = 'DETAIL_VIEW_HEADER_COLUMN_DESC',
   ShowLinkedApplicationsAsc = 'SHOW_LINKED_APPLICATIONS_ASC',
   ShowLinkedApplicationsDesc = 'SHOW_LINKED_APPLICATIONS_DESC',
-  ConflictPriorityAsc = 'CONFLICT_PRIORITY_ASC',
-  ConflictPriorityDesc = 'CONFLICT_PRIORITY_DESC',
+  PriorityAsc = 'PRIORITY_ASC',
+  PriorityDesc = 'PRIORITY_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -12839,23 +12783,17 @@ export type OutcomeDisplayTableOutcomeDisplayIdFkeyInput = {
   /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
   connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
   /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  connectByCode?: Maybe<OutcomeDisplayOutcomeDisplayCodeKeyConnect>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
   connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
   /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
   deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
   /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
   deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
   /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
-  deleteByCode?: Maybe<OutcomeDisplayOutcomeDisplayCodeKeyDelete>;
-  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
   deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
   /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
   updateById?: Maybe<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
   /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
   updateByTableNameAndCode?: Maybe<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
-  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
-  updateByCode?: Maybe<OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate>;
   /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
   updateByNodeId?: Maybe<OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate>;
   /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
@@ -12885,9 +12823,9 @@ export type OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput = {
 /** The `outcomeDisplay` to be created by this mutation. */
 export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
   id?: Maybe<Scalars['Int']>;
-  tableName?: Maybe<Scalars['String']>;
+  tableName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
-  code?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -12895,7 +12833,7 @@ export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewHeaderColumn: Scalars['String'];
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  conflictPriority?: Maybe<Scalars['Int']>;
+  priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -14408,7 +14346,6 @@ export type Query = Node & {
   organisationByRegistration?: Maybe<Organisation>;
   outcomeDisplay?: Maybe<OutcomeDisplay>;
   outcomeDisplayByTableNameAndCode?: Maybe<OutcomeDisplay>;
-  outcomeDisplayByCode?: Maybe<OutcomeDisplay>;
   outcomeDisplayColumnDefinition?: Maybe<OutcomeDisplayColumnDefinition>;
   outcomeDisplayColumnDefinitionByTableNameAndColumnName?: Maybe<OutcomeDisplayColumnDefinition>;
   outcomeDisplayDetail?: Maybe<OutcomeDisplayDetail>;
@@ -15349,12 +15286,6 @@ export type QueryOutcomeDisplayArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryOutcomeDisplayByTableNameAndCodeArgs = {
   tableName: Scalars['String'];
-  code: Scalars['String'];
-};
-
-
-/** The root query type which gives access points into the data universe. */
-export type QueryOutcomeDisplayByCodeArgs = {
   code: Scalars['String'];
 };
 
@@ -26151,18 +26082,6 @@ export type UpdateOrganisationPayloadOrganisationEdgeArgs = {
   orderBy?: Maybe<Array<OrganisationsOrderBy>>;
 };
 
-/** All input for the `updateOutcomeDisplayByCode` mutation. */
-export type UpdateOutcomeDisplayByCodeInput = {
-  /**
-   * An arbitrary string value with no semantic meaning. Will be included in the
-   * payload verbatim. May be used to track mutations by the client.
-   */
-  clientMutationId?: Maybe<Scalars['String']>;
-  /** An object where the defined keys will be set on the `OutcomeDisplay` being updated. */
-  patch: OutcomeDisplayPatch;
-  code: Scalars['String'];
-};
-
 /** All input for the `updateOutcomeDisplayByNodeId` mutation. */
 export type UpdateOutcomeDisplayByNodeIdInput = {
   /**
@@ -26334,7 +26253,7 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOut
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  conflictPriority?: Maybe<Scalars['Int']>;
+  priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -26352,7 +26271,7 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutco
   detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewHeaderColumn?: Maybe<Scalars['String']>;
   showLinkedApplications?: Maybe<Scalars['Boolean']>;
-  conflictPriority?: Maybe<Scalars['Int']>;
+  priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
 };
@@ -32215,11 +32134,9 @@ export type ResolversTypes = {
   OutcomeDisplayTableOutcomeDisplayIdFkeyInput: OutcomeDisplayTableOutcomeDisplayIdFkeyInput;
   OutcomeDisplayOutcomeDisplayPkeyConnect: OutcomeDisplayOutcomeDisplayPkeyConnect;
   OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect: OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect;
-  OutcomeDisplayOutcomeDisplayCodeKeyConnect: OutcomeDisplayOutcomeDisplayCodeKeyConnect;
   OutcomeDisplayNodeIdConnect: OutcomeDisplayNodeIdConnect;
   OutcomeDisplayOutcomeDisplayPkeyDelete: OutcomeDisplayOutcomeDisplayPkeyDelete;
   OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete: OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete;
-  OutcomeDisplayOutcomeDisplayCodeKeyDelete: OutcomeDisplayOutcomeDisplayCodeKeyDelete;
   OutcomeDisplayNodeIdDelete: OutcomeDisplayNodeIdDelete;
   OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
   updateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
@@ -32234,7 +32151,6 @@ export type ResolversTypes = {
   OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
   updateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
   OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
-  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate;
   OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate;
   OutcomeDisplayPatch: OutcomeDisplayPatch;
   OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
@@ -32242,7 +32158,6 @@ export type ResolversTypes = {
   OutcomeDisplayDetailPatch: OutcomeDisplayDetailPatch;
   OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput;
   OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
-  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate;
   OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
   OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
   OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
@@ -32387,7 +32302,6 @@ export type ResolversTypes = {
   UpdateOutcomeDisplayPayload: ResolverTypeWrapper<UpdateOutcomeDisplayPayload>;
   UpdateOutcomeDisplayInput: UpdateOutcomeDisplayInput;
   UpdateOutcomeDisplayByTableNameAndCodeInput: UpdateOutcomeDisplayByTableNameAndCodeInput;
-  UpdateOutcomeDisplayByCodeInput: UpdateOutcomeDisplayByCodeInput;
   UpdateOutcomeDisplayColumnDefinitionByNodeIdInput: UpdateOutcomeDisplayColumnDefinitionByNodeIdInput;
   OutcomeDisplayColumnDefinitionPatch: OutcomeDisplayColumnDefinitionPatch;
   UpdateOutcomeDisplayColumnDefinitionPayload: ResolverTypeWrapper<UpdateOutcomeDisplayColumnDefinitionPayload>;
@@ -32531,7 +32445,6 @@ export type ResolversTypes = {
   DeleteOutcomeDisplayPayload: ResolverTypeWrapper<DeleteOutcomeDisplayPayload>;
   DeleteOutcomeDisplayInput: DeleteOutcomeDisplayInput;
   DeleteOutcomeDisplayByTableNameAndCodeInput: DeleteOutcomeDisplayByTableNameAndCodeInput;
-  DeleteOutcomeDisplayByCodeInput: DeleteOutcomeDisplayByCodeInput;
   DeleteOutcomeDisplayColumnDefinitionByNodeIdInput: DeleteOutcomeDisplayColumnDefinitionByNodeIdInput;
   DeleteOutcomeDisplayColumnDefinitionPayload: ResolverTypeWrapper<DeleteOutcomeDisplayColumnDefinitionPayload>;
   DeleteOutcomeDisplayColumnDefinitionInput: DeleteOutcomeDisplayColumnDefinitionInput;
@@ -33903,11 +33816,9 @@ export type ResolversParentTypes = {
   OutcomeDisplayTableOutcomeDisplayIdFkeyInput: OutcomeDisplayTableOutcomeDisplayIdFkeyInput;
   OutcomeDisplayOutcomeDisplayPkeyConnect: OutcomeDisplayOutcomeDisplayPkeyConnect;
   OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect: OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect;
-  OutcomeDisplayOutcomeDisplayCodeKeyConnect: OutcomeDisplayOutcomeDisplayCodeKeyConnect;
   OutcomeDisplayNodeIdConnect: OutcomeDisplayNodeIdConnect;
   OutcomeDisplayOutcomeDisplayPkeyDelete: OutcomeDisplayOutcomeDisplayPkeyDelete;
   OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete: OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete;
-  OutcomeDisplayOutcomeDisplayCodeKeyDelete: OutcomeDisplayOutcomeDisplayCodeKeyDelete;
   OutcomeDisplayNodeIdDelete: OutcomeDisplayNodeIdDelete;
   OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
   updateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
@@ -33922,7 +33833,6 @@ export type ResolversParentTypes = {
   OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
   updateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
   OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
-  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate;
   OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate;
   OutcomeDisplayPatch: OutcomeDisplayPatch;
   OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
@@ -33930,7 +33840,6 @@ export type ResolversParentTypes = {
   OutcomeDisplayDetailPatch: OutcomeDisplayDetailPatch;
   OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput;
   OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
-  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayCodeKeyUpdate;
   OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
   OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
   OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
@@ -34075,7 +33984,6 @@ export type ResolversParentTypes = {
   UpdateOutcomeDisplayPayload: UpdateOutcomeDisplayPayload;
   UpdateOutcomeDisplayInput: UpdateOutcomeDisplayInput;
   UpdateOutcomeDisplayByTableNameAndCodeInput: UpdateOutcomeDisplayByTableNameAndCodeInput;
-  UpdateOutcomeDisplayByCodeInput: UpdateOutcomeDisplayByCodeInput;
   UpdateOutcomeDisplayColumnDefinitionByNodeIdInput: UpdateOutcomeDisplayColumnDefinitionByNodeIdInput;
   OutcomeDisplayColumnDefinitionPatch: OutcomeDisplayColumnDefinitionPatch;
   UpdateOutcomeDisplayColumnDefinitionPayload: UpdateOutcomeDisplayColumnDefinitionPayload;
@@ -34219,7 +34127,6 @@ export type ResolversParentTypes = {
   DeleteOutcomeDisplayPayload: DeleteOutcomeDisplayPayload;
   DeleteOutcomeDisplayInput: DeleteOutcomeDisplayInput;
   DeleteOutcomeDisplayByTableNameAndCodeInput: DeleteOutcomeDisplayByTableNameAndCodeInput;
-  DeleteOutcomeDisplayByCodeInput: DeleteOutcomeDisplayByCodeInput;
   DeleteOutcomeDisplayColumnDefinitionByNodeIdInput: DeleteOutcomeDisplayColumnDefinitionByNodeIdInput;
   DeleteOutcomeDisplayColumnDefinitionPayload: DeleteOutcomeDisplayColumnDefinitionPayload;
   DeleteOutcomeDisplayColumnDefinitionInput: DeleteOutcomeDisplayColumnDefinitionInput;
@@ -35862,7 +35769,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateOutcomeDisplayByNodeId?: Resolver<Maybe<ResolversTypes['UpdateOutcomeDisplayPayload']>, ParentType, ContextType, RequireFields<MutationUpdateOutcomeDisplayByNodeIdArgs, 'input'>>;
   updateOutcomeDisplay?: Resolver<Maybe<ResolversTypes['UpdateOutcomeDisplayPayload']>, ParentType, ContextType, RequireFields<MutationUpdateOutcomeDisplayArgs, 'input'>>;
   updateOutcomeDisplayByTableNameAndCode?: Resolver<Maybe<ResolversTypes['UpdateOutcomeDisplayPayload']>, ParentType, ContextType, RequireFields<MutationUpdateOutcomeDisplayByTableNameAndCodeArgs, 'input'>>;
-  updateOutcomeDisplayByCode?: Resolver<Maybe<ResolversTypes['UpdateOutcomeDisplayPayload']>, ParentType, ContextType, RequireFields<MutationUpdateOutcomeDisplayByCodeArgs, 'input'>>;
   updateOutcomeDisplayColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['UpdateOutcomeDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateOutcomeDisplayColumnDefinitionByNodeIdArgs, 'input'>>;
   updateOutcomeDisplayColumnDefinition?: Resolver<Maybe<ResolversTypes['UpdateOutcomeDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateOutcomeDisplayColumnDefinitionArgs, 'input'>>;
   updateOutcomeDisplayColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['UpdateOutcomeDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationUpdateOutcomeDisplayColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
@@ -35963,7 +35869,6 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteOutcomeDisplayByNodeId?: Resolver<Maybe<ResolversTypes['DeleteOutcomeDisplayPayload']>, ParentType, ContextType, RequireFields<MutationDeleteOutcomeDisplayByNodeIdArgs, 'input'>>;
   deleteOutcomeDisplay?: Resolver<Maybe<ResolversTypes['DeleteOutcomeDisplayPayload']>, ParentType, ContextType, RequireFields<MutationDeleteOutcomeDisplayArgs, 'input'>>;
   deleteOutcomeDisplayByTableNameAndCode?: Resolver<Maybe<ResolversTypes['DeleteOutcomeDisplayPayload']>, ParentType, ContextType, RequireFields<MutationDeleteOutcomeDisplayByTableNameAndCodeArgs, 'input'>>;
-  deleteOutcomeDisplayByCode?: Resolver<Maybe<ResolversTypes['DeleteOutcomeDisplayPayload']>, ParentType, ContextType, RequireFields<MutationDeleteOutcomeDisplayByCodeArgs, 'input'>>;
   deleteOutcomeDisplayColumnDefinitionByNodeId?: Resolver<Maybe<ResolversTypes['DeleteOutcomeDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteOutcomeDisplayColumnDefinitionByNodeIdArgs, 'input'>>;
   deleteOutcomeDisplayColumnDefinition?: Resolver<Maybe<ResolversTypes['DeleteOutcomeDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteOutcomeDisplayColumnDefinitionArgs, 'input'>>;
   deleteOutcomeDisplayColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['DeleteOutcomeDisplayColumnDefinitionPayload']>, ParentType, ContextType, RequireFields<MutationDeleteOutcomeDisplayColumnDefinitionByTableNameAndColumnNameArgs, 'input'>>;
@@ -36099,9 +36004,9 @@ export type OrganisationsEdgeResolvers<ContextType = any, ParentType extends Res
 export type OutcomeDisplayResolvers<ContextType = any, ParentType extends ResolversParentTypes['OutcomeDisplay'] = ResolversParentTypes['OutcomeDisplay']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  tableName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  tableName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   permissionNames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   tableViewIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   tableViewExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
@@ -36109,7 +36014,7 @@ export type OutcomeDisplayResolvers<ContextType = any, ParentType extends Resolv
   detailViewExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   detailViewHeaderColumn?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   showLinkedApplications?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
-  conflictPriority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   outcomeDisplayTables?: Resolver<ResolversTypes['OutcomeDisplayTablesConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayOutcomeDisplayTablesArgs, 'orderBy'>>;
   outcomeDisplayDetails?: Resolver<ResolversTypes['OutcomeDisplayDetailsConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayOutcomeDisplayDetailsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -36437,7 +36342,6 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   organisationByRegistration?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationByRegistrationArgs, 'registration'>>;
   outcomeDisplay?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType, RequireFields<QueryOutcomeDisplayArgs, 'id'>>;
   outcomeDisplayByTableNameAndCode?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType, RequireFields<QueryOutcomeDisplayByTableNameAndCodeArgs, 'tableName' | 'code'>>;
-  outcomeDisplayByCode?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType, RequireFields<QueryOutcomeDisplayByCodeArgs, 'code'>>;
   outcomeDisplayColumnDefinition?: Resolver<Maybe<ResolversTypes['OutcomeDisplayColumnDefinition']>, ParentType, ContextType, RequireFields<QueryOutcomeDisplayColumnDefinitionArgs, 'id'>>;
   outcomeDisplayColumnDefinitionByTableNameAndColumnName?: Resolver<Maybe<ResolversTypes['OutcomeDisplayColumnDefinition']>, ParentType, ContextType, RequireFields<QueryOutcomeDisplayColumnDefinitionByTableNameAndColumnNameArgs, 'tableName' | 'columnName'>>;
   outcomeDisplayDetail?: Resolver<Maybe<ResolversTypes['OutcomeDisplayDetail']>, ParentType, ContextType, RequireFields<QueryOutcomeDisplayDetailArgs, 'id'>>;

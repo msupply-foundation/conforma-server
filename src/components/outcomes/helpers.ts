@@ -17,6 +17,7 @@ import {
 } from './types'
 import { OutcomeDisplay, OutcomeDisplayColumnDefinition } from '../../generated/graphql'
 import config from '../../config'
+import { plural } from 'pluralize'
 
 // CONSTANTS
 const REST_OF_OUTCOME_FIELDS = '...'
@@ -43,6 +44,8 @@ export const buildAllColumnDefinitions = async (
     .sort((a, b) => b.priority - a.priority) as OutcomeDisplay[]
 
   if (outcomes.length === 0) throw new Error(`No outcomes available for table "${tableName}"`)
+
+  const { title, code } = outcomes[0]
 
   // Only for details view
   const headerColumnName = outcomes[0]?.detailViewHeaderColumn ?? ''
@@ -90,7 +93,14 @@ export const buildAllColumnDefinitions = async (
         }
       : undefined
 
-  return { columnDefinitionMasterList, fieldNames, headerDefinition, showLinkedApplications }
+  return {
+    title: title ?? plural(startCase(tableName)),
+    code,
+    columnDefinitionMasterList,
+    fieldNames,
+    headerDefinition,
+    showLinkedApplications,
+  }
 }
 
 const buildColumnList = (
@@ -132,6 +142,9 @@ const buildColumnDisplayDefinitions = async (
 }
 
 export const constructTableResponse = async (
+  tableName: string,
+  title: string,
+  code: string,
   columnDefinitionMasterList: ColumnDefinitionMasterList,
   fetchedRecords: { id: number; [key: string]: any }[],
   totalCount: number
@@ -168,7 +181,7 @@ export const constructTableResponse = async (
     const thisRow = columnDefinitionMasterList.map((cell, colIndex) => {
       const { columnName, isBasicField, columnDefinition } = cell
       if (isBasicField) return record[columnName]
-      if (!columnDefinition?.valueExpression) return 'Field not defined'
+      else if (!columnDefinition?.valueExpression) return 'Field not defined'
       else {
         evaluationPromiseArray.push(
           evaluateExpression(columnDefinition?.valueExpression ?? {}, {
@@ -183,7 +196,7 @@ export const constructTableResponse = async (
       evaluationIndexArray.push({ row: rowIndex, col: colIndex })
       return 'Awaiting promise...'
     })
-    return { id: record.id, rowValues: thisRow, rowValuesObject: {} }
+    return { id: record.id, rowValues: thisRow, item: {} }
   })
 
   const resolvedValues = await Promise.all(evaluationPromiseArray)
@@ -194,16 +207,16 @@ export const constructTableResponse = async (
     tableRows[row].rowValues[col] = value
   })
 
-  // Also provide a version of the row entity in Object form, just because
+  // Also provide a version of the row/item in Object form, just because
   tableRows.forEach((row: any) => {
-    const rowValuesObject: { [key: string]: any } = {}
+    const item: { [key: string]: any } = {}
     columnDefinitionMasterList.forEach(
-      ({ columnName }, index) => (rowValuesObject[columnName] = row.rowValues[index])
+      ({ columnName }, index) => (item[columnName] = row.rowValues[index])
     )
-    row.rowValuesObject = rowValuesObject
+    row.item = item
   })
 
-  return { headerRow, tableRows, totalCount }
+  return { tableName, title, code, headerRow, tableRows, totalCount }
 }
 
 export const constructDetailsResponse = async (
@@ -276,7 +289,7 @@ export const constructDetailsResponse = async (
     },
   }
   if (headerDefinition.isBasicField) header.value = fetchedRecord[headerDefinition.columnName]
-  if (!headerDefinition?.columnDefinition?.valueExpression) header.value = 'Field not defined'
+  else if (!headerDefinition?.columnDefinition?.valueExpression) header.value = 'Field not defined'
   else {
     evaluationPromiseArray.push(
       evaluateExpression(headerDefinition?.columnDefinition?.valueExpression ?? {}, {

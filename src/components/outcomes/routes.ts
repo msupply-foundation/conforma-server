@@ -38,7 +38,7 @@ const routeOutcomesTable = async (request: any, reply: any) => {
   const orderBy = query?.orderBy ?? 'id'
   const ascending = query?.ascending ? Boolean(query.ascending) : true
 
-  const { columnDefinitionMasterList, fieldNames } = await buildAllColumnDefinitions(
+  const { columnDefinitionMasterList, fieldNames, title, code } = await buildAllColumnDefinitions(
     permissionNames,
     tableName,
     'TABLE'
@@ -56,6 +56,9 @@ const routeOutcomesTable = async (request: any, reply: any) => {
   )
 
   const response = await constructTableResponse(
+    tableName,
+    title,
+    code,
     columnDefinitionMasterList,
     fetchedRecords,
     totalCount
@@ -87,6 +90,9 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
     : undefined
 
   const response = await constructDetailsResponse(
+    // tableName,
+    // title,
+    // code,
     columnDefinitionMasterList,
     headerDefinition as ColumnDefinition,
     fetchedRecord,

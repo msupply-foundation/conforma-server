@@ -28,11 +28,14 @@ interface HeaderRow extends DisplayDefinition {
 interface TableRow {
   id: number
   rowValues: any[]
-  rowValuesObject: { [key: string]: any }
+  item: { [key: string]: any }
 }
 
 // Response object of /outcomes/table endpoint
 export interface OutcomesTableResponse {
+  tableName: string
+  title: string
+  code: string
   headerRow: HeaderRow[]
   tableRows: TableRow[]
   totalCount: number
@@ -52,6 +55,8 @@ export interface ColumnDefinition {
 export type ColumnDefinitionMasterList = ColumnDefinition[]
 
 export interface ColumnDetailOutput {
+  title: string
+  code: string
   columnDefinitionMasterList: ColumnDefinitionMasterList
   fieldNames: string[]
   headerDefinition: ColumnDefinition | undefined

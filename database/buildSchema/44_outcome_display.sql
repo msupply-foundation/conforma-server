@@ -1,9 +1,9 @@
 -- Outcome display
 CREATE TABLE outcome_display (
     id serial PRIMARY KEY,
-    table_name varchar,
+    table_name varchar NOT NULL,
     title varchar,
-    code varchar UNIQUE,
+    code varchar NOT NULL,
     permission_names varchar[],
     table_view_include_columns varchar[],
     table_view_exclude_columns varchar[],
