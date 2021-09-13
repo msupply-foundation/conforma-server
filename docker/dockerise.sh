@@ -5,7 +5,7 @@
 
 SERVER_BRANCH='portuguese-strings-v1'
 WEB_APP_BRANCH='portuguese-strings-v1.1'
-IMAGE_NAME='mflow-demo-2021-09-01'
+IMAGE_NAME='mflow-demo'
 INITIAL_DATA_LOCALE=''
 
 NODE_VERSION='14'
