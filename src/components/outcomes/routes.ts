@@ -90,9 +90,7 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
     : undefined
 
   const response = await constructDetailsResponse(
-    // tableName,
-    // title,
-    // code,
+    tableName,
     columnDefinitionMasterList,
     headerDefinition as ColumnDefinition,
     fetchedRecord,

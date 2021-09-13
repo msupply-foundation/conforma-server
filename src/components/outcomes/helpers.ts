@@ -220,6 +220,7 @@ export const constructTableResponse = async (
 }
 
 export const constructDetailsResponse = async (
+  tableName: string,
   columnDefinitionMasterList: ColumnDefinitionMasterList,
   headerDefinition: ColumnDefinition,
   fetchedRecord: { id: number; [key: string]: any },
@@ -312,5 +313,5 @@ export const constructDetailsResponse = async (
     else item[field] = value
   })
 
-  return { id, header, columns, displayDefinitions, item, linkedApplications }
+  return { tableName, id, header, columns, displayDefinitions, item, linkedApplications }
 }
