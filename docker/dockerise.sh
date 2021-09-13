@@ -4,7 +4,7 @@
 # githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
 
 SERVER_BRANCH='portuguese-strings-v1'
-WEB_APP_BRANCH='portguese-strings-v1'
+WEB_APP_BRANCH='portguese-strings-v1.1'
 IMAGE_NAME='mflow-demo-2021-09-01'
 INITIAL_DATA_LOCALE=''
 
