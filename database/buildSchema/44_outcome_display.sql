@@ -4,28 +4,28 @@ CREATE TABLE outcome_display (
     table_name varchar,
     title varchar,
     code varchar UNIQUE,
-    permission_names varchar[] DEFAULT NULL,
-    table_view_include_columns varchar[] DEFAULT NULL,
-    table_view_exclude_columns varchar[] DEFAULT NULL,
-    detail_view_include_columns varchar[] DEFAULT NULL,
-    detail_view_exclude_columns varchar[] DEFAULT NULL,
-    conflict_priority integer DEFAULT 1,
-    -- Header for detail view
+    permission_names varchar[],
+    table_view_include_columns varchar[],
+    table_view_exclude_columns varchar[],
+    detail_view_include_columns varchar[],
+    detail_view_exclude_columns varchar[],
     detail_view_header_column varchar NOT NULL,
-    show_linked_applications boolean NOT NULL DEFAULT TRUE
+    show_linked_applications boolean NOT NULL DEFAULT TRUE,
+    conflict_priority integer DEFAULT 1,
+    UNIQUE (table_name, code)
 );
 
 -- For columns that require more detail format or evaluation definitions
 CREATE TABLE outcome_display_column_definition (
     id serial PRIMARY KEY,
     table_name varchar,
-    column_match varchar,
+    column_name varchar,
     title varchar,
     element_type_plugin_code varchar,
     element_parameters jsonb,
     additional_formatting jsonb,
-    value_expression jsonb NOT NULL DEFAULT '{}',
-    UNIQUE (table_name, column_match)
+    value_expression jsonb,
+    UNIQUE (table_name, column_name)
 );
 
 -- OLD TABLES -- LEAVING THESE HERE FOR NOW, DELETE ONCE MIGRATION COMPLETE

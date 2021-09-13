@@ -123,7 +123,7 @@ const buildColumnDisplayDefinitions = async (
   const columnDefinitionArray = await DBConnect.getOutcomeColumnDefinitions(tableName, columns)
   const columnDisplayDefinitions: ColumnDisplayDefinitions = {}
   columnDefinitionArray.forEach((item) => {
-    columnDisplayDefinitions[item.column_match] = objectKeysToCamelCase(
+    columnDisplayDefinitions[item.column_name] = objectKeysToCamelCase(
       item
     ) as OutcomeDisplayColumnDefinition
   })
@@ -139,7 +139,6 @@ export const constructTableResponse = async (
   // definitions for each column
   const headerRow = columnDefinitionMasterList.map(
     ({ columnName, isBasicField, dataType, columnDefinition = {} }) => {
-      console.log('columnDefinition', columnDefinition)
       const { title, elementTypePluginCode, elementParameters, additionalFormatting } =
         columnDefinition
       return {

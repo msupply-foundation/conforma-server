@@ -59,6 +59,7 @@ export interface ColumnDetailOutput {
 }
 
 export interface LinkedApplication {
+  id: number
   name: string
   serial: string
   templateName: string

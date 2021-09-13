@@ -919,7 +919,7 @@ class PostgresDB {
     const text = `
       SELECT * FROM outcome_display_column_definition
       WHERE table_name = $1
-      AND column_match = ANY($2)
+      AND column_name = ANY($2)
     `
     try {
       const result = await this.query({ text, values: [tableName, columnMatches] })
