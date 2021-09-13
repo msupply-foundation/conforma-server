@@ -182,11 +182,12 @@ const generateNextReviewAssignments = async ({
     // - if level 1 AND application status is CHANGES_REQUIRED set status: Available and isLocked = true
     // - if level 1 AND NOT isFullyAssignedLevel1 AND appliication status is SUBMITTED, status = Available
     // - if ( canSelfAssign OR level > 1 ) AND reviewAlreadyAssigned set status: SelfAssignedByAnother
-    // - if ( canSelfAssign OR level > 1 ) AND application status is CHANGES_REQUIRED set status: AvailableForSelfAssignment and isLocked = true
-    // - if ( canSelfAssign OR level > 1 ) AND appliication status is SUBMITTED, status = AvailableForSelfAssignment
+    // - if ( canSelfAssign OR level > 1 ) AND application status is CHANGES_REQUIRED set status: Available, isSelfAssignable = true and isLocked = true
+    // - if ( canSelfAssign OR level > 1 ) AND appliication status is SUBMITTED, set status: Available and isSelfAssignable = true
     if (canSelfAssign || nextReviewLevel > 1)
       return {
-        status: ReviewAssignmentStatus.AvailableForSelfAssignment,
+        status: ReviewAssignmentStatus.Available,
+        isSelfAssignable: true,
         isLocked: reviewAlreadyAssigned,
       }
     return {
@@ -199,7 +200,7 @@ const generateNextReviewAssignments = async ({
   // and merge their section code restrictions
   nextLevelReviewers.forEach((reviewer: Reviewer) => {
     const { userId, orgId, allowedSections, canSelfAssign, canMakeFinalDecision } = reviewer
-    const { status, isLocked } = getNewOrExistingAssignmentStatus(
+    const { status, isSelfAssignable, isLocked } = getNewOrExistingAssignmentStatus(
       userId,
       canMakeFinalDecision,
       canSelfAssign
@@ -223,6 +224,7 @@ const generateNextReviewAssignments = async ({
         levelNumber: nextReviewLevel,
         isLastLevel,
         isLastStage,
+        isSelfAssignable: isSelfAssignable || false,
         isFinalDecision: canMakeFinalDecision,
         isLocked,
       }

@@ -30,13 +30,10 @@ async function updateReviewAssignmentsStatus({
 
     const reviewAssignmentUpdates = await Promise.all(
       otherReviewAssignments.map(async (reviewAssignment: any) => {
-        const { id, status } = reviewAssignment
+        const { id } = reviewAssignment
         return {
           id,
-          status:
-            trigger === Trigger.OnReviewSelfAssign
-              ? ReviewAssignmentStatus.SelfAssignedByAnother
-              : status,
+          isLocked: trigger === Trigger.OnReviewSelfAssign,
         }
       })
     )

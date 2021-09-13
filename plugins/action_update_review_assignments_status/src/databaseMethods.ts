@@ -42,17 +42,17 @@ const databaseMethods = (DBConnect: any) => ({
   updateReviewAssignments: async (reviewAssignments: any) => {
     const reviewAssignmentUpdateResults = []
     for (const reviewAssignment of reviewAssignments) {
-      const { id, status } = reviewAssignment
+      const { id, isLocked } = reviewAssignment
       const text = `
       UPDATE review_assignment
-      SET status = $2
+      SET isLocked = $2
       WHERE id = $1
-      RETURNING id, status
+      RETURNING id, isLocked
       `
       try {
         const result = await DBConnect.query({
           text,
-          values: [id, status],
+          values: [id, isLocked],
         })
         reviewAssignmentUpdateResults.push(result.rows[0])
       } catch (err) {

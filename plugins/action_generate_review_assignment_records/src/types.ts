@@ -30,6 +30,7 @@ export interface ReviewAssignment {
   isLastStage: boolean
   isFinalDecision: boolean
   isLocked: boolean
+  isSelfAssignable: boolean
 }
 
 export interface ReviewAssignmentObject {
