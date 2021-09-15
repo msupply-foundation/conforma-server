@@ -83,6 +83,7 @@ export interface DetailsHeader {
 // Response object of /outcomes/table/.../item endpoint
 export interface OutcomesDetailResponse {
   tableName: string
+  tableTitle: string
   id: number
   header: DetailsHeader
   columns: string[]

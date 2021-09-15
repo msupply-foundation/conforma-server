@@ -73,8 +73,13 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
   const recordId = Number(request.params.id)
   const permissionNames = await getPermissionNamesFromJWT(request)
 
-  const { columnDefinitionMasterList, fieldNames, headerDefinition, showLinkedApplications } =
-    await buildAllColumnDefinitions(permissionNames, tableName, 'DETAIL')
+  const {
+    columnDefinitionMasterList,
+    title,
+    fieldNames,
+    headerDefinition,
+    showLinkedApplications,
+  } = await buildAllColumnDefinitions(permissionNames, tableName, 'DETAIL')
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const fetchedRecord = await queryOutcomeTableSingleItem(
@@ -91,6 +96,7 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
 
   const response = await constructDetailsResponse(
     tableName,
+    title,
     columnDefinitionMasterList,
     headerDefinition as ColumnDefinition,
     fetchedRecord,
