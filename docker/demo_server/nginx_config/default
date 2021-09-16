@@ -95,7 +95,7 @@ server {
     gzip_types text/plain application/xml text/css application/javascript; 
 
     listen [::]:50006 ssl ipv6only=on; # managed by Certbot
-    listen 50000 ssl; # managed by Certbot
+    listen 50006 ssl; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
@@ -110,7 +110,7 @@ server {
     gzip_types text/plain application/xml text/css application/javascript; 
 
     listen [::]:50007 ssl ipv6only=on; # managed by Certbot
-    listen 50001 ssl; # managed by Certbot
+    listen 50007 ssl; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
@@ -125,7 +125,7 @@ server {
     gzip_types text/plain application/xml text/css application/javascript; 
 
     listen [::]:50008 ssl ipv6only=on; # managed by Certbot
-    listen 50002 ssl; # managed by Certbot
+    listen 50008 ssl; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
@@ -141,7 +141,7 @@ server {
     gzip_types text/plain application/xml text/css application/javascript; 
 
     listen [::]:50009 ssl ipv6only=on; # managed by Certbot
-    listen 50003 ssl; # managed by Certbot
+    listen 50009 ssl; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/irims-demo.msupply.org/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/irims-demo.msupply.org/privkey.pem; # managed by Certbot
     include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
