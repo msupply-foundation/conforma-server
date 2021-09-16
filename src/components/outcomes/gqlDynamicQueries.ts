@@ -60,7 +60,7 @@ export const queryLinkedApplications = async (id: number, tableName: string) => 
   try {
     queryResult = await DBConnect.gqlQuery(graphQLquery, { id })
   } catch (err) {
-    return { error: true, message: 'Problem with Linked Applications query', detail: err.message }
+    return [{ error: true, message: 'Problem with Linked Applications query', detail: err.message }]
   }
 
   const linkedApplications: LinkedApplication[] = queryResult?.[joinTableName]?.nodes.map(

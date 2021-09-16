@@ -37,7 +37,7 @@ export const buildAllColumnDefinitions = async (
 ): Promise<ColumnDetailOutput> => {
   // Look up allowed Outcome displays
   const outcomeTables = await DBConnect.getAllTableNames()
-  if (!outcomeTables.includes(tableName)) throw new Error('Invalid table name')
+  if (!outcomeTables.includes(tableName)) throw new Error(`Invalid table name: ${tableName}`)
 
   const outcomes = (await DBConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
     .map((outcome) => objectKeysToCamelCase(outcome))
