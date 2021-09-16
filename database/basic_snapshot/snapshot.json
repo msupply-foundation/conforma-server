@@ -1198,6 +1198,11 @@
    "id": 13,
    "name": "reviewFinalDecision",
    "permissionPolicyId": 6
+  },
+  {
+   "id": 14,
+   "name": "applyNonRegistered",
+   "permissionPolicyId": 1
   }
  ],
  "template": [
@@ -1228,70 +1233,6 @@
    "templateCategoryId": null,
    "version": 1,
    "versionTimestamp": "2021-08-10T14:13:37.055372+12:00"
-  },
-  {
-   "code": "Demo",
-   "icon": null,
-   "id": 3,
-   "isLinear": false,
-   "name": "Demo -- Feature Showcase",
-   "namePlural": "Demo -- Feature Showcases",
-   "startMessage": {
-    "children": [
-     "## This is the general registration for feature showcase\nHi, %1. You will need to provide:\n- Proof of identity (Passport, Drivers license)\n- Proof of your medical certification\n- Drug ingredient list\n- Product images\n- Packging images",
-     {
-      "children": [
-       "currentUser.firstName"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "stringSubstitution"
-   },
-   "status": "DISABLED",
-   "submissionMessage": {
-    "children": [
-     "### Application Submitted!\nThanks, %1.",
-     {
-      "children": [
-       "currentUser.firstName"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "stringSubstitution"
-   },
-   "templateCategoryId": 1,
-   "version": 1,
-   "versionTimestamp": "2021-08-10T14:13:37.199264+12:00"
-  },
-  {
-   "code": "CoreActions",
-   "icon": null,
-   "id": 4,
-   "isLinear": true,
-   "name": "Core-actions Templates",
-   "namePlural": "Companies Registrations",
-   "startMessage": "## You will need the following documents ready for upload:\n- <Add list of documents to upload>",
-   "status": "DISABLED",
-   "submissionMessage": "Thank you! Your application has been submitted.",
-   "templateCategoryId": 1,
-   "version": 1,
-   "versionTimestamp": "2021-08-10T14:13:37.578612+12:00"
-  },
-  {
-   "code": "OrgJoin",
-   "icon": null,
-   "id": 5,
-   "isLinear": false,
-   "name": "Join Company",
-   "namePlural": null,
-   "startMessage": "## You will need the following documents ready for upload:\n- PhotoID",
-   "status": "DISABLED",
-   "submissionMessage": "Thank you! Your application has been submitted.",
-   "templateCategoryId": 2,
-   "version": 1,
-   "versionTimestamp": "2021-08-10T14:13:37.786454+12:00"
   },
   {
    "code": "OrgRegistration",
@@ -1379,11 +1320,44 @@
    "name": "Core-actions Templates",
    "namePlural": "Companies Registrations",
    "startMessage": "## You will need the following documents ready for upload:\n- <Add list of documents to upload>",
-   "status": "DRAFT",
+   "status": "AVAILABLE",
    "submissionMessage": "Thank you! Your application has been submitted.",
    "templateCategoryId": 1,
    "version": 2,
    "versionTimestamp": "2021-09-08T19:33:33.648821+12:00"
+  },
+  {
+   "code": "PasswordReset",
+   "icon": null,
+   "id": 11,
+   "isLinear": false,
+   "name": "Reset Password",
+   "namePlural": "",
+   "startMessage": null,
+   "status": "AVAILABLE",
+   "submissionMessage": {
+    "children": [
+     {
+      "children": [
+       1,
+       {
+        "children": [
+         "applicationData.current.stage.number",
+         null
+        ],
+        "operator": "objectProperties"
+       }
+      ],
+      "operator": "="
+     },
+     "Thanks. Please click the link sent your email to change your password.",
+     "Password changed"
+    ],
+    "operator": "?"
+   },
+   "templateCategoryId": null,
+   "version": 2,
+   "versionTimestamp": "2021-09-08T12:43:22.001461+12:00"
   }
  ],
  "userOrganisation": [],
@@ -1398,19 +1372,6 @@
    "serial": "UE-CJD-0100",
    "sessionId": "81YuHj9EFcvKanvB",
    "templateId": 1,
-   "trigger": null,
-   "userId": 2
-  },
-  {
-   "id": 2,
-   "isActive": true,
-   "isConfig": true,
-   "name": "Demo -- Feature Showcase - S-VVY-0001",
-   "orgId": null,
-   "outcome": "PENDING",
-   "serial": "S-VVY-0001",
-   "sessionId": "81YuHj9EFcvKanvB",
-   "templateId": 3,
    "trigger": null,
    "userId": 2
   },
@@ -1437,19 +1398,6 @@
    "serial": "S-BIU-0001",
    "sessionId": "54kLipztqSPQCA8T",
    "templateId": 6,
-   "trigger": null,
-   "userId": 2
-  },
-  {
-   "id": 5,
-   "isActive": true,
-   "isConfig": true,
-   "name": "Company Registration - S-JLP-0002",
-   "orgId": null,
-   "outcome": "PENDING",
-   "serial": "S-JLP-0002",
-   "sessionId": "54kLipztqSPQCA8T",
-   "templateId": 4,
    "trigger": null,
    "userId": 2
   },
@@ -1489,19 +1437,6 @@
    "serial": "S-QXY-0005",
    "sessionId": "o2NccxL8scZ3Z2ux",
    "templateId": 6,
-   "trigger": null,
-   "userId": 2
-  },
-  {
-   "id": 9,
-   "isActive": true,
-   "isConfig": true,
-   "name": "Join Company - S-AVU-0001",
-   "orgId": null,
-   "outcome": "PENDING",
-   "serial": "S-AVU-0001",
-   "sessionId": "WXsvhggdwhlsHadx",
-   "templateId": 5,
    "trigger": null,
    "userId": 2
   },
@@ -2022,1816 +1957,6 @@
    "sequence": 4,
    "templateId": 2,
    "trigger": "ON_VERIFICATION"
-  },
-  {
-   "actionCode": "generateTextString",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 17,
-   "parameterQueries": {
-    "pattern": "S-[A-Z]{3}-<+dddd>",
-    "fieldName": "serial",
-    "tableName": "application",
-    "counterName": {
-     "children": [
-      "applicationData.templateCode"
-     ],
-     "operator": "objectProperties"
-    },
-    "updateRecord": true
-   },
-   "sequence": 1,
-   "templateId": 3,
-   "trigger": "ON_APPLICATION_CREATE"
-  },
-  {
-   "actionCode": "generateTextString",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 18,
-   "parameterQueries": {
-    "pattern": "<?templateName> - <?serial>",
-    "fieldName": "name",
-    "tableName": "application",
-    "customFields": {
-     "serial": "applicationData.applicationSerial",
-     "templateName": "applicationData.templateName"
-    },
-    "updateRecord": true
-   },
-   "sequence": 2,
-   "templateId": 3,
-   "trigger": "ON_APPLICATION_CREATE"
-  },
-  {
-   "actionCode": "incrementStage",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 19,
-   "parameterQueries": null,
-   "sequence": 3,
-   "templateId": 3,
-   "trigger": "ON_APPLICATION_CREATE"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 20,
-   "parameterQueries": {
-    "newStatus": "DRAFT"
-   },
-   "sequence": 1,
-   "templateId": 3,
-   "trigger": "ON_APPLICATION_RESTART"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 21,
-   "parameterQueries": {
-    "newStatus": "DRAFT"
-   },
-   "sequence": 1,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_RESTART"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 22,
-   "parameterQueries": {
-    "newStatus": "DRAFT"
-   },
-   "sequence": 1,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_CREATE"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": {
-    "children": [
-     "applicationData.reviewData.reviewAssignment.isLocked"
-    ],
-    "operator": "objectProperties"
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 23,
-   "parameterQueries": {
-    "newStatus": "LOCKED"
-   },
-   "sequence": 2,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_CREATE"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 24,
-   "parameterQueries": {
-    "newStatus": "SUBMITTED"
-   },
-   "sequence": 1,
-   "templateId": 3,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "trimResponses",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 25,
-   "parameterQueries": null,
-   "sequence": 2,
-   "templateId": 3,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "generateReviewAssignments",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 26,
-   "parameterQueries": null,
-   "sequence": 3,
-   "templateId": 3,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewsStatuses",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 27,
-   "parameterQueries": {
-    "changedResponses": {
-     "children": [
-      "outputCumulative.updatedResponses"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 4,
-   "templateId": 3,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "cleanupFiles",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 28,
-   "parameterQueries": null,
-   "sequence": 5,
-   "templateId": 3,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 29,
-   "parameterQueries": {
-    "newStatus": "SUBMITTED"
-   },
-   "sequence": 50,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "trimResponses",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 30,
-   "parameterQueries": {
-    "timestamp": {
-     "children": [
-      "outputCumulative.reviewStatusHistoryTimestamp"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 51,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewsStatuses",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 31,
-   "parameterQueries": {
-    "triggeredBy": "REVIEW",
-    "applicationId": {
-     "children": [
-      "applicationData.applicationId"
-     ],
-     "operator": "objectProperties"
-    },
-    "changedResponses": {
-     "children": [
-      "outputCumulative.updatedResponses"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 52,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "incrementStage",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         {
-          "children": [
-           "applicationData.reviewData.latestDecision.decision"
-          ],
-          "operator": "objectProperties"
-         },
-         "CONFORM"
-        ],
-        "operator": "="
-       },
-       {
-        "children": [
-         {
-          "children": [
-           "applicationData.reviewData.latestDecision.decision"
-          ],
-          "operator": "objectProperties"
-         },
-         "NON_CONFORM"
-        ],
-        "operator": "="
-       }
-      ],
-      "operator": "OR"
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 32,
-   "parameterQueries": null,
-   "sequence": 53,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "generateReviewAssignments",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 33,
-   "parameterQueries": null,
-   "sequence": 54,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewVisibility",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.reviewData.latestDecision.decision"
-        ],
-        "operator": "objectProperties"
-       },
-       "LIST_OF_QUESTIONS"
-      ],
-      "operator": "="
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 34,
-   "parameterQueries": null,
-   "sequence": 6,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.reviewData.latestDecision.decision"
-        ],
-        "operator": "objectProperties"
-       },
-       "LIST_OF_QUESTIONS"
-      ],
-      "operator": "="
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 35,
-   "parameterQueries": {
-    "isReview": false,
-    "newStatus": "CHANGES_REQUIRED"
-   },
-   "sequence": 55,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "changeOutcome",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.reviewData.latestDecision.decision"
-        ],
-        "operator": "objectProperties"
-       },
-       "LIST_OF_QUESTIONS"
-      ],
-      "operator": "!="
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastStage",
-       null
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 36,
-   "parameterQueries": {
-    "newOutcome": {
-     "children": [
-      {
-       "children": [
-        {
-         "children": [
-          "applicationData.reviewData.latestDecision.decision",
-          null
-         ],
-         "operator": "objectProperties"
-        },
-        "CONFORM"
-       ],
-       "operator": "="
-      },
-      "APPROVED",
-      "REJECTED"
-     ],
-     "operator": "?"
-    }
-   },
-   "sequence": 56,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 37,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 3,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
-  },
-  {
-   "actionCode": "generateName",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 38,
-   "parameterQueries": {
-    "formatExpression": "${applicationData.templateName} — ${applicationData.applicationSerial}"
-   },
-   "sequence": 1,
-   "templateId": 3,
-   "trigger": "DEV_TEST"
-  },
-  {
-   "actionCode": "cLog",
-   "code": null,
-   "condition": {
-    "value": true
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 39,
-   "parameterQueries": {
-    "message": {
-     "value": "Testing parallel actions -- This message is Asynchronous. \nEven though it is last in the Actions list, it'll probably appear first."
-    }
-   },
-   "sequence": null,
-   "templateId": 3,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "generateTextString",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Generate serial for application when created",
-   "eventCode": null,
-   "id": 40,
-   "parameterQueries": {
-    "pattern": "S-[A-Z]{3}-<+dddd>",
-    "fieldName": "serial",
-    "tableName": "application",
-    "counterName": {
-     "children": [
-      "applicationData.templateCode"
-     ],
-     "operator": "objectProperties"
-    },
-    "updateRecord": true
-   },
-   "sequence": 1,
-   "templateId": 4,
-   "trigger": "ON_APPLICATION_CREATE"
-  },
-  {
-   "actionCode": "generateTextString",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Generate name for application wen created",
-   "eventCode": null,
-   "id": 41,
-   "parameterQueries": {
-    "pattern": "<?templateName> - <?serial>",
-    "fieldName": "name",
-    "tableName": "application",
-    "customFields": {
-     "serial": "applicationData.applicationSerial",
-     "templateName": "applicationData.templateName"
-    },
-    "updateRecord": true
-   },
-   "sequence": 2,
-   "templateId": 4,
-   "trigger": "ON_APPLICATION_CREATE"
-  },
-  {
-   "actionCode": "incrementStage",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Increment to first stage when application is created",
-   "eventCode": null,
-   "id": 42,
-   "parameterQueries": {},
-   "sequence": 3,
-   "templateId": 4,
-   "trigger": "ON_APPLICATION_CREATE"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Change application status from CHANGES REQUIRED to DRAFT when the applicant restarts one application with  to do updates (as requested in review).",
-   "eventCode": null,
-   "id": 43,
-   "parameterQueries": {
-    "newStatus": "DRAFT"
-   },
-   "sequence": 1,
-   "templateId": 4,
-   "trigger": "ON_APPLICATION_RESTART"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Change review status to DRAFT when the reviewer clicks to re-review a previous review made which has new status as PENDING or CHANGES REQUESTED. Previous status depends if is coming from lower level or applicant (PENDING) or if is coming back from upper level reviewer (CHANGES REQUESTED)",
-   "eventCode": null,
-   "id": 44,
-   "parameterQueries": {
-    "newStatus": "DRAFT"
-   },
-   "sequence": 1,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_RESTART"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Change review status to DRAFT when the reviewer clicks to start one assignment (and not locked) new review",
-   "eventCode": null,
-   "id": 45,
-   "parameterQueries": {
-    "newStatus": "DRAFT"
-   },
-   "sequence": 1,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_CREATE"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": {
-    "children": [
-     "applicationData.reviewData.reviewAssignment.isLocked"
-    ],
-    "operator": "objectProperties"
-   },
-   "description": "**CORE-ACTION** Change review status to LOCKED when the reviewer clicks to start one assignment with has flag isLocked as true",
-   "eventCode": null,
-   "id": 46,
-   "parameterQueries": {
-    "newStatus": "LOCKED"
-   },
-   "sequence": 2,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_CREATE"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Change application status from DRAFT to SUBMITTED when the applicant submits the application",
-   "eventCode": null,
-   "id": 47,
-   "parameterQueries": {
-    "newStatus": "SUBMITTED"
-   },
-   "sequence": 1,
-   "templateId": 4,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "trimResponses",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Remove duplicated and unchanged responses when application is re-submitted by the applicant.",
-   "eventCode": null,
-   "id": 48,
-   "parameterQueries": {},
-   "sequence": 2,
-   "templateId": 4,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "generateReviewAssignments",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Generate level 1 review assignments in current stage after application is submitted by the applicant ",
-   "eventCode": null,
-   "id": 49,
-   "parameterQueries": {},
-   "sequence": 3,
-   "templateId": 4,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewsStatuses",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Update reviews status with review assignment linked to changed responses by applicant when application is resubmitted.",
-   "eventCode": null,
-   "id": 50,
-   "parameterQueries": {
-    "changedResponses": {
-     "children": [
-      "outputCumulative.updatedResponses"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 4,
-   "templateId": 4,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "cleanupFiles",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Garbage collector for files uploaded and removed by the applicant",
-   "eventCode": null,
-   "id": 51,
-   "parameterQueries": {},
-   "sequence": 5,
-   "templateId": 4,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Change review status to SUBMITTED when the reviewer submits",
-   "eventCode": null,
-   "id": 52,
-   "parameterQueries": {
-    "newStatus": "SUBMITTED"
-   },
-   "sequence": 50,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "trimResponses",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Remove duplicated and unchanged responses or ones without a decision made when review is re-submitted by the reviewer.",
-   "eventCode": null,
-   "id": 53,
-   "parameterQueries": {
-    "timestamp": {
-     "children": [
-      "outputCumulative.reviewStatusHistoryTimestamp"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 51,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewsStatuses",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Update other review status to PENDING or CHANGES REQUESTED after one review is submitted to another reviewer in the chain of review-levels",
-   "eventCode": null,
-   "id": 54,
-   "parameterQueries": {
-    "triggeredBy": "REVIEW",
-    "applicationId": {
-     "children": [
-      "applicationData.applicationId"
-     ],
-     "operator": "objectProperties"
-    },
-    "changedResponses": {
-     "children": [
-      "outputCumulative.updatedResponses"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 52,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "incrementStage",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         {
-          "children": [
-           "applicationData.reviewData.latestDecision.decision"
-          ],
-          "operator": "objectProperties"
-         },
-         "CONFORM"
-        ],
-        "operator": "="
-       },
-       {
-        "children": [
-         {
-          "children": [
-           "applicationData.reviewData.latestDecision.decision"
-          ],
-          "operator": "objectProperties"
-         },
-         "NON_CONFORM"
-        ],
-        "operator": "="
-       }
-      ],
-      "operator": "OR"
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": "**CORE-ACTION** Increment stage of application when last level reviewer submits review with decision of CONFORM or NON_CONFORM",
-   "eventCode": null,
-   "id": 55,
-   "parameterQueries": {},
-   "sequence": 53,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "generateReviewAssignments",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Generate next level (in current stage) of review assignments after one reviewer submits a review to next level - when applicable",
-   "eventCode": null,
-   "id": 56,
-   "parameterQueries": {},
-   "sequence": 54,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewVisibility",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.reviewData.latestDecision.decision"
-        ],
-        "operator": "objectProperties"
-       },
-       "LIST_OF_QUESTIONS"
-      ],
-      "operator": "="
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": "**CORE-ACTION** Allow visibility to review responses (always level 1) on the current stage that were DECLINED to show to applicant after review is submitted with decision of LIST_OF_QUESTIONS",
-   "eventCode": null,
-   "id": 57,
-   "parameterQueries": {},
-   "sequence": 6,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.reviewData.latestDecision.decision"
-        ],
-        "operator": "objectProperties"
-       },
-       "LIST_OF_QUESTIONS"
-      ],
-      "operator": "="
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": "**CORE-ACTION** Change application status to CHANGES_REQUIRED once a last level reviewer submits with decision of LIST_OF_QUESTIONS",
-   "eventCode": null,
-   "id": 58,
-   "parameterQueries": {
-    "isReview": false,
-    "newStatus": "CHANGES_REQUIRED"
-   },
-   "sequence": 55,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "changeOutcome",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.reviewData.latestDecision.decision"
-        ],
-        "operator": "objectProperties"
-       },
-       "LIST_OF_QUESTIONS"
-      ],
-      "operator": "!="
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastStage",
-       null
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": "**CORE-ACTION** Change application outcome when last level and last stage - usually a final decision - submits a review as CONFORM or NON_CONFORM. Outcome will be APPROVED or REJECTED accordingly",
-   "eventCode": null,
-   "id": 59,
-   "parameterQueries": {
-    "newOutcome": {
-     "children": [
-      {
-       "children": [
-        {
-         "children": [
-          "applicationData.reviewData.latestDecision.decision",
-          null
-         ],
-         "operator": "objectProperties"
-        },
-        "CONFORM"
-       ],
-       "operator": "="
-      },
-      "APPROVED",
-      "REJECTED"
-     ],
-     "operator": "?"
-    }
-   },
-   "sequence": 56,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
-   "description": "**CORE-ACTION** Change other review assignment statuses to SELF_ASSIGNED_BY_ANOTHER after one of the review assignment with AVAILABLE_FOR_SELF_ASSIGNMENT is self-assigned by the reviewer",
-   "eventCode": null,
-   "id": 60,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
-  },
-  {
-   "actionCode": "cLog",
-   "code": null,
-   "condition": true,
-   "description": "Example: console log with application serial and template code",
-   "eventCode": null,
-   "id": 62,
-   "parameterQueries": {
-    "message": {
-     "children": [
-      "Application %1 was submitted of template code %2",
-      "applicationData.applicationSerial",
-      "applicationData.templateCode"
-     ],
-     "operator": "stringSubstitution"
-    }
-   },
-   "sequence": null,
-   "templateId": 4,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "modifyRecord",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       "applicationData.outcome"
-      ],
-      "operator": "objectProperties"
-     },
-     "APPROVED"
-    ],
-    "operator": "="
-   },
-   "description": "Example: action to modify record in database using fields from application when outcome is change to APPROVED ",
-   "eventCode": null,
-   "id": 63,
-   "parameterQueries": {
-    "name": {
-     "children": [
-      "applicationData.responses.name.text"
-     ],
-     "operator": "objectProperties"
-    },
-    "address": {
-     "children": [
-      "applicationData.responses.physAdd.text"
-     ],
-     "operator": "objectProperties"
-    },
-    "logo_url": {
-     "children": [
-      "",
-      {
-       "children": [
-        "applicationData.responses.logo.files.fileUrl"
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "CONCAT"
-    },
-    "tableName": "organisation",
-    "registration": {
-     "children": [
-      "applicationData.responses.rego.text"
-     ],
-     "operator": "objectProperties"
-    },
-    "registration_documentation": {
-     "children": [
-      "applicationData.responses.regoDoc"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 101,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "joinUserOrg",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       "applicationData.outcome"
-      ],
-      "operator": "objectProperties"
-     },
-     "APPROVED"
-    ],
-    "operator": "="
-   },
-   "description": "Example: action to connect user to organisation when application outcome is APPROVED",
-   "eventCode": null,
-   "id": 64,
-   "parameterQueries": {
-    "user_id": {
-     "children": [
-      "applicationData.userId"
-     ],
-     "operator": "objectProperties"
-    },
-    "user_role": "Owner",
-    "organisation_id": {
-     "children": [
-      "outputCumulative.organisation.id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 102,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "grantPermissions",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       "applicationData.outcome"
-      ],
-      "operator": "objectProperties"
-     },
-     "APPROVED"
-    ],
-    "operator": "="
-   },
-   "description": "Example: action to grant permissions to user when logged in with organisation joined when application outcome is APPROVED",
-   "eventCode": null,
-   "id": 65,
-   "parameterQueries": {
-    "orgName": {
-     "children": [
-      "outputCumulative.organisation.name"
-     ],
-     "operator": "objectProperties"
-    },
-    "username": {
-     "children": [
-      "applicationData.username"
-     ],
-     "operator": "objectProperties"
-    },
-    "permissionNames": [
-     "reviewJoinOrg"
-    ]
-   },
-   "sequence": 103,
-   "templateId": 4,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "generateTextString",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 66,
-   "parameterQueries": {
-    "pattern": "S-[A-Z]{3}-<+dddd>",
-    "fieldName": "serial",
-    "tableName": "application",
-    "counterName": {
-     "children": [
-      "applicationData.templateCode"
-     ],
-     "operator": "objectProperties"
-    },
-    "updateRecord": true
-   },
-   "sequence": 1,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_CREATE"
-  },
-  {
-   "actionCode": "generateTextString",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 67,
-   "parameterQueries": {
-    "pattern": "<?templateName> - <?serial>",
-    "fieldName": "name",
-    "tableName": "application",
-    "customFields": {
-     "serial": "applicationData.applicationSerial",
-     "templateName": "applicationData.templateName"
-    },
-    "updateRecord": true
-   },
-   "sequence": 2,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_CREATE"
-  },
-  {
-   "actionCode": "incrementStage",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 68,
-   "parameterQueries": null,
-   "sequence": 3,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_CREATE"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 69,
-   "parameterQueries": {
-    "newStatus": "DRAFT"
-   },
-   "sequence": 1,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_RESTART"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 70,
-   "parameterQueries": {
-    "newStatus": "DRAFT"
-   },
-   "sequence": 1,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_RESTART"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 71,
-   "parameterQueries": {
-    "newStatus": "DRAFT"
-   },
-   "sequence": 1,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_CREATE"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": {
-    "children": [
-     "applicationData.reviewData.reviewAssignment.isLocked"
-    ],
-    "operator": "objectProperties"
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 72,
-   "parameterQueries": {
-    "newStatus": "LOCKED"
-   },
-   "sequence": 2,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_CREATE"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 73,
-   "parameterQueries": {
-    "newStatus": "SUBMITTED"
-   },
-   "sequence": 1,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "trimResponses",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 74,
-   "parameterQueries": null,
-   "sequence": 2,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "generateReviewAssignments",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 75,
-   "parameterQueries": null,
-   "sequence": 3,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewsStatuses",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 76,
-   "parameterQueries": {
-    "changedResponses": {
-     "children": [
-      "outputCumulative.updatedResponses"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 4,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "cleanupFiles",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 77,
-   "parameterQueries": null,
-   "sequence": 5,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 78,
-   "parameterQueries": {
-    "newStatus": "SUBMITTED"
-   },
-   "sequence": 50,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "trimResponses",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 79,
-   "parameterQueries": {
-    "timestamp": {
-     "children": [
-      "outputCumulative.reviewStatusHistoryTimestamp"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 51,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewsStatuses",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 80,
-   "parameterQueries": {
-    "triggeredBy": "REVIEW",
-    "applicationId": {
-     "children": [
-      "applicationData.applicationId"
-     ],
-     "operator": "objectProperties"
-    },
-    "changedResponses": {
-     "children": [
-      "outputCumulative.updatedResponses"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 52,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "incrementStage",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         {
-          "children": [
-           "applicationData.reviewData.latestDecision.decision"
-          ],
-          "operator": "objectProperties"
-         },
-         "CONFORM"
-        ],
-        "operator": "="
-       },
-       {
-        "children": [
-         {
-          "children": [
-           "applicationData.reviewData.latestDecision.decision"
-          ],
-          "operator": "objectProperties"
-         },
-         "NON_CONFORM"
-        ],
-        "operator": "="
-       }
-      ],
-      "operator": "OR"
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 81,
-   "parameterQueries": null,
-   "sequence": 53,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "generateReviewAssignments",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 82,
-   "parameterQueries": null,
-   "sequence": 54,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewVisibility",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.reviewData.latestDecision.decision"
-        ],
-        "operator": "objectProperties"
-       },
-       "LIST_OF_QUESTIONS"
-      ],
-      "operator": "="
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 83,
-   "parameterQueries": null,
-   "sequence": 6,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.reviewData.latestDecision.decision"
-        ],
-        "operator": "objectProperties"
-       },
-       "LIST_OF_QUESTIONS"
-      ],
-      "operator": "="
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 84,
-   "parameterQueries": {
-    "isReview": false,
-    "newStatus": "CHANGES_REQUIRED"
-   },
-   "sequence": 55,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "changeOutcome",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.reviewData.latestDecision.decision"
-        ],
-        "operator": "objectProperties"
-       },
-       "LIST_OF_QUESTIONS"
-      ],
-      "operator": "!="
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastLevel"
-      ],
-      "operator": "objectProperties"
-     },
-     {
-      "children": [
-       "applicationData.reviewData.isLastStage",
-       null
-      ],
-      "operator": "objectProperties"
-     }
-    ],
-    "operator": "AND"
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 85,
-   "parameterQueries": {
-    "newOutcome": {
-     "children": [
-      {
-       "children": [
-        {
-         "children": [
-          "applicationData.reviewData.latestDecision.decision",
-          null
-         ],
-         "operator": "objectProperties"
-        },
-        "CONFORM"
-       ],
-       "operator": "="
-      },
-      "APPROVED",
-      "REJECTED"
-     ],
-     "operator": "?"
-    }
-   },
-   "sequence": 56,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "updateReviewAssignmentsStatus",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 86,
-   "parameterQueries": {
-    "trigger": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.trigger"
-     ],
-     "operator": "objectProperties"
-    },
-    "reviewAssignmentId": {
-     "children": [
-      "applicationData.action_payload.trigger_payload.record_id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": null,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SELF_ASSIGN"
-  },
-  {
-   "actionCode": "generateName",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 87,
-   "parameterQueries": {
-    "formatExpression": "${applicationData.templateName} — ${applicationData.applicationSerial}"
-   },
-   "sequence": 1,
-   "templateId": 5,
-   "trigger": "DEV_TEST"
-  },
-  {
-   "actionCode": "cLog",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 88,
-   "parameterQueries": {
-    "message": {
-     "value": "Organisation Registration submission"
-    }
-   },
-   "sequence": null,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "modifyRecord",
-   "code": null,
-   "condition": true,
-   "description": null,
-   "eventCode": null,
-   "id": 89,
-   "parameterQueries": {
-    "id": {
-     "children": [
-      "applicationData.applicationId"
-     ],
-     "operator": "objectProperties"
-    },
-    "org_id": {
-     "children": [
-      "applicationData.responses.S1Q1.selection.id"
-     ],
-     "operator": "objectProperties"
-    },
-    "tableName": "application"
-   },
-   "sequence": null,
-   "templateId": 5,
-   "trigger": "ON_APPLICATION_SUBMIT"
-  },
-  {
-   "actionCode": "joinUserOrg",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       "applicationData.outcome"
-      ],
-      "operator": "objectProperties"
-     },
-     "APPROVED"
-    ],
-    "operator": "="
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 90,
-   "parameterQueries": {
-    "user_id": {
-     "children": [
-      "applicationData.userId"
-     ],
-     "operator": "objectProperties"
-    },
-    "organisation_id": {
-     "children": [
-      "applicationData.responses.S1Q1.selection.id"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 120,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "grantPermissions",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       "applicationData.outcome"
-      ],
-      "operator": "objectProperties"
-     },
-     "APPROVED"
-    ],
-    "operator": "="
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 91,
-   "parameterQueries": {
-    "orgName": {
-     "children": [
-      "applicationData.responses.S1Q1.selection.name"
-     ],
-     "operator": "objectProperties"
-    },
-    "username": {
-     "children": [
-      "applicationData.username"
-     ],
-     "operator": "objectProperties"
-    },
-    "permissionNames": [
-     "canApplyDrugRego"
-    ]
-   },
-   "sequence": 130,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "changeStatus",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       "applicationData.outcome"
-      ],
-      "operator": "objectProperties"
-     },
-     "APPROVED"
-    ],
-    "operator": "="
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 92,
-   "parameterQueries": {
-    "newStatus": "COMPLETED"
-   },
-   "sequence": 110,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
-  },
-  {
-   "actionCode": "sendNotification",
-   "code": null,
-   "condition": {
-    "children": [
-     {
-      "children": [
-       "applicationData.outcome"
-      ],
-      "operator": "objectProperties"
-     },
-     "APPROVED"
-    ],
-    "operator": "="
-   },
-   "description": null,
-   "eventCode": null,
-   "id": 93,
-   "parameterQueries": {
-    "message": {
-     "children": [
-      "### Congratulations, %1!\n\nYour application to join organisation %2 has been APPROVED.\n\n[Application Dashboard](%3)\n\nPlease find attached the ID file you uploaded (testing attachment handling)",
-      {
-       "children": [
-        "applicationData.firstName",
-        ""
-       ],
-       "operator": "objectProperties"
-      },
-      {
-       "children": [
-        "applicationData.responses.S1Q1.text",
-        ""
-       ],
-       "operator": "objectProperties"
-      },
-      "http://localhost:3000"
-     ],
-     "operator": "stringSubstitution"
-    },
-    "subject": {
-     "children": [
-      "Application approved: %1",
-      {
-       "children": [
-        "applicationData.applicationSerial",
-        ""
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "stringSubstitution"
-    },
-    "fromName": "Application Manager",
-    "fromEmail": "no-reply@sussol.net",
-    "attachments": {
-     "children": [
-      "applicationData.responses.IDUpload.files.uniqueId"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sequence": 120,
-   "templateId": 5,
-   "trigger": "ON_REVIEW_SUBMIT"
   },
   {
    "actionCode": "generateTextString",
@@ -8152,174 +6277,321 @@
    "sequence": 106,
    "templateId": 7,
    "trigger": "ON_REVIEW_SUBMIT"
+  },
+  {
+   "actionCode": "generateTextString",
+   "code": null,
+   "condition": true,
+   "description": "Generate long random string for serial to make url unpredictable",
+   "eventCode": "",
+   "id": 237,
+   "parameterQueries": {
+    "pattern": "[A-Za-z0-9]{24}",
+    "fieldName": "serial",
+    "tableName": "application",
+    "updateRecord": true
+   },
+   "sequence": 1,
+   "templateId": 11,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "generateTextString",
+   "code": null,
+   "condition": true,
+   "description": "Create application name",
+   "eventCode": "",
+   "id": 238,
+   "parameterQueries": {
+    "pattern": "<?templateName> - <+dddd>",
+    "fieldName": "name",
+    "tableName": "application",
+    "counterInit": 100,
+    "counterName": {
+     "children": [
+      "applicationData.templateCode"
+     ],
+     "operator": "objectProperties"
+    },
+    "customFields": {
+     "counter": "applicationData.applicationSerial",
+     "templateName": "applicationData.templateName"
+    },
+    "updateRecord": true
+   },
+   "sequence": 2,
+   "templateId": 11,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "incrementStage",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 239,
+   "parameterQueries": null,
+   "sequence": 1,
+   "templateId": 11,
+   "trigger": "ON_APPLICATION_CREATE"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": null,
+   "eventCode": null,
+   "id": 240,
+   "parameterQueries": {
+    "newStatus": "SUBMITTED"
+   },
+   "sequence": 1,
+   "templateId": 11,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "createVerification",
+   "code": null,
+   "condition": {
+    "children": [
+     1,
+     {
+      "children": [
+       "applicationData.stageNumber",
+       null
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "="
+   },
+   "description": "Create verification so that user can confirm their identity via email link",
+   "eventCode": "",
+   "id": 241,
+   "parameterQueries": {
+    "expiry": 1,
+    "message": {
+     "children": [
+      "## Verification successful\n\n[Click here](%1/id/Page1/?sessionId=%2) to change your password",
+      {
+       "children": [
+        {
+         "children": [
+          "applicationData.environmentData.webHostUrl",
+          null
+         ],
+         "operator": "objectProperties"
+        },
+        "/application/",
+        {
+         "children": [
+          "applicationData.applicationSerial",
+          null
+         ],
+         "operator": "objectProperties"
+        }
+       ],
+       "operator": "+"
+      },
+      {
+       "children": [
+        "applicationData.sessionId",
+        null
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    }
+   },
+   "sequence": 2,
+   "templateId": 11,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "sendNotification",
+   "code": null,
+   "condition": {
+    "children": [
+     1,
+     {
+      "children": [
+       "applicationData.stageNumber",
+       null
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "="
+   },
+   "description": "Send verification email",
+   "eventCode": "",
+   "id": 242,
+   "parameterQueries": {
+    "email": {
+     "children": [
+      "query getUser($username:String!) {userByUsername(username: $username) {email, firstName, lastName }}",
+      "graphQLendpoint",
+      [
+       "username"
+      ],
+      {
+       "children": [
+        "applicationData.responses.username.text"
+       ],
+       "operator": "objectProperties"
+      },
+      "userByUsername.email"
+     ],
+     "operator": "graphQL"
+    },
+    "message": {
+     "children": [
+      "Hi %1,\n\nsomeone with your username (%2) requested to reset your password. If this wasn't you, or this was unintentional, please disregard this email.\n\nIn order to reset your password, please click (or copy-paste) the following link:\n\n%3/verify?uid=%4",
+      {
+       "children": [
+        "query getUser($username:String!) {userByUsername(username: $username) {email, firstName, lastName }}",
+        "graphQLendpoint",
+        [
+         "username"
+        ],
+        {
+         "children": [
+          "applicationData.responses.username.text"
+         ],
+         "operator": "objectProperties"
+        },
+        "userByUsername.firstName"
+       ],
+       "operator": "graphQL"
+      },
+      {
+       "children": [
+        "applicationData.responses.username.text",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "applicationData.environmentData.webHostUrl",
+        null
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "outputCumulative.verification.unique_id"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "stringSubstitution"
+    },
+    "subject": "Application Manager -- password reset verification",
+    "fromName": "Application Manager",
+    "fromEmail": "no-reply@sussol.net"
+   },
+   "sequence": 3,
+   "templateId": 11,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "modifyRecord",
+   "code": null,
+   "condition": {
+    "children": [
+     2,
+     {
+      "children": [
+       "applicationData.stageNumber",
+       null
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "="
+   },
+   "description": "Once verified, change password hash in database",
+   "eventCode": "",
+   "id": 243,
+   "parameterQueries": {
+    "tableName": "user",
+    "matchField": "username",
+    "matchValue": {
+     "children": [
+      "applicationData.responses.username.text",
+      null
+     ],
+     "operator": "objectProperties"
+    },
+    "password_hash": {
+     "children": [
+      "applicationData.responses.password.hash"
+     ],
+     "operator": "objectProperties"
+    }
+   },
+   "sequence": 4,
+   "templateId": 11,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "changeOutcome",
+   "code": null,
+   "condition": {
+    "children": [
+     2,
+     {
+      "children": [
+       "applicationData.stageNumber",
+       null
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "="
+   },
+   "description": "We're done",
+   "eventCode": "",
+   "id": 244,
+   "parameterQueries": {
+    "newOutcome": {
+     "value": "APPROVED"
+    }
+   },
+   "sequence": 5,
+   "templateId": 11,
+   "trigger": "ON_APPLICATION_SUBMIT"
+  },
+  {
+   "actionCode": "incrementStage",
+   "code": null,
+   "condition": true,
+   "description": "Increments stage so user can change password",
+   "eventCode": "",
+   "id": 245,
+   "parameterQueries": {},
+   "sequence": 1,
+   "templateId": 11,
+   "trigger": "ON_VERIFICATION"
+  },
+  {
+   "actionCode": "changeStatus",
+   "code": null,
+   "condition": true,
+   "description": "Set to \"Changes Request\" so can be edited again, this time with password field active",
+   "eventCode": "",
+   "id": 246,
+   "parameterQueries": {
+    "newStatus": "DRAFT"
+   },
+   "sequence": 2,
+   "templateId": 11,
+   "trigger": "ON_VERIFICATION"
   }
  ],
  "templateFilterJoin": [
-  {
-   "filterId": 1,
-   "id": 1,
-   "templateId": 3
-  },
-  {
-   "filterId": 2,
-   "id": 2,
-   "templateId": 3
-  },
-  {
-   "filterId": 3,
-   "id": 3,
-   "templateId": 3
-  },
-  {
-   "filterId": 4,
-   "id": 4,
-   "templateId": 3
-  },
-  {
-   "filterId": 5,
-   "id": 5,
-   "templateId": 3
-  },
-  {
-   "filterId": 6,
-   "id": 6,
-   "templateId": 3
-  },
-  {
-   "filterId": 7,
-   "id": 7,
-   "templateId": 3
-  },
-  {
-   "filterId": 8,
-   "id": 8,
-   "templateId": 3
-  },
-  {
-   "filterId": 9,
-   "id": 9,
-   "templateId": 3
-  },
-  {
-   "filterId": 10,
-   "id": 10,
-   "templateId": 3
-  },
-  {
-   "filterId": 11,
-   "id": 11,
-   "templateId": 3
-  },
-  {
-   "filterId": 1,
-   "id": 12,
-   "templateId": 4
-  },
-  {
-   "filterId": 2,
-   "id": 13,
-   "templateId": 4
-  },
-  {
-   "filterId": 3,
-   "id": 14,
-   "templateId": 4
-  },
-  {
-   "filterId": 4,
-   "id": 15,
-   "templateId": 4
-  },
-  {
-   "filterId": 5,
-   "id": 16,
-   "templateId": 4
-  },
-  {
-   "filterId": 6,
-   "id": 17,
-   "templateId": 4
-  },
-  {
-   "filterId": 7,
-   "id": 18,
-   "templateId": 4
-  },
-  {
-   "filterId": 8,
-   "id": 19,
-   "templateId": 4
-  },
-  {
-   "filterId": 9,
-   "id": 20,
-   "templateId": 4
-  },
-  {
-   "filterId": 10,
-   "id": 21,
-   "templateId": 4
-  },
-  {
-   "filterId": 11,
-   "id": 22,
-   "templateId": 4
-  },
-  {
-   "filterId": 1,
-   "id": 23,
-   "templateId": 5
-  },
-  {
-   "filterId": 2,
-   "id": 24,
-   "templateId": 5
-  },
-  {
-   "filterId": 3,
-   "id": 25,
-   "templateId": 5
-  },
-  {
-   "filterId": 4,
-   "id": 26,
-   "templateId": 5
-  },
-  {
-   "filterId": 5,
-   "id": 27,
-   "templateId": 5
-  },
-  {
-   "filterId": 6,
-   "id": 28,
-   "templateId": 5
-  },
-  {
-   "filterId": 7,
-   "id": 29,
-   "templateId": 5
-  },
-  {
-   "filterId": 8,
-   "id": 30,
-   "templateId": 5
-  },
-  {
-   "filterId": 9,
-   "id": 31,
-   "templateId": 5
-  },
-  {
-   "filterId": 10,
-   "id": 32,
-   "templateId": 5
-  },
-  {
-   "filterId": 11,
-   "id": 33,
-   "templateId": 5
-  },
   {
    "filterId": 1,
    "id": 34,
@@ -8623,142 +6895,6 @@
    "allowedSections": null,
    "canMakeFinalDecision": false,
    "canSelfAssign": false,
-   "id": 3,
-   "levelNumber": null,
-   "permissionNameId": 4,
-   "restrictions": null,
-   "stageNumber": null,
-   "templateId": 3
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": false,
-   "canSelfAssign": true,
-   "id": 4,
-   "levelNumber": 1,
-   "permissionNameId": 9,
-   "restrictions": null,
-   "stageNumber": 1,
-   "templateId": 3
-  },
-  {
-   "allowedSections": [
-    "S1"
-   ],
-   "canMakeFinalDecision": false,
-   "canSelfAssign": false,
-   "id": 5,
-   "levelNumber": 1,
-   "permissionNameId": 10,
-   "restrictions": null,
-   "stageNumber": 2,
-   "templateId": 3
-  },
-  {
-   "allowedSections": [
-    "S2"
-   ],
-   "canMakeFinalDecision": false,
-   "canSelfAssign": false,
-   "id": 6,
-   "levelNumber": 1,
-   "permissionNameId": 11,
-   "restrictions": null,
-   "stageNumber": 2,
-   "templateId": 3
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": false,
-   "canSelfAssign": false,
-   "id": 7,
-   "levelNumber": 2,
-   "permissionNameId": 12,
-   "restrictions": null,
-   "stageNumber": 2,
-   "templateId": 3
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": true,
-   "canSelfAssign": false,
-   "id": 8,
-   "levelNumber": 1,
-   "permissionNameId": 13,
-   "restrictions": null,
-   "stageNumber": 3,
-   "templateId": 3
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": false,
-   "canSelfAssign": false,
-   "id": 9,
-   "levelNumber": 1,
-   "permissionNameId": 7,
-   "restrictions": null,
-   "stageNumber": 2,
-   "templateId": 3
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": false,
-   "canSelfAssign": false,
-   "id": 10,
-   "levelNumber": null,
-   "permissionNameId": 4,
-   "restrictions": null,
-   "stageNumber": null,
-   "templateId": 4
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": false,
-   "canSelfAssign": false,
-   "id": 12,
-   "levelNumber": 1,
-   "permissionNameId": 7,
-   "restrictions": null,
-   "stageNumber": 1,
-   "templateId": 4
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": false,
-   "canSelfAssign": false,
-   "id": 13,
-   "levelNumber": null,
-   "permissionNameId": 4,
-   "restrictions": null,
-   "stageNumber": null,
-   "templateId": 5
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": false,
-   "canSelfAssign": false,
-   "id": 14,
-   "levelNumber": 1,
-   "permissionNameId": 7,
-   "restrictions": null,
-   "stageNumber": 1,
-   "templateId": 5
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": false,
-   "canSelfAssign": true,
-   "id": 15,
-   "levelNumber": 1,
-   "permissionNameId": 6,
-   "restrictions": null,
-   "stageNumber": 1,
-   "templateId": 5
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": false,
-   "canSelfAssign": false,
    "id": 16,
    "levelNumber": null,
    "permissionNameId": 4,
@@ -8787,17 +6923,6 @@
    "restrictions": null,
    "stageNumber": 1,
    "templateId": 6
-  },
-  {
-   "allowedSections": null,
-   "canMakeFinalDecision": false,
-   "canSelfAssign": true,
-   "id": 19,
-   "levelNumber": 1,
-   "permissionNameId": 8,
-   "restrictions": null,
-   "stageNumber": 1,
-   "templateId": 4
   },
   {
    "allowedSections": null,
@@ -8978,6 +7103,17 @@
    "restrictions": null,
    "stageNumber": 1,
    "templateId": 10
+  },
+  {
+   "allowedSections": null,
+   "canMakeFinalDecision": false,
+   "canSelfAssign": true,
+   "id": 36,
+   "levelNumber": null,
+   "permissionNameId": 14,
+   "restrictions": null,
+   "stageNumber": null,
+   "templateId": 11
   }
  ],
  "templateSection": [
@@ -8994,48 +7130,6 @@
    "index": 0,
    "templateId": 2,
    "title": "Basic user information"
-  },
-  {
-   "code": "S1",
-   "id": 3,
-   "index": 0,
-   "templateId": 3,
-   "title": "Section 1 - Basics"
-  },
-  {
-   "code": "S2",
-   "id": 4,
-   "index": 2,
-   "templateId": 3,
-   "title": "Section 2 - File Upload"
-  },
-  {
-   "code": "S3",
-   "id": 5,
-   "index": 3,
-   "templateId": 3,
-   "title": "Section 3 - Lists & Search"
-  },
-  {
-   "code": "S1",
-   "id": 6,
-   "index": 0,
-   "templateId": 4,
-   "title": "Section 1: Organisation Details"
-  },
-  {
-   "code": "S2",
-   "id": 7,
-   "index": 1,
-   "templateId": 4,
-   "title": "Section 2: Documentation"
-  },
-  {
-   "code": "S1",
-   "id": 8,
-   "index": 0,
-   "templateId": 5,
-   "title": "Personal Information"
   },
   {
    "code": "S1",
@@ -9106,6 +7200,13 @@
    "index": 1,
    "templateId": 10,
    "title": "Section 2: Documentation"
+  },
+  {
+   "code": "id",
+   "id": 19,
+   "index": 0,
+   "templateId": 11,
+   "title": "Identify User"
   }
  ],
  "templateStage": [
@@ -9124,46 +7225,6 @@
    "number": 1,
    "templateId": 2,
    "title": "Automatic"
-  },
-  {
-   "colour": "#24B5DF",
-   "description": "This application will go through the Screening stage before it can be accessed.",
-   "id": 3,
-   "number": 1,
-   "templateId": 3,
-   "title": "Screening"
-  },
-  {
-   "colour": "#E17E48",
-   "description": "This phase is where your documents will be revised before the application can get the final approval.",
-   "id": 4,
-   "number": 2,
-   "templateId": 3,
-   "title": "Assessment"
-  },
-  {
-   "colour": "#1E14DB",
-   "description": "This is the final step and will change the outcome of this applications.",
-   "id": 5,
-   "number": 3,
-   "templateId": 3,
-   "title": "Final Decision"
-  },
-  {
-   "colour": "#1E14DB",
-   "description": "This application will be approved by a Reviewer",
-   "id": 6,
-   "number": 1,
-   "templateId": 4,
-   "title": "Approval"
-  },
-  {
-   "colour": "#1E14DB",
-   "description": "This application will be approved by a Reviewer",
-   "id": 7,
-   "number": 1,
-   "templateId": 5,
-   "title": "Approval"
   },
   {
    "colour": "#1E14DB",
@@ -9220,6 +7281,22 @@
    "number": 1,
    "templateId": 10,
    "title": "Approval"
+  },
+  {
+   "colour": "#1E14DB",
+   "description": "User enters username",
+   "id": 15,
+   "number": 1,
+   "templateId": 11,
+   "title": "Check Username"
+  },
+  {
+   "colour": "#24B5DF",
+   "description": "User can change password once verified",
+   "id": 16,
+   "number": 2,
+   "templateId": 11,
+   "title": "Change Password"
   }
  ],
  "applicationSection": [],
@@ -9232,25 +7309,11 @@
    "timeCreated": "2021-08-10T14:14:32.319549+12:00"
   },
   {
-   "applicationId": 2,
-   "id": 2,
-   "isCurrent": true,
-   "stageId": 3,
-   "timeCreated": "2021-08-10T14:15:58.239174+12:00"
-  },
-  {
    "applicationId": 4,
    "id": 3,
    "isCurrent": true,
    "stageId": 8,
    "timeCreated": "2021-08-11T11:50:15.259399+12:00"
-  },
-  {
-   "applicationId": 5,
-   "id": 4,
-   "isCurrent": true,
-   "stageId": 6,
-   "timeCreated": "2021-08-11T11:50:31.012719+12:00"
   },
   {
    "applicationId": 6,
@@ -9272,13 +7335,6 @@
    "isCurrent": true,
    "stageId": 8,
    "timeCreated": "2021-08-11T12:00:04.290919+12:00"
-  },
-  {
-   "applicationId": 9,
-   "id": 8,
-   "isCurrent": true,
-   "stageId": 7,
-   "timeCreated": "2021-09-08T19:32:05.746785+12:00"
   },
   {
    "applicationId": 10,
@@ -9892,2259 +7948,6 @@
    "templateCode": "UserRegistration",
    "templateVersion": 1,
    "title": "Password",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q1",
-   "defaultValue": null,
-   "elementTypePluginCode": "shortText",
-   "helpText": "Markdown text can be added to questions with tips to users about important **details**",
-   "id": 15,
-   "index": 0,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "First Name"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "First Name",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q2",
-   "defaultValue": null,
-   "elementTypePluginCode": "shortText",
-   "helpText": null,
-   "id": 16,
-   "index": 1,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": {
-     "children": [
-      "%1, what is your last name?",
-      {
-       "children": [
-        "responses.Q1.text",
-        ""
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "stringSubstitution"
-    }
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Last Name",
-   "validation": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "responses.Q1.text"
-        ],
-        "operator": "objectProperties"
-       },
-       {
-        "value": null
-       }
-      ],
-      "operator": "!="
-     },
-     {
-      "children": [
-       {
-        "children": [
-         "responses.Q1.text"
-        ],
-        "operator": "objectProperties"
-       },
-       {
-        "value": ""
-       }
-      ],
-      "operator": "!="
-     }
-    ],
-    "operator": "AND"
-   },
-   "validationMessage": "You need a first name.",
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "Text1",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": null,
-   "id": 17,
-   "index": 2,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "text": {
-     "children": [
-      "The new user's name is: %1 %2",
-      {
-       "children": [
-        "responses.Q1.text",
-        ""
-       ],
-       "operator": "objectProperties"
-      },
-      {
-       "children": [
-        "responses.Q2.text",
-        ""
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "stringSubstitution"
-    },
-    "style": "basic",
-    "title": {
-     "children": [
-      "**Current User: %1 %2**",
-      {
-       "children": [
-        "applicationData.user.firstName"
-       ],
-       "operator": "objectProperties"
-      },
-      {
-       "children": [
-        "applicationData.user.lastName",
-        ""
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "stringSubstitution"
-    }
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "User Info",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q3",
-   "defaultValue": null,
-   "elementTypePluginCode": "longText",
-   "helpText": "Try entering more than 100 characters to see validation message!",
-   "id": 18,
-   "index": 3,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Description",
-    "lines": 8,
-    "maxLength": 101,
-    "placeholder": "Enter here..."
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "LongText Demo",
-   "validation": {
-    "children": [
-     {
-      "children": [
-       "responses.thisResponse"
-      ],
-      "operator": "objectProperties"
-     },
-     "^[\\s\\S]{0,100}$"
-    ],
-    "operator": "REGEX"
-   },
-   "validationMessage": "Response must be less than 100 characters",
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q4",
-   "defaultValue": null,
-   "elementTypePluginCode": "password",
-   "helpText": null,
-   "id": 19,
-   "index": 4,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Password",
-    "placeholder": "Password must be at least 8 chars long",
-    "confirmPlaceholder": "Enter password again",
-    "validationInternal": {
-     "children": [
-      {
-       "children": [
-        "responses.thisResponse"
-       ],
-       "operator": "objectProperties"
-      },
-      {
-       "value": "^[\\S]{8,}$"
-      }
-     ],
-     "operator": "REGEX"
-    },
-    "validationMessageInternal": "Password must be at least 8 characters"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Password",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "PB1",
-   "defaultValue": null,
-   "elementTypePluginCode": "pageBreak",
-   "helpText": null,
-   "id": 20,
-   "index": 5,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": null,
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Page Break",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "Text2",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": null,
-   "id": 21,
-   "index": 6,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "text": "Shows other selectors as a result of your **selection** which can be **dynamically defined**",
-    "title": "### This page demonstrates selectors options"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Page2",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q5",
-   "defaultValue": null,
-   "elementTypePluginCode": "radioChoice",
-   "helpText": "Next displayed specific dropdown showing based on selection to pick one specific from a static list",
-   "id": 22,
-   "index": 7,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Organisation Type",
-    "options": [
-     "Manufacturer",
-     "Distributor",
-     "Importer"
-    ],
-    "validation": {
-     "value": true
-    },
-    "description": "_Select which type of organisation you belong to._"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Organisation Category",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q6",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 23,
-   "index": 8,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Select Manufacturer",
-    "options": [
-     "Manufacturer A",
-     "Manufacturer B",
-     "Manufacturer C"
-    ],
-    "placeholder": "Select"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Select Manufacturer",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": {
-    "children": [
-     {
-      "children": [
-       "responses.Q5.text"
-      ],
-      "operator": "objectProperties"
-     },
-     {
-      "value": "Manufacturer"
-     }
-    ],
-    "operator": "="
-   }
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q7",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 24,
-   "index": 9,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Select Distributor",
-    "options": [
-     "Distributor A",
-     "Distributor B",
-     "Distributor C"
-    ],
-    "placeholder": "Select"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Select Distributor",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": {
-    "children": [
-     {
-      "children": [
-       "responses.Q5.text"
-      ],
-      "operator": "objectProperties"
-     },
-     {
-      "value": "Distributor"
-     }
-    ],
-    "operator": "="
-   }
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q8",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 25,
-   "index": 10,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Select Importer",
-    "options": [
-     "Importer A",
-     "Importer B",
-     "Importer C"
-    ],
-    "placeholder": "Select"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Select Importer",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": {
-    "children": [
-     {
-      "children": [
-       "responses.Q5.text"
-      ],
-      "operator": "objectProperties"
-     },
-     {
-      "value": "Importer"
-     }
-    ],
-    "operator": "="
-   }
-  },
-  {
-   "category": "INFORMATION",
-   "code": "PB3",
-   "defaultValue": null,
-   "elementTypePluginCode": "pageBreak",
-   "helpText": null,
-   "id": 26,
-   "index": 12,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": null,
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Page Break",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q10",
-   "defaultValue": null,
-   "elementTypePluginCode": "radioChoice",
-   "helpText": null,
-   "id": 27,
-   "index": 13,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "This Radio button group has no default",
-    "options": [
-     "Option A",
-     "Option B",
-     "Option C"
-    ],
-    "hasOther": true,
-    "otherPlaceholder": "Enter other answer"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Testing Radio buttons",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q11",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 28,
-   "index": 14,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Select an organisation (GraphQL query)",
-    "options": {
-     "children": [
-      "query getOrgs {organisations {nodes {name}}}",
-      "graphQLEndpoint",
-      [],
-      "organisations.nodes"
-     ],
-     "operator": "graphQL"
-    },
-    "placeholder": "Select one"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "GraphQL query",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "PB4",
-   "defaultValue": null,
-   "elementTypePluginCode": "pageBreak",
-   "helpText": null,
-   "id": 29,
-   "index": 15,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": null,
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Page Break",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "CheckboxShowcase",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": null,
-   "id": 30,
-   "index": 16,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "text": "Different types and settings for Checkbox plugin",
-    "style": "basic",
-    "title": "## Checkbox demonstration"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Checkbox demonstration",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "CB1",
-   "defaultValue": null,
-   "elementTypePluginCode": "checkbox",
-   "helpText": "",
-   "id": 31,
-   "index": 17,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "This is a single checkbox",
-    "checkboxes": [
-     "Tick me"
-    ]
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Single checkbox",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "CB2",
-   "defaultValue": null,
-   "elementTypePluginCode": "checkbox",
-   "helpText": null,
-   "id": 32,
-   "index": 18,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Three checkboxes, one pre-selected",
-    "checkboxes": [
-     {
-      "key": 0,
-      "label": "Option 1",
-      "selected": true
-     },
-     "Option 2",
-     "Option 3"
-    ]
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Three checkboxes",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "CB3",
-   "defaultValue": null,
-   "elementTypePluginCode": "checkbox",
-   "helpText": null,
-   "id": 33,
-   "index": 19,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "type": "toggle",
-    "label": "Behold! a **toggle** switch:",
-    "checkboxes": [
-     "ON"
-    ]
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Toggle switch",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "TXTON-OFF",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": null,
-   "id": 34,
-   "index": 20,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "title": {
-     "children": [
-      "The switch is toggled %1",
-      {
-       "children": [
-        {
-         "children": [
-          {
-           "children": [
-            "responses.CB3.text"
-           ],
-           "operator": "objectProperties"
-          },
-          "ON"
-         ],
-         "operator": "="
-        },
-        "ON",
-        "OFF"
-       ],
-       "operator": "?"
-      }
-     ],
-     "operator": "stringSubstitution"
-    }
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Checkbox ON",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "CB4",
-   "defaultValue": null,
-   "elementTypePluginCode": "checkbox",
-   "helpText": null,
-   "id": 35,
-   "index": 21,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "type": "slider",
-    "label": "And a couple of **sliders**:",
-    "checkboxes": [
-     {
-      "key": "Opt1",
-      "text": "Ice-cream",
-      "label": "I like ice-cream"
-     },
-     {
-      "key": "Opt2",
-      "text": "Cake",
-      "label": "I like cake"
-     }
-    ]
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Slider switch",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "TXT_LIKE",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": null,
-   "id": 36,
-   "index": 22,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "text": {
-     "children": [
-      "You like: %1%2",
-      {
-       "children": [
-        {
-         "children": [
-          "responses.CB4.values.Opt1.selected"
-         ],
-         "operator": "objectProperties"
-        },
-        "\n- Ice Cream",
-        ""
-       ],
-       "operator": "?"
-      },
-      {
-       "children": [
-        {
-         "children": [
-          "responses.CB4.values.Opt2.selected"
-         ],
-         "operator": "objectProperties"
-        },
-        "\n- Cake",
-        ""
-       ],
-       "operator": "?"
-      }
-     ],
-     "operator": "stringSubstitution"
-    }
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Display Likes",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "CB5",
-   "defaultValue": null,
-   "elementTypePluginCode": "checkbox",
-   "helpText": null,
-   "id": 37,
-   "index": 23,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Lotsa boxes",
-    "layout": "inline",
-    "checkboxes": {
-     "children": [
-      {
-       "value": "https://jsonplaceholder.typicode.com/users"
-      },
-      {
-       "value": []
-      },
-      {
-       "value": "name"
-      }
-     ],
-     "operator": "API"
-    },
-    "description": "If you have a lot of checkboxes, you may wish to use `layout: \"inline\"`.  \n_This selection is dynamically created from an online API._"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Many checkboxes",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "PB5",
-   "defaultValue": null,
-   "elementTypePluginCode": "pageBreak",
-   "helpText": null,
-   "id": 38,
-   "index": 24,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": null,
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Page Break",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "D1",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 39,
-   "index": 25,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "API Lookup: Choose a name from this list",
-    "search": true,
-    "options": {
-     "children": [
-      {
-       "value": "https://jsonplaceholder.typicode.com/users"
-      },
-      {
-       "value": []
-      },
-      {
-       "value": "name"
-      }
-     ],
-     "operator": "API"
-    },
-    "placeholder": "Select"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "API Selection demo",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "D2",
-   "defaultValue": null,
-   "elementTypePluginCode": "shortText",
-   "helpText": null,
-   "id": 40,
-   "index": 26,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Enter 'magicword' to see a text box"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Test Visibility",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "Text3",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": null,
-   "id": 41,
-   "index": 27,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "text": {
-     "children": [
-      "You chose %1 (index number %2) in the API lookup",
-      {
-       "children": [
-        "responses.D1.text"
-       ],
-       "operator": "objectProperties"
-      },
-      {
-       "children": [
-        "responses.D1.optionIndex"
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "stringSubstitution"
-    },
-    "style": "success",
-    "title": "This has appeared because you typed \"magicword\" above."
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Intro",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": {
-    "children": [
-     {
-      "children": [
-       "responses.D2.text"
-      ],
-      "operator": "objectProperties"
-     },
-     {
-      "value": "magicword"
-     }
-    ],
-    "operator": "="
-   }
-  },
-  {
-   "category": "INFORMATION",
-   "code": "Text4",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": null,
-   "id": 42,
-   "index": 28,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "text": "A text info box can be presented in a number of **styles**.\n\n*Please select one below*",
-    "style": {
-     "children": [
-      "responses.D3.text"
-     ],
-     "operator": "objectProperties"
-    },
-    "title": "## Many ways to deliver information!"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Text Showcase",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "D3",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 43,
-   "index": 29,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Select a style",
-    "default": "none",
-    "options": [
-     "none",
-     "basic",
-     "info",
-     "warning",
-     "success",
-     "positive",
-     "error",
-     "negative"
-    ],
-    "placeholder": "Select"
-   },
-   "sectionId": 3,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Selector for TextInfo showcase",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "DocText1",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": "This section provides a demonstration of the different ways the file upload element can be used",
-   "id": 44,
-   "index": 100,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "text": "A demonstration of the File Upload plugin",
-    "style": "info",
-    "title": "### This sections allows you to upload files"
-   },
-   "sectionId": 4,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Document Intro",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q_upload1",
-   "defaultValue": null,
-   "elementTypePluginCode": "fileUpload",
-   "helpText": null,
-   "id": 45,
-   "index": 101,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Please upload your documentation",
-    "description": "You can provide multiple files.  \nFiles must be **image** files or **PDF** and under 5MB.",
-    "fileSizeLimit": 5000,
-    "fileCountLimit": 6,
-    "fileExtensions": [
-     "pdf",
-     "png",
-     "jpg"
-    ]
-   },
-   "sectionId": 4,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "File upload demo 1",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "PB6",
-   "defaultValue": null,
-   "elementTypePluginCode": "pageBreak",
-   "helpText": null,
-   "id": 46,
-   "index": 102,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": null,
-   "sectionId": 4,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Page Break",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q_upload2",
-   "defaultValue": null,
-   "elementTypePluginCode": "fileUpload",
-   "helpText": null,
-   "id": 47,
-   "index": 103,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Please add some more files",
-    "description": {
-     "children": [
-      "No restrictions on this one, but we're testing dynamic description:\n\n_The files uploaded in the last page were:_  \n- _%1_",
-      {
-       "children": [
-        "responses.Q_upload1.text",
-        "No files uploaded"
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "stringSubstitution"
-    },
-    "fileCountLimit": 99
-   },
-   "sectionId": 4,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "File upload demo 2",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "PB7",
-   "defaultValue": null,
-   "elementTypePluginCode": "pageBreak",
-   "helpText": null,
-   "id": 48,
-   "index": 104,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": null,
-   "sectionId": 4,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Page Break",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "Q_upload3",
-   "defaultValue": null,
-   "elementTypePluginCode": "fileUpload",
-   "helpText": null,
-   "id": 49,
-   "index": 105,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Please upload an image file to display",
-    "description": "Only 1 file allowed, must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
-    "fileSizeLimit": 5000,
-    "fileCountLimit": 1,
-    "fileExtensions": [
-     "jpg",
-     "jpeg",
-     "png",
-     "gif",
-     "svg"
-    ]
-   },
-   "sectionId": 4,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "File image upload",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "Img01",
-   "defaultValue": null,
-   "elementTypePluginCode": "imageDisplay",
-   "helpText": null,
-   "id": 50,
-   "index": 106,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "url": {
-     "children": [
-      {
-       "children": [
-        "applicationData.config.serverREST"
-       ],
-       "operator": "objectProperties"
-      },
-      {
-       "children": [
-        "responses.Q_upload3.files.fileUrl"
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "CONCAT"
-    },
-    "size": {
-     "children": [
-      "responses.ImgOpt1.text"
-     ],
-     "operator": "objectProperties"
-    },
-    "altText": "This is the image you uploaded",
-    "alignment": {
-     "children": [
-      "responses.ImgOpt2.text"
-     ],
-     "operator": "objectProperties"
-    }
-   },
-   "sectionId": 4,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Show uploaded image",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": {
-    "children": [
-     {
-      "children": [
-       "responses.Q_upload3.text"
-      ],
-      "operator": "objectProperties"
-     },
-     ""
-    ],
-    "operator": "!="
-   }
-  },
-  {
-   "category": "QUESTION",
-   "code": "ImgOpt1",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 51,
-   "index": 107,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Select image size",
-    "default": 3,
-    "options": [
-     "mini",
-     "tiny",
-     "small",
-     "medium",
-     "large",
-     "big",
-     "huge",
-     "massive"
-    ]
-   },
-   "sectionId": 4,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Image size control",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": {
-    "children": [
-     {
-      "children": [
-       "responses.Q_upload3.text"
-      ],
-      "operator": "objectProperties"
-     },
-     ""
-    ],
-    "operator": "!="
-   }
-  },
-  {
-   "category": "QUESTION",
-   "code": "ImgOpt2",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 52,
-   "index": 108,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Select image alignment",
-    "default": 1,
-    "options": [
-     "left",
-     "center",
-     "right"
-    ]
-   },
-   "sectionId": 4,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Image alignment control",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": {
-    "children": [
-     {
-      "children": [
-       "responses.Q_upload3.text"
-      ],
-      "operator": "objectProperties"
-     },
-     ""
-    ],
-    "operator": "!="
-   }
-  },
-  {
-   "category": "INFORMATION",
-   "code": "IngredientsHeader",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": "Add items one by one to create an **Ingredients list**",
-   "id": 53,
-   "index": 3,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "text": "List items can be displayed in **Card** or **Table** form",
-    "style": "info",
-    "title": "## Ingredients list demonstration"
-   },
-   "sectionId": 5,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Ingredients list demonstration",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "listDemo",
-   "defaultValue": null,
-   "elementTypePluginCode": "listBuilder",
-   "helpText": null,
-   "id": 54,
-   "index": 4,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Ingredients list",
-    "modalText": "## Ingredient item \n\nPlease enter details for **one** ingredient",
-    "displayType": {
-     "children": [
-      "responses.listDisplay.text"
-     ],
-     "operator": "objectProperties"
-    },
-    "inputFields": [
-     {
-      "code": "LB1",
-      "title": "Substance Name",
-      "isRequired": true,
-      "parameters": {
-       "label": "Substance name"
-      },
-      "elementTypePluginCode": "shortText"
-     },
-     {
-      "code": "LB2",
-      "title": "Complementary information",
-      "isRequired": false,
-      "parameters": {
-       "label": "Complementary information"
-      },
-      "elementTypePluginCode": "shortText"
-     },
-     {
-      "code": "LB3",
-      "title": "Quantity",
-      "parameters": {
-       "label": "Quantity",
-       "maxWidth": 130,
-       "description": "Enter a number and select units below"
-      },
-      "validation": {
-       "children": [
-        {
-         "children": [
-          "responses.thisResponse"
-         ],
-         "operator": "objectProperties"
-        },
-        "^[0-9.]+$"
-       ],
-       "operator": "REGEX"
-      },
-      "validationMessage": "Must be a number",
-      "elementTypePluginCode": "shortText"
-     },
-     {
-      "code": "LB4",
-      "title": "Unit",
-      "parameters": {
-       "label": "Unit",
-       "options": [
-        "Milligram",
-        "Microgram",
-        "International Unit"
-       ],
-       "hasOther": true
-      },
-      "elementTypePluginCode": "radioChoice"
-     },
-     {
-      "code": "LB5",
-      "title": "Type",
-      "parameters": {
-       "label": "Type",
-       "default": 0,
-       "options": [
-        "Active",
-        "Inactive"
-       ]
-      },
-      "elementTypePluginCode": "dropdownChoice"
-     },
-     {
-      "code": "LB6",
-      "title": "Included",
-      "parameters": {
-       "label": "Substance present in end product",
-       "layout": "inline",
-       "options": [
-        "Yes",
-        "No"
-       ]
-      },
-      "elementTypePluginCode": "radioChoice"
-     }
-    ],
-    "displayFormat": {
-     "title": "${LB1}",
-     "subtitle": "${LB2}",
-     "description": "**Quantity**: ${LB4} ${LB5}  \n**Substance present?**: ${LB3}  \n**Type**: ${LB6}"
-    },
-    "createModalButtonText": "Add ingredient"
-   },
-   "sectionId": 5,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Ingredients List Demo",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "listDisplay",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 55,
-   "index": 5,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Display style for Ingredients list",
-    "default": "cards",
-    "options": [
-     "cards",
-     "table"
-    ],
-    "placeholder": "Select"
-   },
-   "sectionId": 5,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "List Display Selector",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "PB14",
-   "defaultValue": null,
-   "elementTypePluginCode": "pageBreak",
-   "helpText": null,
-   "id": 56,
-   "index": 6,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": null,
-   "sectionId": 5,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Page Break",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "searchUsers",
-   "defaultValue": null,
-   "elementTypePluginCode": "search",
-   "helpText": "This page contain examples of the **Search** element. It can make API queries in response to user input and display the results, which can be selected.",
-   "id": 57,
-   "index": 7,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "icon": "user",
-    "label": "Search for users",
-    "source": {
-     "children": [
-      "query GetUsers($user: String!) { users(filter: { username: {includesInsensitive: $user } }) {nodes { username, firstName, lastName }}}",
-      "graphQLEndpoint",
-      [
-       "user"
-      ],
-      {
-       "children": [
-        "search.text"
-       ],
-       "operator": "objectProperties"
-      },
-      "users.nodes"
-     ],
-     "operator": "graphQL"
-    },
-    "description": "Start typing to search database for usernames",
-    "placeholder": "Search usernames",
-    "displayFormat": {
-     "title": "${firstName} ${lastName}",
-     "description": "${username}"
-    }
-   },
-   "sectionId": 5,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Search Demo (users)",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "searchCountries",
-   "defaultValue": null,
-   "elementTypePluginCode": "search",
-   "helpText": null,
-   "id": 58,
-   "index": 8,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "icon": "world",
-    "label": "Search for countries",
-    "source": {
-     "children": [
-      "query countries($code: ID!) {country(code: $code) {name, capital, emoji, code}}",
-      "https://countries.trevorblades.com",
-      [
-       "code"
-      ],
-      {
-       "children": [
-        "search.text"
-       ],
-       "operator": "objectProperties"
-      },
-      "country"
-     ],
-     "operator": "graphQL"
-    },
-    "description": "Type the two-character country code (must be CAPS sorry)",
-    "multiSelect": true,
-    "placeholder": "Search countries",
-    "displayFormat": {
-     "title": "${emoji} ${name}",
-     "description": "Capital: ${capital}"
-    },
-    "minCharacters": 2
-   },
-   "sectionId": 5,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Search Demo (countries)",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "searchUC",
-   "defaultValue": null,
-   "elementTypePluginCode": "search",
-   "helpText": null,
-   "id": 59,
-   "index": 9,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "icon": "pills",
-    "label": "Lookup mSupply Universal Codes",
-    "source": {
-     "children": [
-      "query GetEntitiesByName($search: String!) {entities (filter: { code: \"\" description: $search type: \"[drug]\" match: \"contains\"},offset: 0,first: 25) {data {        code,     description,        type,        uid  }, totalLength }}",
-      "https://codes.msupply.foundation:2048/graphql",
-      [
-       "search"
-      ],
-      {
-       "children": [
-        "search.text"
-       ],
-       "operator": "objectProperties"
-      },
-      "entities.data"
-     ],
-     "operator": "graphQL"
-    },
-    "description": "Start typing a drug name",
-    "multiSelect": true,
-    "placeholder": "Search medicines",
-    "resultFormat": {
-     "title": "${description}",
-     "description": "${code}"
-    },
-    "displayFormat": {
-     "title": "${description}",
-     "description": "Universal Code: ${code}"
-    },
-    "minCharacters": 3
-   },
-   "sectionId": 5,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Search Universal Codes",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "searchOrg",
-   "defaultValue": null,
-   "elementTypePluginCode": "search",
-   "helpText": "This one has no `displayFormat` prop, so it falls back to a generic \"default\" display",
-   "id": 60,
-   "index": 11,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "icon": "building",
-    "label": "Search for an organisation",
-    "source": {
-     "children": [
-      "query GetOrgs($registration: String!) { organisations(filter: {registration: {startsWithInsensitive: $registration}}) { nodes { name registration } } }",
-      "graphQLEndpoint",
-      [
-       "registration"
-      ],
-      {
-       "children": [
-        "search.text"
-       ],
-       "operator": "objectProperties"
-      },
-      "organisations.nodes"
-     ],
-     "operator": "graphQL"
-    },
-    "description": "Please enter the organisation's registration code (min 6 chars)",
-    "placeholder": "Search organisations",
-    "minCharacters": 6
-   },
-   "sectionId": 5,
-   "templateCode": "Demo",
-   "templateVersion": 1,
-   "title": "Search Demo (organisations)",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "S1T1",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": "",
-   "id": 61,
-   "index": 10,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "style": "basic",
-    "title": "## Organisation details"
-   },
-   "sectionId": 6,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Intro Section 1",
-   "validation": true,
-   "validationMessage": "",
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "name",
-   "defaultValue": null,
-   "elementTypePluginCode": "shortText",
-   "helpText": null,
-   "id": 62,
-   "index": 20,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "What is the name of your organisation?"
-   },
-   "sectionId": 6,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Organisation Name",
-   "validation": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.config.serverREST"
-        ],
-        "operator": "objectProperties"
-       },
-       "/check-unique"
-      ],
-      "operator": "CONCAT"
-     },
-     [
-      "type",
-      "value"
-     ],
-     "organisation",
-     {
-      "children": [
-       "responses.thisResponse"
-      ],
-      "operator": "objectProperties"
-     },
-     "unique"
-    ],
-    "operator": "API"
-   },
-   "validationMessage": "An organisation with that name already exists",
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "rego",
-   "defaultValue": null,
-   "elementTypePluginCode": "shortText",
-   "helpText": "The details entered here should match with the documents issued by the governing body in your jurisdiction. You will attach evidence of these documents in the following section.",
-   "id": 63,
-   "index": 30,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Please enter your organisation registration code"
-   },
-   "sectionId": 6,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Registration",
-   "validation": {
-    "children": [
-     {
-      "children": [
-       {
-        "children": [
-         "applicationData.config.serverREST"
-        ],
-        "operator": "objectProperties"
-       },
-       "/check-unique"
-      ],
-      "operator": "CONCAT"
-     },
-     [
-      "table",
-      "field",
-      "value"
-     ],
-     "organisation",
-     "registration",
-     {
-      "children": [
-       "responses.thisResponse"
-      ],
-      "operator": "objectProperties"
-     },
-     "unique"
-    ],
-    "operator": "API"
-   },
-   "validationMessage": "An organisation with that registration code already exists",
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "physAdd",
-   "defaultValue": null,
-   "elementTypePluginCode": "longText",
-   "helpText": null,
-   "id": 64,
-   "index": 40,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Organisation **physical** address"
-   },
-   "sectionId": 6,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Address",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "addressCheckbox",
-   "defaultValue": null,
-   "elementTypePluginCode": "checkbox",
-   "helpText": null,
-   "id": 65,
-   "index": 50,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Is the organisation **postal** address *different* to the physical address?",
-    "checkboxes": [
-     {
-      "key": "1",
-      "label": "Yes",
-      "selected": false
-     }
-    ]
-   },
-   "sectionId": 6,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Postal Address Checkbox",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "postAdd",
-   "defaultValue": null,
-   "elementTypePluginCode": "longText",
-   "helpText": null,
-   "id": 66,
-   "index": 60,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Organisation **postal** address",
-    "description": "*Note: in the current schema only one address value is actually saved to the database. This is just for demonstration purposes.*"
-   },
-   "sectionId": 6,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Address",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": {
-    "children": [
-     {
-      "children": [
-       "responses.addressCheckbox.text"
-      ],
-      "operator": "objectProperties"
-     },
-     "Yes"
-    ],
-    "operator": "="
-   }
-  },
-  {
-   "category": "INFORMATION",
-   "code": "PB1",
-   "defaultValue": null,
-   "elementTypePluginCode": "pageBreak",
-   "helpText": null,
-   "id": 67,
-   "index": 70,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": null,
-   "sectionId": 6,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Page Break",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "logo",
-   "defaultValue": null,
-   "elementTypePluginCode": "fileUpload",
-   "helpText": null,
-   "id": 68,
-   "index": 80,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Upload a logo for your organisation",
-    "description": "File must be an image type (.jpg, .jpeg, .png, .gif, .svg) and less than 5MB",
-    "fileSizeLimit": 5000,
-    "fileCountLimit": 1,
-    "fileExtensions": [
-     "jpg",
-     "jpeg",
-     "png",
-     "gif",
-     "svg"
-    ]
-   },
-   "sectionId": 6,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Logo upload",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "activity",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 69,
-   "index": 90,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "What is your organisation's primary activity",
-    "options": [
-     "Manufacturer",
-     "Importer",
-     "Producer"
-    ]
-   },
-   "sectionId": 6,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Organisation Activity",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "orgInfo",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": null,
-   "id": 70,
-   "index": 10,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "text": {
-     "children": [
-      "Registration no. **%1**",
-      {
-       "children": [
-        "responses.rego.text"
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "stringSubstitution"
-    },
-    "style": "basic",
-    "title": {
-     "children": [
-      "**Documentation for Organisation: %1**",
-      {
-       "children": [
-        "responses.name.text"
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "stringSubstitution"
-    }
-   },
-   "sectionId": 7,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Intro Section 2 - Page 1/2",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "logoShow",
-   "defaultValue": null,
-   "elementTypePluginCode": "imageDisplay",
-   "helpText": null,
-   "id": 71,
-   "index": 20,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "url": {
-     "children": [
-      {
-       "children": [
-        "applicationData.config.serverREST"
-       ],
-       "operator": "objectProperties"
-      },
-      {
-       "children": [
-        "responses.logo.files.fileUrl"
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "CONCAT"
-    },
-    "size": "tiny",
-    "altText": "Organisation logo",
-    "alignment": "center"
-   },
-   "sectionId": 7,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Show uploaded logo",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "regoDoc",
-   "defaultValue": null,
-   "elementTypePluginCode": "fileUpload",
-   "helpText": "Certification from your country's registration body is required.",
-   "id": 72,
-   "index": 30,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Please provide proof of your organisation registration",
-    "description": "Allowed formats: .pdf, .doc, .jpg, .png",
-    "fileSizeLimit": 5000,
-    "fileCountLimit": 1,
-    "fileExtensions": [
-     "jpg",
-     "jpeg",
-     "png",
-     "pdf",
-     "doc",
-     "docx"
-    ]
-   },
-   "sectionId": 7,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Registration upload",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "otherDoc",
-   "defaultValue": null,
-   "elementTypePluginCode": "fileUpload",
-   "helpText": "Examples might include import permits.",
-   "id": 73,
-   "index": 40,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Please provide any other documentation pertinent to your organisation's activities",
-    "description": "Allowed formats: .pdf, .doc, .jpg, .png",
-    "fileSizeLimit": 5000,
-    "fileExtensions": [
-     "jpg",
-     "jpeg",
-     "png",
-     "pdf",
-     "doc",
-     "docx"
-    ]
-   },
-   "sectionId": 7,
-   "templateCode": "CoreActions",
-   "templateVersion": 1,
-   "title": "Other documentation upload",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "S1T1",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": null,
-   "id": 74,
-   "index": 0,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "style": "basic",
-    "title": {
-     "children": [
-      "### Welcome, **%1**.",
-      {
-       "children": [
-        "applicationData.user.firstName"
-       ],
-       "operator": "objectProperties"
-      }
-     ],
-     "operator": "stringSubstitution"
-    }
-   },
-   "sectionId": 8,
-   "templateCode": "OrgJoin",
-   "templateVersion": 1,
-   "title": "Intro Section 1",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "S1Q1",
-   "defaultValue": null,
-   "elementTypePluginCode": "dropdownChoice",
-   "helpText": null,
-   "id": 75,
-   "index": 1,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Please select the organisation you wish to join",
-    "search": true,
-    "options": {
-     "children": [
-      "query getOrgs {organisations {nodes {name, id}}}",
-      "",
-      [],
-      "organisations.nodes"
-     ],
-     "operator": "graphQL"
-    },
-    "optionsDisplayProperty": "name"
-   },
-   "sectionId": 8,
-   "templateCode": "OrgJoin",
-   "templateVersion": 1,
-   "title": "Select Organisation",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "S1Q2",
-   "defaultValue": null,
-   "elementTypePluginCode": "longText",
-   "helpText": null,
-   "id": 76,
-   "index": 2,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Reason for joining",
-    "description": "Please provide a brief summary of your relationship to this organisation"
-   },
-   "sectionId": 8,
-   "templateCode": "OrgJoin",
-   "templateVersion": 1,
-   "title": "Reason",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "PB01",
-   "defaultValue": null,
-   "elementTypePluginCode": "pageBreak",
-   "helpText": null,
-   "id": 77,
-   "index": 3,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": null,
-   "sectionId": 8,
-   "templateCode": "OrgJoin",
-   "templateVersion": 1,
-   "title": "Page Break",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "INFORMATION",
-   "code": "T2",
-   "defaultValue": null,
-   "elementTypePluginCode": "textInfo",
-   "helpText": null,
-   "id": 78,
-   "index": 4,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "style": "basic",
-    "title": "### Documentation"
-   },
-   "sectionId": 8,
-   "templateCode": "OrgJoin",
-   "templateVersion": 1,
-   "title": "Documentation Info",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "IDUpload",
-   "defaultValue": null,
-   "elementTypePluginCode": "fileUpload",
-   "helpText": null,
-   "id": 79,
-   "index": 5,
-   "isEditable": true,
-   "isRequired": true,
-   "parameters": {
-    "label": "Please provide photo ID",
-    "description": "Please upload a copy of your photo ID. Must be in **image** or **PDF** format and under 5MB.",
-    "fileSizeLimit": 5000,
-    "fileCountLimit": 1,
-    "fileExtensions": [
-     "pdf",
-     "png",
-     "jpg",
-     "jpeg"
-    ]
-   },
-   "sectionId": 8,
-   "templateCode": "OrgJoin",
-   "templateVersion": 1,
-   "title": "Upload ID",
-   "validation": true,
-   "validationMessage": null,
-   "visibilityCondition": true
-  },
-  {
-   "category": "QUESTION",
-   "code": "DocUpload",
-   "defaultValue": null,
-   "elementTypePluginCode": "fileUpload",
-   "helpText": null,
-   "id": 80,
-   "index": 6,
-   "isEditable": true,
-   "isRequired": false,
-   "parameters": {
-    "label": "Please upload additional documentation",
-    "description": "If necessary, please provide additional documentation showing your relationship to this organisation.\nYou can upload more than one file if necessary, with same restrictions as above.",
-    "fileSizeLimit": 5000,
-    "fileCountLimit": 5,
-    "fileExtensions": [
-     "pdf",
-     "png",
-     "jpg",
-     "jpeg"
-    ]
-   },
-   "sectionId": 8,
-   "templateCode": "OrgJoin",
-   "templateVersion": 1,
-   "title": "Upload Doc",
    "validation": true,
    "validationMessage": null,
    "visibilityCondition": true
@@ -15257,51 +11060,148 @@
    "validation": true,
    "validationMessage": null,
    "visibilityCondition": true
+  },
+  {
+   "category": "INFORMATION",
+   "code": "infoHeader",
+   "defaultValue": null,
+   "elementTypePluginCode": "textInfo",
+   "helpText": "",
+   "id": 173,
+   "index": 10,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "style": "success",
+    "title": "### Password reset request"
+   },
+   "sectionId": 19,
+   "templateCode": "PasswordReset",
+   "templateVersion": 2,
+   "title": "Intro Section 1",
+   "validation": true,
+   "validationMessage": "",
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "username",
+   "defaultValue": null,
+   "elementTypePluginCode": "shortText",
+   "helpText": "",
+   "id": 174,
+   "index": 40,
+   "isEditable": {
+    "children": [
+     1,
+     {
+      "children": [
+       "applicationData.current.stage.number",
+       null
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "="
+   },
+   "isRequired": true,
+   "parameters": {
+    "label": "Please enter your username"
+   },
+   "sectionId": 19,
+   "templateCode": "PasswordReset",
+   "templateVersion": 2,
+   "title": "Username",
+   "validation": {
+    "children": [
+     false,
+     {
+      "children": [
+       {
+        "children": [
+         {
+          "children": [
+           "applicationData.config.serverREST"
+          ],
+          "operator": "objectProperties"
+         },
+         "/check-unique"
+        ],
+        "operator": "+"
+       },
+       [
+        "type",
+        "value"
+       ],
+       "username",
+       {
+        "children": [
+         "responses.thisResponse"
+        ],
+        "operator": "objectProperties"
+       },
+       "unique"
+      ],
+      "operator": "API"
+     }
+    ],
+    "operator": "="
+   },
+   "validationMessage": "Sorry, this username is not recognised",
+   "visibilityCondition": true
+  },
+  {
+   "category": "QUESTION",
+   "code": "password",
+   "defaultValue": null,
+   "elementTypePluginCode": "password",
+   "helpText": "",
+   "id": 175,
+   "index": 41,
+   "isEditable": true,
+   "isRequired": true,
+   "parameters": {
+    "label": "New password",
+    "maskedInput": true,
+    "placeholder": "Password must be at least 6 chars long",
+    "validationInternal": {
+     "children": [
+      {
+       "children": [
+        "responses.thisResponse"
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "value": "^[\\S]{6,}$"
+      }
+     ],
+     "operator": "REGEX"
+    },
+    "validationMessageInternal": "Password must be at least 6 characters"
+   },
+   "sectionId": 19,
+   "templateCode": "PasswordReset",
+   "templateVersion": 2,
+   "title": "New Element",
+   "validation": true,
+   "validationMessage": "",
+   "visibilityCondition": {
+    "children": [
+     2,
+     {
+      "children": [
+       "applicationData.current.stage.number",
+       null
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "="
+   }
   }
  ],
  "templateStageReviewLevel": [
-  {
-   "description": null,
-   "id": 1,
-   "name": "Review",
-   "number": 1,
-   "stageId": 3
-  },
-  {
-   "description": null,
-   "id": 2,
-   "name": "Review",
-   "number": 1,
-   "stageId": 4
-  },
-  {
-   "description": null,
-   "id": 3,
-   "name": "Consolidation",
-   "number": 2,
-   "stageId": 4
-  },
-  {
-   "description": null,
-   "id": 4,
-   "name": "Approval",
-   "number": 1,
-   "stageId": 5
-  },
-  {
-   "description": null,
-   "id": 5,
-   "name": "Review",
-   "number": 1,
-   "stageId": 6
-  },
-  {
-   "description": null,
-   "id": 6,
-   "name": "Review",
-   "number": 1,
-   "stageId": 7
-  },
   {
    "description": null,
    "id": 7,
@@ -15464,474 +11364,6 @@
    "timeCreated": "2021-08-10T14:14:28.157276+12:00",
    "timeSubmitted": null,
    "timeUpdated": "2021-08-10T14:14:28.157276+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 9,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 15,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 10,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 16,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 11,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 17,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 12,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 18,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 13,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 19,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 14,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 21,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 15,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 22,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 16,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 23,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 17,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 24,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 18,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 25,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 19,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 27,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 20,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 28,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 21,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 30,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 22,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 31,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 23,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 32,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 24,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 33,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 25,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 34,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 26,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 35,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 27,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 36,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 28,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 37,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 29,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 39,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 30,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 40,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 31,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 41,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 32,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 42,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 33,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 43,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 34,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 44,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 35,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 45,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 36,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 47,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 37,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 49,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 38,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 50,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 39,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 51,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 40,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 52,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 41,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 53,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 42,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 54,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 43,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 55,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 44,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 57,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 45,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 58,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 46,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 59,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 2,
-   "id": 47,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 60,
-   "timeCreated": "2021-08-10T14:15:54.234935+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-10T14:15:54.234935+12:00",
    "value": null
   },
   {
@@ -16220,159 +11652,6 @@
    "timeCreated": "2021-08-11T11:50:11.376653+12:00",
    "timeSubmitted": null,
    "timeUpdated": "2021-08-11T11:50:11.376653+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 72,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 61,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 73,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 62,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 74,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 63,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 75,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 64,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 76,
-   "isValid": true,
-   "stageNumber": 1,
-   "status": "DRAFT",
-   "templateElementId": 65,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:52:50.377621+12:00",
-   "value": {
-    "text": "*<Nothing Selected>*",
-    "values": {
-     "1": {
-      "text": "Yes",
-      "selected": false,
-      "textNegative": ""
-     }
-    }
-   }
-  },
-  {
-   "applicationId": 5,
-   "id": 77,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 66,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 78,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 68,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 79,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 69,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 80,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 70,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 81,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 71,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 82,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 72,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 5,
-   "id": 83,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 73,
-   "timeCreated": "2021-08-11T11:50:27.048396+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-08-11T11:50:27.048396+12:00",
    "value": null
   },
   {
@@ -16805,78 +12084,6 @@
    "timeCreated": "2021-08-11T11:59:59.820653+12:00",
    "timeSubmitted": null,
    "timeUpdated": "2021-08-11T11:59:59.820653+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 9,
-   "id": 120,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 74,
-   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 9,
-   "id": 121,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 75,
-   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 9,
-   "id": 122,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 76,
-   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 9,
-   "id": 123,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 78,
-   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 9,
-   "id": 124,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 79,
-   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
-   "value": null
-  },
-  {
-   "applicationId": 9,
-   "id": 125,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 80,
-   "timeCreated": "2021-09-08T19:32:05.206401+12:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-09-08T19:32:05.206401+12:00",
    "value": null
   },
   {
@@ -17728,28 +12935,12 @@
    "timeCreated": "2021-08-10T14:14:32.324262+12:00"
   },
   {
-   "applicationId": 2,
-   "applicationStageHistoryId": 2,
-   "id": 2,
-   "isCurrent": true,
-   "status": "DRAFT",
-   "timeCreated": "2021-08-10T14:15:58.241945+12:00"
-  },
-  {
    "applicationId": 4,
    "applicationStageHistoryId": 3,
    "id": 3,
    "isCurrent": true,
    "status": "DRAFT",
    "timeCreated": "2021-08-11T11:50:15.264836+12:00"
-  },
-  {
-   "applicationId": 5,
-   "applicationStageHistoryId": 4,
-   "id": 4,
-   "isCurrent": true,
-   "status": "DRAFT",
-   "timeCreated": "2021-08-11T11:50:31.014171+12:00"
   },
   {
    "applicationId": 6,
@@ -17774,14 +12965,6 @@
    "isCurrent": true,
    "status": "DRAFT",
    "timeCreated": "2021-08-11T12:00:04.293664+12:00"
-  },
-  {
-   "applicationId": 9,
-   "applicationStageHistoryId": 8,
-   "id": 8,
-   "isCurrent": true,
-   "status": "DRAFT",
-   "timeCreated": "2021-09-08T19:32:05.748763+12:00"
   },
   {
    "applicationId": 10,
