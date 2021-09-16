@@ -12,7 +12,7 @@ import {
   queryLinkedApplications,
 } from './gqlDynamicQueries'
 import { camelCase } from 'lodash'
-import { ColumnDefinition, OutcomesResponse } from './types'
+import { ColumnDefinition, LinkedApplication, OutcomesResponse } from './types'
 
 const routeOutcomes = async (request: any, reply: any) => {
   const permissionNames = await getPermissionNamesFromJWT(request)
@@ -45,7 +45,7 @@ const routeOutcomesTable = async (request: any, reply: any) => {
   )
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
-  const { fetchedRecords, totalCount } = await queryOutcomeTable(
+  const { fetchedRecords, totalCount, error } = await queryOutcomeTable(
     tableName,
     fieldNames,
     first,
@@ -54,6 +54,7 @@ const routeOutcomesTable = async (request: any, reply: any) => {
     ascending,
     authHeaders
   )
+  if (error) return error
 
   const response = await constructTableResponse(
     tableName,
@@ -89,6 +90,8 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
     authHeaders
   )
 
+  if (fetchedRecord?.error) return fetchedRecord.error
+
   // GraphQL query to get linked applications -- this one with Admin JWT!
   const linkedApplications = showLinkedApplications
     ? await queryLinkedApplications(recordId, tableName)
@@ -100,7 +103,7 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
     columnDefinitionMasterList,
     headerDefinition as ColumnDefinition,
     fetchedRecord,
-    linkedApplications
+    linkedApplications as LinkedApplication[]
   )
 
   return reply.send(response)

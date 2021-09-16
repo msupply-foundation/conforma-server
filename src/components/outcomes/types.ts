@@ -89,5 +89,11 @@ export interface OutcomesDetailResponse {
   columns: string[]
   item: { [key: string]: any }
   displayDefinitions: { [key: string]: DisplayDefinition }
-  linkedApplications?: LinkedApplication[]
+  linkedApplications?: LinkedApplication[] | GraphQLQueryError
+}
+
+export interface GraphQLQueryError {
+  error: true
+  message: string
+  detail: string
 }
