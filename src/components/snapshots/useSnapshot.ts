@@ -149,10 +149,10 @@ export const getBaseFiles = async (filesFolder: string) => {
 
 const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
   // copy only files that associated with import file records and base filed in snapshot folder (thumbnails)
-  let filePaths = fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.filePath)
+  const filePaths = fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.filePath)
   filePaths.push(...fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.thumbnailPath))
-  let snapshotFilesFolder = `${snapshotFolder}/files`
-  let baseFilePaths = await getBaseFiles(snapshotFilesFolder)
+  const snapshotFilesFolder = `${snapshotFolder}/files`
+  const baseFilePaths = await getBaseFiles(snapshotFilesFolder)
 
   for (const filePath of [...filePaths, ...baseFilePaths]) {
     try {
