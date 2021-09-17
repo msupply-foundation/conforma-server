@@ -20,7 +20,7 @@ async function generateReviewAssignments({
 }: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
 
-  let assignmentPending: [boolean, string] = [false, '']
+  let noAssignmentsPending: [boolean, string] = [false, '']
 
   // Get application/reviewId from applicationData if not provided in parameters
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
@@ -34,11 +34,13 @@ async function generateReviewAssignments({
     ? overwriteIsReview && reviewId !== undefined
     : reviewId !== undefined || applicationData?.action_payload?.trigger_payload?.table === 'review'
 
-  console.log('Generating review assignment records...')
   try {
     // Get template information and current stage for application
     const { templateId, stageNumber, stageId, stageHistoryTimeCreated } =
       applicationData ?? (await DBConnect.getApplicationData(applicationId))
+
+    console.log('Generating review assignment records...')
+    console.log(`Application ${applicationId} stage ${stageNumber}`)
 
     const numReviewLevels: number = (await DBConnect.getNumReviewLevels(stageId)) || 0
     const lastStageNumber: number = await db.getLastStageNumber(applicationId)
@@ -48,7 +50,7 @@ async function generateReviewAssignments({
     // For first review assignment
     if (!isReview) {
       if (numReviewLevels === 0)
-        assignmentPending = [true, 'No reviewer with level associated to first stage']
+        noAssignmentsPending = [true, 'No reviewer with level associated to first stage']
     }
     // For level 1+ or next stages review assignment
     else {
@@ -59,7 +61,7 @@ async function generateReviewAssignments({
       // Review in new stage - first level
       if (submittedReviewStage !== stageNumber) {
         if (numReviewLevels === 0)
-          assignmentPending = [
+          noAssignmentsPending = [
             false,
             `No reviewer with level associated to stageNumber ${stageNumber}`,
           ]
@@ -68,13 +70,13 @@ async function generateReviewAssignments({
       else {
         nextReviewLevel = submittedReviewLevel + 1
         if (nextReviewLevel > numReviewLevels)
-          assignmentPending = [false, 'Final review level reached for current stage']
+          noAssignmentsPending = [false, 'Final review level reached for current stage']
       }
     }
-    if (!assignmentPending[0]) {
+    if (noAssignmentsPending[0]) {
       return {
         status: ActionQueueStatus.Success,
-        error_log: assignmentPending[1],
+        error_log: noAssignmentsPending[1],
         output: {},
       }
     } else {
