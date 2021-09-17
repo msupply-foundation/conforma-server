@@ -19,19 +19,21 @@ const databaseMethods = (DBConnect: any) => ({
     reviewAssignmentId: number,
     applicationId: number,
     stageNumber: number,
-    reviewLevel: number
+    reviewLevel: number,
+    isSelfAssignable: boolean
   ) => {
     const text = `
     SELECT * FROM review_assignment
     WHERE application_id = $2
     AND stage_number = $3
     AND level_number = $4
+    AND is_self_assignable = $5
     AND id <> $1
     `
     try {
       const result = await DBConnect.query({
         text,
-        values: [reviewAssignmentId, applicationId, stageNumber, reviewLevel],
+        values: [reviewAssignmentId, applicationId, stageNumber, reviewLevel, isSelfAssignable],
       })
       return result.rows
     } catch (err) {
