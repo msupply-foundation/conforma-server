@@ -7,6 +7,7 @@ SELECT
     template.code AS template_code,
     serial,
     application.name,
+    session_id,
     user_id,
     org_id,
     stage_id,

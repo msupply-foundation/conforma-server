@@ -267,6 +267,7 @@ class PostgresDB {
       SELECT application_id as "applicationId",
       serial as "applicationSerial",
       name as "applicationName",
+      session_id as "sessionId",
       template_id as "templateId",
       template_name as "templateName",
       template_code as "templateCode",
@@ -778,23 +779,23 @@ class PostgresDB {
     }
   }
 
-  public isFullyAssignedLevel1 = async (applicationId: number) => {
-    const text = `
-    SELECT is_fully_assigned_level_1
-    FROM application_list()
-    WHERE id = $1
-    `
-    try {
-      const result = await this.query({
-        text,
-        values: [applicationId],
-      })
-      return result.rows[0].is_fully_assigned_level_1
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
+  // public isFullyAssignedLevel1 = async (applicationId: number) => {
+  //   const text = `
+  //   SELECT is_fully_assigned_level_1
+  //   FROM application_list()
+  //   WHERE id = $1
+  //   `
+  //   try {
+  //     const result = await this.query({
+  //       text,
+  //       values: [applicationId],
+  //     })
+  //     return result.rows[0].is_fully_assigned_level_1
+  //   } catch (err) {
+  //     console.log(err.message)
+  //     throw err
+  //   }
+  // }
 
   public getAllApplicationResponses = async (applicationId: number) => {
     const text = `
