@@ -16,9 +16,7 @@ IMMUTABLE;
 -- review assignment
 CREATE TYPE public.review_assignment_status AS ENUM (
     'AVAILABLE',
-    'ASSIGNED',
-    'SELF_ASSIGNED_BY_ANOTHER', -- TO BE REMOVED
-    'AVAILABLE_FOR_SELF_ASSIGNMENT' -- TO BE REMOVED
+    'ASSIGNED'
 );
 
 CREATE TABLE public.review_assignment (

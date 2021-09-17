@@ -17265,9 +17265,7 @@ export type ReviewAssignmentStageIdFkeyTemplateStageCreateInput = {
 
 export enum ReviewAssignmentStatus {
   Available = 'AVAILABLE',
-  Assigned = 'ASSIGNED',
-  SelfAssignedByAnother = 'SELF_ASSIGNED_BY_ANOTHER',
-  AvailableForSelfAssignment = 'AVAILABLE_FOR_SELF_ASSIGNMENT'
+  Assigned = 'ASSIGNED'
 }
 
 /** A filter to be used against ReviewAssignmentStatus fields. All fields are combined with a logical ‘and.’ */
