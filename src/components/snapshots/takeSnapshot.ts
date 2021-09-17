@@ -131,6 +131,7 @@ const getSchemaDiff = async (newSnapshotFolder: string) => {
 const copyFiles = async (newSnapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
   // copy only files that associated with exported file records and base filed in files directory (thumbnails)
   let filePaths = fileRecords.map((fileRecord) => fileRecord.filePath)
+  filePaths.push(...fileRecords.map((fileRecord) => fileRecord.thumbnailPath))
   let baseFilePaths = await getBaseFiles(FILES_FOLDER)
 
   for (const filePath of [...filePaths, ...baseFilePaths]) {
