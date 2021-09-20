@@ -15,6 +15,8 @@ export type Scalars = {
   JSON: any;
   /** A point in time as described by the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone. */
   Datetime: any;
+  /** The day, does not include a time. */
+  Date: any;
   /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
   BigInt: any;
   CharacterData: any;
@@ -636,10 +638,10 @@ export type Application = Node & {
   notifications: NotificationsConnection;
   /** Reads and enables pagination through a set of `Verification`. */
   verifications: VerificationsConnection;
-  /** Reads and enables pagination through a set of `OrganisationApplicationJoin`. */
-  organisationApplicationJoins: OrganisationApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `UserApplicationJoin`. */
   userApplicationJoins: UserApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `OrganisationApplicationJoin`. */
+  organisationApplicationJoins: OrganisationApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `ProductApplicationJoin`. */
   productApplicationJoins: ProductApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `LicenceApplicationJoin`. */
@@ -758,18 +760,6 @@ export type ApplicationVerificationsArgs = {
 };
 
 
-export type ApplicationOrganisationApplicationJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<OrganisationApplicationJoinsOrderBy>>;
-  condition?: Maybe<OrganisationApplicationJoinCondition>;
-  filter?: Maybe<OrganisationApplicationJoinFilter>;
-};
-
-
 export type ApplicationUserApplicationJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -779,6 +769,18 @@ export type ApplicationUserApplicationJoinsArgs = {
   orderBy?: Maybe<Array<UserApplicationJoinsOrderBy>>;
   condition?: Maybe<UserApplicationJoinCondition>;
   filter?: Maybe<UserApplicationJoinFilter>;
+};
+
+
+export type ApplicationOrganisationApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<OrganisationApplicationJoinsOrderBy>>;
+  condition?: Maybe<OrganisationApplicationJoinCondition>;
+  filter?: Maybe<OrganisationApplicationJoinFilter>;
 };
 
 
@@ -920,14 +922,14 @@ export type ApplicationFilter = {
   verifications?: Maybe<ApplicationToManyVerificationFilter>;
   /** Some related `verifications` exist. */
   verificationsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `organisationApplicationJoins` relation. */
-  organisationApplicationJoins?: Maybe<ApplicationToManyOrganisationApplicationJoinFilter>;
-  /** Some related `organisationApplicationJoins` exist. */
-  organisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `userApplicationJoins` relation. */
   userApplicationJoins?: Maybe<ApplicationToManyUserApplicationJoinFilter>;
   /** Some related `userApplicationJoins` exist. */
   userApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `organisationApplicationJoins` relation. */
+  organisationApplicationJoins?: Maybe<ApplicationToManyOrganisationApplicationJoinFilter>;
+  /** Some related `organisationApplicationJoins` exist. */
+  organisationApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `productApplicationJoins` relation. */
   productApplicationJoins?: Maybe<ApplicationToManyProductApplicationJoinFilter>;
   /** Some related `productApplicationJoins` exist. */
@@ -979,8 +981,8 @@ export type ApplicationInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -1677,8 +1679,8 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -1815,8 +1817,8 @@ export type ApplicationPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -1894,8 +1896,8 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -2385,8 +2387,8 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -2776,8 +2778,8 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -3711,8 +3713,8 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -3942,8 +3944,8 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -4005,7 +4007,7 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -6382,6 +6384,33 @@ export type CreateVerificationPayloadVerificationEdgeArgs = {
   orderBy?: Maybe<Array<VerificationsOrderBy>>;
 };
 
+
+
+/** A filter to be used against Date fields. All fields are combined with a logical ‘and.’ */
+export type DateFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Scalars['Date']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Scalars['Date']>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Scalars['Date']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Scalars['Date']>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Scalars['Date']>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Scalars['Date']>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Scalars['Date']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Scalars['Date']>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Scalars['Date']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Scalars['Date']>;
+};
 
 
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
@@ -9370,8 +9399,8 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -9902,7 +9931,7 @@ export type FileUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -10231,8 +10260,8 @@ export type LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -13634,8 +13663,8 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -14062,7 +14091,7 @@ export type NotificationUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -14211,8 +14240,8 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -16218,7 +16247,7 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -17178,8 +17207,8 @@ export type ProductApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -19972,8 +20001,8 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -20150,8 +20179,8 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -20317,7 +20346,7 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -20408,7 +20437,7 @@ export type ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -21387,7 +21416,7 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -23706,7 +23735,7 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -28166,8 +28195,8 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -28743,8 +28772,8 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -28773,8 +28802,8 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -28803,8 +28832,8 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -28834,8 +28863,8 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -28865,8 +28894,8 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -28896,8 +28925,8 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -28927,8 +28956,8 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -28958,8 +28987,8 @@ export type UpdateApplicationOnLicenceApplicationJoinForLicenceApplicationJoinAp
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -28989,8 +29018,8 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -29020,8 +29049,8 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -29051,8 +29080,8 @@ export type UpdateApplicationOnProductApplicationJoinForProductApplicationJoinAp
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -29082,8 +29111,8 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -29113,8 +29142,8 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -29144,8 +29173,8 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -29175,8 +29204,8 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -29206,8 +29235,8 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -33696,7 +33725,7 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33717,7 +33746,7 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33738,7 +33767,7 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33759,7 +33788,7 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33780,7 +33809,7 @@ export type UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJ
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33801,7 +33830,7 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33822,7 +33851,7 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33843,7 +33872,7 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33864,7 +33893,7 @@ export type UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33885,7 +33914,7 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -34074,7 +34103,7 @@ export type User = Node & {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
@@ -34256,8 +34285,8 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -34511,7 +34540,7 @@ export type UserApplicationJoinUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -34538,7 +34567,7 @@ export type UserCondition = {
   /** Checks for equality with the object’s `email` field. */
   email?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `dateOfBirth` field. */
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `passwordHash` field. */
   passwordHash?: Maybe<Scalars['String']>;
 };
@@ -34556,7 +34585,7 @@ export type UserFilter = {
   /** Filter by the object’s `email` field. */
   email?: Maybe<StringFilter>;
   /** Filter by the object’s `dateOfBirth` field. */
-  dateOfBirth?: Maybe<StringFilter>;
+  dateOfBirth?: Maybe<DateFilter>;
   /** Filter by the object’s `passwordHash` field. */
   passwordHash?: Maybe<StringFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
@@ -34614,7 +34643,7 @@ export type UserInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -35137,7 +35166,7 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -35177,7 +35206,7 @@ export type UserOrgJoin = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   orgId?: Maybe<Scalars['Int']>;
   orgName?: Maybe<Scalars['String']>;
@@ -35204,7 +35233,7 @@ export type UserOrgJoinCondition = {
   /** Checks for equality with the object’s `email` field. */
   email?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `dateOfBirth` field. */
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `passwordHash` field. */
   passwordHash?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `orgId` field. */
@@ -35236,7 +35265,7 @@ export type UserOrgJoinFilter = {
   /** Filter by the object’s `email` field. */
   email?: Maybe<StringFilter>;
   /** Filter by the object’s `dateOfBirth` field. */
-  dateOfBirth?: Maybe<StringFilter>;
+  dateOfBirth?: Maybe<DateFilter>;
   /** Filter by the object’s `passwordHash` field. */
   passwordHash?: Maybe<StringFilter>;
   /** Filter by the object’s `orgId` field. */
@@ -35323,7 +35352,7 @@ export type UserPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -35533,8 +35562,8 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
-  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -36029,6 +36058,8 @@ export type ResolversTypes = {
   ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter: ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter;
   ReviewAssignmentAssignerJoinFilter: ReviewAssignmentAssignerJoinFilter;
   UserFilter: UserFilter;
+  DateFilter: DateFilter;
+  Date: ResolverTypeWrapper<Scalars['Date']>;
   UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
   UserOrganisationFilter: UserOrganisationFilter;
   OrganisationFilter: OrganisationFilter;
@@ -36083,10 +36114,10 @@ export type ResolversTypes = {
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
   ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
   VerificationFilter: VerificationFilter;
-  ApplicationToManyOrganisationApplicationJoinFilter: ApplicationToManyOrganisationApplicationJoinFilter;
-  OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   ApplicationToManyUserApplicationJoinFilter: ApplicationToManyUserApplicationJoinFilter;
   UserApplicationJoinFilter: UserApplicationJoinFilter;
+  ApplicationToManyOrganisationApplicationJoinFilter: ApplicationToManyOrganisationApplicationJoinFilter;
+  OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   ApplicationToManyProductApplicationJoinFilter: ApplicationToManyProductApplicationJoinFilter;
   ProductApplicationJoinFilter: ProductApplicationJoinFilter;
   ProductFilter: ProductFilter;
@@ -37009,16 +37040,6 @@ export type ResolversTypes = {
   VerificationApplicationIdFkeyInput: VerificationApplicationIdFkeyInput;
   ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnVerificationForVerificationApplicationIdFkeyPatch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
-  OrganisationApplicationJoinApplicationIdFkeyInverseInput: OrganisationApplicationJoinApplicationIdFkeyInverseInput;
-  OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect: OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect;
-  OrganisationApplicationJoinNodeIdConnect: OrganisationApplicationJoinNodeIdConnect;
-  OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete: OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete;
-  OrganisationApplicationJoinNodeIdDelete: OrganisationApplicationJoinNodeIdDelete;
-  OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate;
-  updateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
-  OrganisationApplicationJoinApplicationIdFkeyInput: OrganisationApplicationJoinApplicationIdFkeyInput;
-  ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
   UserApplicationJoinApplicationIdFkeyInverseInput: UserApplicationJoinApplicationIdFkeyInverseInput;
   UserApplicationJoinUserApplicationJoinPkeyConnect: UserApplicationJoinUserApplicationJoinPkeyConnect;
   UserApplicationJoinNodeIdConnect: UserApplicationJoinNodeIdConnect;
@@ -37029,6 +37050,16 @@ export type ResolversTypes = {
   UserApplicationJoinApplicationIdFkeyInput: UserApplicationJoinApplicationIdFkeyInput;
   ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
+  OrganisationApplicationJoinApplicationIdFkeyInverseInput: OrganisationApplicationJoinApplicationIdFkeyInverseInput;
+  OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect: OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect;
+  OrganisationApplicationJoinNodeIdConnect: OrganisationApplicationJoinNodeIdConnect;
+  OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete: OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete;
+  OrganisationApplicationJoinNodeIdDelete: OrganisationApplicationJoinNodeIdDelete;
+  OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate;
+  updateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
+  OrganisationApplicationJoinApplicationIdFkeyInput: OrganisationApplicationJoinApplicationIdFkeyInput;
+  ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
   ProductApplicationJoinApplicationIdFkeyInverseInput: ProductApplicationJoinApplicationIdFkeyInverseInput;
   ProductApplicationJoinProductApplicationJoinPkeyConnect: ProductApplicationJoinProductApplicationJoinPkeyConnect;
   ProductApplicationJoinNodeIdConnect: ProductApplicationJoinNodeIdConnect;
@@ -37092,24 +37123,6 @@ export type ResolversTypes = {
   ProductApplicationJoinProductIdFkeyProductCreateInput: ProductApplicationJoinProductIdFkeyProductCreateInput;
   ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate;
   ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput: ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput;
-  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  UserApplicationJoinApplicationIdFkeyApplicationCreateInput: UserApplicationJoinApplicationIdFkeyApplicationCreateInput;
-  UserApplicationJoinUserIdFkeyInput: UserApplicationJoinUserIdFkeyInput;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
-  UserApplicationJoinUserIdFkeyInverseInput: UserApplicationJoinUserIdFkeyInverseInput;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate;
-  updateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
-  UserApplicationJoinPatch: UserApplicationJoinPatch;
-  UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  UserApplicationJoinUserIdFkeyUserCreateInput: UserApplicationJoinUserIdFkeyUserCreateInput;
-  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput;
   ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate;
   OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput: OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput;
@@ -37129,6 +37142,24 @@ export type ResolversTypes = {
   OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput: OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput;
   ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate;
   OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput: OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput;
+  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  UserApplicationJoinApplicationIdFkeyApplicationCreateInput: UserApplicationJoinApplicationIdFkeyApplicationCreateInput;
+  UserApplicationJoinUserIdFkeyInput: UserApplicationJoinUserIdFkeyInput;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  UserApplicationJoinUserIdFkeyInverseInput: UserApplicationJoinUserIdFkeyInverseInput;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate;
+  updateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
+  UserApplicationJoinPatch: UserApplicationJoinPatch;
+  UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
+  UserApplicationJoinUserIdFkeyUserCreateInput: UserApplicationJoinUserIdFkeyUserCreateInput;
+  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput;
   ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
   VerificationApplicationIdFkeyApplicationCreateInput: VerificationApplicationIdFkeyApplicationCreateInput;
@@ -38062,6 +38093,8 @@ export type ResolversParentTypes = {
   ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter: ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter;
   ReviewAssignmentAssignerJoinFilter: ReviewAssignmentAssignerJoinFilter;
   UserFilter: UserFilter;
+  DateFilter: DateFilter;
+  Date: Scalars['Date'];
   UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
   UserOrganisationFilter: UserOrganisationFilter;
   OrganisationFilter: OrganisationFilter;
@@ -38111,10 +38144,10 @@ export type ResolversParentTypes = {
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
   ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
   VerificationFilter: VerificationFilter;
-  ApplicationToManyOrganisationApplicationJoinFilter: ApplicationToManyOrganisationApplicationJoinFilter;
-  OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   ApplicationToManyUserApplicationJoinFilter: ApplicationToManyUserApplicationJoinFilter;
   UserApplicationJoinFilter: UserApplicationJoinFilter;
+  ApplicationToManyOrganisationApplicationJoinFilter: ApplicationToManyOrganisationApplicationJoinFilter;
+  OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   ApplicationToManyProductApplicationJoinFilter: ApplicationToManyProductApplicationJoinFilter;
   ProductApplicationJoinFilter: ProductApplicationJoinFilter;
   ProductFilter: ProductFilter;
@@ -38975,16 +39008,6 @@ export type ResolversParentTypes = {
   VerificationApplicationIdFkeyInput: VerificationApplicationIdFkeyInput;
   ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnVerificationForVerificationApplicationIdFkeyPatch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
-  OrganisationApplicationJoinApplicationIdFkeyInverseInput: OrganisationApplicationJoinApplicationIdFkeyInverseInput;
-  OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect: OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect;
-  OrganisationApplicationJoinNodeIdConnect: OrganisationApplicationJoinNodeIdConnect;
-  OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete: OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete;
-  OrganisationApplicationJoinNodeIdDelete: OrganisationApplicationJoinNodeIdDelete;
-  OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate;
-  updateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
-  OrganisationApplicationJoinApplicationIdFkeyInput: OrganisationApplicationJoinApplicationIdFkeyInput;
-  ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
   UserApplicationJoinApplicationIdFkeyInverseInput: UserApplicationJoinApplicationIdFkeyInverseInput;
   UserApplicationJoinUserApplicationJoinPkeyConnect: UserApplicationJoinUserApplicationJoinPkeyConnect;
   UserApplicationJoinNodeIdConnect: UserApplicationJoinNodeIdConnect;
@@ -38995,6 +39018,16 @@ export type ResolversParentTypes = {
   UserApplicationJoinApplicationIdFkeyInput: UserApplicationJoinApplicationIdFkeyInput;
   ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
+  OrganisationApplicationJoinApplicationIdFkeyInverseInput: OrganisationApplicationJoinApplicationIdFkeyInverseInput;
+  OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect: OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect;
+  OrganisationApplicationJoinNodeIdConnect: OrganisationApplicationJoinNodeIdConnect;
+  OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete: OrganisationApplicationJoinOrganisationApplicationJoinPkeyDelete;
+  OrganisationApplicationJoinNodeIdDelete: OrganisationApplicationJoinNodeIdDelete;
+  OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingOrganisationApplicationJoinPkeyUpdate;
+  updateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateOrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
+  OrganisationApplicationJoinApplicationIdFkeyInput: OrganisationApplicationJoinApplicationIdFkeyInput;
+  ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyPatch;
   ProductApplicationJoinApplicationIdFkeyInverseInput: ProductApplicationJoinApplicationIdFkeyInverseInput;
   ProductApplicationJoinProductApplicationJoinPkeyConnect: ProductApplicationJoinProductApplicationJoinPkeyConnect;
   ProductApplicationJoinNodeIdConnect: ProductApplicationJoinNodeIdConnect;
@@ -39058,24 +39091,6 @@ export type ResolversParentTypes = {
   ProductApplicationJoinProductIdFkeyProductCreateInput: ProductApplicationJoinProductIdFkeyProductCreateInput;
   ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate;
   ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput: ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput;
-  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  UserApplicationJoinApplicationIdFkeyApplicationCreateInput: UserApplicationJoinApplicationIdFkeyApplicationCreateInput;
-  UserApplicationJoinUserIdFkeyInput: UserApplicationJoinUserIdFkeyInput;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate;
-  updateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
-  UserApplicationJoinUserIdFkeyInverseInput: UserApplicationJoinUserIdFkeyInverseInput;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate;
-  updateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
-  UserApplicationJoinPatch: UserApplicationJoinPatch;
-  UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput;
-  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate;
-  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
-  UserPatch: UserPatch;
-  UserApplicationJoinUserIdFkeyUserCreateInput: UserApplicationJoinUserIdFkeyUserCreateInput;
-  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput;
   ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate: OrganisationApplicationJoinOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate;
   OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput: OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput;
@@ -39095,6 +39110,24 @@ export type ResolversParentTypes = {
   OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput: OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput;
   ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate;
   OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput: OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput;
+  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  UserApplicationJoinApplicationIdFkeyApplicationCreateInput: UserApplicationJoinApplicationIdFkeyApplicationCreateInput;
+  UserApplicationJoinUserIdFkeyInput: UserApplicationJoinUserIdFkeyInput;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserPkeyUpdate;
+  updateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  UserApplicationJoinUserIdFkeyInverseInput: UserApplicationJoinUserIdFkeyInverseInput;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserApplicationJoinPkeyUpdate;
+  updateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch: UpdateUserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
+  UserApplicationJoinPatch: UserApplicationJoinPatch;
+  UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinUserIdFkeyUserApplicationJoinCreateInput;
+  UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate: UserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyUsingUserUsernameKeyUpdate;
+  UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinUserIdFkeyNodeIdUpdate;
+  UserPatch: UserPatch;
+  UserApplicationJoinUserIdFkeyUserCreateInput: UserApplicationJoinUserIdFkeyUserCreateInput;
+  ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput: UserApplicationJoinApplicationIdFkeyUserApplicationJoinCreateInput;
   ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
   VerificationApplicationIdFkeyApplicationCreateInput: VerificationApplicationIdFkeyApplicationCreateInput;
@@ -40062,8 +40095,8 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   filesByApplicationSerial?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationFilesByApplicationSerialArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ApplicationNotificationsArgs, 'orderBy'>>;
   verifications?: Resolver<ResolversTypes['VerificationsConnection'], ParentType, ContextType, RequireFields<ApplicationVerificationsArgs, 'orderBy'>>;
-  organisationApplicationJoins?: Resolver<ResolversTypes['OrganisationApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationOrganisationApplicationJoinsArgs, 'orderBy'>>;
   userApplicationJoins?: Resolver<ResolversTypes['UserApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationUserApplicationJoinsArgs, 'orderBy'>>;
+  organisationApplicationJoins?: Resolver<ResolversTypes['OrganisationApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationOrganisationApplicationJoinsArgs, 'orderBy'>>;
   productApplicationJoins?: Resolver<ResolversTypes['ProductApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationProductApplicationJoinsArgs, 'orderBy'>>;
   licenceApplicationJoins?: Resolver<ResolversTypes['LicenceApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationLicenceApplicationJoinsArgs, 'orderBy'>>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -40976,6 +41009,10 @@ export type CreateVerificationPayloadResolvers<ContextType = any, ParentType ext
 
 export interface CursorScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Cursor'], any> {
   name: 'Cursor';
+}
+
+export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
+  name: 'Date';
 }
 
 export interface DatetimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Datetime'], any> {
@@ -43877,7 +43914,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  dateOfBirth?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dateOfBirth?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   passwordHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<UserUserOrganisationsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<UserPermissionJoinsArgs, 'orderBy'>>;
@@ -43947,7 +43984,7 @@ export type UserOrgJoinResolvers<ContextType = any, ParentType extends Resolvers
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  dateOfBirth?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dateOfBirth?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   passwordHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   orgName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -44131,6 +44168,7 @@ export type Resolvers<ContextType = any> = {
   CreateUserPayload?: CreateUserPayloadResolvers<ContextType>;
   CreateVerificationPayload?: CreateVerificationPayloadResolvers<ContextType>;
   Cursor?: GraphQLScalarType;
+  Date?: GraphQLScalarType;
   Datetime?: GraphQLScalarType;
   DeleteActionPluginPayload?: DeleteActionPluginPayloadResolvers<ContextType>;
   DeleteActionQueuePayload?: DeleteActionQueuePayloadResolvers<ContextType>;
