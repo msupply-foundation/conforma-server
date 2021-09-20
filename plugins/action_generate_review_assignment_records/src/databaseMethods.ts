@@ -51,9 +51,13 @@ const databaseMethods = (DBConnect: any) => ({
     levelNumber: number
   ) => {
     const text = `
-    SELECT status, reviewer_id as "userId", is_locked as "isLocked"
-      FROM review_assignment
-      WHERE application_id = $1
+    SELECT 
+      status, 
+      reviewer_id as "userId", 
+      is_locked as "isLocked", 
+      is_self_assignable as "isSelfAssignable"
+    FROM review_assignment
+    WHERE application_id = $1
       AND stage_number = $2
       AND level_number = $3
       `

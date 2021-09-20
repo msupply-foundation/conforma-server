@@ -81,9 +81,9 @@ async function generateReviewAssignments({
       }
     } else {
       console.log(
-        `Generating assignment for stage ${stageNumber} with total levels: ${numReviewLevels}`,
-        `Current review level ${nextReviewLevel}`,
-        `Last stage number ${lastStageNumber}`
+        `Generating assignment for stage ${stageNumber} with total levels: ${numReviewLevels}.`,
+        `Current review level ${nextReviewLevel}.`,
+        `Last stage number ${lastStageNumber}.`
       )
 
       // Check if other reviewAssignment is already assigned to create new ones LOCKED
