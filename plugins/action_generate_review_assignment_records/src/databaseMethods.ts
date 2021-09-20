@@ -86,6 +86,7 @@ const databaseMethods = (DBConnect: any) => ({
         isLastStage,
         isFinalDecision,
         isLocked,
+        isSelfAssignable,
       } = reviewAssignment
       // Needs a slightly different query with different CONFLICT restrictions
       // depending on whether orgId exists or not.
@@ -97,9 +98,10 @@ const databaseMethods = (DBConnect: any) => ({
           status, application_id, allowed_sections,
           level_number, organisation_id, 
           is_last_level, is_last_stage,
-          is_final_decision, is_locked
+          is_final_decision, is_locked,
+          is_self_assignable 
           )
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
         ON CONFLICT (reviewer_id, ${
           organisationId ? ' organisation_id,' : ''
         } stage_number, application_id, level_number)
@@ -125,6 +127,7 @@ const databaseMethods = (DBConnect: any) => ({
             isLastStage,
             isFinalDecision,
             isLocked,
+            isSelfAssignable,
           ],
         })
         reviewAssignmentIds.push(result.rows[0].id)
