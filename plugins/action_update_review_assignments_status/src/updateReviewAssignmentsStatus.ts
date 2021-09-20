@@ -1,4 +1,4 @@
-import { ActionQueueStatus, ReviewAssignment, Trigger } from '../../../src/generated/graphql'
+import { ActionQueueStatus, ReviewAssignmentStatus, Trigger } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
 import databaseMethods from './databaseMethods'
 
@@ -13,8 +13,6 @@ async function updateReviewAssignmentsStatus({
   try {
     const trigger = parameters?.trigger ?? applicationData?.action_payload?.trigger_payload?.trigger
     const { reviewAssignmentId } = parameters
-
-    let assignments: ReviewAssignment[] = []
     // NB: reviewAssignmentId comes from record_id on TriggerPayload when
     // triggered from review_assignment table
     const {
@@ -23,29 +21,29 @@ async function updateReviewAssignmentsStatus({
       level_number: reviewLevel,
     } = await db.getReviewAssignmentById(reviewAssignmentId)
 
-    switch (trigger) {
-      case Trigger.OnReviewSelfAssign: {
-        const isSelfAssignable = true
-        const otherSelfAssignments = await db.getMatchingReviewAssignments(
-          reviewAssignmentId,
-          applicationId,
-          stageNumber,
-          reviewLevel,
-          isSelfAssignable
-        )
+    const otherReviewAssignments = await db.getMatchingReviewAssignments(
+      reviewAssignmentId,
+      applicationId,
+      stageNumber,
+      reviewLevel
+    )
 
-        assignments = otherSelfAssignments.map(({ id }: ReviewAssignment) => ({
+    const reviewAssignmentUpdates = await Promise.all(
+      otherReviewAssignments.map(async (reviewAssignment: any) => {
+        const { id, status } = reviewAssignment
+        return {
           id,
-          isLocked: true,
-        }))
-      }
-    }
+          status:
+            trigger === Trigger.OnReviewSelfAssign
+              ? ReviewAssignmentStatus.SelfAssignedByAnother
+              : status,
+        }
+      })
+    )
 
-    const reviewAssignmentUpdateResults = await db.updateReviewAssignments(assignments)
+    const reviewAssignmentUpdateResults = await db.updateReviewAssignments(reviewAssignmentUpdates)
 
-    if (reviewAssignmentUpdateResults.length > 0) {
-      console.log('Review Assignment status updates:', reviewAssignmentUpdateResults)
-    }
+    console.log('Review Assignment status updates:', reviewAssignmentUpdateResults)
 
     return {
       status: ActionQueueStatus.Success,

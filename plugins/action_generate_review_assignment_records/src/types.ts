@@ -30,19 +30,14 @@ export interface ReviewAssignment {
   isLastStage: boolean
   isFinalDecision: boolean
   isLocked: boolean
-  isSelfAssignable: boolean
 }
 
 export interface ReviewAssignmentObject {
   [key: string]: ReviewAssignment
 }
 
-export interface AssignmentState {
+export interface ExistingReviewAssignment {
   status: ReviewAssignmentStatus
-  isSelfAssignable: boolean
+  userId: number
   isLocked: boolean
 }
-
-export type ExistingReviewAssignment = {
-  userId: number
-} & AssignmentState

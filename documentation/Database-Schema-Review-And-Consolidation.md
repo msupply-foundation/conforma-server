@@ -27,19 +27,19 @@ They can be queried to:
 
 - Determine who can be assigned to an application stage and level <- front end task
 - Determine if an application stage and level is fully assigned (using review_question_assignment link) <- through application list view
-- Determine if review can be started/assigned <- front end can check if review can be created See `Review and Consolidation URL flow` diagram below
+- Determine if review can be started/created <- front end can check if review can be created (including self assignment) See `Review and Consolidation URL flow` diagram below
 
-#### Review Assignment
-
-##### Status
+#### Review Assignment Status
 
 `Available` -> can be assigned by assigner
 
-`Assigned` -> review is assigned to a user and can be started
+`Not Available` -> cannot be assigned by assigner, in case of `available for self assignment`, when reviewer self assigns a review, all other `review assignments` for current `stage` and `level` are changed to this status
 
-`NOTE`
+`Assigned` -> review is assigned to a user and can be started (in case of self assignment when review is self assigned, review assignment will changes status to assigned)
 
-For MVP, only level 1 reviewer can be assigned to sections (vs self assignment of review) level 1 can also be configured to self assigned, in this case they will need to be configured to review all sections. Level > 1 can only be self-assigned currently. If user is Final decision maker (can only be level 1) the self-assignment will apply for all sections.
+`Available for self assignment` -> review can be started and self assigned
+
+`Assignment NOTE` -> For MVP, only level 1 reviewer can be assigned questions (vs self assignment of review), level > 1 will be self assigned (level 1 can also be configured to self assigned, in this case they will need to be configured to review all sections)
 
 ##### Other fields (that are not straight away self explanatory)
 
@@ -47,9 +47,7 @@ For MVP, only level 1 reviewer can be assigned to sections (vs self assignment o
 
 `is_last_level` -> last level for current stage (determine if review_decision is present in UI)
 
-`is_last_stage` -> check if reviewer is on the last stage to review this application
-
-`is_locked` -> if assignment has `Assigned` status, but review cannot be submitted - usually related to a consolidation with LOQ submitted based on another review done regardig the same application. When re-submitted by Applicant this assignment will be unlocked.
+`is_locked` -> when assignment has `Assigned` status, but review cannot be submitted - usually related to a consolidation with LOQ submitted based on another review done regardig the same application. When re-submitted by Applicant this assignment will be unlocked.
 
 `allowable_sections` -> an array of section IDs that reviewer has permission to review (would typically have all sections), assigner can only assign questions from sections that are in this list
 

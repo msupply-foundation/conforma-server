@@ -16,7 +16,9 @@ IMMUTABLE;
 -- review assignment
 CREATE TYPE public.review_assignment_status AS ENUM (
     'AVAILABLE',
-    'ASSIGNED'
+    'SELF_ASSIGNED_BY_ANOTHER',
+    'ASSIGNED',
+    'AVAILABLE_FOR_SELF_ASSIGNMENT'
 );
 
 CREATE TABLE public.review_assignment (
@@ -38,8 +40,7 @@ CREATE TABLE public.review_assignment (
     is_last_level boolean,
     is_last_stage boolean,
     is_locked boolean DEFAULT FALSE,
-    is_final_decision boolean DEFAULT FALSE,
-    is_self_assignable boolean DEFAULT FALSE
+    is_final_decision boolean DEFAULT FALSE
 );
 
 -- TRIGGER (Listener) on review_assignment table

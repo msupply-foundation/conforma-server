@@ -19,21 +19,19 @@ const databaseMethods = (DBConnect: any) => ({
     reviewAssignmentId: number,
     applicationId: number,
     stageNumber: number,
-    reviewLevel: number,
-    isSelfAssignable: boolean
+    reviewLevel: number
   ) => {
     const text = `
     SELECT * FROM review_assignment
     WHERE application_id = $2
     AND stage_number = $3
     AND level_number = $4
-    AND is_self_assignable = $5
     AND id <> $1
     `
     try {
       const result = await DBConnect.query({
         text,
-        values: [reviewAssignmentId, applicationId, stageNumber, reviewLevel, isSelfAssignable],
+        values: [reviewAssignmentId, applicationId, stageNumber, reviewLevel],
       })
       return result.rows
     } catch (err) {
@@ -44,17 +42,17 @@ const databaseMethods = (DBConnect: any) => ({
   updateReviewAssignments: async (reviewAssignments: any) => {
     const reviewAssignmentUpdateResults = []
     for (const reviewAssignment of reviewAssignments) {
-      const { id, isLocked } = reviewAssignment
+      const { id, status } = reviewAssignment
       const text = `
       UPDATE review_assignment
-      SET isLocked = $2
+      SET status = $2
       WHERE id = $1
-      RETURNING id, isLocked
+      RETURNING id, status
       `
       try {
         const result = await DBConnect.query({
           text,
-          values: [id, isLocked],
+          values: [id, status],
         })
         reviewAssignmentUpdateResults.push(result.rows[0])
       } catch (err) {

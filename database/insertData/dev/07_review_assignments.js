@@ -435,7 +435,6 @@ exports.queries = [
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
-          isSelfAssignable: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
           }
@@ -584,7 +583,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 2 Lvl 2 - Stage 2 = AVAILABLE/LOCKED (not self assignable for this consolidator)
+  // -- Consolidator 2 Lvl 2 - Stage 2 = NOT AVAILABLE (not assignable for this consolidator)
   `mutation {
     createReviewAssignment(
       input: {
@@ -595,12 +594,10 @@ exports.queries = [
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
-          isSelfAssignable: true
-          isLocked: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
           }
-          status: AVAILABLE
+          status: SELF_ASSIGNED_BY_ANOTHER
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 1033, templateElementId: 4001 }
@@ -640,7 +637,6 @@ exports.queries = [
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
-          isSelfAssignable: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
           reviewQuestionAssignmentsUsingId: {
@@ -821,7 +817,6 @@ exports.queries = [
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
-          isSelfAssignable: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
           reviewQuestionAssignmentsUsingId: {
@@ -1220,7 +1215,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 1 Lvl 2 - Stage 2 = AVAILABLE/LOCKED (not assignable for this consolidator)
+  // -- Consolidator 1 Lvl 2 - Stage 2 = NOT AVAILABLE (not assignable for this consolidator)
   `mutation {
     createReviewAssignment(
       input: {
@@ -1231,12 +1226,10 @@ exports.queries = [
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
-          isSelfAssignable: true
-          isLocked: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
           }
-          status: AVAILABLE
+          status: SELF_ASSIGNED_BY_ANOTHER
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 3022, templateElementId: 4001 }
@@ -1275,7 +1268,6 @@ exports.queries = [
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
-          isSelfAssignable: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
           }
@@ -1405,7 +1397,6 @@ exports.queries = [
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
-          isSelfAssignable: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
           reviewQuestionAssignmentsUsingId: {
@@ -1726,7 +1717,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 1 Lvl 2 - Stage 2 = AVAILABLE/LOCKED (not assignable for this consolidator)
+  // -- Consolidator 1 Lvl 2 - Stage 2 = NOT AVAILABLE (not assignable for this consolidator)
   `mutation {
     createReviewAssignment(
       input: {
@@ -1737,12 +1728,10 @@ exports.queries = [
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
-          isSelfAssignable: true
-          isLocked: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
           }
-          status: AVAILABLE
+          status: SELF_ASSIGNED_BY_ANOTHER
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 5022, templateElementId: 4001 }
@@ -1780,7 +1769,6 @@ exports.queries = [
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
-          isSelfAssignable: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
           }
@@ -1902,7 +1890,6 @@ exports.queries = [
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
-          isSelfAssignable: true
           userToReviewerId: { connectByUsername: { username: "testReviewer1" } }
           status: ASSIGNED
           reviewQuestionAssignmentsUsingId: {
@@ -2287,7 +2274,7 @@ exports.queries = [
       }
     }
   }`,
-  // -- Consolidator 1 Lvl 2 - Stage 2 = AVAILABLE/LOCKED (not assignable for this consolidator)
+  // -- Consolidator 1 Lvl 2 - Stage 2 = NOT AVAILABLE (not assignable for this consolidator)
   `mutation {
     createReviewAssignment(
       input: {
@@ -2298,12 +2285,10 @@ exports.queries = [
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
-          isSelfAssignable: true
-          isLocked: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator1" }
           }
-          status: AVAILABLE
+          status: SELF_ASSIGNED_BY_ANOTHER
           reviewQuestionAssignmentsUsingId: {
             create: [
               { id: 6022, templateElementId: 4001 }
@@ -2341,7 +2326,6 @@ exports.queries = [
           stageNumber: 2
           levelNumber: 2
           isLastLevel: true
-          isSelfAssignable: true
           userToReviewerId: {
             connectByUsername: { username: "testConsolidator2" }
           }
@@ -2521,7 +2505,6 @@ exports.queries = [
           stageNumber: 1
           levelNumber: 1
           isLastLevel: true
-          isSelfAssignable: true
           userToReviewerId: { 
             connectByUsername: { username: "testReviewer1" } 
           }
