@@ -19517,7 +19517,8 @@ export enum ReviewStatus {
   Submitted = 'SUBMITTED',
   ChangesRequested = 'CHANGES_REQUESTED',
   Pending = 'PENDING',
-  Locked = 'LOCKED'
+  Locked = 'LOCKED',
+  Discontinued = 'DISCONTINUED'
 }
 
 /** A filter to be used against ReviewStatus fields. All fields are combined with a logical ‘and.’ */
