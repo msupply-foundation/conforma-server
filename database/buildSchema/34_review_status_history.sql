@@ -4,7 +4,8 @@ CREATE TYPE public.review_status AS ENUM (
     'SUBMITTED',
     'CHANGES_REQUESTED',
     'PENDING',
-    'LOCKED'
+    'LOCKED',
+    'DISCONTINUED'
 );
 
 CREATE TABLE public.review_status_history (
