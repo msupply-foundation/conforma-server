@@ -1,0 +1,14 @@
+[
+  {
+    "languageName": "English",
+    "description": "NZ English (default)",
+    "folder": "en_nz",
+    "flag": "🇳🇿"
+  },
+  {
+    "languageName": "Portugese",
+    "description": "Portugese translation for Angola users",
+    "folder": "pt_an",
+    "flag": "🇦🇴"
+  }
+]
