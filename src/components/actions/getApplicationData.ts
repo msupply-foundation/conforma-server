@@ -9,6 +9,7 @@ export const getApplicationData = async (input: {
   payload?: ActionPayload
   applicationId?: number
   reviewId?: number
+  reviewAssignmentId?: number
 }): Promise<ActionApplicationData> => {
   // Requires either application OR trigger_payload, so throw error if neither provided
   if (!input?.payload?.trigger_payload && !input?.applicationId)
@@ -40,10 +41,18 @@ export const getApplicationData = async (input: {
   const reviewId =
     input?.reviewId ?? (trigger_payload?.table === 'review' ? trigger_payload?.record_id : null)
 
+  const reviewAssignmentId =
+    input?.reviewAssignmentId ??
+    (trigger_payload?.table === 'review_assignment' ? trigger_payload?.record_id : null)
+
   const reviewData = reviewId
     ? {
         reviewId,
         ...(await DBConnect.getReviewData(reviewId)),
+      }
+    : reviewAssignmentId
+    ? {
+        ...(await DBConnect.getReviewDataFromAssignment(reviewAssignmentId)),
       }
     : {}
 
