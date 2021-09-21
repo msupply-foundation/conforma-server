@@ -25,9 +25,10 @@ import DBConnect from './components/databaseConnect'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
+import { routeLocalisations, routeGetLanguageFile } from './components/localisation/routes'
 require('dotenv').config()
 
-// Bare-bones Fastify server
+// Fastify server
 
 const startServer = async () => {
   await loadActionPlugins() // Connects to Database and listens for Triggers
@@ -36,6 +37,7 @@ const startServer = async () => {
 
   const server = fastify()
 
+  // For serving static files from "Files" folder
   server.register(fastifyStatic, {
     root: path.join(getAppEntryPointDir(), filesFolder),
   })
@@ -68,6 +70,8 @@ const startServer = async () => {
   server.post('/run-action', routeRunAction)
   server.get('/verify', routeVerification)
   server.post('/generate-pdf', routeGeneratePDF)
+  server.get('/localisations', routeLocalisations)
+  server.get('/language/:code', routeGetLanguageFile)
 
   // File upload endpoint
   server.post('/upload', async function (request: any, reply) {
