@@ -2,13 +2,13 @@
   {
     "languageName": "English",
     "description": "NZ English (default)",
-    "folder": "en_nz",
+    "code": "en_nz",
     "flag": "🇳🇿"
   },
   {
     "languageName": "Portugese",
     "description": "Portugese translation for Angola users",
-    "folder": "pt_an",
+    "code": "pt_an",
     "flag": "🇦🇴"
   }
 ]
