@@ -2,13 +2,15 @@
   {
     "languageName": "English",
     "description": "NZ English (default)",
-    "code": "en_nz",
-    "flag": "🇳🇿"
+    "code": "default",
+    "flag": "🇳🇿",
+    "enabled": true
   },
   {
     "languageName": "Portugese",
     "description": "Portugese translation for Angola users",
     "code": "pt_an",
-    "flag": "🇦🇴"
+    "flag": "🇦🇴",
+    "enabled": true
   }
 ]
