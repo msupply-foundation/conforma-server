@@ -16,6 +16,7 @@ import {
   OutcomesTableResponse,
 } from './types'
 import { OutcomeDisplay, OutcomeDisplayColumnDefinition } from '../../generated/graphql'
+import dataTypeMap, { PostgresDataType } from './postGresToJSDataTypes'
 import config from '../../config'
 import { plural } from 'pluralize'
 
@@ -52,11 +53,11 @@ export const buildAllColumnDefinitions = async (
   const showLinkedApplications = outcomes[0].showLinkedApplications
 
   // Get all Fields on Outcome table (schema query)
-  const fields: { name: string; dataType: string }[] = (
+  const fields: { name: string; dataType: PostgresDataType }[] = (
     await DBConnect.getOutcomeTableColumns(tableName)
   ).map(({ name, dataType }) => ({
     name: camelCase(name),
-    dataType,
+    dataType: dataTypeMap?.[dataType as PostgresDataType] ?? dataType,
   }))
   const fieldNames = fields.map((field) => field.name)
   const fieldDataTypes = fields.reduce((dataTypeIndex: { [key: string]: string }, field) => {
