@@ -47,9 +47,9 @@ const databaseMethods = (DBConnect: any) => ({
       const { id, isLocked } = reviewAssignment
       const text = `
       UPDATE review_assignment
-      SET isLocked = $2
+      SET is_locked = $2
       WHERE id = $1
-      RETURNING id, isLocked
+      RETURNING id, is_locked
       `
       try {
         const result = await DBConnect.query({
