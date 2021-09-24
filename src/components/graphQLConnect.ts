@@ -14,14 +14,14 @@ class GraphQLdb {
     return this._instance || (this._instance = new this())
   }
 
-  public gqlQuery = async (query: string, variables = {}) => {
+  public gqlQuery = async (query: string, variables = {}, authHeader = '') => {
     if (this.adminJWT === '') this.adminJWT = await getAdminJWT()
     const queryResult = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: `Bearer ${this.adminJWT}`,
+        Authorization: authHeader === '' ? `Bearer ${this.adminJWT}` : authHeader,
       },
       body: JSON.stringify({
         query: query,
