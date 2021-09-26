@@ -1,10 +1,10 @@
 # Outcomes Display
 
-Display of Outcome tables (e.g. Products, Users, Orgs) (or any table, strictly speaking) can be configured for viewing in the UI by setting entries in the `outcome_display` and `outcome_display_column_definition` tables. This allows us to set:
+Display of Outcome tables (e.g. Products, Users, Orgs) (or any table, strictly speaking) can be configured for viewing in the UI by setting entries in the `outcome_display` and `outcome_display_column_definition` database tables. This allows us to set:
 
 - who is allowed to see them
 - what columns to show different types of user
-- "special" columns, which show the result of an [evaluator](Query-Syntax.md) expression, so can show joined fields, or queries to another table, say
+- "special" columns, which show the result of an [evaluator](Query-Syntax.md) expression, so can show joined fields, or queries to another table, for example
 - how columns should be formatted in the UI
 
 The data is served to the front-end via the `/outcomes` API end-points, and serves data based on the request's JWT header, so we can ensure that no user can receive data that they haven't been configured to be allowed to see.
@@ -197,7 +197,7 @@ Different configurations of fields and who can see them can be set up for each t
 
 The following fields are also configurable in "outcomes_display" layouts:
 
-- `title`: the name of the "outcome" that shows in the "Outcomes" menu and as the Header of the table (e.g. "Users"). Default is just the tablename converted to plural Title Case, e.g. `user` => "Users"
+- `title`: the name of the "outcome" that shows in the "Outcomes" menu and as the Header of the table (e.g. "Users"). Default is just the tableName converted to plural Title Case, e.g. `user` => "Users"
 - `permissionNames`: an array of permissions names that the request requires (via JWT) in order to see this Layout. Default is an empty array, and both that and `null` allow full access (i.e. no restrictions)
 - `table_view_include_columns`: an array of fields to return for the "table" endpoint. Should be field names written in camelCase. All values should match with either the name of a field in the table being queried, or the name of a "special" column defined in `outcome_display_column_definition` (see below).  
 Some things to be aware of:
@@ -261,4 +261,152 @@ Named properties on an object can be deeply nested, e.g. `user.firstName`
 
 If a column value is an array, then the array will be interpreted as a Markdown list, and all formatting options (plugin type, additional formatting, etc) will be applied to *each item* in the list. See below for an example.
 
-## Additional examples
+## Real use-case example
+
+Here is an `outcome_display` entry for showing Organisations:
+
+```
+{
+    "id": 3,
+    "tableName": "organisation",
+    "code": "organisation",
+    "title": "Organisations",
+    "permissionNames": null,
+    "tableViewIncludeColumns": [
+        "logoUrl",
+        "name",
+        "address"
+        ],
+    "tableViewExcludeColumns": null,
+    "detailViewIncludeColumns": [
+        "logoUrl",
+        "...",
+        "members"
+        ],
+    "detailViewExcludeColumns": [
+        "id",
+        "name",
+        "isSystemOrg"
+        ],
+    "detailViewHeaderColumn": "name",
+    "showLinkedApplications": true,
+    "priority": 1
+}
+```
+
+This layout describe how to display the `organisation` table. It will have the title "Organisations" (when in Table view).
+
+- `permissionNames` is `null`, so all users will see this layout
+- Table view will show the three named columns
+- Details view, however, is a little more complex
+  - `...` shows all columns. The reason why we include it *after* `logoUrl` is because we want the logo to appear first in the Detail table.
+  - the column name `members` is not a field on the `organisation` table. This means we will expect it to have a custom definition in the `outcome_display_column_definition` table.
+  - we exclude `id`, `name` and `isSystemOrg`, so the complete list of fields that will be shown in Details view is (in order):
+    - logoUrl
+    - registration
+    - address
+    - registration_documentation
+    - members (custom column)
+- In Details view, the page Header will be the value from the `name` field (which is why it made sense to exclude it from the list of fields to show)
+- We also are allowed to see a list of Linked Applications in Details view
+
+We now define three columns with custom definitons in `outcome_display_column_definition`: `logoUrl`, `registrationDocumentation` and `members`. That means that the other two will just use their field name as column title, and the values in those fields will be shown as plain text.
+
+Let's look at the custom column definitions one by one:
+
+**logoUrl**
+
+```
+{
+    "id": 6,
+    "tableName": "organisation",
+    "columnName": "logoUrl",
+    "title": "Logo",
+    "elementTypePluginCode": "imageDisplay",
+    "elementParameters": {
+    "url": {
+        "children": [
+        {
+            "children": [
+            "applicationData.config.serverREST"
+            ],
+            "operator": "objectProperties"
+        },
+        {
+            "children": [
+            "responses.thisResponse"
+            ],
+            "operator": "objectProperties"
+        }
+        ],
+        "operator": "+"
+    },
+    "size": "tiny",
+    "altText": "No logo supplied"
+    },
+    "additionalFormatting": null,
+    "valueExpression": {}
+}
+```
+- It will displayed using the "imageDisplay" plugin
+- The `elementParameters` define the url for the logo, namely: a combination of the server host and the value from the current response (the response object being the "value" returned in the `logoUrl` field, which is just a text path to the file).
+- No "additionalFormatting" -- it's all handled by the "imageDisplay" plugin
+- No "valueExpression" -- we just want the data straight from the `logoUrl` field
+
+**registrationDocumentation**
+
+```
+{
+    "id": 8,
+    "tableName": "organisation",
+    "columnName": "registrationDocumentation",
+    "title": "Registration docs",
+    "elementTypePluginCode": "fileUpload",
+    "elementParameters": {},
+    "additionalFormatting": null,
+    "valueExpression": null
+}
+```
+Pretty straightforward, it just uses the "fileUpload" plugin to display, and the value in this field is the whole response object required for the file display.
+
+**members**
+
+```
+{
+    "id": 10,
+    "tableName": "organisation",
+    "columnName": "members",
+    "title": "Members",
+    "elementTypePluginCode": null,
+    "elementParameters": null,
+    "additionalFormatting": {
+        "substitution": "[${user.firstName} ${user.lastName}](/outcomes/user/${user.id})"
+        },
+    "valueExpression": {
+        "operator": "graphQL",
+        "children": [
+            "query getOrgUsers($id:Int!) { userOrganisations(filter: 
+                {organisationId: {equalTo: $id}}) { nodes { user 
+                { id, firstName, lastName }}}}",
+            "graphQLEndpoint",
+            ["id"],
+            {
+                "operator": "objectProperties"
+                "children": ["id"],
+            },
+            "userOrganisations"
+            ] 
+        }
+}
+```
+This is the most sophisticated display field -- it shows a clickable list of users who belong to this organisation. The key definitions here are:
+- `valueExpression` defines a GraphQL query to fetch users via their "userOrganisation" link
+- `additionalFormatting` -- It's not clear here, but the above query returns an *array* of users, which (as mentioned above) will be formatted as a Markdown list by the front-end, so all our formatting definitions apply to each item (i.e. "user") in the array. So this `substitution` string is showing the full name of the user, formatted as a (Markdown) hyperlink, which links to a url showing the Detail view of this user.
+
+All up, these definitions will be interpreted by the front-end and displayed in a Table view that looks like this:
+
+![Table View](images/outcomes-display-table-view.png)
+
+And a Details view like this:
+
+![Details View](images/outcomes-display-detail-view.png)
