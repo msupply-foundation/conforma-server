@@ -1,10 +1,25 @@
 # Outcomes Display
 
-Display of Outcome tables (e.g. Products, Users, Orgs) (or any table, strictly speaking) can be configured for viewing in the UI by setting entries in the `outcome_display` and `outcome_display_column_definition` database tables. This allows us to set:
+<!-- toc -->
+
+## Contents
+  - [API](#api)
+    - [`/outcomes`](#outcomes)
+    - [`/outcomes/table/<tableName>?<queries>`](#outcomestabletablenamequeries)
+      - [Query parameters](#query-parameters)
+    - [`/outcomes/table/<tableName>/item/<id>`](#outcomestabletablenameitemid)
+  - [Configuration](#configuration)
+    - [`outcomes_display` table](#outcomes_display-table)
+    - [`outcome_display_column_definition` table](#outcome_display_column_definition-table)
+    - [Additional formatting](#additional-formatting)
+    - [A note about Array data](#a-note-about-array-data)
+  - [Real use-case example](#real-use-case-example)
+
+Display of **Outcome** tables (e.g. Products, Users, Orgs) (or any table, strictly speaking) can be configured for viewing in the UI by setting entries in the `outcome_display` and `outcome_display_column_definition` database tables. This allows us to set:
 
 - who is allowed to see them
 - what columns to show different types of user
-- "special" columns, which show the result of an [evaluator](Query-Syntax.md) expression, so can show joined fields, or queries to another table, for example
+- "special" columns, which show the result of an [evaluator](Query-Syntax.md) expression, so can show some fields combined, or queries to another table, for example
 - how columns should be formatted in the UI
 
 The data is served to the front-end via the `/outcomes` API end-points, and serves data based on the request's JWT header, so we can ensure that no user can receive data that they haven't been configured to be allowed to see.
@@ -26,7 +41,7 @@ Returns an array of outcome tables the user is allowed to see (based on JWT head
         "title": "Users (Restricted View)",
         "code": "userRestricted"
     },
-    ...
+    ...etc.
 ]
 ```
 
@@ -82,7 +97,7 @@ For querying a specific table. Data is returned in the following structure:
 
 Note that each table row is returned as both an array of values *and* a single "item" object with key-value pairs.
 
-`totalCount` is used for pagination purposes (since only one page's data is returned at a time)
+`totalCount` is used for pagination purposes (since only one page of data is returned at a time)
 
 #### Query parameters
 
@@ -90,7 +105,7 @@ Query parameters are (currently) as follows:
 
 - `first` -- number of records to return (default: 20)
 - `offset` -- start from record number (default: 0) (used in conjunction with `first` to control pagination)
-- `orderBy` -- field to sort by (default: `id`),
+- `order-by` -- field to sort by (default: `id`),
 - `ascending` -- whether to sort ascending or descending (default: `true`)
 
 Eventually, there will be additional parameters for searching and filtering -- not yet implemented
@@ -199,17 +214,17 @@ The following fields are also configurable in "outcomes_display" layouts:
 
 - `title`: the name of the "outcome" that shows in the "Outcomes" menu and as the Header of the table (e.g. "Users"). Default is just the tableName converted to plural Title Case, e.g. `user` => "Users"
 - `permissionNames`: an array of permissions names that the request requires (via JWT) in order to see this Layout. Default is an empty array, and both that and `null` allow full access (i.e. no restrictions)
-- `table_view_include_columns`: an array of fields to return for the "table" endpoint. Should be field names written in camelCase. All values should match with either the name of a field in the table being queried, or the name of a "special" column defined in `outcome_display_column_definition` (see below).  
+- `table_view_include_columns`: an array of fields to return for the "table" endpoint. Should be field names written in camelCase. All values should match with either the name of a field in the table being queried, or the name of a "custom" column defined in `outcome_display_column_definition` (see below).  
 Some things to be aware of:
   - `null` or empty array means return ALL fields
-  - if you've named a "special" field in here and yet still want to return all other fields, you can specify this by including the special value "..." as an item, which has the same effect as the "...rest" parameter in javascript.
+  - if you've named a "custom" field in here and yet still want to return all other fields, you can specify this by including the special value "..." as an item, which has the same effect as the "...rest" parameter in javascript.
 - `table_view_exclude_columns`: an array of columns to exclude. Basically, it takes all the columns collected from the "include" list, and removes any named here.
 - `detail_view_include_columns` / `detail_view_exclude_columns`: exactly the same as the "table_view" fields, except applies to the fields that show up in the Details view
 - `detail_view_header_column`: name of the field/column whose value should be used as the Header display in Details view. If not specified, the table name will just be used.
 - `show_linked_applications`: if `true`, the `/item` endpoint will also return an array of linked applications connected to this particular item. These are taken from the outcome "join" tables, whose records are created on successful application approvals.
-- `priority`: when multiple layouts match the request (i.e. user has permissions for more than one Layout), the returned columns will be a union of the columns specified in both layouts. However,there will still only be one "Title" and "Header column" returned and each layout may have a different one, so the layout with the highest priority will be used. Default value: 1. In general you'd want to give the more "restrcited" permission the higher priority, but most of the time you won't need to consider this as the Title and Header would often be the same.
+- `priority`: when multiple layouts match the request (i.e. user has permissions for more than one Layout), the returned columns will be a union of the columns specified in both layouts. However,there will still only be one "Title" and "Header column" returned and each layout may have a different one, so the layout with the highest priority will be used. In general you'd want to give the more "restrcited" permission the higher priority, but most of the time you won't need to consider this as the Title and Header would often be the same. Default value: `1`.
 
-Okay, so if you're just wanting to display fields directly taken from the outcome table in question, and the formatting requirements are all "simple" types (text, number, boolean, Date) the `outcomes_display` table is all you need. However, if you want to return columns with more complex data (such as a list of ingredients, or a query to another table) or requires non-default formatting, you'll need to define these in the `outcome_display_column_definition` table.
+Okay, so if you're just wanting to display fields directly taken from the outcome table in question, and the formatting requirements are all "simple" types (text, number, boolean, Date) the `outcomes_display` table is all you need. However, if you want to return columns with more complex data (such as a list of ingredients, or a query to another table) or require non-default formatting, you'll need to define these in the `outcome_display_column_definition` table.
 
 ### `outcome_display_column_definition` table
 
@@ -221,7 +236,7 @@ The input fields are as follows:
 - `column_name`: must match with one of the column names specified in the inclusion lists above.
 - `title`: title to show for the field name. If not specified, it will just be the column_name in "Start Case".
 - `element_type_plugin_code`: if the value being returned is a whole application response, then it will parsed and displayed using a front-end element plugin (SummaryView). This is where you specify the code of the plugin required. If `null`, value won't be sent to a SummaryView element for display.
-- `element_parameters`: if a plugin is specified above, then it will require parameters. This value should be an object containing all the parameters required for display. Values of parameters can be literals or evaluator queries, and will be evaluated by the front-end in SummaryView just like a normal form element.
+- `element_parameters`: if a plugin is specified above, then it will require input parameters. This value should be an object containing all the parameters required for display. Values of parameters can be literals or evaluator queries, and will be evaluated by the front-end in SummaryView just like a normal form element.
 - `additional_formatting`: a custom object specifiying additional formatting definitons. Detailed explanation below.
 - `value_expression`: if `null`, the returned value will just be the value of the field from the table in question. However, if you are defining a custom column, or you want to over-ride the value of the field, this field should contain an evaluator expression. The "object" passed into the evaluator for "objectProperties" operator is the current record (item) represented as key-value pairs. So, for example, if you wanted to return a custom field from the "user" table that combined both first and last names (column name: `fullName`), your `value_expression` query would be:  
 ```
@@ -240,11 +255,11 @@ The input fields are as follows:
   ]
 }
 ```  
-`firstName` and `lastName` are native fields on the "user" table. Note that the object containing current values contains *all* fields, not just the ones being returned, so you can extract values from fields not being returned, such as in this case (where you wouldn't want to return `firstName` and `lastName` fields as well as a `fullName` column.)
+`firstName` and `lastName` are native fields on the "user" table, and are at the root level of the passed-in object here. Note that this object contains *all* fields, not just the ones being returned, so you can extract values from fields not being returned, such as in this case (where you wouldn't want to return `firstName` and `lastName` fields as well as a `fullName` column.)
 
 ### Additional formatting
 
-The additional formatting field is intended to be an extensible field, where we can add new "custom formatting" definitions as required. Currently, the following fields are supported:
+The additional formatting field is intended to be an extensible field, where we can add new "custom formatting" definitions as required. Currently, the following properties are supported:
 
 - `dateFormat`: Out of the box, if the returned value is a Date type, then it will be displayed in a nice "short date" format (DD/MM/YY) (locale-dependent). However, if you want a different date format, the value here should either be one of the Luxon date/time presets (see [here](https://moment.github.io/luxon/#/formatting?id=presets)) or a whole Luxon date format object.
 - `substitution`: A string value with `${<property>}` substitution parameters, the same technique used by the "listBuilder" and "search" plugins for displaying complex input data. If the value returned by the column this applies to is an object, then `<property>` refers to a property of that object.  
@@ -253,9 +268,9 @@ For example, if the returned value was `{name: "John", age: 35}` and you wanted 
 All fields are interpreted as Markdown by the front end, so this would display as: **John** (35).  
 Named properties on an object can be deeply nested, e.g. `user.firstName`
 
-  If the returned value is *not* an object, we can substitute the whole value into the substitution string using `${}` (i.e. empty parameter) e.g. to display any simple column's value in italics, we'd just add the substitution string `*${}$*`
+  If the returned value is *not* an object, we can substitute the whole value into the substitution string using `${}` (i.e. empty parameter) e.g. to display any simple column's value in italics, we'd just add the substitution string `*${}*`
 
-  Note: the same result could be achieved using a complex evaluator query in the `value_expression` field, but this is just a simpler way to do basic substitutions.
+  Note: the same result could be achieved using a complex evaluator query in the `value_expression` field, but this is just a simpler (and hopefully more readable) way to do basic substitutions.
 
 ### A note about Array data
 
