@@ -5,8 +5,6 @@ import config from '../../config'
 const { localisationsFolder } = config
 
 export const routeLocalisations = async (request: any, reply: any) => {
-  console.log(getAppEntryPointDir())
-  console.log(path.join(getAppEntryPointDir(), localisationsFolder))
   reply.sendFile('languages.json', path.join(getAppEntryPointDir(), localisationsFolder))
 }
 
