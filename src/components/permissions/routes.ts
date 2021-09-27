@@ -3,6 +3,8 @@ import { getUserInfo, getTokenData, extractJWTfromHeader } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
+import path from 'path'
+import { getAppEntryPointDir } from '../../components/utilityFunctions'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
@@ -116,6 +118,11 @@ const routeVerification = async (request: any, reply: any) => {
   }
 }
 
+// Serve config to front-end
+const routeGetConfig = async (request: any, reply: any) => {
+  reply.sendFile('config.json', path.join(getAppEntryPointDir(), '../'))
+}
+
 export {
   routeUserInfo,
   routeLogin,
@@ -123,4 +130,5 @@ export {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
+  routeGetConfig,
 }

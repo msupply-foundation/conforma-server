@@ -11,6 +11,7 @@ import {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
+  routeGetConfig,
 } from './components/permissions'
 import { routeOutcomes, routeOutcomesTable, routeOutcomesDetail } from './components/outcomes'
 import { routeGeneratePDF } from './components/files/documentGenerate'
@@ -63,6 +64,7 @@ const startServer = async () => {
     }
   })
 
+  server.get('/get-config', routeGetConfig)
   server.get('/user-info', routeUserInfo)
   server.post('/login', routeLogin)
   server.post('/login-org', routeLoginOrg)
