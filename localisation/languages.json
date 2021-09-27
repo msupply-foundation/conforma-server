@@ -1,8 +1,8 @@
 [
   {
     "languageName": "English",
-    "description": "NZ English (default)",
-    "code": "default",
+    "description": "NZ English",
+    "code": "en_nz",
     "flag": "🇳🇿",
     "enabled": true
   },

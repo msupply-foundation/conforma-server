@@ -1,4 +1,3 @@
-// import languages from '../../../localisation/languages.json'
 import path from 'path'
 import { getAppEntryPointDir } from '../../components/utilityFunctions'
 import config from '../../config'
