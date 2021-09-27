@@ -118,7 +118,7 @@ const routeVerification = async (request: any, reply: any) => {
   }
 }
 
-// Serve config to front-end
+// Serve prefs to front-end
 const routeGetPrefs = async (request: any, reply: any) => {
   reply.send({ preferences: prefs.web, languageOptions })
 }
