@@ -1,11 +1,12 @@
 import DBConnect from '../databaseConnect'
 import { plural } from 'pluralize'
-import { snakeCase } from 'lodash'
+import { camelCase, snakeCase, upperFirst } from 'lodash'
 import { LinkedApplication } from './types'
 
 export const queryOutcomeTable = async (
   tableName: string,
   fieldNames: string[],
+  gqlFilters: object,
   first: number,
   offset: number,
   orderBy: string,
@@ -13,10 +14,11 @@ export const queryOutcomeTable = async (
   authHeaders: string
 ) => {
   const tableNamePlural = plural(tableName)
+  const filterType = upperFirst(camelCase(tableName)) + 'Filter'
   const fieldNameString = fieldNames.join(', ')
   const orderByType = `${snakeCase(orderBy).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}`
-  const variables = { first, offset }
-  const graphQLquery = `query getOutcomeRecords($first: Int!, $offset: Int!) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: ${orderByType}) { nodes { ${fieldNameString} }, totalCount}}`
+  const variables = { first, offset, filter: gqlFilters }
+  const graphQLquery = `query getOutcomeRecords($first: Int!, $offset: Int!, $filter: ${filterType}) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: ${orderByType}, filter: $filter) { nodes { ${fieldNameString} }, totalCount}}`
 
   let queryResult
   try {

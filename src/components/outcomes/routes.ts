@@ -38,16 +38,20 @@ const routeOutcomesTable = async (request: any, reply: any) => {
   const orderBy = query?.orderBy ?? 'id'
   const ascending = query?.ascending ? query?.ascending === 'true' : true
 
-  const { columnDefinitionMasterList, fieldNames, title, code } = await buildAllColumnDefinitions(
-    permissionNames,
-    tableName,
-    'TABLE'
-  )
+  const { columnDefinitionMasterList, fieldNames, gqlFilters, title, code } =
+    await buildAllColumnDefinitions({
+      permissionNames,
+      tableName,
+      type: 'TABLE',
+      userId,
+      orgId,
+    })
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const { fetchedRecords, totalCount, error } = await queryOutcomeTable(
     tableName,
     fieldNames,
+    gqlFilters,
     first,
     offset,
     orderBy,
@@ -72,7 +76,7 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const tableName = camelCase(request.params.tableName)
   const recordId = Number(request.params.id)
-  const { permissionNames } = await getPermissionNamesFromJWT(request)
+  const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
 
   const {
     columnDefinitionMasterList,
@@ -80,7 +84,7 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
     fieldNames,
     headerDefinition,
     showLinkedApplications,
-  } = await buildAllColumnDefinitions(permissionNames, tableName, 'DETAIL')
+  } = await buildAllColumnDefinitions({ permissionNames, tableName, type: 'DETAIL', userId, orgId })
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const fetchedRecord = await queryOutcomeTableSingleItem(

@@ -15,6 +15,8 @@ export type Scalars = {
   JSON: any;
   /** A point in time as described by the [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) standard. May or may not include a timezone. */
   Datetime: any;
+  /** The day, does not include a time. */
+  Date: any;
   /** A signed eight-byte integer. The upper big integer values are greater than the max value for a JavaScript number. Therefore all big integers will be output as strings and not numbers. */
   BigInt: any;
   CharacterData: any;
@@ -640,10 +642,10 @@ export type Application = Node & {
   organisationApplicationJoins: OrganisationApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `UserApplicationJoin`. */
   userApplicationJoins: UserApplicationJoinsConnection;
-  /** Reads and enables pagination through a set of `ProductApplicationJoin`. */
-  productApplicationJoins: ProductApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `LicenceApplicationJoin`. */
   licenceApplicationJoins: LicenceApplicationJoinsConnection;
+  /** Reads and enables pagination through a set of `ProductApplicationJoin`. */
+  productApplicationJoins: ProductApplicationJoinsConnection;
   stage?: Maybe<Scalars['String']>;
   stageNumber?: Maybe<Scalars['Int']>;
   status?: Maybe<ApplicationStatus>;
@@ -782,18 +784,6 @@ export type ApplicationUserApplicationJoinsArgs = {
 };
 
 
-export type ApplicationProductApplicationJoinsArgs = {
-  first?: Maybe<Scalars['Int']>;
-  last?: Maybe<Scalars['Int']>;
-  offset?: Maybe<Scalars['Int']>;
-  before?: Maybe<Scalars['Cursor']>;
-  after?: Maybe<Scalars['Cursor']>;
-  orderBy?: Maybe<Array<ProductApplicationJoinsOrderBy>>;
-  condition?: Maybe<ProductApplicationJoinCondition>;
-  filter?: Maybe<ProductApplicationJoinFilter>;
-};
-
-
 export type ApplicationLicenceApplicationJoinsArgs = {
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
@@ -803,6 +793,18 @@ export type ApplicationLicenceApplicationJoinsArgs = {
   orderBy?: Maybe<Array<LicenceApplicationJoinsOrderBy>>;
   condition?: Maybe<LicenceApplicationJoinCondition>;
   filter?: Maybe<LicenceApplicationJoinFilter>;
+};
+
+
+export type ApplicationProductApplicationJoinsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ProductApplicationJoinsOrderBy>>;
+  condition?: Maybe<ProductApplicationJoinCondition>;
+  filter?: Maybe<ProductApplicationJoinFilter>;
 };
 
 /** The fields on `application` to look up the row to connect. */
@@ -928,14 +930,14 @@ export type ApplicationFilter = {
   userApplicationJoins?: Maybe<ApplicationToManyUserApplicationJoinFilter>;
   /** Some related `userApplicationJoins` exist. */
   userApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
-  /** Filter by the object’s `productApplicationJoins` relation. */
-  productApplicationJoins?: Maybe<ApplicationToManyProductApplicationJoinFilter>;
-  /** Some related `productApplicationJoins` exist. */
-  productApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `licenceApplicationJoins` relation. */
   licenceApplicationJoins?: Maybe<ApplicationToManyLicenceApplicationJoinFilter>;
   /** Some related `licenceApplicationJoins` exist. */
   licenceApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `productApplicationJoins` relation. */
+  productApplicationJoins?: Maybe<ApplicationToManyProductApplicationJoinFilter>;
+  /** Some related `productApplicationJoins` exist. */
+  productApplicationJoinsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `template` relation. */
   template?: Maybe<TemplateFilter>;
   /** Filter by the object’s `user` relation. */
@@ -981,8 +983,8 @@ export type ApplicationInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `String` values. */
@@ -1679,8 +1681,8 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `organisation` in the `ApplicationInput` mutation. */
@@ -1817,8 +1819,8 @@ export type ApplicationPatch = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 export type ApplicationResponse = Node & {
@@ -1896,8 +1898,8 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The `applicationResponse` to be created by this mutation. */
@@ -2387,8 +2389,8 @@ export type ApplicationSectionApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The `applicationSection` to be created by this mutation. */
@@ -2778,8 +2780,8 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The `applicationStageHistory` to be created by this mutation. */
@@ -3713,8 +3715,8 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `template` in the `ApplicationInput` mutation. */
@@ -3944,8 +3946,8 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `user` in the `ApplicationInput` mutation. */
@@ -4005,7 +4007,7 @@ export type ApplicationUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -5119,6 +5121,39 @@ export type CreateLookupTablePayload = {
 /** The output of our create `LookupTable` mutation. */
 export type CreateLookupTablePayloadLookupTableEdgeArgs = {
   orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
+/** All input for the create `LookupTableTestAddNewLookupTable` mutation. */
+export type CreateLookupTableTestAddNewLookupTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTestAddNewLookupTable` to be created by this mutation. */
+  lookupTableTestAddNewLookupTable: LookupTableTestAddNewLookupTableInput;
+};
+
+/** The output of our create `LookupTableTestAddNewLookupTable` mutation. */
+export type CreateLookupTableTestAddNewLookupTablePayload = {
+  __typename?: 'CreateLookupTableTestAddNewLookupTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTestAddNewLookupTable` that was created by this mutation. */
+  lookupTableTestAddNewLookupTable?: Maybe<LookupTableTestAddNewLookupTable>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableTestAddNewLookupTable`. May be used by Relay 1. */
+  lookupTableTestAddNewLookupTableEdge?: Maybe<LookupTableTestAddNewLookupTablesEdge>;
+};
+
+
+/** The output of our create `LookupTableTestAddNewLookupTable` mutation. */
+export type CreateLookupTableTestAddNewLookupTablePayloadLookupTableTestAddNewLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableTestAddNewLookupTablesOrderBy>>;
 };
 
 /** All input for the create `LookupTableTherapeuticCategory` mutation. */
@@ -6384,6 +6419,33 @@ export type CreateVerificationPayloadVerificationEdgeArgs = {
 
 
 
+/** A filter to be used against Date fields. All fields are combined with a logical ‘and.’ */
+export type DateFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<Scalars['Date']>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<Scalars['Date']>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<Scalars['Date']>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<Scalars['Date']>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<Scalars['Date']>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<Scalars['Date']>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<Scalars['Date']>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<Scalars['Date']>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<Scalars['Date']>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<Scalars['Date']>;
+};
+
+
 /** A filter to be used against Datetime fields. All fields are combined with a logical ‘and.’ */
 export type DatetimeFilter = {
   /** Is null (if `true` is specified) or is not null (if `false` is specified). */
@@ -7320,6 +7382,50 @@ export type DeleteLookupTablePayload = {
 /** The output of our delete `LookupTable` mutation. */
 export type DeleteLookupTablePayloadLookupTableEdgeArgs = {
   orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
+/** All input for the `deleteLookupTableTestAddNewLookupTableByNodeId` mutation. */
+export type DeleteLookupTableTestAddNewLookupTableByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableTestAddNewLookupTable` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLookupTableTestAddNewLookupTable` mutation. */
+export type DeleteLookupTableTestAddNewLookupTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `LookupTableTestAddNewLookupTable` mutation. */
+export type DeleteLookupTableTestAddNewLookupTablePayload = {
+  __typename?: 'DeleteLookupTableTestAddNewLookupTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTestAddNewLookupTable` that was deleted by this mutation. */
+  lookupTableTestAddNewLookupTable?: Maybe<LookupTableTestAddNewLookupTable>;
+  deletedLookupTableTestAddNewLookupTableNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableTestAddNewLookupTable`. May be used by Relay 1. */
+  lookupTableTestAddNewLookupTableEdge?: Maybe<LookupTableTestAddNewLookupTablesEdge>;
+};
+
+
+/** The output of our delete `LookupTableTestAddNewLookupTable` mutation. */
+export type DeleteLookupTableTestAddNewLookupTablePayloadLookupTableTestAddNewLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableTestAddNewLookupTablesOrderBy>>;
 };
 
 /** All input for the `deleteLookupTableTherapeuticCategoryByNodeId` mutation. */
@@ -9372,8 +9478,8 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The `file` to be created by this mutation. */
@@ -9902,7 +10008,7 @@ export type FileUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -10177,6 +10283,7 @@ export type Licence = Node & {
   companyName?: Maybe<Scalars['String']>;
   productType?: Maybe<Scalars['String']>;
   registration?: Maybe<Scalars['String']>;
+  licenseType?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `LicenceApplicationJoin`. */
   licenceApplicationJoins: LicenceApplicationJoinsConnection;
 };
@@ -10233,8 +10340,8 @@ export type LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `LicenceApplicationJoinInput` mutation. */
@@ -10397,6 +10504,7 @@ export type LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput = {
   companyName?: Maybe<Scalars['String']>;
   productType?: Maybe<Scalars['String']>;
   registration?: Maybe<Scalars['String']>;
+  licenseType?: Maybe<Scalars['String']>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInverseInput>;
 };
 
@@ -10504,6 +10612,8 @@ export type LicenceCondition = {
   productType?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `registration` field. */
   registration?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `licenseType` field. */
+  licenseType?: Maybe<Scalars['String']>;
 };
 
 /** A filter to be used against `Licence` object types. All fields are combined with a logical ‘and.’ */
@@ -10524,6 +10634,8 @@ export type LicenceFilter = {
   productType?: Maybe<StringFilter>;
   /** Filter by the object’s `registration` field. */
   registration?: Maybe<StringFilter>;
+  /** Filter by the object’s `licenseType` field. */
+  licenseType?: Maybe<StringFilter>;
   /** Filter by the object’s `licenceApplicationJoins` relation. */
   licenceApplicationJoins?: Maybe<LicenceToManyLicenceApplicationJoinFilter>;
   /** Some related `licenceApplicationJoins` exist. */
@@ -10546,6 +10658,7 @@ export type LicenceInput = {
   companyName?: Maybe<Scalars['String']>;
   productType?: Maybe<Scalars['String']>;
   registration?: Maybe<Scalars['String']>;
+  licenseType?: Maybe<Scalars['String']>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInverseInput>;
 };
 
@@ -10596,6 +10709,7 @@ export type LicencePatch = {
   companyName?: Maybe<Scalars['String']>;
   productType?: Maybe<Scalars['String']>;
   registration?: Maybe<Scalars['String']>;
+  licenseType?: Maybe<Scalars['String']>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInverseInput>;
 };
 
@@ -10640,6 +10754,8 @@ export enum LicencesOrderBy {
   ProductTypeDesc = 'PRODUCT_TYPE_DESC',
   RegistrationAsc = 'REGISTRATION_ASC',
   RegistrationDesc = 'REGISTRATION_DESC',
+  LicenseTypeAsc = 'LICENSE_TYPE_ASC',
+  LicenseTypeDesc = 'LICENSE_TYPE_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -11089,6 +11205,93 @@ export enum LookupTablesOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export type LookupTableTestAddNewLookupTable = Node & {
+  __typename?: 'LookupTableTestAddNewLookupTable';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  activeIngredient?: Maybe<Scalars['String']>;
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/**
+ * A condition to be used against `LookupTableTestAddNewLookupTable` object types.
+ * All fields are tested for equality and combined with a logical ‘and.’
+ */
+export type LookupTableTestAddNewLookupTableCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `activeIngredient` field. */
+  activeIngredient?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `apiManufacturer` field. */
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** A filter to be used against `LookupTableTestAddNewLookupTable` object types. All fields are combined with a logical ‘and.’ */
+export type LookupTableTestAddNewLookupTableFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `activeIngredient` field. */
+  activeIngredient?: Maybe<StringFilter>;
+  /** Filter by the object’s `apiManufacturer` field. */
+  apiManufacturer?: Maybe<StringFilter>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LookupTableTestAddNewLookupTableFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LookupTableTestAddNewLookupTableFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LookupTableTestAddNewLookupTableFilter>;
+};
+
+/** An input for mutations affecting `LookupTableTestAddNewLookupTable` */
+export type LookupTableTestAddNewLookupTableInput = {
+  id?: Maybe<Scalars['Int']>;
+  activeIngredient?: Maybe<Scalars['String']>;
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** Represents an update to a `LookupTableTestAddNewLookupTable`. Fields that are set will be updated. */
+export type LookupTableTestAddNewLookupTablePatch = {
+  id?: Maybe<Scalars['Int']>;
+  activeIngredient?: Maybe<Scalars['String']>;
+  apiManufacturer?: Maybe<Scalars['String']>;
+};
+
+/** A connection to a list of `LookupTableTestAddNewLookupTable` values. */
+export type LookupTableTestAddNewLookupTablesConnection = {
+  __typename?: 'LookupTableTestAddNewLookupTablesConnection';
+  /** A list of `LookupTableTestAddNewLookupTable` objects. */
+  nodes: Array<Maybe<LookupTableTestAddNewLookupTable>>;
+  /** A list of edges which contains the `LookupTableTestAddNewLookupTable` and cursor to aid in pagination. */
+  edges: Array<LookupTableTestAddNewLookupTablesEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LookupTableTestAddNewLookupTable` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `LookupTableTestAddNewLookupTable` edge in the connection. */
+export type LookupTableTestAddNewLookupTablesEdge = {
+  __typename?: 'LookupTableTestAddNewLookupTablesEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LookupTableTestAddNewLookupTable` at the end of the edge. */
+  node?: Maybe<LookupTableTestAddNewLookupTable>;
+};
+
+/** Methods to use when ordering `LookupTableTestAddNewLookupTable`. */
+export enum LookupTableTestAddNewLookupTablesOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  ActiveIngredientAsc = 'ACTIVE_INGREDIENT_ASC',
+  ActiveIngredientDesc = 'ACTIVE_INGREDIENT_DESC',
+  ApiManufacturerAsc = 'API_MANUFACTURER_ASC',
+  ApiManufacturerDesc = 'API_MANUFACTURER_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 /** A connection to a list of `LookupTableTherapeuticCategory` values. */
 export type LookupTableTherapeuticCategoriesConnection = {
   __typename?: 'LookupTableTherapeuticCategoriesConnection';
@@ -11226,6 +11429,8 @@ export type Mutation = {
   createLookupTableDosageForm?: Maybe<CreateLookupTableDosageFormPayload>;
   /** Creates a single `LookupTableIngredient`. */
   createLookupTableIngredient?: Maybe<CreateLookupTableIngredientPayload>;
+  /** Creates a single `LookupTableTestAddNewLookupTable`. */
+  createLookupTableTestAddNewLookupTable?: Maybe<CreateLookupTableTestAddNewLookupTablePayload>;
   /** Creates a single `LookupTableTherapeuticCategory`. */
   createLookupTableTherapeuticCategory?: Maybe<CreateLookupTableTherapeuticCategoryPayload>;
   /** Creates a single `Notification`. */
@@ -11378,6 +11583,10 @@ export type Mutation = {
   updateLookupTableIngredientByNodeId?: Maybe<UpdateLookupTableIngredientPayload>;
   /** Updates a single `LookupTableIngredient` using a unique key and a patch. */
   updateLookupTableIngredient?: Maybe<UpdateLookupTableIngredientPayload>;
+  /** Updates a single `LookupTableTestAddNewLookupTable` using its globally unique id and a patch. */
+  updateLookupTableTestAddNewLookupTableByNodeId?: Maybe<UpdateLookupTableTestAddNewLookupTablePayload>;
+  /** Updates a single `LookupTableTestAddNewLookupTable` using a unique key and a patch. */
+  updateLookupTableTestAddNewLookupTable?: Maybe<UpdateLookupTableTestAddNewLookupTablePayload>;
   /** Updates a single `LookupTableTherapeuticCategory` using its globally unique id and a patch. */
   updateLookupTableTherapeuticCategoryByNodeId?: Maybe<UpdateLookupTableTherapeuticCategoryPayload>;
   /** Updates a single `LookupTableTherapeuticCategory` using a unique key and a patch. */
@@ -11622,6 +11831,10 @@ export type Mutation = {
   deleteLookupTableIngredientByNodeId?: Maybe<DeleteLookupTableIngredientPayload>;
   /** Deletes a single `LookupTableIngredient` using a unique key. */
   deleteLookupTableIngredient?: Maybe<DeleteLookupTableIngredientPayload>;
+  /** Deletes a single `LookupTableTestAddNewLookupTable` using its globally unique id. */
+  deleteLookupTableTestAddNewLookupTableByNodeId?: Maybe<DeleteLookupTableTestAddNewLookupTablePayload>;
+  /** Deletes a single `LookupTableTestAddNewLookupTable` using a unique key. */
+  deleteLookupTableTestAddNewLookupTable?: Maybe<DeleteLookupTableTestAddNewLookupTablePayload>;
   /** Deletes a single `LookupTableTherapeuticCategory` using its globally unique id. */
   deleteLookupTableTherapeuticCategoryByNodeId?: Maybe<DeleteLookupTableTherapeuticCategoryPayload>;
   /** Deletes a single `LookupTableTherapeuticCategory` using a unique key. */
@@ -11899,6 +12112,12 @@ export type MutationCreateLookupTableDosageFormArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateLookupTableIngredientArgs = {
   input: CreateLookupTableIngredientInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLookupTableTestAddNewLookupTableArgs = {
+  input: CreateLookupTableTestAddNewLookupTableInput;
 };
 
 
@@ -12355,6 +12574,18 @@ export type MutationUpdateLookupTableIngredientByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateLookupTableIngredientArgs = {
   input: UpdateLookupTableIngredientInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableTestAddNewLookupTableByNodeIdArgs = {
+  input: UpdateLookupTableTestAddNewLookupTableByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLookupTableTestAddNewLookupTableArgs = {
+  input: UpdateLookupTableTestAddNewLookupTableInput;
 };
 
 
@@ -13091,6 +13322,18 @@ export type MutationDeleteLookupTableIngredientArgs = {
 
 
 /** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableTestAddNewLookupTableByNodeIdArgs = {
+  input: DeleteLookupTableTestAddNewLookupTableByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLookupTableTestAddNewLookupTableArgs = {
+  input: DeleteLookupTableTestAddNewLookupTableInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteLookupTableTherapeuticCategoryByNodeIdArgs = {
   input: DeleteLookupTableTherapeuticCategoryByNodeIdInput;
 };
@@ -13636,8 +13879,8 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `NotificationInput` mutation. */
@@ -14062,7 +14305,7 @@ export type NotificationUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -14213,8 +14456,8 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `OrganisationApplicationJoinInput` mutation. */
@@ -16240,7 +16483,7 @@ export type PermissionJoinUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -17202,8 +17445,8 @@ export type ProductApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ProductApplicationJoinInput` mutation. */
@@ -17841,6 +18084,8 @@ export type Query = Node & {
   lookupTableDosageForms?: Maybe<LookupTableDosageFormsConnection>;
   /** Reads and enables pagination through a set of `LookupTableIngredient`. */
   lookupTableIngredients?: Maybe<LookupTableIngredientsConnection>;
+  /** Reads and enables pagination through a set of `LookupTableTestAddNewLookupTable`. */
+  lookupTableTestAddNewLookupTables?: Maybe<LookupTableTestAddNewLookupTablesConnection>;
   /** Reads and enables pagination through a set of `LookupTableTherapeuticCategory`. */
   lookupTableTherapeuticCategories?: Maybe<LookupTableTherapeuticCategoriesConnection>;
   /** Reads and enables pagination through a set of `Notification`. */
@@ -17942,6 +18187,7 @@ export type Query = Node & {
   lookupTableContainer?: Maybe<LookupTableContainer>;
   lookupTableDosageForm?: Maybe<LookupTableDosageForm>;
   lookupTableIngredient?: Maybe<LookupTableIngredient>;
+  lookupTableTestAddNewLookupTable?: Maybe<LookupTableTestAddNewLookupTable>;
   lookupTableTherapeuticCategory?: Maybe<LookupTableTherapeuticCategory>;
   notification?: Maybe<Notification>;
   organisation?: Maybe<Organisation>;
@@ -18052,6 +18298,8 @@ export type Query = Node & {
   lookupTableDosageFormByNodeId?: Maybe<LookupTableDosageForm>;
   /** Reads a single `LookupTableIngredient` using its globally unique `ID`. */
   lookupTableIngredientByNodeId?: Maybe<LookupTableIngredient>;
+  /** Reads a single `LookupTableTestAddNewLookupTable` using its globally unique `ID`. */
+  lookupTableTestAddNewLookupTableByNodeId?: Maybe<LookupTableTestAddNewLookupTable>;
   /** Reads a single `LookupTableTherapeuticCategory` using its globally unique `ID`. */
   lookupTableTherapeuticCategoryByNodeId?: Maybe<LookupTableTherapeuticCategory>;
   /** Reads a single `Notification` using its globally unique `ID`. */
@@ -18414,6 +18662,19 @@ export type QueryLookupTableIngredientsArgs = {
   orderBy?: Maybe<Array<LookupTableIngredientsOrderBy>>;
   condition?: Maybe<LookupTableIngredientCondition>;
   filter?: Maybe<LookupTableIngredientFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLookupTableTestAddNewLookupTablesArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LookupTableTestAddNewLookupTablesOrderBy>>;
+  condition?: Maybe<LookupTableTestAddNewLookupTableCondition>;
+  filter?: Maybe<LookupTableTestAddNewLookupTableFilter>;
 };
 
 
@@ -19063,6 +19324,12 @@ export type QueryLookupTableIngredientArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLookupTableTestAddNewLookupTableArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryLookupTableTherapeuticCategoryArgs = {
   id: Scalars['Int'];
 };
@@ -19679,6 +19946,12 @@ export type QueryLookupTableIngredientByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLookupTableTestAddNewLookupTableByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryLookupTableTherapeuticCategoryByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -19996,8 +20269,8 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ReviewInput` mutation. */
@@ -20173,8 +20446,8 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `ReviewAssignmentInput` mutation. */
@@ -20336,7 +20609,7 @@ export type ReviewAssignmentAssignerIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -20427,7 +20700,7 @@ export type ReviewAssignmentAssignerJoinAssignerIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -21396,7 +21669,7 @@ export type ReviewAssignmentReviewerIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -23711,7 +23984,7 @@ export type ReviewReviewerIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -28171,8 +28444,8 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `TriggerScheduleInput` mutation. */
@@ -28748,8 +29021,8 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -28778,8 +29051,8 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -28808,8 +29081,8 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -28839,8 +29112,8 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -28870,8 +29143,8 @@ export type UpdateApplicationOnApplicationSectionForApplicationSectionApplicatio
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -28901,8 +29174,8 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -28932,8 +29205,8 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -28963,8 +29236,8 @@ export type UpdateApplicationOnLicenceApplicationJoinForLicenceApplicationJoinAp
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -28994,8 +29267,8 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -29025,8 +29298,8 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -29056,8 +29329,8 @@ export type UpdateApplicationOnProductApplicationJoinForProductApplicationJoinAp
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -29087,8 +29360,8 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -29118,8 +29391,8 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -29149,8 +29422,8 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -29180,8 +29453,8 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
@@ -29211,8 +29484,8 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** The output of our update `Application` mutation. */
@@ -29995,6 +30268,7 @@ export type UpdateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenc
   companyName?: Maybe<Scalars['String']>;
   productType?: Maybe<Scalars['String']>;
   registration?: Maybe<Scalars['String']>;
+  licenseType?: Maybe<Scalars['String']>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinLicenceIdFkeyInverseInput>;
 };
 
@@ -30253,6 +30527,53 @@ export type UpdateLookupTablePayload = {
 /** The output of our update `LookupTable` mutation. */
 export type UpdateLookupTablePayloadLookupTableEdgeArgs = {
   orderBy?: Maybe<Array<LookupTablesOrderBy>>;
+};
+
+/** All input for the `updateLookupTableTestAddNewLookupTableByNodeId` mutation. */
+export type UpdateLookupTableTestAddNewLookupTableByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LookupTableTestAddNewLookupTable` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LookupTableTestAddNewLookupTable` being updated. */
+  patch: LookupTableTestAddNewLookupTablePatch;
+};
+
+/** All input for the `updateLookupTableTestAddNewLookupTable` mutation. */
+export type UpdateLookupTableTestAddNewLookupTableInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LookupTableTestAddNewLookupTable` being updated. */
+  patch: LookupTableTestAddNewLookupTablePatch;
+  id: Scalars['Int'];
+};
+
+/** The output of our update `LookupTableTestAddNewLookupTable` mutation. */
+export type UpdateLookupTableTestAddNewLookupTablePayload = {
+  __typename?: 'UpdateLookupTableTestAddNewLookupTablePayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LookupTableTestAddNewLookupTable` that was updated by this mutation. */
+  lookupTableTestAddNewLookupTable?: Maybe<LookupTableTestAddNewLookupTable>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** An edge for our `LookupTableTestAddNewLookupTable`. May be used by Relay 1. */
+  lookupTableTestAddNewLookupTableEdge?: Maybe<LookupTableTestAddNewLookupTablesEdge>;
+};
+
+
+/** The output of our update `LookupTableTestAddNewLookupTable` mutation. */
+export type UpdateLookupTableTestAddNewLookupTablePayloadLookupTableTestAddNewLookupTableEdgeArgs = {
+  orderBy?: Maybe<Array<LookupTableTestAddNewLookupTablesOrderBy>>;
 };
 
 /** All input for the `updateLookupTableTherapeuticCategoryByNodeId` mutation. */
@@ -33693,7 +34014,7 @@ export type UpdateUserOnApplicationForApplicationUserIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33714,7 +34035,7 @@ export type UpdateUserOnFileForFileUserIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33735,7 +34056,7 @@ export type UpdateUserOnNotificationForNotificationUserIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33756,7 +34077,7 @@ export type UpdateUserOnPermissionJoinForPermissionJoinUserIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33777,7 +34098,7 @@ export type UpdateUserOnReviewAssignmentAssignerJoinForReviewAssignmentAssignerJ
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33798,7 +34119,7 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentAssignerIdFkeyPatch =
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33819,7 +34140,7 @@ export type UpdateUserOnReviewAssignmentForReviewAssignmentReviewerIdFkeyPatch =
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33840,7 +34161,7 @@ export type UpdateUserOnReviewForReviewReviewerIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33861,7 +34182,7 @@ export type UpdateUserOnUserApplicationJoinForUserApplicationJoinUserIdFkeyPatch
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -33882,7 +34203,7 @@ export type UpdateUserOnUserOrganisationForUserOrganisationUserIdFkeyPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -34071,7 +34392,7 @@ export type User = Node & {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   /** Reads and enables pagination through a set of `UserOrganisation`. */
   userOrganisations: UserOrganisationsConnection;
@@ -34255,8 +34576,8 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `UserApplicationJoinInput` mutation. */
@@ -34508,7 +34829,7 @@ export type UserApplicationJoinUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -34535,7 +34856,7 @@ export type UserCondition = {
   /** Checks for equality with the object’s `email` field. */
   email?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `dateOfBirth` field. */
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `passwordHash` field. */
   passwordHash?: Maybe<Scalars['String']>;
 };
@@ -34553,7 +34874,7 @@ export type UserFilter = {
   /** Filter by the object’s `email` field. */
   email?: Maybe<StringFilter>;
   /** Filter by the object’s `dateOfBirth` field. */
-  dateOfBirth?: Maybe<StringFilter>;
+  dateOfBirth?: Maybe<DateFilter>;
   /** Filter by the object’s `passwordHash` field. */
   passwordHash?: Maybe<StringFilter>;
   /** Filter by the object’s `userOrganisations` relation. */
@@ -34611,7 +34932,7 @@ export type UserInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -35134,7 +35455,7 @@ export type UserOrganisationUserIdFkeyUserCreateInput = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -35174,7 +35495,7 @@ export type UserOrgJoin = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   orgId?: Maybe<Scalars['Int']>;
   orgName?: Maybe<Scalars['String']>;
@@ -35201,7 +35522,7 @@ export type UserOrgJoinCondition = {
   /** Checks for equality with the object’s `email` field. */
   email?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `dateOfBirth` field. */
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   /** Checks for equality with the object’s `passwordHash` field. */
   passwordHash?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `orgId` field. */
@@ -35233,7 +35554,7 @@ export type UserOrgJoinFilter = {
   /** Filter by the object’s `email` field. */
   email?: Maybe<StringFilter>;
   /** Filter by the object’s `dateOfBirth` field. */
-  dateOfBirth?: Maybe<StringFilter>;
+  dateOfBirth?: Maybe<DateFilter>;
   /** Filter by the object’s `passwordHash` field. */
   passwordHash?: Maybe<StringFilter>;
   /** Filter by the object’s `orgId` field. */
@@ -35320,7 +35641,7 @@ export type UserPatch = {
   lastName?: Maybe<Scalars['String']>;
   username?: Maybe<Scalars['String']>;
   email?: Maybe<Scalars['String']>;
-  dateOfBirth?: Maybe<Scalars['String']>;
+  dateOfBirth?: Maybe<Scalars['Date']>;
   passwordHash?: Maybe<Scalars['String']>;
   userOrganisationsUsingId?: Maybe<UserOrganisationUserIdFkeyInverseInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinUserIdFkeyInverseInput>;
@@ -35532,8 +35853,8 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
-  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
   licenceApplicationJoinsUsingId?: Maybe<LicenceApplicationJoinApplicationIdFkeyInverseInput>;
+  productApplicationJoinsUsingId?: Maybe<ProductApplicationJoinApplicationIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `application` in the `VerificationInput` mutation. */
@@ -35964,7 +36285,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['File'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ProductApplicationJoin'] | ResolversTypes['Product'] | ResolversTypes['LicenceApplicationJoin'] | ResolversTypes['Licence'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['LookupTableAdministrationRoute'] | ResolversTypes['LookupTableContainer'] | ResolversTypes['LookupTableDosageForm'] | ResolversTypes['LookupTableIngredient'] | ResolversTypes['LookupTableTherapeuticCategory'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'] | ResolversTypes['OutcomeDisplayColumnDefinition'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['File'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['LicenceApplicationJoin'] | ResolversTypes['Licence'] | ResolversTypes['ProductApplicationJoin'] | ResolversTypes['Product'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['LookupTableAdministrationRoute'] | ResolversTypes['LookupTableContainer'] | ResolversTypes['LookupTableDosageForm'] | ResolversTypes['LookupTableIngredient'] | ResolversTypes['LookupTableTestAddNewLookupTable'] | ResolversTypes['LookupTableTherapeuticCategory'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'] | ResolversTypes['OutcomeDisplayColumnDefinition'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -36026,6 +36347,8 @@ export type ResolversTypes = {
   ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter: ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter;
   ReviewAssignmentAssignerJoinFilter: ReviewAssignmentAssignerJoinFilter;
   UserFilter: UserFilter;
+  DateFilter: DateFilter;
+  Date: ResolverTypeWrapper<Scalars['Date']>;
   UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
   UserOrganisationFilter: UserOrganisationFilter;
   OrganisationFilter: OrganisationFilter;
@@ -36084,14 +36407,14 @@ export type ResolversTypes = {
   OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   ApplicationToManyUserApplicationJoinFilter: ApplicationToManyUserApplicationJoinFilter;
   UserApplicationJoinFilter: UserApplicationJoinFilter;
-  ApplicationToManyProductApplicationJoinFilter: ApplicationToManyProductApplicationJoinFilter;
-  ProductApplicationJoinFilter: ProductApplicationJoinFilter;
-  ProductFilter: ProductFilter;
-  ProductToManyProductApplicationJoinFilter: ProductToManyProductApplicationJoinFilter;
   ApplicationToManyLicenceApplicationJoinFilter: ApplicationToManyLicenceApplicationJoinFilter;
   LicenceApplicationJoinFilter: LicenceApplicationJoinFilter;
   LicenceFilter: LicenceFilter;
   LicenceToManyLicenceApplicationJoinFilter: LicenceToManyLicenceApplicationJoinFilter;
+  ApplicationToManyProductApplicationJoinFilter: ApplicationToManyProductApplicationJoinFilter;
+  ProductApplicationJoinFilter: ProductApplicationJoinFilter;
+  ProductFilter: ProductFilter;
+  ProductToManyProductApplicationJoinFilter: ProductToManyProductApplicationJoinFilter;
   OrganisationToManyReviewAssignmentFilter: OrganisationToManyReviewAssignmentFilter;
   OrganisationToManyReviewAssignmentAssignerJoinFilter: OrganisationToManyReviewAssignmentAssignerJoinFilter;
   OrganisationToManyOrganisationApplicationJoinFilter: OrganisationToManyOrganisationApplicationJoinFilter;
@@ -36261,18 +36584,18 @@ export type ResolversTypes = {
   VerificationsConnection: ResolverTypeWrapper<VerificationsConnection>;
   Verification: ResolverTypeWrapper<Verification>;
   VerificationsEdge: ResolverTypeWrapper<VerificationsEdge>;
-  ProductApplicationJoinsOrderBy: ProductApplicationJoinsOrderBy;
-  ProductApplicationJoinCondition: ProductApplicationJoinCondition;
-  ProductApplicationJoinsConnection: ResolverTypeWrapper<ProductApplicationJoinsConnection>;
-  ProductApplicationJoin: ResolverTypeWrapper<ProductApplicationJoin>;
-  Product: ResolverTypeWrapper<Product>;
-  ProductApplicationJoinsEdge: ResolverTypeWrapper<ProductApplicationJoinsEdge>;
   LicenceApplicationJoinsOrderBy: LicenceApplicationJoinsOrderBy;
   LicenceApplicationJoinCondition: LicenceApplicationJoinCondition;
   LicenceApplicationJoinsConnection: ResolverTypeWrapper<LicenceApplicationJoinsConnection>;
   LicenceApplicationJoin: ResolverTypeWrapper<LicenceApplicationJoin>;
   Licence: ResolverTypeWrapper<Licence>;
   LicenceApplicationJoinsEdge: ResolverTypeWrapper<LicenceApplicationJoinsEdge>;
+  ProductApplicationJoinsOrderBy: ProductApplicationJoinsOrderBy;
+  ProductApplicationJoinCondition: ProductApplicationJoinCondition;
+  ProductApplicationJoinsConnection: ResolverTypeWrapper<ProductApplicationJoinsConnection>;
+  ProductApplicationJoin: ResolverTypeWrapper<ProductApplicationJoin>;
+  Product: ResolverTypeWrapper<Product>;
+  ProductApplicationJoinsEdge: ResolverTypeWrapper<ProductApplicationJoinsEdge>;
   ApplicationResponsesEdge: ResolverTypeWrapper<ApplicationResponsesEdge>;
   TemplateElementsEdge: ResolverTypeWrapper<TemplateElementsEdge>;
   TemplateSectionsEdge: ResolverTypeWrapper<TemplateSectionsEdge>;
@@ -36376,6 +36699,12 @@ export type ResolversTypes = {
   LookupTableIngredientsConnection: ResolverTypeWrapper<LookupTableIngredientsConnection>;
   LookupTableIngredient: ResolverTypeWrapper<LookupTableIngredient>;
   LookupTableIngredientsEdge: ResolverTypeWrapper<LookupTableIngredientsEdge>;
+  LookupTableTestAddNewLookupTablesOrderBy: LookupTableTestAddNewLookupTablesOrderBy;
+  LookupTableTestAddNewLookupTableCondition: LookupTableTestAddNewLookupTableCondition;
+  LookupTableTestAddNewLookupTableFilter: LookupTableTestAddNewLookupTableFilter;
+  LookupTableTestAddNewLookupTablesConnection: ResolverTypeWrapper<LookupTableTestAddNewLookupTablesConnection>;
+  LookupTableTestAddNewLookupTable: ResolverTypeWrapper<LookupTableTestAddNewLookupTable>;
+  LookupTableTestAddNewLookupTablesEdge: ResolverTypeWrapper<LookupTableTestAddNewLookupTablesEdge>;
   LookupTableTherapeuticCategoriesOrderBy: LookupTableTherapeuticCategoriesOrderBy;
   LookupTableTherapeuticCategoryCondition: LookupTableTherapeuticCategoryCondition;
   LookupTableTherapeuticCategoryFilter: LookupTableTherapeuticCategoryFilter;
@@ -37026,16 +37355,6 @@ export type ResolversTypes = {
   UserApplicationJoinApplicationIdFkeyInput: UserApplicationJoinApplicationIdFkeyInput;
   ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
-  ProductApplicationJoinApplicationIdFkeyInverseInput: ProductApplicationJoinApplicationIdFkeyInverseInput;
-  ProductApplicationJoinProductApplicationJoinPkeyConnect: ProductApplicationJoinProductApplicationJoinPkeyConnect;
-  ProductApplicationJoinNodeIdConnect: ProductApplicationJoinNodeIdConnect;
-  ProductApplicationJoinProductApplicationJoinPkeyDelete: ProductApplicationJoinProductApplicationJoinPkeyDelete;
-  ProductApplicationJoinNodeIdDelete: ProductApplicationJoinNodeIdDelete;
-  ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingProductApplicationJoinPkeyUpdate: ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingProductApplicationJoinPkeyUpdate;
-  updateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch: UpdateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
-  ProductApplicationJoinApplicationIdFkeyInput: ProductApplicationJoinApplicationIdFkeyInput;
-  ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
   LicenceApplicationJoinApplicationIdFkeyInverseInput: LicenceApplicationJoinApplicationIdFkeyInverseInput;
   LicenceApplicationJoinLicenceApplicationJoinPkeyConnect: LicenceApplicationJoinLicenceApplicationJoinPkeyConnect;
   LicenceApplicationJoinNodeIdConnect: LicenceApplicationJoinNodeIdConnect;
@@ -37046,30 +37365,19 @@ export type ResolversTypes = {
   LicenceApplicationJoinApplicationIdFkeyInput: LicenceApplicationJoinApplicationIdFkeyInput;
   ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyPatch;
-  ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  ApplicationPatch: ApplicationPatch;
-  LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput: LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput;
-  LicenceApplicationJoinLicenceIdFkeyInput: LicenceApplicationJoinLicenceIdFkeyInput;
-  LicenceLicencePkeyConnect: LicenceLicencePkeyConnect;
-  LicenceNodeIdConnect: LicenceNodeIdConnect;
-  LicenceLicencePkeyDelete: LicenceLicencePkeyDelete;
-  LicenceNodeIdDelete: LicenceNodeIdDelete;
-  LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicencePkeyUpdate: LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicencePkeyUpdate;
-  updateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch: UpdateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch;
-  LicenceApplicationJoinLicenceIdFkeyInverseInput: LicenceApplicationJoinLicenceIdFkeyInverseInput;
-  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicenceApplicationJoinPkeyUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicenceApplicationJoinPkeyUpdate;
-  updateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch: UpdateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch;
-  LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate: LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate;
-  LicenceApplicationJoinPatch: LicenceApplicationJoinPatch;
-  LicenceApplicationJoinLicenceIdFkeyLicenceApplicationJoinCreateInput: LicenceApplicationJoinLicenceIdFkeyLicenceApplicationJoinCreateInput;
-  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate;
-  LicencePatch: LicencePatch;
-  LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput: LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput;
-  ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  LicenceApplicationJoinApplicationIdFkeyLicenceApplicationJoinCreateInput: LicenceApplicationJoinApplicationIdFkeyLicenceApplicationJoinCreateInput;
+  ProductApplicationJoinApplicationIdFkeyInverseInput: ProductApplicationJoinApplicationIdFkeyInverseInput;
+  ProductApplicationJoinProductApplicationJoinPkeyConnect: ProductApplicationJoinProductApplicationJoinPkeyConnect;
+  ProductApplicationJoinNodeIdConnect: ProductApplicationJoinNodeIdConnect;
+  ProductApplicationJoinProductApplicationJoinPkeyDelete: ProductApplicationJoinProductApplicationJoinPkeyDelete;
+  ProductApplicationJoinNodeIdDelete: ProductApplicationJoinNodeIdDelete;
+  ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingProductApplicationJoinPkeyUpdate: ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingProductApplicationJoinPkeyUpdate;
+  updateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch: UpdateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
+  ProductApplicationJoinApplicationIdFkeyInput: ProductApplicationJoinApplicationIdFkeyInput;
+  ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
   ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate: ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  ApplicationPatch: ApplicationPatch;
   ProductApplicationJoinApplicationIdFkeyApplicationCreateInput: ProductApplicationJoinApplicationIdFkeyApplicationCreateInput;
   ProductApplicationJoinProductIdFkeyInput: ProductApplicationJoinProductIdFkeyInput;
   ProductProductPkeyConnect: ProductProductPkeyConnect;
@@ -37089,6 +37397,27 @@ export type ResolversTypes = {
   ProductApplicationJoinProductIdFkeyProductCreateInput: ProductApplicationJoinProductIdFkeyProductCreateInput;
   ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate;
   ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput: ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput;
+  ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput: LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput;
+  LicenceApplicationJoinLicenceIdFkeyInput: LicenceApplicationJoinLicenceIdFkeyInput;
+  LicenceLicencePkeyConnect: LicenceLicencePkeyConnect;
+  LicenceNodeIdConnect: LicenceNodeIdConnect;
+  LicenceLicencePkeyDelete: LicenceLicencePkeyDelete;
+  LicenceNodeIdDelete: LicenceNodeIdDelete;
+  LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicencePkeyUpdate: LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicencePkeyUpdate;
+  updateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch: UpdateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch;
+  LicenceApplicationJoinLicenceIdFkeyInverseInput: LicenceApplicationJoinLicenceIdFkeyInverseInput;
+  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicenceApplicationJoinPkeyUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicenceApplicationJoinPkeyUpdate;
+  updateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch: UpdateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch;
+  LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate: LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate;
+  LicenceApplicationJoinPatch: LicenceApplicationJoinPatch;
+  LicenceApplicationJoinLicenceIdFkeyLicenceApplicationJoinCreateInput: LicenceApplicationJoinLicenceIdFkeyLicenceApplicationJoinCreateInput;
+  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate;
+  LicencePatch: LicencePatch;
+  LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput: LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput;
+  ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  LicenceApplicationJoinApplicationIdFkeyLicenceApplicationJoinCreateInput: LicenceApplicationJoinApplicationIdFkeyLicenceApplicationJoinCreateInput;
   ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
   UserApplicationJoinApplicationIdFkeyApplicationCreateInput: UserApplicationJoinApplicationIdFkeyApplicationCreateInput;
@@ -37498,6 +37827,9 @@ export type ResolversTypes = {
   CreateLookupTableIngredientInput: CreateLookupTableIngredientInput;
   LookupTableIngredientInput: LookupTableIngredientInput;
   CreateLookupTableIngredientPayload: ResolverTypeWrapper<CreateLookupTableIngredientPayload>;
+  CreateLookupTableTestAddNewLookupTableInput: CreateLookupTableTestAddNewLookupTableInput;
+  LookupTableTestAddNewLookupTableInput: LookupTableTestAddNewLookupTableInput;
+  CreateLookupTableTestAddNewLookupTablePayload: ResolverTypeWrapper<CreateLookupTableTestAddNewLookupTablePayload>;
   CreateLookupTableTherapeuticCategoryInput: CreateLookupTableTherapeuticCategoryInput;
   LookupTableTherapeuticCategoryInput: LookupTableTherapeuticCategoryInput;
   CreateLookupTableTherapeuticCategoryPayload: ResolverTypeWrapper<CreateLookupTableTherapeuticCategoryPayload>;
@@ -37709,6 +38041,10 @@ export type ResolversTypes = {
   LookupTableIngredientPatch: LookupTableIngredientPatch;
   UpdateLookupTableIngredientPayload: ResolverTypeWrapper<UpdateLookupTableIngredientPayload>;
   UpdateLookupTableIngredientInput: UpdateLookupTableIngredientInput;
+  UpdateLookupTableTestAddNewLookupTableByNodeIdInput: UpdateLookupTableTestAddNewLookupTableByNodeIdInput;
+  LookupTableTestAddNewLookupTablePatch: LookupTableTestAddNewLookupTablePatch;
+  UpdateLookupTableTestAddNewLookupTablePayload: ResolverTypeWrapper<UpdateLookupTableTestAddNewLookupTablePayload>;
+  UpdateLookupTableTestAddNewLookupTableInput: UpdateLookupTableTestAddNewLookupTableInput;
   UpdateLookupTableTherapeuticCategoryByNodeIdInput: UpdateLookupTableTherapeuticCategoryByNodeIdInput;
   LookupTableTherapeuticCategoryPatch: LookupTableTherapeuticCategoryPatch;
   UpdateLookupTableTherapeuticCategoryPayload: ResolverTypeWrapper<UpdateLookupTableTherapeuticCategoryPayload>;
@@ -37886,6 +38222,9 @@ export type ResolversTypes = {
   DeleteLookupTableIngredientByNodeIdInput: DeleteLookupTableIngredientByNodeIdInput;
   DeleteLookupTableIngredientPayload: ResolverTypeWrapper<DeleteLookupTableIngredientPayload>;
   DeleteLookupTableIngredientInput: DeleteLookupTableIngredientInput;
+  DeleteLookupTableTestAddNewLookupTableByNodeIdInput: DeleteLookupTableTestAddNewLookupTableByNodeIdInput;
+  DeleteLookupTableTestAddNewLookupTablePayload: ResolverTypeWrapper<DeleteLookupTableTestAddNewLookupTablePayload>;
+  DeleteLookupTableTestAddNewLookupTableInput: DeleteLookupTableTestAddNewLookupTableInput;
   DeleteLookupTableTherapeuticCategoryByNodeIdInput: DeleteLookupTableTherapeuticCategoryByNodeIdInput;
   DeleteLookupTableTherapeuticCategoryPayload: ResolverTypeWrapper<DeleteLookupTableTherapeuticCategoryPayload>;
   DeleteLookupTableTherapeuticCategoryInput: DeleteLookupTableTherapeuticCategoryInput;
@@ -38009,7 +38348,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['File'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ProductApplicationJoin'] | ResolversParentTypes['Product'] | ResolversParentTypes['LicenceApplicationJoin'] | ResolversParentTypes['Licence'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['LookupTableAdministrationRoute'] | ResolversParentTypes['LookupTableContainer'] | ResolversParentTypes['LookupTableDosageForm'] | ResolversParentTypes['LookupTableIngredient'] | ResolversParentTypes['LookupTableTherapeuticCategory'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['File'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['LicenceApplicationJoin'] | ResolversParentTypes['Licence'] | ResolversParentTypes['ProductApplicationJoin'] | ResolversParentTypes['Product'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['LookupTableAdministrationRoute'] | ResolversParentTypes['LookupTableContainer'] | ResolversParentTypes['LookupTableDosageForm'] | ResolversParentTypes['LookupTableIngredient'] | ResolversParentTypes['LookupTableTestAddNewLookupTable'] | ResolversParentTypes['LookupTableTherapeuticCategory'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -38059,6 +38398,8 @@ export type ResolversParentTypes = {
   ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter: ReviewAssignmentToManyReviewAssignmentAssignerJoinFilter;
   ReviewAssignmentAssignerJoinFilter: ReviewAssignmentAssignerJoinFilter;
   UserFilter: UserFilter;
+  DateFilter: DateFilter;
+  Date: Scalars['Date'];
   UserToManyUserOrganisationFilter: UserToManyUserOrganisationFilter;
   UserOrganisationFilter: UserOrganisationFilter;
   OrganisationFilter: OrganisationFilter;
@@ -38112,14 +38453,14 @@ export type ResolversParentTypes = {
   OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   ApplicationToManyUserApplicationJoinFilter: ApplicationToManyUserApplicationJoinFilter;
   UserApplicationJoinFilter: UserApplicationJoinFilter;
-  ApplicationToManyProductApplicationJoinFilter: ApplicationToManyProductApplicationJoinFilter;
-  ProductApplicationJoinFilter: ProductApplicationJoinFilter;
-  ProductFilter: ProductFilter;
-  ProductToManyProductApplicationJoinFilter: ProductToManyProductApplicationJoinFilter;
   ApplicationToManyLicenceApplicationJoinFilter: ApplicationToManyLicenceApplicationJoinFilter;
   LicenceApplicationJoinFilter: LicenceApplicationJoinFilter;
   LicenceFilter: LicenceFilter;
   LicenceToManyLicenceApplicationJoinFilter: LicenceToManyLicenceApplicationJoinFilter;
+  ApplicationToManyProductApplicationJoinFilter: ApplicationToManyProductApplicationJoinFilter;
+  ProductApplicationJoinFilter: ProductApplicationJoinFilter;
+  ProductFilter: ProductFilter;
+  ProductToManyProductApplicationJoinFilter: ProductToManyProductApplicationJoinFilter;
   OrganisationToManyReviewAssignmentFilter: OrganisationToManyReviewAssignmentFilter;
   OrganisationToManyReviewAssignmentAssignerJoinFilter: OrganisationToManyReviewAssignmentAssignerJoinFilter;
   OrganisationToManyOrganisationApplicationJoinFilter: OrganisationToManyOrganisationApplicationJoinFilter;
@@ -38262,16 +38603,16 @@ export type ResolversParentTypes = {
   VerificationsConnection: VerificationsConnection;
   Verification: Verification;
   VerificationsEdge: VerificationsEdge;
-  ProductApplicationJoinCondition: ProductApplicationJoinCondition;
-  ProductApplicationJoinsConnection: ProductApplicationJoinsConnection;
-  ProductApplicationJoin: ProductApplicationJoin;
-  Product: Product;
-  ProductApplicationJoinsEdge: ProductApplicationJoinsEdge;
   LicenceApplicationJoinCondition: LicenceApplicationJoinCondition;
   LicenceApplicationJoinsConnection: LicenceApplicationJoinsConnection;
   LicenceApplicationJoin: LicenceApplicationJoin;
   Licence: Licence;
   LicenceApplicationJoinsEdge: LicenceApplicationJoinsEdge;
+  ProductApplicationJoinCondition: ProductApplicationJoinCondition;
+  ProductApplicationJoinsConnection: ProductApplicationJoinsConnection;
+  ProductApplicationJoin: ProductApplicationJoin;
+  Product: Product;
+  ProductApplicationJoinsEdge: ProductApplicationJoinsEdge;
   ApplicationResponsesEdge: ApplicationResponsesEdge;
   TemplateElementsEdge: TemplateElementsEdge;
   TemplateSectionsEdge: TemplateSectionsEdge;
@@ -38357,6 +38698,11 @@ export type ResolversParentTypes = {
   LookupTableIngredientsConnection: LookupTableIngredientsConnection;
   LookupTableIngredient: LookupTableIngredient;
   LookupTableIngredientsEdge: LookupTableIngredientsEdge;
+  LookupTableTestAddNewLookupTableCondition: LookupTableTestAddNewLookupTableCondition;
+  LookupTableTestAddNewLookupTableFilter: LookupTableTestAddNewLookupTableFilter;
+  LookupTableTestAddNewLookupTablesConnection: LookupTableTestAddNewLookupTablesConnection;
+  LookupTableTestAddNewLookupTable: LookupTableTestAddNewLookupTable;
+  LookupTableTestAddNewLookupTablesEdge: LookupTableTestAddNewLookupTablesEdge;
   LookupTableTherapeuticCategoryCondition: LookupTableTherapeuticCategoryCondition;
   LookupTableTherapeuticCategoryFilter: LookupTableTherapeuticCategoryFilter;
   LookupTableTherapeuticCategoriesConnection: LookupTableTherapeuticCategoriesConnection;
@@ -38992,16 +39338,6 @@ export type ResolversParentTypes = {
   UserApplicationJoinApplicationIdFkeyInput: UserApplicationJoinApplicationIdFkeyInput;
   ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyPatch;
-  ProductApplicationJoinApplicationIdFkeyInverseInput: ProductApplicationJoinApplicationIdFkeyInverseInput;
-  ProductApplicationJoinProductApplicationJoinPkeyConnect: ProductApplicationJoinProductApplicationJoinPkeyConnect;
-  ProductApplicationJoinNodeIdConnect: ProductApplicationJoinNodeIdConnect;
-  ProductApplicationJoinProductApplicationJoinPkeyDelete: ProductApplicationJoinProductApplicationJoinPkeyDelete;
-  ProductApplicationJoinNodeIdDelete: ProductApplicationJoinNodeIdDelete;
-  ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingProductApplicationJoinPkeyUpdate: ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingProductApplicationJoinPkeyUpdate;
-  updateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch: UpdateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
-  ProductApplicationJoinApplicationIdFkeyInput: ProductApplicationJoinApplicationIdFkeyInput;
-  ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
-  updateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
   LicenceApplicationJoinApplicationIdFkeyInverseInput: LicenceApplicationJoinApplicationIdFkeyInverseInput;
   LicenceApplicationJoinLicenceApplicationJoinPkeyConnect: LicenceApplicationJoinLicenceApplicationJoinPkeyConnect;
   LicenceApplicationJoinNodeIdConnect: LicenceApplicationJoinNodeIdConnect;
@@ -39012,30 +39348,19 @@ export type ResolversParentTypes = {
   LicenceApplicationJoinApplicationIdFkeyInput: LicenceApplicationJoinApplicationIdFkeyInput;
   ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyPatch;
-  ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
-  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  ApplicationPatch: ApplicationPatch;
-  LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput: LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput;
-  LicenceApplicationJoinLicenceIdFkeyInput: LicenceApplicationJoinLicenceIdFkeyInput;
-  LicenceLicencePkeyConnect: LicenceLicencePkeyConnect;
-  LicenceNodeIdConnect: LicenceNodeIdConnect;
-  LicenceLicencePkeyDelete: LicenceLicencePkeyDelete;
-  LicenceNodeIdDelete: LicenceNodeIdDelete;
-  LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicencePkeyUpdate: LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicencePkeyUpdate;
-  updateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch: UpdateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch;
-  LicenceApplicationJoinLicenceIdFkeyInverseInput: LicenceApplicationJoinLicenceIdFkeyInverseInput;
-  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicenceApplicationJoinPkeyUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicenceApplicationJoinPkeyUpdate;
-  updateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch: UpdateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch;
-  LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate: LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate;
-  LicenceApplicationJoinPatch: LicenceApplicationJoinPatch;
-  LicenceApplicationJoinLicenceIdFkeyLicenceApplicationJoinCreateInput: LicenceApplicationJoinLicenceIdFkeyLicenceApplicationJoinCreateInput;
-  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate;
-  LicencePatch: LicencePatch;
-  LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput: LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput;
-  ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate;
-  LicenceApplicationJoinApplicationIdFkeyLicenceApplicationJoinCreateInput: LicenceApplicationJoinApplicationIdFkeyLicenceApplicationJoinCreateInput;
+  ProductApplicationJoinApplicationIdFkeyInverseInput: ProductApplicationJoinApplicationIdFkeyInverseInput;
+  ProductApplicationJoinProductApplicationJoinPkeyConnect: ProductApplicationJoinProductApplicationJoinPkeyConnect;
+  ProductApplicationJoinNodeIdConnect: ProductApplicationJoinNodeIdConnect;
+  ProductApplicationJoinProductApplicationJoinPkeyDelete: ProductApplicationJoinProductApplicationJoinPkeyDelete;
+  ProductApplicationJoinNodeIdDelete: ProductApplicationJoinNodeIdDelete;
+  ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingProductApplicationJoinPkeyUpdate: ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingProductApplicationJoinPkeyUpdate;
+  updateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch: UpdateProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
+  ProductApplicationJoinApplicationIdFkeyInput: ProductApplicationJoinApplicationIdFkeyInput;
+  ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch: UpdateApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyPatch;
   ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate: ProductApplicationJoinOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  ApplicationPatch: ApplicationPatch;
   ProductApplicationJoinApplicationIdFkeyApplicationCreateInput: ProductApplicationJoinApplicationIdFkeyApplicationCreateInput;
   ProductApplicationJoinProductIdFkeyInput: ProductApplicationJoinProductIdFkeyInput;
   ProductProductPkeyConnect: ProductProductPkeyConnect;
@@ -39055,6 +39380,27 @@ export type ResolversParentTypes = {
   ProductApplicationJoinProductIdFkeyProductCreateInput: ProductApplicationJoinProductIdFkeyProductCreateInput;
   ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnProductApplicationJoinForProductApplicationJoinApplicationIdFkeyNodeIdUpdate;
   ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput: ProductApplicationJoinApplicationIdFkeyProductApplicationJoinCreateInput;
+  ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput: LicenceApplicationJoinApplicationIdFkeyApplicationCreateInput;
+  LicenceApplicationJoinLicenceIdFkeyInput: LicenceApplicationJoinLicenceIdFkeyInput;
+  LicenceLicencePkeyConnect: LicenceLicencePkeyConnect;
+  LicenceNodeIdConnect: LicenceNodeIdConnect;
+  LicenceLicencePkeyDelete: LicenceLicencePkeyDelete;
+  LicenceNodeIdDelete: LicenceNodeIdDelete;
+  LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicencePkeyUpdate: LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicencePkeyUpdate;
+  updateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch: UpdateLicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch;
+  LicenceApplicationJoinLicenceIdFkeyInverseInput: LicenceApplicationJoinLicenceIdFkeyInverseInput;
+  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicenceApplicationJoinPkeyUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyUsingLicenceApplicationJoinPkeyUpdate;
+  updateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch: UpdateLicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyPatch;
+  LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate: LicenceOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate;
+  LicenceApplicationJoinPatch: LicenceApplicationJoinPatch;
+  LicenceApplicationJoinLicenceIdFkeyLicenceApplicationJoinCreateInput: LicenceApplicationJoinLicenceIdFkeyLicenceApplicationJoinCreateInput;
+  LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate: LicenceApplicationJoinOnLicenceApplicationJoinForLicenceApplicationJoinLicenceIdFkeyNodeIdUpdate;
+  LicencePatch: LicencePatch;
+  LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput: LicenceApplicationJoinLicenceIdFkeyLicenceCreateInput;
+  ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnLicenceApplicationJoinForLicenceApplicationJoinApplicationIdFkeyNodeIdUpdate;
+  LicenceApplicationJoinApplicationIdFkeyLicenceApplicationJoinCreateInput: LicenceApplicationJoinApplicationIdFkeyLicenceApplicationJoinCreateInput;
   ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate: UserApplicationJoinOnUserApplicationJoinForUserApplicationJoinApplicationIdFkeyNodeIdUpdate;
   UserApplicationJoinApplicationIdFkeyApplicationCreateInput: UserApplicationJoinApplicationIdFkeyApplicationCreateInput;
@@ -39464,6 +39810,9 @@ export type ResolversParentTypes = {
   CreateLookupTableIngredientInput: CreateLookupTableIngredientInput;
   LookupTableIngredientInput: LookupTableIngredientInput;
   CreateLookupTableIngredientPayload: CreateLookupTableIngredientPayload;
+  CreateLookupTableTestAddNewLookupTableInput: CreateLookupTableTestAddNewLookupTableInput;
+  LookupTableTestAddNewLookupTableInput: LookupTableTestAddNewLookupTableInput;
+  CreateLookupTableTestAddNewLookupTablePayload: CreateLookupTableTestAddNewLookupTablePayload;
   CreateLookupTableTherapeuticCategoryInput: CreateLookupTableTherapeuticCategoryInput;
   LookupTableTherapeuticCategoryInput: LookupTableTherapeuticCategoryInput;
   CreateLookupTableTherapeuticCategoryPayload: CreateLookupTableTherapeuticCategoryPayload;
@@ -39675,6 +40024,10 @@ export type ResolversParentTypes = {
   LookupTableIngredientPatch: LookupTableIngredientPatch;
   UpdateLookupTableIngredientPayload: UpdateLookupTableIngredientPayload;
   UpdateLookupTableIngredientInput: UpdateLookupTableIngredientInput;
+  UpdateLookupTableTestAddNewLookupTableByNodeIdInput: UpdateLookupTableTestAddNewLookupTableByNodeIdInput;
+  LookupTableTestAddNewLookupTablePatch: LookupTableTestAddNewLookupTablePatch;
+  UpdateLookupTableTestAddNewLookupTablePayload: UpdateLookupTableTestAddNewLookupTablePayload;
+  UpdateLookupTableTestAddNewLookupTableInput: UpdateLookupTableTestAddNewLookupTableInput;
   UpdateLookupTableTherapeuticCategoryByNodeIdInput: UpdateLookupTableTherapeuticCategoryByNodeIdInput;
   LookupTableTherapeuticCategoryPatch: LookupTableTherapeuticCategoryPatch;
   UpdateLookupTableTherapeuticCategoryPayload: UpdateLookupTableTherapeuticCategoryPayload;
@@ -39852,6 +40205,9 @@ export type ResolversParentTypes = {
   DeleteLookupTableIngredientByNodeIdInput: DeleteLookupTableIngredientByNodeIdInput;
   DeleteLookupTableIngredientPayload: DeleteLookupTableIngredientPayload;
   DeleteLookupTableIngredientInput: DeleteLookupTableIngredientInput;
+  DeleteLookupTableTestAddNewLookupTableByNodeIdInput: DeleteLookupTableTestAddNewLookupTableByNodeIdInput;
+  DeleteLookupTableTestAddNewLookupTablePayload: DeleteLookupTableTestAddNewLookupTablePayload;
+  DeleteLookupTableTestAddNewLookupTableInput: DeleteLookupTableTestAddNewLookupTableInput;
   DeleteLookupTableTherapeuticCategoryByNodeIdInput: DeleteLookupTableTherapeuticCategoryByNodeIdInput;
   DeleteLookupTableTherapeuticCategoryPayload: DeleteLookupTableTherapeuticCategoryPayload;
   DeleteLookupTableTherapeuticCategoryInput: DeleteLookupTableTherapeuticCategoryInput;
@@ -40061,8 +40417,8 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   verifications?: Resolver<ResolversTypes['VerificationsConnection'], ParentType, ContextType, RequireFields<ApplicationVerificationsArgs, 'orderBy'>>;
   organisationApplicationJoins?: Resolver<ResolversTypes['OrganisationApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationOrganisationApplicationJoinsArgs, 'orderBy'>>;
   userApplicationJoins?: Resolver<ResolversTypes['UserApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationUserApplicationJoinsArgs, 'orderBy'>>;
-  productApplicationJoins?: Resolver<ResolversTypes['ProductApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationProductApplicationJoinsArgs, 'orderBy'>>;
   licenceApplicationJoins?: Resolver<ResolversTypes['LicenceApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationLicenceApplicationJoinsArgs, 'orderBy'>>;
+  productApplicationJoins?: Resolver<ResolversTypes['ProductApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationProductApplicationJoinsArgs, 'orderBy'>>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stageNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
@@ -40638,6 +40994,14 @@ export type CreateLookupTablePayloadResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateLookupTableTestAddNewLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateLookupTableTestAddNewLookupTablePayload'] = ResolversParentTypes['CreateLookupTableTestAddNewLookupTablePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lookupTableTestAddNewLookupTable?: Resolver<Maybe<ResolversTypes['LookupTableTestAddNewLookupTable']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  lookupTableTestAddNewLookupTableEdge?: Resolver<Maybe<ResolversTypes['LookupTableTestAddNewLookupTablesEdge']>, ParentType, ContextType, RequireFields<CreateLookupTableTestAddNewLookupTablePayloadLookupTableTestAddNewLookupTableEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateLookupTableTherapeuticCategoryPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateLookupTableTherapeuticCategoryPayload'] = ResolversParentTypes['CreateLookupTableTherapeuticCategoryPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lookupTableTherapeuticCategory?: Resolver<Maybe<ResolversTypes['LookupTableTherapeuticCategory']>, ParentType, ContextType>;
@@ -40975,6 +41339,10 @@ export interface CursorScalarConfig extends GraphQLScalarTypeConfig<ResolversTyp
   name: 'Cursor';
 }
 
+export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
+  name: 'Date';
+}
+
 export interface DatetimeScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Datetime'], any> {
   name: 'Datetime';
 }
@@ -41156,6 +41524,15 @@ export type DeleteLookupTablePayloadResolvers<ContextType = any, ParentType exte
   deletedLookupTableNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   lookupTableEdge?: Resolver<Maybe<ResolversTypes['LookupTablesEdge']>, ParentType, ContextType, RequireFields<DeleteLookupTablePayloadLookupTableEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteLookupTableTestAddNewLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteLookupTableTestAddNewLookupTablePayload'] = ResolversParentTypes['DeleteLookupTableTestAddNewLookupTablePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lookupTableTestAddNewLookupTable?: Resolver<Maybe<ResolversTypes['LookupTableTestAddNewLookupTable']>, ParentType, ContextType>;
+  deletedLookupTableTestAddNewLookupTableNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  lookupTableTestAddNewLookupTableEdge?: Resolver<Maybe<ResolversTypes['LookupTableTestAddNewLookupTablesEdge']>, ParentType, ContextType, RequireFields<DeleteLookupTableTestAddNewLookupTablePayloadLookupTableTestAddNewLookupTableEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -41635,6 +42012,7 @@ export type LicenceResolvers<ContextType = any, ParentType extends ResolversPare
   companyName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   productType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   registration?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  licenseType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   licenceApplicationJoins?: Resolver<ResolversTypes['LicenceApplicationJoinsConnection'], ParentType, ContextType, RequireFields<LicenceLicenceApplicationJoinsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
@@ -41787,6 +42165,28 @@ export type LookupTablesEdgeResolvers<ContextType = any, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type LookupTableTestAddNewLookupTableResolvers<ContextType = any, ParentType extends ResolversParentTypes['LookupTableTestAddNewLookupTable'] = ResolversParentTypes['LookupTableTestAddNewLookupTable']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  activeIngredient?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  apiManufacturer?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LookupTableTestAddNewLookupTablesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['LookupTableTestAddNewLookupTablesConnection'] = ResolversParentTypes['LookupTableTestAddNewLookupTablesConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['LookupTableTestAddNewLookupTable']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['LookupTableTestAddNewLookupTablesEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LookupTableTestAddNewLookupTablesEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['LookupTableTestAddNewLookupTablesEdge'] = ResolversParentTypes['LookupTableTestAddNewLookupTablesEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['LookupTableTestAddNewLookupTable']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type LookupTableTherapeuticCategoriesConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['LookupTableTherapeuticCategoriesConnection'] = ResolversParentTypes['LookupTableTherapeuticCategoriesConnection']> = {
   nodes?: Resolver<Array<Maybe<ResolversTypes['LookupTableTherapeuticCategory']>>, ParentType, ContextType>;
   edges?: Resolver<Array<ResolversTypes['LookupTableTherapeuticCategoriesEdge']>, ParentType, ContextType>;
@@ -41830,6 +42230,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createLookupTableContainer?: Resolver<Maybe<ResolversTypes['CreateLookupTableContainerPayload']>, ParentType, ContextType, RequireFields<MutationCreateLookupTableContainerArgs, 'input'>>;
   createLookupTableDosageForm?: Resolver<Maybe<ResolversTypes['CreateLookupTableDosageFormPayload']>, ParentType, ContextType, RequireFields<MutationCreateLookupTableDosageFormArgs, 'input'>>;
   createLookupTableIngredient?: Resolver<Maybe<ResolversTypes['CreateLookupTableIngredientPayload']>, ParentType, ContextType, RequireFields<MutationCreateLookupTableIngredientArgs, 'input'>>;
+  createLookupTableTestAddNewLookupTable?: Resolver<Maybe<ResolversTypes['CreateLookupTableTestAddNewLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationCreateLookupTableTestAddNewLookupTableArgs, 'input'>>;
   createLookupTableTherapeuticCategory?: Resolver<Maybe<ResolversTypes['CreateLookupTableTherapeuticCategoryPayload']>, ParentType, ContextType, RequireFields<MutationCreateLookupTableTherapeuticCategoryArgs, 'input'>>;
   createNotification?: Resolver<Maybe<ResolversTypes['CreateNotificationPayload']>, ParentType, ContextType, RequireFields<MutationCreateNotificationArgs, 'input'>>;
   createOrganisation?: Resolver<Maybe<ResolversTypes['CreateOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationCreateOrganisationArgs, 'input'>>;
@@ -41906,6 +42307,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateLookupTableDosageForm?: Resolver<Maybe<ResolversTypes['UpdateLookupTableDosageFormPayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableDosageFormArgs, 'input'>>;
   updateLookupTableIngredientByNodeId?: Resolver<Maybe<ResolversTypes['UpdateLookupTableIngredientPayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableIngredientByNodeIdArgs, 'input'>>;
   updateLookupTableIngredient?: Resolver<Maybe<ResolversTypes['UpdateLookupTableIngredientPayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableIngredientArgs, 'input'>>;
+  updateLookupTableTestAddNewLookupTableByNodeId?: Resolver<Maybe<ResolversTypes['UpdateLookupTableTestAddNewLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableTestAddNewLookupTableByNodeIdArgs, 'input'>>;
+  updateLookupTableTestAddNewLookupTable?: Resolver<Maybe<ResolversTypes['UpdateLookupTableTestAddNewLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableTestAddNewLookupTableArgs, 'input'>>;
   updateLookupTableTherapeuticCategoryByNodeId?: Resolver<Maybe<ResolversTypes['UpdateLookupTableTherapeuticCategoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableTherapeuticCategoryByNodeIdArgs, 'input'>>;
   updateLookupTableTherapeuticCategory?: Resolver<Maybe<ResolversTypes['UpdateLookupTableTherapeuticCategoryPayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableTherapeuticCategoryArgs, 'input'>>;
   updateNotificationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateNotificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateNotificationByNodeIdArgs, 'input'>>;
@@ -42028,6 +42431,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteLookupTableDosageForm?: Resolver<Maybe<ResolversTypes['DeleteLookupTableDosageFormPayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableDosageFormArgs, 'input'>>;
   deleteLookupTableIngredientByNodeId?: Resolver<Maybe<ResolversTypes['DeleteLookupTableIngredientPayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableIngredientByNodeIdArgs, 'input'>>;
   deleteLookupTableIngredient?: Resolver<Maybe<ResolversTypes['DeleteLookupTableIngredientPayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableIngredientArgs, 'input'>>;
+  deleteLookupTableTestAddNewLookupTableByNodeId?: Resolver<Maybe<ResolversTypes['DeleteLookupTableTestAddNewLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableTestAddNewLookupTableByNodeIdArgs, 'input'>>;
+  deleteLookupTableTestAddNewLookupTable?: Resolver<Maybe<ResolversTypes['DeleteLookupTableTestAddNewLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableTestAddNewLookupTableArgs, 'input'>>;
   deleteLookupTableTherapeuticCategoryByNodeId?: Resolver<Maybe<ResolversTypes['DeleteLookupTableTherapeuticCategoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableTherapeuticCategoryByNodeIdArgs, 'input'>>;
   deleteLookupTableTherapeuticCategory?: Resolver<Maybe<ResolversTypes['DeleteLookupTableTherapeuticCategoryPayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableTherapeuticCategoryArgs, 'input'>>;
   deleteNotificationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteNotificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteNotificationByNodeIdArgs, 'input'>>;
@@ -42113,7 +42518,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'File' | 'UserApplicationJoin' | 'ApplicationSection' | 'TriggerSchedule' | 'Verification' | 'ProductApplicationJoin' | 'Product' | 'LicenceApplicationJoin' | 'Licence' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'LookupTableAdministrationRoute' | 'LookupTableContainer' | 'LookupTableDosageForm' | 'LookupTableIngredient' | 'LookupTableTherapeuticCategory' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail' | 'OutcomeDisplayColumnDefinition', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'File' | 'UserApplicationJoin' | 'ApplicationSection' | 'TriggerSchedule' | 'Verification' | 'LicenceApplicationJoin' | 'Licence' | 'ProductApplicationJoin' | 'Product' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'LookupTableAdministrationRoute' | 'LookupTableContainer' | 'LookupTableDosageForm' | 'LookupTableIngredient' | 'LookupTableTestAddNewLookupTable' | 'LookupTableTherapeuticCategory' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail' | 'OutcomeDisplayColumnDefinition', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -42567,6 +42972,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   lookupTableContainers?: Resolver<Maybe<ResolversTypes['LookupTableContainersConnection']>, ParentType, ContextType, RequireFields<QueryLookupTableContainersArgs, 'orderBy'>>;
   lookupTableDosageForms?: Resolver<Maybe<ResolversTypes['LookupTableDosageFormsConnection']>, ParentType, ContextType, RequireFields<QueryLookupTableDosageFormsArgs, 'orderBy'>>;
   lookupTableIngredients?: Resolver<Maybe<ResolversTypes['LookupTableIngredientsConnection']>, ParentType, ContextType, RequireFields<QueryLookupTableIngredientsArgs, 'orderBy'>>;
+  lookupTableTestAddNewLookupTables?: Resolver<Maybe<ResolversTypes['LookupTableTestAddNewLookupTablesConnection']>, ParentType, ContextType, RequireFields<QueryLookupTableTestAddNewLookupTablesArgs, 'orderBy'>>;
   lookupTableTherapeuticCategories?: Resolver<Maybe<ResolversTypes['LookupTableTherapeuticCategoriesConnection']>, ParentType, ContextType, RequireFields<QueryLookupTableTherapeuticCategoriesArgs, 'orderBy'>>;
   notifications?: Resolver<Maybe<ResolversTypes['NotificationsConnection']>, ParentType, ContextType, RequireFields<QueryNotificationsArgs, 'orderBy'>>;
   organisations?: Resolver<Maybe<ResolversTypes['OrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryOrganisationsArgs, 'orderBy'>>;
@@ -42629,6 +43035,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   lookupTableContainer?: Resolver<Maybe<ResolversTypes['LookupTableContainer']>, ParentType, ContextType, RequireFields<QueryLookupTableContainerArgs, 'id'>>;
   lookupTableDosageForm?: Resolver<Maybe<ResolversTypes['LookupTableDosageForm']>, ParentType, ContextType, RequireFields<QueryLookupTableDosageFormArgs, 'id'>>;
   lookupTableIngredient?: Resolver<Maybe<ResolversTypes['LookupTableIngredient']>, ParentType, ContextType, RequireFields<QueryLookupTableIngredientArgs, 'id'>>;
+  lookupTableTestAddNewLookupTable?: Resolver<Maybe<ResolversTypes['LookupTableTestAddNewLookupTable']>, ParentType, ContextType, RequireFields<QueryLookupTableTestAddNewLookupTableArgs, 'id'>>;
   lookupTableTherapeuticCategory?: Resolver<Maybe<ResolversTypes['LookupTableTherapeuticCategory']>, ParentType, ContextType, RequireFields<QueryLookupTableTherapeuticCategoryArgs, 'id'>>;
   notification?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<QueryNotificationArgs, 'id'>>;
   organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationArgs, 'id'>>;
@@ -42720,6 +43127,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   lookupTableContainerByNodeId?: Resolver<Maybe<ResolversTypes['LookupTableContainer']>, ParentType, ContextType, RequireFields<QueryLookupTableContainerByNodeIdArgs, 'nodeId'>>;
   lookupTableDosageFormByNodeId?: Resolver<Maybe<ResolversTypes['LookupTableDosageForm']>, ParentType, ContextType, RequireFields<QueryLookupTableDosageFormByNodeIdArgs, 'nodeId'>>;
   lookupTableIngredientByNodeId?: Resolver<Maybe<ResolversTypes['LookupTableIngredient']>, ParentType, ContextType, RequireFields<QueryLookupTableIngredientByNodeIdArgs, 'nodeId'>>;
+  lookupTableTestAddNewLookupTableByNodeId?: Resolver<Maybe<ResolversTypes['LookupTableTestAddNewLookupTable']>, ParentType, ContextType, RequireFields<QueryLookupTableTestAddNewLookupTableByNodeIdArgs, 'nodeId'>>;
   lookupTableTherapeuticCategoryByNodeId?: Resolver<Maybe<ResolversTypes['LookupTableTherapeuticCategory']>, ParentType, ContextType, RequireFields<QueryLookupTableTherapeuticCategoryByNodeIdArgs, 'nodeId'>>;
   notificationByNodeId?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<QueryNotificationByNodeIdArgs, 'nodeId'>>;
   organisationByNodeId?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationByNodeIdArgs, 'nodeId'>>;
@@ -43535,6 +43943,14 @@ export type UpdateLookupTablePayloadResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateLookupTableTestAddNewLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateLookupTableTestAddNewLookupTablePayload'] = ResolversParentTypes['UpdateLookupTableTestAddNewLookupTablePayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lookupTableTestAddNewLookupTable?: Resolver<Maybe<ResolversTypes['LookupTableTestAddNewLookupTable']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  lookupTableTestAddNewLookupTableEdge?: Resolver<Maybe<ResolversTypes['LookupTableTestAddNewLookupTablesEdge']>, ParentType, ContextType, RequireFields<UpdateLookupTableTestAddNewLookupTablePayloadLookupTableTestAddNewLookupTableEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateLookupTableTherapeuticCategoryPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateLookupTableTherapeuticCategoryPayload'] = ResolversParentTypes['UpdateLookupTableTherapeuticCategoryPayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lookupTableTherapeuticCategory?: Resolver<Maybe<ResolversTypes['LookupTableTherapeuticCategory']>, ParentType, ContextType>;
@@ -43875,7 +44291,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   username?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  dateOfBirth?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dateOfBirth?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   passwordHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   userOrganisations?: Resolver<ResolversTypes['UserOrganisationsConnection'], ParentType, ContextType, RequireFields<UserUserOrganisationsArgs, 'orderBy'>>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<UserPermissionJoinsArgs, 'orderBy'>>;
@@ -43945,7 +44361,7 @@ export type UserOrgJoinResolvers<ContextType = any, ParentType extends Resolvers
   firstName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lastName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  dateOfBirth?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  dateOfBirth?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   passwordHash?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   orgName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -44093,6 +44509,7 @@ export type Resolvers<ContextType = any> = {
   CreateLookupTableDosageFormPayload?: CreateLookupTableDosageFormPayloadResolvers<ContextType>;
   CreateLookupTableIngredientPayload?: CreateLookupTableIngredientPayloadResolvers<ContextType>;
   CreateLookupTablePayload?: CreateLookupTablePayloadResolvers<ContextType>;
+  CreateLookupTableTestAddNewLookupTablePayload?: CreateLookupTableTestAddNewLookupTablePayloadResolvers<ContextType>;
   CreateLookupTableTherapeuticCategoryPayload?: CreateLookupTableTherapeuticCategoryPayloadResolvers<ContextType>;
   CreateNotificationPayload?: CreateNotificationPayloadResolvers<ContextType>;
   CreateOrganisationApplicationJoinPayload?: CreateOrganisationApplicationJoinPayloadResolvers<ContextType>;
@@ -44129,6 +44546,7 @@ export type Resolvers<ContextType = any> = {
   CreateUserPayload?: CreateUserPayloadResolvers<ContextType>;
   CreateVerificationPayload?: CreateVerificationPayloadResolvers<ContextType>;
   Cursor?: GraphQLScalarType;
+  Date?: GraphQLScalarType;
   Datetime?: GraphQLScalarType;
   DeleteActionPluginPayload?: DeleteActionPluginPayloadResolvers<ContextType>;
   DeleteActionQueuePayload?: DeleteActionQueuePayloadResolvers<ContextType>;
@@ -44148,6 +44566,7 @@ export type Resolvers<ContextType = any> = {
   DeleteLookupTableDosageFormPayload?: DeleteLookupTableDosageFormPayloadResolvers<ContextType>;
   DeleteLookupTableIngredientPayload?: DeleteLookupTableIngredientPayloadResolvers<ContextType>;
   DeleteLookupTablePayload?: DeleteLookupTablePayloadResolvers<ContextType>;
+  DeleteLookupTableTestAddNewLookupTablePayload?: DeleteLookupTableTestAddNewLookupTablePayloadResolvers<ContextType>;
   DeleteLookupTableTherapeuticCategoryPayload?: DeleteLookupTableTherapeuticCategoryPayloadResolvers<ContextType>;
   DeleteNotificationPayload?: DeleteNotificationPayloadResolvers<ContextType>;
   DeleteOrganisationApplicationJoinPayload?: DeleteOrganisationApplicationJoinPayloadResolvers<ContextType>;
@@ -44215,6 +44634,9 @@ export type Resolvers<ContextType = any> = {
   LookupTableIngredientsEdge?: LookupTableIngredientsEdgeResolvers<ContextType>;
   LookupTablesConnection?: LookupTablesConnectionResolvers<ContextType>;
   LookupTablesEdge?: LookupTablesEdgeResolvers<ContextType>;
+  LookupTableTestAddNewLookupTable?: LookupTableTestAddNewLookupTableResolvers<ContextType>;
+  LookupTableTestAddNewLookupTablesConnection?: LookupTableTestAddNewLookupTablesConnectionResolvers<ContextType>;
+  LookupTableTestAddNewLookupTablesEdge?: LookupTableTestAddNewLookupTablesEdgeResolvers<ContextType>;
   LookupTableTherapeuticCategoriesConnection?: LookupTableTherapeuticCategoriesConnectionResolvers<ContextType>;
   LookupTableTherapeuticCategoriesEdge?: LookupTableTherapeuticCategoriesEdgeResolvers<ContextType>;
   LookupTableTherapeuticCategory?: LookupTableTherapeuticCategoryResolvers<ContextType>;
@@ -44343,6 +44765,7 @@ export type Resolvers<ContextType = any> = {
   UpdateLookupTableDosageFormPayload?: UpdateLookupTableDosageFormPayloadResolvers<ContextType>;
   UpdateLookupTableIngredientPayload?: UpdateLookupTableIngredientPayloadResolvers<ContextType>;
   UpdateLookupTablePayload?: UpdateLookupTablePayloadResolvers<ContextType>;
+  UpdateLookupTableTestAddNewLookupTablePayload?: UpdateLookupTableTestAddNewLookupTablePayloadResolvers<ContextType>;
   UpdateLookupTableTherapeuticCategoryPayload?: UpdateLookupTableTherapeuticCategoryPayloadResolvers<ContextType>;
   UpdateNotificationPayload?: UpdateNotificationPayloadResolvers<ContextType>;
   UpdateOrganisationApplicationJoinPayload?: UpdateOrganisationApplicationJoinPayloadResolvers<ContextType>;
