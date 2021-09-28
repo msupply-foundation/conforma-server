@@ -23,21 +23,32 @@ async function updateReviewAssignmentsStatus({
       level_number: reviewLevel,
     } = await db.getReviewAssignmentById(reviewAssignmentId)
 
-    switch (trigger) {
-      case Trigger.OnReviewSelfAssign: {
-        const isSelfAssignable = true
-        const otherSelfAssignments = await db.getMatchingReviewAssignments(
-          reviewAssignmentId,
-          applicationId,
-          stageNumber,
-          reviewLevel,
-          isSelfAssignable
-        )
+    console.log('trigger', trigger)
 
-        assignments = otherSelfAssignments.map(({ id }: ReviewAssignment) => ({
-          id,
-          isLocked: true,
-        }))
+    const setOtherSelfAssignmentsLocked = async (isLocked: boolean) => {
+      const isSelfAssignable = true
+      const otherSelfAssignments = await db.getMatchingReviewAssignments(
+        reviewAssignmentId,
+        applicationId,
+        stageNumber,
+        reviewLevel,
+        isSelfAssignable
+      )
+
+      return otherSelfAssignments.map(({ id }: ReviewAssignment) => ({
+        id,
+        isLocked,
+      }))
+    }
+
+    switch (trigger) {
+      case Trigger.OnReviewSelfAssign:
+      case Trigger.OnReviewAssign:
+        assignments = await setOtherSelfAssignmentsLocked(true)
+        break
+      case Trigger.OnReviewUnassign: {
+        assignments = await setOtherSelfAssignmentsLocked(false)
+        break
       }
     }
 
