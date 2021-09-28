@@ -36,6 +36,8 @@ export type ExportAndImportOptions = {
   // tablesToUpdateOnInsertFail is deprecated, but values are still required (for existing snapshots), they key is change to skipTableOnInsertFail in useSnapshot
   tablesToUpdateOnInsertFail: string[]
   skipTableOnInsertFail: string[]
+  includeLocalisation?: boolean
+  includePrefs?: boolean
   resetFiles: boolean
 }
 

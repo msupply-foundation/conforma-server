@@ -56,7 +56,11 @@ const takeSnapshot: SnapshotOperation = async ({
 
     await copyFiles(newSnapshotFolder, snapshotObject.file)
 
-    await zipSnapshot(newSnapshotFolder, snapshotName)
+    // Copy localisation
+    if (options?.includeLocalisation)
+      // Copy prefs
+
+      await zipSnapshot(newSnapshotFolder, snapshotName)
 
     return { success: true, message: `created snapshot ${snapshotName}` }
   } catch (e) {
