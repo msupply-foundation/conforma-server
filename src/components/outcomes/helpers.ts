@@ -1,5 +1,5 @@
 import DBConnect from '../databaseConnect'
-import { getTokenData, extractJWTfromHeader } from '../permissions/loginHelpers'
+import { extractJWTfromHeader } from '../permissions/loginHelpers'
 import { objectKeysToCamelCase } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import fetch from 'node-fetch'
@@ -30,7 +30,7 @@ type JWTData = {
   permissionNames: string[]
 }
 export const getPermissionNamesFromJWT = async (request: any): Promise<JWTData> => {
-  const { userId, orgId } = await getTokenData(extractJWTfromHeader(request))
+  const { userId, orgId } = request.auth
   const permissionNames = await (
     await DBConnect.getUserOrgPermissionNames(userId, orgId)
   ).map((result) => result.permissionName)

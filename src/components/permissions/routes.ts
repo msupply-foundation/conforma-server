@@ -1,5 +1,5 @@
 import databaseConnect from '../databaseConnect'
-import { getUserInfo, getTokenData, extractJWTfromHeader } from './loginHelpers'
+import { getUserInfo, extractJWTfromHeader } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
@@ -55,8 +55,7 @@ Authenticates user and checks they belong to requested org (id). Returns:
 */
 const routeLoginOrg = async (request: any, reply: any) => {
   const { orgId, sessionId } = request.body
-  const token = extractJWTfromHeader(request)
-  const { userId, error } = await getTokenData(token)
+  const { userId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
   const userInfo = await getUserInfo({ userId, orgId, sessionId })
@@ -70,8 +69,7 @@ template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
   const { sessionId } = request.query
-  const token = extractJWTfromHeader(request)
-  const { userId, orgId, sessionId: returnSessionId, error } = await getTokenData(token)
+  const { userId, orgId, sessionId: returnSessionId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
   return reply.send({
@@ -81,12 +79,6 @@ const routeUserInfo = async (request: any, reply: any) => {
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
-  // const token = extractJWTfromHeader(request)
-  // const username = await getUsername(token)
-  // return reply.send(await getUserInfo(username))
-
-  // TO DO, check for admin
-
   // TODO, add parameters to only drop specific policies, for now drop and reinstante them all
 
   return reply.send(await updateRowPolicies())
