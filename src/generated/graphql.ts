@@ -12047,7 +12047,9 @@ export type OutcomeDisplay = Node & {
   tableName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrctions?: Maybe<Scalars['JSON']>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -12230,8 +12232,12 @@ export type OutcomeDisplayCondition = {
   title?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `code` field. */
   code?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `permissionNames` field. */
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  /** Checks for equality with the object’s `rowRestrctions` field. */
+  rowRestrctions?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `tableViewIncludeColumns` field. */
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `tableViewExcludeColumns` field. */
@@ -12411,7 +12417,9 @@ export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = 
   tableName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrctions?: Maybe<Scalars['JSON']>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -12499,8 +12507,12 @@ export type OutcomeDisplayFilter = {
   title?: Maybe<StringFilter>;
   /** Filter by the object’s `code` field. */
   code?: Maybe<StringFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: Maybe<StringFilter>;
   /** Filter by the object’s `permissionNames` field. */
   permissionNames?: Maybe<StringListFilter>;
+  /** Filter by the object’s `rowRestrctions` field. */
+  rowRestrctions?: Maybe<JsonFilter>;
   /** Filter by the object’s `tableViewIncludeColumns` field. */
   tableViewIncludeColumns?: Maybe<StringListFilter>;
   /** Filter by the object’s `tableViewExcludeColumns` field. */
@@ -12537,7 +12549,9 @@ export type OutcomeDisplayInput = {
   tableName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrctions?: Maybe<Scalars['JSON']>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -12635,7 +12649,9 @@ export type OutcomeDisplayPatch = {
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrctions?: Maybe<Scalars['JSON']>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -12680,8 +12696,12 @@ export enum OutcomeDisplaysOrderBy {
   TitleDesc = 'TITLE_DESC',
   CodeAsc = 'CODE_ASC',
   CodeDesc = 'CODE_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
   PermissionNamesAsc = 'PERMISSION_NAMES_ASC',
   PermissionNamesDesc = 'PERMISSION_NAMES_DESC',
+  RowRestrctionsAsc = 'ROW_RESTRCTIONS_ASC',
+  RowRestrctionsDesc = 'ROW_RESTRCTIONS_DESC',
   TableViewIncludeColumnsAsc = 'TABLE_VIEW_INCLUDE_COLUMNS_ASC',
   TableViewIncludeColumnsDesc = 'TABLE_VIEW_INCLUDE_COLUMNS_DESC',
   TableViewExcludeColumnsAsc = 'TABLE_VIEW_EXCLUDE_COLUMNS_ASC',
@@ -12841,7 +12861,9 @@ export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
   tableName: Scalars['String'];
   title?: Maybe<Scalars['String']>;
   code: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrctions?: Maybe<Scalars['JSON']>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -26270,7 +26292,9 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOut
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrctions?: Maybe<Scalars['JSON']>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -26288,7 +26312,9 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutco
   tableName?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
   permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  rowRestrctions?: Maybe<Scalars['JSON']>;
   tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
   detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
@@ -36033,7 +36059,9 @@ export type OutcomeDisplayResolvers<ContextType = any, ParentType extends Resolv
   tableName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   permissionNames?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
+  rowRestrctions?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   tableViewIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   tableViewExcludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   detailViewIncludeColumns?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
