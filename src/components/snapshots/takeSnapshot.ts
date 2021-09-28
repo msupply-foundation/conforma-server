@@ -19,6 +19,8 @@ import {
   SNAPSHOT_FOLDER,
   SNAPSHOT_OPTIONS_FOLDER,
   FILES_FOLDER,
+  LOCALISATION_FOLDER,
+  PREFERENCES_FILE,
   PG_DFF_JS_LOCATION,
 } from './constants'
 import { getBaseFiles, getDirectoryFromPath } from './useSnapshot'
@@ -58,9 +60,12 @@ const takeSnapshot: SnapshotOperation = async ({
 
     // Copy localisation
     if (options?.includeLocalisation)
-      // Copy prefs
+      execSync(`cp -r '${LOCALISATION_FOLDER}/' '${newSnapshotFolder}/localisation'`)
 
-      await zipSnapshot(newSnapshotFolder, snapshotName)
+    // Copy prefs
+    if (options?.includePrefs) execSync(`cp '${PREFERENCES_FILE}' '${newSnapshotFolder}'`)
+
+    await zipSnapshot(newSnapshotFolder, snapshotName)
 
     return { success: true, message: `created snapshot ${snapshotName}` }
   } catch (e) {
