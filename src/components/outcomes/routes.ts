@@ -82,6 +82,7 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
     columnDefinitionMasterList,
     title,
     fieldNames,
+    gqlFilters,
     headerDefinition,
     showLinkedApplications,
   } = await buildAllColumnDefinitions({ permissionNames, tableName, type: 'DETAIL', userId, orgId })
@@ -90,11 +91,12 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
   const fetchedRecord = await queryOutcomeTableSingleItem(
     tableName,
     fieldNames,
+    gqlFilters,
     recordId,
     authHeaders
   )
 
-  if (fetchedRecord?.error) return fetchedRecord.error
+  if (fetchedRecord?.error) return fetchedRecord
 
   // GraphQL query to get linked applications -- this one with Admin JWT!
   const linkedApplications = showLinkedApplications
