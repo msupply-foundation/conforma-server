@@ -129,7 +129,6 @@ const getFilters = (
   userId: number,
   orgId: number | undefined
 ): object => {
-  console.log('UserID', userId)
   // We're only interested in the highest priority restrictions
   const restrictions = outcomes[0].rowRestrctions || { id: { isNull: false } }
   // Substitute userId/orgId placeholder with actual values
