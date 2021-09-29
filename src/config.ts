@@ -19,6 +19,7 @@ const config = {
   pluginsFolder: '../plugins',
   imagesFolder: '../images',
   databaseFolder: '../database',
+  localisationsFolder: '../localisation',
   // In production postgraphile is started with -q and -i /postgraphile/...
   nodeModulesFolder:
     process.env.NODE_ENV === 'production' ? '../../node_modules' : '../node_modules',
