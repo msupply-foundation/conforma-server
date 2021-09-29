@@ -112,7 +112,7 @@ class DBConnect {
 
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
-  public getUserPermissionNames = PostgresDB.getUserPermissionNames
+  public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames
 
   public joinPermissionNameToUser = PostgresDB.joinPermissionNameToUser
 
@@ -122,7 +122,7 @@ class DBConnect {
 
   public getReviewStageAndLevel = PostgresDB.getReviewStageAndLevel
 
-  public isFullyAssignedLevel1 = PostgresDB.isFullyAssignedLevel1
+  // public isFullyAssignedLevel1 = PostgresDB.isFullyAssignedLevel1
 
   public getAllApplicationResponses = PostgresDB.getAllApplicationResponses
 
@@ -130,7 +130,15 @@ class DBConnect {
 
   public getDatabaseInfo = PostgresDB.getDatabaseInfo
 
+  public getAllTableNames = PostgresDB.getAllTableNames
+
+  public getOutcomeTableColumns = PostgresDB.getOutcomeTableColumns
+
   public getPermissionPolicies = PostgresDB.getPermissionPolicies
+
+  public getAllowedOutcomeDisplays = PostgresDB.getAllowedOutcomeDisplays
+
+  public getOutcomeColumnDefinitions = PostgresDB.getOutcomeColumnDefinitions
 
   // GraphQL
 

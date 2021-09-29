@@ -74,6 +74,7 @@ export interface ActionApplicationData {
   applicationId: number
   applicationSerial: string
   applicationName: string
+  sessionId: string
   templateId: number
   templateName: string
   templateCode: string
