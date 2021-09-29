@@ -24,17 +24,11 @@ import { plural } from 'pluralize'
 const REST_OF_OUTCOME_FIELDS = '...'
 const graphQLEndpoint = config.graphQLendpoint
 
-type JWTData = {
-  userId: number
-  orgId?: number
-  permissionNames: string[]
-}
-export const getPermissionNamesFromJWT = async (request: any): Promise<JWTData> => {
+export const getPermissionNamesFromJWT = async (request: any): Promise<string[]> => {
   const { userId, orgId } = await getTokenData(extractJWTfromHeader(request))
-  const permissionNames = await (
+  return await (
     await DBConnect.getUserOrgPermissionNames(userId, orgId)
   ).map((result) => result.permissionName)
-  return { userId, orgId, permissionNames }
 }
 
 export const buildAllColumnDefinitions = async (
