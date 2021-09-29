@@ -3,6 +3,9 @@ import { getUserInfo, getTokenData, extractJWTfromHeader } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
+import path from 'path'
+import { readFileSync } from 'fs'
+import { getAppEntryPointDir } from '../utilityFunctions'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
@@ -116,6 +119,17 @@ const routeVerification = async (request: any, reply: any) => {
   }
 }
 
+// Serve prefs to front-end
+const routeGetPrefs = async (request: any, reply: any) => {
+  const prefs = JSON.parse(
+    readFileSync(path.join(getAppEntryPointDir(), '../preferences.json'), 'utf8')
+  )
+  const languageOptions = JSON.parse(
+    readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
+  )
+  reply.send({ preferences: prefs.web, languageOptions })
+}
+
 export {
   routeUserInfo,
   routeLogin,
@@ -123,4 +137,5 @@ export {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
+  routeGetPrefs,
 }

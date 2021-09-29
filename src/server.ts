@@ -11,6 +11,7 @@ import {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
+  routeGetPrefs,
 } from './components/permissions'
 import { routeOutcomes, routeOutcomesTable, routeOutcomesDetail } from './components/outcomes'
 import { routeGeneratePDF } from './components/files/documentGenerate'
@@ -26,7 +27,7 @@ import DBConnect from './components/databaseConnect'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
-import { routeLocalisations, routeGetLanguageFile } from './components/localisation/routes'
+import { routeGetLanguageFile } from './components/localisation/routes'
 require('dotenv').config()
 
 // Fastify server
@@ -63,6 +64,7 @@ const startServer = async () => {
     }
   })
 
+  server.get('/get-prefs', routeGetPrefs)
   server.get('/user-info', routeUserInfo)
   server.post('/login', routeLogin)
   server.post('/login-org', routeLoginOrg)
@@ -71,7 +73,6 @@ const startServer = async () => {
   server.post('/run-action', routeRunAction)
   server.get('/verify', routeVerification)
   server.post('/generate-pdf', routeGeneratePDF)
-  server.get('/localisations', routeLocalisations)
   server.get('/language/:code', routeGetLanguageFile)
   server.get('/outcomes', routeOutcomes)
   server.get('/outcomes/table/:tableName', routeOutcomesTable)

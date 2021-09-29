@@ -16,6 +16,8 @@ import {
   ROOT_FOLDER,
   SNAPSHOT_FOLDER,
   SNAPSHOT_OPTIONS_FOLDER,
+  LOCALISATION_FOLDER,
+  PREFERENCES_FILE,
 } from './constants'
 
 const useSnapshot: SnapshotOperation = async ({
@@ -51,6 +53,24 @@ const useSnapshot: SnapshotOperation = async ({
     console.log('inserting from snapshot ... done')
 
     await copyFiles(snapshotFolder, insertedRecords.file)
+
+    // Import localisations
+    if (options?.includeLocalisation) {
+      try {
+        execSync(`cp -r  '${snapshotFolder}/localisation/' '${LOCALISATION_FOLDER}/' `)
+      } catch (e) {
+        console.log("Couldn't import localisations")
+      }
+    }
+
+    // Import preferences
+    if (options?.includePrefs) {
+      try {
+        execSync(`cp '${snapshotFolder}/preferences.json' '${PREFERENCES_FILE}'`)
+      } catch (e) {
+        console.log("Couldn't import preferences")
+      }
+    }
 
     // Update serials
     console.log('running serial update ... ')
