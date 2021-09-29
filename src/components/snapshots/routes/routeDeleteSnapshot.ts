@@ -16,6 +16,8 @@ const routeDeleteSnapshot = async (request: FastifyRequest, reply: FastifyReply)
 
   try {
     await asyncRimRaf(path.join(SNAPSHOT_FOLDER, snapshotName as string))
+    // Also delete the .zip if it exists
+    await asyncRimRaf(path.join(SNAPSHOT_FOLDER, `${snapshotName}.zip`))
     reply.send({ success: true })
   } catch (e) {
     reply.send({
