@@ -11,7 +11,6 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 - [Overview](Overview.md)
 - [Glossary](Glossary.md)
 - [Docker](Docker.md)
-- [Snapshots](Snapshots.md)
 
 **Database**
 
@@ -28,6 +27,8 @@ Please see [ReadMe](__README.md) for information about maintaining this document
 - [Triggers & Actions](Triggers-and-Actions.md)
   - [Action plugin spec](Action-plugin-specification.md)
   - [List of Action plugins](List-of-Action-plugins.md)
+  - [Core-templates](https://github.com/openmsupply/application-manager-web-app/wiki/List-Core-Actions)
+- [Template Builder](https://github.com/openmsupply/application-manager-web-app/wiki/Template-Builder)
 - [Dynamic Expressions/Queries](Query-Syntax.md)
 
 **Build and Demo Server**
