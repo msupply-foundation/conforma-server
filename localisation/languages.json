@@ -1,8 +1,8 @@
 [
   {
     "languageName": "English",
-    "description": "NZ English (default)",
-    "code": "default",
+    "description": "NZ English",
+    "code": "en_nz",
     "flag": "🇳🇿",
     "enabled": true
   },
@@ -12,5 +12,12 @@
     "code": "pt_an",
     "flag": "🇦🇴",
     "enabled": true
+  },
+  {
+    "languageName": "English",
+    "description": "Certain string replacements for DTAC scholarship",
+    "code": "en_dtac",
+    "flag": "🇦🇺",
+    "enabled": false
   }
 ]
