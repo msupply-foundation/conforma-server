@@ -26,7 +26,7 @@ CREATE TABLE application_list_shape (
     total_assign_locked bigint
 );
 
-CREATE FUNCTION application_list (userid int DEFAULT 0)
+CREATE FUNCTION application_list (userid int DEFAULT 0, language_code varchar DEFAULT '')
     RETURNS SETOF application_list_shape
     AS $$
     SELECT
@@ -69,10 +69,12 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN assigner_list (stage_status.stage_id, $1) ON app.id = assigner_list.application_id
 WHERE
     app.is_config = FALSE
+    AND (language_code = $2
+        OR language_code IS NULL)
 $$
 LANGUAGE sql
 STABLE;
 
 -- (https://github.com/graphile/graphile-engine/pull/378)
-COMMENT ON FUNCTION application_list (userid int) IS E'@sortable';
+COMMENT ON FUNCTION application_list (userid int, language_code varchar) IS E'@sortable';
 

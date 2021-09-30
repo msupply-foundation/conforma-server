@@ -16421,6 +16421,7 @@ export type QueryVerificationByUniqueIdArgs = {
 /** The root query type which gives access points into the data universe. */
 export type QueryApplicationListArgs = {
   userid?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
