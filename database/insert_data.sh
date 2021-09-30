@@ -2,7 +2,7 @@
 
 #copy folder with snapshot_basic for inital Application manager setup
 mkdir ./database/_snapshots
-cp -rf ./database/basic_snapshot ./database/_snapshots
+cp -rf ./database/core_templates ./database/_snapshots
 
 #insert data from
 echo -e "\nInserting data..."
@@ -14,7 +14,7 @@ if [ $1 = 'js' ]; then
 elif [ $1 != '' ]; then
     yarn ts-node ./database/snapshotCLI.ts use $1 &
 else
-    yarn ts-node ./database/snapshotCLI.ts use "basic_snapshot" &
+    yarn ts-node ./database/snapshotCLI.ts use "core_templates" &
 fi
 
 # Makes script wait until async node script has completed
