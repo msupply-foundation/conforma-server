@@ -13,13 +13,7 @@ import {
   FilePayload,
   TriggerQueueUpdatePayload,
 } from '../types'
-import {
-  ActionQueueStatus,
-  ApplicationOutcome,
-  ApplicationStatus,
-  ReviewStatus,
-  Trigger,
-} from '../generated/graphql'
+import { ApplicationOutcome, ApplicationStatus, ReviewStatus, Trigger } from '../generated/graphql'
 
 class PostgresDB {
   private static _instance: PostgresDB
@@ -687,16 +681,17 @@ class PostgresDB {
     }
   }
 
-  public getUserPermissionNames = async (username: string) => {
+  public getUserOrgPermissionNames = async (userId: number, orgId: number | null | undefined) => {
+    const orgMatch = `"orgId" ${orgId ? '= $2' : 'IS NULL'}`
     const text = `
-    select permission_name.id, permission_name.name 
-    from "user"
-    join permission_join on "user".id = permission_join.user_id
-    join permission_name on permission_name.id = permission_join.permission_name_id
-    where "username" = $1
-    `
+      SELECT "permissionNameId" as id,
+      "permissionName" FROM permissions_all
+      WHERE "userId" = $1
+      AND ${orgMatch}`
+    const values: number[] = [userId]
+    if (orgId) values.push(orgId)
     try {
-      const result = await this.query({ text, values: [username] })
+      const result = await this.query({ text, values })
       return result.rows
     } catch (err) {
       console.log(err.message)
@@ -852,6 +847,38 @@ class PostgresDB {
     }
   }
 
+  public getAllTableNames = async () => {
+    const text = `
+      SELECT table_name
+      FROM information_schema.tables
+      WHERE table_schema='public'
+      AND table_type='BASE TABLE';
+    `
+    try {
+      const result = await this.query({ text, rowMode: 'array' })
+      return result.rows.map((table) => table[0])
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getOutcomeTableColumns = async (tableName: string) => {
+    const text = `
+      SELECT column_name as name,
+      data_type as "dataType"
+      FROM information_schema.columns
+      WHERE table_name = $1;
+    `
+    try {
+      const result = await this.query({ text, values: [tableName] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getPermissionPolicies: GetPermissionPolicies = async () => {
     try {
       const result = await this.query({
@@ -862,6 +889,45 @@ class PostgresDB {
     } catch (err) {
       console.log(err.message)
       throw new Error('Problem getting permission policies')
+    }
+  }
+
+  // OUTCOME QUERIES
+
+  public getAllowedOutcomeDisplays = async (userPermissions: string[], tableName: string = '%') => {
+    // Returns any records that have ANY permissionNames in common with input
+    // userPermissions, or are empty (i.e. public)
+    const text = `
+      SELECT * FROM outcome_display
+      WHERE (
+              $1 && permission_names
+              OR permission_names IS NULL
+              OR cardinality(permission_names) = 0
+            )
+      AND table_name LIKE $2
+    `
+    const values = [userPermissions, tableName]
+    try {
+      const result = await this.query({ text, values })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getOutcomeColumnDefinitions = async (tableName: string, columnMatches: string[]) => {
+    const text = `
+      SELECT * FROM outcome_display_column_definition
+      WHERE table_name = $1
+      AND column_name = ANY($2)
+    `
+    try {
+      const result = await this.query({ text, values: [tableName, columnMatches] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
     }
   }
 }
