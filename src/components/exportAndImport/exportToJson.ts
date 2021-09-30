@@ -13,19 +13,19 @@ const getRecordsAsObject = async ({
 
   const tablesToExport = filterByIncludeAndExclude(includeTables, excludeTables, databaseTables)
 
-  const fitleredRecords: ObjectRecords = {}
+  const filteredRecords: ObjectRecords = {}
   const records: ObjectRecords = {}
 
   for (const table of tablesToExport) {
     const { tableName } = table
-    const filteredReferences = getFilteredReferences(table, fitleredRecords)
+    const filteredReferences = getFilteredReferences(table, filteredRecords)
     const baseFilter = filters?.[tableName] || {}
 
     const { gql, getter, hasFilter } = constructGqlAndGetter(table, filteredReferences, baseFilter)
     const result = await databaseConnect.gqlQuery(gql)
     const rows = getter(result)
     records[tableName] = rows
-    if (hasFilter) fitleredRecords[tableName] = rows
+    if (hasFilter) filteredRecords[tableName] = rows
   }
 
   return records
@@ -57,7 +57,6 @@ const getFilteredReferences = (
       filters[columnName] = { in: inValues }
     }
   )
-
   return filters
 }
 
