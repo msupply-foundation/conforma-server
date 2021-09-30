@@ -31,7 +31,7 @@ CREATE FUNCTION review_list (stageid int, reviewerid int)
                 THEN 'MAKE_DECISION'
             WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED' AND review.id IS NULL) != 0
                 THEN 'START_REVIEW'
-            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE_FOR_SELF_ASSIGNMENT' AND review = NULL) != 0
+            WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'AVAILABLE_FOR_SELF_ASSIGNMENT' AND (review = NULL OR is_locked = FALSE)) != 0
                 THEN 'SELF_ASSIGN'
             WHEN COUNT(*) FILTER (WHERE review_assignment.status = 'ASSIGNED' OR review_status_history.status = 'SUBMITTED') != 0
                 THEN 'VIEW_REVIEW'
