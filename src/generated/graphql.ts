@@ -515,7 +515,6 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -527,6 +526,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** The `actionQueue` to be created by this mutation. */
@@ -1019,7 +1019,6 @@ export type ApplicationListShape = {
   name?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
   templateName?: Maybe<Scalars['String']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
@@ -1027,6 +1026,8 @@ export type ApplicationListShape = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  languageCode?: Maybe<Scalars['String']>;
+  languageStrings?: Maybe<Scalars['JSON']>;
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
@@ -1051,8 +1052,6 @@ export type ApplicationListShapeCondition = {
   templateCode?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `templateName` field. */
   templateName?: Maybe<Scalars['String']>;
-  /** Checks for equality with the object’s `languageStrings` field. */
-  languageStrings?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `applicant` field. */
   applicant?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `orgName` field. */
@@ -1067,6 +1066,10 @@ export type ApplicationListShapeCondition = {
   outcome?: Maybe<ApplicationOutcome>;
   /** Checks for equality with the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `languageCode` field. */
+  languageCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `languageStrings` field. */
+  languageStrings?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `assigners` field. */
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** Checks for equality with the object’s `reviewers` field. */
@@ -1095,8 +1098,6 @@ export type ApplicationListShapeFilter = {
   templateCode?: Maybe<StringFilter>;
   /** Filter by the object’s `templateName` field. */
   templateName?: Maybe<StringFilter>;
-  /** Filter by the object’s `languageStrings` field. */
-  languageStrings?: Maybe<JsonFilter>;
   /** Filter by the object’s `applicant` field. */
   applicant?: Maybe<StringFilter>;
   /** Filter by the object’s `orgName` field. */
@@ -1111,6 +1112,10 @@ export type ApplicationListShapeFilter = {
   outcome?: Maybe<ApplicationOutcomeFilter>;
   /** Filter by the object’s `lastActiveDate` field. */
   lastActiveDate?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `languageCode` field. */
+  languageCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `languageStrings` field. */
+  languageStrings?: Maybe<JsonFilter>;
   /** Filter by the object’s `assigners` field. */
   assigners?: Maybe<StringListFilter>;
   /** Filter by the object’s `reviewers` field. */
@@ -1140,7 +1145,6 @@ export type ApplicationListShapeInput = {
   name?: Maybe<Scalars['String']>;
   templateCode?: Maybe<Scalars['String']>;
   templateName?: Maybe<Scalars['String']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   applicant?: Maybe<Scalars['String']>;
   orgName?: Maybe<Scalars['String']>;
   stage?: Maybe<Scalars['String']>;
@@ -1148,6 +1152,8 @@ export type ApplicationListShapeInput = {
   status?: Maybe<ApplicationStatus>;
   outcome?: Maybe<ApplicationOutcome>;
   lastActiveDate?: Maybe<Scalars['Datetime']>;
+  languageCode?: Maybe<Scalars['String']>;
+  languageStrings?: Maybe<Scalars['JSON']>;
   assigners?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewers?: Maybe<Array<Maybe<Scalars['String']>>>;
   reviewerAction?: Maybe<ReviewerAction>;
@@ -1192,8 +1198,6 @@ export enum ApplicationListShapesOrderBy {
   TemplateCodeDesc = 'TEMPLATE_CODE_DESC',
   TemplateNameAsc = 'TEMPLATE_NAME_ASC',
   TemplateNameDesc = 'TEMPLATE_NAME_DESC',
-  LanguageStringsAsc = 'LANGUAGE_STRINGS_ASC',
-  LanguageStringsDesc = 'LANGUAGE_STRINGS_DESC',
   ApplicantAsc = 'APPLICANT_ASC',
   ApplicantDesc = 'APPLICANT_DESC',
   OrgNameAsc = 'ORG_NAME_ASC',
@@ -1208,6 +1212,10 @@ export enum ApplicationListShapesOrderBy {
   OutcomeDesc = 'OUTCOME_DESC',
   LastActiveDateAsc = 'LAST_ACTIVE_DATE_ASC',
   LastActiveDateDesc = 'LAST_ACTIVE_DATE_DESC',
+  LanguageCodeAsc = 'LANGUAGE_CODE_ASC',
+  LanguageCodeDesc = 'LANGUAGE_CODE_DESC',
+  LanguageStringsAsc = 'LANGUAGE_STRINGS_ASC',
+  LanguageStringsDesc = 'LANGUAGE_STRINGS_DESC',
   AssignersAsc = 'ASSIGNERS_ASC',
   AssignersDesc = 'ASSIGNERS_DESC',
   ReviewersAsc = 'REVIEWERS_ASC',
@@ -3596,7 +3604,6 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -3608,6 +3615,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** A filter to be used against many `ApplicationResponse` object types. All fields are combined with a logical ‘and.’ */
@@ -4661,6 +4669,47 @@ export type CreateFilterPayload = {
 /** The output of our create `Filter` mutation. */
 export type CreateFilterPayloadFilterEdgeArgs = {
   orderBy?: Maybe<Array<FiltersOrderBy>>;
+};
+
+/** All input for the create `LanguageString` mutation. */
+export type CreateLanguageStringInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LanguageString` to be created by this mutation. */
+  languageString: LanguageStringInput;
+};
+
+/** The output of our create `LanguageString` mutation. */
+export type CreateLanguageStringPayload = {
+  __typename?: 'CreateLanguageStringPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LanguageString` that was created by this mutation. */
+  languageString?: Maybe<LanguageString>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `LanguageString`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `LanguageString`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `LanguageString`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `LanguageString`. */
+  permissionName?: Maybe<PermissionName>;
+  /** An edge for our `LanguageString`. May be used by Relay 1. */
+  languageStringEdge?: Maybe<LanguageStringsEdge>;
+};
+
+
+/** The output of our create `LanguageString` mutation. */
+export type CreateLanguageStringPayloadLanguageStringEdgeArgs = {
+  orderBy?: Maybe<Array<LanguageStringsOrderBy>>;
 };
 
 /** All input for the create `LookupTable` mutation. */
@@ -6433,6 +6482,58 @@ export type DeleteFilterPayload = {
 /** The output of our delete `Filter` mutation. */
 export type DeleteFilterPayloadFilterEdgeArgs = {
   orderBy?: Maybe<Array<FiltersOrderBy>>;
+};
+
+/** All input for the `deleteLanguageStringByNodeId` mutation. */
+export type DeleteLanguageStringByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LanguageString` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteLanguageString` mutation. */
+export type DeleteLanguageStringInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `LanguageString` mutation. */
+export type DeleteLanguageStringPayload = {
+  __typename?: 'DeleteLanguageStringPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LanguageString` that was deleted by this mutation. */
+  languageString?: Maybe<LanguageString>;
+  deletedLanguageStringNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `LanguageString`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `LanguageString`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `LanguageString`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `LanguageString`. */
+  permissionName?: Maybe<PermissionName>;
+  /** An edge for our `LanguageString`. May be used by Relay 1. */
+  languageStringEdge?: Maybe<LanguageStringsEdge>;
+};
+
+
+/** The output of our delete `LanguageString` mutation. */
+export type DeleteLanguageStringPayloadLanguageStringEdgeArgs = {
+  orderBy?: Maybe<Array<LanguageStringsOrderBy>>;
 };
 
 /** All input for the `deleteLookupTableByNodeId` mutation. */
@@ -8734,7 +8835,6 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -8746,6 +8846,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** The `file` to be created by this mutation. */
@@ -8848,6 +8949,8 @@ export type Filter = Node & {
   userRole?: Maybe<PermissionPolicyType>;
   /** Reads and enables pagination through a set of `TemplateFilterJoin`. */
   templateFilterJoins: TemplateFilterJoinsConnection;
+  /** Reads and enables pagination through a set of `LanguageString`. */
+  languageStrings: LanguageStringsConnection;
 };
 
 
@@ -8860,6 +8963,18 @@ export type FilterTemplateFilterJoinsArgs = {
   orderBy?: Maybe<Array<TemplateFilterJoinsOrderBy>>;
   condition?: Maybe<TemplateFilterJoinCondition>;
   filter?: Maybe<TemplateFilterJoinFilter>;
+};
+
+
+export type FilterLanguageStringsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LanguageStringsOrderBy>>;
+  condition?: Maybe<LanguageStringCondition>;
+  filter?: Maybe<LanguageStringFilter>;
 };
 
 /** A condition to be used against `Filter` object types. All fields are tested for equality and combined with a logical ‘and.’ */
@@ -8892,6 +9007,10 @@ export type FilterFilter = {
   templateFilterJoins?: Maybe<FilterToManyTemplateFilterJoinFilter>;
   /** Some related `templateFilterJoins` exist. */
   templateFilterJoinsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `languageStrings` relation. */
+  languageStrings?: Maybe<FilterToManyLanguageStringFilter>;
+  /** Some related `languageStrings` exist. */
+  languageStringsExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<FilterFilter>>;
   /** Checks for any expressions in this list. */
@@ -8928,6 +9047,7 @@ export type FilterInput = {
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
   templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsFilterIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -8940,6 +9060,28 @@ export type FilterNodeIdConnect = {
 export type FilterNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `filter` to be deleted. */
   nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type FilterOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `languageString` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `languageString` being updated. */
+  patch: LanguageStringPatch;
+};
+
+/** The fields on `filter` to look up the row to update. */
+export type FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: UpdateFilterOnLanguageStringForLanguageStringsFilterIdFkeyPatch;
+  code: Scalars['String'];
+};
+
+/** The fields on `filter` to look up the row to update. */
+export type FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterPkeyUpdate = {
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: UpdateFilterOnLanguageStringForLanguageStringsFilterIdFkeyPatch;
+  id: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -8972,6 +9114,7 @@ export type FilterPatch = {
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
   templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsFilterIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `Filter` values. */
@@ -9012,6 +9155,16 @@ export enum FiltersOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+/** A filter to be used against many `LanguageString` object types. All fields are combined with a logical ‘and.’ */
+export type FilterToManyLanguageStringFilter = {
+  /** Every related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<LanguageStringFilter>;
+  /** Some related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<LanguageStringFilter>;
+  /** No related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<LanguageStringFilter>;
+};
 
 /** A filter to be used against many `TemplateFilterJoin` object types. All fields are combined with a logical ‘and.’ */
 export type FilterToManyTemplateFilterJoinFilter = {
@@ -9084,6 +9237,538 @@ export type JsonFilter = {
   containsAnyKeys?: Maybe<Array<Scalars['String']>>;
   /** Contained by the specified JSON. */
   containedBy?: Maybe<Scalars['JSON']>;
+};
+
+export type LanguageString = Node & {
+  __typename?: 'LanguageString';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  /** Reads a single `Template` that is related to this `LanguageString`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `LanguageString`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `LanguageString`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `LanguageString`. */
+  permissionName?: Maybe<PermissionName>;
+};
+
+/**
+ * A condition to be used against `LanguageString` object types. All fields are
+ * tested for equality and combined with a logical ‘and.’
+ */
+export type LanguageStringCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `languageCode` field. */
+  languageCode?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `strings` field. */
+  strings?: Maybe<Scalars['JSON']>;
+  /** Checks for equality with the object’s `templateId` field. */
+  templateId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `filterId` field. */
+  filterId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `outcomeDisplayId` field. */
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<Scalars['Int']>;
+};
+
+/** A filter to be used against `LanguageString` object types. All fields are combined with a logical ‘and.’ */
+export type LanguageStringFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `languageCode` field. */
+  languageCode?: Maybe<StringFilter>;
+  /** Filter by the object’s `strings` field. */
+  strings?: Maybe<JsonFilter>;
+  /** Filter by the object’s `templateId` field. */
+  templateId?: Maybe<IntFilter>;
+  /** Filter by the object’s `filterId` field. */
+  filterId?: Maybe<IntFilter>;
+  /** Filter by the object’s `outcomeDisplayId` field. */
+  outcomeDisplayId?: Maybe<IntFilter>;
+  /** Filter by the object’s `permissionNameId` field. */
+  permissionNameId?: Maybe<IntFilter>;
+  /** Filter by the object’s `template` relation. */
+  template?: Maybe<TemplateFilter>;
+  /** A related `template` exists. */
+  templateExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `filter` relation. */
+  filter?: Maybe<FilterFilter>;
+  /** A related `filter` exists. */
+  filterExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `outcomeDisplay` relation. */
+  outcomeDisplay?: Maybe<OutcomeDisplayFilter>;
+  /** A related `outcomeDisplay` exists. */
+  outcomeDisplayExists?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `permissionName` relation. */
+  permissionName?: Maybe<PermissionNameFilter>;
+  /** A related `permissionName` exists. */
+  permissionNameExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<LanguageStringFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<LanguageStringFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<LanguageStringFilter>;
+};
+
+/** An input for mutations affecting `LanguageString` */
+export type LanguageStringInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<LanguageStringsTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<LanguageStringsFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<LanguageStringsPermissionNameIdFkeyInput>;
+};
+
+/** The fields on `languageString` to look up the row to connect. */
+export type LanguageStringLanguageStringsPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `languageString` to look up the row to delete. */
+export type LanguageStringLanguageStringsPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type LanguageStringNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `languageString` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type LanguageStringNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `languageString` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `filter` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `filter` being updated. */
+  patch: FilterPatch;
+};
+
+/** The fields on `languageString` to look up the row to update. */
+export type LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyUsingLanguageStringsPkeyUpdate = {
+  /** An object where the defined keys will be set on the `languageString` being updated. */
+  patch: UpdateLanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `outcomeDisplay` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: OutcomeDisplayPatch;
+};
+
+/** The fields on `languageString` to look up the row to update. */
+export type LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingLanguageStringsPkeyUpdate = {
+  /** An object where the defined keys will be set on the `languageString` being updated. */
+  patch: UpdateLanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `permissionName` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `permissionName` being updated. */
+  patch: PermissionNamePatch;
+};
+
+/** The fields on `languageString` to look up the row to update. */
+export type LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingLanguageStringsPkeyUpdate = {
+  /** An object where the defined keys will be set on the `languageString` being updated. */
+  patch: UpdateLanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `template` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: TemplatePatch;
+};
+
+/** The fields on `languageString` to look up the row to update. */
+export type LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyUsingLanguageStringsPkeyUpdate = {
+  /** An object where the defined keys will be set on the `languageString` being updated. */
+  patch: UpdateLanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `LanguageString`. Fields that are set will be updated. */
+export type LanguageStringPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<LanguageStringsTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<LanguageStringsFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<LanguageStringsPermissionNameIdFkeyInput>;
+};
+
+/** A connection to a list of `LanguageString` values. */
+export type LanguageStringsConnection = {
+  __typename?: 'LanguageStringsConnection';
+  /** A list of `LanguageString` objects. */
+  nodes: Array<Maybe<LanguageString>>;
+  /** A list of edges which contains the `LanguageString` and cursor to aid in pagination. */
+  edges: Array<LanguageStringsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `LanguageString` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `LanguageString` edge in the connection. */
+export type LanguageStringsEdge = {
+  __typename?: 'LanguageStringsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `LanguageString` at the end of the edge. */
+  node?: Maybe<LanguageString>;
+};
+
+/** The `filter` to be created by this mutation. */
+export type LanguageStringsFilterIdFkeyFilterCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  code: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsFilterIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `filter` in the `LanguageStringInput` mutation. */
+export type LanguageStringsFilterIdFkeyInput = {
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectById?: Maybe<FilterFilterPkeyConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectByCode?: Maybe<FilterFilterCodeKeyConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  connectByNodeId?: Maybe<FilterNodeIdConnect>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteById?: Maybe<FilterFilterPkeyDelete>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteByCode?: Maybe<FilterFilterCodeKeyDelete>;
+  /** The primary key(s) for `filter` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<FilterNodeIdDelete>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateById?: Maybe<FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterPkeyUpdate>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateByCode?: Maybe<FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `filter` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate>;
+  /** A `FilterInput` object that will be created and connected to this object. */
+  create?: Maybe<LanguageStringsFilterIdFkeyFilterCreateInput>;
+};
+
+/** Input for the nested mutation of `languageString` in the `FilterInput` mutation. */
+export type LanguageStringsFilterIdFkeyInverseInput = {
+  /** Flag indicating whether all other `languageString` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  connectById?: Maybe<Array<LanguageStringLanguageStringsPkeyConnect>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LanguageStringNodeIdConnect>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LanguageStringLanguageStringsPkeyDelete>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LanguageStringNodeIdDelete>>;
+  /** The primary key(s) and patch data for `languageString` for the far side of the relationship. */
+  updateById?: Maybe<Array<LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyUsingLanguageStringsPkeyUpdate>>;
+  /** The primary key(s) and patch data for `languageString` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<FilterOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate>>;
+  /** A `LanguageStringInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LanguageStringsFilterIdFkeyLanguageStringsCreateInput>>;
+};
+
+/** The `languageString` to be created by this mutation. */
+export type LanguageStringsFilterIdFkeyLanguageStringsCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<LanguageStringsTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<LanguageStringsFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<LanguageStringsPermissionNameIdFkeyInput>;
+};
+
+/** Methods to use when ordering `LanguageString`. */
+export enum LanguageStringsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  LanguageCodeAsc = 'LANGUAGE_CODE_ASC',
+  LanguageCodeDesc = 'LANGUAGE_CODE_DESC',
+  StringsAsc = 'STRINGS_ASC',
+  StringsDesc = 'STRINGS_DESC',
+  TemplateIdAsc = 'TEMPLATE_ID_ASC',
+  TemplateIdDesc = 'TEMPLATE_ID_DESC',
+  FilterIdAsc = 'FILTER_ID_ASC',
+  FilterIdDesc = 'FILTER_ID_DESC',
+  OutcomeDisplayIdAsc = 'OUTCOME_DISPLAY_ID_ASC',
+  OutcomeDisplayIdDesc = 'OUTCOME_DISPLAY_ID_DESC',
+  PermissionNameIdAsc = 'PERMISSION_NAME_ID_ASC',
+  PermissionNameIdDesc = 'PERMISSION_NAME_ID_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
+/** Input for the nested mutation of `outcomeDisplay` in the `LanguageStringInput` mutation. */
+export type LanguageStringsOutcomeDisplayIdFkeyInput = {
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  connectByNodeId?: Maybe<OutcomeDisplayNodeIdConnect>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteById?: Maybe<OutcomeDisplayOutcomeDisplayPkeyDelete>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteByTableNameAndCode?: Maybe<OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete>;
+  /** The primary key(s) for `outcomeDisplay` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<OutcomeDisplayNodeIdDelete>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateById?: Maybe<OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateByTableNameAndCode?: Maybe<OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate>;
+  /** The primary key(s) and patch data for `outcomeDisplay` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate>;
+  /** A `OutcomeDisplayInput` object that will be created and connected to this object. */
+  create?: Maybe<LanguageStringsOutcomeDisplayIdFkeyOutcomeDisplayCreateInput>;
+};
+
+/** Input for the nested mutation of `languageString` in the `OutcomeDisplayInput` mutation. */
+export type LanguageStringsOutcomeDisplayIdFkeyInverseInput = {
+  /** Flag indicating whether all other `languageString` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  connectById?: Maybe<Array<LanguageStringLanguageStringsPkeyConnect>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LanguageStringNodeIdConnect>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LanguageStringLanguageStringsPkeyDelete>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LanguageStringNodeIdDelete>>;
+  /** The primary key(s) and patch data for `languageString` for the far side of the relationship. */
+  updateById?: Maybe<Array<LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingLanguageStringsPkeyUpdate>>;
+  /** The primary key(s) and patch data for `languageString` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate>>;
+  /** A `LanguageStringInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LanguageStringsOutcomeDisplayIdFkeyLanguageStringsCreateInput>>;
+};
+
+/** The `languageString` to be created by this mutation. */
+export type LanguageStringsOutcomeDisplayIdFkeyLanguageStringsCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<LanguageStringsTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<LanguageStringsFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<LanguageStringsPermissionNameIdFkeyInput>;
+};
+
+/** The `outcomeDisplay` to be created by this mutation. */
+export type LanguageStringsOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  tableName: Scalars['String'];
+  title?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn: Scalars['String'];
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
+  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `permissionName` in the `LanguageStringInput` mutation. */
+export type LanguageStringsPermissionNameIdFkeyInput = {
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  connectById?: Maybe<PermissionNamePermissionNamePkeyConnect>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  connectByName?: Maybe<PermissionNamePermissionNameNameKeyConnect>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  connectByNodeId?: Maybe<PermissionNameNodeIdConnect>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  deleteById?: Maybe<PermissionNamePermissionNamePkeyDelete>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  deleteByName?: Maybe<PermissionNamePermissionNameNameKeyDelete>;
+  /** The primary key(s) for `permissionName` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<PermissionNameNodeIdDelete>;
+  /** The primary key(s) and patch data for `permissionName` for the far side of the relationship. */
+  updateById?: Maybe<PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNamePkeyUpdate>;
+  /** The primary key(s) and patch data for `permissionName` for the far side of the relationship. */
+  updateByName?: Maybe<PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate>;
+  /** The primary key(s) and patch data for `permissionName` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate>;
+  /** A `PermissionNameInput` object that will be created and connected to this object. */
+  create?: Maybe<LanguageStringsPermissionNameIdFkeyPermissionNameCreateInput>;
+};
+
+/** Input for the nested mutation of `languageString` in the `PermissionNameInput` mutation. */
+export type LanguageStringsPermissionNameIdFkeyInverseInput = {
+  /** Flag indicating whether all other `languageString` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  connectById?: Maybe<Array<LanguageStringLanguageStringsPkeyConnect>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LanguageStringNodeIdConnect>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LanguageStringLanguageStringsPkeyDelete>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LanguageStringNodeIdDelete>>;
+  /** The primary key(s) and patch data for `languageString` for the far side of the relationship. */
+  updateById?: Maybe<Array<LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingLanguageStringsPkeyUpdate>>;
+  /** The primary key(s) and patch data for `languageString` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate>>;
+  /** A `LanguageStringInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LanguageStringsPermissionNameIdFkeyLanguageStringsCreateInput>>;
+};
+
+/** The `languageString` to be created by this mutation. */
+export type LanguageStringsPermissionNameIdFkeyLanguageStringsCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<LanguageStringsTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<LanguageStringsFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<LanguageStringsPermissionNameIdFkeyInput>;
+};
+
+/** The `permissionName` to be created by this mutation. */
+export type LanguageStringsPermissionNameIdFkeyPermissionNameCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsPermissionNameIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `template` in the `LanguageStringInput` mutation. */
+export type LanguageStringsTemplateIdFkeyInput = {
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectById?: Maybe<TemplateTemplatePkeyConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  connectByNodeId?: Maybe<TemplateNodeIdConnect>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteById?: Maybe<TemplateTemplatePkeyDelete>;
+  /** The primary key(s) for `template` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<TemplateNodeIdDelete>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateById?: Maybe<TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyUsingTemplatePkeyUpdate>;
+  /** The primary key(s) and patch data for `template` for the far side of the relationship. */
+  updateByNodeId?: Maybe<LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate>;
+  /** A `TemplateInput` object that will be created and connected to this object. */
+  create?: Maybe<LanguageStringsTemplateIdFkeyTemplateCreateInput>;
+};
+
+/** Input for the nested mutation of `languageString` in the `TemplateInput` mutation. */
+export type LanguageStringsTemplateIdFkeyInverseInput = {
+  /** Flag indicating whether all other `languageString` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  connectById?: Maybe<Array<LanguageStringLanguageStringsPkeyConnect>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<LanguageStringNodeIdConnect>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  deleteById?: Maybe<Array<LanguageStringLanguageStringsPkeyDelete>>;
+  /** The primary key(s) for `languageString` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<LanguageStringNodeIdDelete>>;
+  /** The primary key(s) and patch data for `languageString` for the far side of the relationship. */
+  updateById?: Maybe<Array<LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyUsingLanguageStringsPkeyUpdate>>;
+  /** The primary key(s) and patch data for `languageString` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate>>;
+  /** A `LanguageStringInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<LanguageStringsTemplateIdFkeyLanguageStringsCreateInput>>;
+};
+
+/** The `languageString` to be created by this mutation. */
+export type LanguageStringsTemplateIdFkeyLanguageStringsCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<LanguageStringsTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<LanguageStringsFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<LanguageStringsPermissionNameIdFkeyInput>;
+};
+
+/** The `template` to be created by this mutation. */
+export type LanguageStringsTemplateIdFkeyTemplateCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
+  code: Scalars['String'];
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 export type LookupTable = Node & {
@@ -9209,6 +9894,8 @@ export type Mutation = {
   createFile?: Maybe<CreateFilePayload>;
   /** Creates a single `Filter`. */
   createFilter?: Maybe<CreateFilterPayload>;
+  /** Creates a single `LanguageString`. */
+  createLanguageString?: Maybe<CreateLanguageStringPayload>;
   /** Creates a single `LookupTable`. */
   createLookupTable?: Maybe<CreateLookupTablePayload>;
   /** Creates a single `Notification`. */
@@ -9325,6 +10012,10 @@ export type Mutation = {
   updateFilter?: Maybe<UpdateFilterPayload>;
   /** Updates a single `Filter` using a unique key and a patch. */
   updateFilterByCode?: Maybe<UpdateFilterPayload>;
+  /** Updates a single `LanguageString` using its globally unique id and a patch. */
+  updateLanguageStringByNodeId?: Maybe<UpdateLanguageStringPayload>;
+  /** Updates a single `LanguageString` using a unique key and a patch. */
+  updateLanguageString?: Maybe<UpdateLanguageStringPayload>;
   /** Updates a single `LookupTable` using its globally unique id and a patch. */
   updateLookupTableByNodeId?: Maybe<UpdateLookupTablePayload>;
   /** Updates a single `LookupTable` using a unique key and a patch. */
@@ -9525,6 +10216,10 @@ export type Mutation = {
   deleteFilter?: Maybe<DeleteFilterPayload>;
   /** Deletes a single `Filter` using a unique key. */
   deleteFilterByCode?: Maybe<DeleteFilterPayload>;
+  /** Deletes a single `LanguageString` using its globally unique id. */
+  deleteLanguageStringByNodeId?: Maybe<DeleteLanguageStringPayload>;
+  /** Deletes a single `LanguageString` using a unique key. */
+  deleteLanguageString?: Maybe<DeleteLanguageStringPayload>;
   /** Deletes a single `LookupTable` using its globally unique id. */
   deleteLookupTableByNodeId?: Maybe<DeleteLookupTablePayload>;
   /** Deletes a single `LookupTable` using a unique key. */
@@ -9744,6 +10439,12 @@ export type MutationCreateFileArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateFilterArgs = {
   input: CreateFilterInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateLanguageStringArgs = {
+  input: CreateLanguageStringInput;
 };
 
 
@@ -10092,6 +10793,18 @@ export type MutationUpdateFilterArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateFilterByCodeArgs = {
   input: UpdateFilterByCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLanguageStringByNodeIdArgs = {
+  input: UpdateLanguageStringByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateLanguageStringArgs = {
+  input: UpdateLanguageStringInput;
 };
 
 
@@ -10692,6 +11405,18 @@ export type MutationDeleteFilterArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteFilterByCodeArgs = {
   input: DeleteFilterByCodeInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLanguageStringByNodeIdArgs = {
+  input: DeleteLanguageStringByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteLanguageStringArgs = {
+  input: DeleteLanguageStringInput;
 };
 
 
@@ -12099,6 +12824,8 @@ export type OutcomeDisplay = Node & {
   outcomeDisplayTables: OutcomeDisplayTablesConnection;
   /** Reads and enables pagination through a set of `OutcomeDisplayDetail`. */
   outcomeDisplayDetails: OutcomeDisplayDetailsConnection;
+  /** Reads and enables pagination through a set of `LanguageString`. */
+  languageStrings: LanguageStringsConnection;
 };
 
 
@@ -12123,6 +12850,18 @@ export type OutcomeDisplayOutcomeDisplayDetailsArgs = {
   orderBy?: Maybe<Array<OutcomeDisplayDetailsOrderBy>>;
   condition?: Maybe<OutcomeDisplayDetailCondition>;
   filter?: Maybe<OutcomeDisplayDetailFilter>;
+};
+
+
+export type OutcomeDisplayLanguageStringsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LanguageStringsOrderBy>>;
+  condition?: Maybe<LanguageStringCondition>;
+  filter?: Maybe<LanguageStringFilter>;
 };
 
 export type OutcomeDisplayColumnDefinition = Node & {
@@ -12461,6 +13200,7 @@ export type OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = 
   priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInverseInput>;
 };
 
 /** The `outcomeDisplayDetail` to be created by this mutation. */
@@ -12563,6 +13303,10 @@ export type OutcomeDisplayFilter = {
   outcomeDisplayDetails?: Maybe<OutcomeDisplayToManyOutcomeDisplayDetailFilter>;
   /** Some related `outcomeDisplayDetails` exist. */
   outcomeDisplayDetailsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `languageStrings` relation. */
+  languageStrings?: Maybe<OutcomeDisplayToManyLanguageStringFilter>;
+  /** Some related `languageStrings` exist. */
+  languageStringsExist?: Maybe<Scalars['Boolean']>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<OutcomeDisplayFilter>>;
   /** Checks for any expressions in this list. */
@@ -12587,6 +13331,7 @@ export type OutcomeDisplayInput = {
   priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -12599,6 +13344,29 @@ export type OutcomeDisplayNodeIdConnect = {
 export type OutcomeDisplayNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `outcomeDisplay` to be deleted. */
   nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `languageString` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `languageString` being updated. */
+  patch: LanguageStringPatch;
+};
+
+/** The fields on `outcomeDisplay` to look up the row to update. */
+export type OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: UpdateOutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `outcomeDisplay` to look up the row to update. */
+export type OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate = {
+  /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+  patch: UpdateOutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch;
+  tableName: Scalars['String'];
+  code: Scalars['String'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -12685,6 +13453,7 @@ export type OutcomeDisplayPatch = {
   priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `OutcomeDisplay` values. */
@@ -12891,6 +13660,7 @@ export type OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput = {
   priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInverseInput>;
 };
 
 /** The `outcomeDisplayTable` to be created by this mutation. */
@@ -12960,6 +13730,16 @@ export enum OutcomeDisplayTablesOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+/** A filter to be used against many `LanguageString` object types. All fields are combined with a logical ‘and.’ */
+export type OutcomeDisplayToManyLanguageStringFilter = {
+  /** Every related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<LanguageStringFilter>;
+  /** Some related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<LanguageStringFilter>;
+  /** No related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<LanguageStringFilter>;
+};
 
 /** A filter to be used against many `OutcomeDisplayDetail` object types. All fields are combined with a logical ‘and.’ */
 export type OutcomeDisplayToManyOutcomeDisplayDetailFilter = {
@@ -13288,6 +14068,7 @@ export type PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsPermissionNameIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `PermissionJoin` values. */
@@ -13417,6 +14198,8 @@ export type PermissionName = Node & {
   permissionJoins: PermissionJoinsConnection;
   /** Reads and enables pagination through a set of `TemplatePermission`. */
   templatePermissions: TemplatePermissionsConnection;
+  /** Reads and enables pagination through a set of `LanguageString`. */
+  languageStrings: LanguageStringsConnection;
 };
 
 
@@ -13441,6 +14224,18 @@ export type PermissionNameTemplatePermissionsArgs = {
   orderBy?: Maybe<Array<TemplatePermissionsOrderBy>>;
   condition?: Maybe<TemplatePermissionCondition>;
   filter?: Maybe<TemplatePermissionFilter>;
+};
+
+
+export type PermissionNameLanguageStringsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LanguageStringsOrderBy>>;
+  condition?: Maybe<LanguageStringCondition>;
+  filter?: Maybe<LanguageStringFilter>;
 };
 
 /**
@@ -13472,6 +14267,10 @@ export type PermissionNameFilter = {
   templatePermissions?: Maybe<PermissionNameToManyTemplatePermissionFilter>;
   /** Some related `templatePermissions` exist. */
   templatePermissionsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `languageStrings` relation. */
+  languageStrings?: Maybe<PermissionNameToManyLanguageStringFilter>;
+  /** Some related `languageStrings` exist. */
+  languageStringsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `permissionPolicy` relation. */
   permissionPolicy?: Maybe<PermissionPolicyFilter>;
   /** A related `permissionPolicy` exists. */
@@ -13492,6 +14291,7 @@ export type PermissionNameInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsPermissionNameIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -13504,6 +14304,28 @@ export type PermissionNameNodeIdConnect = {
 export type PermissionNameNodeIdDelete = {
   /** The globally unique `ID` which identifies a single `permissionName` to be deleted. */
   nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `languageString` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `languageString` being updated. */
+  patch: LanguageStringPatch;
+};
+
+/** The fields on `permissionName` to look up the row to update. */
+export type PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate = {
+  /** An object where the defined keys will be set on the `permissionName` being updated. */
+  patch: UpdatePermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch;
+  name: Scalars['String'];
+};
+
+/** The fields on `permissionName` to look up the row to update. */
+export type PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNamePkeyUpdate = {
+  /** An object where the defined keys will be set on the `permissionName` being updated. */
+  patch: UpdatePermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch;
+  id: Scalars['Int'];
 };
 
 /** The globally unique `ID` look up for the row to update. */
@@ -13580,6 +14402,7 @@ export type PermissionNamePatch = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsPermissionNameIdFkeyInverseInput>;
 };
 
 /** The fields on `permissionName` to look up the row to connect. */
@@ -13659,6 +14482,7 @@ export type PermissionNamePermissionPolicyIdFkeyPermissionNameCreateInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsPermissionNameIdFkeyInverseInput>;
 };
 
 /** The `permissionPolicy` to be created by this mutation. */
@@ -13707,6 +14531,16 @@ export enum PermissionNamesOrderBy {
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
+
+/** A filter to be used against many `LanguageString` object types. All fields are combined with a logical ‘and.’ */
+export type PermissionNameToManyLanguageStringFilter = {
+  /** Every related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<LanguageStringFilter>;
+  /** Some related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<LanguageStringFilter>;
+  /** No related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<LanguageStringFilter>;
+};
 
 /** A filter to be used against many `PermissionJoin` object types. All fields are combined with a logical ‘and.’ */
 export type PermissionNameToManyPermissionJoinFilter = {
@@ -14308,6 +15142,8 @@ export type Query = Node & {
   files?: Maybe<FilesConnection>;
   /** Reads and enables pagination through a set of `Filter`. */
   filters?: Maybe<FiltersConnection>;
+  /** Reads and enables pagination through a set of `LanguageString`. */
+  languageStrings?: Maybe<LanguageStringsConnection>;
   /** Reads and enables pagination through a set of `LookupTable`. */
   lookupTables?: Maybe<LookupTablesConnection>;
   /** Reads and enables pagination through a set of `Notification`. */
@@ -14394,6 +15230,7 @@ export type Query = Node & {
   fileByUniqueId?: Maybe<File>;
   filter?: Maybe<Filter>;
   filterByCode?: Maybe<Filter>;
+  languageString?: Maybe<LanguageString>;
   lookupTable?: Maybe<LookupTable>;
   notification?: Maybe<Notification>;
   organisation?: Maybe<Organisation>;
@@ -14486,6 +15323,8 @@ export type Query = Node & {
   fileByNodeId?: Maybe<File>;
   /** Reads a single `Filter` using its globally unique `ID`. */
   filterByNodeId?: Maybe<Filter>;
+  /** Reads a single `LanguageString` using its globally unique `ID`. */
+  languageStringByNodeId?: Maybe<LanguageString>;
   /** Reads a single `LookupTable` using its globally unique `ID`. */
   lookupTableByNodeId?: Maybe<LookupTable>;
   /** Reads a single `Notification` using its globally unique `ID`. */
@@ -14749,6 +15588,19 @@ export type QueryFiltersArgs = {
   orderBy?: Maybe<Array<FiltersOrderBy>>;
   condition?: Maybe<FilterCondition>;
   filter?: Maybe<FilterFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLanguageStringsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LanguageStringsOrderBy>>;
+  condition?: Maybe<LanguageStringCondition>;
+  filter?: Maybe<LanguageStringFilter>;
 };
 
 
@@ -15304,6 +16156,12 @@ export type QueryFilterByCodeArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryLanguageStringArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryLookupTableArgs = {
   id: Scalars['Int'];
 };
@@ -15849,6 +16707,12 @@ export type QueryFileByNodeIdArgs = {
 
 /** The root query type which gives access points into the data universe. */
 export type QueryFilterByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryLanguageStringByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
 
@@ -17814,7 +18678,6 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -17826,6 +18689,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** A filter to be used against many `ReviewAssignmentAssignerJoin` object types. All fields are combined with a logical ‘and.’ */
@@ -20572,7 +21436,6 @@ export type Template = Node & {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   /** Reads a single `TemplateCategory` that is related to this `Template`. */
   templateCategory?: Maybe<TemplateCategory>;
   /** Reads and enables pagination through a set of `TemplateSection`. */
@@ -20595,6 +21458,8 @@ export type Template = Node & {
   reviewAssignments: ReviewAssignmentsConnection;
   /** Reads and enables pagination through a set of `File`. */
   files: FilesConnection;
+  /** Reads and enables pagination through a set of `LanguageString`. */
+  languageStrings: LanguageStringsConnection;
 };
 
 
@@ -20715,6 +21580,18 @@ export type TemplateFilesArgs = {
   orderBy?: Maybe<Array<FilesOrderBy>>;
   condition?: Maybe<FileCondition>;
   filter?: Maybe<FileFilter>;
+};
+
+
+export type TemplateLanguageStringsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<LanguageStringsOrderBy>>;
+  condition?: Maybe<LanguageStringCondition>;
+  filter?: Maybe<LanguageStringFilter>;
 };
 
 export type TemplateAction = Node & {
@@ -20979,7 +21856,6 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -20991,6 +21867,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** A connection to a list of `TemplateCategory` values. */
@@ -21211,8 +22088,6 @@ export type TemplateCondition = {
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   /** Checks for equality with the object’s `version` field. */
   version?: Maybe<Scalars['Int']>;
-  /** Checks for equality with the object’s `languageStrings` field. */
-  languageStrings?: Maybe<Scalars['JSON']>;
 };
 
 export type TemplateElement = Node & {
@@ -21802,8 +22677,6 @@ export type TemplateFilter = {
   versionTimestamp?: Maybe<DatetimeFilter>;
   /** Filter by the object’s `version` field. */
   version?: Maybe<IntFilter>;
-  /** Filter by the object’s `languageStrings` field. */
-  languageStrings?: Maybe<JsonFilter>;
   /** Filter by the object’s `templateSections` relation. */
   templateSections?: Maybe<TemplateToManyTemplateSectionFilter>;
   /** Some related `templateSections` exist. */
@@ -21844,6 +22717,10 @@ export type TemplateFilter = {
   files?: Maybe<TemplateToManyFileFilter>;
   /** Some related `files` exist. */
   filesExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `languageStrings` relation. */
+  languageStrings?: Maybe<TemplateToManyLanguageStringFilter>;
+  /** Some related `languageStrings` exist. */
+  languageStringsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `templateCategory` relation. */
   templateCategory?: Maybe<TemplateCategoryFilter>;
   /** A related `templateCategory` exists. */
@@ -21910,6 +22787,7 @@ export type TemplateFilterJoinFilterIdFkeyFilterCreateInput = {
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
   templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsFilterIdFkeyInverseInput>;
 };
 
 /** Input for the nested mutation of `filter` in the `TemplateFilterJoinInput` mutation. */
@@ -22121,7 +22999,6 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22133,6 +23010,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** The `templateFilterJoin` to be created by this mutation. */
@@ -22157,7 +23035,6 @@ export type TemplateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22169,6 +23046,7 @@ export type TemplateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** The globally unique `ID` look up for the row to connect. */
@@ -22225,6 +23103,21 @@ export type TemplateOnFileForFileTemplateIdFkeyNodeIdUpdate = {
 export type TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate = {
   /** An object where the defined keys will be set on the `template` being updated. */
   patch: UpdateTemplateOnFileForFileTemplateIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `languageString` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `languageString` being updated. */
+  patch: LanguageStringPatch;
+};
+
+/** The fields on `template` to look up the row to update. */
+export type TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyUsingTemplatePkeyUpdate = {
+  /** An object where the defined keys will be set on the `template` being updated. */
+  patch: UpdateTemplateOnLanguageStringForLanguageStringsTemplateIdFkeyPatch;
   id: Scalars['Int'];
 };
 
@@ -22362,7 +23255,6 @@ export type TemplatePatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22374,6 +23266,7 @@ export type TemplatePatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 export type TemplatePermission = Node & {
@@ -22578,6 +23471,7 @@ export type TemplatePermissionPermissionNameIdFkeyPermissionNameCreateInput = {
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsPermissionNameIdFkeyInverseInput>;
 };
 
 /** The `templatePermission` to be created by this mutation. */
@@ -22693,7 +23587,6 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -22705,6 +23598,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** The `templatePermission` to be created by this mutation. */
@@ -23034,7 +23928,6 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -23046,6 +23939,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** The `templateSection` to be created by this mutation. */
@@ -23137,8 +24031,6 @@ export enum TemplatesOrderBy {
   VersionTimestampDesc = 'VERSION_TIMESTAMP_DESC',
   VersionAsc = 'VERSION_ASC',
   VersionDesc = 'VERSION_DESC',
-  LanguageStringsAsc = 'LANGUAGE_STRINGS_ASC',
-  LanguageStringsDesc = 'LANGUAGE_STRINGS_DESC',
   PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
@@ -23702,7 +24594,6 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -23714,6 +24605,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** The `templateStage` to be created by this mutation. */
@@ -23868,7 +24760,6 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   icon?: Maybe<Scalars['String']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -23880,6 +24771,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** The fields on `template` to look up the row to connect. */
@@ -23920,6 +24812,16 @@ export type TemplateToManyFileFilter = {
   some?: Maybe<FileFilter>;
   /** No related `File` matches the filter criteria. All fields are combined with a logical ‘and.’ */
   none?: Maybe<FileFilter>;
+};
+
+/** A filter to be used against many `LanguageString` object types. All fields are combined with a logical ‘and.’ */
+export type TemplateToManyLanguageStringFilter = {
+  /** Every related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<LanguageStringFilter>;
+  /** Some related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<LanguageStringFilter>;
+  /** No related `LanguageString` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<LanguageStringFilter>;
 };
 
 /** A filter to be used against many `ReviewAssignment` object types. All fields are combined with a logical ‘and.’ */
@@ -24601,7 +25503,6 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -24613,6 +25514,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** The `triggerSchedule` to be created by this mutation. */
@@ -25838,6 +26740,17 @@ export type UpdateFilterInput = {
 };
 
 /** An object where the defined keys will be set on the `filter` being updated. */
+export type UpdateFilterOnLanguageStringForLanguageStringsFilterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  code?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  query?: Maybe<Scalars['JSON']>;
+  userRole?: Maybe<PermissionPolicyType>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsFilterIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `filter` being updated. */
 export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   code?: Maybe<Scalars['String']>;
@@ -25845,6 +26758,7 @@ export type UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPat
   query?: Maybe<Scalars['JSON']>;
   userRole?: Maybe<PermissionPolicyType>;
   templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinFilterIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsFilterIdFkeyInverseInput>;
 };
 
 /** The output of our update `Filter` mutation. */
@@ -25867,6 +26781,117 @@ export type UpdateFilterPayload = {
 /** The output of our update `Filter` mutation. */
 export type UpdateFilterPayloadFilterEdgeArgs = {
   orderBy?: Maybe<Array<FiltersOrderBy>>;
+};
+
+/** All input for the `updateLanguageStringByNodeId` mutation. */
+export type UpdateLanguageStringByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `LanguageString` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `LanguageString` being updated. */
+  patch: LanguageStringPatch;
+};
+
+/** All input for the `updateLanguageString` mutation. */
+export type UpdateLanguageStringInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `LanguageString` being updated. */
+  patch: LanguageStringPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `languageString` being updated. */
+export type UpdateLanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<LanguageStringsTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<LanguageStringsFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<LanguageStringsPermissionNameIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `languageString` being updated. */
+export type UpdateLanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<LanguageStringsTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<LanguageStringsFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<LanguageStringsPermissionNameIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `languageString` being updated. */
+export type UpdateLanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  templateId?: Maybe<Scalars['Int']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<LanguageStringsTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<LanguageStringsFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<LanguageStringsPermissionNameIdFkeyInput>;
+};
+
+/** An object where the defined keys will be set on the `languageString` being updated. */
+export type UpdateLanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  languageCode?: Maybe<Scalars['String']>;
+  strings?: Maybe<Scalars['JSON']>;
+  filterId?: Maybe<Scalars['Int']>;
+  outcomeDisplayId?: Maybe<Scalars['Int']>;
+  permissionNameId?: Maybe<Scalars['Int']>;
+  templateToTemplateId?: Maybe<LanguageStringsTemplateIdFkeyInput>;
+  filterToFilterId?: Maybe<LanguageStringsFilterIdFkeyInput>;
+  outcomeDisplayToOutcomeDisplayId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInput>;
+  permissionNameToPermissionNameId?: Maybe<LanguageStringsPermissionNameIdFkeyInput>;
+};
+
+/** The output of our update `LanguageString` mutation. */
+export type UpdateLanguageStringPayload = {
+  __typename?: 'UpdateLanguageStringPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `LanguageString` that was updated by this mutation. */
+  languageString?: Maybe<LanguageString>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Template` that is related to this `LanguageString`. */
+  template?: Maybe<Template>;
+  /** Reads a single `Filter` that is related to this `LanguageString`. */
+  filter?: Maybe<Filter>;
+  /** Reads a single `OutcomeDisplay` that is related to this `LanguageString`. */
+  outcomeDisplay?: Maybe<OutcomeDisplay>;
+  /** Reads a single `PermissionName` that is related to this `LanguageString`. */
+  permissionName?: Maybe<PermissionName>;
+  /** An edge for our `LanguageString`. May be used by Relay 1. */
+  languageStringEdge?: Maybe<LanguageStringsEdge>;
+};
+
+
+/** The output of our update `LanguageString` mutation. */
+export type UpdateLanguageStringPayloadLanguageStringEdgeArgs = {
+  orderBy?: Maybe<Array<LanguageStringsOrderBy>>;
 };
 
 /** All input for the `updateLookupTableByNodeId` mutation. */
@@ -26322,6 +27347,25 @@ export type UpdateOutcomeDisplayInput = {
 };
 
 /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
+export type UpdateOutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  tableName?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  permissionNames?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  tableViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewIncludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewExcludeColumns?: Maybe<Array<Maybe<Scalars['String']>>>;
+  detailViewHeaderColumn?: Maybe<Scalars['String']>;
+  showLinkedApplications?: Maybe<Scalars['Boolean']>;
+  priority?: Maybe<Scalars['Int']>;
+  outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
+  outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
 export type UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   tableName?: Maybe<Scalars['String']>;
@@ -26337,6 +27381,7 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOut
   priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `outcomeDisplay` being updated. */
@@ -26355,6 +27400,7 @@ export type UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutco
   priority?: Maybe<Scalars['Int']>;
   outcomeDisplayTablesUsingId?: Maybe<OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput>;
   outcomeDisplayDetailsUsingId?: Maybe<OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsOutcomeDisplayIdFkeyInverseInput>;
 };
 
 /** The output of our update `OutcomeDisplay` mutation. */
@@ -26561,6 +27607,17 @@ export type UpdatePermissionNameInput = {
 };
 
 /** An object where the defined keys will be set on the `permissionName` being updated. */
+export type UpdatePermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  permissionPolicyId?: Maybe<Scalars['Int']>;
+  permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
+  permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsPermissionNameIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `permissionName` being updated. */
 export type UpdatePermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   name?: Maybe<Scalars['String']>;
@@ -26568,6 +27625,7 @@ export type UpdatePermissionNameOnPermissionJoinForPermissionJoinPermissionNameI
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsPermissionNameIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `permissionName` being updated. */
@@ -26577,6 +27635,7 @@ export type UpdatePermissionNameOnPermissionNameForPermissionNamePermissionPolic
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsPermissionNameIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `permissionName` being updated. */
@@ -26587,6 +27646,7 @@ export type UpdatePermissionNameOnTemplatePermissionForTemplatePermissionPermiss
   permissionPolicyToPermissionPolicyId?: Maybe<PermissionNamePermissionPolicyIdFkeyInput>;
   permissionJoinsUsingId?: Maybe<PermissionJoinPermissionNameIdFkeyInverseInput>;
   templatePermissionsUsingId?: Maybe<TemplatePermissionPermissionNameIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsPermissionNameIdFkeyInverseInput>;
 };
 
 /** The output of our update `PermissionName` mutation. */
@@ -28159,7 +29219,6 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28171,6 +29230,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28187,7 +29247,6 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28199,6 +29258,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28215,7 +29275,6 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28227,6 +29286,35 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `template` being updated. */
+export type UpdateTemplateOnLanguageStringForLanguageStringsTemplateIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  name?: Maybe<Scalars['String']>;
+  namePlural?: Maybe<Scalars['String']>;
+  code?: Maybe<Scalars['String']>;
+  isLinear?: Maybe<Scalars['Boolean']>;
+  startMessage?: Maybe<Scalars['JSON']>;
+  status?: Maybe<TemplateStatus>;
+  submissionMessage?: Maybe<Scalars['JSON']>;
+  icon?: Maybe<Scalars['String']>;
+  templateCategoryId?: Maybe<Scalars['Int']>;
+  versionTimestamp?: Maybe<Scalars['Datetime']>;
+  version?: Maybe<Scalars['Int']>;
+  templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
+  templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
+  templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
+  templateFilterJoinsUsingId?: Maybe<TemplateFilterJoinTemplateIdFkeyInverseInput>;
+  templatePermissionsUsingId?: Maybe<TemplatePermissionTemplateIdFkeyInverseInput>;
+  applicationsUsingId?: Maybe<ApplicationTemplateIdFkeyInverseInput>;
+  actionQueuesUsingId?: Maybe<ActionQueueTemplateIdFkeyInverseInput>;
+  templateActionsUsingId?: Maybe<TemplateActionTemplateIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
+  filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28243,7 +29331,6 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28255,6 +29342,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28271,7 +29359,6 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28283,6 +29370,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28299,7 +29387,6 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28311,6 +29398,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28326,7 +29414,6 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   icon?: Maybe<Scalars['String']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28338,6 +29425,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28354,7 +29442,6 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28366,6 +29453,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28382,7 +29470,6 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28394,6 +29481,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28410,7 +29498,6 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28422,6 +29509,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** An object where the defined keys will be set on the `template` being updated. */
@@ -28438,7 +29526,6 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   templateCategoryId?: Maybe<Scalars['Int']>;
   versionTimestamp?: Maybe<Scalars['Datetime']>;
   version?: Maybe<Scalars['Int']>;
-  languageStrings?: Maybe<Scalars['JSON']>;
   templateCategoryToTemplateCategoryId?: Maybe<TemplateTemplateCategoryIdFkeyInput>;
   templateSectionsUsingId?: Maybe<TemplateSectionTemplateIdFkeyInverseInput>;
   templateStagesUsingId?: Maybe<TemplateStageTemplateIdFkeyInverseInput>;
@@ -28450,6 +29537,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+  languageStringsUsingId?: Maybe<LanguageStringsTemplateIdFkeyInverseInput>;
 };
 
 /** The output of our update `Template` mutation. */
@@ -30883,7 +31971,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'] | ResolversTypes['OutcomeDisplayColumnDefinition'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['LanguageString'] | ResolversTypes['Filter'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayTable'] | ResolversTypes['OutcomeDisplayDetail'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['File'] | ResolversTypes['ApplicationSection'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplayColumnDefinition'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -30957,9 +32045,21 @@ export type ResolversTypes = {
   PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
   PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
   TemplatePermissionFilter: TemplatePermissionFilter;
-  PermissionPolicyFilter: PermissionPolicyFilter;
+  PermissionNameToManyLanguageStringFilter: PermissionNameToManyLanguageStringFilter;
+  LanguageStringFilter: LanguageStringFilter;
+  FilterFilter: FilterFilter;
   PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
   PermissionPolicyType: PermissionPolicyType;
+  FilterToManyTemplateFilterJoinFilter: FilterToManyTemplateFilterJoinFilter;
+  TemplateFilterJoinFilter: TemplateFilterJoinFilter;
+  FilterToManyLanguageStringFilter: FilterToManyLanguageStringFilter;
+  OutcomeDisplayFilter: OutcomeDisplayFilter;
+  OutcomeDisplayToManyOutcomeDisplayTableFilter: OutcomeDisplayToManyOutcomeDisplayTableFilter;
+  OutcomeDisplayTableFilter: OutcomeDisplayTableFilter;
+  OutcomeDisplayToManyOutcomeDisplayDetailFilter: OutcomeDisplayToManyOutcomeDisplayDetailFilter;
+  OutcomeDisplayDetailFilter: OutcomeDisplayDetailFilter;
+  OutcomeDisplayToManyLanguageStringFilter: OutcomeDisplayToManyLanguageStringFilter;
+  PermissionPolicyFilter: PermissionPolicyFilter;
   PermissionPolicyToManyPermissionNameFilter: PermissionPolicyToManyPermissionNameFilter;
   OrganisationToManyApplicationFilter: OrganisationToManyApplicationFilter;
   ApplicationFilter: ApplicationFilter;
@@ -31018,9 +32118,6 @@ export type ResolversTypes = {
   TemplateSectionToManyApplicationSectionFilter: TemplateSectionToManyApplicationSectionFilter;
   TemplateToManyTemplateStageFilter: TemplateToManyTemplateStageFilter;
   TemplateToManyTemplateFilterJoinFilter: TemplateToManyTemplateFilterJoinFilter;
-  TemplateFilterJoinFilter: TemplateFilterJoinFilter;
-  FilterFilter: FilterFilter;
-  FilterToManyTemplateFilterJoinFilter: FilterToManyTemplateFilterJoinFilter;
   TemplateToManyTemplatePermissionFilter: TemplateToManyTemplatePermissionFilter;
   TemplateToManyApplicationFilter: TemplateToManyApplicationFilter;
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
@@ -31029,6 +32126,7 @@ export type ResolversTypes = {
   TemplateToManyTriggerScheduleFilter: TemplateToManyTriggerScheduleFilter;
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
   TemplateToManyFileFilter: TemplateToManyFileFilter;
+  TemplateToManyLanguageStringFilter: TemplateToManyLanguageStringFilter;
   TemplateCategoryFilter: TemplateCategoryFilter;
   UiLocationListFilter: UiLocationListFilter;
   UiLocation: UiLocation;
@@ -31076,6 +32174,28 @@ export type ResolversTypes = {
   TemplatePermissionsConnection: ResolverTypeWrapper<TemplatePermissionsConnection>;
   TemplatePermission: ResolverTypeWrapper<TemplatePermission>;
   TemplatePermissionsEdge: ResolverTypeWrapper<TemplatePermissionsEdge>;
+  LanguageStringsOrderBy: LanguageStringsOrderBy;
+  LanguageStringCondition: LanguageStringCondition;
+  LanguageStringsConnection: ResolverTypeWrapper<LanguageStringsConnection>;
+  LanguageString: ResolverTypeWrapper<LanguageString>;
+  Filter: ResolverTypeWrapper<Filter>;
+  TemplateFilterJoinsOrderBy: TemplateFilterJoinsOrderBy;
+  TemplateFilterJoinCondition: TemplateFilterJoinCondition;
+  TemplateFilterJoinsConnection: ResolverTypeWrapper<TemplateFilterJoinsConnection>;
+  TemplateFilterJoin: ResolverTypeWrapper<TemplateFilterJoin>;
+  TemplateFilterJoinsEdge: ResolverTypeWrapper<TemplateFilterJoinsEdge>;
+  OutcomeDisplay: ResolverTypeWrapper<OutcomeDisplay>;
+  OutcomeDisplayTablesOrderBy: OutcomeDisplayTablesOrderBy;
+  OutcomeDisplayTableCondition: OutcomeDisplayTableCondition;
+  OutcomeDisplayTablesConnection: ResolverTypeWrapper<OutcomeDisplayTablesConnection>;
+  OutcomeDisplayTable: ResolverTypeWrapper<OutcomeDisplayTable>;
+  OutcomeDisplayTablesEdge: ResolverTypeWrapper<OutcomeDisplayTablesEdge>;
+  OutcomeDisplayDetailsOrderBy: OutcomeDisplayDetailsOrderBy;
+  OutcomeDisplayDetailCondition: OutcomeDisplayDetailCondition;
+  OutcomeDisplayDetailsConnection: ResolverTypeWrapper<OutcomeDisplayDetailsConnection>;
+  OutcomeDisplayDetail: ResolverTypeWrapper<OutcomeDisplayDetail>;
+  OutcomeDisplayDetailsEdge: ResolverTypeWrapper<OutcomeDisplayDetailsEdge>;
+  LanguageStringsEdge: ResolverTypeWrapper<LanguageStringsEdge>;
   PermissionJoinsEdge: ResolverTypeWrapper<PermissionJoinsEdge>;
   ApplicationsOrderBy: ApplicationsOrderBy;
   ApplicationCondition: ApplicationCondition;
@@ -31165,12 +32285,6 @@ export type ResolversTypes = {
   TemplateStageCondition: TemplateStageCondition;
   TemplateStagesConnection: ResolverTypeWrapper<TemplateStagesConnection>;
   TemplateStagesEdge: ResolverTypeWrapper<TemplateStagesEdge>;
-  TemplateFilterJoinsOrderBy: TemplateFilterJoinsOrderBy;
-  TemplateFilterJoinCondition: TemplateFilterJoinCondition;
-  TemplateFilterJoinsConnection: ResolverTypeWrapper<TemplateFilterJoinsConnection>;
-  TemplateFilterJoin: ResolverTypeWrapper<TemplateFilterJoin>;
-  Filter: ResolverTypeWrapper<Filter>;
-  TemplateFilterJoinsEdge: ResolverTypeWrapper<TemplateFilterJoinsEdge>;
   TemplateActionsOrderBy: TemplateActionsOrderBy;
   TemplateActionCondition: TemplateActionCondition;
   TemplateActionsConnection: ResolverTypeWrapper<TemplateActionsConnection>;
@@ -31239,23 +32353,7 @@ export type ResolversTypes = {
   OrganisationsEdge: ResolverTypeWrapper<OrganisationsEdge>;
   OutcomeDisplaysOrderBy: OutcomeDisplaysOrderBy;
   OutcomeDisplayCondition: OutcomeDisplayCondition;
-  OutcomeDisplayFilter: OutcomeDisplayFilter;
-  OutcomeDisplayToManyOutcomeDisplayTableFilter: OutcomeDisplayToManyOutcomeDisplayTableFilter;
-  OutcomeDisplayTableFilter: OutcomeDisplayTableFilter;
-  OutcomeDisplayToManyOutcomeDisplayDetailFilter: OutcomeDisplayToManyOutcomeDisplayDetailFilter;
-  OutcomeDisplayDetailFilter: OutcomeDisplayDetailFilter;
   OutcomeDisplaysConnection: ResolverTypeWrapper<OutcomeDisplaysConnection>;
-  OutcomeDisplay: ResolverTypeWrapper<OutcomeDisplay>;
-  OutcomeDisplayTablesOrderBy: OutcomeDisplayTablesOrderBy;
-  OutcomeDisplayTableCondition: OutcomeDisplayTableCondition;
-  OutcomeDisplayTablesConnection: ResolverTypeWrapper<OutcomeDisplayTablesConnection>;
-  OutcomeDisplayTable: ResolverTypeWrapper<OutcomeDisplayTable>;
-  OutcomeDisplayTablesEdge: ResolverTypeWrapper<OutcomeDisplayTablesEdge>;
-  OutcomeDisplayDetailsOrderBy: OutcomeDisplayDetailsOrderBy;
-  OutcomeDisplayDetailCondition: OutcomeDisplayDetailCondition;
-  OutcomeDisplayDetailsConnection: ResolverTypeWrapper<OutcomeDisplayDetailsConnection>;
-  OutcomeDisplayDetail: ResolverTypeWrapper<OutcomeDisplayDetail>;
-  OutcomeDisplayDetailsEdge: ResolverTypeWrapper<OutcomeDisplayDetailsEdge>;
   OutcomeDisplaysEdge: ResolverTypeWrapper<OutcomeDisplaysEdge>;
   OutcomeDisplayColumnDefinitionsOrderBy: OutcomeDisplayColumnDefinitionsOrderBy;
   OutcomeDisplayColumnDefinitionCondition: OutcomeDisplayColumnDefinitionCondition;
@@ -31728,8 +32826,115 @@ export type ResolversTypes = {
   FileTemplateIdFkeyInput: FileTemplateIdFkeyInput;
   TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnFileForFileTemplateIdFkeyPatch: UpdateTemplateOnFileForFileTemplateIdFkeyPatch;
-  FileOnFileForFileTemplateIdFkeyNodeIdUpdate: FileOnFileForFileTemplateIdFkeyNodeIdUpdate;
+  LanguageStringsTemplateIdFkeyInverseInput: LanguageStringsTemplateIdFkeyInverseInput;
+  LanguageStringLanguageStringsPkeyConnect: LanguageStringLanguageStringsPkeyConnect;
+  LanguageStringNodeIdConnect: LanguageStringNodeIdConnect;
+  LanguageStringLanguageStringsPkeyDelete: LanguageStringLanguageStringsPkeyDelete;
+  LanguageStringNodeIdDelete: LanguageStringNodeIdDelete;
+  LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyUsingLanguageStringsPkeyUpdate: LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyUsingLanguageStringsPkeyUpdate;
+  updateLanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyPatch: UpdateLanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyPatch;
+  LanguageStringsTemplateIdFkeyInput: LanguageStringsTemplateIdFkeyInput;
+  TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnLanguageStringForLanguageStringsTemplateIdFkeyPatch: UpdateTemplateOnLanguageStringForLanguageStringsTemplateIdFkeyPatch;
+  LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate: LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate;
   TemplatePatch: TemplatePatch;
+  LanguageStringsTemplateIdFkeyTemplateCreateInput: LanguageStringsTemplateIdFkeyTemplateCreateInput;
+  LanguageStringsFilterIdFkeyInput: LanguageStringsFilterIdFkeyInput;
+  FilterFilterPkeyConnect: FilterFilterPkeyConnect;
+  FilterFilterCodeKeyConnect: FilterFilterCodeKeyConnect;
+  FilterNodeIdConnect: FilterNodeIdConnect;
+  FilterFilterPkeyDelete: FilterFilterPkeyDelete;
+  FilterFilterCodeKeyDelete: FilterFilterCodeKeyDelete;
+  FilterNodeIdDelete: FilterNodeIdDelete;
+  FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterPkeyUpdate: FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterPkeyUpdate;
+  updateFilterOnLanguageStringForLanguageStringsFilterIdFkeyPatch: UpdateFilterOnLanguageStringForLanguageStringsFilterIdFkeyPatch;
+  TemplateFilterJoinFilterIdFkeyInverseInput: TemplateFilterJoinFilterIdFkeyInverseInput;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate;
+  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  TemplateFilterJoinFilterIdFkeyInput: TemplateFilterJoinFilterIdFkeyInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate;
+  updateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  LanguageStringsFilterIdFkeyInverseInput: LanguageStringsFilterIdFkeyInverseInput;
+  LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyUsingLanguageStringsPkeyUpdate: LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyUsingLanguageStringsPkeyUpdate;
+  updateLanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyPatch: UpdateLanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyPatch;
+  LanguageStringsOutcomeDisplayIdFkeyInput: LanguageStringsOutcomeDisplayIdFkeyInput;
+  OutcomeDisplayOutcomeDisplayPkeyConnect: OutcomeDisplayOutcomeDisplayPkeyConnect;
+  OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect: OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect;
+  OutcomeDisplayNodeIdConnect: OutcomeDisplayNodeIdConnect;
+  OutcomeDisplayOutcomeDisplayPkeyDelete: OutcomeDisplayOutcomeDisplayPkeyDelete;
+  OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete: OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete;
+  OutcomeDisplayNodeIdDelete: OutcomeDisplayNodeIdDelete;
+  OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
+  updateOutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch;
+  OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput: OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput;
+  OutcomeDisplayTableOutcomeDisplayTablePkeyConnect: OutcomeDisplayTableOutcomeDisplayTablePkeyConnect;
+  OutcomeDisplayTableNodeIdConnect: OutcomeDisplayTableNodeIdConnect;
+  OutcomeDisplayTableOutcomeDisplayTablePkeyDelete: OutcomeDisplayTableOutcomeDisplayTablePkeyDelete;
+  OutcomeDisplayTableNodeIdDelete: OutcomeDisplayTableNodeIdDelete;
+  OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate: OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate;
+  updateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
+  OutcomeDisplayTableOutcomeDisplayIdFkeyInput: OutcomeDisplayTableOutcomeDisplayIdFkeyInput;
+  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
+  updateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
+  OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput;
+  OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect: OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect;
+  OutcomeDisplayDetailNodeIdConnect: OutcomeDisplayDetailNodeIdConnect;
+  OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete: OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete;
+  OutcomeDisplayDetailNodeIdDelete: OutcomeDisplayDetailNodeIdDelete;
+  OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate: OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate;
+  updateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
+  OutcomeDisplayDetailOutcomeDisplayIdFkeyInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyInput;
+  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
+  updateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
+  LanguageStringsOutcomeDisplayIdFkeyInverseInput: LanguageStringsOutcomeDisplayIdFkeyInverseInput;
+  LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingLanguageStringsPkeyUpdate: LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingLanguageStringsPkeyUpdate;
+  updateLanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch: UpdateLanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch;
+  LanguageStringsPermissionNameIdFkeyInput: LanguageStringsPermissionNameIdFkeyInput;
+  PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNamePkeyUpdate: PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNamePkeyUpdate;
+  updatePermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch: UpdatePermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch;
+  LanguageStringsPermissionNameIdFkeyInverseInput: LanguageStringsPermissionNameIdFkeyInverseInput;
+  LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingLanguageStringsPkeyUpdate: LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingLanguageStringsPkeyUpdate;
+  updateLanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch: UpdateLanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch;
+  PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate;
+  LanguageStringPatch: LanguageStringPatch;
+  LanguageStringsPermissionNameIdFkeyLanguageStringsCreateInput: LanguageStringsPermissionNameIdFkeyLanguageStringsCreateInput;
+  PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate;
+  LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate: LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate;
+  PermissionNamePatch: PermissionNamePatch;
+  LanguageStringsPermissionNameIdFkeyPermissionNameCreateInput: LanguageStringsPermissionNameIdFkeyPermissionNameCreateInput;
+  OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate;
+  LanguageStringsOutcomeDisplayIdFkeyLanguageStringsCreateInput: LanguageStringsOutcomeDisplayIdFkeyLanguageStringsCreateInput;
+  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
+  OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate;
+  OutcomeDisplayPatch: OutcomeDisplayPatch;
+  OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
+  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate;
+  OutcomeDisplayDetailPatch: OutcomeDisplayDetailPatch;
+  OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput;
+  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
+  OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
+  OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
+  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
+  OutcomeDisplayTablePatch: OutcomeDisplayTablePatch;
+  OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput: OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput;
+  OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
+  LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate: LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate;
+  LanguageStringsOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: LanguageStringsOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
+  FilterOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate: FilterOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate;
+  LanguageStringsFilterIdFkeyLanguageStringsCreateInput: LanguageStringsFilterIdFkeyLanguageStringsCreateInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
+  FilterPatch: FilterPatch;
+  TemplateFilterJoinFilterIdFkeyFilterCreateInput: TemplateFilterJoinFilterIdFkeyFilterCreateInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
+  TemplateFilterJoinPatch: TemplateFilterJoinPatch;
+  TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput;
+  FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterCodeKeyUpdate;
+  LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate: LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate;
+  LanguageStringsFilterIdFkeyFilterCreateInput: LanguageStringsFilterIdFkeyFilterCreateInput;
+  TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate: TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate;
+  LanguageStringsTemplateIdFkeyLanguageStringsCreateInput: LanguageStringsTemplateIdFkeyLanguageStringsCreateInput;
+  FileOnFileForFileTemplateIdFkeyNodeIdUpdate: FileOnFileForFileTemplateIdFkeyNodeIdUpdate;
   FileTemplateIdFkeyTemplateCreateInput: FileTemplateIdFkeyTemplateCreateInput;
   FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
   ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
@@ -32091,7 +33296,6 @@ export type ResolversTypes = {
   TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput: TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput;
   PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
-  PermissionNamePatch: PermissionNamePatch;
   PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput: PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput;
   OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate: OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinPatch: PermissionJoinPatch;
@@ -32133,25 +33337,6 @@ export type ResolversTypes = {
   TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput: TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput;
   TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
   TemplateFilterJoinTemplateIdFkeyTemplateCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateCreateInput;
-  TemplateFilterJoinFilterIdFkeyInput: TemplateFilterJoinFilterIdFkeyInput;
-  FilterFilterPkeyConnect: FilterFilterPkeyConnect;
-  FilterFilterCodeKeyConnect: FilterFilterCodeKeyConnect;
-  FilterNodeIdConnect: FilterNodeIdConnect;
-  FilterFilterPkeyDelete: FilterFilterPkeyDelete;
-  FilterFilterCodeKeyDelete: FilterFilterCodeKeyDelete;
-  FilterNodeIdDelete: FilterNodeIdDelete;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate;
-  updateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  TemplateFilterJoinFilterIdFkeyInverseInput: TemplateFilterJoinFilterIdFkeyInverseInput;
-  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate;
-  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
-  TemplateFilterJoinPatch: TemplateFilterJoinPatch;
-  TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate;
-  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
-  FilterPatch: FilterPatch;
-  TemplateFilterJoinFilterIdFkeyFilterCreateInput: TemplateFilterJoinFilterIdFkeyFilterCreateInput;
   TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
   TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput;
   TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate;
@@ -32207,6 +33392,9 @@ export type ResolversTypes = {
   CreateFilterInput: CreateFilterInput;
   FilterInput: FilterInput;
   CreateFilterPayload: ResolverTypeWrapper<CreateFilterPayload>;
+  CreateLanguageStringInput: CreateLanguageStringInput;
+  LanguageStringInput: LanguageStringInput;
+  CreateLanguageStringPayload: ResolverTypeWrapper<CreateLanguageStringPayload>;
   CreateLookupTableInput: CreateLookupTableInput;
   LookupTableInput: LookupTableInput;
   CreateLookupTablePayload: ResolverTypeWrapper<CreateLookupTablePayload>;
@@ -32218,45 +33406,6 @@ export type ResolversTypes = {
   CreateOrganisationPayload: ResolverTypeWrapper<CreateOrganisationPayload>;
   CreateOutcomeDisplayInput: CreateOutcomeDisplayInput;
   OutcomeDisplayInput: OutcomeDisplayInput;
-  OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput: OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput;
-  OutcomeDisplayTableOutcomeDisplayTablePkeyConnect: OutcomeDisplayTableOutcomeDisplayTablePkeyConnect;
-  OutcomeDisplayTableNodeIdConnect: OutcomeDisplayTableNodeIdConnect;
-  OutcomeDisplayTableOutcomeDisplayTablePkeyDelete: OutcomeDisplayTableOutcomeDisplayTablePkeyDelete;
-  OutcomeDisplayTableNodeIdDelete: OutcomeDisplayTableNodeIdDelete;
-  OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate: OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate;
-  updateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  OutcomeDisplayTableOutcomeDisplayIdFkeyInput: OutcomeDisplayTableOutcomeDisplayIdFkeyInput;
-  OutcomeDisplayOutcomeDisplayPkeyConnect: OutcomeDisplayOutcomeDisplayPkeyConnect;
-  OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect: OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect;
-  OutcomeDisplayNodeIdConnect: OutcomeDisplayNodeIdConnect;
-  OutcomeDisplayOutcomeDisplayPkeyDelete: OutcomeDisplayOutcomeDisplayPkeyDelete;
-  OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete: OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete;
-  OutcomeDisplayNodeIdDelete: OutcomeDisplayNodeIdDelete;
-  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
-  updateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput;
-  OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect: OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect;
-  OutcomeDisplayDetailNodeIdConnect: OutcomeDisplayDetailNodeIdConnect;
-  OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete: OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete;
-  OutcomeDisplayDetailNodeIdDelete: OutcomeDisplayDetailNodeIdDelete;
-  OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate: OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate;
-  updateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  OutcomeDisplayDetailOutcomeDisplayIdFkeyInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyInput;
-  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
-  updateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
-  OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate;
-  OutcomeDisplayPatch: OutcomeDisplayPatch;
-  OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
-  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate;
-  OutcomeDisplayDetailPatch: OutcomeDisplayDetailPatch;
-  OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput;
-  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
-  OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
-  OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
-  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
-  OutcomeDisplayTablePatch: OutcomeDisplayTablePatch;
-  OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput: OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput;
   CreateOutcomeDisplayPayload: ResolverTypeWrapper<CreateOutcomeDisplayPayload>;
   CreateOutcomeDisplayColumnDefinitionInput: CreateOutcomeDisplayColumnDefinitionInput;
   OutcomeDisplayColumnDefinitionInput: OutcomeDisplayColumnDefinitionInput;
@@ -32380,6 +33529,9 @@ export type ResolversTypes = {
   UpdateFilterPayload: ResolverTypeWrapper<UpdateFilterPayload>;
   UpdateFilterInput: UpdateFilterInput;
   UpdateFilterByCodeInput: UpdateFilterByCodeInput;
+  UpdateLanguageStringByNodeIdInput: UpdateLanguageStringByNodeIdInput;
+  UpdateLanguageStringPayload: ResolverTypeWrapper<UpdateLanguageStringPayload>;
+  UpdateLanguageStringInput: UpdateLanguageStringInput;
   UpdateLookupTableByNodeIdInput: UpdateLookupTableByNodeIdInput;
   LookupTablePatch: LookupTablePatch;
   UpdateLookupTablePayload: ResolverTypeWrapper<UpdateLookupTablePayload>;
@@ -32524,6 +33676,9 @@ export type ResolversTypes = {
   DeleteFilterPayload: ResolverTypeWrapper<DeleteFilterPayload>;
   DeleteFilterInput: DeleteFilterInput;
   DeleteFilterByCodeInput: DeleteFilterByCodeInput;
+  DeleteLanguageStringByNodeIdInput: DeleteLanguageStringByNodeIdInput;
+  DeleteLanguageStringPayload: ResolverTypeWrapper<DeleteLanguageStringPayload>;
+  DeleteLanguageStringInput: DeleteLanguageStringInput;
   DeleteLookupTableByNodeIdInput: DeleteLookupTableByNodeIdInput;
   DeleteLookupTablePayload: ResolverTypeWrapper<DeleteLookupTablePayload>;
   DeleteLookupTableInput: DeleteLookupTableInput;
@@ -32635,7 +33790,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['LanguageString'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayTable'] | ResolversParentTypes['OutcomeDisplayDetail'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['File'] | ResolversParentTypes['ApplicationSection'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -32697,8 +33852,20 @@ export type ResolversParentTypes = {
   PermissionNameToManyPermissionJoinFilter: PermissionNameToManyPermissionJoinFilter;
   PermissionNameToManyTemplatePermissionFilter: PermissionNameToManyTemplatePermissionFilter;
   TemplatePermissionFilter: TemplatePermissionFilter;
-  PermissionPolicyFilter: PermissionPolicyFilter;
+  PermissionNameToManyLanguageStringFilter: PermissionNameToManyLanguageStringFilter;
+  LanguageStringFilter: LanguageStringFilter;
+  FilterFilter: FilterFilter;
   PermissionPolicyTypeFilter: PermissionPolicyTypeFilter;
+  FilterToManyTemplateFilterJoinFilter: FilterToManyTemplateFilterJoinFilter;
+  TemplateFilterJoinFilter: TemplateFilterJoinFilter;
+  FilterToManyLanguageStringFilter: FilterToManyLanguageStringFilter;
+  OutcomeDisplayFilter: OutcomeDisplayFilter;
+  OutcomeDisplayToManyOutcomeDisplayTableFilter: OutcomeDisplayToManyOutcomeDisplayTableFilter;
+  OutcomeDisplayTableFilter: OutcomeDisplayTableFilter;
+  OutcomeDisplayToManyOutcomeDisplayDetailFilter: OutcomeDisplayToManyOutcomeDisplayDetailFilter;
+  OutcomeDisplayDetailFilter: OutcomeDisplayDetailFilter;
+  OutcomeDisplayToManyLanguageStringFilter: OutcomeDisplayToManyLanguageStringFilter;
+  PermissionPolicyFilter: PermissionPolicyFilter;
   PermissionPolicyToManyPermissionNameFilter: PermissionPolicyToManyPermissionNameFilter;
   OrganisationToManyApplicationFilter: OrganisationToManyApplicationFilter;
   ApplicationFilter: ApplicationFilter;
@@ -32753,9 +33920,6 @@ export type ResolversParentTypes = {
   TemplateSectionToManyApplicationSectionFilter: TemplateSectionToManyApplicationSectionFilter;
   TemplateToManyTemplateStageFilter: TemplateToManyTemplateStageFilter;
   TemplateToManyTemplateFilterJoinFilter: TemplateToManyTemplateFilterJoinFilter;
-  TemplateFilterJoinFilter: TemplateFilterJoinFilter;
-  FilterFilter: FilterFilter;
-  FilterToManyTemplateFilterJoinFilter: FilterToManyTemplateFilterJoinFilter;
   TemplateToManyTemplatePermissionFilter: TemplateToManyTemplatePermissionFilter;
   TemplateToManyApplicationFilter: TemplateToManyApplicationFilter;
   TemplateToManyActionQueueFilter: TemplateToManyActionQueueFilter;
@@ -32764,6 +33928,7 @@ export type ResolversParentTypes = {
   TemplateToManyTriggerScheduleFilter: TemplateToManyTriggerScheduleFilter;
   TemplateToManyReviewAssignmentFilter: TemplateToManyReviewAssignmentFilter;
   TemplateToManyFileFilter: TemplateToManyFileFilter;
+  TemplateToManyLanguageStringFilter: TemplateToManyLanguageStringFilter;
   TemplateCategoryFilter: TemplateCategoryFilter;
   UiLocationListFilter: UiLocationListFilter;
   TemplateCategoryToManyTemplateFilter: TemplateCategoryToManyTemplateFilter;
@@ -32802,6 +33967,24 @@ export type ResolversParentTypes = {
   TemplatePermissionsConnection: TemplatePermissionsConnection;
   TemplatePermission: TemplatePermission;
   TemplatePermissionsEdge: TemplatePermissionsEdge;
+  LanguageStringCondition: LanguageStringCondition;
+  LanguageStringsConnection: LanguageStringsConnection;
+  LanguageString: LanguageString;
+  Filter: Filter;
+  TemplateFilterJoinCondition: TemplateFilterJoinCondition;
+  TemplateFilterJoinsConnection: TemplateFilterJoinsConnection;
+  TemplateFilterJoin: TemplateFilterJoin;
+  TemplateFilterJoinsEdge: TemplateFilterJoinsEdge;
+  OutcomeDisplay: OutcomeDisplay;
+  OutcomeDisplayTableCondition: OutcomeDisplayTableCondition;
+  OutcomeDisplayTablesConnection: OutcomeDisplayTablesConnection;
+  OutcomeDisplayTable: OutcomeDisplayTable;
+  OutcomeDisplayTablesEdge: OutcomeDisplayTablesEdge;
+  OutcomeDisplayDetailCondition: OutcomeDisplayDetailCondition;
+  OutcomeDisplayDetailsConnection: OutcomeDisplayDetailsConnection;
+  OutcomeDisplayDetail: OutcomeDisplayDetail;
+  OutcomeDisplayDetailsEdge: OutcomeDisplayDetailsEdge;
+  LanguageStringsEdge: LanguageStringsEdge;
   PermissionJoinsEdge: PermissionJoinsEdge;
   ApplicationCondition: ApplicationCondition;
   ApplicationsConnection: ApplicationsConnection;
@@ -32874,11 +34057,6 @@ export type ResolversParentTypes = {
   TemplateStageCondition: TemplateStageCondition;
   TemplateStagesConnection: TemplateStagesConnection;
   TemplateStagesEdge: TemplateStagesEdge;
-  TemplateFilterJoinCondition: TemplateFilterJoinCondition;
-  TemplateFilterJoinsConnection: TemplateFilterJoinsConnection;
-  TemplateFilterJoin: TemplateFilterJoin;
-  Filter: Filter;
-  TemplateFilterJoinsEdge: TemplateFilterJoinsEdge;
   TemplateActionCondition: TemplateActionCondition;
   TemplateActionsConnection: TemplateActionsConnection;
   TemplateAction: TemplateAction;
@@ -32934,21 +34112,7 @@ export type ResolversParentTypes = {
   OrganisationsConnection: OrganisationsConnection;
   OrganisationsEdge: OrganisationsEdge;
   OutcomeDisplayCondition: OutcomeDisplayCondition;
-  OutcomeDisplayFilter: OutcomeDisplayFilter;
-  OutcomeDisplayToManyOutcomeDisplayTableFilter: OutcomeDisplayToManyOutcomeDisplayTableFilter;
-  OutcomeDisplayTableFilter: OutcomeDisplayTableFilter;
-  OutcomeDisplayToManyOutcomeDisplayDetailFilter: OutcomeDisplayToManyOutcomeDisplayDetailFilter;
-  OutcomeDisplayDetailFilter: OutcomeDisplayDetailFilter;
   OutcomeDisplaysConnection: OutcomeDisplaysConnection;
-  OutcomeDisplay: OutcomeDisplay;
-  OutcomeDisplayTableCondition: OutcomeDisplayTableCondition;
-  OutcomeDisplayTablesConnection: OutcomeDisplayTablesConnection;
-  OutcomeDisplayTable: OutcomeDisplayTable;
-  OutcomeDisplayTablesEdge: OutcomeDisplayTablesEdge;
-  OutcomeDisplayDetailCondition: OutcomeDisplayDetailCondition;
-  OutcomeDisplayDetailsConnection: OutcomeDisplayDetailsConnection;
-  OutcomeDisplayDetail: OutcomeDisplayDetail;
-  OutcomeDisplayDetailsEdge: OutcomeDisplayDetailsEdge;
   OutcomeDisplaysEdge: OutcomeDisplaysEdge;
   OutcomeDisplayColumnDefinitionCondition: OutcomeDisplayColumnDefinitionCondition;
   OutcomeDisplayColumnDefinitionFilter: OutcomeDisplayColumnDefinitionFilter;
@@ -33412,8 +34576,115 @@ export type ResolversParentTypes = {
   FileTemplateIdFkeyInput: FileTemplateIdFkeyInput;
   TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnFileForFileTemplateIdFkeyUsingTemplatePkeyUpdate;
   updateTemplateOnFileForFileTemplateIdFkeyPatch: UpdateTemplateOnFileForFileTemplateIdFkeyPatch;
-  FileOnFileForFileTemplateIdFkeyNodeIdUpdate: FileOnFileForFileTemplateIdFkeyNodeIdUpdate;
+  LanguageStringsTemplateIdFkeyInverseInput: LanguageStringsTemplateIdFkeyInverseInput;
+  LanguageStringLanguageStringsPkeyConnect: LanguageStringLanguageStringsPkeyConnect;
+  LanguageStringNodeIdConnect: LanguageStringNodeIdConnect;
+  LanguageStringLanguageStringsPkeyDelete: LanguageStringLanguageStringsPkeyDelete;
+  LanguageStringNodeIdDelete: LanguageStringNodeIdDelete;
+  LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyUsingLanguageStringsPkeyUpdate: LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyUsingLanguageStringsPkeyUpdate;
+  updateLanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyPatch: UpdateLanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyPatch;
+  LanguageStringsTemplateIdFkeyInput: LanguageStringsTemplateIdFkeyInput;
+  TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyUsingTemplatePkeyUpdate: TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyUsingTemplatePkeyUpdate;
+  updateTemplateOnLanguageStringForLanguageStringsTemplateIdFkeyPatch: UpdateTemplateOnLanguageStringForLanguageStringsTemplateIdFkeyPatch;
+  LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate: LanguageStringOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate;
   TemplatePatch: TemplatePatch;
+  LanguageStringsTemplateIdFkeyTemplateCreateInput: LanguageStringsTemplateIdFkeyTemplateCreateInput;
+  LanguageStringsFilterIdFkeyInput: LanguageStringsFilterIdFkeyInput;
+  FilterFilterPkeyConnect: FilterFilterPkeyConnect;
+  FilterFilterCodeKeyConnect: FilterFilterCodeKeyConnect;
+  FilterNodeIdConnect: FilterNodeIdConnect;
+  FilterFilterPkeyDelete: FilterFilterPkeyDelete;
+  FilterFilterCodeKeyDelete: FilterFilterCodeKeyDelete;
+  FilterNodeIdDelete: FilterNodeIdDelete;
+  FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterPkeyUpdate: FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterPkeyUpdate;
+  updateFilterOnLanguageStringForLanguageStringsFilterIdFkeyPatch: UpdateFilterOnLanguageStringForLanguageStringsFilterIdFkeyPatch;
+  TemplateFilterJoinFilterIdFkeyInverseInput: TemplateFilterJoinFilterIdFkeyInverseInput;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate;
+  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  TemplateFilterJoinFilterIdFkeyInput: TemplateFilterJoinFilterIdFkeyInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate;
+  updateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
+  LanguageStringsFilterIdFkeyInverseInput: LanguageStringsFilterIdFkeyInverseInput;
+  LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyUsingLanguageStringsPkeyUpdate: LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyUsingLanguageStringsPkeyUpdate;
+  updateLanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyPatch: UpdateLanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyPatch;
+  LanguageStringsOutcomeDisplayIdFkeyInput: LanguageStringsOutcomeDisplayIdFkeyInput;
+  OutcomeDisplayOutcomeDisplayPkeyConnect: OutcomeDisplayOutcomeDisplayPkeyConnect;
+  OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect: OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect;
+  OutcomeDisplayNodeIdConnect: OutcomeDisplayNodeIdConnect;
+  OutcomeDisplayOutcomeDisplayPkeyDelete: OutcomeDisplayOutcomeDisplayPkeyDelete;
+  OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete: OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete;
+  OutcomeDisplayNodeIdDelete: OutcomeDisplayNodeIdDelete;
+  OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
+  updateOutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch;
+  OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput: OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput;
+  OutcomeDisplayTableOutcomeDisplayTablePkeyConnect: OutcomeDisplayTableOutcomeDisplayTablePkeyConnect;
+  OutcomeDisplayTableNodeIdConnect: OutcomeDisplayTableNodeIdConnect;
+  OutcomeDisplayTableOutcomeDisplayTablePkeyDelete: OutcomeDisplayTableOutcomeDisplayTablePkeyDelete;
+  OutcomeDisplayTableNodeIdDelete: OutcomeDisplayTableNodeIdDelete;
+  OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate: OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate;
+  updateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
+  OutcomeDisplayTableOutcomeDisplayIdFkeyInput: OutcomeDisplayTableOutcomeDisplayIdFkeyInput;
+  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
+  updateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
+  OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput;
+  OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect: OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect;
+  OutcomeDisplayDetailNodeIdConnect: OutcomeDisplayDetailNodeIdConnect;
+  OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete: OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete;
+  OutcomeDisplayDetailNodeIdDelete: OutcomeDisplayDetailNodeIdDelete;
+  OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate: OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate;
+  updateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
+  OutcomeDisplayDetailOutcomeDisplayIdFkeyInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyInput;
+  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
+  updateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
+  LanguageStringsOutcomeDisplayIdFkeyInverseInput: LanguageStringsOutcomeDisplayIdFkeyInverseInput;
+  LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingLanguageStringsPkeyUpdate: LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingLanguageStringsPkeyUpdate;
+  updateLanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch: UpdateLanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyPatch;
+  LanguageStringsPermissionNameIdFkeyInput: LanguageStringsPermissionNameIdFkeyInput;
+  PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNamePkeyUpdate: PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNamePkeyUpdate;
+  updatePermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch: UpdatePermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch;
+  LanguageStringsPermissionNameIdFkeyInverseInput: LanguageStringsPermissionNameIdFkeyInverseInput;
+  LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingLanguageStringsPkeyUpdate: LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingLanguageStringsPkeyUpdate;
+  updateLanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch: UpdateLanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyPatch;
+  PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate: PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate;
+  LanguageStringPatch: LanguageStringPatch;
+  LanguageStringsPermissionNameIdFkeyLanguageStringsCreateInput: LanguageStringsPermissionNameIdFkeyLanguageStringsCreateInput;
+  PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnLanguageStringForLanguageStringsPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate;
+  LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate: LanguageStringOnLanguageStringForLanguageStringsPermissionNameIdFkeyNodeIdUpdate;
+  PermissionNamePatch: PermissionNamePatch;
+  LanguageStringsPermissionNameIdFkeyPermissionNameCreateInput: LanguageStringsPermissionNameIdFkeyPermissionNameCreateInput;
+  OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate;
+  LanguageStringsOutcomeDisplayIdFkeyLanguageStringsCreateInput: LanguageStringsOutcomeDisplayIdFkeyLanguageStringsCreateInput;
+  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
+  OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate;
+  OutcomeDisplayPatch: OutcomeDisplayPatch;
+  OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
+  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate;
+  OutcomeDisplayDetailPatch: OutcomeDisplayDetailPatch;
+  OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput;
+  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
+  OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
+  OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
+  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
+  OutcomeDisplayTablePatch: OutcomeDisplayTablePatch;
+  OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput: OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput;
+  OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
+  LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate: LanguageStringOnLanguageStringForLanguageStringsOutcomeDisplayIdFkeyNodeIdUpdate;
+  LanguageStringsOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: LanguageStringsOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
+  FilterOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate: FilterOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate;
+  LanguageStringsFilterIdFkeyLanguageStringsCreateInput: LanguageStringsFilterIdFkeyLanguageStringsCreateInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate;
+  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
+  FilterPatch: FilterPatch;
+  TemplateFilterJoinFilterIdFkeyFilterCreateInput: TemplateFilterJoinFilterIdFkeyFilterCreateInput;
+  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
+  TemplateFilterJoinPatch: TemplateFilterJoinPatch;
+  TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput;
+  FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnLanguageStringForLanguageStringsFilterIdFkeyUsingFilterCodeKeyUpdate;
+  LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate: LanguageStringOnLanguageStringForLanguageStringsFilterIdFkeyNodeIdUpdate;
+  LanguageStringsFilterIdFkeyFilterCreateInput: LanguageStringsFilterIdFkeyFilterCreateInput;
+  TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate: TemplateOnLanguageStringForLanguageStringsTemplateIdFkeyNodeIdUpdate;
+  LanguageStringsTemplateIdFkeyLanguageStringsCreateInput: LanguageStringsTemplateIdFkeyLanguageStringsCreateInput;
+  FileOnFileForFileTemplateIdFkeyNodeIdUpdate: FileOnFileForFileTemplateIdFkeyNodeIdUpdate;
   FileTemplateIdFkeyTemplateCreateInput: FileTemplateIdFkeyTemplateCreateInput;
   FileApplicationSerialFkeyInput: FileApplicationSerialFkeyInput;
   ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate: ApplicationOnFileForFileApplicationSerialFkeyUsingApplicationPkeyUpdate;
@@ -33775,7 +35046,6 @@ export type ResolversParentTypes = {
   TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput: TemplatePermissionPermissionNameIdFkeyTemplatePermissionCreateInput;
   PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate: PermissionNameOnPermissionJoinForPermissionJoinPermissionNameIdFkeyUsingPermissionNameNameKeyUpdate;
   PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate: PermissionJoinOnPermissionJoinForPermissionJoinPermissionNameIdFkeyNodeIdUpdate;
-  PermissionNamePatch: PermissionNamePatch;
   PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput: PermissionJoinPermissionNameIdFkeyPermissionNameCreateInput;
   OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate: OrganisationOnPermissionJoinForPermissionJoinOrganisationIdFkeyNodeIdUpdate;
   PermissionJoinPatch: PermissionJoinPatch;
@@ -33817,25 +35087,6 @@ export type ResolversParentTypes = {
   TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput: TemplatePermissionTemplateIdFkeyTemplatePermissionCreateInput;
   TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
   TemplateFilterJoinTemplateIdFkeyTemplateCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateCreateInput;
-  TemplateFilterJoinFilterIdFkeyInput: TemplateFilterJoinFilterIdFkeyInput;
-  FilterFilterPkeyConnect: FilterFilterPkeyConnect;
-  FilterFilterCodeKeyConnect: FilterFilterCodeKeyConnect;
-  FilterNodeIdConnect: FilterNodeIdConnect;
-  FilterFilterPkeyDelete: FilterFilterPkeyDelete;
-  FilterFilterCodeKeyDelete: FilterFilterCodeKeyDelete;
-  FilterNodeIdDelete: FilterNodeIdDelete;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterPkeyUpdate;
-  updateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateFilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  TemplateFilterJoinFilterIdFkeyInverseInput: TemplateFilterJoinFilterIdFkeyInverseInput;
-  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingTemplateFilterJoinPkeyUpdate;
-  updateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch: UpdateTemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyPatch;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
-  TemplateFilterJoinPatch: TemplateFilterJoinPatch;
-  TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinFilterIdFkeyTemplateFilterJoinCreateInput;
-  FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate: FilterOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyUsingFilterCodeKeyUpdate;
-  TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate: TemplateFilterJoinOnTemplateFilterJoinForTemplateFilterJoinFilterIdFkeyNodeIdUpdate;
-  FilterPatch: FilterPatch;
-  TemplateFilterJoinFilterIdFkeyFilterCreateInput: TemplateFilterJoinFilterIdFkeyFilterCreateInput;
   TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate: TemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFkeyNodeIdUpdate;
   TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput: TemplateFilterJoinTemplateIdFkeyTemplateFilterJoinCreateInput;
   TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate: TemplateStageOnTemplateStageForTemplateStageTemplateIdFkeyNodeIdUpdate;
@@ -33891,6 +35142,9 @@ export type ResolversParentTypes = {
   CreateFilterInput: CreateFilterInput;
   FilterInput: FilterInput;
   CreateFilterPayload: CreateFilterPayload;
+  CreateLanguageStringInput: CreateLanguageStringInput;
+  LanguageStringInput: LanguageStringInput;
+  CreateLanguageStringPayload: CreateLanguageStringPayload;
   CreateLookupTableInput: CreateLookupTableInput;
   LookupTableInput: LookupTableInput;
   CreateLookupTablePayload: CreateLookupTablePayload;
@@ -33902,45 +35156,6 @@ export type ResolversParentTypes = {
   CreateOrganisationPayload: CreateOrganisationPayload;
   CreateOutcomeDisplayInput: CreateOutcomeDisplayInput;
   OutcomeDisplayInput: OutcomeDisplayInput;
-  OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput: OutcomeDisplayTableOutcomeDisplayIdFkeyInverseInput;
-  OutcomeDisplayTableOutcomeDisplayTablePkeyConnect: OutcomeDisplayTableOutcomeDisplayTablePkeyConnect;
-  OutcomeDisplayTableNodeIdConnect: OutcomeDisplayTableNodeIdConnect;
-  OutcomeDisplayTableOutcomeDisplayTablePkeyDelete: OutcomeDisplayTableOutcomeDisplayTablePkeyDelete;
-  OutcomeDisplayTableNodeIdDelete: OutcomeDisplayTableNodeIdDelete;
-  OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate: OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTablePkeyUpdate;
-  updateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  OutcomeDisplayTableOutcomeDisplayIdFkeyInput: OutcomeDisplayTableOutcomeDisplayIdFkeyInput;
-  OutcomeDisplayOutcomeDisplayPkeyConnect: OutcomeDisplayOutcomeDisplayPkeyConnect;
-  OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect: OutcomeDisplayOutcomeDisplayTableNameCodeKeyConnect;
-  OutcomeDisplayNodeIdConnect: OutcomeDisplayNodeIdConnect;
-  OutcomeDisplayOutcomeDisplayPkeyDelete: OutcomeDisplayOutcomeDisplayPkeyDelete;
-  OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete: OutcomeDisplayOutcomeDisplayTableNameCodeKeyDelete;
-  OutcomeDisplayNodeIdDelete: OutcomeDisplayNodeIdDelete;
-  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
-  updateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyPatch;
-  OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyInverseInput;
-  OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect: OutcomeDisplayDetailOutcomeDisplayDetailPkeyConnect;
-  OutcomeDisplayDetailNodeIdConnect: OutcomeDisplayDetailNodeIdConnect;
-  OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete: OutcomeDisplayDetailOutcomeDisplayDetailPkeyDelete;
-  OutcomeDisplayDetailNodeIdDelete: OutcomeDisplayDetailNodeIdDelete;
-  OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate: OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayDetailPkeyUpdate;
-  updateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  OutcomeDisplayDetailOutcomeDisplayIdFkeyInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyInput;
-  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayPkeyUpdate;
-  updateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch: UpdateOutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyPatch;
-  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
-  OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayDetailOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate;
-  OutcomeDisplayPatch: OutcomeDisplayPatch;
-  OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
-  OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnOutcomeDisplayDetailForOutcomeDisplayDetailOutcomeDisplayIdFkeyNodeIdUpdate;
-  OutcomeDisplayDetailPatch: OutcomeDisplayDetailPatch;
-  OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput: OutcomeDisplayDetailOutcomeDisplayIdFkeyOutcomeDisplayDetailCreateInput;
-  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyUsingOutcomeDisplayTableNameCodeKeyUpdate;
-  OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayTableOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
-  OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput: OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayCreateInput;
-  OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate: OutcomeDisplayOnOutcomeDisplayTableForOutcomeDisplayTableOutcomeDisplayIdFkeyNodeIdUpdate;
-  OutcomeDisplayTablePatch: OutcomeDisplayTablePatch;
-  OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput: OutcomeDisplayTableOutcomeDisplayIdFkeyOutcomeDisplayTableCreateInput;
   CreateOutcomeDisplayPayload: CreateOutcomeDisplayPayload;
   CreateOutcomeDisplayColumnDefinitionInput: CreateOutcomeDisplayColumnDefinitionInput;
   OutcomeDisplayColumnDefinitionInput: OutcomeDisplayColumnDefinitionInput;
@@ -34064,6 +35279,9 @@ export type ResolversParentTypes = {
   UpdateFilterPayload: UpdateFilterPayload;
   UpdateFilterInput: UpdateFilterInput;
   UpdateFilterByCodeInput: UpdateFilterByCodeInput;
+  UpdateLanguageStringByNodeIdInput: UpdateLanguageStringByNodeIdInput;
+  UpdateLanguageStringPayload: UpdateLanguageStringPayload;
+  UpdateLanguageStringInput: UpdateLanguageStringInput;
   UpdateLookupTableByNodeIdInput: UpdateLookupTableByNodeIdInput;
   LookupTablePatch: LookupTablePatch;
   UpdateLookupTablePayload: UpdateLookupTablePayload;
@@ -34208,6 +35426,9 @@ export type ResolversParentTypes = {
   DeleteFilterPayload: DeleteFilterPayload;
   DeleteFilterInput: DeleteFilterInput;
   DeleteFilterByCodeInput: DeleteFilterByCodeInput;
+  DeleteLanguageStringByNodeIdInput: DeleteLanguageStringByNodeIdInput;
+  DeleteLanguageStringPayload: DeleteLanguageStringPayload;
+  DeleteLanguageStringInput: DeleteLanguageStringInput;
   DeleteLookupTableByNodeIdInput: DeleteLookupTableByNodeIdInput;
   DeleteLookupTablePayload: DeleteLookupTablePayload;
   DeleteLookupTableInput: DeleteLookupTableInput;
@@ -34480,7 +35701,6 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   templateName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  languageStrings?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   applicant?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   orgName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -34488,6 +35708,8 @@ export type ApplicationListShapeResolvers<ContextType = any, ParentType extends 
   status?: Resolver<Maybe<ResolversTypes['ApplicationStatus']>, ParentType, ContextType>;
   outcome?: Resolver<Maybe<ResolversTypes['ApplicationOutcome']>, ParentType, ContextType>;
   lastActiveDate?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
+  languageCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  languageStrings?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   assigners?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   reviewers?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
   reviewerAction?: Resolver<Maybe<ResolversTypes['ReviewerAction']>, ParentType, ContextType>;
@@ -34921,6 +36143,18 @@ export type CreateFilterPayloadResolvers<ContextType = any, ParentType extends R
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateLanguageStringPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateLanguageStringPayload'] = ResolversParentTypes['CreateLanguageStringPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  languageString?: Resolver<Maybe<ResolversTypes['LanguageString']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  outcomeDisplay?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType>;
+  permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
+  languageStringEdge?: Resolver<Maybe<ResolversTypes['LanguageStringsEdge']>, ParentType, ContextType, RequireFields<CreateLanguageStringPayloadLanguageStringEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateLookupTablePayload'] = ResolversParentTypes['CreateLookupTablePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType>;
@@ -35343,6 +36577,19 @@ export type DeleteFilterPayloadResolvers<ContextType = any, ParentType extends R
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DeleteLanguageStringPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteLanguageStringPayload'] = ResolversParentTypes['DeleteLanguageStringPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  languageString?: Resolver<Maybe<ResolversTypes['LanguageString']>, ParentType, ContextType>;
+  deletedLanguageStringNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  outcomeDisplay?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType>;
+  permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
+  languageStringEdge?: Resolver<Maybe<ResolversTypes['LanguageStringsEdge']>, ParentType, ContextType, RequireFields<DeleteLanguageStringPayloadLanguageStringEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type DeleteLookupTablePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteLookupTablePayload'] = ResolversParentTypes['DeleteLookupTablePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType>;
@@ -35746,6 +36993,7 @@ export type FilterResolvers<ContextType = any, ParentType extends ResolversParen
   query?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   userRole?: Resolver<Maybe<ResolversTypes['PermissionPolicyType']>, ParentType, ContextType>;
   templateFilterJoins?: Resolver<ResolversTypes['TemplateFilterJoinsConnection'], ParentType, ContextType, RequireFields<FilterTemplateFilterJoinsArgs, 'orderBy'>>;
+  languageStrings?: Resolver<ResolversTypes['LanguageStringsConnection'], ParentType, ContextType, RequireFields<FilterLanguageStringsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -35766,6 +37014,36 @@ export type FiltersEdgeResolvers<ContextType = any, ParentType extends Resolvers
 export interface JsonScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['JSON'], any> {
   name: 'JSON';
 }
+
+export type LanguageStringResolvers<ContextType = any, ParentType extends ResolversParentTypes['LanguageString'] = ResolversParentTypes['LanguageString']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  languageCode?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  strings?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  filterId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  outcomeDisplayId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  permissionNameId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  outcomeDisplay?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType>;
+  permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LanguageStringsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['LanguageStringsConnection'] = ResolversParentTypes['LanguageStringsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['LanguageString']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['LanguageStringsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type LanguageStringsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['LanguageStringsEdge'] = ResolversParentTypes['LanguageStringsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['LanguageString']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
 
 export type LookupTableResolvers<ContextType = any, ParentType extends ResolversParentTypes['LookupTable'] = ResolversParentTypes['LookupTable']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -35803,6 +37081,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   createElementTypePlugin?: Resolver<Maybe<ResolversTypes['CreateElementTypePluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateElementTypePluginArgs, 'input'>>;
   createFile?: Resolver<Maybe<ResolversTypes['CreateFilePayload']>, ParentType, ContextType, RequireFields<MutationCreateFileArgs, 'input'>>;
   createFilter?: Resolver<Maybe<ResolversTypes['CreateFilterPayload']>, ParentType, ContextType, RequireFields<MutationCreateFilterArgs, 'input'>>;
+  createLanguageString?: Resolver<Maybe<ResolversTypes['CreateLanguageStringPayload']>, ParentType, ContextType, RequireFields<MutationCreateLanguageStringArgs, 'input'>>;
   createLookupTable?: Resolver<Maybe<ResolversTypes['CreateLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationCreateLookupTableArgs, 'input'>>;
   createNotification?: Resolver<Maybe<ResolversTypes['CreateNotificationPayload']>, ParentType, ContextType, RequireFields<MutationCreateNotificationArgs, 'input'>>;
   createOrganisation?: Resolver<Maybe<ResolversTypes['CreateOrganisationPayload']>, ParentType, ContextType, RequireFields<MutationCreateOrganisationArgs, 'input'>>;
@@ -35861,6 +37140,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateFilterByNodeId?: Resolver<Maybe<ResolversTypes['UpdateFilterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateFilterByNodeIdArgs, 'input'>>;
   updateFilter?: Resolver<Maybe<ResolversTypes['UpdateFilterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateFilterArgs, 'input'>>;
   updateFilterByCode?: Resolver<Maybe<ResolversTypes['UpdateFilterPayload']>, ParentType, ContextType, RequireFields<MutationUpdateFilterByCodeArgs, 'input'>>;
+  updateLanguageStringByNodeId?: Resolver<Maybe<ResolversTypes['UpdateLanguageStringPayload']>, ParentType, ContextType, RequireFields<MutationUpdateLanguageStringByNodeIdArgs, 'input'>>;
+  updateLanguageString?: Resolver<Maybe<ResolversTypes['UpdateLanguageStringPayload']>, ParentType, ContextType, RequireFields<MutationUpdateLanguageStringArgs, 'input'>>;
   updateLookupTableByNodeId?: Resolver<Maybe<ResolversTypes['UpdateLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableByNodeIdArgs, 'input'>>;
   updateLookupTable?: Resolver<Maybe<ResolversTypes['UpdateLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationUpdateLookupTableArgs, 'input'>>;
   updateNotificationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateNotificationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateNotificationByNodeIdArgs, 'input'>>;
@@ -35961,6 +37242,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteFilterByNodeId?: Resolver<Maybe<ResolversTypes['DeleteFilterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteFilterByNodeIdArgs, 'input'>>;
   deleteFilter?: Resolver<Maybe<ResolversTypes['DeleteFilterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteFilterArgs, 'input'>>;
   deleteFilterByCode?: Resolver<Maybe<ResolversTypes['DeleteFilterPayload']>, ParentType, ContextType, RequireFields<MutationDeleteFilterByCodeArgs, 'input'>>;
+  deleteLanguageStringByNodeId?: Resolver<Maybe<ResolversTypes['DeleteLanguageStringPayload']>, ParentType, ContextType, RequireFields<MutationDeleteLanguageStringByNodeIdArgs, 'input'>>;
+  deleteLanguageString?: Resolver<Maybe<ResolversTypes['DeleteLanguageStringPayload']>, ParentType, ContextType, RequireFields<MutationDeleteLanguageStringArgs, 'input'>>;
   deleteLookupTableByNodeId?: Resolver<Maybe<ResolversTypes['DeleteLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableByNodeIdArgs, 'input'>>;
   deleteLookupTable?: Resolver<Maybe<ResolversTypes['DeleteLookupTablePayload']>, ParentType, ContextType, RequireFields<MutationDeleteLookupTableArgs, 'input'>>;
   deleteNotificationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteNotificationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteNotificationByNodeIdArgs, 'input'>>;
@@ -36038,7 +37321,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationSection' | 'TriggerSchedule' | 'Verification' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail' | 'OutcomeDisplayColumnDefinition', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'LanguageString' | 'Filter' | 'TemplateFilterJoin' | 'OutcomeDisplay' | 'OutcomeDisplayTable' | 'OutcomeDisplayDetail' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'File' | 'ApplicationSection' | 'TriggerSchedule' | 'Verification' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplayColumnDefinition', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -36120,6 +37403,7 @@ export type OutcomeDisplayResolvers<ContextType = any, ParentType extends Resolv
   priority?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   outcomeDisplayTables?: Resolver<ResolversTypes['OutcomeDisplayTablesConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayOutcomeDisplayTablesArgs, 'orderBy'>>;
   outcomeDisplayDetails?: Resolver<ResolversTypes['OutcomeDisplayDetailsConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayOutcomeDisplayDetailsArgs, 'orderBy'>>;
+  languageStrings?: Resolver<ResolversTypes['LanguageStringsConnection'], ParentType, ContextType, RequireFields<OutcomeDisplayLanguageStringsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36259,6 +37543,7 @@ export type PermissionNameResolvers<ContextType = any, ParentType extends Resolv
   permissionPolicy?: Resolver<Maybe<ResolversTypes['PermissionPolicy']>, ParentType, ContextType>;
   permissionJoins?: Resolver<ResolversTypes['PermissionJoinsConnection'], ParentType, ContextType, RequireFields<PermissionNamePermissionJoinsArgs, 'orderBy'>>;
   templatePermissions?: Resolver<ResolversTypes['TemplatePermissionsConnection'], ParentType, ContextType, RequireFields<PermissionNameTemplatePermissionsArgs, 'orderBy'>>;
+  languageStrings?: Resolver<ResolversTypes['LanguageStringsConnection'], ParentType, ContextType, RequireFields<PermissionNameLanguageStringsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36387,6 +37672,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   elementTypePlugins?: Resolver<Maybe<ResolversTypes['ElementTypePluginsConnection']>, ParentType, ContextType, RequireFields<QueryElementTypePluginsArgs, 'orderBy'>>;
   files?: Resolver<Maybe<ResolversTypes['FilesConnection']>, ParentType, ContextType, RequireFields<QueryFilesArgs, 'orderBy'>>;
   filters?: Resolver<Maybe<ResolversTypes['FiltersConnection']>, ParentType, ContextType, RequireFields<QueryFiltersArgs, 'orderBy'>>;
+  languageStrings?: Resolver<Maybe<ResolversTypes['LanguageStringsConnection']>, ParentType, ContextType, RequireFields<QueryLanguageStringsArgs, 'orderBy'>>;
   lookupTables?: Resolver<Maybe<ResolversTypes['LookupTablesConnection']>, ParentType, ContextType, RequireFields<QueryLookupTablesArgs, 'orderBy'>>;
   notifications?: Resolver<Maybe<ResolversTypes['NotificationsConnection']>, ParentType, ContextType, RequireFields<QueryNotificationsArgs, 'orderBy'>>;
   organisations?: Resolver<Maybe<ResolversTypes['OrganisationsConnection']>, ParentType, ContextType, RequireFields<QueryOrganisationsArgs, 'orderBy'>>;
@@ -36438,6 +37724,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   fileByUniqueId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByUniqueIdArgs, 'uniqueId'>>;
   filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType, RequireFields<QueryFilterArgs, 'id'>>;
   filterByCode?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType, RequireFields<QueryFilterByCodeArgs, 'code'>>;
+  languageString?: Resolver<Maybe<ResolversTypes['LanguageString']>, ParentType, ContextType, RequireFields<QueryLanguageStringArgs, 'id'>>;
   lookupTable?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType, RequireFields<QueryLookupTableArgs, 'id'>>;
   notification?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<QueryNotificationArgs, 'id'>>;
   organisation?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationArgs, 'id'>>;
@@ -36518,6 +37805,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   elementTypePluginByNodeId?: Resolver<Maybe<ResolversTypes['ElementTypePlugin']>, ParentType, ContextType, RequireFields<QueryElementTypePluginByNodeIdArgs, 'nodeId'>>;
   fileByNodeId?: Resolver<Maybe<ResolversTypes['File']>, ParentType, ContextType, RequireFields<QueryFileByNodeIdArgs, 'nodeId'>>;
   filterByNodeId?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType, RequireFields<QueryFilterByNodeIdArgs, 'nodeId'>>;
+  languageStringByNodeId?: Resolver<Maybe<ResolversTypes['LanguageString']>, ParentType, ContextType, RequireFields<QueryLanguageStringByNodeIdArgs, 'nodeId'>>;
   lookupTableByNodeId?: Resolver<Maybe<ResolversTypes['LookupTable']>, ParentType, ContextType, RequireFields<QueryLookupTableByNodeIdArgs, 'nodeId'>>;
   notificationByNodeId?: Resolver<Maybe<ResolversTypes['Notification']>, ParentType, ContextType, RequireFields<QueryNotificationByNodeIdArgs, 'nodeId'>>;
   organisationByNodeId?: Resolver<Maybe<ResolversTypes['Organisation']>, ParentType, ContextType, RequireFields<QueryOrganisationByNodeIdArgs, 'nodeId'>>;
@@ -36848,7 +38136,6 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   templateCategoryId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   versionTimestamp?: Resolver<Maybe<ResolversTypes['Datetime']>, ParentType, ContextType>;
   version?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  languageStrings?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   templateCategory?: Resolver<Maybe<ResolversTypes['TemplateCategory']>, ParentType, ContextType>;
   templateSections?: Resolver<ResolversTypes['TemplateSectionsConnection'], ParentType, ContextType, RequireFields<TemplateTemplateSectionsArgs, 'orderBy'>>;
   templateStages?: Resolver<ResolversTypes['TemplateStagesConnection'], ParentType, ContextType, RequireFields<TemplateTemplateStagesArgs, 'orderBy'>>;
@@ -36860,6 +38147,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   triggerSchedules?: Resolver<ResolversTypes['TriggerSchedulesConnection'], ParentType, ContextType, RequireFields<TemplateTriggerSchedulesArgs, 'orderBy'>>;
   reviewAssignments?: Resolver<ResolversTypes['ReviewAssignmentsConnection'], ParentType, ContextType, RequireFields<TemplateReviewAssignmentsArgs, 'orderBy'>>;
   files?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<TemplateFilesArgs, 'orderBy'>>;
+  languageStrings?: Resolver<ResolversTypes['LanguageStringsConnection'], ParentType, ContextType, RequireFields<TemplateLanguageStringsArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37269,6 +38557,18 @@ export type UpdateFilterPayloadResolvers<ContextType = any, ParentType extends R
   filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
   query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
   filterEdge?: Resolver<Maybe<ResolversTypes['FiltersEdge']>, ParentType, ContextType, RequireFields<UpdateFilterPayloadFilterEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type UpdateLanguageStringPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateLanguageStringPayload'] = ResolversParentTypes['UpdateLanguageStringPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  languageString?: Resolver<Maybe<ResolversTypes['LanguageString']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
+  filter?: Resolver<Maybe<ResolversTypes['Filter']>, ParentType, ContextType>;
+  outcomeDisplay?: Resolver<Maybe<ResolversTypes['OutcomeDisplay']>, ParentType, ContextType>;
+  permissionName?: Resolver<Maybe<ResolversTypes['PermissionName']>, ParentType, ContextType>;
+  languageStringEdge?: Resolver<Maybe<ResolversTypes['LanguageStringsEdge']>, ParentType, ContextType, RequireFields<UpdateLanguageStringPayloadLanguageStringEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -37760,6 +39060,7 @@ export type Resolvers<ContextType = any> = {
   CreateElementTypePluginPayload?: CreateElementTypePluginPayloadResolvers<ContextType>;
   CreateFilePayload?: CreateFilePayloadResolvers<ContextType>;
   CreateFilterPayload?: CreateFilterPayloadResolvers<ContextType>;
+  CreateLanguageStringPayload?: CreateLanguageStringPayloadResolvers<ContextType>;
   CreateLookupTablePayload?: CreateLookupTablePayloadResolvers<ContextType>;
   CreateNotificationPayload?: CreateNotificationPayloadResolvers<ContextType>;
   CreateOrganisationPayload?: CreateOrganisationPayloadResolvers<ContextType>;
@@ -37805,6 +39106,7 @@ export type Resolvers<ContextType = any> = {
   DeleteElementTypePluginPayload?: DeleteElementTypePluginPayloadResolvers<ContextType>;
   DeleteFilePayload?: DeleteFilePayloadResolvers<ContextType>;
   DeleteFilterPayload?: DeleteFilterPayloadResolvers<ContextType>;
+  DeleteLanguageStringPayload?: DeleteLanguageStringPayloadResolvers<ContextType>;
   DeleteLookupTablePayload?: DeleteLookupTablePayloadResolvers<ContextType>;
   DeleteNotificationPayload?: DeleteNotificationPayloadResolvers<ContextType>;
   DeleteOrganisationPayload?: DeleteOrganisationPayloadResolvers<ContextType>;
@@ -37847,6 +39149,9 @@ export type Resolvers<ContextType = any> = {
   FiltersConnection?: FiltersConnectionResolvers<ContextType>;
   FiltersEdge?: FiltersEdgeResolvers<ContextType>;
   JSON?: GraphQLScalarType;
+  LanguageString?: LanguageStringResolvers<ContextType>;
+  LanguageStringsConnection?: LanguageStringsConnectionResolvers<ContextType>;
+  LanguageStringsEdge?: LanguageStringsEdgeResolvers<ContextType>;
   LookupTable?: LookupTableResolvers<ContextType>;
   LookupTablesConnection?: LookupTablesConnectionResolvers<ContextType>;
   LookupTablesEdge?: LookupTablesEdgeResolvers<ContextType>;
@@ -37959,6 +39264,7 @@ export type Resolvers<ContextType = any> = {
   UpdateElementTypePluginPayload?: UpdateElementTypePluginPayloadResolvers<ContextType>;
   UpdateFilePayload?: UpdateFilePayloadResolvers<ContextType>;
   UpdateFilterPayload?: UpdateFilterPayloadResolvers<ContextType>;
+  UpdateLanguageStringPayload?: UpdateLanguageStringPayloadResolvers<ContextType>;
   UpdateLookupTablePayload?: UpdateLookupTablePayloadResolvers<ContextType>;
   UpdateNotificationPayload?: UpdateNotificationPayloadResolvers<ContextType>;
   UpdateOrganisationPayload?: UpdateOrganisationPayloadResolvers<ContextType>;

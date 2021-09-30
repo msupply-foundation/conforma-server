@@ -17,8 +17,7 @@ CREATE TABLE public.template (
     icon varchar,
     template_category_id integer REFERENCES public.template_category (id),
     version_timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
-    version integer DEFAULT 1,
-    language_strings jsonb DEFAULT '{}'
+    version integer DEFAULT 1
 );
 
 -- FUNCTION to generate a new version of template (should run as a trigger)

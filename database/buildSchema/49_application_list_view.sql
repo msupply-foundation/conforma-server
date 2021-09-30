@@ -6,7 +6,6 @@ CREATE TABLE application_list_shape (
     "name" varchar,
     template_code varchar,
     template_name varchar,
-    language_strings jsonb,
     applicant varchar,
     org_name varchar,
     stage varchar,
@@ -14,6 +13,8 @@ CREATE TABLE application_list_shape (
     "status" public.application_status,
     outcome public.application_outcome,
     last_active_date timestamptz,
+    language_code varchar,
+    language_strings jsonb,
     assigners varchar[],
     reviewers varchar[],
     reviewer_action public.reviewer_action,
@@ -34,7 +35,6 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         app.name,
         template.code AS template_code,
         template.name AS template_name,
-        template.language_strings,
         CONCAT(first_name, ' ', last_name) AS applicant,
         org.name AS org_name,
         stage_status.stage,
@@ -42,6 +42,8 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         stage_status.status,
         app.outcome,
         status_history_time_created AS last_active_date,
+        language_strings.language_code,
+        language_strings.strings AS language_strings,
         assigners,
         reviewers,
         reviewer_action,
@@ -60,6 +62,7 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN TEMPLATE ON app.template_id = template.id
     LEFT JOIN "user" ON user_id = "user".id
     LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
+    LEFT JOIN language_strings ON template.id = language_strings.template_id
     LEFT JOIN organisation org ON app.org_id = org.id
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
     LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
