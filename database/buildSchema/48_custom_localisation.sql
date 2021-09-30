@@ -1,5 +1,5 @@
 -- language strings for custom elements (tempaltes, filters, etc.)
-CREATE TABLE public.language_strings (
+CREATE TABLE public.custom_localisation (
     id serial PRIMARY KEY,
     language_code varchar,
     strings jsonb DEFAULT '{}',

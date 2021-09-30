@@ -42,8 +42,8 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
         stage_status.status,
         app.outcome,
         status_history_time_created AS last_active_date,
-        language_strings.language_code,
-        language_strings.strings AS language_strings,
+        custom_localisation.language_code,
+        custom_localisation.strings AS language_strings,
         assigners,
         reviewers,
         reviewer_action,
@@ -62,7 +62,7 @@ CREATE FUNCTION application_list (userid int DEFAULT 0)
     LEFT JOIN TEMPLATE ON app.template_id = template.id
     LEFT JOIN "user" ON user_id = "user".id
     LEFT JOIN application_stage_status_latest AS stage_status ON app.id = stage_status.application_id
-    LEFT JOIN language_strings ON template.id = language_strings.template_id
+    LEFT JOIN custom_localisation ON template.id = custom_localisation.template_id
     LEFT JOIN organisation org ON app.org_id = org.id
     LEFT JOIN assignment_list (stage_status.stage_id) ON app.id = assignment_list.application_id
     LEFT JOIN review_list (stage_status.stage_id, $1) ON app.id = review_list.application_id
