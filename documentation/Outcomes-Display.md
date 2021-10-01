@@ -328,7 +328,7 @@ This layout describe how to display the `organisation` table. It will have the t
 
 We now define three columns with custom definitions in `outcome_display_column_definition`: `logoUrl`, `registrationDocumentation` and `members`. That means that the other two will just use their field name as column title, and the values in those fields will be shown as plain text.
 
-Let's look at the custom column definitions one by one:
+Let's look at the custom column definitions one by one (from `outcome_display_column_definition`):
 
 **logoUrl**
 
