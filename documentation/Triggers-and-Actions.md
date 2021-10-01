@@ -5,11 +5,13 @@
 ## Article Contents
 
 - [Overview of Trigger and Action system](#overview-of-trigger-and-action-system)
-- [List of available Triggers and the "listener" associated with it.](#list-of-available-triggers-and-the-listener-associated-with-it)
+  - [List of available Triggers](#list-of-available-triggers)
+  - [Database tables that have a TRIGGER field](#database-tables-that-have-a-trigger-field-that-is-listened-to)
+  - [List of Core-actions available in initial configuration](https://github.com/openmsupply/application-manager-web-app/wiki/List-Core-Actions)
 - [Actions](#actions)
 - [Action parameters](#action-parameters)
 - [Passing information to Actions](#passing-information-to-actions)
-- [Running actions via REST endpoint]()
+- [Running actions via REST endpoint](#running-actions-via-rest-endpoint)
 
 <!-- tocstop -->
 

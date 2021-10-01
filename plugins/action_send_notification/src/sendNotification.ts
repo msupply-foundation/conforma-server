@@ -37,6 +37,14 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
     },
   })
 
+  if (!email) {
+    console.log('Warning: no email address(es) provided')
+    return {
+      status: ActionQueueStatus.Fail,
+      error_log: 'Email address(es) not supplied',
+    }
+  }
+
   try {
     const emailAddressString = stringifyEmailRecipientsList(email)
 
@@ -75,6 +83,11 @@ const sendNotification: ActionPluginType = async ({ parameters, applicationData,
             db.notificationEmailSent(notificationResult.id)
           }
         })
+        .catch((err) =>
+          console.log(
+            `Email sending FAILED: ${err.message}\nCheck "email_sent" field in "notification" table`
+          )
+        )
     }
 
     // NOTE: Because sending email happens asynchronously, the output object
