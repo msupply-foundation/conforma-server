@@ -325,7 +325,7 @@ This layout describe how to display the `organisation` table. It will have the t
 - In Details view, the page Header will be the value from the `name` field (which is why it made sense to exclude it from the list of fields to show)
 - We also are allowed to see a list of Linked Applications in Details view
 
-We now define three columns with custom definitons in `outcome_display_column_definition`: `logoUrl`, `registrationDocumentation` and `members`. That means that the other two will just use their field name as column title, and the values in those fields will be shown as plain text.
+We now define three columns with custom definitions in `outcome_display_column_definition`: `logoUrl`, `registrationDocumentation` and `members`. That means that the other two will just use their field name as column title, and the values in those fields will be shown as plain text.
 
 Let's look at the custom column definitions one by one:
 
