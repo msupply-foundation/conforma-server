@@ -25,7 +25,7 @@ export type DatabaseTables = DatabaseTable[]
 
 export type ExportAndImportOptions = {
   filters: {
-    [tableName: string]: object
+    [tableName: string]: { [key: string]: any }
   }
   includeTables: string[]
   excludeTables: string[]
@@ -38,6 +38,7 @@ export type ExportAndImportOptions = {
   skipTableOnInsertFail: string[]
   includeLocalisation?: boolean
   includePrefs?: boolean
+  exportCustomLocalisationsAsJson?: true
   resetFiles: boolean
 }
 

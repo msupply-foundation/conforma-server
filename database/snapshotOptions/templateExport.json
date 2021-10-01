@@ -12,23 +12,17 @@
     "templateSection",
     "templateStageReviewLevel",
     "permissionName",
-    "file",
-    "customLocalisation"
+    "file"
   ],
   "//tablesToUpdateOnInsertFail": "deprecated, in favour of skipTableOnInsertFail",
   "//skipTableOnInsertFail": "These tables have unique contraint other then ID, they will be skippped if insert fail, and any related records will reference existing record",
-  "skipTableOnInsertFail": [
-    "permissionName",
-    "permissionPolicy",
-    "filter",
-    "file",
-    "customLocalisation"
-  ],
+  "skipTableOnInsertFail": ["permissionName", "permissionPolicy", "filter", "file"],
   "excludeTables": [],
   "insertScriptsLocale": "dev",
   "includeInsertScripts": [],
   "excludeInsertScripts": [],
   "includePrefs": false,
   "includeLocalisation": false,
+  "exportCustomLocalisationsAsJson": true,
   "resetFiles": false
 }

@@ -5,6 +5,7 @@ import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
 import updateRowPolicies from '../../../database/updateRowPolicies'
 import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
+import DBConnect from '../databaseConnect'
 import importFromJson from '../exportAndImport/importFromJson'
 
 import {
@@ -69,6 +70,26 @@ const useSnapshot: SnapshotOperation = async ({
         execSync(`cp '${snapshotFolder}/preferences.json' '${PREFERENCES_FILE}'`)
       } catch (e) {
         console.log("Couldn't import preferences")
+      }
+    }
+
+    // Import template localisations from JSON, but make sure this snapshot only
+    // has one template in it!
+    if (snapshotObject?.template.length === 1) {
+      const templateId = insertedRecords.template[0].new.id
+      if (fsSync.existsSync(`${snapshotFolder}/customLocalisation`)) {
+        const languageCodes = fsSync.readdirSync(`${snapshotFolder}/customLocalisation`)
+        const insertValues: [string, object, number][] = []
+        languageCodes.forEach((code) => {
+          const strings = JSON.parse(
+            fsSync.readFileSync(
+              path.join(snapshotFolder, 'customLocalisation', code, 'strings.json'),
+              { encoding: 'utf-8' }
+            )
+          )
+          insertValues.push([code, strings, templateId])
+        })
+        await DBConnect.setLanguages(insertValues)
       }
     }
 

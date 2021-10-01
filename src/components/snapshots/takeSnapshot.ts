@@ -8,6 +8,8 @@ import getRecordsAsObject from '../exportAndImport/exportToJson'
 import { promisify } from 'util'
 import zipper from 'adm-zip'
 import pgDiffConfig from './pgDiffConfig.json'
+import DBConnect from '../databaseConnect'
+import { makeFolder } from '../utilityFunctions'
 import {
   DEFAULT_SNAPSHOT_NAME,
   DEFAULT_OPTIONS_NAME,
@@ -54,11 +56,28 @@ const takeSnapshot: SnapshotOperation = async ({
       JSON.stringify(options, null, ' ')
     )
 
+    // Export template localisations as JSON -- only if single template is
+    // being exported
+    type Languages = { language_code: string; strings: object }[]
+    if (options.filters?.template?.id && options?.exportCustomLocalisationsAsJson) {
+      console.log('Exporting template localisations')
+      const languages: Languages = await DBConnect.getLanguages(
+        options.filters?.template?.id?.equalTo
+      )
+      if (languages.length > 0) makeFolder(path.join(newSnapshotFolder, 'customLocalisation'))
+      languages.forEach(({ language_code, strings }) => {
+        //
+        const languagePath = path.join(newSnapshotFolder, 'customLocalisation', language_code)
+        makeFolder(languagePath)
+        fs.writeFile(path.join(languagePath, 'strings.json'), JSON.stringify(strings, null, 2))
+      })
+    }
+
     if (options.shouldReInitialise) await getSchemaDiff(newSnapshotFolder)
 
     await copyFiles(newSnapshotFolder, snapshotObject.file)
 
-    // Copy localisation
+    // Copy core localisation
     if (options?.includeLocalisation)
       execSync(`cp -r '${LOCALISATION_FOLDER}/' '${newSnapshotFolder}/localisation'`)
 

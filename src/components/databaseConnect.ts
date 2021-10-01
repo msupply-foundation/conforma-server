@@ -140,6 +140,10 @@ class DBConnect {
 
   public getOutcomeColumnDefinitions = PostgresDB.getOutcomeColumnDefinitions
 
+  public getLanguages = PostgresDB.getLanguagesForTemplate
+
+  public setLanguages = PostgresDB.insertTemplateLocalisations
+
   // GraphQL
 
   public gqlQuery = GraphQLdb.gqlQuery

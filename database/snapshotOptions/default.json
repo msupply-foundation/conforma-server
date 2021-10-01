@@ -14,5 +14,6 @@
   "excludeInsertScripts": [],
   "includePrefs": true,
   "includeLocalisation": true,
+  "exportCustomLocalisationsAsJson": false,
   "resetFiles": true
 }

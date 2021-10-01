@@ -930,6 +930,36 @@ class PostgresDB {
       throw err
     }
   }
+
+  public getLanguagesForTemplate = async (templateId: number) => {
+    const text = `
+      SELECT language_code, strings FROM custom_localisation
+      WHERE template_id = $1
+    `
+    try {
+      const result = await this.query({ text, values: [templateId] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public insertTemplateLocalisations = async (valuesArray: [string, object, number][]) => {
+    const text = `
+      INSERT INTO custom_localisation (language_code, strings, template_id)
+      VALUES ($1, $2, $3)
+    `
+    try {
+      for (const values of valuesArray) {
+        await this.query({ text, values })
+      }
+      return
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
 }
 
 export type permissionPolicyColumns = {
