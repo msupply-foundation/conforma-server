@@ -95,7 +95,7 @@ For querying a specific table. Data is returned in the following structure:
 }
 ```
 
-Note that each table row is returned as both an array of values *and* a single "item" object with key-value pairs.
+Note that each table row is returned as both an array of values *and* a single "item" object with key-value pairs, so you can query the resulting rows by index or by key, whichever is more appropriate.
 
 `totalCount` is used for pagination purposes (since only one page of data is returned at a time)
 
