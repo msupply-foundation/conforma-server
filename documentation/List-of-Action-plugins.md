@@ -435,13 +435,14 @@ Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html)
 | Input parameters<br />(\*required) <br/> | Output properties                          |
 | ---------------------------------------- | ------------------------------------------ |
 | `docTemplateId`\*                        | `document: {uniqueId, filename, filepath}` |
+| `option`                                 |                                            |
 | `appicationSerial`                       |                                            |
 | `additionalData`                         |                                            |
 | `userId`                                 |                                            |
 
 The Action utilises the internal `generatePDF` function, which is also accessible via the [`/generate-pdf` endpoint](API.md)
 
-`docTemplateId` specifies the uniqueId of the carbone template file (from the "file" table)
+`docTemplateId` specifies the uniqueId of the carbone template file (from the "file" table) and `options` optional can define a localisatiion to be used for dates and currency formatting.
 
 The data used by the action primarily comes from `applicationData` and `outputCumulative`, which are flattened/spread into a combined object to the carbone processer. However, if you wish to supply extra data, this can be added within an `additionalData` parameter. It gets sent to the carbone processer's "data" field like so:
 
