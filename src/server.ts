@@ -65,71 +65,72 @@ const startServer = async () => {
         return reply.send({ success: false, message: error })
       }
     })
-  }
 
-  // Routes to work without authentication check, behind /public route
-  server.register(
-    (server, _, done) => {
-      server.post('/login', routeLogin)
-      server.get('/get-prefs', routeGetPrefs)
-      server.get('/language/:code', routeGetLanguageFile)
-      server.get('/verify', routeVerification)
-      done()
-    },
-    { prefix: '/public' }
-  )
-
-  // Route for admin tasks only
-  server.register(
-    (server, _, done) => {
-      // Check isAdmin
-      server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
-        if (!request.auth.isAdmin) {
-          reply.statusCode = 401
-          return reply.send({ sucess: false, message: 'Not admin user' })
-        }
-      })
-
-      server.register(lookupTableRoutes, { prefix: '/lookup-table' })
-      server.register(snapshotRoutes, { prefix: '/snapshot' })
-      server.get('/updateRowPolicies', routeUpdateRowPolicies)
-      server.post('/run-action', routeRunAction)
-      done()
-    },
-    { prefix: '/admin' }
-  )
-
-  // File download endpoint (get by unique ID)
-  server.get('/file', async function (request: any, reply: any) {
-    const { uid, thumbnail } = request.query
-    const { original_filename, file_path, thumbnail_path } = await getFilePath(
-      uid,
-      thumbnail === 'true'
+    // Routes to work without authentication check, behind /public route
+    server.register(
+      (server, _, done) => {
+        server.post('/login', routeLogin)
+        server.get('/get-prefs', routeGetPrefs)
+        server.get('/language/:code', routeGetLanguageFile)
+        server.get('/verify', routeVerification)
+        done()
+      },
+      { prefix: '/public' }
     )
-    // TO-DO Check for permission to access file
-    try {
-      // TO-DO: Rename file back to original for download
-      return reply.sendFile(file_path ? file_path : thumbnail_path)
-    } catch {
-      return reply.send({ success: false, message: 'Unable to retrieve file' })
-    }
-  })
 
-  server.get('/user-info', routeUserInfo)
-  server.post('/login-org', routeLoginOrg)
-  server.post('/create-hash', routeCreateHash)
-  server.post('/generate-pdf', routeGeneratePDF)
-  server.get('/outcomes', routeOutcomes)
-  server.get('/outcomes/table/:tableName', routeOutcomesTable)
-  server.get('/outcomes/table/:tableName/item/:id', routeOutcomesDetail)
+    // Route for admin tasks only
+    server.register(
+      (server, _, done) => {
+        // Check isAdmin
+        server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
+          if (!request.auth.isAdmin) {
+            reply.statusCode = 401
+            return reply.send({ sucess: false, message: 'Not admin user' })
+          }
+        })
 
-  // File upload endpoint
-  server.post('/upload', async function (request: any, reply) {
-    // TO-DO: Authentication
-    const data = await request.files()
-    const fileData = await saveFiles(data, objectKeysToSnakeCase(request.query))
-    reply.send({ success: true, fileData })
-  })
+        server.register(lookupTableRoutes, { prefix: '/lookup-table' })
+        server.register(snapshotRoutes, { prefix: '/snapshot' })
+        server.get('/updateRowPolicies', routeUpdateRowPolicies)
+        server.post('/run-action', routeRunAction)
+        done()
+      },
+      { prefix: '/admin' }
+    )
+
+    // File download endpoint (get by unique ID)
+    server.get('/file', async function (request: any, reply: any) {
+      const { uid, thumbnail } = request.query
+      const { original_filename, file_path, thumbnail_path } = await getFilePath(
+        uid,
+        thumbnail === 'true'
+      )
+      // TO-DO Check for permission to access file
+      try {
+        // TO-DO: Rename file back to original for download
+        return reply.sendFile(file_path ? file_path : thumbnail_path)
+      } catch {
+        return reply.send({ success: false, message: 'Unable to retrieve file' })
+      }
+    })
+
+    server.get('/user-info', routeUserInfo)
+    server.post('/login-org', routeLoginOrg)
+    server.post('/create-hash', routeCreateHash)
+    server.post('/generate-pdf', routeGeneratePDF)
+    server.get('/outcomes', routeOutcomes)
+    server.get('/outcomes/table/:tableName', routeOutcomesTable)
+    server.get('/outcomes/table/:tableName/item/:id', routeOutcomesDetail)
+
+    // File upload endpoint
+    server.post('/upload', async function (request: any, reply) {
+      // TO-DO: Authentication
+      const data = await request.files()
+      const fileData = await saveFiles(data, objectKeysToSnakeCase(request.query))
+      reply.send({ success: true, fileData })
+    })
+    server.register(api, { prefix: '/api' })
+  }
 
   server.get('/', async (request, reply) => {
     console.log('Request made')
@@ -139,7 +140,6 @@ const startServer = async () => {
   // Unique name/email/organisation check
   server.get('/check-unique', routecheckUnique)
 
-  server.register(api, { prefix: '/api' })
   server.listen(config.RESTport, (err, address) => {
     if (err) {
       console.error(err)
