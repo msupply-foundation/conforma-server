@@ -72,6 +72,7 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
       orgId,
       templatePermissionRows,
       sessionId: returnSessionId,
+      isAdmin,
     }),
     user: {
       userId: userId || newUserId,
@@ -106,7 +107,7 @@ const getSignedJWT = async (JWTelements: object) => {
 }
 
 const getAdminJWT = async () => {
-  return await signPromise({ ...baseJWT, role: 'postgres' }, config.jwtSecret)
+  return await signPromise({ ...baseJWT, isAdmin: true, role: 'postgres' }, config.jwtSecret)
 }
 
 export { extractJWTfromHeader, getUserInfo, getTokenData, getAdminJWT }

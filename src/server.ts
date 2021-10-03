@@ -1,4 +1,4 @@
-import fastify from 'fastify'
+import fastify, { FastifyPluginCallback, FastifyReply } from 'fastify'
 import fastifyStatic from 'fastify-static'
 import fastifyMultipart from 'fastify-multipart'
 import fastifyCors from 'fastify-cors'
@@ -12,6 +12,7 @@ import {
   routeCreateHash,
   routeVerification,
   routeGetPrefs,
+  routecheckUnique,
 } from './components/permissions'
 import { routeOutcomes, routeOutcomesTable, routeOutcomesDetail } from './components/outcomes'
 import { routeGeneratePDF } from './components/files/documentGenerate'
@@ -28,12 +29,13 @@ import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
 import { routeGetLanguageFile } from './components/localisation/routes'
+import { extractJWTfromHeader, getTokenData } from './components/permissions/loginHelpers'
 require('dotenv').config()
 
 // Fastify server
 
 const startServer = async () => {
-  await loadActionPlugins() // Connects to Database and listens for Triggers
+  // await loadActionPlugins() // Connects to Database and listens for Triggers
 
   createFilesFolder()
 
@@ -47,6 +49,55 @@ const startServer = async () => {
   server.register(fastifyMultipart)
 
   server.register(fastifyCors, { origin: '*' }) // Allow all origin (TODO change in PROD)
+
+  const api: FastifyPluginCallback = (server, _, done) => {
+    // Here we parse JWT, and set it in request.auth, which is available for downstream routes
+    server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
+      if (request.url.startsWith('/api/public')) return
+
+      const token = extractJWTfromHeader(request)
+      const { error, ...tokenData } = await getTokenData(token)
+
+      request.auth = tokenData
+
+      if (error) {
+        reply.statusCode = 401
+        return reply.send({ success: false, message: error })
+      }
+    })
+  }
+
+  // Routes to work without authentication check, behind /public route
+  server.register(
+    (server, _, done) => {
+      server.post('/login', routeLogin)
+      server.get('/get-prefs', routeGetPrefs)
+      server.get('/language/:code', routeGetLanguageFile)
+      server.get('/verify', routeVerification)
+      done()
+    },
+    { prefix: '/public' }
+  )
+
+  // Route for admin tasks only
+  server.register(
+    (server, _, done) => {
+      // Check isAdmin
+      server.addHook('preValidation', async (request: any, reply: FastifyReply) => {
+        if (!request.auth.isAdmin) {
+          reply.statusCode = 401
+          return reply.send({ sucess: false, message: 'Not admin user' })
+        }
+      })
+
+      server.register(lookupTableRoutes, { prefix: '/lookup-table' })
+      server.register(snapshotRoutes, { prefix: '/snapshot' })
+      server.get('/updateRowPolicies', routeUpdateRowPolicies)
+      server.post('/run-action', routeRunAction)
+      done()
+    },
+    { prefix: '/admin' }
+  )
 
   // File download endpoint (get by unique ID)
   server.get('/file', async function (request: any, reply: any) {
@@ -64,16 +115,10 @@ const startServer = async () => {
     }
   })
 
-  server.get('/get-prefs', routeGetPrefs)
   server.get('/user-info', routeUserInfo)
-  server.post('/login', routeLogin)
   server.post('/login-org', routeLoginOrg)
-  server.get('/updateRowPolicies', routeUpdateRowPolicies)
   server.post('/create-hash', routeCreateHash)
-  server.post('/run-action', routeRunAction)
-  server.get('/verify', routeVerification)
   server.post('/generate-pdf', routeGeneratePDF)
-  server.get('/language/:code', routeGetLanguageFile)
   server.get('/outcomes', routeOutcomes)
   server.get('/outcomes/table/:tableName', routeOutcomesTable)
   server.get('/outcomes/table/:tableName/item/:id', routeOutcomesDetail)
@@ -86,63 +131,15 @@ const startServer = async () => {
     reply.send({ success: true, fileData })
   })
 
-  server.register(lookupTableRoutes, { prefix: '/lookup-table' })
-
-  // Snapshot routes
-  server.register(snapshotRoutes, { prefix: '/snapshot' })
-
   server.get('/', async (request, reply) => {
     console.log('Request made')
     return 'This is the response\n'
   })
 
   // Unique name/email/organisation check
-  server.get('/check-unique', async (request: any, reply) => {
-    const { type, value, table, field } = request.query
-    if (value === '' || value === undefined) {
-      reply.send({
-        unique: false,
-        message: 'Value not provided',
-      })
-      return
-    }
-    let tableName, fieldName
-    switch (type) {
-      case 'username':
-        tableName = 'user'
-        fieldName = 'username'
-        break
-      case 'email':
-        tableName = 'user'
-        fieldName = 'email'
-        break
-      case 'organisation':
-        tableName = 'organisation'
-        fieldName = 'name'
-        break
-      default:
-        if (!table || !field) {
-          reply.send({
-            unique: false,
-            message: 'Type, table, or field missing or invalid',
-          })
-          return
-        } else {
-          tableName = table
-          fieldName = field
-        }
-    }
-    try {
-      const isUnique = await DBConnect.isUnique(tableName, fieldName, value)
-      reply.send({
-        unique: isUnique,
-        message: '',
-      })
-    } catch (err) {
-      reply.send({ unique: false, message: err.message })
-    }
-  })
+  server.get('/check-unique', routecheckUnique)
 
+  server.register(api, { prefix: '/api' })
   server.listen(config.RESTport, (err, address) => {
     if (err) {
       console.error(err)
@@ -159,6 +156,3 @@ const startServer = async () => {
 }
 
 startServer()
-
-// Just for testing
-// setTimeout(() => console.log(actionLibrary, actionSchedule), 3000);
