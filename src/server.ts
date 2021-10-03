@@ -114,6 +114,7 @@ const startServer = async () => {
       }
     })
 
+    server.get('/check-unique', routecheckUnique)
     server.get('/user-info', routeUserInfo)
     server.post('/login-org', routeLoginOrg)
     server.post('/create-hash', routeCreateHash)
@@ -124,21 +125,19 @@ const startServer = async () => {
 
     // File upload endpoint
     server.post('/upload', async function (request: any, reply) {
-      // TO-DO: Authentication
       const data = await request.files()
       const fileData = await saveFiles(data, objectKeysToSnakeCase(request.query))
       reply.send({ success: true, fileData })
     })
-    server.register(api, { prefix: '/api' })
+    done()
   }
+
+  server.register(api, { prefix: '/api' })
 
   server.get('/', async (request, reply) => {
     console.log('Request made')
     return 'This is the response\n'
   })
-
-  // Unique name/email/organisation check
-  server.get('/check-unique', routecheckUnique)
 
   server.listen(config.RESTport, (err, address) => {
     if (err) {
