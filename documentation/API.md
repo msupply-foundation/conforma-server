@@ -99,6 +99,13 @@ GET: `/verify?uid=<uniqueid>`
 
 Sets the verification record at `<uniqueid>` to `true` and triggers configured Action. Used for verification via email, etc. See [Create Verification Action](List-of-Action-plugins.md) for more info.
 
+#### File download endpoint:
+
+GET: `/file?id=<uniqueId>`
+
+Usage: `GET` request with file database id as a URL query parameter.
+
+This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.s
 ---
 ### Authenticated endpoints
 
@@ -126,14 +133,6 @@ URL query paramter fields (optional):
 e.g. `/upload?user=2&application_serial=3`
 
 Files are uploaded to `src/files` with their database table id appended to the filename (to ensure uniqueness).
-
-#### File download endpoint:
-
-GET: `/file?id=XX`
-
-Usage: `GET` request with file database id as a URL query parameter.
-
-**To-do**: authentication/permission checks for file access.
 
 #### Check unique endpoint
 

@@ -72,6 +72,21 @@ const startServer = async () => {
         server.get('/get-prefs', routeGetPrefs)
         server.get('/language/:code', routeGetLanguageFile)
         server.get('/verify', routeVerification)
+        // File download endpoint (get by unique ID)
+        server.get('/file', async function (request: any, reply: any) {
+          const { uid, thumbnail } = request.query
+          const { original_filename, file_path, thumbnail_path } = await getFilePath(
+            uid,
+            thumbnail === 'true'
+          )
+          // TO-DO Check for permission to access file
+          try {
+            // TO-DO: Rename file back to original for download
+            return reply.sendFile(file_path ? file_path : thumbnail_path)
+          } catch {
+            return reply.send({ success: false, message: 'Unable to retrieve file' })
+          }
+        })
         done()
       },
       { prefix: '/public' }
@@ -96,22 +111,6 @@ const startServer = async () => {
       },
       { prefix: '/admin' }
     )
-
-    // File download endpoint (get by unique ID)
-    server.get('/file', async function (request: any, reply: any) {
-      const { uid, thumbnail } = request.query
-      const { original_filename, file_path, thumbnail_path } = await getFilePath(
-        uid,
-        thumbnail === 'true'
-      )
-      // TO-DO Check for permission to access file
-      try {
-        // TO-DO: Rename file back to original for download
-        return reply.sendFile(file_path ? file_path : thumbnail_path)
-      } catch {
-        return reply.send({ success: false, message: 'Unable to retrieve file' })
-      }
-    })
 
     server.get('/check-unique', routecheckUnique)
     server.get('/user-info', routeUserInfo)
