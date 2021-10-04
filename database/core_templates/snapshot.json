@@ -365,7 +365,7 @@
   {
    "id": 3,
    "name": "OrgRegistration",
-   "value": 7
+   "value": 8
   },
   {
    "id": 4,
@@ -500,52 +500,217 @@
   }
  ],
  "lookupTable": [],
- "organisation": [],
+ "organisation": [
+  {
+   "address": "United States",
+   "id": 1,
+   "isSystemOrg": true,
+   "logoUrl": "/file?uid=CylhAzxRhSX_QjtArq3bi",
+   "name": "FDA",
+   "registration": "fda",
+   "registrationDocumentation": {
+    "text": "documento_registro_empresa.doc",
+    "files": [
+     {
+      "fileUrl": "/file?uid=StHQ_ujY4eFKnSBpcObXE",
+      "filename": "documento_registro_empresa.doc",
+      "mimetype": "application/msword",
+      "uniqueId": "StHQ_ujY4eFKnSBpcObXE",
+      "thumbnailUrl": "/file?uid=StHQ_ujY4eFKnSBpcObXE&thumbnail=true"
+     }
+    ]
+   }
+  }
+ ],
  "outcomeDisplay": [
   {
-   "code": "user",
+   "code": "userPublic",
    "detailViewExcludeColumns": null,
-   "detailViewHeaderColumn": "username",
-   "detailViewIncludeColumns": null,
-   "id": 1,
+   "detailViewHeaderColumn": "fullName",
+   "detailViewIncludeColumns": [
+    "firstName",
+    "lastName"
+   ],
+   "id": 2,
    "permissionNames": null,
    "priority": 1,
-   "showLinkedApplications": true,
+   "showLinkedApplications": false,
    "tableName": "user",
    "tableViewExcludeColumns": null,
-   "tableViewIncludeColumns": null,
+   "tableViewIncludeColumns": [
+    "usernamePlain",
+    "firstName",
+    "lastName"
+   ],
    "title": "Users"
   },
   {
    "code": "organisation",
-   "detailViewExcludeColumns": null,
+   "detailViewExcludeColumns": [
+    "id",
+    "name",
+    "isSystemOrg"
+   ],
    "detailViewHeaderColumn": "name",
-   "detailViewIncludeColumns": null,
-   "id": 2,
+   "detailViewIncludeColumns": [
+    "logoUrl",
+    "...",
+    "members"
+   ],
+   "id": 3,
    "permissionNames": null,
    "priority": 1,
    "showLinkedApplications": true,
    "tableName": "organisation",
    "tableViewExcludeColumns": null,
-   "tableViewIncludeColumns": null,
+   "tableViewIncludeColumns": [
+    "logoUrl",
+    "name",
+    "address"
+   ],
    "title": "Organisations"
-  },
-  {
-   "code": "license",
-   "detailViewExcludeColumns": null,
-   "detailViewHeaderColumn": "serial",
-   "detailViewIncludeColumns": null,
-   "id": 3,
-   "permissionNames": null,
-   "priority": 1,
-   "showLinkedApplications": true,
-   "tableName": "license",
-   "tableViewExcludeColumns": null,
-   "tableViewIncludeColumns": null,
-   "title": "Licenses"
   }
  ],
- "outcomeDisplayColumnDefinition": [],
+ "outcomeDisplayColumnDefinition": [
+  {
+   "additionalFormatting": null,
+   "columnName": "fullName",
+   "elementParameters": null,
+   "elementTypePluginCode": null,
+   "id": 2,
+   "tableName": "user",
+   "title": "Full Name",
+   "valueExpression": {
+    "children": [
+     "%1 %2",
+     {
+      "children": [
+       "firstName"
+      ],
+      "operator": "objectProperties"
+     },
+     {
+      "children": [
+       "lastName"
+      ],
+      "operator": "objectProperties"
+     }
+    ],
+    "operator": "stringSubstitution"
+   }
+  },
+  {
+   "additionalFormatting": null,
+   "columnName": "logoUrl",
+   "elementParameters": {
+    "url": {
+     "children": [
+      {
+       "children": [
+        "applicationData.config.serverREST"
+       ],
+       "operator": "objectProperties"
+      },
+      {
+       "children": [
+        "responses.thisResponse"
+       ],
+       "operator": "objectProperties"
+      }
+     ],
+     "operator": "+"
+    },
+    "size": "tiny",
+    "altText": "No logo supplied"
+   },
+   "elementTypePluginCode": "imageDisplay",
+   "id": 6,
+   "tableName": "organisation",
+   "title": "Logo",
+   "valueExpression": {}
+  },
+  {
+   "additionalFormatting": null,
+   "columnName": "registrationDocumentation",
+   "elementParameters": {},
+   "elementTypePluginCode": "fileUpload",
+   "id": 8,
+   "tableName": "organisation",
+   "title": "Registration docs",
+   "valueExpression": null
+  },
+  {
+   "additionalFormatting": {
+    "substitution": "[${user.firstName} ${user.lastName}](/outcomes/user/${user.id})"
+   },
+   "columnName": "members",
+   "elementParameters": null,
+   "elementTypePluginCode": null,
+   "id": 10,
+   "tableName": "organisation",
+   "title": "Members",
+   "valueExpression": {
+    "children": [
+     "query getOrgUsers($id:Int!) { userOrganisations(filter: {organisationId: {equalTo: $id}}) { nodes { user { id, firstName, lastName }}}}",
+     "graphQLEndpoint",
+     [
+      "id"
+     ],
+     {
+      "children": [
+       "id"
+      ],
+      "operator": "objectProperties"
+     },
+     "userOrganisations"
+    ],
+    "operator": "graphQL"
+   }
+  },
+  {
+   "additionalFormatting": null,
+   "columnName": "usernamePlain",
+   "elementParameters": null,
+   "elementTypePluginCode": null,
+   "id": 15,
+   "tableName": "user",
+   "title": "Username",
+   "valueExpression": {
+    "children": [
+     "username"
+    ],
+    "operator": "objectProperties"
+   }
+  },
+  {
+   "additionalFormatting": {
+    "substitution": "[${organisation.name}](/outcomes/organisation/${organisation.id})"
+   },
+   "columnName": "orgs",
+   "elementParameters": null,
+   "elementTypePluginCode": null,
+   "id": 19,
+   "tableName": "user",
+   "title": "Member of",
+   "valueExpression": {
+    "children": [
+     "query getUsersOrgs($id: Int!) {  userOrganisations(filter: {userId: {equalTo: $id}}) { nodes { organisation { name, id }}}}",
+     "graphQLEndpoint",
+     [
+      "id"
+     ],
+     {
+      "children": [
+       "id"
+      ],
+      "operator": "objectProperties"
+     },
+     "userOrganisations"
+    ],
+    "operator": "graphQL"
+   }
+  }
+ ],
  "permissionPolicy": [
   {
    "defaultRestrictions": null,
@@ -840,30 +1005,21 @@
   },
   {
    "dateOfBirth": null,
-   "email": "nicole@sussol.net",
+   "email": null,
    "firstName": "Admin",
    "id": 2,
    "lastName": "Admin",
    "passwordHash": "$2a$10$5R5ruFOLgrjOox5oH0I67.Rez7qGCEwf2a60Pe2TpfmIN99Dr0uW.",
-   "username": "admin2"
-  },
-  {
-   "dateOfBirth": null,
-   "email": "nicole@sussol.net",
-   "firstName": "nic",
-   "id": 3,
-   "lastName": "nic2",
-   "passwordHash": "$2b$10$hwMScaOTOjasji8mTyd9fuv3Gu0Moh5ClkhITonQtaiXxmZ1wu./W",
-   "username": "nic2"
+   "username": "admin"
   }
  ],
  "outcomeDisplayDetail": [
   {
    "columnName": "firstName",
    "elementTypePluginCode": "shortText",
-   "id": 1,
+   "id": 2,
    "isTextColumn": true,
-   "outcomeDisplayId": 1,
+   "outcomeDisplayId": 2,
    "parameters": {
     "label": "First Name"
    },
@@ -872,9 +1028,9 @@
   {
    "columnName": "lastName",
    "elementTypePluginCode": "shortText",
-   "id": 2,
+   "id": 3,
    "isTextColumn": true,
-   "outcomeDisplayId": 1,
+   "outcomeDisplayId": 2,
    "parameters": {
     "label": "Last Name"
    },
@@ -883,9 +1039,9 @@
   {
    "columnName": "username",
    "elementTypePluginCode": "shortText",
-   "id": 3,
+   "id": 4,
    "isTextColumn": true,
-   "outcomeDisplayId": 1,
+   "outcomeDisplayId": 2,
    "parameters": {
     "label": "Username"
    },
@@ -894,79 +1050,20 @@
   {
    "columnName": "email",
    "elementTypePluginCode": "shortText",
-   "id": 4,
+   "id": 5,
    "isTextColumn": true,
-   "outcomeDisplayId": 1,
+   "outcomeDisplayId": 2,
    "parameters": {
     "label": "Email"
    },
    "title": "email"
   },
   {
-   "columnName": "dateOfBirth",
-   "elementTypePluginCode": "shortText",
-   "id": 5,
-   "isTextColumn": true,
-   "outcomeDisplayId": 1,
-   "parameters": {
-    "label": "Date of Birth"
-   },
-   "title": "Date of Birth"
-  },
-  {
-   "columnName": "nationalId",
-   "elementTypePluginCode": "shortText",
-   "id": 6,
-   "isTextColumn": true,
-   "outcomeDisplayId": 1,
-   "parameters": {
-    "label": "National Id"
-   },
-   "title": "National Id"
-  },
-  {
-   "columnName": "secondary",
-   "elementTypePluginCode": "shortText",
-   "id": 7,
-   "isTextColumn": true,
-   "outcomeDisplayId": 1,
-   "parameters": {
-    "label": "Secondary Education Details"
-   },
-   "title": "Secondary Education Details"
-  },
-  {
-   "columnName": "universityHistory",
-   "elementTypePluginCode": "listBuilder",
-   "id": 8,
-   "isTextColumn": false,
-   "outcomeDisplayId": 1,
-   "parameters": {
-    "label": "Tertiary Education Details",
-    "displayType": "table",
-    "inputFields": [
-     {
-      "code": "LB1",
-      "title": "Name of institution"
-     },
-     {
-      "code": "LB2",
-      "title": "University year"
-     },
-     {
-      "code": "LB3",
-      "title": "University title"
-     }
-    ]
-   },
-   "title": "Tertiary Education Details"
-  },
-  {
    "columnName": "registration",
    "elementTypePluginCode": "shortText",
-   "id": 9,
+   "id": 10,
    "isTextColumn": true,
-   "outcomeDisplayId": 2,
+   "outcomeDisplayId": 3,
    "parameters": {
     "label": "Registration Number"
    },
@@ -975,9 +1072,9 @@
   {
    "columnName": "address",
    "elementTypePluginCode": "shortText",
-   "id": 10,
+   "id": 11,
    "isTextColumn": true,
-   "outcomeDisplayId": 2,
+   "outcomeDisplayId": 3,
    "parameters": {
     "label": "Address"
    },
@@ -986,9 +1083,9 @@
   {
    "columnName": "logoUrl",
    "elementTypePluginCode": "imageDisplay",
-   "id": 11,
+   "id": 12,
    "isTextColumn": true,
-   "outcomeDisplayId": 2,
+   "outcomeDisplayId": 3,
    "parameters": {
     "url": {
      "children": [
@@ -1014,89 +1111,9 @@
    "title": "Logo"
   },
   {
-   "columnName": "professionalExperience",
-   "elementTypePluginCode": "fileUpload",
-   "id": 12,
-   "isTextColumn": false,
-   "outcomeDisplayId": 2,
-   "parameters": {
-    "label": "Owner professional experience",
-    "displayType": "card",
-    "inputFields": [
-     {
-      "code": "PEtype",
-      "title": "Type of role"
-     },
-     {
-      "code": "PEname",
-      "title": "Org name"
-     },
-     {
-      "code": "PEorgTel",
-      "title": "Org telephone"
-     },
-     {
-      "code": "PEorgEmail",
-      "title": "Org email"
-     },
-     {
-      "code": "PErole",
-      "title": "Role"
-     },
-     {
-      "code": "PEfrom",
-      "title": "From"
-     },
-     {
-      "code": "PEto",
-      "title": "To"
-     }
-    ],
-    "displayFormat": {
-     "title": "${PEname}",
-     "subtitle": "${PEtype}  \n${PEorgTel} ${PEorgEmail}",
-     "description": "**Role**: ${PErole}  \n${PEfrom} – ${PEto}"
-    }
-   },
-   "title": "Owner professional experience"
-  },
-  {
-   "columnName": "productType",
-   "elementTypePluginCode": "shortText",
-   "id": 13,
-   "isTextColumn": true,
-   "outcomeDisplayId": 3,
-   "parameters": {
-    "label": "Product type"
-   },
-   "title": "Product type"
-  },
-  {
-   "columnName": "type",
-   "elementTypePluginCode": "shortText",
-   "id": 14,
-   "isTextColumn": true,
-   "outcomeDisplayId": 3,
-   "parameters": {
-    "label": "License type"
-   },
-   "title": "License type"
-  },
-  {
-   "columnName": "expiryDate",
-   "elementTypePluginCode": "shortText",
-   "id": 15,
-   "isTextColumn": true,
-   "outcomeDisplayId": 3,
-   "parameters": {
-    "label": "Expiry date"
-   },
-   "title": "Expiry date"
-  },
-  {
    "columnName": "companyName",
    "elementTypePluginCode": "shortText",
-   "id": 16,
+   "id": 17,
    "isTextColumn": true,
    "outcomeDisplayId": 3,
    "parameters": {
@@ -1108,84 +1125,56 @@
  "outcomeDisplayTable": [
   {
    "columnName": "username",
-   "id": 1,
+   "id": 2,
    "isTextColumn": true,
-   "outcomeDisplayId": 1,
+   "outcomeDisplayId": 2,
    "title": "Username"
   },
   {
    "columnName": "firstName",
-   "id": 2,
+   "id": 3,
    "isTextColumn": true,
-   "outcomeDisplayId": 1,
+   "outcomeDisplayId": 2,
    "title": "First Name"
   },
   {
    "columnName": "lastName",
-   "id": 3,
+   "id": 4,
    "isTextColumn": true,
-   "outcomeDisplayId": 1,
+   "outcomeDisplayId": 2,
    "title": "First Name"
   },
   {
    "columnName": "email",
-   "id": 4,
+   "id": 5,
    "isTextColumn": true,
-   "outcomeDisplayId": 1,
+   "outcomeDisplayId": 2,
    "title": "Email"
   },
   {
    "columnName": "name",
-   "id": 5,
+   "id": 6,
    "isTextColumn": true,
-   "outcomeDisplayId": 2,
+   "outcomeDisplayId": 3,
    "title": "Organisation Name"
   },
   {
    "columnName": "registration",
-   "id": 6,
+   "id": 7,
    "isTextColumn": true,
-   "outcomeDisplayId": 2,
+   "outcomeDisplayId": 3,
    "title": "Registration Number"
   },
   {
    "columnName": "address",
-   "id": 7,
-   "isTextColumn": true,
-   "outcomeDisplayId": 2,
-   "title": "Address"
-  },
-  {
-   "columnName": "serial",
    "id": 8,
    "isTextColumn": true,
    "outcomeDisplayId": 3,
-   "title": "Serial"
-  },
-  {
-   "columnName": "productType",
-   "id": 9,
-   "isTextColumn": true,
-   "outcomeDisplayId": 3,
-   "title": "Product type"
-  },
-  {
-   "columnName": "type",
-   "id": 10,
-   "isTextColumn": true,
-   "outcomeDisplayId": 3,
-   "title": "License type"
-  },
-  {
-   "columnName": "expiryDate",
-   "id": 11,
-   "isTextColumn": true,
-   "outcomeDisplayId": 3,
-   "title": "Expiry date"
+   "title": "Address"
   },
   {
    "columnName": "companyName",
-   "id": 12,
+   "id": 13,
    "isTextColumn": true,
    "outcomeDisplayId": 3,
    "title": "Company name"
@@ -1432,7 +1421,14 @@
    "versionTimestamp": "2021-09-22T16:18:42.49605+12:00"
   }
  ],
- "userOrganisation": [],
+ "userOrganisation": [
+  {
+   "id": 2,
+   "organisationId": 1,
+   "userId": 2,
+   "userRole": "Owner"
+  }
+ ],
  "application": [
   {
    "id": 1,
@@ -1550,19 +1546,6 @@
    "templateId": 13,
    "trigger": null,
    "userId": 2
-  },
-  {
-   "id": 27,
-   "isActive": true,
-   "isConfig": false,
-   "name": "Edit User Details - UE-ALU-0102",
-   "orgId": null,
-   "outcome": "PENDING",
-   "serial": "UE-ALU-0102",
-   "sessionId": "nHvkVZCrq_jas_sg",
-   "templateId": 1,
-   "trigger": null,
-   "userId": 2
   }
  ],
  "permissionJoin": [
@@ -1630,13 +1613,6 @@
    "userId": 2
   },
   {
-   "id": 10,
-   "isActive": true,
-   "organisationId": null,
-   "permissionNameId": 1,
-   "userId": 2
-  },
-  {
    "id": 11,
    "isActive": true,
    "organisationId": null,
@@ -1644,11 +1620,11 @@
    "userId": 1
   },
   {
-   "id": 12,
+   "id": 13,
    "isActive": true,
-   "organisationId": null,
-   "permissionNameId": 4,
-   "userId": 3
+   "organisationId": 1,
+   "permissionNameId": 1,
+   "userId": 2
   }
  ],
  "templateAction": [
@@ -7035,15 +7011,9 @@
    "isCurrent": true,
    "stageId": 18,
    "timeCreated": "2021-10-04T10:57:52.368001+13:00"
-  },
-  {
-   "applicationId": 27,
-   "id": 26,
-   "isCurrent": true,
-   "stageId": 1,
-   "timeCreated": "2021-10-04T11:40:31.626918+13:00"
   }
  ],
+ "organisationApplicationJoin": [],
  "templateElement": [
   {
    "category": "INFORMATION",
@@ -7249,7 +7219,7 @@
     ]
    },
    "elementTypePluginCode": "shortText",
-   "helpText": null,
+   "helpText": "",
    "id": 5,
    "index": 4,
    "isEditable": true,
@@ -7269,9 +7239,7 @@
       ],
       "operator": "objectProperties"
      },
-     {
-      "value": "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$"
-     }
+     "^\\S+@\\S+\\.\\S+$"
     ],
     "operator": "REGEX"
    },
@@ -7564,7 +7532,7 @@
    "code": "Q4Email",
    "defaultValue": null,
    "elementTypePluginCode": "shortText",
-   "helpText": null,
+   "helpText": "",
    "id": 13,
    "index": 50,
    "isEditable": true,
@@ -7584,9 +7552,7 @@
       ],
       "operator": "objectProperties"
      },
-     {
-      "value": "^[A-Za-z0-9.]+@[A-Za-z0-9]+\\.[A-Za-z0-9.]+$"
-     }
+     "^\\S+@\\S+\\.\\S+$"
     ],
     "operator": "REGEX"
    },
@@ -10794,7 +10760,7 @@
    "templateElementId": 6,
    "timeCreated": "2021-08-10T14:14:28.157276+12:00",
    "timeSubmitted": null,
-   "timeUpdated": "2021-10-04T11:31:59.510721+13:00",
+   "timeUpdated": "2021-10-04T13:01:46.291012+13:00",
    "value": {
     "text": "*<Nothing Selected>*",
     "values": {
@@ -11720,26 +11686,31 @@
   {
    "applicationId": 14,
    "id": 199,
-   "isValid": null,
-   "stageNumber": null,
+   "isValid": false,
+   "stageNumber": 1,
    "status": "DRAFT",
    "templateElementId": 13,
    "timeCreated": "2021-10-04T09:40:07.589012+13:00",
    "timeSubmitted": null,
-   "timeUpdated": "2021-10-04T09:40:07.589012+13:00",
-   "value": null
+   "timeUpdated": "2021-10-04T12:57:22.522092+13:00",
+   "value": {
+    "text": "nicole_madruga@hotmail.com"
+   }
   },
   {
    "applicationId": 14,
    "id": 200,
-   "isValid": null,
-   "stageNumber": null,
+   "isValid": false,
+   "stageNumber": 1,
    "status": "DRAFT",
    "templateElementId": 14,
    "timeCreated": "2021-10-04T09:40:07.589012+13:00",
    "timeSubmitted": null,
-   "timeUpdated": "2021-10-04T09:40:07.589012+13:00",
-   "value": null
+   "timeUpdated": "2021-10-04T12:57:24.288472+13:00",
+   "value": {
+    "hash": "",
+    "text": ""
+   }
   },
   {
    "applicationId": 15,
@@ -11836,108 +11807,6 @@
    "timeSubmitted": null,
    "timeUpdated": "2021-10-04T10:57:51.893189+13:00",
    "value": ""
-  },
-  {
-   "applicationId": 27,
-   "id": 236,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 2,
-   "timeCreated": "2021-10-04T11:40:31.189038+13:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-10-04T11:40:31.189038+13:00",
-   "value": {
-    "text": "Admin"
-   }
-  },
-  {
-   "applicationId": 27,
-   "id": 237,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 3,
-   "timeCreated": "2021-10-04T11:40:31.189038+13:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-10-04T11:40:31.189038+13:00",
-   "value": {
-    "text": "Admin"
-   }
-  },
-  {
-   "applicationId": 27,
-   "id": 238,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 4,
-   "timeCreated": "2021-10-04T11:40:31.189038+13:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-10-04T11:40:31.189038+13:00",
-   "value": {
-    "text": "admin2"
-   }
-  },
-  {
-   "applicationId": 27,
-   "id": 239,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 5,
-   "timeCreated": "2021-10-04T11:40:31.189038+13:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-10-04T11:40:31.189038+13:00",
-   "value": {
-    "text": "nicole@sussol.net"
-   }
-  },
-  {
-   "applicationId": 27,
-   "id": 240,
-   "isValid": true,
-   "stageNumber": 1,
-   "status": "DRAFT",
-   "templateElementId": 6,
-   "timeCreated": "2021-10-04T11:40:31.189038+13:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-10-04T11:40:32.593281+13:00",
-   "value": {
-    "text": "*<Nothing Selected>*",
-    "values": {
-     "0": {
-      "text": "Yes",
-      "selected": false,
-      "textNegative": ""
-     }
-    },
-    "selectedValuesArray": []
-   }
-  },
-  {
-   "applicationId": 27,
-   "id": 241,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 7,
-   "timeCreated": "2021-10-04T11:40:31.189038+13:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-10-04T11:40:31.189038+13:00",
-   "value": null
-  },
-  {
-   "applicationId": 27,
-   "id": 242,
-   "isValid": null,
-   "stageNumber": null,
-   "status": "DRAFT",
-   "templateElementId": 8,
-   "timeCreated": "2021-10-04T11:40:31.189038+13:00",
-   "timeSubmitted": null,
-   "timeUpdated": "2021-10-04T11:40:31.189038+13:00",
-   "value": null
   }
  ],
  "applicationStatusHistory": [
@@ -12012,14 +11881,6 @@
    "isCurrent": true,
    "status": "DRAFT",
    "timeCreated": "2021-10-04T10:57:52.369085+13:00"
-  },
-  {
-   "applicationId": 27,
-   "applicationStageHistoryId": 26,
-   "id": 37,
-   "isCurrent": true,
-   "status": "DRAFT",
-   "timeCreated": "2021-10-04T11:40:31.629413+13:00"
   }
  ],
  "reviewAssignment": [],
