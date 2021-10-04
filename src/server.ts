@@ -132,12 +132,12 @@ const startServer = async () => {
     done()
   }
 
-  server.register(api, { prefix: '/api' })
-
   server.get('/', async (request, reply) => {
     console.log('Request made')
     return 'This is the response\n'
   })
+
+  server.register(api, { prefix: '/api' })
 
   server.listen(config.RESTport, (err, address) => {
     if (err) {
