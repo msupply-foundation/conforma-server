@@ -508,18 +508,7 @@
    "logoUrl": "/file?uid=CylhAzxRhSX_QjtArq3bi",
    "name": "FDA",
    "registration": "fda",
-   "registrationDocumentation": {
-    "text": "documento_registro_empresa.doc",
-    "files": [
-     {
-      "fileUrl": "/file?uid=StHQ_ujY4eFKnSBpcObXE",
-      "filename": "documento_registro_empresa.doc",
-      "mimetype": "application/msword",
-      "uniqueId": "StHQ_ujY4eFKnSBpcObXE",
-      "thumbnailUrl": "/file?uid=StHQ_ujY4eFKnSBpcObXE&thumbnail=true"
-     }
-    ]
-   }
+   "registrationDocumentation": null
   }
  ],
  "outcomeDisplay": [
@@ -1559,56 +1548,56 @@
   {
    "id": 2,
    "isActive": true,
-   "organisationId": null,
+   "organisationId": 1,
    "permissionNameId": 4,
    "userId": 2
   },
   {
    "id": 3,
    "isActive": true,
-   "organisationId": null,
+   "organisationId": 1,
    "permissionNameId": 7,
    "userId": 2
   },
   {
    "id": 4,
    "isActive": true,
-   "organisationId": null,
+   "organisationId": 1,
    "permissionNameId": 5,
    "userId": 2
   },
   {
    "id": 5,
    "isActive": true,
-   "organisationId": null,
+   "organisationId": 1,
    "permissionNameId": 9,
    "userId": 2
   },
   {
    "id": 6,
    "isActive": true,
-   "organisationId": null,
+   "organisationId": 1,
    "permissionNameId": 10,
    "userId": 2
   },
   {
    "id": 7,
    "isActive": true,
-   "organisationId": null,
+   "organisationId": 1,
    "permissionNameId": 11,
    "userId": 2
   },
   {
    "id": 8,
    "isActive": true,
-   "organisationId": null,
+   "organisationId": 1,
    "permissionNameId": 12,
    "userId": 2
   },
   {
    "id": 9,
    "isActive": true,
-   "organisationId": null,
+   "organisationId": 1,
    "permissionNameId": 13,
    "userId": 2
   },
@@ -11884,7 +11873,22 @@
   }
  ],
  "reviewAssignment": [],
- "file": [],
+ "file": [
+  {
+   "applicationResponseId": null,
+   "applicationSerial": null,
+   "filePath": "/fda_CylhAzxRhSX_QjtArq3bi.png",
+   "id": 3,
+   "mimetype": null,
+   "originalFilename": "fda.png",
+   "submitted": false,
+   "templateId": null,
+   "thumbnailPath": "/fda_CylhAzxRhSX_QjtArq3bi.png",
+   "timestamp": "2021-10-04T15:23:06.342206+13:00",
+   "uniqueId": "CylhAzxRhSX_QjtArq3bi",
+   "userId": null
+  }
+ ],
  "review": [],
  "reviewAssignmentAssignerJoin": [],
  "reviewQuestionAssignment": [],
