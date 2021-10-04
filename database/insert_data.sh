@@ -9,9 +9,7 @@ echo -e "\nInserting data..."
 
 echo $1
 
-if [ $1 = 'js' ]; then
-    yarn ts-node ./database/insertDataCLI.ts $2 &
-elif [ $1 != '' ]; then
+if [ $1 != '' ]; then
     yarn ts-node ./database/snapshotCLI.ts use $1 &
 else
     yarn ts-node ./database/snapshotCLI.ts use "core_templates" &
