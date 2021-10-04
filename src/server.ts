@@ -34,7 +34,7 @@ require('dotenv').config()
 // Fastify server
 
 const startServer = async () => {
-  // await loadActionPlugins() // Connects to Database and listens for Triggers
+  await loadActionPlugins() // Connects to Database and listens for Triggers
 
   createFilesFolder()
 
