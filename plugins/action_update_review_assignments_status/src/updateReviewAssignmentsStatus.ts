@@ -23,8 +23,6 @@ async function updateReviewAssignmentsStatus({
       level_number: reviewLevel,
     } = await db.getReviewAssignmentById(reviewAssignmentId)
 
-    console.log('trigger', trigger)
-
     const setOtherSelfAssignmentsLocked = async (isLocked: boolean) => {
       const isSelfAssignable = true
       const otherSelfAssignments = await db.getMatchingReviewAssignments(
