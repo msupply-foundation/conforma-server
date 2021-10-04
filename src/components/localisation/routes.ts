@@ -4,10 +4,6 @@ import config from '../../config'
 
 const { localisationsFolder } = config
 
-export const routeLocalisations = async (request: any, reply: any) => {
-  reply.sendFile('languages.json', path.join(getAppEntryPointDir(), localisationsFolder))
-}
-
 export const routeGetLanguageFile = async (request: any, reply: any) => {
   const { code } = request.params
   const stringsFile = path.join(code, 'strings.json')
