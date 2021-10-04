@@ -31,9 +31,9 @@ export const baseJWT = { aud: 'postgraphile' }
   }
 */
 const compileJWT = (JWTelements: any) => {
-  const { userId, orgId, templatePermissionRows, sessionId } = JWTelements
+  const { userId, orgId, templatePermissionRows, sessionId, isAdmin } = JWTelements
 
-  let JWT: any = { ...baseJWT, userId, orgId, sessionId }
+  let JWT: any = { ...baseJWT, userId, orgId, sessionId, isAdmin }
   const templateIdsForPolicy: { [policyAbbreviation: string]: number[] } = {}
 
   templatePermissionRows.forEach((permissionRow: PermissionRow) => {
