@@ -1,5 +1,4 @@
 import DBConnect from '../databaseConnect'
-import { getTokenData, extractJWTfromHeader } from '../permissions/loginHelpers'
 import { objectKeysToCamelCase } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import fetch from 'node-fetch'
@@ -25,7 +24,7 @@ const REST_OF_OUTCOME_FIELDS = '...'
 const graphQLEndpoint = config.graphQLendpoint
 
 export const getPermissionNamesFromJWT = async (request: any): Promise<string[]> => {
-  const { userId, orgId } = await getTokenData(extractJWTfromHeader(request))
+  const { userId, orgId } = request.auth
   return await (
     await DBConnect.getUserOrgPermissionNames(userId, orgId)
   ).map((result) => result.permissionName)

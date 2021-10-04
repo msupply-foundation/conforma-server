@@ -24,7 +24,6 @@ import {
 } from './components/files/fileHandler'
 import { getAppEntryPointDir, objectKeysToSnakeCase } from './components/utilityFunctions'
 import routeRunAction from './components/actions/runAction'
-import DBConnect from './components/databaseConnect'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
@@ -35,7 +34,7 @@ require('dotenv').config()
 // Fastify server
 
 const startServer = async () => {
-  // await loadActionPlugins() // Connects to Database and listens for Triggers
+  await loadActionPlugins() // Connects to Database and listens for Triggers
 
   createFilesFolder()
 
