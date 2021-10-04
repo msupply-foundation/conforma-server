@@ -23,7 +23,7 @@ import {
   filesFolder,
 } from './components/files/fileHandler'
 import { getAppEntryPointDir, objectKeysToSnakeCase } from './components/utilityFunctions'
-import routeRunAction from './components/actions/runAction'
+import { routeRunAction, routeGetApplicationData } from './components/actions/runAction'
 import config from './config'
 import lookupTableRoutes from './lookup-table/routes'
 import snapshotRoutes from './components/snapshots/routes'
@@ -34,7 +34,7 @@ require('dotenv').config()
 // Fastify server
 
 const startServer = async () => {
-  await loadActionPlugins() // Connects to Database and listens for Triggers
+  // await loadActionPlugins() // Connects to Database and listens for Triggers
 
   createFilesFolder()
 
@@ -107,6 +107,7 @@ const startServer = async () => {
         server.register(snapshotRoutes, { prefix: '/snapshot' })
         server.get('/updateRowPolicies', routeUpdateRowPolicies)
         server.post('/run-action', routeRunAction)
+        server.get('/get-application-data', routeGetApplicationData)
         done()
       },
       { prefix: '/admin' }
