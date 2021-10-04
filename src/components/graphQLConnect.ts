@@ -88,7 +88,7 @@ class GraphQLdb {
       `,
       { reviewAssignmentId }
     )
-    return data.reviews.nodes[0] || null
+    return data?.reviews?.nodes[0] || null
   }
 
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
