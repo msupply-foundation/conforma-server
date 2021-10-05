@@ -295,7 +295,7 @@ Performs queries on connected GraphQL interface.
 
 ## GET
 
-Performs http GET requests to API endpoints, with optional authentication.
+Performs http GET requests to API endpoints, with optional authentication (see [below](#authentication)).
 
 - Input: _(note: basically the same as GraphQL)_
   - 1st child node returns a **string** containing the url of the API endpoint
