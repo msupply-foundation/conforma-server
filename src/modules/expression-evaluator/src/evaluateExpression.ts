@@ -113,14 +113,21 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
     case 'POST':
     case 'GET':
     case 'API':
-      const { APIfetch, headers } = params
+      const { APIfetch } = params
       const isPostRequest = inputQuery.operator === 'POST'
-      let urlWithQuery, returnedProperty, requestBody
+      let urlWithQuery, returnedProperty, requestBody, headers
       try {
-        const { url, fieldNames, values, returnProperty } = assignChildNodesToQuery([
+        const {
+          url,
+          headers: queryHeaders,
+          fieldNames,
+          values,
+          returnProperty,
+        } = assignChildNodesToQuery([
           '', // Extra unused field for GET/POST (query)
           ...childrenResolved,
         ])
+        headers = queryHeaders ?? params?.headers
         returnedProperty = returnProperty
         urlWithQuery =
           fieldNames.length > 0
@@ -218,11 +225,19 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
 async function processGraphQL(
   queryArray: any[],
   connection: IGraphQLConnection,
-  headers: { [key: string]: string } = {}
+  gqlHeaders: { [key: string]: string } = {}
 ) {
   try {
-    const { url, query, fieldNames, values, returnProperty } = assignChildNodesToQuery(queryArray)
+    const {
+      url,
+      headers: queryHeaders,
+      query,
+      fieldNames,
+      values,
+      returnProperty,
+    } = assignChildNodesToQuery(queryArray)
     const variables = zipArraysToObject(fieldNames, values)
+    const headers = queryHeaders ?? gqlHeaders
     const data = await graphQLquery(url, query, variables, connection, headers)
     if (!data) throw new Error('GraphQL query problem')
     try {
@@ -231,7 +246,7 @@ async function processGraphQL(
       throw new Error('GraphQL -- unable to retrieve node')
     }
   } catch (err) {
-    throw new Error('GraphQL problem')
+    throw new Error(err.message)
   }
 }
 
@@ -252,14 +267,19 @@ const extractAndSimplify = (
 const assignChildNodesToQuery = (childNodes: any[]) => {
   const skipFields = 3 // skip query, url and fieldNames
   const query: string = childNodes[0]
-  const url: string = childNodes[1]
+  let url: string
+  let headers: { [key: string]: string } | null = null
+  if (typeof childNodes[1] === 'object') {
+    url = childNodes[1].url
+    headers = childNodes[1].headers
+  } else url = childNodes[1]
   const fieldNames: string[] = childNodes[2]
 
   const lastFieldIndex = fieldNames.length + skipFields
   const values: string[] = childNodes.slice(skipFields, lastFieldIndex)
   const returnProperty: string = childNodes[lastFieldIndex]
 
-  return { url, query, fieldNames, values, returnProperty }
+  return { url, headers, query, fieldNames, values, returnProperty }
 }
 
 // Build an object from an array of field names and an array of values
@@ -324,6 +344,10 @@ const graphQLquery = async (
     }),
   })
   const data = await queryResult.json()
+  if (data?.errors) {
+    const errorMessage = data.errors[0].message
+    throw new Error(errorMessage)
+  }
   return data.data
 }
 

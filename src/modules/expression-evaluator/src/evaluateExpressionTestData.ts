@@ -688,6 +688,45 @@ testData.APIisUnique = {
   operator: 'GET',
   children: ['http://localhost:8080/api/check-unique', ['type', 'value'], 'username', 'druglord'],
 }
+
+testData.APIisUniqueWithHeaders = {
+  operator: 'graphQL',
+  children: [
+    `query App($appId:Int!) {
+      application(id: $appId) {
+        name
+      }
+    }`,
+    {
+      operator: 'buildObject',
+      properties: [
+        {
+          key: 'url',
+          value: '',
+        },
+        {
+          key: 'headers',
+          value: {
+            operator: 'buildObject',
+            properties: [
+              {
+                key: 'Authorization',
+                value: {
+                  operator: 'objectProperties',
+                  children: ['secrets.adminAuth'],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+    ['appId'],
+    22,
+    'application.name',
+  ],
+}
+
 testData.onlineTestAPI = {
   operator: 'GET',
   children: ['https://jsonplaceholder.typicode.com/todos/1', [], 'title'],
@@ -777,6 +816,21 @@ testData.getListOfApplications_withId = {
 // GraphQL operator
 
 testData.simpleGraphQL = {
+  operator: 'graphQL',
+  children: [
+    `query App($appId:Int!) {
+      application(id: $appId) {
+        name
+      }
+    }`,
+    'graphQLEndpoint',
+    ['appId'],
+    22,
+    'application.name',
+  ],
+}
+
+testData.simpleGraphQLCustomHeader = {
   operator: 'graphQL',
   children: [
     `query App($appId:Int!) {
