@@ -5480,10 +5480,7 @@
     {
       "actionCode": "changeStatus",
       "code": null,
-      "condition": {
-        "children": ["applicationData.reviewData.reviewAssignment.isLocked", false],
-        "operator": "objectProperties"
-      },
+      "condition": true,
       "description": "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED",
       "eventCode": "",
       "id": 260,
@@ -5498,10 +5495,7 @@
     {
       "actionCode": "changeStatus",
       "code": null,
-      "condition": {
-        "children": ["applicationData.reviewData.reviewAssignment.isLocked", false],
-        "operator": "objectProperties"
-      },
+      "condition": true,
       "description": "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED",
       "eventCode": "",
       "id": 261,
@@ -5516,10 +5510,7 @@
     {
       "actionCode": "changeStatus",
       "code": null,
-      "condition": {
-        "children": ["applicationData.reviewData.reviewAssignment.isLocked", false],
-        "operator": "objectProperties"
-      },
+      "condition": true,
       "description": "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED",
       "eventCode": "",
       "id": 262,
@@ -5535,7 +5526,7 @@
       "actionCode": "changeStatus",
       "code": null,
       "condition": {
-        "children": ["applicationData.reviewData.reviewAssignment.isLocked", false],
+        "children": true,
         "operator": "objectProperties"
       },
       "description": "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED",
