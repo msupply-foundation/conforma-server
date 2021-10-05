@@ -4,9 +4,9 @@ GraphQL Fragment - CORE ACTIONS
 */
 exports.coreActions = `
     # ON_APPLICATION_CREATE
-    # change status to DRAFT
     # generate serial
-    # generate initial name
+    # generate application name
+    # increment stage
     {
         actionCode: "generateTextString"
         sequence: 1
@@ -75,19 +75,19 @@ exports.coreActions = `
         }
     }
     {
-      actionCode: "changeStatus"
-      trigger: ON_REVIEW_CREATE
-      sequence: 2
-      condition: {
-        operator: "objectProperties"
-        children: [
-          "applicationData.reviewData.reviewAssignment.isLocked"
-        ]
-      }
-      parameterQueries: {
-        newStatus: "LOCKED"
-      }
-  }
+        actionCode: "changeStatus"
+        trigger: ON_REVIEW_CREATE
+        sequence: 2
+        condition: {
+          operator: "objectProperties"
+          children: [
+            "applicationData.reviewData.reviewAssignment.isLocked"
+          ]
+        }
+        parameterQueries: {
+          newStatus: "LOCKED"
+        }
+    }
     # ON_APPLICATION_SUBMIT
     # 1 - change status to SUBMITTED
     # 2 - trim responses
@@ -129,14 +129,43 @@ exports.coreActions = `
     }
     # -------------------------------------------
     # ON_REVIEW_SUBMIT
-    # 1 - change status to SUBMITTED
-    # 2 - trim responses
-    # 3 - update review statuses (for other reviews related to this review submission)
-    # 4 - increment application stage (after last level reviewer conforms)
-    # 5 - generate review assignments
-    # 6 - adjust visibility of review responses (for applicant - LOQ)
+    # 1 - adjust visibility of review responses (for applicant - LOQ)
+    # 2 - change status to SUBMITTED
+    # 3 - trim responses
+    # 4 - update review statuses (for other reviews related to this review submission)
+    # 5 - increment application stage (after last level reviewer conforms)
+    # 6 - generate review assignments
     # 7 - change application status (for applicant - LOQ)
     # 8 & 9 - change application outcome after last stage and last level submission
+    # update review visibility for applicant
+    # condition checks for latest review decison = LIST_OF_QUESTIONS
+    # AND review being isLastLevel
+    {
+        actionCode: "updateReviewVisibility"
+        sequence: 1
+        trigger: ON_REVIEW_SUBMIT
+        condition: {
+        operator: "AND"
+        children: [
+          {
+            operator: "="
+            children: [
+              {
+                operator: "objectProperties"
+                children: [
+                  "applicationData.reviewData.latestDecision.decision"
+                ]
+              }
+              "LIST_OF_QUESTIONS"
+            ]
+          }
+          {
+            operator: "objectProperties"
+            children: ["applicationData.reviewData.isLastLevel"]
+          }
+        ]
+      }
+    }
     {
         actionCode: "changeStatus"
         trigger: ON_REVIEW_SUBMIT
@@ -225,35 +254,6 @@ exports.coreActions = `
       actionCode: "generateReviewAssignments"
       trigger: ON_REVIEW_SUBMIT
       sequence: 54
-    }
-    # update review visibility for applicant
-    # condition checks for latest review decison = LIST_OF_QUESTIONS
-    # AND review being isLastLevel
-    {
-        actionCode: "updateReviewVisibility"
-        sequence: 6
-        trigger: ON_REVIEW_SUBMIT
-        condition: {
-        operator: "AND"
-        children: [
-          {
-            operator: "="
-            children: [
-              {
-                operator: "objectProperties"
-                children: [
-                  "applicationData.reviewData.latestDecision.decision"
-                ]
-              }
-              "LIST_OF_QUESTIONS"
-            ]
-          }
-          {
-            operator: "objectProperties"
-            children: ["applicationData.reviewData.isLastLevel"]
-          }
-        ]
-      }
     }
     # change application status to changes requested
     # condition checks for latest review decison = LIST_OF_QUESTIONS
@@ -365,7 +365,56 @@ exports.coreActions = `
             children: ["applicationData.action_payload.trigger_payload.trigger"]
         }
         }
-    }   
+    }
+    # -------------------------------------------
+    # ON_REVIEW_REASSIGN
+    # 1 - change review (if existing) on re-assignment back to status DRAFT or LOCKED (according with assignment)
+    {
+      actionCode: "changeStatus"
+      trigger: ON_REVIEW_REASSIGN
+      sequence: 1
+      condition: {
+        operator: "objectProperties"
+        children: [
+          "applicationData.reviewData.reviewAssignment.isLocked"
+        ]
+      }
+      parameterQueries: {
+        isReview: true #Required since we're updating the review status
+        newStatus: {
+          operator: "?",
+          children: [
+          {
+            operator: "objectProperties",
+            children: [
+            "applicationData.reviewData.reviewAssignment.isLocked",
+            null
+            ]
+          },
+          "LOCKED",
+          "DRAFT"
+          ]
+        }
+      }
+    }
+    # -------------------------------------------
+    # ON_REVIEW_UNASSIGN
+    # 1 - change previous review un-assignment with status locked to also have review status DISCONTINUED
+    {
+      actionCode: "changeStatus"
+      trigger: ON_REVIEW_UNASSIGN
+      sequence: 1
+      condition: {
+        operator: "objectProperties"
+        children: [
+          "applicationData.reviewData.reviewAssignment.isLocked"
+        ]
+      }
+      parameterQueries: {
+        isReview: true #Required since we're updating the review status
+        newStatus: "DISCONTINUED"
+      }
+    }
     `
 
 /*

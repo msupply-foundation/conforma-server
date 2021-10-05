@@ -64,6 +64,33 @@ class GraphQLdb {
     return data.review
   }
 
+  public getReviewDataFromAssignment = async (reviewAssignmentId: number) => {
+    const data = await this.gqlQuery(
+      `
+      query getReview($reviewAssignmentId: Int!) {
+        reviews(filter: { reviewAssignmentId: { equalTo: $reviewAssignmentId } }) {
+          nodes {
+            reviewId: id
+            levelNumber
+            isLastLevel
+            isLastStage
+            status
+            latestDecision {
+                decision
+                comment
+            }
+            reviewAssignment {
+              isLocked
+            }
+          }
+        }
+      }
+      `,
+      { reviewAssignmentId }
+    )
+    return data?.reviews?.nodes[0] || null
+  }
+
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
     switch (tableName) {
       default:

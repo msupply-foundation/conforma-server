@@ -5,6 +5,7 @@ import routeListSnapshots from './routeListSnapshots'
 import routeTakeSnapshot from './routeTakeSnapshot'
 import routeUseSnapshot from './routeUseSnapshot'
 import routeUploadSnapshot from './routeUploadSnapshot'
+import routeDeleteSnapshot from './routeDeleteSnapshot'
 
 const snapshotRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, done) => {
   server.register(fastifyStatic, {
@@ -15,6 +16,7 @@ const snapshotRoutes: FastifyPluginCallback<{ prefix: string }> = (server, _, do
   server.post('/take', routeTakeSnapshot)
   server.post('/use', routeUseSnapshot)
   server.post('/upload', routeUploadSnapshot)
+  server.post('/delete', routeDeleteSnapshot)
 
   done()
 }
