@@ -158,7 +158,8 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
 
     case 'graphQL':
       if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
-      return processGraphQL(childrenResolved, params.graphQLConnection, params?.headers)
+      const gqlHeaders = params?.headers ?? params.graphQLConnection.headers
+      return processGraphQL(childrenResolved, params.graphQLConnection, gqlHeaders)
 
     case 'buildObject':
       return buildObject(inputQuery as BuildObjectQuery, evaluationExpressionInstance)
