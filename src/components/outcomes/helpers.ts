@@ -130,7 +130,7 @@ const getFilters = (
   orgId: number | undefined
 ): object => {
   // We're only interested in the highest priority restrictions
-  const restrictions = outcomes[0].rowRestrctions || { id: { isNull: false } }
+  const restrictions = outcomes[0].rowRestrictions || { id: { isNull: false } }
   // Substitute userId/orgId placeholder with actual values
   return mapValuesDeep(restrictions, (node: any) => {
     if (typeof node !== 'string') return node
