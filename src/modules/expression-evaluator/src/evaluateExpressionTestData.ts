@@ -690,19 +690,14 @@ testData.APIisUnique = {
 }
 
 testData.APIisUniqueWithHeaders = {
-  operator: 'graphQL',
+  operator: 'GET',
   children: [
-    `query App($appId:Int!) {
-      application(id: $appId) {
-        name
-      }
-    }`,
     {
       operator: 'buildObject',
       properties: [
         {
           key: 'url',
-          value: '',
+          value: 'http://localhost:8080/api/check-unique',
         },
         {
           key: 'headers',
@@ -713,7 +708,7 @@ testData.APIisUniqueWithHeaders = {
                 key: 'Authorization',
                 value: {
                   operator: 'objectProperties',
-                  children: ['secrets.adminAuth'],
+                  children: ['secrets.nonRegisteredAuth'],
                 },
               },
             ],
@@ -721,9 +716,9 @@ testData.APIisUniqueWithHeaders = {
         },
       ],
     },
-    ['appId'],
-    22,
-    'application.name',
+    ['type', 'value'],
+    'username',
+    'jane_smith',
   ],
 }
 
@@ -838,7 +833,30 @@ testData.simpleGraphQLCustomHeader = {
         name
       }
     }`,
-    'graphQLEndpoint',
+    {
+      operator: 'buildObject',
+      properties: [
+        {
+          key: 'url',
+          value: '',
+        },
+        {
+          key: 'headers',
+          value: {
+            operator: 'buildObject',
+            properties: [
+              {
+                key: 'Authorization',
+                value: {
+                  operator: 'objectProperties',
+                  children: ['secrets.adminAuth'],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
     ['appId'],
     22,
     'application.name',

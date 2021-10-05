@@ -531,17 +531,17 @@ test('Test GraphQL -- get single application name', () => {
   })
 })
 
-// test('Test GraphQL -- get single application name with custom query authorization', () => {
-//   return evaluateExpression(testData.simpleGraphQLCustomHeader, {
-//     objects: { secrets },
-//     graphQLConnection: {
-//       fetch: fetch,
-//       endpoint: graphQLendpoint,
-//     },
-//   }).then((result: any) => {
-//     expect(result).toEqual('Company Registration - S-ECL-0011')
-//   })
-// })
+test('Test GraphQL -- get single application name with custom query authorization', () => {
+  return evaluateExpression(testData.simpleGraphQLCustomHeader, {
+    objects: { secrets },
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual('Company Registration - S-ECL-0011')
+  })
+})
 
 test('Test GraphQL -- List of Application Names', () => {
   return evaluateExpression(testData.GraphQL_listOfApplications, {
