@@ -28,23 +28,3 @@ CREATE TABLE outcome_display_column_definition (
     UNIQUE (table_name, column_name)
 );
 
--- OLD TABLES -- LEAVING THESE HERE FOR NOW, DELETE ONCE MIGRATION COMPLETE
-CREATE TABLE outcome_display_table (
-    id serial PRIMARY KEY,
-    column_name varchar,
-    -- Text or full value from form element plugin
-    is_text_column boolean,
-    title varchar,
-    outcome_display_id integer REFERENCES outcome_display (id) ON DELETE CASCADE
-);
-
-CREATE TABLE outcome_display_detail (
-    id serial PRIMARY KEY,
-    column_name varchar,
-    title varchar,
-    element_type_plugin_code varchar,
-    is_text_column boolean,
-    parameters jsonb,
-    outcome_display_id integer REFERENCES outcome_display (id) ON DELETE CASCADE
-);
-
