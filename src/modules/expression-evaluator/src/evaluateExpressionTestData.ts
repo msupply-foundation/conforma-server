@@ -686,7 +686,7 @@ testData.stringSubstitutionEmptyStringInReplacements = {
 
 testData.APIisUnique = {
   operator: 'GET',
-  children: ['http://localhost:8080/check-unique', ['type', 'value'], 'username', 'druglord'],
+  children: ['http://localhost:8080/api/check-unique', ['type', 'value'], 'username', 'druglord'],
 }
 testData.onlineTestAPI = {
   operator: 'GET',
@@ -701,7 +701,13 @@ testData.onlineArrayReturn = {
 
 testData.APIlogin = {
   operator: 'POST',
-  children: ['http://localhost:8080/login', ['username', 'password'], 'js', '123456', 'success'],
+  children: [
+    'http://localhost:8080/api/public/login',
+    ['username', 'password'],
+    'js',
+    '123456',
+    'success',
+  ],
 }
 
 // prettier-ignore
@@ -973,7 +979,7 @@ testData.emailValidation = {
     {
       operator: 'GET',
       children: [
-        'http://localhost:8080/check-unique',
+        'http://localhost:8080/api/check-unique',
         ['type', 'value'],
         'email',
         {

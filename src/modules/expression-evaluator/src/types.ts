@@ -23,6 +23,7 @@ export interface IParameters {
   pgConnection?: IConnection
   graphQLConnection?: IGraphQLConnection
   APIfetch?: Function
+  headers?: { [key: string]: string }
 }
 
 export interface OperatorNode {
