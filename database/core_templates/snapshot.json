@@ -1164,7 +1164,7 @@
       "icon": null,
       "id": 10,
       "isLinear": true,
-      "name": "Sample Template",
+      "name": "Sample Templates",
       "namePlural": "Sample template applications",
       "startMessage": "## You will need the following documents ready for upload:\n- <Add list of documents to upload>",
       "status": "AVAILABLE",
@@ -1370,56 +1370,56 @@
     {
       "id": 2,
       "isActive": true,
-      "organisationId": null,
+      "organisationId": 1,
       "permissionNameId": 4,
       "userId": 2
     },
     {
       "id": 3,
       "isActive": true,
-      "organisationId": null,
+      "organisationId": 1,
       "permissionNameId": 7,
       "userId": 2
     },
     {
       "id": 4,
       "isActive": true,
-      "organisationId": null,
+      "organisationId": 1,
       "permissionNameId": 5,
       "userId": 2
     },
     {
       "id": 5,
       "isActive": true,
-      "organisationId": null,
+      "organisationId": 1,
       "permissionNameId": 9,
       "userId": 2
     },
     {
       "id": 6,
       "isActive": true,
-      "organisationId": null,
+      "organisationId": 1,
       "permissionNameId": 10,
       "userId": 2
     },
     {
       "id": 7,
       "isActive": true,
-      "organisationId": null,
+      "organisationId": 1,
       "permissionNameId": 11,
       "userId": 2
     },
     {
       "id": 8,
       "isActive": true,
-      "organisationId": null,
+      "organisationId": 1,
       "permissionNameId": 12,
       "userId": 2
     },
     {
       "id": 9,
       "isActive": true,
-      "organisationId": null,
+      "organisationId": 1,
       "permissionNameId": 13,
       "userId": 2
     },
@@ -2208,6 +2208,27 @@
       "trigger": "ON_REVIEW_SUBMIT"
     },
     {
+      "actionCode": "updateReviewAssignmentsStatus",
+      "code": null,
+      "condition": true,
+      "description": null,
+      "eventCode": null,
+      "id": 140,
+      "parameterQueries": {
+        "trigger": {
+          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "operator": "objectProperties"
+        },
+        "reviewAssignmentId": {
+          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "operator": "objectProperties"
+        }
+      },
+      "sequence": null,
+      "templateId": 7,
+      "trigger": "ON_REVIEW_SELF_ASSIGN"
+    },
+    {
       "actionCode": "generateName",
       "code": null,
       "condition": true,
@@ -2756,6 +2777,27 @@
       "sequence": 56,
       "templateId": 8,
       "trigger": "ON_REVIEW_SUBMIT"
+    },
+    {
+      "actionCode": "updateReviewAssignmentsStatus",
+      "code": null,
+      "condition": true,
+      "description": null,
+      "eventCode": null,
+      "id": 166,
+      "parameterQueries": {
+        "trigger": {
+          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "operator": "objectProperties"
+        },
+        "reviewAssignmentId": {
+          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "operator": "objectProperties"
+        }
+      },
+      "sequence": null,
+      "templateId": 8,
+      "trigger": "ON_REVIEW_SELF_ASSIGN"
     },
     {
       "actionCode": "generateName",
@@ -3356,6 +3398,27 @@
       "trigger": "ON_REVIEW_SUBMIT"
     },
     {
+      "actionCode": "updateReviewAssignmentsStatus",
+      "code": null,
+      "condition": true,
+      "description": null,
+      "eventCode": null,
+      "id": 194,
+      "parameterQueries": {
+        "trigger": {
+          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "operator": "objectProperties"
+        },
+        "reviewAssignmentId": {
+          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "operator": "objectProperties"
+        }
+      },
+      "sequence": null,
+      "templateId": 9,
+      "trigger": "ON_REVIEW_SELF_ASSIGN"
+    },
+    {
       "actionCode": "generateName",
       "code": null,
       "condition": true,
@@ -3795,6 +3858,27 @@
       "sequence": 56,
       "templateId": 10,
       "trigger": "ON_REVIEW_SUBMIT"
+    },
+    {
+      "actionCode": "updateReviewAssignmentsStatus",
+      "code": null,
+      "condition": true,
+      "description": "**CORE-ACTION** Change other review assignment statuses to SELF_ASSIGNED_BY_ANOTHER after one of the review assignment with AVAILABLE_FOR_SELF_ASSIGNMENT is self-assigned by the reviewer",
+      "eventCode": null,
+      "id": 217,
+      "parameterQueries": {
+        "trigger": {
+          "children": ["applicationData.action_payload.trigger_payload.trigger"],
+          "operator": "objectProperties"
+        },
+        "reviewAssignmentId": {
+          "children": ["applicationData.action_payload.trigger_payload.record_id"],
+          "operator": "objectProperties"
+        }
+      },
+      "sequence": null,
+      "templateId": 10,
+      "trigger": "ON_REVIEW_SELF_ASSIGN"
     },
     {
       "actionCode": "cLog",
@@ -5328,6 +5412,72 @@
       "trigger": "ON_APPLICATION_SUBMIT"
     },
     {
+      "actionCode": "generateTextString",
+      "code": null,
+      "condition": true,
+      "description": "Update application name with a more meaningful title using pattern:\n\"templateName: username - serial\"",
+      "eventCode": "",
+      "id": 257,
+      "parameterQueries": {
+        "pattern": "<?templateName>: <?username> - <?applicationSerial>",
+        "fieldName": "name",
+        "tableName": "application",
+        "customFields": {
+          "username": "applicationData.responses.username.text",
+          "templateName": "applicationData.templateName",
+          "applicationSerial": "applicationData.applicationSerial"
+        },
+        "updateRecord": true
+      },
+      "sequence": 6,
+      "templateId": 11,
+      "trigger": "ON_APPLICATION_SUBMIT"
+    },
+    {
+      "actionCode": "generateTextString",
+      "code": null,
+      "condition": true,
+      "description": "Update application name with a more meaningful title using pattern:\n\"templateName: username - serial\"",
+      "eventCode": "",
+      "id": 258,
+      "parameterQueries": {
+        "pattern": "<?templateName>: <?username> - <?applicationSerial>",
+        "fieldName": "name",
+        "tableName": "application",
+        "customFields": {
+          "username": "applicationData.username",
+          "templateName": "applicationData.templateName",
+          "applicationSerial": "applicationData.applicationSerial"
+        },
+        "updateRecord": true
+      },
+      "sequence": 4,
+      "templateId": 1,
+      "trigger": "ON_APPLICATION_SUBMIT"
+    },
+    {
+      "actionCode": "generateTextString",
+      "code": null,
+      "condition": true,
+      "description": "Update application name with a more meaningful title using pattern:\n\"templateName: username - serial\"",
+      "eventCode": "",
+      "id": 259,
+      "parameterQueries": {
+        "pattern": "<?templateName>: <?username> - <?applicationSerial>",
+        "fieldName": "name",
+        "tableName": "application",
+        "customFields": {
+          "username": "applicationData.responses.Q3Username.text",
+          "templateName": "applicationData.templateName",
+          "applicationSerial": "applicationData.applicationSerial"
+        },
+        "updateRecord": true
+      },
+      "sequence": 4,
+      "templateId": 2,
+      "trigger": "ON_APPLICATION_SUBMIT"
+    },
+    {
       "actionCode": "changeStatus",
       "code": null,
       "condition": {
@@ -5336,7 +5486,7 @@
       },
       "description": "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED",
       "eventCode": "",
-      "id": 257,
+      "id": 260,
       "parameterQueries": {
         "isReview": true,
         "newStatus": "DISCONTINUED"
@@ -5354,7 +5504,7 @@
       },
       "description": "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED",
       "eventCode": "",
-      "id": 258,
+      "id": 261,
       "parameterQueries": {
         "isReview": true,
         "newStatus": "DISCONTINUED"
@@ -5372,7 +5522,7 @@
       },
       "description": "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED",
       "eventCode": "",
-      "id": 259,
+      "id": 262,
       "parameterQueries": {
         "isReview": true,
         "newStatus": "DISCONTINUED"
@@ -5390,7 +5540,7 @@
       },
       "description": "**CORE-ACTION** On Re-assignment happens change previous review status to DISCONTINUED",
       "eventCode": "",
-      "id": 260,
+      "id": 263,
       "parameterQueries": {
         "isReview": true,
         "newStatus": "DISCONTINUED"
@@ -5414,7 +5564,7 @@
       },
       "description": "**CORE-ACTION** On Re-assignment if review is existing change to DRAFT or LOCKED (if assignment flag is_locked isTrue)",
       "eventCode": "",
-      "id": 261,
+      "id": 264,
       "parameterQueries": {
         "isReview": true,
         "newStatus": {
@@ -5448,7 +5598,7 @@
       },
       "description": "**CORE-ACTION** On Re-assignment if review is existing change to DRAFT or LOCKED (if assignment flag is_locked isTrue)",
       "eventCode": "",
-      "id": 262,
+      "id": 265,
       "parameterQueries": {
         "isReview": true,
         "newStatus": {
@@ -5482,7 +5632,7 @@
       },
       "description": "**CORE-ACTION** On Re-assignment if review is existing change to DRAFT or LOCKED (if assignment is LOCKED)",
       "eventCode": null,
-      "id": 263,
+      "id": 266,
       "parameterQueries": {
         "isReview": true,
         "newStatus": {
@@ -5516,7 +5666,7 @@
       },
       "description": "**CORE-ACTION** On Re-assignment if review is existing change to DRAFT or LOCKED (if assignment flag is_locked isTrue)",
       "eventCode": "",
-      "id": 264,
+      "id": 267,
       "parameterQueries": {
         "isReview": true,
         "newStatus": {
@@ -5541,7 +5691,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Re-assignment change other self_assignment reviewAssignment flag is_locked to True",
       "eventCode": null,
-      "id": 265,
+      "id": 268,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5562,7 +5712,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Assignment change other self_assignment reviewAssignment flag is_locked to True",
       "eventCode": null,
-      "id": 266,
+      "id": 269,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5583,7 +5733,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Self-assignment change other self_assignment reviewAssignment flag is_locked to True",
       "eventCode": "",
-      "id": 267,
+      "id": 270,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5604,7 +5754,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Assignment change other self_assignment reviewAssignment flag is_locked to True",
       "eventCode": null,
-      "id": 268,
+      "id": 271,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5625,7 +5775,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Re-assignment change other self_assignment reviewAssignment flag is_locked to True",
       "eventCode": null,
-      "id": 269,
+      "id": 272,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5646,7 +5796,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Assignment change other self_assignment reviewAssignment flag is_locked to True",
       "eventCode": null,
-      "id": 270,
+      "id": 273,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5667,7 +5817,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Assignment change other self_assignment reviewAssignment flag is_locked to True",
       "eventCode": null,
-      "id": 271,
+      "id": 274,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5688,7 +5838,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Self-assignment change other self_assignment reviewAssignment flag is_locked to True",
       "eventCode": null,
-      "id": 272,
+      "id": 275,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5709,7 +5859,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Un-assignment change other reviewAssignment that has flag is_self_assignment = True set flag is_locked to False",
       "eventCode": "",
-      "id": 273,
+      "id": 276,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5730,7 +5880,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Un-assignment change other reviewAssignment that has flag is_self_assignment = True set flag is_locked to False",
       "eventCode": "",
-      "id": 274,
+      "id": 277,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5751,7 +5901,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Un-assignment change other reviewAssignment that has flag is_self_assignment = True set flag is_locked to False",
       "eventCode": "",
-      "id": 275,
+      "id": 278,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5772,7 +5922,7 @@
       "condition": true,
       "description": "**CORE-ACTION** On Un-assignment change other reviewAssignment that has flag is_self_assignment = True set flag is_locked to False",
       "eventCode": "",
-      "id": 276,
+      "id": 279,
       "parameterQueries": {
         "trigger": {
           "children": ["applicationData.action_payload.trigger_payload.trigger"],
@@ -5786,72 +5936,6 @@
       "sequence": 1,
       "templateId": 10,
       "trigger": "ON_REVIEW_UNASSIGN"
-    },
-    {
-      "actionCode": "generateTextString",
-      "code": null,
-      "condition": true,
-      "description": "Update application name with a more meaningful title using pattern:\n\"templateName: username - serial\"",
-      "eventCode": "",
-      "id": 277,
-      "parameterQueries": {
-        "pattern": "<?templateName>: <?username> - <?applicationSerial>",
-        "fieldName": "name",
-        "tableName": "application",
-        "customFields": {
-          "username": "applicationData.responses.username.text",
-          "templateName": "applicationData.templateName",
-          "applicationSerial": "applicationData.applicationSerial"
-        },
-        "updateRecord": true
-      },
-      "sequence": 6,
-      "templateId": 11,
-      "trigger": "ON_APPLICATION_SUBMIT"
-    },
-    {
-      "actionCode": "generateTextString",
-      "code": null,
-      "condition": true,
-      "description": "Update application name with a more meaningful title using pattern:\n\"templateName: username - serial\"",
-      "eventCode": "",
-      "id": 278,
-      "parameterQueries": {
-        "pattern": "<?templateName>: <?username> - <?applicationSerial>",
-        "fieldName": "name",
-        "tableName": "application",
-        "customFields": {
-          "username": "applicationData.username",
-          "templateName": "applicationData.templateName",
-          "applicationSerial": "applicationData.applicationSerial"
-        },
-        "updateRecord": true
-      },
-      "sequence": 4,
-      "templateId": 1,
-      "trigger": "ON_APPLICATION_SUBMIT"
-    },
-    {
-      "actionCode": "generateTextString",
-      "code": null,
-      "condition": true,
-      "description": "Update application name with a more meaningful title using pattern:\n\"templateName: username - serial\"",
-      "eventCode": "",
-      "id": 279,
-      "parameterQueries": {
-        "pattern": "<?templateName>: <?username> - <?applicationSerial>",
-        "fieldName": "name",
-        "tableName": "application",
-        "customFields": {
-          "username": "applicationData.responses.Q3Username.text",
-          "templateName": "applicationData.templateName",
-          "applicationSerial": "applicationData.applicationSerial"
-        },
-        "updateRecord": true
-      },
-      "sequence": 4,
-      "templateId": 2,
-      "trigger": "ON_APPLICATION_SUBMIT"
     }
   ],
   "templateFilterJoin": [
@@ -11087,7 +11171,22 @@
     }
   ],
   "reviewAssignment": [],
-  "file": [],
+  "file": [
+    {
+      "applicationResponseId": null,
+      "applicationSerial": null,
+      "filePath": "/fda_CylhAzxRhSX_QjtArq3bi.png",
+      "id": 3,
+      "mimetype": null,
+      "originalFilename": "fda.png",
+      "submitted": false,
+      "templateId": null,
+      "thumbnailPath": "/fda_CylhAzxRhSX_QjtArq3bi.png",
+      "timestamp": "2021-10-04T15:23:06.342206+13:00",
+      "uniqueId": "CylhAzxRhSX_QjtArq3bi",
+      "userId": null
+    }
+  ],
   "review": [],
   "reviewAssignmentAssignerJoin": [],
   "reviewQuestionAssignment": [],
