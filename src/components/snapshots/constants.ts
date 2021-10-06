@@ -16,6 +16,8 @@ export const DATABASE_FOLDER = path.join(getAppEntryPointDir(), config.databaseF
 export const SNAPSHOT_FOLDER = path.join(DATABASE_FOLDER, SNAPSHOT_SUBFOLDER)
 export const SNAPSHOT_OPTIONS_FOLDER = path.join(DATABASE_FOLDER, OPTIONS_SUBFOLDER)
 export const FILES_FOLDER = path.join(getAppEntryPointDir(), config.filesFolder)
+export const LOCALISATION_FOLDER = path.join(getAppEntryPointDir(), config.localisationsFolder)
+export const PREFERENCES_FILE = path.join(getAppEntryPointDir(), '../preferences.json')
 
 export const PG_DFF_JS_LOCATION = path.join(
   getAppEntryPointDir(),
