@@ -12,5 +12,7 @@
   "insertScriptsLocale": "dev",
   "includeInsertScripts": ["none"],
   "excludeInsertScripts": [],
+  "includePrefs": true,
+  "includeLocalisation": true,
   "resetFiles": true
 }
