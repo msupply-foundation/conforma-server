@@ -90,7 +90,9 @@ Provides current preferences and language options for the current installation. 
 
 #### Get language endpoint:
 
-GET: `/language/<langauge-code>`
+GET: `/language/<language-code>`
+
+e.g. `/language/en_nz` (the default language setting)
 
 Gets the set of localised strings for the core application (i.e. not customisable entities like templates).
 
@@ -125,11 +127,14 @@ POST: `/upload`
 Usage: `POST` request with file(s) in the request `body` form-data:  
 `key: "file" value: <File(s)>`
 
-URL query paramter fields (optional):
+URL query paramter fields (all optional):
 
 - `user_id`
-- `application_serial`
-- `application_response_id`
+- `application_serial` (for associating files with their applications)
+- `application_response_id` (for specifying what response a file belongs to, useful for the file "clean-up" action)
+- `unique_id` (the randomly generated one should normally be sufficient)
+- `template_id` (to associate a file with a template, for example a carbone template doc)
+- `subfolder` (files are placed in subfolder based on the application_serial provided, but a specific subfolder can be defined instead (which over-rides the application subfolder))
 
 e.g. `/upload?user=2&application_serial=3`
 
