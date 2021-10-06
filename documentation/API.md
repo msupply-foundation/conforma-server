@@ -11,10 +11,11 @@ The back-end currently has two server instances which are launched to handle inc
 
 ## Postgraphile server API:
 
-`http://localhost:5000/graphql`
+`http://localhost:5000/graphql` (in Development environment)  
+`http://localhost:5000/postgraphile/graphql` (in Production environment)
 
 Web-based GUI available at:  
-`http://localhost:5000/graphiql`
+`http://localhost:5000/graphiql` (development only)
 
 ---
 
