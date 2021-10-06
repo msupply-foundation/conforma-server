@@ -29,4 +29,5 @@ CREATE TRIGGER application_stage_history_trigger
     AFTER INSERT OR UPDATE OF is_current ON public.application_stage_history
     FOR EACH ROW
     WHEN (NEW.is_current = TRUE)
-    EXECUTE FUNCTION public.stage_is_current_update ()
+    EXECUTE FUNCTION public.stage_is_current_update ();
+
