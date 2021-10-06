@@ -106,7 +106,7 @@ GET: `/file?id=<uniqueId>`
 
 Usage: `GET` request with file database id as a URL query parameter.
 
-This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.s
+This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.
 ---
 ### Authenticated endpoints
 
