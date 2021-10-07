@@ -5,6 +5,7 @@ CREATE TABLE outcome_display (
     title varchar,
     code varchar NOT NULL,
     permission_names varchar[],
+    row_restrictions jsonb DEFAULT '{}',
     table_view_include_columns varchar[],
     table_view_exclude_columns varchar[],
     detail_view_include_columns varchar[],
@@ -26,25 +27,5 @@ CREATE TABLE outcome_display_column_definition (
     additional_formatting jsonb,
     value_expression jsonb,
     UNIQUE (table_name, column_name)
-);
-
--- OLD TABLES -- LEAVING THESE HERE FOR NOW, DELETE ONCE MIGRATION COMPLETE
-CREATE TABLE outcome_display_table (
-    id serial PRIMARY KEY,
-    column_name varchar,
-    -- Text or full value from form element plugin
-    is_text_column boolean,
-    title varchar,
-    outcome_display_id integer REFERENCES outcome_display (id) ON DELETE CASCADE
-);
-
-CREATE TABLE outcome_display_detail (
-    id serial PRIMARY KEY,
-    column_name varchar,
-    title varchar,
-    element_type_plugin_code varchar,
-    is_text_column boolean,
-    parameters jsonb,
-    outcome_display_id integer REFERENCES outcome_display (id) ON DELETE CASCADE
 );
 

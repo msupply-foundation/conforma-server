@@ -15,7 +15,7 @@ import { camelCase } from 'lodash'
 import { ColumnDefinition, LinkedApplication, OutcomesResponse } from './types'
 
 const routeOutcomes = async (request: any, reply: any) => {
-  const permissionNames = await getPermissionNamesFromJWT(request)
+  const { permissionNames } = await getPermissionNamesFromJWT(request)
   const outcomes = await DBConnect.getAllowedOutcomeDisplays(permissionNames)
   const distinctOutcomes = getDistinctObjects(outcomes, 'table_name', 'priority')
   const outcomeResponse: OutcomesResponse = distinctOutcomes.map(({ table_name, title, code }) => ({
@@ -29,7 +29,7 @@ const routeOutcomes = async (request: any, reply: any) => {
 const routeOutcomesTable = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const tableName = camelCase(request.params.tableName)
-  const permissionNames = await getPermissionNamesFromJWT(request)
+  const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
   const query = objectKeysToCamelCase(request.query)
 
   // GraphQL pagination parameters
@@ -38,16 +38,20 @@ const routeOutcomesTable = async (request: any, reply: any) => {
   const orderBy = query?.orderBy ?? 'id'
   const ascending = query?.ascending ? query?.ascending === 'true' : true
 
-  const { columnDefinitionMasterList, fieldNames, title, code } = await buildAllColumnDefinitions(
-    permissionNames,
-    tableName,
-    'TABLE'
-  )
+  const { columnDefinitionMasterList, fieldNames, gqlFilters, title, code } =
+    await buildAllColumnDefinitions({
+      permissionNames,
+      tableName,
+      type: 'TABLE',
+      userId,
+      orgId,
+    })
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const { fetchedRecords, totalCount, error } = await queryOutcomeTable(
     tableName,
     fieldNames,
+    gqlFilters,
     first,
     offset,
     orderBy,
@@ -72,25 +76,27 @@ const routeOutcomesDetail = async (request: any, reply: any) => {
   const authHeaders = request?.headers?.authorization
   const tableName = camelCase(request.params.tableName)
   const recordId = Number(request.params.id)
-  const permissionNames = await getPermissionNamesFromJWT(request)
+  const { userId, orgId, permissionNames } = await getPermissionNamesFromJWT(request)
 
   const {
     columnDefinitionMasterList,
     title,
     fieldNames,
+    gqlFilters,
     headerDefinition,
     showLinkedApplications,
-  } = await buildAllColumnDefinitions(permissionNames, tableName, 'DETAIL')
+  } = await buildAllColumnDefinitions({ permissionNames, tableName, type: 'DETAIL', userId, orgId })
 
   // GraphQL query -- get ALL fields (passing JWT), with pagination
   const fetchedRecord = await queryOutcomeTableSingleItem(
     tableName,
     fieldNames,
+    gqlFilters,
     recordId,
     authHeaders
   )
 
-  if (fetchedRecord?.error) return fetchedRecord.error
+  if (fetchedRecord?.error) return fetchedRecord
 
   // GraphQL query to get linked applications -- this one with Admin JWT!
   const linkedApplications = showLinkedApplications

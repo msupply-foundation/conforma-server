@@ -1,4 +1,4 @@
-import { ActionQueueStatus, ReviewAssignmentStatus, Trigger } from '../../../src/generated/graphql'
+import { ActionQueueStatus, ReviewAssignment, Trigger } from '../../../src/generated/graphql'
 import { ActionPluginInput } from '../../types'
 import databaseMethods from './databaseMethods'
 
@@ -13,6 +13,8 @@ async function updateReviewAssignmentsStatus({
   try {
     const trigger = parameters?.trigger ?? applicationData?.action_payload?.trigger_payload?.trigger
     const { reviewAssignmentId } = parameters
+
+    let assignments: ReviewAssignment[] = []
     // NB: reviewAssignmentId comes from record_id on TriggerPayload when
     // triggered from review_assignment table
     const {
@@ -21,29 +23,38 @@ async function updateReviewAssignmentsStatus({
       level_number: reviewLevel,
     } = await db.getReviewAssignmentById(reviewAssignmentId)
 
-    const otherReviewAssignments = await db.getMatchingReviewAssignments(
-      reviewAssignmentId,
-      applicationId,
-      stageNumber,
-      reviewLevel
-    )
+    const setOtherSelfAssignmentsLocked = async (isLocked: boolean) => {
+      const isSelfAssignable = true
+      const otherSelfAssignments = await db.getMatchingReviewAssignments(
+        reviewAssignmentId,
+        applicationId,
+        stageNumber,
+        reviewLevel,
+        isSelfAssignable
+      )
 
-    const reviewAssignmentUpdates = await Promise.all(
-      otherReviewAssignments.map(async (reviewAssignment: any) => {
-        const { id, status } = reviewAssignment
-        return {
-          id,
-          status:
-            trigger === Trigger.OnReviewSelfAssign
-              ? ReviewAssignmentStatus.SelfAssignedByAnother
-              : status,
-        }
-      })
-    )
+      return otherSelfAssignments.map(({ id }: ReviewAssignment) => ({
+        id,
+        isLocked,
+      }))
+    }
 
-    const reviewAssignmentUpdateResults = await db.updateReviewAssignments(reviewAssignmentUpdates)
+    switch (trigger) {
+      case Trigger.OnReviewSelfAssign:
+      case Trigger.OnReviewAssign:
+        assignments = await setOtherSelfAssignmentsLocked(true)
+        break
+      case Trigger.OnReviewUnassign: {
+        assignments = await setOtherSelfAssignmentsLocked(false)
+        break
+      }
+    }
 
-    console.log('Review Assignment status updates:', reviewAssignmentUpdateResults)
+    const reviewAssignmentUpdateResults = await db.updateReviewAssignments(assignments)
+
+    if (reviewAssignmentUpdateResults.length > 0) {
+      console.log('Review Assignment status updates:', reviewAssignmentUpdateResults)
+    }
 
     return {
       status: ActionQueueStatus.Success,

@@ -11,10 +11,11 @@ The back-end currently has two server instances which are launched to handle inc
 
 ## Postgraphile server API:
 
-`http://localhost:5000/graphql`
+`http://localhost:5000/graphql` (in Development environment)  
+`http://localhost:5000/postgraphile/graphql` (in Production environment)
 
 Web-based GUI available at:  
-`http://localhost:5000/graphiql`
+`http://localhost:5000/graphiql` (development only)
 
 ---
 
@@ -89,7 +90,9 @@ Provides current preferences and language options for the current installation. 
 
 #### Get language endpoint:
 
-GET: `/language/<langauge-code>`
+GET: `/language/<language-code>`
+
+e.g. `/language/en_nz` (the default language setting)
 
 Gets the set of localised strings for the core application (i.e. not customisable entities like templates).
 
@@ -105,7 +108,7 @@ GET: `/file?id=<uniqueId>`
 
 Usage: `GET` request with file database id as a URL query parameter.
 
-This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.s
+This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.
 ---
 ### Authenticated endpoints
 
@@ -124,11 +127,14 @@ POST: `/upload`
 Usage: `POST` request with file(s) in the request `body` form-data:  
 `key: "file" value: <File(s)>`
 
-URL query paramter fields (optional):
+URL query paramter fields (all optional):
 
 - `user_id`
-- `application_serial`
-- `application_response_id`
+- `application_serial` (for associating files with their applications)
+- `application_response_id` (for specifying what response a file belongs to, useful for the file "clean-up" action)
+- `unique_id` (the randomly generated one should normally be sufficient)
+- `template_id` (to associate a file with a template, for example a carbone template doc)
+- `subfolder` (files are placed in subfolder based on the application_serial provided, but a specific subfolder can be defined instead (which over-rides the application subfolder))
 
 e.g. `/upload?user=2&application_serial=3`
 

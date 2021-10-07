@@ -1,6 +1,6 @@
 /*************************************************/
 /*** SCRIPT AUTHOR: application-manager-server ***/
-/***    CREATED ON: 2021-10-04T02:29:06.034Z   ***/
+/***    CREATED ON: 2021-10-07T22:39:22.196Z   ***/
 /*************************************************/
 
 --- BEGIN CREATE TABLE "public"."organisation_application_join" ---
