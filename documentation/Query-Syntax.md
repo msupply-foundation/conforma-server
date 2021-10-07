@@ -670,7 +670,7 @@ There is a [Jest](https://jestjs.io/) test suite for the expression evaluator in
 
 However, for the tests to work you'll need two things:
 
-1. Load the [snapshot](Snapshots.md) called `evaluator_test` from the private templates repo (in `/dev/other`)
+1. Load the [snapshot](Snapshots.md) called `evaluator_test` from the private templates repo (in `/dev/snapshots`)
 2. You'll need to provide authentication JWTs for certain tests. The test suite is expecting a file called `testSecrets.json` in the evaluator /src folder, with the following info:  
 ```
 {
@@ -679,7 +679,7 @@ However, for the tests to work you'll need two things:
 }
 
 ```  
-This secrets file is *not* included in any repo for security reasons, so you'll need to create it yourself.
+This secrets file is *not* included in any repo for security reasons, but can be found in Bitwarden "Sussol - IRIMS" folder.
 
 # Development
 
