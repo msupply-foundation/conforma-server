@@ -1,11 +1,12 @@
 import DBConnect from '../databaseConnect'
 import { plural } from 'pluralize'
-import { snakeCase } from 'lodash'
+import { camelCase, snakeCase, upperFirst } from 'lodash'
 import { LinkedApplication } from './types'
 
 export const queryOutcomeTable = async (
   tableName: string,
   fieldNames: string[],
+  gqlFilters: object,
   first: number,
   offset: number,
   orderBy: string,
@@ -13,10 +14,11 @@ export const queryOutcomeTable = async (
   authHeaders: string
 ) => {
   const tableNamePlural = plural(tableName)
+  const filterType = upperFirst(camelCase(tableName)) + 'Filter'
   const fieldNameString = fieldNames.join(', ')
   const orderByType = `${snakeCase(orderBy).toUpperCase()}_${ascending ? 'ASC' : 'DESC'}`
-  const variables = { first, offset }
-  const graphQLquery = `query getOutcomeRecords($first: Int!, $offset: Int!) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: ${orderByType}) { nodes { ${fieldNameString} }, totalCount}}`
+  const variables = { first, offset, filter: gqlFilters }
+  const graphQLquery = `query getOutcomeRecords($first: Int!, $offset: Int!, $filter: ${filterType}) { ${tableNamePlural}(first: $first, offset: $offset, orderBy: ${orderByType}, filter: $filter) { nodes { ${fieldNameString} }, totalCount}}`
 
   let queryResult
   try {
@@ -34,20 +36,35 @@ export const queryOutcomeTable = async (
 export const queryOutcomeTableSingleItem = async (
   tableName: string,
   fieldNames: string[],
+  gqlFilters: object,
   id: number,
   authHeaders: string
 ) => {
+  const tableNamePlural = plural(tableName)
+  const filterType = upperFirst(camelCase(tableName)) + 'Filter'
   const fieldNameString = fieldNames.join(', ')
-  const graphQLquery = `query getOutcomeRecord($id:Int!){ ${tableName}(id: $id) {${fieldNameString}}}`
+  const variables = { id, filter: gqlFilters }
+  const graphQLquery = `query getOutcomeRecord($id:Int!, $filter:${filterType}){ ${tableNamePlural}(condition: {id: $id}, filter: $filter) { nodes {${fieldNameString}}}}`
   let queryResult
   try {
-    queryResult = await DBConnect.gqlQuery(graphQLquery, { id }, authHeaders)
+    queryResult = await DBConnect.gqlQuery(graphQLquery, variables, authHeaders)
   } catch (err) {
     return { error: true, message: 'Problem with Outcome Item query', detail: err.message }
   }
-
-  const fetchedRecord = queryResult?.[tableName]
-  return fetchedRecord
+  const fetchedRecords = queryResult?.[tableNamePlural]?.nodes
+  if (fetchedRecords === undefined)
+    return {
+      error: true,
+      message: 'Problem parsing query result',
+      detail: 'Invalid object property',
+    }
+  if (fetchedRecords.length === 0)
+    return {
+      error: true,
+      message: 'Item not available',
+      detail: "Either this record doesn't exist, or you are not authorized to view it.",
+    }
+  return fetchedRecords[0]
 }
 
 export const queryLinkedApplications = async (id: number, tableName: string) => {

@@ -5,6 +5,7 @@ CREATE TABLE outcome_display (
     title varchar,
     code varchar NOT NULL,
     permission_names varchar[],
+    row_restrictions jsonb DEFAULT '{}',
     table_view_include_columns varchar[],
     table_view_exclude_columns varchar[],
     detail_view_include_columns varchar[],
