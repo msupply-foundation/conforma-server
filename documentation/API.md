@@ -9,74 +9,32 @@ The back-end currently has two server instances which are launched to handle inc
 
 ---
 
-### Postgraphile server API:
+## Postgraphile server API:
 
-`http://localhost:5000/graphql`
+`http://localhost:5000/graphql` (in Development environment)  
+`http://localhost:5000/postgraphile/graphql` (in Production environment)
 
 Web-based GUI available at:  
-`http://localhost:5000/graphiql`
+`http://localhost:5000/graphiql` (development only)
 
 ---
 
-### Fastify server API
+## Fastify server API
 
-`http://localhost:8080`
+`http://localhost:8080` (In Development environment)
 
-#### File upload endpoint:
+### Authentication
 
-`/upload`
+Endpoints are divided into three group, as far as authentication goes:
 
-Usage: `POST` request with file(s) in the request `body` form-data:  
-`key: "file" value: <File(s)>`
+- **Public** -- no authentication required
+- **Authenticated** -- valid JWT for user required (including nonRegistered user)
+- **Admin** -- requires Admin permission (`isAdmin: true` in JWT)
 
-URL query paramter fields (optional):
+---
+### Public endpoints
 
-- `user_id`
-- `application_serial`
-- `application_response_id`
-
-e.g. `/upload?user=2&application_serial=3`
-
-Files are uploaded to `src/files` with their database table id appended to the filename (to ensure uniqueness).
-
-#### File download endpoint:
-
-`/file?id=XX`
-
-Usage: `GET` request with file database id as a URL query parameter.
-
-**To-do**: authentication/permission checks for file access.
-
-#### Check unique endpoint
-
-`/check-unique`
-
-Endpoint to check if an entity (e.g. username, email) is unique in the system. Needed because the front-end user won't have permission to query the full list of records, only ones they have permission for.
-
-Query parameters:
-
-- `type`: available options: `username`, `email`, `organisation`
-- `value`: the value being checked for uniqueness
-- `table`: the database table to check
-- `field`: the field in the above table to check
-
-Note that `table` and `field` are only required when `type` is not specified -- `type` is basically a table/field shorthand for "username", "email" and "organisation" checks; for any other checks, use `table` and `field`.
-
-Example request URL: `/check-unique/type=email&value=carl@sussol.net`
-
-Check is case-insensitive, so `user99` will return **Not Unique** if `User99` is in the database.
-
-Request will return an object, structured like so:
-
-```
-{
-  unique: true/false
-  message: "Type missing or invalid"/"Value not provided", or <empty string> if all okay
-}
-```
-
-There are basic unit tests for this endpoint. Run:  
-`yarn test src/server.test.ts`
+All are prefixed with `/api/public` e.g `http://localhost:8080/api/public/login`
 
 #### Login
 
@@ -124,6 +82,97 @@ Basic login endpoint that will also return (on success):
 }
 ```
 
+#### Get preferences endpoint:
+
+GET: `/get-prefs`
+
+Provides current preferences and language options for the current installation. Called by front-end at the very start of loading in order to configure the environment according to system settings.
+
+#### Get language endpoint:
+
+GET: `/language/<language-code>`
+
+e.g. `/language/en_nz` (the default language setting)
+
+Gets the set of localised strings for the core application (i.e. not customisable entities like templates).
+
+#### Verification endpoint
+
+GET: `/verify?uid=<uniqueid>`
+
+Sets the verification record at `<uniqueid>` to `true` and triggers configured Action. Used for verification via email, etc. See [Create Verification Action](List-of-Action-plugins.md) for more info.
+
+#### File download endpoint:
+
+GET: `/file?id=<uniqueId>`
+
+Usage: `GET` request with file database id as a URL query parameter.
+
+This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.
+---
+### Authenticated endpoints
+
+These are all prefixes with `/api`, e.g. `http://localhost:8080/api/login-org`
+
+They require a valid JWT supplied as a Bearer token in the authorization header of the request:
+
+```
+Authorization: Bearer <token>
+```
+
+#### File upload endpoint:
+
+POST: `/upload`
+
+Usage: `POST` request with file(s) in the request `body` form-data:  
+`key: "file" value: <File(s)>`
+
+URL query paramter fields (all optional):
+
+- `user_id`
+- `application_serial` (for associating files with their applications)
+- `application_response_id` (for specifying what response a file belongs to, useful for the file "clean-up" action)
+- `unique_id` (the randomly generated one should normally be sufficient)
+- `template_id` (to associate a file with a template, for example a carbone template doc)
+- `subfolder` (files are placed in subfolder based on the application_serial provided, but a specific subfolder can be defined instead (which over-rides the application subfolder))
+
+e.g. `/upload?user=2&application_serial=3`
+
+Files are uploaded to `src/files` with their database table id appended to the filename (to ensure uniqueness).
+
+#### Check unique endpoint
+
+GET: `/check-unique`
+
+Endpoint to check if an entity (e.g. username, email) is unique in the system. Needed because the front-end user won't have permission to query the full list of records, only ones they have permission for.
+
+Query parameters:
+
+- `type`: available options: `username`, `email`, `organisation`
+- `value`: the value being checked for uniqueness
+- `table`: the database table to check
+- `field`: the field in the above table to check
+
+Note that `table` and `field` are only required when `type` is not specified -- `type` is basically a table/field shorthand for "username", "email" and "organisation" checks; for any other checks, use `table` and `field`.
+
+Example request URL: `/check-unique/type=email&value=carl@sussol.net`
+
+Check is case-insensitive, so `user99` will return **Not Unique** if `User99` is in the database.
+
+Request will return an object, structured like so:
+
+```
+{
+  unique: true/false
+  message: "Type missing or invalid"/"Value not provided", or <empty string> if all okay
+}
+```
+
+There are basic unit tests for this endpoint. Run:  
+`yarn test src/server.test.ts`
+
+
+
 #### Login Organisation
 
 POST: `/login-org`
@@ -144,15 +193,49 @@ End point to get user permission and info based on JWT token.
 
 If JWT is invalid or is missing 'nonRegistered' user info will be returned.
 
-##### REQUEST Headers:
-
-```
-Authorization: Bearer ${token}
-```
-
 ##### RESPONSE Body:
 
 The same as login endpoint, without the success field
+
+#### Generate PDF
+
+POST: `/generate-pdf`
+
+Endpoint to generate PDF files based on a [Carbone template](https://carbone.io/api-reference.html).
+
+**Parameters** (as body JSON):
+
+- `fileId` -- uniqueId of the carbone template file (from the "file" table)
+- `data` -- object containing all the data to be used for substitutions in the carbone template
+- `userId` / `applicationSerial` / `templateId` -- not required, but will be added to the resulting "file" record of the generated document. Note: it is not recommended to add `templateId` to files generated for applications; it should be reserved for files directly associated with templates, such as carbone document templates.
+- `subfolder` -- will save output file into a subfolder if `applicationSerial` is not supplied
+
+The return object contains:
+
+```
+{ uniqueId, filename, filePath }
+```
+
+The internal function called by this endpoint is the same one run by the ["generateDoc" action](List-of-Action-plugins.md).
+
+### Outcomes
+
+GET:
+`/outcomes`
+`/outcomes/table/<tableName>`
+`/outcomes/table/<tableName>/item/<id>`
+
+For displaying Outcome data (e.g. Users, Products, Orgs). User's JWT determines what they are allowed to see, and data is returned accordingly.
+
+Please see [Outcomes Display](Outcomes-Display.md) for more info.
+
+---
+
+### Admin only endpoints
+
+These are all prefixed with `/api/admin/` e..g `http://localhost:8080/api/admin/updateRowPolicies`
+
+They require a valid JWT with the `isAdmin` field set to `true` (which means user has "Admin" permissions)
 
 #### Update row level policies
 
@@ -222,29 +305,19 @@ returns:
 }
 ```
 
-#### Generate PDF
+#### Snapshot endpoints
 
-POST: `/generate-pdf`
+- GET: `/snapshots/list`
+- POST: `/snapshots/take`
+- POST: `/snapshots/use`
+- POST: `/snapshots/upload`
+- POST: `/snapshots/delete`
 
-Endpoint to generate PDF files based on a [Carbone template](https://carbone.io/api-reference.html).
+See [Snapshot documentation](Snapshots.md) for more info
 
-**Parameters** (as body JSON):
+#### Lookup table endpoints
 
-- `fileId` -- uniqueId of the carbone template file (from the "file" table)
-- `data` -- object containing all the data to be used for substitutions in the carbone template
-- `userId` / `applicationSerial` / `templateId` -- not required, but will be added to the resulting "file" record of the generated document. Note: it is not recommended to add `templateId` to files generated for applications; it should be reserved for files directly associated with templates, such as carbone document templates.
-- `subfolder` -- will save output file into a subfolder if `applicationSerial` is not supplied
+- POST: `/lookup-table/import`
+- GET: `/lookup-table/export`
 
-The return object contains:
-
-```
-{ uniqueId, filename, filePath }
-```
-
-The internal function called by this endpoint is the same one run by the ["generateDoc" action](List-of-Action).
-
----
-
-**To-do**: authorisation of some sort (use JWT, and some way to define ADMIN user, maybe boolean on permission_policy)
-
-**To-do**: fine grained change vs dropping all and reinstating them
+See [Lookup table documentation](Lookup-Tables.md) for more info
