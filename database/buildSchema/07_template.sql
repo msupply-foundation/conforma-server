@@ -47,7 +47,7 @@ $template_event$
 LANGUAGE plpgsql;
 
 -- FUNCTION to make sure duplicated templates have 'DRAFT' status
---   but only if there are no other versions with 'AVAILABLE' status
+--   but only if there is another version with 'AVAILABLE' status
 CREATE OR REPLACE FUNCTION public.set_template_to_draft ()
     RETURNS TRIGGER
     AS $template_event$
