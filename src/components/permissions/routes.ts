@@ -1,5 +1,5 @@
 import databaseConnect from '../databaseConnect'
-import { getUserInfo, getTokenData, extractJWTfromHeader } from './loginHelpers'
+import { getUserInfo, extractJWTfromHeader } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
@@ -58,8 +58,7 @@ Authenticates user and checks they belong to requested org (id). Returns:
 */
 const routeLoginOrg = async (request: any, reply: any) => {
   const { orgId, sessionId } = request.body
-  const token = extractJWTfromHeader(request)
-  const { userId, error } = await getTokenData(token)
+  const { userId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
   const userInfo = await getUserInfo({ userId, orgId, sessionId })
@@ -73,8 +72,7 @@ template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
   const { sessionId } = request.query
-  const token = extractJWTfromHeader(request)
-  const { userId, orgId, sessionId: returnSessionId, error } = await getTokenData(token)
+  const { userId, orgId, sessionId: returnSessionId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
   return reply.send({
@@ -84,12 +82,6 @@ const routeUserInfo = async (request: any, reply: any) => {
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
-  // const token = extractJWTfromHeader(request)
-  // const username = await getUsername(token)
-  // return reply.send(await getUserInfo(username))
-
-  // TO DO, check for admin
-
   // TODO, add parameters to only drop specific policies, for now drop and reinstante them all
 
   return reply.send(await updateRowPolicies())
@@ -130,6 +122,53 @@ const routeGetPrefs = async (request: any, reply: any) => {
   reply.send({ preferences: prefs.web, languageOptions })
 }
 
+// Unique name/email/organisation/other check
+const routecheckUnique = async (request: any, reply: any) => {
+  const { type, value, table, field } = request.query
+  if (value === '' || value === undefined) {
+    reply.send({
+      unique: false,
+      message: 'Value not provided',
+    })
+    return
+  }
+  let tableName, fieldName
+  switch (type) {
+    case 'username':
+      tableName = 'user'
+      fieldName = 'username'
+      break
+    case 'email':
+      tableName = 'user'
+      fieldName = 'email'
+      break
+    case 'organisation':
+      tableName = 'organisation'
+      fieldName = 'name'
+      break
+    default:
+      if (!table || !field) {
+        reply.send({
+          unique: false,
+          message: 'Type, table, or field missing or invalid',
+        })
+        return
+      } else {
+        tableName = table
+        fieldName = field
+      }
+  }
+  try {
+    const isUnique = await databaseConnect.isUnique(tableName, fieldName, value)
+    reply.send({
+      unique: isUnique,
+      message: '',
+    })
+  } catch (err) {
+    reply.send({ unique: false, message: err.message })
+  }
+}
+
 export {
   routeUserInfo,
   routeLogin,
@@ -138,4 +177,5 @@ export {
   routeCreateHash,
   routeVerification,
   routeGetPrefs,
+  routecheckUnique,
 }
