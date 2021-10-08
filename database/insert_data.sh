@@ -20,9 +20,3 @@ fi
 # Makes script wait until async node script has completed
 PID=$!
 wait $PID
-
-yarn ts-node ./database/updateRowPoliciesCLI.ts &
-
-# Makes script wait until async node script has completed
-PID=$!
-wait $PID
