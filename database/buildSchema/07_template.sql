@@ -47,6 +47,7 @@ $template_event$
 LANGUAGE plpgsql;
 
 -- FUNCTION to make sure duplicated templates have 'DRAFT' status
+--   but only if there is another version with 'AVAILABLE' status
 CREATE OR REPLACE FUNCTION public.set_template_to_draft ()
     RETURNS TRIGGER
     AS $template_event$
@@ -57,11 +58,32 @@ BEGIN
         FROM
             TEMPLATE
         WHERE
-            id != NEW.id AND code = NEW.code) > 0 THEN
+            id != NEW.id AND code = NEW.code AND status = 'AVAILABLE') > 0 THEN
         NEW.status = 'DRAFT';
     END IF;
     RETURN NEW;
 END
+$template_event$
+LANGUAGE plpgsql;
+
+-- FUNCTION to set 'AVAILABLE' version of template to 'DISABLED'
+-- when another is set to 'AVAILABLE'
+CREATE OR REPLACE FUNCTION public.template_status_update ()
+    RETURNS TRIGGER
+    AS $template_event$
+BEGIN
+    IF (NEW.status = 'AVAILABLE') THEN
+        UPDATE
+            public.template
+        SET
+            status = 'DISABLED'
+        WHERE
+            code = NEW.code
+            AND status = 'AVAILABLE'
+            AND id != NEW.id;
+    END IF;
+    RETURN NULL;
+END;
 $template_event$
 LANGUAGE plpgsql;
 
@@ -75,4 +97,12 @@ CREATE TRIGGER set_template_version_trigger
 CREATE TRIGGER set_template_to_draft_trigger
     BEFORE INSERT ON public.template
     FOR EACH ROW
-    EXECUTE FUNCTION public.set_template_to_draft ()
+    EXECUTE FUNCTION public.set_template_to_draft ();
+
+-- TRIGGER to ensure only one template version can be 'AVAILABLE'
+CREATE TRIGGER template_status_update_trigger
+    AFTER UPDATE OF status ON public.template
+    FOR EACH ROW
+    WHEN (NEW.status = 'AVAILABLE')
+    EXECUTE FUNCTION public.template_status_update ();
+
