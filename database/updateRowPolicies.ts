@@ -1,6 +1,14 @@
 import fetch from 'node-fetch'
-import { getAdminJWT } from '../src/components/permissions/loginHelpers'
 import config from '../src/config'
+import { sign } from 'jsonwebtoken'
+import { promisify } from 'util'
+import { baseJWT } from '../src/components/permissions/rowLevelPolicyHelpers'
+
+const signPromise: any = promisify(sign)
+
+const getAdminJWT = async () => {
+  return await signPromise({ ...baseJWT, isAdmin: true, role: 'postgres' }, config.jwtSecret)
+}
 
 async function updateRowPolicies() {
   console.log('updating row level policies ... ')
@@ -19,6 +27,7 @@ async function updateRowPolicies() {
   }
 
   console.log('updating row level policies ... done')
+  process.exit(0)
 }
 
 export default updateRowPolicies
