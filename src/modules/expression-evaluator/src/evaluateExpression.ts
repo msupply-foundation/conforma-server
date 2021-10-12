@@ -113,13 +113,21 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
     case 'POST':
     case 'GET':
     case 'API':
+      const { APIfetch } = params
       const isPostRequest = inputQuery.operator === 'POST'
-      let urlWithQuery, returnedProperty, requestBody
+      let urlWithQuery, returnedProperty, requestBody, headers
       try {
-        const { url, fieldNames, values, returnProperty } = assignChildNodesToQuery([
+        const {
+          url,
+          headers: queryHeaders,
+          fieldNames,
+          values,
+          returnProperty,
+        } = assignChildNodesToQuery([
           '', // Extra unused field for GET/POST (query)
           ...childrenResolved,
         ])
+        headers = queryHeaders ?? params?.headers
         returnedProperty = returnProperty
         urlWithQuery =
           fieldNames.length > 0
@@ -136,11 +144,12 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
         data = isPostRequest
           ? await fetchAPIrequest({
               url: urlWithQuery,
-              APIfetch: params.APIfetch,
+              APIfetch,
               method: 'POST',
               body: requestBody,
+              headers,
             })
-          : await fetchAPIrequest({ url: urlWithQuery, APIfetch: params.APIfetch })
+          : await fetchAPIrequest({ url: urlWithQuery, APIfetch, headers })
       } catch {
         throw new Error('Problem with API call')
       }
@@ -156,7 +165,8 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
 
     case 'graphQL':
       if (!params.graphQLConnection) throw new Error('No GraphQL database connection provided')
-      return processGraphQL(childrenResolved, params.graphQLConnection)
+      const gqlHeaders = params?.headers ?? params.graphQLConnection.headers
+      return processGraphQL(childrenResolved, params.graphQLConnection, gqlHeaders)
 
     case 'buildObject':
       return buildObject(inputQuery as BuildObjectQuery, evaluationExpressionInstance)
@@ -212,11 +222,23 @@ async function processPgSQL(queryArray: any[], queryType: string, connection: IC
  * @param connection
  *   - fetch: Method used for fetching (front-end bind to browser)
  */
-async function processGraphQL(queryArray: any[], connection: IGraphQLConnection) {
+async function processGraphQL(
+  queryArray: any[],
+  connection: IGraphQLConnection,
+  gqlHeaders: { [key: string]: string } = {}
+) {
   try {
-    const { url, query, fieldNames, values, returnProperty } = assignChildNodesToQuery(queryArray)
+    const {
+      url,
+      headers: queryHeaders,
+      query,
+      fieldNames,
+      values,
+      returnProperty,
+    } = assignChildNodesToQuery(queryArray)
     const variables = zipArraysToObject(fieldNames, values)
-    const data = await graphQLquery(url, query, variables, connection)
+    const headers = queryHeaders ?? gqlHeaders
+    const data = await graphQLquery(url, query, variables, connection, headers)
     if (!data) throw new Error('GraphQL query problem')
     try {
       return extractAndSimplify(data, returnProperty, "GraphQL - Can't resolve node")
@@ -224,7 +246,7 @@ async function processGraphQL(queryArray: any[], connection: IGraphQLConnection)
       throw new Error('GraphQL -- unable to retrieve node')
     }
   } catch (err) {
-    throw new Error('GraphQL problem')
+    throw new Error(err.message)
   }
 }
 
@@ -245,14 +267,19 @@ const extractAndSimplify = (
 const assignChildNodesToQuery = (childNodes: any[]) => {
   const skipFields = 3 // skip query, url and fieldNames
   const query: string = childNodes[0]
-  const url: string = childNodes[1]
+  let url: string
+  let headers: { [key: string]: string } | null = null
+  if (typeof childNodes[1] === 'object') {
+    url = childNodes[1].url
+    headers = childNodes[1].headers
+  } else url = childNodes[1]
   const fieldNames: string[] = childNodes[2]
 
   const lastFieldIndex = fieldNames.length + skipFields
   const values: string[] = childNodes.slice(skipFields, lastFieldIndex)
   const returnProperty: string = childNodes[lastFieldIndex]
 
-  return { url, query, fieldNames, values, returnProperty }
+  return { url, headers, query, fieldNames, values, returnProperty }
 }
 
 // Build an object from an array of field names and an array of values
@@ -294,7 +321,8 @@ const graphQLquery = async (
   url: string,
   query: string,
   variables: object,
-  connection: IGraphQLConnection
+  connection: IGraphQLConnection,
+  headers: { [key: string]: string }
 ) => {
   // Get an external endpoint to use, or get the default GraphQL endpoint if received:
   // "graphqlendpoint" (case insensitive), an empty string "" or null
@@ -308,6 +336,7 @@ const graphQLquery = async (
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
+      ...headers,
     },
     body: JSON.stringify({
       query: query,
@@ -315,6 +344,10 @@ const graphQLquery = async (
     }),
   })
   const data = await queryResult.json()
+  if (data?.errors) {
+    const errorMessage = data.errors[0].message
+    throw new Error(errorMessage)
+  }
   return data.data
 }
 
@@ -323,14 +356,22 @@ interface APIrequestProps {
   APIfetch: any
   method?: 'GET' | 'POST'
   body?: { [key: string]: string } | null
+  headers?: { [key: string]: string }
 }
 
 // GET/POST request using fetch (node or browser variety)
-const fetchAPIrequest = async ({ url, APIfetch, method = 'GET', body }: APIrequestProps) => {
+const fetchAPIrequest = async ({
+  url,
+  APIfetch,
+  method = 'GET',
+  body,
+  headers = {},
+}: APIrequestProps) => {
   const result = await APIfetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
+      ...headers,
     },
     body: JSON.stringify(body),
   })

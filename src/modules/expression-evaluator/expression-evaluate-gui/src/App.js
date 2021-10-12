@@ -52,6 +52,7 @@ function App() {
   )
   const [objects, setObjects] = useState()
   const [isObjectsValid, setIsObjectsValid] = useState(true)
+  const [jwtToken, setJwtToken] = useState(localStorage.getItem('JWT'))
   const [strictJSONInput, setStrictJSONInput] = useState(false)
   const [strictJSONObjInput, setStrictJSONObjInput] = useState(false)
   const [evaluatorSelection, setEvaluatorSelection] = useState(
@@ -73,11 +74,13 @@ function App() {
     } catch {
       cleanInput = { value: '< Invalid input >' }
     }
+    const headers = jwtToken ? { Authorization: 'Bearer ' + jwtToken } : {}
     evaluate(cleanInput, {
       objects: objects,
       pgConnection: pgInterface,
       graphQLConnection: { fetch: fetchNative, endpoint: graphQLendpoint },
       APIfetch: fetchNative,
+      headers,
     })
       .then((res) => {
         const output = typeof res === 'object' ? JSON.stringify(res, null, 2) : String(res)
@@ -89,7 +92,7 @@ function App() {
         setResultType('error')
       })
     localStorage.setItem('inputText', input)
-  }, [input, objectsInput, objects, evaluatorSelection])
+  }, [input, objectsInput, objects, evaluatorSelection, jwtToken])
 
   // Try and turn object(s) input string into object array
   useEffect(() => {
@@ -115,6 +118,11 @@ function App() {
 
   const handleObjectsChange = (event) => {
     setObjectsInput(event.target.value)
+  }
+
+  const handleJWTChange = (event) => {
+    setJwtToken(event.target.value)
+    localStorage.setItem('JWT', event.target.value)
   }
 
   const handleSelect = (event) => {
@@ -224,16 +232,29 @@ function App() {
           multiline
           fullWidth
           spellCheck="false"
-          rows={30}
+          rows={21}
           value={objectsInput}
           variant="outlined"
           onChange={handleObjectsChange}
         />
-        {!isObjectsValid && (
-          <Typography className="invalid-warning" style={{ color: 'red' }}>
-            Invalid object input
-          </Typography>
-        )}
+        <Typography className="invalid-warning" style={{ color: 'red' }}>
+          {!isObjectsValid ? 'Invalid object input' : ''}
+        </Typography>
+        <TextField
+          className={classes.margin}
+          id="jwt-input"
+          label="JWT Token"
+          InputProps={{
+            classes: { input: classes.textField },
+          }}
+          multiline
+          fullWidth
+          spellCheck="false"
+          rows={5}
+          value={jwtToken}
+          variant="outlined"
+          onChange={handleJWTChange}
+        />
       </Grid>
       <Grid item xs className={classes.margin}>
         <h1>Input</h1>
