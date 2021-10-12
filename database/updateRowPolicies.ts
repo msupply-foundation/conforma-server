@@ -2,7 +2,7 @@ import fetch from 'node-fetch'
 import config from '../src/config'
 import { sign } from 'jsonwebtoken'
 import { promisify } from 'util'
-import { baseJWT } from '../src/components/permissions/rowLevelPolicyHelpers'
+const baseJWT = { aud: 'postgraphile' }
 
 const signPromise: any = promisify(sign)
 
@@ -27,7 +27,6 @@ async function updateRowPolicies() {
   }
 
   console.log('updating row level policies ... done')
-  process.exit(0)
 }
 
 export default updateRowPolicies
