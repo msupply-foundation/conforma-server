@@ -181,22 +181,19 @@ sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/server
 sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/graphile.log
 ```
 
-### Stop or remove
-
-```bash
-# to stop
-PORT_APP=8000 PORT_DASH=8001 sudo docker-compose -E --project-name 'mflow-on-8000' stop
-# to remove (when new version is out)
-PORT_APP=8000 PORT_DASH=8001 sudo docker-compose -E --project-name 'mflow-on-8000' down
-```
-
-Note: the variables at the start of those commands (PORT_APP, etc) are not actually required for the command, but they're needed to that the .yml file has suitable substitutions, otherwise it will be interpreted as "invalid".
-
 ## To restart an instance
 
-- Run `sudo docker stop <name>` (name from above, or can use container id)
-- Remove container: `sudo docker rm <name>`
-- Re-run as above. Note: this resets the container to initial state, including database reset. If you want to preserve existing data, you’ll need to take a snapshot first, then reload after restart.
+In case you don't want to use the existing database previously set on that instance, you need to stop and remove the resouces by doing this:
+
+- Run `sudo docker stop <name>`
+  - name from above (plus `_app_1` e.g.: `mflow-on-8000_app_1`)
+  - or can use container id. e.g.: `sudo docker stop 030f8b82814b`
+- Remove container: `sudo docker rm <name>` or remove the folder on `demo_server` (e.g `sudo rm -rf app_postgres_on_port_8000`)
+
+- Now re-run the instance changing the ports accordingly to the instance you need to re-launch:
+  `PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'mflow-on-8000' up -d`
+
+Note: this resets the container to initial state, including database reset. If you want to preserve existing data, you’ll need to take a snapshot first, then reload after restart.
 
 ### Other image/container commands
 
