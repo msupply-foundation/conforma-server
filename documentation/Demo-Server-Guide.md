@@ -69,6 +69,7 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
   - name
   - port 8000
   - WEB_HOST url
+  - JWT_SECRET (this can be any random string, but should be a decent length, say > 24 alphanumeric characters. There's no need to record this key anywhere, as it can change anytime -- that just means existing JWTs become invalid, so users will need to re-login)
 
   The system will be launched with “basic_snapshot” data. Upload and run a new snapshot as required
 
