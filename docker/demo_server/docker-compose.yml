@@ -11,6 +11,7 @@ services:
     environment:
       SMTP_PASSWORD: '${SMTP_SECRET}'
       WEB_HOST: '${WEB_URL}'
+      JWT_SECRET: '${JWT_SECRET}'
     volumes:
       - ./app_postgres_on_port_${PORT_APP}:/var/lib/postgresql/12/main/
       - ./app_snapshots_on_port_${PORT_APP}:/usr/src/application-manager-server/build/database/_snapshots

@@ -20,7 +20,7 @@ Example: While working on develop make a quick branch `test-demo-2021-09-01` and
 
 - Edit `run.sh`
   - include correct `SMTP_PASSWORD`(from Bitwarden or your personal .env file)
-  - Change test build to name of image created
+  - Change test build to name and tag of image created
 - Run it: `./run.sh`
 
 ## Upload to Docker hub
@@ -63,12 +63,13 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
   `sudo docker pull <full-image-name>`
   Example: `sudo docker pull msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14`
 - Run image:  
-  `sudo docker run -dti -p 8000:3000 -e 'SMTP_PASSWORD=<password>' -e 'WEB_HOST=https://irims-demo.msupply.org:50000' --name mflow-demo-on-8000 msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14`  
+  `sudo docker run -dti -p 8000:3000 -e 'SMTP_PASSWORD=<password>' -e 'WEB_HOST=https://irims-demo.msupply.org:50000' -e 'JWT_SECRET=<some-random-secret>' --name mflow-demo-on-8000 msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14`  
    This will launch one instance. To launch other instances in their own container, run the same command, but change:
 
   - name
   - port 8000
   - WEB_HOST url
+  - JWT_SECRET (this can be any random string, but should be a decent length, say > 24 alphanumeric characters. There's no need to record this key anywhere, as it can change anytime -- that just means existing JWTs become invalid, so users will need to re-login)
 
   The system will be launched with “basic_snapshot” data. Upload and run a new snapshot as required
 
@@ -160,6 +161,7 @@ sudo chown 472 grafana_on_port_8009
 export TAG='front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14'
 export SMTP_SECRET='add_smtp_secret_here'
 export WEB_URL='https://irims-demo.msupply.org:<replace port>'
+export JWT_SECRET='random private key'
 
 # -d is for detached, if you want to see all output then start without -d
 PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'mflow-on-8000' up -d
