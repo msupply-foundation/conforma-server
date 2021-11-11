@@ -5,7 +5,7 @@
 docker run \
     -ti \
     -p 3000:3000 \
-    -e 'SMTP_PASSWORD=smtp_password_goes_here' \
+    -e 'SMTP_PASSWORD=smtp_password_goes_here' -e 'WEB_HOST=http://localhost:3000' \
     testbuild
 
 # -ti -> interactive (connect to shell on startup)
