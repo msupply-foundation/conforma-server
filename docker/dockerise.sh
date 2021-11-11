@@ -16,6 +16,7 @@ IMAGE_TAG="front-${WEB_APP_BRANCH}_back-${SERVER_BRANCH}_pg-${POSTGRES_VERSION}_
 echo "building image: ${IMAGE_TAG}"
 
 docker build \
+   --no-cache \
    --progress plain \
    -t "${IMAGE_NAME}:${IMAGE_TAG}" \
    --build-arg SERVER_BRANCH="$SERVER_BRANCH" \
