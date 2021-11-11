@@ -41,6 +41,7 @@ const getDatabaseInfo = async () => {
       const isGenerated = is_generated === 'ALWAYS'
       const isEnum = data_type === 'USER-DEFINED'
       const isJson = data_type === 'jsonb'
+      const isJsonArray = data_type === 'ARRAY' && sub_data_type === 'jsonb'
       const isEnumArray = data_type === 'ARRAY' && sub_data_type === 'USER-DEFINED'
 
       const fkTableName = camelCase(fk_to_table_name || '')
@@ -52,6 +53,7 @@ const getDatabaseInfo = async () => {
         isGenerated,
         isReference,
         isEnum,
+        isJsonArray,
         isJson,
         isEnumArray,
         reference: !isReference

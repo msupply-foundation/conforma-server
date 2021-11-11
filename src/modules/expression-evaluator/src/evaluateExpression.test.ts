@@ -3,6 +3,7 @@
 import evaluateExpression from './evaluateExpression'
 import { testData } from './evaluateExpressionTestData'
 import config from './config.json'
+import secrets from './testSecrets.json'
 
 const { Client } = require('pg')
 
@@ -404,8 +405,20 @@ test('String substitution - some parameters empty strings', () => {
 test('GET: Check username is unique', () => {
   return evaluateExpression(testData.APIisUnique, {
     APIfetch: fetch,
+    headers: {
+      Authorization: secrets.nonRegisteredAuth,
+    },
   }).then((result: any) => {
     expect(result).toEqual({ unique: true, message: '' })
+  })
+})
+
+test('GET: Check username is unique using custom query authentication', () => {
+  return evaluateExpression(testData.APIisUniqueWithHeaders, {
+    objects: { secrets },
+    APIfetch: fetch,
+  }).then((result: any) => {
+    expect(result).toEqual({ unique: false, message: '' })
   })
 })
 
@@ -447,7 +460,7 @@ test('POST: Check user login credentials', () => {
 test('Test Postgres lookup single string', () => {
   return evaluateExpression(testData.getApplicationName, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toBe('Test Review -- Vitamin C')
+      expect(result).toBe('Company License -- Modern medicines or Medical devices - S-GZY-0010')
     }
   )
 })
@@ -456,13 +469,11 @@ test('Test Postgres get array of template names', () => {
   return evaluateExpression(testData.getListOfTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
       expect(result).toEqual([
-        'Edit User Details',
         'User Registration',
-        'Demo -- Feature Showcase',
-        'Company Registration',
-        'Test -- Review Process',
-        'Drug Registration - General Medicines Procedure',
-        'Join Company',
+        'Edit User Details',
+        'Grant User Permissions',
+        'Add User to Company',
+        'Company License -- Modern medicines or Medical devices',
       ])
     }
   )
@@ -471,7 +482,7 @@ test('Test Postgres get array of template names', () => {
 test('Test Postgres get Count of templates', () => {
   return evaluateExpression(testData.countTemplates, { pgConnection: pgConnect }).then(
     (result: any) => {
-      expect(result).toEqual(7)
+      expect(result).toEqual(24)
     }
   )
 })
@@ -480,13 +491,11 @@ test('Test Postgres get template names -- no type', () => {
   return evaluateExpression(testData.getListOfTemplates_noType, { pgConnection: pgConnect }).then(
     (result: any) => {
       expect(result).toEqual([
-        { name: 'Edit User Details' },
         { name: 'User Registration' },
-        { name: 'Demo -- Feature Showcase' },
-        { name: 'Company Registration' },
-        { name: 'Test -- Review Process' },
-        { name: 'Drug Registration - General Medicines Procedure' },
-        { name: 'Join Company' },
+        { name: 'Edit User Details' },
+        { name: 'Grant User Permissions' },
+        { name: 'Add User to Company' },
+        { name: 'Company License -- Modern medicines or Medical devices' },
       ])
     }
   )
@@ -497,12 +506,11 @@ test('Test Postgres get application list with IDs', () => {
     pgConnection: pgConnect,
   }).then((result: any) => {
     expect(result).toEqual([
-      { id: 4000, name: 'Test Review -- Vitamin C' },
-      { id: 4001, name: 'Test Review -- Vitamin B' },
-      { id: 4002, name: 'Test Review -- Amoxicillin' },
-      { id: 4003, name: 'Test Review -- Ibuprofen' },
-      { id: 4004, name: 'Test Review -- Paracetamol' },
-      { id: 4005, name: 'Test Review -- Oxygen' },
+      { id: 18, name: 'Company License -- Modern medicines or Medical devices - S-GZY-0010' },
+      { id: 22, name: 'Company Registration - S-ECL-0011' },
+      { id: 23, name: 'Product Registration - S-WJY-0006' },
+      { id: 26, name: 'Company Registration - Pharma123' },
+      { id: 27, name: 'Company Registration - Holistic Medicine AU' },
     ])
   })
 })
@@ -515,8 +523,23 @@ test('Test GraphQL -- get single application name', () => {
       fetch: fetch,
       endpoint: graphQLendpoint,
     },
+    headers: {
+      Authorization: secrets.adminAuth,
+    },
   }).then((result: any) => {
-    expect(result).toEqual('Test Review -- Vitamin C')
+    expect(result).toEqual('Company Registration - S-ECL-0011')
+  })
+})
+
+test('Test GraphQL -- get single application name with custom query authorization', () => {
+  return evaluateExpression(testData.simpleGraphQLCustomHeader, {
+    objects: { secrets },
+    graphQLConnection: {
+      fetch: fetch,
+      endpoint: graphQLendpoint,
+    },
+  }).then((result: any) => {
+    expect(result).toEqual('Company Registration - S-ECL-0011')
   })
 })
 
@@ -525,15 +548,15 @@ test('Test GraphQL -- List of Application Names', () => {
     graphQLConnection: {
       fetch: fetch,
       endpoint: graphQLendpoint,
+      headers: {
+        Authorization: secrets.adminAuth,
+      },
     },
   }).then((result: any) => {
     expect(result).toEqual([
-      'Test Review -- Vitamin C',
-      'Test Review -- Vitamin B',
-      'Test Review -- Amoxicillin',
-      'Test Review -- Ibuprofen',
-      'Test Review -- Paracetamol',
-      'Test Review -- Oxygen',
+      'Company Registration - Advance Phamaceutical Manufacturing',
+      'Company Registration - Bayer (Pty) Ltd',
+      'Company Registration - Novartis Spain',
     ])
   })
 })
@@ -543,15 +566,15 @@ test('Test GraphQL -- List of Application Names with Ids', () => {
     graphQLConnection: {
       fetch: fetch,
       endpoint: graphQLendpoint,
+      headers: {
+        Authorization: secrets.adminAuth,
+      },
     },
   }).then((result: any) => {
     expect(result).toEqual([
-      { id: 4000, name: 'Test Review -- Vitamin C' },
-      { id: 4001, name: 'Test Review -- Vitamin B' },
-      { id: 4002, name: 'Test Review -- Amoxicillin' },
-      { id: 4003, name: 'Test Review -- Ibuprofen' },
-      { id: 4004, name: 'Test Review -- Paracetamol' },
-      { id: 4005, name: 'Test Review -- Oxygen' },
+      { id: 45, name: 'Product Registration - S-LZU-0014' },
+      { id: 46, name: 'Company License -- Modern medicines or Medical devices - S-MTC-0013' },
+      { id: 47, name: 'Product Registration - Epivir 150 mg film-coated tablet' },
     ])
   })
 })
@@ -562,17 +585,23 @@ test('Test GraphQL -- Get list of templates -- no return node specifed', () => {
       fetch: fetch,
       endpoint: graphQLendpoint,
     },
+    headers: {
+      Authorization: secrets.adminAuth,
+    },
   }).then((result: any) => {
     expect(result).toEqual({
       templates: {
         edges: [
-          { node: { name: 'Edit User Details' } },
-          { node: { name: 'User Registration' } },
-          { node: { name: 'Demo -- Feature Showcase' } },
-          { node: { name: 'Company Registration' } },
-          { node: { name: 'Test -- Review Process' } },
-          { node: { name: 'Drug Registration - General Medicines Procedure' } },
-          { node: { name: 'Join Company' } },
+          {
+            node: {
+              name: 'Product Registration',
+            },
+          },
+          {
+            node: {
+              name: 'Company Registration',
+            },
+          },
         ],
       },
     })
@@ -586,19 +615,7 @@ test('Test GraphQL -- Count templates -- passing params as object option', () =>
       endpoint: graphQLendpoint,
     },
   }).then((result: any) => {
-    expect(result).toEqual(7)
-  })
-})
-
-test('Test GraphQL -- count Sections on current Application', () => {
-  return evaluateExpression(testData.GraphQL_CountApplicationSections, {
-    objects: { application: testData.application },
-    graphQLConnection: {
-      fetch: fetch,
-      endpoint: graphQLendpoint,
-    },
-  }).then((result: any) => {
-    expect(result).toEqual(2)
+    expect(result).toEqual(24)
   })
 })
 
@@ -609,8 +626,11 @@ test('Test GraphQL -- count Responses on current Application - using empty url (
       fetch: fetch,
       endpoint: graphQLendpoint,
     },
+    headers: {
+      Authorization: secrets.adminAuth,
+    },
   }).then((result: any) => {
-    expect(result).toEqual(10)
+    expect(result).toEqual(20)
   })
 })
 
@@ -647,8 +667,6 @@ test('Test GraphQL -- Check result of field can be null', () => {
   })
 })
 
-// TO-DO: Test with multiple variables and dynamic values
-
 // More complex combinations
 
 test('Test concatenate user First and Last names', () => {
@@ -675,6 +693,9 @@ test('Test email validation -- email is unique and is valid email', () => {
   return evaluateExpression(testData.emailValidation, {
     objects: { form: testData.form },
     APIfetch: fetch,
+    headers: {
+      Authorization: secrets.nonRegisteredAuth,
+    },
   }).then((result: any) => {
     expect(result).toBe(true)
   })
@@ -688,16 +709,6 @@ test('Test visibility condition -- Answer to Q1 is Drug Registration and user be
     expect(result).toBe(true)
   })
 })
-
-// The following need more data in database and schema refinements before they can be implemented:
-
-// test('Test Trigger condition -- Stage = 1 (Screening) and All Questions are approved', () => {
-//   return evaluateExpression(testData.complex2, {
-//     application: testData.application,
-//   }).then((result: any) => {
-//     expect(result).toBe(true);
-//   });
-// });
 
 // Non-standard input expressions
 

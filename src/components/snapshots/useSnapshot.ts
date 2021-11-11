@@ -4,7 +4,7 @@ import path from 'path'
 import { execSync } from 'child_process'
 import insertData from '../../../database/insertData'
 import updateRowPolicies from '../../../database/updateRowPolicies'
-import { SnapshotOperation, ExportAndImportOptions } from '../exportAndImport/types'
+import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
 import importFromJson from '../exportAndImport/importFromJson'
 
 import {
@@ -16,6 +16,8 @@ import {
   ROOT_FOLDER,
   SNAPSHOT_FOLDER,
   SNAPSHOT_OPTIONS_FOLDER,
+  LOCALISATION_FOLDER,
+  PREFERENCES_FILE,
 } from './constants'
 
 const useSnapshot: SnapshotOperation = async ({
@@ -35,14 +37,40 @@ const useSnapshot: SnapshotOperation = async ({
     const snapshotObject = JSON.parse(snapshotRaw)
 
     if (options.shouldReInitialise) {
-      await initiliseDatabase(options, snapshotFolder)
+      await initialiseDatabase(options, snapshotFolder)
     }
 
-    copyFiles(snapshotFolder)
+    if (options.resetFiles) {
+      execSync(`rm -rf ${FILES_FOLDER}/*`)
+    }
 
     console.log('inserting from snapshot ... ')
-    await importFromJson(snapshotObject, options, options.shouldReInitialise)
+    const insertedRecords = await importFromJson(
+      snapshotObject,
+      options,
+      options.shouldReInitialise
+    )
     console.log('inserting from snapshot ... done')
+
+    await copyFiles(snapshotFolder, insertedRecords.file)
+
+    // Import localisations
+    if (options?.includeLocalisation) {
+      try {
+        execSync(`cp -r  '${snapshotFolder}/localisation/' '${LOCALISATION_FOLDER}/' `)
+      } catch (e) {
+        console.log("Couldn't import localisations")
+      }
+    }
+
+    // Import preferences
+    if (options?.includePrefs) {
+      try {
+        execSync(`cp '${snapshotFolder}/preferences.json' '${PREFERENCES_FILE}'`)
+      } catch (e) {
+        console.log("Couldn't import preferences")
+      }
+    }
 
     // Update serials
     console.log('running serial update ... ')
@@ -63,6 +91,15 @@ const useSnapshot: SnapshotOperation = async ({
     return { success: false, message: 'error while loading snapshot', error: e.toString() }
   }
 }
+
+const convertDeprecated = (options: ExportAndImportOptions) => {
+  // see comment in ExportAndImportOptions type
+  return {
+    ...options,
+    skipTableOnInsertFail: options.skipTableOnInsertFail || options.tablesToUpdateOnInsertFail,
+  }
+}
+
 const getOptions = async (
   snapshotFolder: string,
   optionsName?: string,
@@ -70,7 +107,7 @@ const getOptions = async (
 ) => {
   if (options) {
     console.log('use options passed as a parameter')
-    return options
+    return convertDeprecated(options)
   }
   let optionsFile = path.join(snapshotFolder, `${OPTIONS_FILE_NAME}.json`)
 
@@ -80,10 +117,10 @@ const getOptions = async (
     encoding: 'utf-8',
   })
 
-  return JSON.parse(optionsRaw) as ExportAndImportOptions
+  return convertDeprecated(JSON.parse(optionsRaw) as ExportAndImportOptions)
 }
 
-const initiliseDatabase = async (
+const initialiseDatabase = async (
   { insertScriptsLocale, includeInsertScripts, excludeInsertScripts }: ExportAndImportOptions,
   snapshotFolder: string
 ) => {
@@ -96,7 +133,13 @@ const initiliseDatabase = async (
   const diffFile = path.join(snapshotFolder, `${PG_SCHEMA_DIFF_FILE_NAME}.sql`)
   if (fsSync.existsSync(diffFile)) {
     console.log('adding changes to schema ... ')
-    execSync(`psql -U postgres -q -b -d ${databaseName} -f "${diffFile}"`, { cwd: ROOT_FOLDER })
+
+    let dbPatch = `psql -v -U postgres -q -b -d ${databaseName} -f "${diffFile}"`
+
+    // run db patch twice (in silenced error mode), to make sure references that were not met the first time will be met the second time
+    execSync(dbPatch, { cwd: ROOT_FOLDER })
+    execSync(dbPatch, { cwd: ROOT_FOLDER })
+
     console.log('adding changes to schema ... done')
   }
 
@@ -105,15 +148,44 @@ const initiliseDatabase = async (
   console.log('inserting core data ... done')
 }
 
-const copyFiles = (snapshotFolder: string) => {
-  console.log('copying files ...')
-  // -p = no error if exists
-  execSync(`mkdir -p ${FILES_FOLDER}`)
+export const getDirectoryFromPath = (filePath: string) => {
+  const [_, ...directory] = filePath.split('/').reverse()
+  return directory.join('/')
+}
+// Get base files (thumbnails)
+export const getBaseFiles = async (filesFolder: string) => {
   try {
-    execSync(`cp -R ${snapshotFolder}/files/* ${FILES_FOLDER}`)
-    console.log('copying files ... done')
+    let dirents = await fs.readdir(filesFolder, {
+      encoding: 'utf-8',
+      withFileTypes: true,
+    })
+    return dirents
+      .filter((dirent) => !dirent.isDirectory() && !dirent.name.startsWith('.'))
+      .map((dirent) => dirent.name)
   } catch {
-    console.log('No files to copy')
+    return []
+  }
+}
+
+const copyFiles = async (snapshotFolder: string, fileRecords: ObjectRecord[] = []) => {
+  // copy only files that associated with import file records and base filed in snapshot folder (thumbnails)
+  const filePaths = fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.filePath)
+  filePaths.push(...fileRecords.map((oldAndNewFileRecord) => oldAndNewFileRecord.new.thumbnailPath))
+  const snapshotFilesFolder = `${snapshotFolder}/files`
+  const baseFilePaths = await getBaseFiles(snapshotFilesFolder)
+
+  for (const filePath of [...filePaths, ...baseFilePaths]) {
+    try {
+      console.log('copying file', filePath)
+
+      const destinationDirectory = `${FILES_FOLDER}/${getDirectoryFromPath(filePath)}`
+      // -p = no error if exists, create parent
+      execSync(`mkdir -p '${destinationDirectory}'`)
+
+      execSync(`cp '${snapshotFilesFolder}/${filePath}' '${destinationDirectory}'`)
+    } catch (e) {
+      console.log('failed to copy file', e)
+    }
   }
 }
 

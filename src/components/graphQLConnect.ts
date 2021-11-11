@@ -14,14 +14,14 @@ class GraphQLdb {
     return this._instance || (this._instance = new this())
   }
 
-  public gqlQuery = async (query: string, variables = {}) => {
+  public gqlQuery = async (query: string, variables = {}, authHeader = '') => {
     if (this.adminJWT === '') this.adminJWT = await getAdminJWT()
     const queryResult = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        Authorization: `Bearer ${this.adminJWT}`,
+        Authorization: authHeader === '' ? `Bearer ${this.adminJWT}` : authHeader,
       },
       body: JSON.stringify({
         query: query,
@@ -62,6 +62,33 @@ class GraphQLdb {
       { id: reviewId }
     )
     return data.review
+  }
+
+  public getReviewDataFromAssignment = async (reviewAssignmentId: number) => {
+    const data = await this.gqlQuery(
+      `
+      query getReview($reviewAssignmentId: Int!) {
+        reviews(filter: { reviewAssignmentId: { equalTo: $reviewAssignmentId } }) {
+          nodes {
+            reviewId: id
+            levelNumber
+            isLastLevel
+            isLastStage
+            status
+            latestDecision {
+                decision
+                comment
+            }
+            reviewAssignment {
+              isLocked
+            }
+          }
+        }
+      }
+      `,
+      { reviewAssignmentId }
+    )
+    return data?.reviews?.nodes[0] || null
   }
 
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {

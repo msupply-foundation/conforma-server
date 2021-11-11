@@ -61,7 +61,7 @@
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",
     "@openmsupply/deep-comparison": "^1.0.1",
-    "@openmsupply/expression-evaluator": "^1.9.2",
+    "@openmsupply/expression-evaluator": "^1.9.3",
     "adm-zip": "^0.5.5",
     "bcrypt": "^5.0.0",
     "carbone": "^3.2.3",
@@ -78,6 +78,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.21",
     "luxon": "^1.27.0",
+    "map-values-deep": "^1.0.2",
     "nanoid": "^3.1.21",
     "node-schedule": "^2.0.0",
     "pg": "^8.4.1",

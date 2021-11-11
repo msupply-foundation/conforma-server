@@ -7,6 +7,7 @@ export type DatabaseColumn = {
   isEnum: boolean
   isEnumArray: boolean
   isJson: boolean
+  isJsonArray: boolean
   reference: {
     tableName: string
     columnName: string
@@ -32,7 +33,12 @@ export type ExportAndImportOptions = {
   insertScriptsLocale: string
   includeInsertScripts: string[]
   excludeInsertScripts: string[]
+  // tablesToUpdateOnInsertFail is deprecated, but values are still required (for existing snapshots), they key is change to skipTableOnInsertFail in useSnapshot
   tablesToUpdateOnInsertFail: string[]
+  skipTableOnInsertFail: string[]
+  includeLocalisation?: boolean
+  includePrefs?: boolean
+  resetFiles: boolean
 }
 
 export type ObjectRecord = { [columnName: string]: any }

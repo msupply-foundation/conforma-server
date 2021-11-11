@@ -1,8 +1,11 @@
 import databaseConnect from '../databaseConnect'
-import { getUserInfo, getTokenData, extractJWTfromHeader } from './loginHelpers'
+import { getUserInfo, extractJWTfromHeader } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
+import path from 'path'
+import { readFileSync } from 'fs'
+import { getAppEntryPointDir } from '../utilityFunctions'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
 
@@ -26,7 +29,7 @@ Authenticates login and returns:
 */
 const routeLogin = async (request: any, reply: any) => {
   try {
-    const { username, password } = request.body
+    const { username, password, sessionId } = request.body
     if (password === undefined) return reply.send({ success: false })
 
     const userOrgInfo: UserOrg[] = (await databaseConnect.getUserOrgData({ username })) || {}
@@ -40,7 +43,7 @@ const routeLogin = async (request: any, reply: any) => {
     // Login successful
     reply.send({
       success: true,
-      ...(await getUserInfo({ userId })),
+      ...(await getUserInfo({ userId, sessionId })),
     })
   } catch (err) {
     return reply.send({ success: false, error: err.message })
@@ -54,12 +57,11 @@ Authenticates user and checks they belong to requested org (id). Returns:
   - JWT (with orgId included)
 */
 const routeLoginOrg = async (request: any, reply: any) => {
-  const { orgId } = request.body
-  const token = extractJWTfromHeader(request)
-  const { userId, error } = await getTokenData(token)
+  const { orgId, sessionId } = request.body
+  const { userId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
-  const userInfo = await getUserInfo({ userId, orgId })
+  const userInfo = await getUserInfo({ userId, orgId, sessionId })
 
   reply.send({ success: true, ...userInfo })
 }
@@ -69,20 +71,17 @@ Authenticates user using JWT header and returns latest user/org info,
 template permissions and new JWT token
 */
 const routeUserInfo = async (request: any, reply: any) => {
-  const token = extractJWTfromHeader(request)
-  const { userId, orgId, sessionId, error } = await getTokenData(token)
+  const { sessionId } = request.query
+  const { userId, orgId, sessionId: returnSessionId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
-  return reply.send({ success: true, ...(await getUserInfo({ userId, orgId, sessionId })) })
+  return reply.send({
+    success: true,
+    ...(await getUserInfo({ userId, orgId, sessionId: sessionId ?? returnSessionId })),
+  })
 }
 
 const routeUpdateRowPolicies = async (request: any, reply: any) => {
-  // const token = extractJWTfromHeader(request)
-  // const username = await getUsername(token)
-  // return reply.send(await getUserInfo(username))
-
-  // TO DO, check for admin
-
   // TODO, add parameters to only drop specific policies, for now drop and reinstante them all
 
   return reply.send(await updateRowPolicies())
@@ -112,6 +111,64 @@ const routeVerification = async (request: any, reply: any) => {
   }
 }
 
+// Serve prefs to front-end
+const routeGetPrefs = async (request: any, reply: any) => {
+  const prefs = JSON.parse(
+    readFileSync(path.join(getAppEntryPointDir(), '../preferences.json'), 'utf8')
+  )
+  const languageOptions = JSON.parse(
+    readFileSync(path.join(getAppEntryPointDir(), '../localisation/languages.json'), 'utf8')
+  )
+  reply.send({ preferences: prefs.web, languageOptions })
+}
+
+// Unique name/email/organisation/other check
+const routecheckUnique = async (request: any, reply: any) => {
+  const { type, value, table, field } = request.query
+  if (value === '' || value === undefined) {
+    reply.send({
+      unique: false,
+      message: 'Value not provided',
+    })
+    return
+  }
+  let tableName, fieldName
+  switch (type) {
+    case 'username':
+      tableName = 'user'
+      fieldName = 'username'
+      break
+    case 'email':
+      tableName = 'user'
+      fieldName = 'email'
+      break
+    case 'organisation':
+      tableName = 'organisation'
+      fieldName = 'name'
+      break
+    default:
+      if (!table || !field) {
+        reply.send({
+          unique: false,
+          message: 'Type, table, or field missing or invalid',
+        })
+        return
+      } else {
+        tableName = table
+        fieldName = field
+      }
+  }
+  try {
+    const isUnique = await databaseConnect.isUnique(tableName, fieldName, value)
+    reply.send({
+      unique: isUnique,
+      message: '',
+    })
+  } catch (err) {
+    reply.send({ unique: false, message: err.message })
+  }
+}
+
 export {
   routeUserInfo,
   routeLogin,
@@ -119,4 +176,6 @@ export {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
+  routeGetPrefs,
+  routecheckUnique,
 }

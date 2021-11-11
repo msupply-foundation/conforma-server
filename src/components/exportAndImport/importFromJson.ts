@@ -1,4 +1,4 @@
-import { camelCase } from 'lodash'
+import { camelCase, mapValues } from 'lodash'
 import databaseConnect from '../databaseConnect'
 import getDatabaseInfo from './getDatabaseInfo'
 import { filterByIncludeAndExclude } from './helpers'
@@ -12,10 +12,16 @@ import {
   ObjectRecords,
 } from './types'
 
-const insertFromObject = async (
+type InsertFromObject = (
   records: ObjectRecords,
-  { includeTables, excludeTables, tablesToUpdateOnInsertFail = [] }: ExportAndImportOptions,
-  preserveIds: boolean = false
+  options: ExportAndImportOptions,
+  preserveIds?: boolean
+) => Promise<InsertedRecords>
+
+const insertFromObject: InsertFromObject = async (
+  records,
+  { includeTables, excludeTables, skipTableOnInsertFail = [] },
+  preserveIds = false
 ) => {
   const databaseTables = (await getDatabaseInfo()).filter(({ isView }) => !isView)
 
@@ -28,7 +34,7 @@ const insertFromObject = async (
     if (!recordsForTable || recordsForTable.length === 0) continue
 
     for (let record of recordsForTable) {
-      const { insertQuery, updateQuery, insertGetter, updateGetter, variables } =
+      const { insertQuery, getRecordQuery, insertGetter, getRecordGetter, variables } =
         constructInsertAndGetter(record, table, insertedRecords, preserveIds)
       let result = {}
       let row = {}
@@ -36,9 +42,15 @@ const insertFromObject = async (
         result = await databaseConnect.gqlQuery(insertQuery, variables)
         row = insertGetter(result)
       } catch (e) {
-        if (!tablesToUpdateOnInsertFail.includes(tableName)) throw e
-        result = await databaseConnect.gqlQuery(updateQuery, variables)
-        row = updateGetter(result)
+        // If insert failed and table is in skipTableOnInsertFail, this is likely due to unique constraint (i.e. permissionName.name or filter.code)
+        // in this case record should be skipped but we still want to get id for existing record so that we can link related records (i.e templatePermission)
+        if (!skipTableOnInsertFail.includes(tableName)) throw e
+        if (!getRecordQuery)
+          throw new Error(
+            `insert query failed but no unique field found to construct getter query, insert query was: ${insertQuery}`
+          )
+        result = await databaseConnect.gqlQuery(getRecordQuery, variables)
+        row = getRecordGetter(result)
       }
 
       if (!insertedRecords[tableName]) insertedRecords[tableName] = []
@@ -58,26 +70,26 @@ const constructInsertAndGetter = (
   const foreignKeyReplacements = getForeignKeyReplacements(record, columns, insertedRecords)
   const insertableValues: ObjectRecord = {}
   const values = { ...record, ...foreignKeyReplacements }
+  let uniqueField: string | undefined
 
-  columns.forEach(({ isPrimary, isGenerated, columnName }) => {
+  columns.forEach(({ isPrimary, isGenerated, isUnique, columnName }) => {
     if (!preserveIds && isPrimary) return
     if (isGenerated) return
     if (values[columnName] === undefined) return
+    if (isUnique) uniqueField = camelCase(columnName)
     insertableValues[columnName] = values[columnName]
   })
 
   // Postgraphile will make all plural table names singular for mutations
   const singularTableName = singular(tableName)
   const insertMutationName = camelCase(`create ${singularTableName}`)
-  const updateMutationName = camelCase(`update ${singularTableName}`)
+  const getRecordQueryName = camelCase(`${singularTableName} by ${uniqueField}`)
   const { keyValues, variables, variableDeclarations } = getInsertKeyValues(
     insertableValues,
     columns
   )
 
-  const resultQuery = `${singularTableName} { ${columns
-    .map(({ columnName }) => columnName)
-    .join(' ')} }`
+  const resultFields = ` ${columns.map(({ columnName }) => columnName).join(' ')}`
 
   const insertQuery = `mutation ${insertMutationName} ${variableDeclarations} {
         ${insertMutationName} (
@@ -86,23 +98,18 @@ const constructInsertAndGetter = (
                     ${keyValues}
                 }
             }
-        ) { ${resultQuery} }
+        ) { ${singularTableName} { ${resultFields} } }
     }`
 
-  const updateQuery = `mutation ${updateMutationName} ${variableDeclarations} {
-      ${updateMutationName} (
-          input: {
-              patch: {
-                  ${keyValues}
-              },
-              id: ${record.id}
-          }
-      ) { ${resultQuery} }
+  const getRecordQuery =
+    uniqueField &&
+    `query ${getRecordQueryName} { 
+      ${getRecordQueryName}(${uniqueField}: "${record[uniqueField]}") { ${resultFields} }
   }`
 
   const insertGetter = (gqlResult: any) => gqlResult[insertMutationName][singularTableName]
-  const updateGetter = (gqlResult: any) => gqlResult[updateMutationName][singularTableName]
-  return { insertQuery, updateQuery, insertGetter, updateGetter, variables }
+  const getRecordGetter = (gqlResult: any) => gqlResult[getRecordQueryName]
+  return { insertQuery, getRecordQuery, insertGetter, getRecordGetter, variables }
 }
 
 const getForeignKeyReplacements = (
@@ -146,7 +153,7 @@ const findReferenceValues = (
   if (!referencedRecord) return null
   return referencedRecord.new[referenceColumnName]
 }
-type JsonVariables = { [variableName: string]: string }
+type JsonVariables = { [variableName: string]: { value: JSON; type: 'JSON!' | '[JSON!]' } }
 
 const getInsertKeyValues = (values: ObjectRecord, columns: DatabaseColumn[]) => {
   const jsonVariables: JsonVariables = {}
@@ -162,9 +169,10 @@ const getInsertKeyValues = (values: ObjectRecord, columns: DatabaseColumn[]) => 
         // Make sure enum values are not quoted in an array
         if (column.isEnumArray) gqlValue = gqlValue.replace(/"/g, '')
         // Add quotes around object
-        if (column.isJson && value instanceof Object) {
+        if ((column.isJson || column.isJsonArray) && value instanceof Object) {
           const variableName = `$${columnName}`
-          jsonVariables[columnName] = value
+          const type = column.isJson ? 'JSON!' : '[JSON!]'
+          jsonVariables[columnName] = { value, type }
 
           gqlValue = variableName
         }
@@ -174,13 +182,13 @@ const getInsertKeyValues = (values: ObjectRecord, columns: DatabaseColumn[]) => 
     })
     .join(',')
 
-  const variableDeclarations = Object.keys(jsonVariables).map(
-    (variableName) => `$${variableName}: JSON!`
+  const variableDeclarations = Object.entries(jsonVariables).map(
+    ([variableName, { type }]) => `$${variableName}: ${type}`
   )
 
   return {
     keyValues,
-    variables: jsonVariables,
+    variables: mapValues(jsonVariables, ({ value }) => value),
     variableDeclarations:
       variableDeclarations.length === 0 ? '' : `(${variableDeclarations.join(',')})`,
   }

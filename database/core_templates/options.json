@@ -1,4 +1,6 @@
 {
+ "0": "{",
+ "1": "}",
  "filters": {},
  "includeTables": [],
  "excludeTables": [
@@ -13,5 +15,8 @@
  "includeInsertScripts": [
   "none"
  ],
- "excludeInsertScripts": []
+ "excludeInsertScripts": [],
+ "includePrefs": true,
+ "includeLocalisation": true,
+ "resetFiles": true
 }

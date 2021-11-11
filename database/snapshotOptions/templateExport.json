@@ -14,9 +14,14 @@
     "permissionName",
     "file"
   ],
-  "tablesToUpdateOnInsertFail": ["permissionName", "permissionPolicy", "filter", "file"],
+  "//tablesToUpdateOnInsertFail": "deprecated, in favour of skipTableOnInsertFail",
+  "//skipTableOnInsertFail": "These tables have unique contraint other then ID, they will be skippped if insert fail, and any related records will reference existing record",
+  "skipTableOnInsertFail": ["permissionName", "permissionPolicy", "filter", "file"],
   "excludeTables": [],
   "insertScriptsLocale": "dev",
   "includeInsertScripts": [],
-  "excludeInsertScripts": []
+  "excludeInsertScripts": [],
+  "includePrefs": false,
+  "includeLocalisation": false,
+  "resetFiles": false
 }

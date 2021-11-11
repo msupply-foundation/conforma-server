@@ -4,7 +4,7 @@ This module is in `src/modules/expression-evaluator`, structured as its own pack
 
 The current build of the module is published to Github packages so it can be easily imported into both front- and back-end projects. See [Installation](#installation) at the end of this page for instructions on how to make it work in your environment, or [Development](#development) for information on further development of the module, including a browser-based GUI expression builder.
 
-Run `yarn test` to see it in action.
+Run `yarn test` to see it in action. (See [Testing section](#testing) for more info)
 
 ---
 
@@ -35,7 +35,10 @@ For more complex lookups, we would hide the complexity from the user in the Temp
 <!-- toc -->
 <!-- generated with markdown-toc -->
 
+- [(Dynamic) Query/Expression Syntax](#dynamic-queryexpression-syntax)
+  - [Contents](#contents)
 - [Structure](#structure)
+  - [type](#type)
 - [Operators](#operators)
   - [AND](#and)
   - [OR](#or)
@@ -50,14 +53,18 @@ For more complex lookups, we would hide the complexity from the user in the Temp
   - [graphQL](#graphql)
   - [GET](#get)
   - [POST](#post)
-  - [buildObject](#buildObject)
+    - [Authentication](#authentication)
+  - [buildObject](#buildobject)
 - [Usage](#usage)
+    - [`expression`](#expression)
+    - [`parameters`](#parameters)
 - [Examples](#examples)
 - [To Do](#to-do)
 - [Installation](#installation)
+- [Testing](#testing)
 - [Development](#development)
-  - [Publishing a new version of the package](#publishing-a-new-version-of-the-package)
-  - [GUI expression builder](#gui-expression-builder)
+    - [Publishing a new version of the package](#publishing-a-new-version-of-the-package)
+    - [GUI expression builder](#gui-expression-builder)
 
 <!-- tocstop -->
 
@@ -288,7 +295,7 @@ Performs queries on connected GraphQL interface.
 
 ## GET
 
-Performs http GET requests to public API endpoints.
+Performs http GET requests to API endpoints, with optional authentication (see [below](#authentication)).
 
 - Input: _(note: basically the same as GraphQL)_
   - 1st child node returns a **string** containing the url of the API endpoint
@@ -337,6 +344,28 @@ This expression queries our `/login` endpoint to check a user's credentials, and
   ],
 }
 ```
+
+### Authentication
+
+The `GET`, `POST`, and `GraphQL` operators may require authentication for the endpoints they are querying, such as our own [API](API.md). This can be achieved in a couple of different ways.
+
+1. Pass the authentication information as part of the [parameters](#parameters) `headers` field. For example, a JWT authentication might be:  
+    ```
+    headers: {
+      Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiZGFydGhfdmFkZXIifQ.UT8qpoNVJGam4HEasxQdJ7tiYC2UzvIGcu_9OUMLJ1k"
+    }
+    ```  
+    In the front-end app, all evaluator queries use this mechanism to pass the current user's JWT, and this should be sufficient for most purposes. It's only if you require sending different headers, or need to dynamically build an authentication token, or have queries to external authenticated APIs, that you might need this second option:
+
+2. HTTP headers can be baked into each query by over-riding the "url" node of API/GraphQL queries. As described above, the "url" node normally expects a string url. However, you can also provided this node as an object with the following structure:  
+    ```
+    {
+      url: "<url-string-as-above>",
+      headers: <headers-object-as-above>
+    }
+    ```
+    In this case, the evaluator will parse the url and headers from this node and continue as normal, but the `headers` object will take priority over any that may be included in `parameters`. The `headers` object can be dynamically created using the [`buildObject`](#buildobject) operator if required. See the test suite query `testData.APIisUniqueWithHeader` for an example of how to do this.
+
 
 ## buildObject
 
@@ -432,6 +461,7 @@ The query evaluator is implemented in the `evaluateExpression` function:
 - `pgConnection: <postGresConnect object>` (or any valid PostGres connection object, e.g. `Client` from `node-postgres`)
 - `graphQLConnection: { fetch: <fetch object>, endpoint: <URL of GraphQL endpoint>}` -- connection information for a local GraphQL endpoint. Only required if expression contains **graphQL** operator.
 - `APIfetch: <fetch object>` -- required if the API operator is being used. (Note: the reason this must be passed in rather than having the module use `fetch` directly is so it can work in both front- and back-end. The browser provides a native `fetch` method, but this isn't available in Node, which requires the `node-fetch` package. So in order to work in both, the module expects the appropriate variant of the fetch object to be passed in.)
+- `headers: <HTTP request headers object>` -- optional headers for API or GraphQL requests, such as Authentication tokens. See [Authentication](#authentication) for more information.
 
 # Examples
 
@@ -627,6 +657,29 @@ To update to the latest release of the package, run:
 `yarn upgrade @openmsupply/expression-evaluator`
 
 <a name="development"></a>
+
+# Testing
+
+There is a [Jest](https://jestjs.io/) test suite for the expression evaluator included in the server repo. It can be run using:
+
+```
+ yarn test ./src/modules/expression-evaluator/src/evaluateExpression.test.ts 
+```
+
+(Or just `yarn test ./src/evaluateExpression.test.ts` from within evaluator subfolder )
+
+However, for the tests to work you'll need two things:
+
+1. Load the [snapshot](Snapshots.md) called `evaluator_test` from the private templates repo (in `/dev/snapshots`)
+2. You'll need to provide authentication JWTs for certain tests. The test suite is expecting a file called `testSecrets.json` in the evaluator /src folder, with the following info:  
+```
+{
+  "nonRegisteredAuth": "Bearer <nonRegistered-JWT-token>",
+  "adminAuth": "Bearer <admin-JWT-token>"
+}
+
+```  
+This secrets file is *not* included in any repo for security reasons, but can be found in Bitwarden "Sussol - IRIMS" folder.
 
 # Development
 

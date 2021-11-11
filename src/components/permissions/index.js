@@ -5,6 +5,8 @@ import {
   routeUpdateRowPolicies,
   routeCreateHash,
   routeVerification,
+  routeGetPrefs,
+  routecheckUnique,
 } from './routes'
 
 export {
@@ -14,4 +16,6 @@ export {
   routeLoginOrg,
   routeUpdateRowPolicies,
   routeVerification,
+  routeGetPrefs,
+  routecheckUnique,
 }
