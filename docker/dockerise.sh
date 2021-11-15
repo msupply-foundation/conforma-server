@@ -3,8 +3,8 @@
 # This command requires githubtoken.txt, in the repo root (it's git ingored btw).
 # githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
 
-SERVER_BRANCH='B-1.0.8'
-WEB_APP_BRANCH='B-1.0.8'
+SERVER_BRANCH='main'
+WEB_APP_BRANCH='main'
 IMAGE_NAME='mflow-demo'
 INITIAL_DATA_LOCALE=''
 
@@ -16,7 +16,6 @@ IMAGE_TAG="front-${WEB_APP_BRANCH}_back-${SERVER_BRANCH}_pg-${POSTGRES_VERSION}_
 echo "building image: ${IMAGE_TAG}"
 
 docker build \
-   --no-cache \
    --progress plain \
    -t "${IMAGE_NAME}:${IMAGE_TAG}" \
    --build-arg SERVER_BRANCH="$SERVER_BRANCH" \
