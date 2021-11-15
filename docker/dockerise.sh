@@ -17,6 +17,7 @@ echo "building image: ${IMAGE_TAG}"
 
 docker build \
    --progress plain \
+   --no-cache \
    -t "${IMAGE_NAME}:${IMAGE_TAG}" \
    --build-arg SERVER_BRANCH="$SERVER_BRANCH" \
    --build-arg WEB_APP_BRANCH="$WEB_APP_BRANCH" \
