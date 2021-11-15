@@ -682,6 +682,11 @@ testData.stringSubstitutionEmptyStringInReplacements = {
   children: ['You like: %1%2%3', '', '\\n-Cake', '\\n-Candy'],
 }
 
+testData.stringSubstitutionRepeatedParameters = {
+  operator: 'stringSubstitution',
+  children: ['%1 is the same as %1 but not %2', 'this', 'that'],
+}
+
 // GET operator
 
 testData.APIisUnique = {

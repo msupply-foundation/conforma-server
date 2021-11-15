@@ -401,6 +401,12 @@ test('String substitution - some parameters empty strings', () => {
   )
 })
 
+test('String substitution - repeated parameters', () => {
+  return evaluateExpression(testData.stringSubstitutionRepeatedParameters).then((result: any) => {
+    expect(result).toBe('this is the same as this but not that')
+  })
+})
+
 // GET operator
 test('GET: Check username is unique', () => {
   return evaluateExpression(testData.APIisUnique, {
