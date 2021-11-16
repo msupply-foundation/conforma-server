@@ -11,7 +11,7 @@ CREATE TABLE public.template (
     name_plural varchar,
     code varchar NOT NULL,
     is_linear boolean DEFAULT TRUE,
-    is_interactive boolean DEFAULT TRUE,
+    can_applicant_make_changes boolean DEFAULT TRUE,
     start_message jsonb,
     status public.template_status,
     submission_message jsonb DEFAULT '"Thank you! Your application has been submitted."' ::jsonb,
