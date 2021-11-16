@@ -10,7 +10,6 @@ import {
 } from './types'
 
 import buildObject, { BuildObjectQuery } from './resolvers/buildObject'
-import { replace } from 'lodash'
 
 const defaultParameters: IParameters = {}
 
