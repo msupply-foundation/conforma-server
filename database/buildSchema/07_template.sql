@@ -11,6 +11,7 @@ CREATE TABLE public.template (
     name_plural varchar,
     code varchar NOT NULL,
     is_linear boolean DEFAULT TRUE,
+    can_applicant_make_changes boolean DEFAULT TRUE,
     start_message jsonb,
     status public.template_status,
     submission_message jsonb DEFAULT '"Thank you! Your application has been submitted."' ::jsonb,
@@ -18,6 +19,7 @@ CREATE TABLE public.template (
     template_category_id integer REFERENCES public.template_category (id),
     version_timestamp timestamptz DEFAULT CURRENT_TIMESTAMP,
     version integer DEFAULT 1
+
 );
 
 -- FUNCTION to generate a new version of template (should run as a trigger)
