@@ -113,13 +113,9 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
         .reverse()
         .forEach(([param, replacement]) => {
           console.log(param, replacement)
-          outputString = outputString.replaceAll(param, replacement)
+          outputString = outputString.replace(new RegExp(`${param}`, 'g'), replacement ?? '')
         })
       return outputString
-    // let i = 0
-    // return parameters.reduce((outputString, param) => {
-    //   return outputString.replace(param, replacements[i] !== undefined ? replacements[i++] : '')
-    // }, origString)
 
     case 'POST':
     case 'GET':

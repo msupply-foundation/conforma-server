@@ -684,7 +684,7 @@ testData.stringSubstitutionEmptyStringInReplacements = {
 
 testData.stringSubstitutionRepeatedParameters = {
   operator: 'stringSubstitution',
-  children: ['%1 is the same as %1 but not %2', 'this', 'that'],
+  children: ['%1 is the same as %1 but not %2', 'THIS', 'THAT'],
 }
 
 // GET operator

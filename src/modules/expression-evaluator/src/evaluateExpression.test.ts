@@ -403,7 +403,7 @@ test('String substitution - some parameters empty strings', () => {
 
 test('String substitution - repeated parameters', () => {
   return evaluateExpression(testData.stringSubstitutionRepeatedParameters).then((result: any) => {
-    expect(result).toBe('this is the same as this but not that')
+    expect(result).toBe('THIS is the same as THIS but not THAT')
   })
 })
 
