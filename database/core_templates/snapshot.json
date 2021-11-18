@@ -1567,7 +1567,7 @@
         },
         "message": {
           "children": [
-            "Hi %1,\n\nplease confirm your user account registration by clicking (or copy-pasting) the following link:\n\n%2%3",
+            "Hi %1,\n\nplease confirm your user account registration by clicking (or copy-pasting) the following link:\n\n[%2%3](%2%3)",
             {
               "children": ["applicationData.responses.Q1FirstName.text", ""],
               "operator": "objectProperties"
@@ -4094,7 +4094,7 @@
         },
         "message": {
           "children": [
-            "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: %3/application/%4\n\nMany thanks,\n\n%5",
+            "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: [%3/application/%4](%3/application/%4)\n\nMany thanks,\n\n%5",
             {
               "children": ["applicationData.applicationName", null],
               "operator": "objectProperties"
@@ -4287,7 +4287,7 @@
         },
         "message": {
           "children": [
-            "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit %4/application/%5\n\nMany thanks,\n\n%6",
+            "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit [%4/application/%5](%4/application/%5)\n\nMany thanks,\n\n%6",
             {
               "children": ["applicationData.applicationName", null],
               "operator": "objectProperties"
@@ -4358,7 +4358,7 @@
         },
         "message": {
           "children": [
-            "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: %3/application/%4\n\nMany thanks,\n\n%5",
+            "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: [%3/application/%4](%3/application/%4)\n\nMany thanks,\n\n%5",
             {
               "children": ["applicationData.applicationName", null],
               "operator": "objectProperties"
@@ -4507,7 +4507,7 @@
         },
         "message": {
           "children": [
-            "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit %4/application/%5\n\nMany thanks,\n\n{Regulatory Agency}",
+            "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit [%4/application/%5](%4/application/%5)\n\nMany thanks,\n\n{Regulatory Agency}",
             {
               "children": ["applicationData.applicationName", null],
               "operator": "objectProperties"
@@ -4569,7 +4569,7 @@
         },
         "message": {
           "children": [
-            "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: %3/application/%4\n\nMany thanks,\n\n{Regulatory Agency}",
+            "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: [%3/application/%4](%3/application/%4)\n\nMany thanks,\n\n{Regulatory Agency}",
             {
               "children": ["applicationData.applicationName", null],
               "operator": "objectProperties"
@@ -4709,7 +4709,7 @@
         },
         "message": {
           "children": [
-            "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit %4/application/%5\n\nMany thanks,\n\n{Regulatory Agency}",
+            "# Your application has been rejected\n \n%1 application was rejected during stage of %2.\nThe outline reason for rejection is:\n    \"%3\"\n\nTo see more information on mFlow visit [%4/application/%5](%4/application/%5)\n\nMany thanks,\n\n{Regulatory Agency}",
             {
               "children": ["applicationData.applicationName", null],
               "operator": "objectProperties"
@@ -4771,7 +4771,7 @@
         },
         "message": {
           "children": [
-            "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: %3/application/%4\n\nMany thanks,\n\n{Regulatory Agency}",
+            "# A List of Questions have been submitted\n \nApplication %1 needs your attention now. \n\n%2\n\nTo see and make changes to your application on mFlow visit: [%3/application/%4](%3/application/%4)\n\nMany thanks,\n\n{Regulatory Agency}",
             {
               "children": ["applicationData.applicationName", null],
               "operator": "objectProperties"
@@ -4971,7 +4971,7 @@
         },
         "message": {
           "children": [
-            "Hi %1,\n\nsomeone with your username (%2) requested to reset your password. If this wasn't you, or this was unintentional, please disregard this email.\n\nIn order to reset your password, please click (or copy-paste) the following link:\n\n%3/verify?uid=%4",
+            "Hi %1,\n\nsomeone with your username (%2) requested to reset your password. If this wasn't you, or this was unintentional, please disregard this email.\n\nIn order to reset your password, please click (or copy-paste) the following link:\n\n[%3/verify?uid=%4](%3/verify?uid=%4)",
             {
               "children": [
                 "query getUser($username:String!) {userByUsername(username: $username) {email, firstName, lastName }}",
