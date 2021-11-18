@@ -508,6 +508,7 @@ export type ActionQueueTemplateIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -3770,6 +3771,7 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -9750,6 +9752,7 @@ export type FileTemplateIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -21032,6 +21035,7 @@ export type ReviewAssignmentTemplateIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -23793,6 +23797,7 @@ export type Template = Node & {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -24199,6 +24204,7 @@ export type TemplateActionTemplateIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -24423,6 +24429,8 @@ export type TemplateCondition = {
   code?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `isLinear` field. */
   isLinear?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `canApplicantMakeChanges` field. */
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `startMessage` field. */
   startMessage?: Maybe<Scalars['JSON']>;
   /** Checks for equality with the object’s `status` field. */
@@ -25012,6 +25020,8 @@ export type TemplateFilter = {
   code?: Maybe<StringFilter>;
   /** Filter by the object’s `isLinear` field. */
   isLinear?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `canApplicantMakeChanges` field. */
+  canApplicantMakeChanges?: Maybe<BooleanFilter>;
   /** Filter by the object’s `startMessage` field. */
   startMessage?: Maybe<JsonFilter>;
   /** Filter by the object’s `status` field. */
@@ -25336,6 +25346,7 @@ export type TemplateFilterJoinTemplateIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -25371,6 +25382,7 @@ export type TemplateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -25575,6 +25587,7 @@ export type TemplatePatch = {
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -25905,6 +25918,7 @@ export type TemplatePermissionTemplateIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -26245,6 +26259,7 @@ export type TemplateSectionTemplateIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -26340,6 +26355,8 @@ export enum TemplatesOrderBy {
   CodeDesc = 'CODE_DESC',
   IsLinearAsc = 'IS_LINEAR_ASC',
   IsLinearDesc = 'IS_LINEAR_DESC',
+  CanApplicantMakeChangesAsc = 'CAN_APPLICANT_MAKE_CHANGES_ASC',
+  CanApplicantMakeChangesDesc = 'CAN_APPLICANT_MAKE_CHANGES_DESC',
   StartMessageAsc = 'START_MESSAGE_ASC',
   StartMessageDesc = 'START_MESSAGE_DESC',
   StatusAsc = 'STATUS_ASC',
@@ -26910,6 +26927,7 @@ export type TemplateStageTemplateIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -27076,6 +27094,7 @@ export type TemplateTemplateCategoryIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -27813,6 +27832,7 @@ export type TriggerScheduleTemplateIdFkeyTemplateCreateInput = {
   namePlural?: Maybe<Scalars['String']>;
   code: Scalars['String'];
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32046,6 +32066,7 @@ export type UpdateTemplateOnActionQueueForActionQueueTemplateIdFkeyPatch = {
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32073,6 +32094,7 @@ export type UpdateTemplateOnApplicationForApplicationTemplateIdFkeyPatch = {
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32100,6 +32122,7 @@ export type UpdateTemplateOnFileForFileTemplateIdFkeyPatch = {
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32127,6 +32150,7 @@ export type UpdateTemplateOnReviewAssignmentForReviewAssignmentTemplateIdFkeyPat
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32154,6 +32178,7 @@ export type UpdateTemplateOnTemplateActionForTemplateActionTemplateIdFkeyPatch =
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32181,6 +32206,7 @@ export type UpdateTemplateOnTemplateFilterJoinForTemplateFilterJoinTemplateIdFke
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32208,6 +32234,7 @@ export type UpdateTemplateOnTemplateForTemplateTemplateCategoryIdFkeyPatch = {
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32234,6 +32261,7 @@ export type UpdateTemplateOnTemplatePermissionForTemplatePermissionTemplateIdFke
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32261,6 +32289,7 @@ export type UpdateTemplateOnTemplateSectionForTemplateSectionTemplateIdFkeyPatch
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32288,6 +32317,7 @@ export type UpdateTemplateOnTemplateStageForTemplateStageTemplateIdFkeyPatch = {
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -32315,6 +32345,7 @@ export type UpdateTemplateOnTriggerScheduleForTriggerScheduleTemplateIdFkeyPatch
   namePlural?: Maybe<Scalars['String']>;
   code?: Maybe<Scalars['String']>;
   isLinear?: Maybe<Scalars['Boolean']>;
+  canApplicantMakeChanges?: Maybe<Scalars['Boolean']>;
   startMessage?: Maybe<Scalars['JSON']>;
   status?: Maybe<TemplateStatus>;
   submissionMessage?: Maybe<Scalars['JSON']>;
@@ -42152,6 +42183,7 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
   namePlural?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   code?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isLinear?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  canApplicantMakeChanges?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   startMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['TemplateStatus']>, ParentType, ContextType>;
   submissionMessage?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
