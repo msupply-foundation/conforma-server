@@ -105,10 +105,16 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
       const parameters = (origString.match(regex) || []).sort(
         (a, b) => Number(a.slice(1)) - Number(b.slice(1))
       )
-      let i = 0
-      return parameters.reduce((outputString, param) => {
-        return outputString.replace(param, replacements[i] !== undefined ? replacements[i++] : '')
-      }, origString)
+      const uniqueParameters = new Set(parameters)
+      const replacementsObj = zipArraysToObject(Array.from(uniqueParameters), replacements)
+      let outputString = origString
+      Object.entries(replacementsObj)
+        .reverse()
+        .forEach(([param, replacement]) => {
+          console.log(param, replacement)
+          outputString = outputString.replace(new RegExp(`${param}`, 'g'), replacement ?? '')
+        })
+      return outputString
 
     case 'POST':
     case 'GET':
