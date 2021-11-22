@@ -269,7 +269,7 @@ A json array of new policies:
 
 POST: `/run-action`
 
-End point to run Actions[Triggers-and-Actions.md] in isolation. Returns the action's "Output" object.
+End point to run [Actions](Triggers-and-Actions.md) in isolation. Returns the action's "Output" object.
 
 **Parameters** (as body JSON):
 
