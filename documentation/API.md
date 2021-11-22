@@ -32,6 +32,7 @@ Endpoints are divided into three group, as far as authentication goes:
 - **Admin** -- requires Admin permission (`isAdmin: true` in JWT)
 
 ---
+
 ### Public endpoints
 
 All are prefixed with `/api/public` e.g `http://localhost:8080/api/public/login`
@@ -108,8 +109,8 @@ GET: `/file?id=<uniqueId>`
 
 Usage: `GET` request with file database id as a URL query parameter.
 
-This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.
----
+## This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.
+
 ### Authenticated endpoints
 
 These are all prefixes with `/api`, e.g. `http://localhost:8080/api/login-org`
@@ -171,8 +172,6 @@ Request will return an object, structured like so:
 There are basic unit tests for this endpoint. Run:  
 `yarn test src/server.test.ts`
 
-
-
 #### Login Organisation
 
 POST: `/login-org`
@@ -187,7 +186,7 @@ Returns (on success):
 
 #### User Info
 
-GET: `/userInfo`
+GET: `/user-info`
 
 End point to get user permission and info based on JWT token.
 
@@ -196,6 +195,40 @@ If JWT is invalid or is missing 'nonRegistered' user info will be returned.
 ##### RESPONSE Body:
 
 The same as login endpoint, without the success field
+
+#### User Permissions
+
+GET: `/user-permissions`
+
+End point to ger **another** user permissions given a organisation.
+
+Will check JWT of current user to check if they have permission to view user's permissions in the given organisation. - TODO
+
+##### REQUEST Body:
+
+```JSON
+{
+    "username": "${username}",
+    "orgId": "${orgId}"
+}
+```
+
+##### RESPONSE Body (example):
+
+```JSON
+{
+    "success": true,
+    "templatePermissions": {
+        "TestRego": [
+            "Apply"
+        ],
+        "CompRego1": [
+            "Apply",
+            "Review"
+        ]
+    }
+}
+```
 
 #### Generate PDF
 

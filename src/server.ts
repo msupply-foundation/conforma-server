@@ -6,6 +6,7 @@ import path from 'path'
 import { loadActionPlugins } from './components/pluginsConnect'
 import {
   routeUserInfo,
+  routeUserPermissions,
   routeLogin,
   routeLoginOrg,
   routeUpdateRowPolicies,
@@ -115,6 +116,7 @@ const startServer = async () => {
 
     server.get('/check-unique', routecheckUnique)
     server.get('/user-info', routeUserInfo)
+    server.get('/user-permissions', routeUserPermissions)
     server.post('/login-org', routeLoginOrg)
     server.post('/create-hash', routeCreateHash)
     server.post('/generate-pdf', routeGeneratePDF)

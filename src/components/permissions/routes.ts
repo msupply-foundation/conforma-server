@@ -1,5 +1,5 @@
 import databaseConnect from '../databaseConnect'
-import { getUserInfo, extractJWTfromHeader } from './loginHelpers'
+import { getUserInfo, buildTemplatePermissions } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
@@ -57,7 +57,19 @@ Authenticates user and checks they belong to requested org (id). Returns:
   - JWT (with orgId included)
 */
 const routeLoginOrg = async (request: any, reply: any) => {
-  const { orgId, sessionId } = request.body
+  const { auth, body } = request
+  if (!body)
+    return reply.send({
+      success: false,
+      message: 'Missing orgId in body.',
+    })
+  if (!body.orgId) return reply.send({ success: false, message: 'orgId not provided' })
+  // if (!body.sessionId) return reply.send({ success: false, message: 'sessionId not provided' })
+  const { orgId, sessionId } = body
+
+  console.log('orgId', orgId, 'sessionId', sessionId, 'auth', auth)
+
+  if (!auth.userId) return reply.send({ success: false, message: 'userId not provided' })
   const { userId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
@@ -78,6 +90,31 @@ const routeUserInfo = async (request: any, reply: any) => {
   return reply.send({
     success: true,
     ...(await getUserInfo({ userId, orgId, sessionId: sessionId ?? returnSessionId })),
+  })
+}
+
+const routeUserPermissions = async (request: any, reply: any) => {
+  console.log('routeUserPermissions!!', request)
+  const { auth, header, body } = request
+  if (!body)
+    return reply.send({
+      success: false,
+      message: 'Missing orgId in body.',
+    })
+  if (!body.username) return reply.send({ success: false, message: 'username not provided' })
+  // if (!body.sessionId) return reply.send({ success: false, message: 'sessionId not provided' })
+
+  const { orgId, username } = body ?? { orgId: null }
+
+  if (auth.error) return reply.send({ success: false, message: auth.console.error })
+
+  console.log('orgId', orgId, 'username', username, 'auth', auth)
+
+  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username, orgId)
+
+  return reply.send({
+    success: true,
+    templatePermissions: buildTemplatePermissions(templatePermissionRows),
   })
 }
 
@@ -171,6 +208,7 @@ const routecheckUnique = async (request: any, reply: any) => {
 
 export {
   routeUserInfo,
+  routeUserPermissions,
   routeLogin,
   routeLoginOrg,
   routeUpdateRowPolicies,
