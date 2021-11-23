@@ -106,10 +106,17 @@ const routeUserPermissions = async (request: any, reply: any) => {
 
   if (auth.error) return reply.send({ success: false, message: auth.console.error })
 
+  // Store object with keys as permissionNames and values as an array of templateCodes
   const userExistingPermissions = await databaseConnect.getUserTemplatePermissions(username, orgId)
-  console.log('userExistingPermissions', userExistingPermissions)
-
-  const grantedPermissions = userExistingPermissions.map(({ permissionName }) => permissionName)
+  const grantedPermissions = userExistingPermissions.reduce(
+    (grantedPermissions, { permissionName, templateCode }) => {
+      if (!grantedPermissions[permissionName]) grantedPermissions[permissionName] = []
+      if (!grantedPermissions[permissionName].includes(templateCode))
+        grantedPermissions[permissionName].push(templateCode)
+      return grantedPermissions
+    },
+    {}
+  )
 
   const isSystemOrg = await databaseConnect.isInternalOrg(Number(orgId))
 
@@ -120,11 +127,11 @@ const routeUserPermissions = async (request: any, reply: any) => {
       name,
       description,
       display_name: startCase(name),
-      is_user_granted: grantedPermissions.includes(name),
+      is_user_granted: Object.keys(grantedPermissions).includes(name),
     })),
     grantedPermissions,
     availablePermissions: templatePermissionRows
-      .filter((permission) => !grantedPermissions.includes(permission.name))
+      .filter((permission) => !Object.keys(grantedPermissions).includes(permission.name))
       .map(({ name }) => name),
   })
 }
