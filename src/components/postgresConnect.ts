@@ -663,6 +663,17 @@ class PostgresDB {
     }
   }
 
+  public getDistinctPermissions = async (isSystemOrgPermission: boolean = false) => {
+    const text = 'select * from permission_name where is_system_org_permission = $1'
+    try {
+      const result = await this.query({ text, values: [isSystemOrgPermission] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getAllGeneratedRowPolicies = async () => {
     const text = `
       SELECT policyname, tablename 

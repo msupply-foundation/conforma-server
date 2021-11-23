@@ -114,4 +114,4 @@ const getAdminJWT = async () => {
   return await signPromise({ ...baseJWT, isAdmin: true, role: 'postgres' }, config.jwtSecret)
 }
 
-export { buildTemplatePermissions, extractJWTfromHeader, getUserInfo, getTokenData, getAdminJWT }
+export { extractJWTfromHeader, getUserInfo, getTokenData, getAdminJWT }

@@ -110,6 +110,8 @@ class DBConnect {
 
   public getAllPermissions = PostgresDB.getAllPermissions
 
+  public getDistinctPermissions = PostgresDB.getDistinctPermissions
+
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 
   public getUserOrgPermissionNames = PostgresDB.getUserOrgPermissionNames
@@ -147,6 +149,8 @@ class DBConnect {
   public getReviewData = GraphQLdb.getReviewData
 
   public getReviewDataFromAssignment = GraphQLdb.getReviewDataFromAssignment
+
+  public isInternalOrg = GraphQLdb.isInternalOrg
 }
 
 const dbConnectInstance = DBConnect.Instance

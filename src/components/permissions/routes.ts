@@ -1,10 +1,11 @@
 import databaseConnect from '../databaseConnect'
-import { getUserInfo, buildTemplatePermissions } from './loginHelpers'
+import { getUserInfo } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
 import path from 'path'
 import { readFileSync } from 'fs'
+import { startCase } from 'lodash'
 import { getAppEntryPointDir } from '../utilityFunctions'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
@@ -94,27 +95,37 @@ const routeUserInfo = async (request: any, reply: any) => {
 }
 
 const routeUserPermissions = async (request: any, reply: any) => {
-  console.log('routeUserPermissions!!', request)
-  const { auth, header, body } = request
-  if (!body)
+  const { auth, query } = request
+  if (!query || !query.username)
     return reply.send({
       success: false,
-      message: 'Missing orgId in body.',
+      message: 'Missing username in query.',
     })
-  if (!body.username) return reply.send({ success: false, message: 'username not provided' })
-  // if (!body.sessionId) return reply.send({ success: false, message: 'sessionId not provided' })
 
-  const { orgId, username } = body ?? { orgId: null }
+  const { orgId, username } = query ?? { orgId: null }
 
   if (auth.error) return reply.send({ success: false, message: auth.console.error })
 
-  console.log('orgId', orgId, 'username', username, 'auth', auth)
+  const userExistingPermissions = await databaseConnect.getUserTemplatePermissions(username, orgId)
+  console.log('userExistingPermissions', userExistingPermissions)
 
-  const templatePermissionRows = await databaseConnect.getUserTemplatePermissions(username, orgId)
+  const grantedPermissions = userExistingPermissions.map(({ permissionName }) => permissionName)
+
+  const isSystemOrg = await databaseConnect.isInternalOrg(Number(orgId))
+
+  const templatePermissionRows = await databaseConnect.getDistinctPermissions(isSystemOrg)
 
   return reply.send({
-    success: true,
-    templatePermissions: buildTemplatePermissions(templatePermissionRows),
+    templatePermissions: templatePermissionRows.map(({ name, description }) => ({
+      name,
+      description,
+      display_name: startCase(name),
+      is_user_granted: grantedPermissions.includes(name),
+    })),
+    grantedPermissions,
+    availablePermissions: templatePermissionRows
+      .filter((permission) => !grantedPermissions.includes(permission.name))
+      .map(({ name }) => name),
   })
 }
 
