@@ -111,7 +111,6 @@ const evaluateExpression: EvaluateExpression = async (inputQuery, params = defau
       Object.entries(replacementsObj)
         .reverse()
         .forEach(([param, replacement]) => {
-          console.log(param, replacement)
           outputString = outputString.replace(new RegExp(`${param}`, 'g'), replacement ?? '')
         })
       return outputString

@@ -1088,10 +1088,10 @@
   version "1.0.1"
   resolved "https://npm.pkg.github.com/download/@openmsupply/deep-comparison/1.0.1/e2230c86d7c57a929ecced4212c0812c00a98717556a0122ff5f343c3a9dc1df#da636710e93ab0310f3a15967be8eba3aaf3844d"
 
-"@openmsupply/expression-evaluator@^1.9.4":
-  version "1.9.4"
-  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.9.4/5368821df9b865ca99253494808f7b12aa741af9a0ecca817d8e21fc51f11172#c3980d4b46e952dfc9bd08beaaa80f6b4a085a39"
-  integrity sha512-Ymzca2tuD5CkGt2RrgFbCKjBnLyVp9WvY41weiZBrSc2RGDvgS6TMLQfHY5nak0sx5eM9y+OM+HAPPzCxZFy9g==
+"@openmsupply/expression-evaluator@^1.9.5":
+  version "1.9.5"
+  resolved "https://npm.pkg.github.com/download/@openmsupply/expression-evaluator/1.9.5/125bf76206253e0935aa5090b0ca4477af42ab4c84dd8eb9d6ea57bfc67293f5#a3990bdbc91db86a621c4efe406dc2bbc1fbbce7"
+  integrity sha512-ugAQmPv8k/PB5saaimwDNKpjfTeV81jfihk3tfNSbanZUdJOgfiCWAUXSdPWhmaa0i6yLu4nN5m4UkKGYL+m8Q==
 
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.1"
