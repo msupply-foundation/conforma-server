@@ -641,10 +641,12 @@ class PostgresDB {
       WHERE username = $1
       AND (${orgMatch} OR "isUserCategory" = true)
       `
+
     const values: (string | number)[] = [username]
     if (orgId) values.push(orgId)
     try {
       const result = await this.query({ text, values })
+      console.log('result', result)
       return result.rows
     } catch (err) {
       console.log(err.message)
