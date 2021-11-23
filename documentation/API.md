@@ -198,35 +198,49 @@ The same as login endpoint, without the success field
 
 #### User Permissions
 
-GET: `/user-permissions`
+GET: `/user-permissions?username=<username>&orgId=<orgId>`
 
-End point to ger **another** user permissions given a organisation.
+End point to get **another** user's granted permissions + all existing permissions on templates for a given organisation. If no orgId is received will list user-only permissions (the ones with organisation_id = NULL) for external users. Intended for use in template to view/edit antoher user's permissions -- client supplies `username`, `orgId` and the JWT from `/login` return
 
-Will check JWT of current user to check if they have permission to view user's permissions in the given organisation. - TODO
+Returns (on success):
 
-##### REQUEST Body:
-
-```JSON
-{
-    "username": "${username}",
-    "orgId": "${orgId}"
-}
-```
+- template permissions for organisation (using `is_system_org` to filter internal/external permissionNames)
+  - display_name (just the **name** field written with spaces)
+  - name (to be used in the action to be granting the user's permission)
+  - description (new field)
+  - is_user_grante (**true/false** - similar to what is in next two arrays)
+- granted permissions to user
+  - Permissions names user **has** been granted permission
+- available permissions for user
+  - Permissions names user **hasn't** been granted permission
 
 ##### RESPONSE Body (example):
 
 ```JSON
 {
-    "success": true,
-    "templatePermissions": {
-        "TestRego": [
-            "Apply"
-        ],
-        "CompRego1": [
-            "Apply",
-            "Review"
-        ]
-    }
+    "templatePermissions":
+    [
+        {
+            "name": "applyTestRego",
+            "display_name": "Apply Test Rego",
+            "description": "Permission for external user to apply for a Test template of user registration",
+            "is_user_granted": true
+        },
+        {
+            "name": "applyCompanyRegistration",
+            "display_name": "Apply Company Registration",
+            "description": "Permission for external user to apply for Company registration template",
+            "is_user_grante": false
+        }
+    ],
+   "grantedPermissions":
+   [
+      "applyTestRego"
+   ],
+   "availablePermissions":
+   [
+       "applyCompanyRegistration"
+   ]
 }
 ```
 
