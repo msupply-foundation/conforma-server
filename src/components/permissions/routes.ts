@@ -68,8 +68,6 @@ const routeLoginOrg = async (request: any, reply: any) => {
   // if (!body.sessionId) return reply.send({ success: false, message: 'sessionId not provided' })
   const { orgId, sessionId } = body
 
-  console.log('orgId', orgId, 'sessionId', sessionId, 'auth', auth)
-
   if (!auth.userId) return reply.send({ success: false, message: 'userId not provided' })
   const { userId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })

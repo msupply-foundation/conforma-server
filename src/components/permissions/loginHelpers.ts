@@ -33,14 +33,10 @@ type UserOrgParameters = {
 const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
   const { username, userId, orgId, sessionId } = userOrgParameters
 
-  console.log('userOrgParamentes', username, userId, orgId, sessionId)
-
   const userOrgData: UserOrg[] = await databaseConnect.getUserOrgData({
     userId,
     username,
   })
-
-  console.log('userOrgData', userId, username, userOrgData)
 
   const {
     userId: newUserId,
