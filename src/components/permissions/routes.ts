@@ -118,7 +118,7 @@ const routeUserPermissions = async (request: any, reply: any) => {
             name: permissionName,
             description,
             displayName: startCase(permissionName),
-            isUserGranted: Object.keys(grantedPermissions).includes(permissionName),
+            isUserGranted: grantedPermissions.includes(permissionName),
             templateCodes: [],
           }
         if (!templatePermissions[permissionName].templateCodes.includes(templateCode))
