@@ -101,7 +101,7 @@ const routeUserPermissions = async (request: any, reply: any) => {
     })
 
   const { username } = query
-  const orgId = query.ordId ?? null
+  const orgId = query.orgId ?? null
 
   if (auth.error) return reply.send({ success: false, message: auth.console.error })
 
