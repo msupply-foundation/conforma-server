@@ -110,7 +110,7 @@ class DBConnect {
 
   public getAllPermissions = PostgresDB.getAllPermissions
 
-  public getDistinctPermissions = PostgresDB.getDistinctPermissions
+  public getTemplatePermissions = PostgresDB.getTemplatePermissions
 
   public getAllGeneratedRowPolicies = PostgresDB.getAllGeneratedRowPolicies
 

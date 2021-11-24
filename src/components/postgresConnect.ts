@@ -664,8 +664,12 @@ class PostgresDB {
     }
   }
 
-  public getDistinctPermissions = async (isSystemOrgPermission: boolean = false) => {
-    const text = 'select * from permission_name where is_system_org_permission = $1'
+  public getTemplatePermissions = async (isSystemOrgPermission: boolean = false) => {
+    const text = `SELECT template.code as "templateCode", pn.name as "permissionName", description 
+      FROM permission_name pn
+      JOIN template_permission tp ON pn.id = tp.permission_name_id
+      join template on tp.template_id = template.id
+      WHERE is_system_org_permission = $1`
     try {
       const result = await this.query({ text, values: [isSystemOrgPermission] })
       return result.rows

@@ -58,17 +58,8 @@ Authenticates user and checks they belong to requested org (id). Returns:
   - JWT (with orgId included)
 */
 const routeLoginOrg = async (request: any, reply: any) => {
-  const { auth, body } = request
-  if (!body)
-    return reply.send({
-      success: false,
-      message: 'Missing orgId in body.',
-    })
-  if (!body.orgId) return reply.send({ success: false, message: 'orgId not provided' })
-  // if (!body.sessionId) return reply.send({ success: false, message: 'sessionId not provided' })
-  const { orgId, sessionId } = body
+  const { orgId, sessionId } = request.body
 
-  if (!auth.userId) return reply.send({ success: false, message: 'userId not provided' })
   const { userId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
@@ -105,33 +96,48 @@ const routeUserPermissions = async (request: any, reply: any) => {
 
   if (auth.error) return reply.send({ success: false, message: auth.console.error })
 
-  // Store object with keys as permissionNames and values as an array of templateCodes
+  const isSystemOrg = await databaseConnect.isInternalOrg(Number(orgId))
+
+  const templatePermissionRows = await databaseConnect.getTemplatePermissions(isSystemOrg)
   const userExistingPermissions = await databaseConnect.getUserTemplatePermissions(username, orgId)
+
   const grantedPermissions = userExistingPermissions.reduce(
-    (grantedPermissions, { permissionName, templateCode }) => {
-      if (!grantedPermissions[permissionName]) grantedPermissions[permissionName] = []
-      if (!grantedPermissions[permissionName].includes(templateCode))
-        grantedPermissions[permissionName].push(templateCode)
+    (grantedPermissions, { permissionName }) => {
+      if (!grantedPermissions.includes(permissionName)) grantedPermissions.push(permissionName)
       return grantedPermissions
+    },
+    []
+  )
+
+  // Store object with keys as permissionNames and values as an array of templateCodes
+  const templatePermissions = templatePermissionRows.reduce(
+    (templatePermissions, { permissionName, templateCode, description }) => {
+      if (!templatePermissions[permissionName])
+        templatePermissions[permissionName] = {
+          name: permissionName,
+          description,
+          displayName: startCase(permissionName),
+          isUserGranted: Object.keys(grantedPermissions).includes(permissionName),
+          templateCodes: [],
+        }
+      if (!templatePermissions[permissionName].templateCodes.includes(templateCode))
+        templatePermissions[permissionName].templateCodes.push(templateCode)
+      return templatePermissions
     },
     {}
   )
 
-  const isSystemOrg = await databaseConnect.isInternalOrg(Number(orgId))
-
-  const templatePermissionRows = await databaseConnect.getDistinctPermissions(isSystemOrg)
+  const availablePermissions = Object.values(templatePermissionRows)
+    .filter(({ permissionName }) => !grantedPermissions.includes(permissionName))
+    .reduce((availablePermissions, { permissionName }) => {
+      if (!availablePermissions.includes(permissionName)) availablePermissions.push(permissionName)
+      return availablePermissions
+    }, [])
 
   return reply.send({
-    templatePermissions: templatePermissionRows.map(({ name, description }) => ({
-      name,
-      description,
-      display_name: startCase(name),
-      is_user_granted: Object.keys(grantedPermissions).includes(name),
-    })),
+    templatePermissions,
     grantedPermissions,
-    availablePermissions: templatePermissionRows
-      .filter((permission) => !Object.keys(grantedPermissions).includes(permission.name))
-      .map(({ name }) => name),
+    availablePermissions,
   })
 }
 
