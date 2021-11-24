@@ -109,22 +109,24 @@ const routeUserPermissions = async (request: any, reply: any) => {
     []
   )
 
-  // Store object with keys as permissionNames and values as an array of templateCodes
-  const templatePermissions = templatePermissionRows.reduce(
-    (templatePermissions, { permissionName, templateCode, description }) => {
-      if (!templatePermissions[permissionName])
-        templatePermissions[permissionName] = {
-          name: permissionName,
-          description,
-          displayName: startCase(permissionName),
-          isUserGranted: Object.keys(grantedPermissions).includes(permissionName),
-          templateCodes: [],
-        }
-      if (!templatePermissions[permissionName].templateCodes.includes(templateCode))
-        templatePermissions[permissionName].templateCodes.push(templateCode)
-      return templatePermissions
-    },
-    {}
+  // Store array of object per permissionNames with properties and an array of templateCodes
+  const templatePermissions = Object.values(
+    templatePermissionRows.reduce(
+      (templatePermissions, { permissionName, templateCode, description }) => {
+        if (!templatePermissions[permissionName])
+          templatePermissions[permissionName] = {
+            name: permissionName,
+            description,
+            displayName: startCase(permissionName),
+            isUserGranted: Object.keys(grantedPermissions).includes(permissionName),
+            templateCodes: [],
+          }
+        if (!templatePermissions[permissionName].templateCodes.includes(templateCode))
+          templatePermissions[permissionName].templateCodes.push(templateCode)
+        return templatePermissions
+      },
+      {}
+    )
   )
 
   const availablePermissions = Object.values(templatePermissionRows)
