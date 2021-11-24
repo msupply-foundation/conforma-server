@@ -205,14 +205,14 @@ End point to get **another** user's granted permissions + all existing permissio
 Returns (on success):
 
 - template permissions for organisation (using `is_system_org` to filter internal/external permissionNames)
-  - display_name (just the **name** field written with spaces)
+  - displayName (just the **name** field written with spaces)
   - name (to be used in the action to be granting the user's permission)
   - description (new field)
-  - is_user_granted (**true/false** - similar to what is in next two arrays)
-  - template_codes: Array of all templates linked to permission - unrelated to current orgId
-    and the JWT from `/login` return
+  - isUserGranted (**true/false** - similar to what is in next two arrays)
+  - TemplateCodes - Array with all templates linked to this permission
 - granted permissions to user
   - Permissions names user **has** been granted permission
+    - Each permissionName has a list of templates linked to it
 - available permissions for user
   - Permissions names user **hasn't** been granted permission
 
@@ -224,17 +224,17 @@ Returns (on success):
     [
         {
             "name": "applyTestRego",
-            "display_name": "Apply Test Rego",
+            "displayName": "Apply Test Rego",
             "description": "Permission for external user to apply for a Test template of user registration",
-            "is_user_granted": true,
-            "template_codes": [ "UserRegistration" ]
+            "isUserGranted": true,
+            "templateCodes": [ "UserRegistration" ]
         },
         {
             "name": "applyCompanyRegistration",
-            "display_name": "Apply Company Registration",
+            "displayName": "Apply Company Registration",
             "description": "Permission for external user to apply for Company registration template",
-            "is_user_grante": false,
-            "templateCodes": [ "OrgRegistration" ]
+            "isUserGranted": false,
+            "templateCodes": [ "CompanyRegistration" ]
         }
     ],
    "grantedPermissions":
