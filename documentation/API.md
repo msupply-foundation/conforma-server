@@ -200,7 +200,7 @@ The same as login endpoint, without the success field
 
 GET: `/user-permissions?username=<username>&orgId=<orgId>`
 
-End point to get **another** user's granted permissions + all existing permissions on templates for a given organisation. If no orgId is received will list user-only permissions (the ones with organisation_id = NULL) for external users. Intended for use in template to view/edit antoher user's permissions -- client supplies `username`, `orgId` and the JWT from `/login` return
+End point to get **another** user's granted permissions + all existing permissions on templates for a given organisation. If no orgId is received the list should contain user-only permissions (the ones with organisation_id = NULL) for external users. Intended for use in template to view/edit antoher user's permissions -- client supplies `username` and `orgId`.
 
 Returns (on success):
 
@@ -208,7 +208,9 @@ Returns (on success):
   - display_name (just the **name** field written with spaces)
   - name (to be used in the action to be granting the user's permission)
   - description (new field)
-  - is_user_grante (**true/false** - similar to what is in next two arrays)
+  - is_user_granted (**true/false** - similar to what is in next two arrays)
+  - template_codes: Array of all templates linked to permission - unrelated to current orgId
+    and the JWT from `/login` return
 - granted permissions to user
   - Permissions names user **has** been granted permission
 - available permissions for user
@@ -224,13 +226,15 @@ Returns (on success):
             "name": "applyTestRego",
             "display_name": "Apply Test Rego",
             "description": "Permission for external user to apply for a Test template of user registration",
-            "is_user_granted": true
+            "is_user_granted": true,
+            "template_codes": [ "UserRegistration" ]
         },
         {
             "name": "applyCompanyRegistration",
             "display_name": "Apply Company Registration",
             "description": "Permission for external user to apply for Company registration template",
-            "is_user_grante": false
+            "is_user_grante": false,
+            "templateCodes": [ "OrgRegistration" ]
         }
     ],
    "grantedPermissions":
