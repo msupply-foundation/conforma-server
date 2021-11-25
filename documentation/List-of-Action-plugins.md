@@ -1,7 +1,6 @@
 ## Contents
 
 <!-- toc -->
-
 - [Console Log](#console-log)
 - [Change Outcome](#change-outcome)
 - [Increment Stage](#increment-stage)
@@ -319,8 +318,6 @@ Grants permission to user/org -- i.e. creates `permission_join` from user/org to
 
 Revokes permissions from to user/org -- i.e. sets the `is_active` field to `false` on `permission_join` for a given user/org and permission name.
 
-`permission_join`s are never actually removed, they just get set to inactive -- this ensures that a user can still _read_ previous applications, even if they've lost permissions for that type, they just can't create new ones. _**NOTE**: This functionality not actually implemented yet in policies/front-end -- TO-DO_
-
 - _Action Code:_ **`revokePermissions`**
 
 | Input parameters<br />(\*required) <br/> | Output properties                                                                    |
@@ -329,6 +326,9 @@ Revokes permissions from to user/org -- i.e. sets the `is_active` field to `fals
 | `permissionNames`\* [Array of names]     |                                                                                      |
 | `orgName`                                |                                                                                      |
 | `orgId`                                  |                                                                                      |
+| `isRemovingPermission` (default: `true`)                                 |                                                                                      |
+
+The `isRemovingPermission` parameter specifies whether or not the `permission_join` record should be *deleted* (the default behaviour) or just set to inactive (which would mean the user can still *view* their applications but not create new ones, or submit existing). _**NOTE**: This functionality not actually implemented yet in policies/front-end, so only full removal should be used currently -- TO-DO_
 
 ---
 
