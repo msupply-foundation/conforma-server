@@ -5,8 +5,7 @@ import databaseMethods from './databaseMethods'
 const revokePermissions = async ({ applicationData, parameters, DBConnect }: ActionPluginInput) => {
   const db = databaseMethods(DBConnect)
   // Don't specify orgName/Id default because we might be targeting a permission_join with no user (even if application has organisation)
-  const { username = applicationData?.username, orgName, orgId, permissionNames } = parameters
-  const isRemovingPermission = true
+  const { username = applicationData?.username, orgName, orgId, permissionNames, isRemovingPermission = true } = parameters
   try {
     const result = Boolean(orgName || orgId)
       ? await db.revokePermissionFromUserOrg(
