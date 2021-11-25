@@ -665,11 +665,8 @@ class PostgresDB {
   }
 
   public getTemplatePermissions = async (isSystemOrgPermission: boolean = false) => {
-    const text = `SELECT template.code as "templateCode", pn.name as "permissionName", description 
-      FROM permission_name pn
-      JOIN template_permission tp ON pn.id = tp.permission_name_id
-      join template on tp.template_id = template.id
-      WHERE is_system_org_permission = $1`
+    const text = `SELECT * FROM permissions_all
+      WHERE  "isSystemOrgPermission" = $1`
     try {
       const result = await this.query({ text, values: [isSystemOrgPermission] })
       return result.rows

@@ -15833,6 +15833,7 @@ export type PermissionsAll = {
   userId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   isUserCategory?: Maybe<Scalars['Boolean']>;
+  isSystemOrgPermission?: Maybe<Scalars['Boolean']>;
 };
 
 /**
@@ -15882,6 +15883,8 @@ export type PermissionsAllCondition = {
   orgId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `isUserCategory` field. */
   isUserCategory?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isSystemOrgPermission` field. */
+  isSystemOrgPermission?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `PermissionsAll` object types. All fields are combined with a logical ‘and.’ */
@@ -15928,6 +15931,8 @@ export type PermissionsAllFilter = {
   orgId?: Maybe<IntFilter>;
   /** Filter by the object’s `isUserCategory` field. */
   isUserCategory?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isSystemOrgPermission` field. */
+  isSystemOrgPermission?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<PermissionsAllFilter>>;
   /** Checks for any expressions in this list. */
@@ -16002,7 +16007,9 @@ export enum PermissionsAllsOrderBy {
   OrgIdAsc = 'ORG_ID_ASC',
   OrgIdDesc = 'ORG_ID_DESC',
   IsUserCategoryAsc = 'IS_USER_CATEGORY_ASC',
-  IsUserCategoryDesc = 'IS_USER_CATEGORY_DESC'
+  IsUserCategoryDesc = 'IS_USER_CATEGORY_DESC',
+  IsSystemOrgPermissionAsc = 'IS_SYSTEM_ORG_PERMISSION_ASC',
+  IsSystemOrgPermissionDesc = 'IS_SYSTEM_ORG_PERMISSION_DESC'
 }
 
 export type PostgresRowLevel = {
@@ -40815,6 +40822,7 @@ export type PermissionsAllResolvers<ContextType = any, ParentType extends Resolv
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isUserCategory?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isSystemOrgPermission?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
