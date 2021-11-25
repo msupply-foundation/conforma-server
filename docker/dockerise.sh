@@ -3,9 +3,9 @@
 # This command requires githubtoken.txt, in the repo root (it's git ingored btw).
 # githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
 
-SERVER_BRANCH='develop'
-WEB_APP_BRANCH='develop'
-IMAGE_NAME='mflow-demo'
+SERVER_BRANCH='B-1.0.10'
+WEB_APP_BRANCH='B-1.0.10'
+IMAGE_NAME='conforma-demo'
 INITIAL_DATA_LOCALE=''
 
 NODE_VERSION='14'
