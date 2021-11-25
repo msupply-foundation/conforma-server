@@ -23,10 +23,15 @@ const databaseMethods = (DBConnect: any) => ({
   revokePermissionFromUserOrg: async (
     username: string,
     org: string | number,
-    permissionNames: string[]
+    permissionNames: string[],
+    isRemovingPermissions: boolean
   ) => {
     const text = `
-      UPDATE permission_join SET is_active = false
+      ${
+        isRemovingPermissions
+          ? 'DELETE FROM permission_join '
+          : 'UPDATE permission_join SET is_active = false '
+      } 
       WHERE user_id = (
         SELECT id from "user" WHERE username = $1
       ) AND organisation_id = ${

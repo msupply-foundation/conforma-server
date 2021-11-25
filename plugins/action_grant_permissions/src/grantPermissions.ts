@@ -13,10 +13,13 @@ const grantPermissions = async ({ applicationData, parameters, DBConnect }: Acti
     const outputNames = []
 
     for (const permissionName of permissionNames) {
-      const permissionJoinId =
-        orgName || orgId // Can use either one to create a permission_join with a company
-          ? await DBConnect.joinPermissionNameToUserOrg(username, orgName || orgId, permissionName)
-          : await DBConnect.joinPermissionNameToUser(username, permissionName)
+      const permissionJoinId = Boolean(orgName || orgId) // Can use either one to create a permission_join with a company
+        ? await DBConnect.joinPermissionNameToUserOrg(
+            username,
+            orgName || Number(orgId),
+            permissionName
+          )
+        : await DBConnect.joinPermissionNameToUser(username, permissionName)
       permissionJoinIds.push(permissionJoinId)
       if (permissionJoinId) outputNames.push(permissionName)
     }

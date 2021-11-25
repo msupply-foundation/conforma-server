@@ -6,14 +6,16 @@ const revokePermissions = async ({ applicationData, parameters, DBConnect }: Act
   const db = databaseMethods(DBConnect)
   // Don't specify orgName/Id default because we might be targeting a permission_join with no user (even if application has organisation)
   const { username = applicationData?.username, orgName, orgId, permissionNames } = parameters
+  const isRemovingPermission = true
   try {
-    const result =
-      orgName || orgId
-        ? await db.revokePermissionFromUserOrg(username, orgName || orgId, permissionNames)
-        : await db.revokePermissionFromUser(username, permissionNames)
-
-    console.log('Revoked permissions:')
-    console.log({ username, orgName, orgId, permissions: result })
+    const result = Boolean(orgName || orgId)
+      ? await db.revokePermissionFromUserOrg(
+          username,
+          orgName || Number(orgId),
+          permissionNames,
+          isRemovingPermission
+        )
+      : await db.revokePermissionFromUser(username, permissionNames)
 
     return {
       status: ActionQueueStatus.Success,
