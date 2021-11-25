@@ -32,6 +32,7 @@ Endpoints are divided into three group, as far as authentication goes:
 - **Admin** -- requires Admin permission (`isAdmin: true` in JWT)
 
 ---
+
 ### Public endpoints
 
 All are prefixed with `/api/public` e.g `http://localhost:8080/api/public/login`
@@ -108,8 +109,8 @@ GET: `/file?id=<uniqueId>`
 
 Usage: `GET` request with file database id as a URL query parameter.
 
-This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.
----
+## This is a public endpoint, but files all have a long uniqueId which should prevent unauthorized access.
+
 ### Authenticated endpoints
 
 These are all prefixes with `/api`, e.g. `http://localhost:8080/api/login-org`
@@ -171,8 +172,6 @@ Request will return an object, structured like so:
 There are basic unit tests for this endpoint. Run:  
 `yarn test src/server.test.ts`
 
-
-
 #### Login Organisation
 
 POST: `/login-org`
@@ -187,7 +186,7 @@ Returns (on success):
 
 #### User Info
 
-GET: `/userInfo`
+GET: `/user-info`
 
 End point to get user permission and info based on JWT token.
 
@@ -196,6 +195,61 @@ If JWT is invalid or is missing 'nonRegistered' user info will be returned.
 ##### RESPONSE Body:
 
 The same as login endpoint, without the success field
+
+#### User Permissions
+
+GET: `/user-permissions?username=<username>&orgId=<orgId>`
+
+End point to get **another** user's granted permissions + all existing permissions on templates for a given organisation. If no orgId is received the list should contain user-only permissions (the ones with organisation_id = NULL) for external users. Intended for use in template to view/edit antoher user's permissions -- client supplies `username` and `orgId`.
+
+Returns (on success):
+
+- template permissions for organisation (using `is_system_org` to filter internal/external permissionNames)
+  - id (permissionNameId)
+  - name (to be used in the action to be granting the user's permission)
+  - displayName (just the **name** field written with spaces)
+  - description (new field)
+  - isUserGranted (**true/false** - similar to what is in next two arrays)
+  - TemplateCodes - Array with all templates linked to this permission
+- granted permissions to user
+  - Permissions names user **has** been granted permission
+    - Each permissionName has a list of templates linked to it
+- available permissions for user
+  - Permissions names user **hasn't** been granted permission
+
+##### RESPONSE Body (example):
+
+```JSON
+{
+    "templatePermissions":
+    [
+        {
+            "id": 1,
+            "name": "applyTestRego",
+            "displayName": "Apply Test Rego",
+            "description": "Permission for external user to apply for a Test template of user registration",
+            "isUserGranted": true,
+            "templateCodes": [ "UserRegistration" ]
+        },
+        {
+            "id": 2,
+            "name": "applyCompanyRegistration",
+            "displayName": "Apply Company Registration",
+            "description": "Permission for external user to apply for Company registration template",
+            "isUserGranted": false,
+            "templateCodes": [ "CompanyRegistration" ]
+        }
+    ],
+   "grantedPermissions":
+   [
+      "applyTestRego"
+   ],
+   "availablePermissions":
+   [
+       "applyCompanyRegistration"
+   ]
+}
+```
 
 #### Generate PDF
 

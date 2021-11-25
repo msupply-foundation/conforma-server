@@ -1,10 +1,11 @@
 import databaseConnect from '../databaseConnect'
-import { getUserInfo, extractJWTfromHeader } from './loginHelpers'
+import { getUserInfo } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
 import path from 'path'
 import { readFileSync } from 'fs'
+import { startCase } from 'lodash'
 import { getAppEntryPointDir } from '../utilityFunctions'
 
 const saltRounds = 10 // For bcrypt salting: 2^saltRounds = 1024
@@ -58,6 +59,7 @@ Authenticates user and checks they belong to requested org (id). Returns:
 */
 const routeLoginOrg = async (request: any, reply: any) => {
   const { orgId, sessionId } = request.body
+
   const { userId, error } = request.auth
   if (error) return reply.send({ success: false, message: error })
 
@@ -78,6 +80,70 @@ const routeUserInfo = async (request: any, reply: any) => {
   return reply.send({
     success: true,
     ...(await getUserInfo({ userId, orgId, sessionId: sessionId ?? returnSessionId })),
+  })
+}
+
+const routeUserPermissions = async (request: any, reply: any) => {
+  const { auth, query } = request
+  if (!query || !query.username)
+    return reply.send({
+      success: false,
+      message: 'Missing username in query.',
+    })
+
+  const { username } = query
+  const orgId = query?.orgId ?? null
+
+  if (auth.error) return reply.send({ success: false, message: auth.console.error })
+
+  const isSystemOrg = await databaseConnect.isInternalOrg(Number(orgId))
+
+  const templatePermissionRows = await databaseConnect.getTemplatePermissions(isSystemOrg)
+  const userExistingPermissions = await databaseConnect.getUserTemplatePermissions(username, orgId)
+
+  const grantedPermissions = userExistingPermissions.reduce(
+    (grantedPermissions, { permissionName }) => {
+      if (!grantedPermissions.includes(permissionName)) grantedPermissions.push(permissionName)
+      return grantedPermissions
+    },
+    []
+  )
+
+  // Store array of object per permissionNames with properties and an array of templateCodes
+  const templatePermissions = Object.values(
+    templatePermissionRows.reduce(
+      (templatePermissions, { permissionNameId, permissionName, templateCode, description }) => {
+        if (!templatePermissions[permissionName])
+          templatePermissions[permissionName] = {
+            id: permissionNameId,
+            name: permissionName,
+            description,
+            displayName: startCase(permissionName),
+            isUserGranted: grantedPermissions.includes(permissionName),
+            templateCodes: [],
+          }
+        if (
+          !!templateCode &&
+          !templatePermissions[permissionName].templateCodes.includes(templateCode)
+        )
+          templatePermissions[permissionName].templateCodes.push(templateCode)
+        return templatePermissions
+      },
+      {}
+    )
+  )
+
+  const availablePermissions = Object.values(templatePermissionRows)
+    .filter(({ permissionName }) => !grantedPermissions.includes(permissionName))
+    .reduce((availablePermissions, { permissionName }) => {
+      if (!availablePermissions.includes(permissionName)) availablePermissions.push(permissionName)
+      return availablePermissions
+    }, [])
+
+  return reply.send({
+    templatePermissions,
+    grantedPermissions,
+    availablePermissions,
   })
 }
 
@@ -171,6 +237,7 @@ const routecheckUnique = async (request: any, reply: any) => {
 
 export {
   routeUserInfo,
+  routeUserPermissions,
   routeLogin,
   routeLoginOrg,
   routeUpdateRowPolicies,

@@ -37,7 +37,8 @@ CREATE VIEW permissions_all AS (
             TRUE
         ELSE
             FALSE
-        END AS "isUserCategory"
+        END AS "isUserCategory",
+        permission_name.is_system_org_permission AS "isSystemOrgPermission"
     FROM
         permission_name
         JOIN permission_join ON permission_join.permission_name_id = permission_name.id

@@ -7,6 +7,7 @@ import {
   routeVerification,
   routeGetPrefs,
   routecheckUnique,
+  routeUserPermissions,
 } from './routes'
 
 export {
@@ -18,4 +19,5 @@ export {
   routeVerification,
   routeGetPrefs,
   routecheckUnique,
+  routeUserPermissions
 }

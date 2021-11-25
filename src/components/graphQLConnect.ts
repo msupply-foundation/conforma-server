@@ -91,6 +91,20 @@ class GraphQLdb {
     return data?.reviews?.nodes[0] || null
   }
 
+  public isInternalOrg = async (orgId: number): Promise<boolean> => {
+    const data = await this.gqlQuery(
+      `
+      query getOrganisation($orgId: Int!) {
+        organisation(id: $orgId) {
+          isSystemOrg
+        }
+      }
+      `,
+      { orgId }
+    )
+    return data?.organisation?.isSystemOrg ?? false
+  }
+
   public getTemplateId = async (tableName: string, record_id: number): Promise<number> => {
     switch (tableName) {
       default:

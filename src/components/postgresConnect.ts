@@ -641,6 +641,7 @@ class PostgresDB {
       WHERE username = $1
       AND (${orgMatch} OR "isUserCategory" = true)
       `
+
     const values: (string | number)[] = [username]
     if (orgId) values.push(orgId)
     try {
@@ -656,6 +657,18 @@ class PostgresDB {
     const text = 'select * from permissions_all'
     try {
       const result = await this.query({ text, values: [] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getTemplatePermissions = async (isSystemOrgPermission: boolean = false) => {
+    const text = `SELECT * FROM permissions_all
+      WHERE  "isSystemOrgPermission" = $1`
+    try {
+      const result = await this.query({ text, values: [isSystemOrgPermission] })
       return result.rows
     } catch (err) {
       console.log(err.message)
