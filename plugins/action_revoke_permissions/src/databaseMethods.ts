@@ -24,7 +24,7 @@ const databaseMethods = (DBConnect: any) => ({
     username: string,
     org: string | number,
     permissionNames: string[],
-    isRemovingPermissions: boolean
+    isRemovingPermissions: boolean = true
   ) => {
     const text = `
       ${
