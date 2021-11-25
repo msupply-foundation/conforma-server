@@ -205,8 +205,9 @@ End point to get **another** user's granted permissions + all existing permissio
 Returns (on success):
 
 - template permissions for organisation (using `is_system_org` to filter internal/external permissionNames)
-  - displayName (just the **name** field written with spaces)
+  - id (permissionNameId)
   - name (to be used in the action to be granting the user's permission)
+  - displayName (just the **name** field written with spaces)
   - description (new field)
   - isUserGranted (**true/false** - similar to what is in next two arrays)
   - TemplateCodes - Array with all templates linked to this permission
@@ -223,6 +224,7 @@ Returns (on success):
     "templatePermissions":
     [
         {
+            "id": 1,
             "name": "applyTestRego",
             "displayName": "Apply Test Rego",
             "description": "Permission for external user to apply for a Test template of user registration",
@@ -230,6 +232,7 @@ Returns (on success):
             "templateCodes": [ "UserRegistration" ]
         },
         {
+            "id": 2,
             "name": "applyCompanyRegistration",
             "displayName": "Apply Company Registration",
             "description": "Permission for external user to apply for Company registration template",
