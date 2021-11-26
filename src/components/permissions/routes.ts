@@ -101,7 +101,7 @@ const routeUserPermissions = async (request: any, reply: any) => {
   const templatePermissionRows = await databaseConnect.getTemplatePermissions(isSystemOrg)
   const userExistingPermissions = username
     ? await databaseConnect.getUserTemplatePermissions(username, orgId)
-    : await databaseConnect.getOrgTemplatePermissions(orgId)
+    : await databaseConnect.getOrgTemplatePermissions(isSystemOrg)
 
   const grantedPermissions = userExistingPermissions.reduce(
     (grantedPermissions, { permissionName }) => {

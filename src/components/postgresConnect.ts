@@ -634,12 +634,12 @@ class PostgresDB {
     }
   }
 
-  public getOrgTemplatePermissions = async (orgId: number) => {
+  public getOrgTemplatePermissions = async (isSystemOrg: boolean) => {
     const text = `SELECT * FROM permissions_all
-      WHERE "orgId" = $1
+      WHERE "isSystemOrgPermission" = $1
       `
     try {
-      const result = await this.query({ text, values: [orgId] })
+      const result = await this.query({ text, values: [isSystemOrg] })
       return result.rows
     } catch (err) {
       console.log(err.message)
