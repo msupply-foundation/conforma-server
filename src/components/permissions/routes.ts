@@ -85,10 +85,10 @@ const routeUserInfo = async (request: any, reply: any) => {
 
 const routeUserPermissions = async (request: any, reply: any) => {
   const { auth, query } = request
-  if (!query || !query.username)
+  if (!query || (!query.username && !query.orgId))
     return reply.send({
       success: false,
-      message: 'Missing username in query.',
+      message: 'Missing username or orgId in query.',
     })
 
   const { username } = query
@@ -99,7 +99,9 @@ const routeUserPermissions = async (request: any, reply: any) => {
   const isSystemOrg = await databaseConnect.isInternalOrg(Number(orgId))
 
   const templatePermissionRows = await databaseConnect.getTemplatePermissions(isSystemOrg)
-  const userExistingPermissions = await databaseConnect.getUserTemplatePermissions(username, orgId)
+  const userExistingPermissions = username
+    ? await databaseConnect.getUserTemplatePermissions(username, orgId)
+    : await databaseConnect.getOrgTemplatePermissions(orgId)
 
   const grantedPermissions = userExistingPermissions.reduce(
     (grantedPermissions, { permissionName }) => {
