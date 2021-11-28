@@ -87,7 +87,7 @@ async function generateReviewAssignments({
       )
 
       // Check if other reviewAssignment is already assigned to create new ones LOCKED
-      const existingReviewAssignments: ExistingReviewAssignment[] =
+      const previousReviewAssignments: ExistingReviewAssignment[] =
         await db.getExistingReviewAssignments(applicationId, stageNumber, nextReviewLevel)
 
       const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
@@ -102,7 +102,7 @@ async function generateReviewAssignments({
       const isLastStage = stageNumber === lastStageNumber
 
       const reviewAssignments: ReviewAssignmentObject = generateNextReviewAssignments({
-        existingReviewAssignments,
+        previousReviewAssignments,
         nextReviewLevel,
         nextLevelReviewers,
         applicationId,
@@ -167,7 +167,7 @@ async function generateReviewAssignments({
 }
 
 interface GenerateNextReviewAssignmentsProps {
-  existingReviewAssignments: ExistingReviewAssignment[]
+  previousReviewAssignments: ExistingReviewAssignment[]
   nextReviewLevel: number
   nextLevelReviewers: Reviewer[]
   applicationId: number
@@ -180,7 +180,7 @@ interface GenerateNextReviewAssignmentsProps {
 }
 
 const generateNextReviewAssignments = ({
-  existingReviewAssignments,
+  previousReviewAssignments,
   nextReviewLevel,
   nextLevelReviewers,
   applicationId,
@@ -191,6 +191,14 @@ const generateNextReviewAssignments = ({
   stageNumber,
   timeStageCreated,
 }: GenerateNextReviewAssignmentsProps): ReviewAssignmentObject => {
+  // Remove from the list of previous reviewAssignments when
+  // no longer showing reviewer on nextLevelReviewers (when permission is revoked)
+  const existingReviewAssignments = previousReviewAssignments.filter(({ userId }) =>
+    nextLevelReviewers.find(({ userId: reviewerId }) => reviewerId === userId)
+  )
+
+  console.log('existingReviewAssignments', existingReviewAssignments)
+
   const reviewAssignments: ReviewAssignmentObject = {}
   // Build reviewers into object map so we can combine duplicate user_orgs
   // and merge their section code restrictions
@@ -200,9 +208,13 @@ const generateNextReviewAssignments = ({
       (reviewAssignment) => reviewAssignment.userId === reviewer.userId
     )
 
+    const existingReviewsAssigned = existingReviewAssignments.filter(
+      ({ status }) => status === ReviewAssignmentStatus.Assigned
+    )
+
     // Get assignmentState with: status, isLocked and isSelfAssigned (to create new or update)
     const assignment = getNewOrExistingAssignmentStatus(
-      existingReviewAssignments.some(({ status }) => status == ReviewAssignmentStatus.Assigned),
+      existingReviewsAssigned,
       reviewer.canMakeFinalDecision,
       reviewer.canSelfAssign || nextReviewLevel > 1,
       existingAssignment
@@ -267,34 +279,36 @@ const constructReviewAssignmentObject = (
 
 // Checks if existing assignment, should keep status and update if isLocked
 const getNewOrExistingAssignmentStatus = (
-  // userId: number,
-  reviewAlreadyAssigned: boolean,
+  existingReviewsAssigned: ExistingReviewAssignment[],
   canMakeFinalDecision: boolean,
   isSelfAssignable: boolean,
   existingAssignment?: ExistingReviewAssignment
 ): AssignmentState => {
+  const isReviewAssigned = existingReviewsAssigned.length > 0
+  const isAssigned = existingReviewsAssigned.some(
+    ({ userId }) => userId === existingAssignment?.userId
+  )
   // temporarily final decision shouldn't be locked if there are other reviewAssignemt assigned
   // Note: This logic will be updated during implementation of ISSUE #836 (front-end) to allow
   // locking other reviewAssignments for finalDecision once one has been submitted.
   if (canMakeFinalDecision)
     return { status: ReviewAssignmentStatus.Assigned, isSelfAssignable: true, isLocked: false }
 
-  // If user already has reviewAssignment return same status and isLocked flag
-  if (existingAssignment)
-    return {
-      status: existingAssignment.status,
-      isSelfAssignable: existingAssignment.isSelfAssignable,
-      isLocked: existingAssignment.isLocked,
-    }
-
-  // Non-existing review assignments
-  // Should create new ReviewAssignment status = Available (always)
-  // If review canSelfAssign then isSelfAssignable = true (Default: false)
-  // If reviewAlreadyAssigned then isLocked = true (only for self-assignable)
+  // Create new OR update ReviewAssignment:
+  // 1. If existing
+  //   - keep same status, isSelfAssignable
+  //   - just update isLocked = true (if already assigned to another)
+  // 2. If new reviewAssignment:
+  //   - status = Available (always)
+  //   - if review canSelfAssign set isSelfAssignable = true (Default: false)
+  //   - if isReviewAssigned then isLocked = true (only when is self-assignable)
   return {
-    status: ReviewAssignmentStatus.Available,
-    isSelfAssignable,
-    isLocked: reviewAlreadyAssigned && isSelfAssignable,
+    status: existingAssignment?.status ?? ReviewAssignmentStatus.Available,
+    isSelfAssignable: existingAssignment?.isSelfAssignable ?? isSelfAssignable,
+    isLocked:
+      existingAssignment && isAssigned
+        ? existingAssignment.isLocked
+        : isReviewAssigned && isSelfAssignable,
   }
 }
 
