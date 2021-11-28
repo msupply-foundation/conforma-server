@@ -1,5 +1,5 @@
 {
-  "APP_NAME": "conforma",
+  "APP_NAME": "mFlow",
   "APP_NAME_SUBHEADER": "Gerenciador de formulários",
   "ACTION_ASSIGN": "Atribuir",
   "ACTION_CONTINUE": "Continuar",
@@ -147,7 +147,7 @@
   "TITLE_HISTORY_REVIEW": "Avaliação",
   "TITLE_HISTORY_SUBMITTED_BY_APPLICANT": "Enviado pelo solicitante",
   "TITLE_HISTORY_PANEL": "Histórico da avaliação",
-  "TITLE_LOGIN_HEADER": "Conforma - Gerenciador de formulários",
+  "TITLE_LOGIN_HEADER": "mFlow - Gerenciador de formulários",
   "TITLE_LOGIN": "Acesso",
   "TITLE_APPLICATION_FORM": "Secções do formulário",
   "TITLE_APPLICATION_SUMMARY": "Availar e enviar",
