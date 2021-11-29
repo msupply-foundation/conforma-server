@@ -34,7 +34,7 @@ async function refreshReviewAssignments({
     console.log(
       shouldRefreshAll
         ? 'Refreshing review_assignments for ALL active applications...'
-        : 'Refreshing review_assignments for applications:' + applicationIds
+        : 'Refreshing review_assignments for applications: ' + applicationIds
     )
 
     // Iterate over applications and call "generateReviewAssignments" action for
