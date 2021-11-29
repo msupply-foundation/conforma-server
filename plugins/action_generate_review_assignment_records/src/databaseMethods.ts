@@ -1,4 +1,5 @@
 import { PermissionPolicyType, ReviewAssignment } from '../../../src/generated/graphql'
+import { DeleteReviewAssignment, ExistingReviewAssignment } from './types'
 
 const databaseMethods = (DBConnect: any) => ({
   getLastStageNumber: async (applicationId: number) => {
@@ -177,6 +178,60 @@ const databaseMethods = (DBConnect: any) => ({
         // TO-DO: What to do with existing records whose review_assignments
         // weren't updated? (i.e. they should no longer exist)
         // Delete them?
+      } catch (err) {
+        console.log(err.message)
+        reviewAssignmentAssignerJoinIds.push(err.message)
+        throw err
+      }
+    }
+    return reviewAssignmentAssignerJoinIds
+  },
+
+  removeReviewAssignments: async (reviewAssignments: DeleteReviewAssignment[]) => {
+    const reviewAssignmentIds = []
+    for (const reviewAssignment of reviewAssignments) {
+      const { userId: reviewerId, stageNumber, levelNumber, applicationId } = reviewAssignment
+
+      const text = `
+        DELETE FROM review_assignment 
+          WHERE reviewer_id = $1
+          AND stage_number = $2
+          AND level_number = $3
+          AND application_id = $4 
+        RETURNING id`
+
+      try {
+        const result = await DBConnect.query({
+          text,
+          values: [reviewerId, stageNumber, levelNumber, applicationId],
+        })
+        reviewAssignmentIds.push(result.rows[0].id)
+      } catch (err) {
+        console.log(err.message)
+        reviewAssignmentIds.push(err.message)
+        throw err
+      }
+    }
+    return reviewAssignmentIds
+  },
+  removeReviewAssignerJoins: async (reviewAssignmentAssignerJoins: any) => {
+    const reviewAssignmentAssignerJoinIds = []
+    for (const reviewAssignmentAssignerJoin of reviewAssignmentAssignerJoins) {
+      const { assignerId, reviewAssignmentId, organisationId } = reviewAssignmentAssignerJoin
+
+      const text = `
+        DELETE FROM review_assignment 
+          WHERE  assigner_id = $1
+          AND review_assignment_id = $2
+          AND organisation_id = $3
+        RETURNING id`
+
+      try {
+        const result = await DBConnect.query({
+          text,
+          values: [assignerId, reviewAssignmentId, organisationId],
+        })
+        reviewAssignmentAssignerJoinIds.push(result.rows[0].id)
       } catch (err) {
         console.log(err.message)
         reviewAssignmentAssignerJoinIds.push(err.message)

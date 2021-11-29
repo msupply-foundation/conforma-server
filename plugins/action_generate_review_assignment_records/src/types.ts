@@ -46,3 +46,10 @@ export interface AssignmentState {
 export type ExistingReviewAssignment = {
   userId: number
 } & AssignmentState
+
+export interface DeleteReviewAssignment {
+  userId: number
+  applicationId: number
+  stageNumber: number
+  levelNumber: number
+}

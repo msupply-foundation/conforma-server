@@ -4,6 +4,7 @@ import {
   ReviewAssignmentObject,
   ExistingReviewAssignment,
   AssignmentState,
+  DeleteReviewAssignment,
 } from './types'
 import databaseMethods from './databaseMethods'
 import {
@@ -101,22 +102,25 @@ async function generateReviewAssignments({
       const isLastLevel = nextReviewLevel === numReviewLevels
       const isLastStage = stageNumber === lastStageNumber
 
-      const reviewAssignments: ReviewAssignmentObject = generateNextReviewAssignments({
+      const { createReviewAssignments, deleteReviewAssignments } = generateNextReviewAssignments(
         previousReviewAssignments,
         nextReviewLevel,
         nextLevelReviewers,
         applicationId,
-        levelNumber: nextReviewLevel,
+        nextReviewLevel,
         isLastLevel,
         isLastStage,
         stageId,
         stageNumber,
-        timeStageCreated: stageHistoryTimeCreated,
-      })
+        stageHistoryTimeCreated
+      )
+
+      // Delete review_assignment that no longer applies
+      const deletedAssignmentIds = await db.removeReviewAssignments(deleteReviewAssignments)
 
       // Save review_assignment records to database
-      const reviewAssignmentIds = await db.addReviewAssignments(
-        Object.values(reviewAssignments) as ReviewAssignment[]
+      const createdReviewAssignmentIds = await db.addReviewAssignments(
+        Object.values(createReviewAssignments) as ReviewAssignment[]
       )
 
       // Generate review_assignment_assigner_joins
@@ -128,10 +132,10 @@ async function generateReviewAssignments({
         nextReviewLevel,
         PermissionPolicyType.Assign
       )
-      const reviewAssignmentAssignerJoins = []
-      for (const reviewAssignmentId of reviewAssignmentIds) {
+      const createdReviewAssignerJoins = []
+      for (const reviewAssignmentId of createdReviewAssignmentIds) {
         for (const assigner of availableAssigners) {
-          reviewAssignmentAssignerJoins.push({
+          createdReviewAssignerJoins.push({
             assignerId: assigner.userId,
             orgId: assigner.orgId,
             reviewAssignmentId,
@@ -139,19 +143,31 @@ async function generateReviewAssignments({
         }
       }
       const reviewAssignmentAssignerJoinIds = await db.addReviewAssignmentAssignerJoins(
-        reviewAssignmentAssignerJoins
+        createdReviewAssignerJoins
       )
 
-      console.log('ReviewAssignmentAssignerJoinIds', reviewAssignmentAssignerJoinIds)
+      const deleteReviewAssignerJoins = []
+      for (const reviewAssignmentId of deletedAssignmentIds) {
+        for (const assigner of availableAssigners) {
+          deleteReviewAssignerJoins.push({
+            assignerId: assigner.userId,
+            orgId: assigner.orgId,
+            reviewAssignmentId,
+          })
+        }
+      }
+      const deletedAssignerIds = await db.removeReviewAssignerJoins(deleteReviewAssignerJoins)
 
       return {
         status: ActionQueueStatus.Success,
         error_log: '',
         output: {
-          reviewAssignments,
-          reviewAssignmentIds,
-          reviewAssignmentAssignerJoins,
+          reviewAssignments: createReviewAssignments,
+          reviewAssignmentIds: createdReviewAssignmentIds,
+          reviewAssignmentAssignerJoins: createdReviewAssignerJoins,
           reviewAssignmentAssignerJoinIds,
+          removedAssignmentIds: deletedAssignmentIds,
+          removedAssignmentAssignerIds: deletedAssignerIds,
           nextStageNumber: stageNumber,
           nextReviewLevel,
         },
@@ -166,20 +182,23 @@ async function generateReviewAssignments({
   }
 }
 
-interface GenerateNextReviewAssignmentsProps {
-  previousReviewAssignments: ExistingReviewAssignment[]
-  nextReviewLevel: number
-  nextLevelReviewers: Reviewer[]
-  applicationId: number
-  levelNumber: number
-  isLastLevel: boolean
-  isLastStage: boolean
-  stageId: number
-  stageNumber: number
+type RegerenateReviewAssignments = (
+  previousReviewAssignments: ExistingReviewAssignment[],
+  nextReviewLevel: number,
+  nextLevelReviewers: Reviewer[],
+  applicationId: number,
+  levelNumber: number,
+  isLastLevel: boolean,
+  isLastStage: boolean,
+  stageId: number,
+  stageNumber: number,
   timeStageCreated: Date
+) => {
+  createReviewAssignments: ReviewAssignmentObject
+  deleteReviewAssignments: DeleteReviewAssignment[]
 }
 
-const generateNextReviewAssignments = ({
+const generateNextReviewAssignments: RegerenateReviewAssignments = (
   previousReviewAssignments,
   nextReviewLevel,
   nextLevelReviewers,
@@ -189,17 +208,20 @@ const generateNextReviewAssignments = ({
   isLastStage,
   stageId,
   stageNumber,
-  timeStageCreated,
-}: GenerateNextReviewAssignmentsProps): ReviewAssignmentObject => {
+  timeStageCreated
+) => {
   // Remove from the list of previous reviewAssignments when
   // no longer showing reviewer on nextLevelReviewers (when permission is revoked)
   const existingReviewAssignments = previousReviewAssignments.filter(({ userId }) =>
     nextLevelReviewers.find(({ userId: reviewerId }) => reviewerId === userId)
   )
 
-  console.log('existingReviewAssignments', existingReviewAssignments)
+  // Get list of reviewAssignments to delete (after user has permission revoked)
+  const deleteReviewAssignments: DeleteReviewAssignment[] = previousReviewAssignments
+    .filter((x) => !existingReviewAssignments.includes(x))
+    .map(({ userId }) => ({ userId, applicationId, stageNumber, levelNumber }))
 
-  const reviewAssignments: ReviewAssignmentObject = {}
+  const createReviewAssignments: ReviewAssignmentObject = {}
   // Build reviewers into object map so we can combine duplicate user_orgs
   // and merge their section code restrictions
   nextLevelReviewers.forEach((reviewer: Reviewer) => {
@@ -221,7 +243,7 @@ const generateNextReviewAssignments = ({
     )
 
     constructReviewAssignmentObject(
-      reviewAssignments,
+      createReviewAssignments,
       reviewer,
       assignment,
       applicationId,
@@ -234,7 +256,7 @@ const generateNextReviewAssignments = ({
     )
   })
 
-  return reviewAssignments
+  return { createReviewAssignments, deleteReviewAssignments }
 }
 
 // --------- Helper functions ---------
