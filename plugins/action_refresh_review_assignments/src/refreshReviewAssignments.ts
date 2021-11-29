@@ -60,7 +60,7 @@ async function refreshReviewAssignments({
     console.log(error.message)
     return {
       status: ActionQueueStatus.Fail,
-      error_log: 'Problem creating review_assignment records: ' + error.message,
+      error_log: 'Problem creating  some review_assignment records: ' + error.message,
     }
   }
 }
