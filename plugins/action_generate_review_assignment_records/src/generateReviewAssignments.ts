@@ -26,6 +26,7 @@ async function generateReviewAssignments({
   // Get application/reviewId from applicationData if not provided in parameters
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
+  const isRegenaration = parameters?.isRegenaration ?? false
   // Check if "isReview = false" to overwrite having received reviewId - used when need to process an upgrade on same review levels
   const overwriteIsReview = parameters?.isReview
 
@@ -43,10 +44,16 @@ async function generateReviewAssignments({
     console.log('Generating review assignment records...')
     console.log(`Application ${applicationId} stage ${stageNumber}`)
 
+    // Get last existing review level. If there are none, it's assumed to be an application submission - review level 1
+    let nextReviewLevel = isRegenaration
+      ? (await db.getLastReviewLevel(applicationId, stageNumber)) ?? 1
+      : 1
+
+    // Also get number of reviews in current stage and total number of stages
     const numReviewLevels: number = (await DBConnect.getNumReviewLevels(stageId)) || 0
     const lastStageNumber: number = await db.getLastStageNumber(applicationId)
 
-    let nextReviewLevel = 1
+    // let nextReviewLevel = 1
 
     // For first review assignment
     if (!isReview) {

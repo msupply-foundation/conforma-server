@@ -19,6 +19,26 @@ const databaseMethods = (DBConnect: any) => ({
     }
   },
 
+  getLastReviewLevel: async (
+    applicationId: number,
+    stageNumber: number
+  ): Promise<number | null> => {
+    const text = `
+      SELECT MAX(level_number)
+        FROM application 
+        INNER JOIN template_stage ON template_stage.template_id = application.template_id 
+        INNER JOIN review ON review.application_id = application.id AND template_stage.number = review.stage_number
+        WHERE application.id = $1
+        AND stage_number = $2`
+    try {
+      const result = await DBConnect.query({ text, values: [applicationId, stageNumber] })
+      return result.rows[0]?.max ?? null
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  },
+
   getPersonnelForApplicationStageLevel: async (
     templateId: number,
     stageNumber: number,
