@@ -113,7 +113,6 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
         reviewAssignmentAssignerJoins: [],
         reviewAssignmentAssignerJoinIds: [],
         removedAssignmentIds: [],
-        removedAssignmentAssignerIds: [],
         nextStageNumber: 1,
         nextReviewLevel: 1,
       },
@@ -257,7 +256,6 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
         ],
         reviewAssignmentAssignerJoinIds: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
         removedAssignmentIds: [],
-        removedAssignmentAssignerIds: [],
         nextStageNumber: 2,
         nextReviewLevel: 1,
       },
@@ -314,7 +312,6 @@ test('Test: Submit Review ID#6003 for Application ID#4002 - Stage 2 Lvl 1 to upd
         reviewAssignmentAssignerJoinIds: [],
         reviewAssignmentAssignerJoins: [],
         removedAssignmentIds: [],
-        removedAssignmentAssignerIds: [],
         nextStageNumber: 2,
         nextReviewLevel: 2,
       },
@@ -386,7 +383,6 @@ describe('Move Review to next stage (Final Decision) before generation of review
           reviewAssignmentAssignerJoins: [],
           reviewAssignmentAssignerJoinIds: [],
           removedAssignmentIds: [],
-          removedAssignmentAssignerIds: [],
           nextStageNumber: 3,
           nextReviewLevel: 1,
         },
@@ -519,7 +515,6 @@ describe('Re-generate reviewAssignments for application on Stage 1 - Level 1', (
           reviewAssignmentAssignerJoins: [],
           reviewAssignmentAssignerJoinIds: [],
           removedAssignmentIds: [],
-          removedAssignmentAssignerIds: [],
           nextStageNumber: 1,
           nextReviewLevel: 1,
         },
@@ -632,8 +627,195 @@ describe('Re-generate reviewAssignments after revoked permission for application
           reviewAssignmentAssignerJoins: [],
           reviewAssignmentAssignerJoinIds: [],
           removedAssignmentIds: [1005],
-          removedAssignmentAssignerIds: [],
           nextStageNumber: 1,
+          nextReviewLevel: 1,
+        },
+      })
+    })
+  })
+})
+
+describe('Re-generate reviewAssignments after granted permission for application on Stage 2 - Level 1', () => {
+  // Setup database
+  beforeAll(async (done) => {
+    await DBConnect.query({
+      text: `
+      INSERT INTO public.permission_join (user_id, permission_name_id, is_active)
+        VALUES (100, 11, 'True');
+      `,
+      values: [],
+    })
+    done()
+  })
+  test('Test: Re-create assignments for Application ID#4002 - Stage 2 Lvl 1 - Adding one review assignment', () => {
+    return generateReviewAssignments({
+      parameters: { applicationId: 4002, isRegeneration: true }, // stageNumber: 2, stageId: 7, levels: 2
+      DBConnect,
+    }).then((result: any) => {
+      expect(clearResult(result)).toEqual({
+        status: ActionQueueStatus.Success,
+        error_log: '',
+        output: {
+          reviewAssignments: [
+            {
+              reviewerId: 6,
+              organisationId: null,
+              stageId: 6,
+              stageNumber: 2,
+              levelNumber: 1,
+              status: ReviewAssignmentStatus.Assigned,
+              applicationId: 4002,
+              allowedSections: ['S1'],
+              isLastLevel: false,
+              isLastStage: false,
+              isFinalDecision: false,
+              isSelfAssignable: false,
+              isLocked: false,
+            },
+            {
+              reviewerId: 7,
+              organisationId: null,
+              stageId: 6,
+              stageNumber: 2,
+              levelNumber: 1,
+              status: ReviewAssignmentStatus.Assigned,
+              applicationId: 4002,
+              allowedSections: ['S2'],
+              isLastLevel: false,
+              isLastStage: false,
+              isFinalDecision: false,
+              isSelfAssignable: false,
+              isLocked: false,
+            },
+            {
+              reviewerId: 14,
+              organisationId: null,
+              stageId: 6,
+              stageNumber: 2,
+              levelNumber: 1,
+              status: ReviewAssignmentStatus.Available,
+              applicationId: 4002,
+              allowedSections: ['S1', 'S2'],
+              isLastLevel: false,
+              isLastStage: false,
+              isFinalDecision: false,
+              isSelfAssignable: false,
+              isLocked: false,
+            },
+            {
+              reviewerId: 15,
+              organisationId: null,
+              stageId: 6,
+              stageNumber: 2,
+              levelNumber: 1,
+              status: ReviewAssignmentStatus.Available,
+              applicationId: 4002,
+              allowedSections: ['S1', 'S2'],
+              isLastLevel: false,
+              isLastStage: false,
+              isFinalDecision: false,
+              isSelfAssignable: false,
+              isLocked: false,
+            },
+            {
+              reviewerId: 100,
+              organisationId: null,
+              stageId: 6,
+              stageNumber: 2,
+              levelNumber: 1,
+              status: ReviewAssignmentStatus.Available,
+              applicationId: 4002,
+              allowedSections: ['S2'],
+              isLastLevel: false,
+              isLastStage: false,
+              isFinalDecision: false,
+              isSelfAssignable: false,
+              isLocked: false,
+            },
+          ],
+          reviewAssignmentIds: [1007, 1008, 1068, 1069, 1089],
+          reviewAssignmentAssignerJoins: [
+            {
+              assignerId: 10,
+              orgId: null,
+              reviewAssignmentId: 1007,
+            },
+            {
+              assignerId: 11,
+              orgId: null,
+              reviewAssignmentId: 1007,
+            },
+            {
+              assignerId: 18,
+              orgId: null,
+              reviewAssignmentId: 1007,
+            },
+            {
+              assignerId: 10,
+              orgId: null,
+              reviewAssignmentId: 1008,
+            },
+            {
+              assignerId: 11,
+              orgId: null,
+              reviewAssignmentId: 1008,
+            },
+            {
+              assignerId: 18,
+              orgId: null,
+              reviewAssignmentId: 1008,
+            },
+            {
+              assignerId: 10,
+              orgId: null,
+              reviewAssignmentId: 1068,
+            },
+            {
+              assignerId: 11,
+              orgId: null,
+              reviewAssignmentId: 1068,
+            },
+            {
+              assignerId: 18,
+              orgId: null,
+              reviewAssignmentId: 1068,
+            },
+            {
+              assignerId: 10,
+              orgId: null,
+              reviewAssignmentId: 1069,
+            },
+            {
+              assignerId: 11,
+              orgId: null,
+              reviewAssignmentId: 1069,
+            },
+            {
+              assignerId: 18,
+              orgId: null,
+              reviewAssignmentId: 1069,
+            },
+            {
+              assignerId: 10,
+              orgId: null,
+              reviewAssignmentId: 1089,
+            },
+            {
+              assignerId: 11,
+              orgId: null,
+              reviewAssignmentId: 1089,
+            },
+            {
+              assignerId: 18,
+              orgId: null,
+              reviewAssignmentId: 1089,
+            },
+          ],
+          reviewAssignmentAssignerJoinIds: [
+            25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 49, 50, 51,
+          ],
+          removedAssignmentIds: [],
+          nextStageNumber: 2,
           nextReviewLevel: 1,
         },
       })
@@ -645,10 +827,8 @@ describe('Re-generate reviewAssignments after revoked permission for application
   // Setup database
   beforeAll(async (done) => {
     await DBConnect.query({
-      text: `
-        DELETE FROM public.permission_join WHERE user_id = $1 AND permission_name_id = $2;
-      `,
-      values: [100, 13],
+      text: `DELETE FROM public.permission_join WHERE user_id = $1 AND permission_name_id = $2`,
+      values: [100, 11],
     })
     done()
   })
@@ -692,8 +872,38 @@ describe('Re-generate reviewAssignments after revoked permission for application
               isSelfAssignable: false,
               isLocked: false,
             },
+            {
+              reviewerId: 14,
+              organisationId: null,
+              stageId: 6,
+              stageNumber: 2,
+              levelNumber: 1,
+              status: ReviewAssignmentStatus.Available,
+              applicationId: 4002,
+              allowedSections: ['S1', 'S2'],
+              isLastLevel: false,
+              isLastStage: false,
+              isFinalDecision: false,
+              isSelfAssignable: false,
+              isLocked: false,
+            },
+            {
+              reviewerId: 15,
+              organisationId: null,
+              stageId: 6,
+              stageNumber: 2,
+              levelNumber: 1,
+              status: ReviewAssignmentStatus.Available,
+              applicationId: 4002,
+              allowedSections: ['S1', 'S2'],
+              isLastLevel: false,
+              isLastStage: false,
+              isFinalDecision: false,
+              isSelfAssignable: false,
+              isLocked: false,
+            },
           ],
-          reviewAssignmentIds: [1007, 1008],
+          reviewAssignmentIds: [1007, 1008, 1068, 1069],
           reviewAssignmentAssignerJoins: [
             {
               assignerId: 10,
@@ -725,10 +935,40 @@ describe('Re-generate reviewAssignments after revoked permission for application
               orgId: null,
               reviewAssignmentId: 1008,
             },
+
+            {
+              assignerId: 10,
+              orgId: null,
+              reviewAssignmentId: 1068,
+            },
+            {
+              assignerId: 11,
+              orgId: null,
+              reviewAssignmentId: 1068,
+            },
+            {
+              assignerId: 18,
+              orgId: null,
+              reviewAssignmentId: 1068,
+            },
+            {
+              assignerId: 10,
+              orgId: null,
+              reviewAssignmentId: 1069,
+            },
+            {
+              assignerId: 11,
+              orgId: null,
+              reviewAssignmentId: 1069,
+            },
+            {
+              assignerId: 18,
+              orgId: null,
+              reviewAssignmentId: 1069,
+            },
           ],
-          reviewAssignmentAssignerJoinIds: [25, 26, 27, 28, 29, 30],
-          removedAssignmentIds: [1068, 1069],
-          removedAssignmentAssignerIds: [31, 32, 33, 34, 35, 36],
+          reviewAssignmentAssignerJoinIds: [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36],
+          removedAssignmentIds: [1089],
           nextStageNumber: 2,
           nextReviewLevel: 1,
         },

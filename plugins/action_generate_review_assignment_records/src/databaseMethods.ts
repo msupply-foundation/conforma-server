@@ -234,32 +234,6 @@ const databaseMethods = (DBConnect: any) => ({
     }
     return reviewAssignmentIds
   },
-  removeReviewAssignerJoins: async (reviewAssignmentAssignerJoins: any) => {
-    const reviewAssignmentAssignerJoinIds = []
-    for (const reviewAssignmentAssignerJoin of reviewAssignmentAssignerJoins) {
-      const { assignerId, reviewAssignmentId, organisationId } = reviewAssignmentAssignerJoin
-
-      const text = `
-        DELETE FROM review_assignment 
-          WHERE  assigner_id = $1
-          AND review_assignment_id = $2
-          AND organisation_id = $3
-        RETURNING id`
-
-      try {
-        const result = await DBConnect.query({
-          text,
-          values: [assignerId, reviewAssignmentId, organisationId],
-        })
-        reviewAssignmentAssignerJoinIds.push(result.rows[0].id)
-      } catch (err) {
-        console.log(err.message)
-        reviewAssignmentAssignerJoinIds.push(err.message)
-        throw err
-      }
-    }
-    return reviewAssignmentAssignerJoinIds
-  },
 })
 
 export default databaseMethods

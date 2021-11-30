@@ -149,21 +149,10 @@ async function generateReviewAssignments({
           })
         }
       }
+
       const reviewAssignmentAssignerJoinIds = await db.addReviewAssignmentAssignerJoins(
         createdReviewAssignerJoins
       )
-
-      const deleteReviewAssignerJoins = []
-      for (const reviewAssignmentId of deletedAssignmentIds) {
-        for (const assigner of availableAssigners) {
-          deleteReviewAssignerJoins.push({
-            assignerId: assigner.userId,
-            orgId: assigner.orgId,
-            reviewAssignmentId,
-          })
-        }
-      }
-      const deletedAssignerIds = await db.removeReviewAssignerJoins(deleteReviewAssignerJoins)
 
       return {
         status: ActionQueueStatus.Success,
@@ -174,7 +163,6 @@ async function generateReviewAssignments({
           reviewAssignmentAssignerJoins: createdReviewAssignerJoins,
           reviewAssignmentAssignerJoinIds,
           removedAssignmentIds: deletedAssignmentIds,
-          removedAssignmentAssignerIds: deletedAssignerIds,
           nextStageNumber: stageNumber,
           nextReviewLevel,
         },
