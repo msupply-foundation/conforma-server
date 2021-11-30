@@ -326,7 +326,7 @@ Revokes permissions from to user/org -- i.e. sets the `is_active` field to `fals
 | `permissionNames`\* [Array of names]     |                                                                                      |
 | `orgName`                                |                                                                                      |
 | `orgId`                                  |                                                                                      |
-| `isRemovingPermission` (default: `true`)                                 |                                                                                      |
+| `isRemovingPermission` (default: `true`) |                                                                                      |
 
 The `isRemovingPermission` parameter specifies whether or not the `permission_join` record should be *deleted* (the default behaviour) or just set to inactive (which would mean the user can still *view* their applications but not create new ones, or submit existing). _**NOTE**: This functionality not actually implemented yet in policies/front-end, so only full removal should be used currently -- TO-DO_
 
@@ -355,11 +355,6 @@ Should be run whenever an application or review is submitted, and it will genera
 - if `isReview` is NOT `true`, the Action will generate review assignment records for Stage 1, level 1 review. If `true`, it'll generate records for the _next_ review level (either in the same Stage or level 1 of the next Stage).
 - if assignment records already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp)
 
-TO-DO:
-
-- decide what to do with records that exist, but no longer should be (e.g. the reviewer has been removed/permissions revoked)\_
-- allow optional parameter for `userId`: this will be for when we re-generate all review assignment records for a specific reviewer if (for example) they've had their permissions changed. When and how this occurs needs to be further thought out.
-
 ---
 
 ### Update Review Assignments
@@ -374,6 +369,27 @@ When a reviewer self-assigns themselves to a review_assignment (i.e. its status 
 | `trigger` (only executes on `ON_REVIEW_SELF_ASSIGN`) |                                                       |
 
 **Note:** If `trigger` is not supplied, the plugin will try to infer it from `applicationData`
+
+---
+
+### Refresh Review Assignments
+
+A "super-action", which regenerates all `review_assignment` and `review_assignment_assigner_join` records associated with a specific user, or group of users (or all users). It does this by figuring out which active applications are associated with the input user(s), and then running [`generateReviewAssignments`](#generate-review-assignments) on each of them.
+
+Should be run whenever the permissions for any user are changed.
+
+- _Action Code:_ **`refreshReviewAssignments`**
+
+| Input parameters<br />(\*required) <br/> | Output properties     |
+| ---------------------------------------- | --------------------- |
+| `userId`                                 | `updatedApplications` |
+|                                          | `reviewAssignments`   |
+
+
+**Notes**:
+
+- `userId` can be a single user (number) *OR* an array of `userId`s
+- if `userId` is omitted completely, then ALL active applications will have their review assignments re-generated. Useful for manually running and fully updating the system assignments.
 
 ---
 
