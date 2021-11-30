@@ -59,6 +59,10 @@ const getUserInfo = async (userOrgParameters: UserOrgParameters) => {
     orgId || null
   )
 
+  // Also get org-only permissions
+  if (orgId)
+    templatePermissionRows.push(...(await databaseConnect.getOrgTemplatePermissions(orgId)))
+
   const selectedOrg = orgId ? orgList.filter((org) => org.orgId === orgId) : undefined
 
   const returnSessionId = sessionId ?? nanoid(16)

@@ -653,6 +653,21 @@ class PostgresDB {
     }
   }
 
+  public getOrgTemplatePermissions = async (orgId: number) => {
+    const text = `SELECT * FROM permissions_all
+      WHERE "orgId" = $1
+      AND username IS NULL
+      `
+    const values: number[] = [orgId]
+    try {
+      const result = await this.query({ text, values })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getAllPermissions = async () => {
     const text = 'select * from permissions_all'
     try {
