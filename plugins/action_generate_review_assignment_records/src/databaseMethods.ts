@@ -27,7 +27,7 @@ const databaseMethods = (DBConnect: any) => ({
       SELECT MAX(level_number)
         FROM application 
         INNER JOIN template_stage ON template_stage.template_id = application.template_id 
-        INNER JOIN review ON review.application_id = application.id AND template_stage.number = review.stage_number
+        INNER JOIN review_assignment ON review_assignment.application_id = application.id AND template_stage.number = review_assignment.stage_number
         WHERE application.id = $1
         AND stage_number = $2`
     try {
