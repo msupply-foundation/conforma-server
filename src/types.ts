@@ -203,3 +203,11 @@ export interface Organisation {
 }
 
 export interface UserOrg extends User, Organisation {}
+
+export interface PermissionDetails {
+  id: number
+  name: string
+  description: string
+  isUserGranted: boolean
+  templateCodes: string[]
+}
