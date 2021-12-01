@@ -107,9 +107,10 @@ const generateForFirstLevelReviews = async (
   let result = {
     status: ActionQueueStatus.Success,
     error_log: '',
-    output: { levels: [] },
+    output: { levels: [] as ResultObject[] },
   }
   result.output.levels.push(levelResult)
+
   return result
 }
 
@@ -172,7 +173,7 @@ const generateForNextLevelReviews = async (
   let result = {
     status: ActionQueueStatus.Success,
     error_log: '',
-    output: { levels: [] },
+    output: { levels: [] as ResultObject[] },
   }
 
   result.output.levels.push(levelResult)
@@ -201,7 +202,7 @@ const generateForAllLevelsUntilCurrentLevel = async (
   let result = {
     status: ActionQueueStatus.Success,
     error_log: '',
-    output: { levels: [] },
+    output: { levels: [] as ResultObject[] },
   }
 
   // Run loop over all levels until current to generate reviewAssignments
