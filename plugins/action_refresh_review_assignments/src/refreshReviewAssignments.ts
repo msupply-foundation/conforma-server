@@ -14,7 +14,7 @@ async function refreshReviewAssignments({
   const shouldRefreshAll = !parameters?.userId
 
   // Can handle input of either single userId or an array of userIds
-  const userIds = Array.isArray(parameters?.userId) ? parameters.userId : [parameters.userId]
+  const userIds = Array.isArray(parameters?.userId) ? parameters?.userId : [parameters?.userId]
 
   try {
     const getApplicationsToUpdate = async (userIds: number[]) => {
