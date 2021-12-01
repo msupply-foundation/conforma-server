@@ -2,7 +2,7 @@ import databaseConnect from '../databaseConnect'
 import { getUserInfo } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
-import { UserOrg } from '../../types'
+import { UserOrg, PermissionDetails } from '../../types'
 import path from 'path'
 import { readFileSync } from 'fs'
 import { startCase } from 'lodash'
@@ -99,20 +99,46 @@ const routeUserPermissions = async (request: any, reply: any) => {
   const isSystemOrg = await databaseConnect.isInternalOrg(Number(orgId))
 
   const templatePermissionRows = await databaseConnect.getTemplatePermissions(isSystemOrg)
-  const userExistingPermissions = username
-    ? await databaseConnect.getUserTemplatePermissions(username, orgId)
-    : await databaseConnect.getOrgTemplatePermissions(isSystemOrg)
 
-  const grantedPermissions = userExistingPermissions.reduce(
-    (grantedPermissions, { permissionName }) => {
-      if (!grantedPermissions.includes(permissionName)) grantedPermissions.push(permissionName)
-      return grantedPermissions
-    },
-    []
-  )
+  let grantedPermissions: string[] = []
+  let availablePermissions: string[] = []
+
+  if (username) {
+    // Get permissions for organisation and which have been granted to user
+    const userExistingPermissions = await databaseConnect.getUserTemplatePermissions(
+      username,
+      orgId
+    )
+    console.log('userExistingPermissions', userExistingPermissions)
+
+    grantedPermissions = userExistingPermissions.reduce(
+      (grantedPermissions, { permissionName }) => {
+        if (!grantedPermissions.includes(permissionName)) grantedPermissions.push(permissionName)
+        return grantedPermissions
+      },
+      []
+    )
+    availablePermissions = Object.values(templatePermissionRows)
+      .filter(({ permissionName }) => !grantedPermissions.includes(permissionName))
+      .reduce((availablePermissions, { permissionName }) => {
+        if (!availablePermissions.includes(permissionName))
+          availablePermissions.push(permissionName)
+        return availablePermissions
+      }, [])
+  } else {
+    // Get permissions for organisation without association with as user
+    const orgExistingPermissions = await databaseConnect.getOrgTemplatePermissions(isSystemOrg)
+    availablePermissions = orgExistingPermissions.reduce(
+      (availablePermissions, { permissionName }) => {
+        if (!grantedPermissions.includes(permissionName)) availablePermissions.push(permissionName)
+        return availablePermissions
+      },
+      []
+    )
+  }
 
   // Store array of object per permissionNames with properties and an array of templateCodes
-  const templatePermissions = Object.values(
+  const templatePermissions: PermissionDetails[] = Object.values(
     templatePermissionRows.reduce(
       (templatePermissions, { permissionNameId, permissionName, templateCode, description }) => {
         if (!templatePermissions[permissionName])
@@ -135,15 +161,10 @@ const routeUserPermissions = async (request: any, reply: any) => {
     )
   )
 
-  const availablePermissions = Object.values(templatePermissionRows)
-    .filter(({ permissionName }) => !grantedPermissions.includes(permissionName))
-    .reduce((availablePermissions, { permissionName }) => {
-      if (!availablePermissions.includes(permissionName)) availablePermissions.push(permissionName)
-      return availablePermissions
-    }, [])
-
   return reply.send({
-    templatePermissions,
+    templatePermissions: templatePermissions.sort(({ name: aName }, { name: bName }) =>
+      aName.localeCompare(bName)
+    ),
     grantedPermissions,
     availablePermissions,
   })
