@@ -662,7 +662,7 @@ describe('Re-generate reviewAssignments after revoked permission for application
   })
 })
 
-describe('Re-generate reviewAssignments after granted permission for application on Stage 2 - Level 1', () => {
+describe('Re-generate reviewAssignments after granted permission for application on Stage 2 - Level 2 (considering assignments)', () => {
   // Setup database
   beforeAll(async (done) => {
     await DBConnect.query({
@@ -674,7 +674,7 @@ describe('Re-generate reviewAssignments after granted permission for application
     })
     done()
   })
-  test('Test: Re-create assignments for Application ID#4002 - Stage 2 Lvl 1 - Adding one review assignment', () => {
+  test('Test: Re-create assignments for Application ID#4002 - Stage 2 (Levels 1 & 2) - Adding one review assignment', () => {
     return generateReviewAssignments({
       parameters: { applicationId: 4002, isRegeneration: true }, // stageNumber: 2, stageId: 7, levels: 2
       DBConnect,
@@ -847,6 +847,46 @@ describe('Re-generate reviewAssignments after granted permission for application
               nextStageNumber: 2,
               nextReviewLevel: 1,
             },
+            {
+              reviewAssignments: [
+                {
+                  reviewerId: 8,
+                  organisationId: null,
+                  stageId: 6,
+                  stageNumber: 2,
+                  levelNumber: 2,
+                  status: ReviewAssignmentStatus.Available,
+                  applicationId: 4002,
+                  allowedSections: null,
+                  isLastLevel: true,
+                  isLastStage: false,
+                  isFinalDecision: false,
+                  isSelfAssignable: true,
+                  isLocked: true,
+                },
+                {
+                  reviewerId: 9,
+                  organisationId: null,
+                  stageId: 6,
+                  stageNumber: 2,
+                  levelNumber: 2,
+                  status: ReviewAssignmentStatus.Assigned,
+                  applicationId: 4002,
+                  allowedSections: null,
+                  isLastLevel: true,
+                  isLastStage: false,
+                  isFinalDecision: false,
+                  isSelfAssignable: true,
+                  isLocked: false,
+                },
+              ],
+              reviewAssignmentIds: [1009, 1010],
+              reviewAssignmentAssignerJoins: [],
+              reviewAssignmentAssignerJoinIds: [],
+              removedAssignmentIds: [],
+              nextStageNumber: 2,
+              nextReviewLevel: 2,
+            },
           ],
         },
       })
@@ -854,7 +894,7 @@ describe('Re-generate reviewAssignments after granted permission for application
   })
 })
 
-describe('Re-generate reviewAssignments after revoked permission for application on Stage 2 - Level 1', () => {
+describe('Re-generate reviewAssignments after revoked permission for application on Stage 2 - Level 2 (considering assignments)', () => {
   // Setup database
   beforeAll(async (done) => {
     await DBConnect.query({
@@ -863,7 +903,7 @@ describe('Re-generate reviewAssignments after revoked permission for application
     })
     done()
   })
-  test('Test: Re-create assignments for Application ID#4002 - Stage 2 Lvl 1 - Removing one review assignment', () => {
+  test('Test: Re-create assignments for Application ID#4002 - Stage 2 (Levels 1 & 2) - Removing one review assignment', () => {
     return generateReviewAssignments({
       parameters: { applicationId: 4002, isRegeneration: true }, // stageNumber: 2, stageId: 7, levels: 2
       DBConnect,
@@ -1004,6 +1044,46 @@ describe('Re-generate reviewAssignments after revoked permission for application
               removedAssignmentIds: [1089],
               nextStageNumber: 2,
               nextReviewLevel: 1,
+            },
+            {
+              reviewAssignments: [
+                {
+                  reviewerId: 8,
+                  organisationId: null,
+                  stageId: 6,
+                  stageNumber: 2,
+                  levelNumber: 2,
+                  status: ReviewAssignmentStatus.Available,
+                  applicationId: 4002,
+                  allowedSections: null,
+                  isLastLevel: true,
+                  isLastStage: false,
+                  isFinalDecision: false,
+                  isSelfAssignable: true,
+                  isLocked: true,
+                },
+                {
+                  reviewerId: 9,
+                  organisationId: null,
+                  stageId: 6,
+                  stageNumber: 2,
+                  levelNumber: 2,
+                  status: ReviewAssignmentStatus.Assigned,
+                  applicationId: 4002,
+                  allowedSections: null,
+                  isLastLevel: true,
+                  isLastStage: false,
+                  isFinalDecision: false,
+                  isSelfAssignable: true,
+                  isLocked: false,
+                },
+              ],
+              reviewAssignmentIds: [1009, 1010],
+              reviewAssignmentAssignerJoins: [],
+              reviewAssignmentAssignerJoinIds: [],
+              removedAssignmentIds: [],
+              nextStageNumber: 2,
+              nextReviewLevel: 2,
             },
           ],
         },
