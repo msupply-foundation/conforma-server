@@ -1,6 +1,7 @@
 ## Contents
 
 <!-- toc -->
+
 - [Console Log](#console-log)
 - [Change Outcome](#change-outcome)
 - [Increment Stage](#increment-stage)
@@ -328,32 +329,36 @@ Revokes permissions from to user/org -- i.e. sets the `is_active` field to `fals
 | `orgId`                                  |                                                                                      |
 | `isRemovingPermission` (default: `true`) |                                                                                      |
 
-The `isRemovingPermission` parameter specifies whether or not the `permission_join` record should be *deleted* (the default behaviour) or just set to inactive (which would mean the user can still *view* their applications but not create new ones, or submit existing). _**NOTE**: This functionality not actually implemented yet in policies/front-end, so only full removal should be used currently -- TO-DO_
+The `isRemovingPermission` parameter specifies whether or not the `permission_join` record should be _deleted_ (the default behaviour) or just set to inactive (which would mean the user can still _view_ their applications but not create new ones, or submit existing). _**NOTE**: This functionality not actually implemented yet in policies/front-end, so only full removal should be used currently -- TO-DO_
 
 ---
 
 ### Generate Review Assignments
 
-Generates records in the `review_assignment` table -- i.e. which users (reviewers) are allowed to do a review for the current stage/level (and for which Sections). The records are set with status "Available" or "Available for self-assignment", waiting for assignment.
+Generates records in the `review_assignment` table -- i.e. which users (reviewers) are allowed to do a review for the current stage/level (and for which Sections). The records are set with `status` "Available" or "Assigned" and flags for `isSelfAssignable` and `isLocked` to help define when is allowed self-assignment.
 
 It also creates records in the `review_assignment_assigner_join` table -- basically a list of users who have permission to make the _assignments_ in the review_assignment table.
 
-Should be run whenever an application or review is submitted, and it will generate the review assignments for the next _review_ that should be done.
+This action also removes `reviewAssigments` and `reviewAssignmentAssignerJoins` in case a permission no longer applies to a user to be reviewing an application.
+
+Should be run whenever an application or review is submitted or re-submitted, and it will generate the review assignments for the next _review_ that should be done. Also runs using flag `isRegeneration` when new permissions are granted/revoked to reviewers in order to update existing reviewAssignments.
 
 - _Action Code:_ **`generateReviewAssignments`**
 
-| Input parameters<br />(\*required) <br/> | Output properties                 |
-| ---------------------------------------- | --------------------------------- |
-| `applicationId`                          | `reviewAssignmentIds`             |
-| `reviewId`                               | `reviewAssignmentAssignerJoins`   |
-| `isReview`                               | `reviewAssignmentAssignerJoinIds` |
-|                                          | `currentReviewLevel`              |
-|                                          | `nextReviewLevel`                 |
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `applicationId` \*                       | `levels`          |
+| `reviewId`                               |                   |
+| `isRegeneration`                         |                   |
+|                                          |                   |
+|                                          |                   |
 
 **Notes**:
 
-- if `isReview` is NOT `true`, the Action will generate review assignment records for Stage 1, level 1 review. If `true`, it'll generate records for the _next_ review level (either in the same Stage or level 1 of the next Stage).
-- if assignment records already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp)
+- If `applicationId` only is passed the action will generate reviewAssignments for the 1st level of the current stage - which can be the first one if that's triggered by a first submission by the applicant. It can also be triggered by application re-submissions.
+- If `reviewId` is also received the action will generate reviewAssignments for the **next** level of reviews in the current stage or - if it was the last level on current stage, generate for 1st level of the **next** stage. Nothing is created if it reached the last level & stage.
+- By default `isRegeneration` is `false`. If the action receive this flag (ignores if a reviewId is received...) and re-generate **all** review assignment records for the current stage **from** level 1 **to** the current level of review assignments. This is to be used when review assignments should be created or deleted after changing user's permissions to review and usually triggreed by the parent action [`refreshReviewAssignments`](#refresh-review-assignments)
+- In all of the cases, when a `reviewAssignment` record already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp).
 
 ---
 
@@ -385,10 +390,9 @@ Should be run whenever the permissions for any user are changed.
 | `userId`                                 | `updatedApplications` |
 |                                          | `reviewAssignments`   |
 
-
 **Notes**:
 
-- `userId` can be a single user (number) *OR* an array of `userId`s
+- `userId` can be a single user (number) _OR_ an array of `userId`s
 - if `userId` is omitted completely, then ALL active applications will have their review assignments re-generated. Useful for manually running and fully updating the system assignments.
 
 ---
