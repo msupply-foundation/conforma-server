@@ -2,22 +2,37 @@
 
 <!-- toc -->
 
-- [Console Log](#console-log)
-- [Change Outcome](#change-outcome)
-- [Increment Stage](#increment-stage)
-- [Change Status](#change-status)
-- [Modify Record](#modify-record)
-- [Generate Text String](#generate-text-string)
-- [Join User to Organsation](#join-user-to-organsation)
-- [Grant Permissions](#grant-permissions)
-- [Revoke Permissions](#revoke-permissions)
-- [Generate Review Assignments](#generate-review-assignments)
-- [Update Review Assignments](#update-review-assignments)
-- [Trim Responses](#trim-responses)
-- [Update Review Visibility](#update-review-visibility)
-- [Update Review Statuses](#update-review-statuses)
-- [Generate Document](#generate-document)
-- [Send Notification](#send-notification)
+- [Contents](#contents)
+  - [Console Log](#console-log)
+  - [Change Outcome](#change-outcome)
+  - [Increment Stage](#increment-stage)
+  - [Change Status](#change-status)
+  - [Modify Record](#modify-record)
+  - [Generate Text String](#generate-text-string)
+    - [Parameters summary](#parameters-summary)
+      - [String parameters](#string-parameters)
+      - [Update record parameters](#update-record-parameters)
+      - [More examples:](#more-examples)
+  - [Join User to Organsation](#join-user-to-organsation)
+  - [Grant Permissions](#grant-permissions)
+  - [Revoke Permissions](#revoke-permissions)
+  - [Generate Review Assignments](#generate-review-assignments)
+  - [Update Review Assignments](#update-review-assignments)
+  - [Refresh Review Assignments](#refresh-review-assignments)
+  - [Trim Responses](#trim-responses)
+  - [Update Review Visibility](#update-review-visibility)
+  - [Update Review Statuses](#update-review-statuses)
+  - [Generate Document](#generate-document)
+  - [Send Notification](#send-notification)
+- [Core Actions](#core-actions)
+    - [On Application Create:](#on-application-create)
+    - [On Application Submit](#on-application-submit)
+    - [On Application Restart (i.e. after "Changes Requested"):](#on-application-restart-ie-after-changes-requested)
+    - [On Review Self-Assign:](#on-review-self-assign)
+    - [On Review Assign (by other)](#on-review-assign-by-other)
+    - [On Review Create](#on-review-create)
+    - [On Review Submit:](#on-review-submit)
+    - [On Review Restart: (i.e. review making changes based on higher level requests)](#on-review-restart-ie-review-making-changes-based-on-higher-level-requests)
 
 * [Core Actions](#core-actions)
 
@@ -349,15 +364,14 @@ Should be run whenever an application or review is submitted or re-submitted, an
 | ---------------------------------------- | ----------------- |
 | `applicationId` \*                       | `levels`          |
 | `reviewId`                               |                   |
-| `isRegeneration`                         |                   |
+|                                          |                   |
 |                                          |                   |
 |                                          |                   |
 
 **Notes**:
 
-- If `applicationId` only is passed the action will generate reviewAssignments for the 1st level of the current stage - which can be the first one if that's triggered by a first submission by the applicant. It can also be triggered by application re-submissions.
+- If `applicationId` only is passed the action will generate reviewAssignments for **all** review levels on the current stage up to and including the current level. As well as generating first level review assignments for the first application submissiong, this also accounts for the case when an applicant *re-submits* after making changes and we need to generate fresh review_assignments for the first level even though higher level review assignments already exist (it will also regenerate the higher levels, but this won't cause any problems).
 - If `reviewId` is also received the action will generate reviewAssignments for the **next** level of reviews in the current stage or - if it was the last level on current stage, generate for 1st level of the **next** stage. Nothing is created if it reached the last level & stage.
-- By default `isRegeneration` is `false`. If the action receive this flag (ignores if a reviewId is received...) and re-generate **all** review assignment records for the current stage **from** level 1 **to** the current level of review assignments. This is to be used when review assignments should be created or deleted after changing user's permissions to review and usually triggreed by the parent action [`refreshReviewAssignments`](#refresh-review-assignments)
 - In all of the cases, when a `reviewAssignment` record already exist (i.e. if it's a re-assignment), they will just be updated (with a new timestamp).
 
 ---

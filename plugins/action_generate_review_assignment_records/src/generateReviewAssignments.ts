@@ -24,7 +24,6 @@ async function generateReviewAssignments({
   // Get application/reviewId from applicationData if not provided in parameters
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
-  const isRegeneration = parameters?.isRegeneration ?? false
 
   try {
     // Get template information and current stage for application
@@ -33,17 +32,7 @@ async function generateReviewAssignments({
 
     const numReviewLevels = (await DBConnect.getNumReviewLevels(stageId)) || 0
 
-    if (isRegeneration)
-      return generateForAllLevelsUntilCurrentLevel(
-        db,
-        applicationId,
-        stageNumber,
-        stageId,
-        stageHistoryTimeCreated,
-        templateId,
-        numReviewLevels
-      )
-    else if (reviewId) {
+    if (reviewId) {
       const { stageNumber: submittedReviewStage, levelNumber: submittedReviewLevel } =
         await DBConnect.getReviewStageAndLevel(reviewId)
       return generateForNextLevelReviews(
@@ -61,7 +50,7 @@ async function generateReviewAssignments({
     }
     // isApplication submission/re-submission
     else
-      return generateForFirstLevelReviews(
+      return generateForAllLevelsUntilCurrentLevel(
         db,
         applicationId,
         stageNumber,
@@ -79,6 +68,7 @@ async function generateReviewAssignments({
   }
 }
 
+// This function not currently used, but we can re-activate it with a parameter flag if we need to use it at some point
 const generateForFirstLevelReviews = async (
   db: any,
   applicationId: number,
