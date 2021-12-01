@@ -64,6 +64,6 @@ export interface ResultObject {
   }[]
   reviewAssignmentAssignerJoinIds: number[]
   removedAssignmentIds: number[]
-  nextStageNumber: number
-  nextReviewLevel: number
+  stageNumber: number
+  reviewLevel: number
 }

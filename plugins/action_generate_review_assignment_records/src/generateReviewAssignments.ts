@@ -301,8 +301,8 @@ const generateReviewAssignmentsInLevel = async (
     reviewAssignmentAssignerJoins: createdReviewAssignerJoins,
     reviewAssignmentAssignerJoinIds,
     removedAssignmentIds: deletedAssignmentIds,
-    nextStageNumber: stageNumber,
-    nextReviewLevel: reviewLevel,
+    stageNumber,
+    reviewLevel,
   } as ResultObject
 }
 
