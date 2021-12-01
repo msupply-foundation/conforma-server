@@ -5,6 +5,7 @@ import {
   ExistingReviewAssignment,
   AssignmentState,
   DeleteReviewAssignment,
+  ResultObject,
 } from './types'
 import databaseMethods from './databaseMethods'
 import {
@@ -157,7 +158,7 @@ const generateForNextLevelReviews = async (
     }
   }
 
-  const result = await generateReviewAssignmentsInLevel(
+  const levelResult = await generateReviewAssignmentsInLevel(
     db,
     applicationId,
     currentStageNumber,
@@ -168,11 +169,14 @@ const generateForNextLevelReviews = async (
     numReviewLevels
   )
 
-  return {
+  let result = {
     status: ActionQueueStatus.Success,
     error_log: '',
-    output: { levels: [result] },
+    output: { levels: [] },
   }
+
+  result.output.levels.push(levelResult)
+  return result
 }
 
 const generateForAllLevelsUntilCurrentLevel = async (
@@ -194,8 +198,14 @@ const generateForAllLevelsUntilCurrentLevel = async (
   // Create array with levels [1,2..,N]
   const arrayLevels = Array.from({ length: currentReviewLevel }, (v, k) => k + 1)
 
+  let result = {
+    status: ActionQueueStatus.Success,
+    error_log: '',
+    output: { levels: [] },
+  }
+
   // Run loop over all levels until current to generate reviewAssignments
-  Promise.all(
+  await Promise.all(
     arrayLevels.map((level) =>
       generateReviewAssignmentsInLevel(
         db,
@@ -208,11 +218,9 @@ const generateForAllLevelsUntilCurrentLevel = async (
         numReviewLevels
       )
     )
-  ).then((values) => ({
-    status: ActionQueueStatus.Success,
-    error_log: '',
-    output: { levels: values.map((reviewResult) => reviewResult) },
-  }))
+  ).then((values) => values.map((reviewResult) => result.output.levels.push(reviewResult)))
+
+  return result
 }
 
 const generateReviewAssignmentsInLevel = async (
@@ -224,7 +232,7 @@ const generateReviewAssignmentsInLevel = async (
   stageHistoryTimeCreated: Date,
   templateId: number,
   numReviewLevels: number
-) => {
+): Promise<ResultObject> => {
   const lastStageNumber: number = await db.getLastStageNumber(applicationId)
   // Check if other reviewAssignment is already assigned to create new ones LOCKED
   const previousReviewAssignments: ExistingReviewAssignment[] =
@@ -294,7 +302,7 @@ const generateReviewAssignmentsInLevel = async (
     removedAssignmentIds: deletedAssignmentIds,
     nextStageNumber: stageNumber,
     nextReviewLevel: reviewLevel,
-  }
+  } as ResultObject
 }
 
 type RegerenateReviewAssignments = (

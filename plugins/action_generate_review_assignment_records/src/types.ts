@@ -55,13 +55,13 @@ export interface DeleteReviewAssignment {
 }
 
 export interface ResultObject {
-  reviewAssignments: ReviewAssignment
-  reviewAssignmentsIds: number[]
+  reviewAssignments: ReviewAssignment[]
+  reviewAssignmentIds: number[]
   reviewAssignmentAssignerJoins: {
     assignerId: number
     orgId: number
     reviewAssignmentId: number
-  }
+  }[]
   reviewAssignmentAssignerJoinIds: number[]
   removedAssignmentIds: number[]
   nextStageNumber: number
