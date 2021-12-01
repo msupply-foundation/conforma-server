@@ -122,7 +122,7 @@ test('Test: Submit Application ID#4001 - Stage 1 (Last level)', () => {
 
 test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
   return generateReviewAssignments({
-    parameters: { templateId: 4, applicationId: 4002 }, // stageNumber: 2, stageId: 6, levels: 2
+    parameters: { applicationId: 4002 }, // stageNumber: 2, stageId: 6, levels: 2
     DBConnect,
   }).then((result: any) => {
     expect(clearResult(result)).toEqual({
@@ -269,7 +269,7 @@ test('Test: Submit Application ID#4002 - Stage 2 Lvl1', () => {
 
 test('Test: Submit Review ID#6003 for Application ID#4002 - Stage 2 Lvl 1 to update existing level 2 assignment', () => {
   return generateReviewAssignments({
-    parameters: { templateId: 4, applicationId: 4002, reviewId: 6003 }, // stageNumber: 2, stageId: 6, levels: 2
+    parameters: { applicationId: 4002, reviewId: 6003 }, // stageNumber: 2, stageId: 6, levels: 2
     DBConnect,
   }).then((result: any) => {
     expect(clearResult(result)).toEqual({
@@ -340,7 +340,7 @@ describe('Move Review to next stage (Final Decision) before generation of review
 
   test('Submit Review ID#7003 for Application ID#4004 - Stage 2 Lvl 2 to create assignments for Stage 3 (Last Stage) - Final Decision', () => {
     return generateReviewAssignments({
-      parameters: { templateId: 4, applicationId: 4004, reviewId: 7004 }, // stageNumber: 2, stageId: 7, levels: 2
+      parameters: { applicationId: 4004, reviewId: 7004 }, // stageNumber: 2, stageId: 7, levels: 2
       DBConnect,
     }).then((result: any) => {
       expect(clearResult(result)).toEqual({

@@ -26,7 +26,7 @@ async function generateReviewAssignments({
   // Get application/reviewId from applicationData if not provided in parameters
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
-  const isRegenaration = parameters?.isRegenaration ?? false
+  const isRegenaration = parameters?.isRegeneration ?? false
   // Check if "isReview = false" to overwrite having received reviewId - used when need to process an upgrade on same review levels
   const overwriteIsReview = parameters?.isReview
 
