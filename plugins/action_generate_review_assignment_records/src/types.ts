@@ -53,3 +53,17 @@ export interface DeleteReviewAssignment {
   stageNumber: number
   levelNumber: number
 }
+
+export interface ResultObject {
+  reviewAssignments: ReviewAssignment
+  reviewAssignmentsIds: number[]
+  reviewAssignmentAssignerJoins: {
+    assignerId: number
+    orgId: number
+    reviewAssignmentId: number
+  }
+  reviewAssignmentAssignerJoinIds: number[]
+  removedAssignmentIds: number[]
+  nextStageNumber: number
+  nextReviewLevel: number
+}

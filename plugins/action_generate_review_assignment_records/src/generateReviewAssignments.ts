@@ -20,160 +20,280 @@ async function generateReviewAssignments({
   DBConnect,
 }: ActionPluginInput) {
   const db = databaseMethods(DBConnect)
-
-  let noAssignmentsPending: [boolean, string] = [false, '']
-
   // Get application/reviewId from applicationData if not provided in parameters
   const applicationId = parameters?.applicationId ?? applicationData?.applicationId
   const reviewId = parameters?.reviewId ?? applicationData?.reviewData?.reviewId
-  const isRegenaration = parameters?.isRegeneration ?? false
-  // Check if "isReview = false" to overwrite having received reviewId - used when need to process an upgrade on same review levels
-  const overwriteIsReview = parameters?.isReview
-
-  // Set "isReview = true" when receiving reviewId (and isReview != false) OR triggered from table 'review'
-  // Even if "isReview === true" is received, but no reviewId it will be considered "isReview = false"
-  const isReview = !!overwriteIsReview
-    ? overwriteIsReview && reviewId !== undefined
-    : reviewId !== undefined || applicationData?.action_payload?.trigger_payload?.table === 'review'
+  const isRegeneration = parameters?.isRegeneration ?? false
 
   try {
     // Get template information and current stage for application
     const { templateId, stageNumber, stageId, stageHistoryTimeCreated } =
       applicationData ?? (await DBConnect.getApplicationData(applicationId))
 
-    console.log('Generating review assignment records...')
-    console.log(`Application ${applicationId} stage ${stageNumber}`)
+    const numReviewLevels = (await DBConnect.getNumReviewLevels(stageId)) || 0
 
-    // Get last existing review level. If there are none, it's assumed to be an application submission - review level 1
-    let nextReviewLevel = isRegenaration
-      ? (await db.getLastReviewLevel(applicationId, stageNumber)) ?? 1
-      : 1
-
-    // Also get number of reviews in current stage and total number of stages
-    const numReviewLevels: number = (await DBConnect.getNumReviewLevels(stageId)) || 0
-    const lastStageNumber: number = await db.getLastStageNumber(applicationId)
-
-    // let nextReviewLevel = 1
-
-    // For first review assignment
-    if (!isReview) {
-      if (numReviewLevels === 0)
-        noAssignmentsPending = [true, 'No reviewer with level associated to first stage']
-    }
-    // For level 1+ or next stages review assignment
-    else {
+    if (isRegeneration)
+      return generateForAllLevelsUntilCurrentLevel(
+        db,
+        applicationId,
+        stageNumber,
+        stageId,
+        stageHistoryTimeCreated,
+        templateId,
+        numReviewLevels
+      )
+    else if (reviewId) {
       const { stageNumber: submittedReviewStage, levelNumber: submittedReviewLevel } =
         await DBConnect.getReviewStageAndLevel(reviewId)
-
-      console.log(`Submitted stage ${submittedReviewStage} level ${submittedReviewLevel}`)
-      // Review in new stage - first level
-      if (submittedReviewStage !== stageNumber) {
-        if (numReviewLevels === 0)
-          noAssignmentsPending = [
-            false,
-            `No reviewer with level associated to stageNumber ${stageNumber}`,
-          ]
-      }
-      // Review in same stage - for next level
-      else {
-        nextReviewLevel = submittedReviewLevel + 1
-        if (nextReviewLevel > numReviewLevels)
-          noAssignmentsPending = [false, 'Final review level reached for current stage']
-      }
-    }
-    if (noAssignmentsPending[0]) {
-      return {
-        status: ActionQueueStatus.Success,
-        error_log: noAssignmentsPending[1],
-        output: {},
-      }
-    } else {
-      console.log(
-        `Generating assignment for stage ${stageNumber} with total levels: ${numReviewLevels}.`,
-        `Current review level ${nextReviewLevel}.`,
-        `Last stage number ${lastStageNumber}.`
-      )
-
-      // Check if other reviewAssignment is already assigned to create new ones LOCKED
-      const previousReviewAssignments: ExistingReviewAssignment[] =
-        await db.getExistingReviewAssignments(applicationId, stageNumber, nextReviewLevel)
-
-      const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
-        templateId,
-        stageNumber,
-        nextReviewLevel,
-        PermissionPolicyType.Review
-      )
-      console.log('Existing reviewers for stage/level', nextLevelReviewers)
-
-      const isLastLevel = nextReviewLevel === numReviewLevels
-      const isLastStage = stageNumber === lastStageNumber
-
-      const { createReviewAssignments, deleteReviewAssignments } = generateNextReviewAssignments(
-        previousReviewAssignments,
-        nextReviewLevel,
-        nextLevelReviewers,
+      return generateForNextLevelReviews(
+        db,
         applicationId,
-        nextReviewLevel,
-        isLastLevel,
-        isLastStage,
+        stageNumber,
         stageId,
-        stageNumber,
-        stageHistoryTimeCreated
-      )
-
-      // Delete review_assignment that no longer applies
-      const deletedAssignmentIds = await db.removeReviewAssignments(deleteReviewAssignments)
-
-      // Save review_assignment records to database
-      const createdReviewAssignmentIds = await db.addReviewAssignments(
-        Object.values(createReviewAssignments) as ReviewAssignment[]
-      )
-
-      // Generate review_assignment_assigner_joins
-      // For now we assume that assigners have no Section restrictions
-      console.log('Generating review_assignment_assigner_join records...')
-      const availableAssigners = await db.getPersonnelForApplicationStageLevel(
+        stageHistoryTimeCreated,
         templateId,
-        stageNumber,
-        nextReviewLevel,
-        PermissionPolicyType.Assign
+        reviewId,
+        submittedReviewStage,
+        submittedReviewLevel,
+        numReviewLevels
       )
-      const createdReviewAssignerJoins = []
-      for (const reviewAssignmentId of createdReviewAssignmentIds) {
-        for (const assigner of availableAssigners) {
-          createdReviewAssignerJoins.push({
-            assignerId: assigner.userId,
-            orgId: assigner.orgId,
-            reviewAssignmentId,
-          })
-        }
-      }
-
-      const reviewAssignmentAssignerJoinIds = await db.addReviewAssignmentAssignerJoins(
-        createdReviewAssignerJoins
-      )
-
-      return {
-        status: ActionQueueStatus.Success,
-        error_log: '',
-        output: {
-          reviewAssignments: createReviewAssignments,
-          reviewAssignmentIds: createdReviewAssignmentIds,
-          reviewAssignmentAssignerJoins: createdReviewAssignerJoins,
-          reviewAssignmentAssignerJoinIds,
-          removedAssignmentIds: deletedAssignmentIds,
-          nextStageNumber: stageNumber,
-          nextReviewLevel,
-        },
-      }
     }
+    // isApplication submission/re-submission
+    else
+      return generateForFirstLevelReviews(
+        db,
+        applicationId,
+        stageNumber,
+        stageId,
+        stageHistoryTimeCreated,
+        templateId,
+        numReviewLevels
+      )
   } catch (error) {
     console.log(error.message)
     return {
       status: ActionQueueStatus.Fail,
       error_log: 'Problem creating review_assignment records: ' + error.message,
     }
+  }
+}
+
+const generateForFirstLevelReviews = async (
+  db: any,
+  applicationId: number,
+  stageNumber: number,
+  stageId: number,
+  stageHistoryTimeCreated: Date,
+  templateId: number,
+  numReviewLevels: number
+) => {
+  console.log('Generating review assignment records for application submission...')
+  console.log(`Application ${applicationId} stage ${stageNumber}`)
+
+  const reviewLevel = 1
+
+  const levelResult = await generateReviewAssignmentsInLevel(
+    db,
+    applicationId,
+    stageNumber,
+    reviewLevel,
+    stageId,
+    stageHistoryTimeCreated,
+    templateId,
+    numReviewLevels
+  )
+
+  let result = {
+    status: ActionQueueStatus.Success,
+    error_log: '',
+    output: { levels: [] },
+  }
+  result.output.levels.push(levelResult)
+  return result
+}
+
+const generateForNextLevelReviews = async (
+  db: any,
+  applicationId: number,
+  currentStageNumber: number,
+  stageId: number,
+  stageHistoryTimeCreated: Date,
+  templateId: number,
+  reviewId: number,
+  submittedReviewStage: number,
+  submittedReviewLevel: number,
+  numReviewLevels: number
+) => {
+  console.log('Generating review assignment records for review submission...')
+  console.log(`Application ${applicationId} stage ${currentStageNumber}\n
+  Review ${reviewId} stage ${submittedReviewStage} level ${submittedReviewLevel}`)
+  let nextReviewLevel = 1
+
+  if (numReviewLevels === 0) {
+    return {
+      status: ActionQueueStatus.Success,
+      error_log: 'No reviewer with level associated to first stage',
+      output: {},
+    }
+  } else {
+    // Review in new stage - first level
+    if (submittedReviewStage !== currentStageNumber) {
+      if (numReviewLevels === 0)
+        return {
+          status: ActionQueueStatus.Success,
+          error_log: `No reviewer with level associated to stageNumber ${currentStageNumber}`,
+          output: {},
+        }
+    }
+    // Review in same stage - for next level
+    else {
+      nextReviewLevel = submittedReviewLevel + 1
+      if (nextReviewLevel > numReviewLevels)
+        return {
+          status: ActionQueueStatus.Success,
+          error_log: 'Final review level reached for current stage',
+          output: {},
+        }
+    }
+  }
+
+  const result = await generateReviewAssignmentsInLevel(
+    db,
+    applicationId,
+    currentStageNumber,
+    nextReviewLevel,
+    stageId,
+    stageHistoryTimeCreated,
+    templateId,
+    numReviewLevels
+  )
+
+  return {
+    status: ActionQueueStatus.Success,
+    error_log: '',
+    output: { levels: [result] },
+  }
+}
+
+const generateForAllLevelsUntilCurrentLevel = async (
+  db: any,
+  applicationId: number,
+  stageNumber: number,
+  stageId: number,
+  stageHistoryTimeCreated: Date,
+  templateId: number,
+  numReviewLevels: number
+) => {
+  // Get last existing reviewAssignment level. If there are none - review level 1
+  let currentReviewLevel = (await db.getLastReviewLevel(applicationId, stageNumber)) ?? 1
+  console.log('Generating review assignment records for assignments re-generation...')
+  console.log(
+    `Application ${applicationId} stage ${stageNumber}, current level ${currentReviewLevel}`
+  )
+
+  // Create array with levels [1,2..,N]
+  const arrayLevels = Array.from({ length: currentReviewLevel }, (v, k) => k + 1)
+
+  // Run loop over all levels until current to generate reviewAssignments
+  Promise.all(
+    arrayLevels.map((level) =>
+      generateReviewAssignmentsInLevel(
+        db,
+        applicationId,
+        stageNumber,
+        level,
+        stageId,
+        stageHistoryTimeCreated,
+        templateId,
+        numReviewLevels
+      )
+    )
+  ).then((values) => ({
+    status: ActionQueueStatus.Success,
+    error_log: '',
+    output: { levels: values.map((reviewResult) => reviewResult) },
+  }))
+}
+
+const generateReviewAssignmentsInLevel = async (
+  db: any,
+  applicationId: number,
+  stageNumber: number,
+  reviewLevel: number,
+  stageId: number,
+  stageHistoryTimeCreated: Date,
+  templateId: number,
+  numReviewLevels: number
+) => {
+  const lastStageNumber: number = await db.getLastStageNumber(applicationId)
+  // Check if other reviewAssignment is already assigned to create new ones LOCKED
+  const previousReviewAssignments: ExistingReviewAssignment[] =
+    await db.getExistingReviewAssignments(applicationId, stageNumber, reviewLevel)
+
+  const nextLevelReviewers = await db.getPersonnelForApplicationStageLevel(
+    templateId,
+    stageNumber,
+    reviewLevel,
+    PermissionPolicyType.Review
+  )
+  console.log('Existing reviewers for stage/level', nextLevelReviewers)
+
+  const isLastLevel = reviewLevel === numReviewLevels
+  const isLastStage = stageNumber === lastStageNumber
+
+  const { createReviewAssignments, deleteReviewAssignments } = await generateNextReviewAssignments(
+    previousReviewAssignments,
+    reviewLevel,
+    nextLevelReviewers,
+    applicationId,
+    reviewLevel,
+    isLastLevel,
+    isLastStage,
+    stageId,
+    stageNumber,
+    stageHistoryTimeCreated
+  )
+
+  // Delete review_assignment that no longer applies
+  const deletedAssignmentIds = await db.removeReviewAssignments(deleteReviewAssignments)
+
+  // Save review_assignment records to database
+  const createdReviewAssignmentIds = await db.addReviewAssignments(
+    Object.values(createReviewAssignments) as ReviewAssignment[]
+  )
+
+  // Generate review_assignment_assigner_joins
+  // For now we assume that assigners have no Section restrictions
+  console.log('Generating review_assignment_assigner_join records...')
+  const availableAssigners = await db.getPersonnelForApplicationStageLevel(
+    templateId,
+    stageNumber,
+    reviewLevel,
+    PermissionPolicyType.Assign
+  )
+  const createdReviewAssignerJoins = []
+  for (const reviewAssignmentId of createdReviewAssignmentIds) {
+    for (const assigner of availableAssigners) {
+      createdReviewAssignerJoins.push({
+        assignerId: assigner.userId,
+        orgId: assigner.orgId,
+        reviewAssignmentId,
+      })
+    }
+  }
+
+  const reviewAssignmentAssignerJoinIds = await db.addReviewAssignmentAssignerJoins(
+    createdReviewAssignerJoins
+  )
+
+  return {
+    reviewAssignments: Object.values(createReviewAssignments),
+    reviewAssignmentIds: createdReviewAssignmentIds,
+    reviewAssignmentAssignerJoins: createdReviewAssignerJoins,
+    reviewAssignmentAssignerJoinIds,
+    removedAssignmentIds: deletedAssignmentIds,
+    nextStageNumber: stageNumber,
+    nextReviewLevel: reviewLevel,
   }
 }
 
