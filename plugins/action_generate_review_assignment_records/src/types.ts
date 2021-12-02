@@ -46,3 +46,24 @@ export interface AssignmentState {
 export type ExistingReviewAssignment = {
   userId: number
 } & AssignmentState
+
+export interface DeleteReviewAssignment {
+  userId: number
+  applicationId: number
+  stageNumber: number
+  levelNumber: number
+}
+
+export interface ResultObject {
+  reviewAssignments: ReviewAssignment[]
+  reviewAssignmentIds: number[]
+  reviewAssignmentAssignerJoins: {
+    assignerId: number
+    orgId: number
+    reviewAssignmentId: number
+  }[]
+  reviewAssignmentAssignerJoinIds: number[]
+  removedAssignmentIds: number[]
+  stageNumber: number
+  reviewLevel: number
+}

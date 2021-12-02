@@ -1,0 +1,13 @@
+{
+  "name": "refresh_all_review_assignment_records_action",
+  "version": "0.1",
+  "description": "Re-generates ALL review assignments for all applications associated with specific user",
+  "author": "The mSupplyFoundation",
+  "license": "MIT",
+  "scripts": {
+    "build": "node ../../utils/pluginScripts/buildPluginFromPluginFolder.js",
+    "test": "node ../../utils/pluginScripts/testPluginFromPluginFolder.js"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
