@@ -634,6 +634,19 @@ class PostgresDB {
     }
   }
 
+  public getSystemOrgTemplatePermissions = async (isSystemOrg: boolean) => {
+    const text = `SELECT * FROM permissions_all
+      WHERE "isSystemOrgPermission" = $1
+      `
+    try {
+      const result = await this.query({ text, values: [isSystemOrg] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getUserTemplatePermissions = async (username: string, orgId: number | null) => {
     const orgMatch = `"orgId" ${orgId === null ? 'IS NULL' : '= $2'}`
 
@@ -641,8 +654,24 @@ class PostgresDB {
       WHERE username = $1
       AND (${orgMatch} OR "isUserCategory" = true)
       `
+
     const values: (string | number)[] = [username]
     if (orgId) values.push(orgId)
+    try {
+      const result = await this.query({ text, values })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getOrgTemplatePermissions = async (orgId: number) => {
+    const text = `SELECT * FROM permissions_all
+      WHERE "orgId" = $1
+      AND username IS NULL
+      `
+    const values: number[] = [orgId]
     try {
       const result = await this.query({ text, values })
       return result.rows
@@ -656,6 +685,20 @@ class PostgresDB {
     const text = 'select * from permissions_all'
     try {
       const result = await this.query({ text, values: [] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
+  public getTemplatePermissions = async (isSystemOrgPermission: boolean = false) => {
+    const text = `SELECT * FROM permissions_all
+      WHERE  "isSystemOrgPermission" = $1
+      ORDER BY "permissionName"
+      `
+    try {
+      const result = await this.query({ text, values: [isSystemOrgPermission] })
       return result.rows
     } catch (err) {
       console.log(err.message)

@@ -6,6 +6,14 @@ type PermissionTypes = keyof typeof PermissionPolicyType
 // to PermissionTypes, thus below declaration
 type PermissionRow = Omit<PermissionsAll, 'permissionType'> & { permissionType: PermissionTypes }
 
+interface PermissionDetails {
+  id: number
+  name: string
+  displayName: string
+  description: string
+  isUserGranted: boolean
+  templateCodes: string[]
+}
 interface TemplatePermissions {
   [index: string]: Array<PermissionTypes>
 }
@@ -25,4 +33,11 @@ interface RuleTypes {
   [index: string]: RuleType
 }
 
-export { PermissionTypes, PermissionRow, TemplatePermissions, UserInfo, RuleTypes }
+export {
+  PermissionDetails,
+  PermissionTypes,
+  PermissionRow,
+  TemplatePermissions,
+  UserInfo,
+  RuleTypes,
+}
