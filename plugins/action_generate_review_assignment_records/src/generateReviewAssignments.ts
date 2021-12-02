@@ -196,7 +196,7 @@ const generateForAllLevelsUntilCurrentLevel = async (
   }
 
   // Run loop over all levels until current to generate reviewAssignments
-  await Promise.all(
+  const values = await Promise.all(
     arrayLevels.map((level) =>
       generateReviewAssignmentsInLevel(
         db,
@@ -209,7 +209,8 @@ const generateForAllLevelsUntilCurrentLevel = async (
         numReviewLevels
       )
     )
-  ).then((values) => values.map((reviewResult) => result.output.levels.push(reviewResult)))
+  )
+  values.map((reviewResult) => result.output.levels.push(reviewResult))
 
   return result
 }
