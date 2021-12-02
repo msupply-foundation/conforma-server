@@ -22,8 +22,8 @@ const databaseMethods = (DBConnect: any) => ({
       WHERE "userId" = ANY($1)
       AND "permissionType" = ANY('{REVIEW, ASSIGN}')
       AND app.outcome = 'PENDING'
-      AND app.status <> 'DRAFT'
     `
+    // We should also exclude applications in DRAFT, but only when its a *first* draft, so this check is done in `generateReviewAssignments` action
     try {
       const result = await DBConnect.query({ text, values: [userIds] })
       return result.rows.map(({ application_id }: { application_id: number }) => application_id)
