@@ -3,6 +3,7 @@ import { getUserInfo } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
 import { UserOrg } from '../../types'
+import { PermissionDetails } from '../permissions/types'
 import path from 'path'
 import { readFileSync } from 'fs'
 import { startCase } from 'lodash'
@@ -85,10 +86,10 @@ const routeUserInfo = async (request: any, reply: any) => {
 
 const routeUserPermissions = async (request: any, reply: any) => {
   const { auth, query } = request
-  if (!query || !query.username)
+  if (!query || (!query.username && !query.orgId))
     return reply.send({
       success: false,
-      message: 'Missing username in query.',
+      message: 'Missing username or orgId in query.',
     })
 
   const { username } = query
@@ -99,18 +100,35 @@ const routeUserPermissions = async (request: any, reply: any) => {
   const isSystemOrg = await databaseConnect.isInternalOrg(Number(orgId))
 
   const templatePermissionRows = await databaseConnect.getTemplatePermissions(isSystemOrg)
-  const userExistingPermissions = await databaseConnect.getUserTemplatePermissions(username, orgId)
 
-  const grantedPermissions = userExistingPermissions.reduce(
-    (grantedPermissions, { permissionName }) => {
-      if (!grantedPermissions.includes(permissionName)) grantedPermissions.push(permissionName)
-      return grantedPermissions
-    },
-    []
-  )
+  let grantedPermissions: string[] = []
+  let availablePermissions: string[] = []
+
+  if (username) {
+    // Get permissions for organisation and which have been granted to user
+    const userExistingPermissions = await databaseConnect.getUserTemplatePermissions(
+      username,
+      orgId
+    )
+
+    grantedPermissions = Array.from(
+      new Set(userExistingPermissions.map((p) => p.permissionName))
+    ).sort()
+    availablePermissions = Array.from(
+      new Set(
+        Object.values(templatePermissionRows)
+          .filter(({ permissionName }) => !grantedPermissions.includes(permissionName))
+          .map((p) => p.permissionName)
+      )
+    ).sort()
+  } else {
+    // Get permissions for organisation without association with as user
+    const orgExistingPermissions = await databaseConnect.getOrgTemplatePermissions(isSystemOrg)
+    availablePermissions = Array.from(new Set(orgExistingPermissions.map((p) => p.perm))).sort()
+  }
 
   // Store array of object per permissionNames with properties and an array of templateCodes
-  const templatePermissions = Object.values(
+  const templatePermissions: PermissionDetails[] = Object.values(
     templatePermissionRows.reduce(
       (templatePermissions, { permissionNameId, permissionName, templateCode, description }) => {
         if (!templatePermissions[permissionName])
@@ -132,13 +150,6 @@ const routeUserPermissions = async (request: any, reply: any) => {
       {}
     )
   )
-
-  const availablePermissions = Object.values(templatePermissionRows)
-    .filter(({ permissionName }) => !grantedPermissions.includes(permissionName))
-    .reduce((availablePermissions, { permissionName }) => {
-      if (!availablePermissions.includes(permissionName)) availablePermissions.push(permissionName)
-      return availablePermissions
-    }, [])
 
   return reply.send({
     templatePermissions,

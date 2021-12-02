@@ -200,7 +200,16 @@ The same as login endpoint, without the success field
 
 GET: `/user-permissions?username=<username>&orgId=<orgId>`
 
-End point to get **another** user's granted permissions + all existing permissions on templates for a given organisation. If no orgId is received the list should contain user-only permissions (the ones with organisation_id = NULL) for external users. Intended for use in template to view/edit antoher user's permissions -- client supplies `username` and `orgId`.
+End point to get **another** user's granted permissions + all existing permissions on templates for a given organisation.
+Intended for use in template to view/edit antoher user's permissions -- client supplies `username` and `orgId`.
+
+##### usage
+
+GET: `/user-permissions?username=<username>` If no `orgId` is received the list should contain user-only permissions (the ones with organisation_id = NULL) for external users.
+
+GET: `/user-permissions?orgId=<orgId>` If no `username` is received (it has to receive orgId in this case) list all available permissions for an org (checking whether is if internal or external)
+
+**Note**: When using this endpoint to list permissionNames in organisation, they will be listed as `availablePermissions`.
 
 Returns (on success):
 
@@ -213,7 +222,6 @@ Returns (on success):
   - TemplateCodes - Array with all templates linked to this permission
 - granted permissions to user
   - Permissions names user **has** been granted permission
-    - Each permissionName has a list of templates linked to it
 - available permissions for user
   - Permissions names user **hasn't** been granted permission
 

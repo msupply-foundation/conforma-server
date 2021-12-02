@@ -634,6 +634,19 @@ class PostgresDB {
     }
   }
 
+  public getOrgTemplatePermissions = async (isSystemOrg: boolean) => {
+    const text = `SELECT * FROM permissions_all
+      WHERE "isSystemOrgPermission" = $1
+      `
+    try {
+      const result = await this.query({ text, values: [isSystemOrg] })
+      return result.rows
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   public getUserTemplatePermissions = async (username: string, orgId: number | null) => {
     const orgMatch = `"orgId" ${orgId === null ? 'IS NULL' : '= $2'}`
 
@@ -681,7 +694,9 @@ class PostgresDB {
 
   public getTemplatePermissions = async (isSystemOrgPermission: boolean = false) => {
     const text = `SELECT * FROM permissions_all
-      WHERE  "isSystemOrgPermission" = $1`
+      WHERE  "isSystemOrgPermission" = $1
+      ORDER BY "permissionName"
+      `
     try {
       const result = await this.query({ text, values: [isSystemOrgPermission] })
       return result.rows
