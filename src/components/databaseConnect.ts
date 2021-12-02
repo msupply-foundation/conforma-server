@@ -106,7 +106,11 @@ class DBConnect {
 
   public getApplicationResponses = PostgresDB.getApplicationResponses
 
+  public getOrgTemplatePermissions = PostgresDB.getOrgTemplatePermissions
+
   public getUserTemplatePermissions = PostgresDB.getUserTemplatePermissions
+
+  public getOrgTemplatePermissions = PostgresDB.getOrgTemplatePermissions
 
   public getAllPermissions = PostgresDB.getAllPermissions
 
