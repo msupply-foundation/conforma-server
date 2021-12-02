@@ -110,7 +110,6 @@ const routeUserPermissions = async (request: any, reply: any) => {
       username,
       orgId
     )
-    console.log('userExistingPermissions', userExistingPermissions)
 
     grantedPermissions = Array.from(
       new Set(userExistingPermissions.map((p) => p.permissionName))
