@@ -1,11 +1,11 @@
 {
   "type": "action_plugin",
-  "code": "generateReviewAssignments",
-  "name": "Generate Review Assignment Records",
-  "description": "Generates review_assignment records for current application",
+  "code": "refreshReviewAssignments",
+  "name": "Refresh User Review Assignment Records",
+  "description": "Re-generates ALL review assignments for all applications associated with specific user",
   "required_parameters": [],
-  "optional_parameters": ["applicationId", "reviewId", "isRegeneration"],
-  "output_properties": ["levels"],
+  "optional_parameters": ["userId", "orgId"],
+  "output_properties": [],
   "info": {
     "author": {
       "name": "The mSupply Foundation",
@@ -19,6 +19,6 @@
     "links": [],
     "screenshots": [],
     "version": "1.0.0",
-    "updated": "2021-02-02"
+    "updated": "2021-11-29"
   }
 }

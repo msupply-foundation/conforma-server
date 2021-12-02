@@ -817,6 +817,20 @@ class PostgresDB {
     }
   }
 
+  public getCurrentReviewStageAndLevel = async (applicationId: number) => {
+    const text = `
+      SELECT MAX(review.level_number) AS "levelNumber", MAX(stage_number) as "stageNumber"
+      FROM review WHERE review.application_id = $1
+    `
+    try {
+      const result = await this.query({ text, values: [applicationId] })
+      return result.rows[0]
+    } catch (err) {
+      console.log(err.message)
+      throw err
+    }
+  }
+
   // public isFullyAssignedLevel1 = async (applicationId: number) => {
   //   const text = `
   //   SELECT is_fully_assigned_level_1
