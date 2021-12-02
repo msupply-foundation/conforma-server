@@ -112,13 +112,13 @@ const routeUserPermissions = async (request: any, reply: any) => {
     console.log('userExistingPermissions', userExistingPermissions)
 
  grantedPermissions = Array.from(new Set(userExistingPermissions.map((p) => p.permissionName))).sort()
-    availablePermissions = Object.values(templatePermissionRows)
-      .filter(({ permissionName }) => !grantedPermissions.includes(permissionName))
-      .reduce((availablePermissions, { permissionName }) => {
-        if (!availablePermissions.includes(permissionName))
-          availablePermissions.push(permissionName)
-        return availablePermissions
-      }, [])
+    availablePermissions = Array.from(
+      new Set(
+        Object.values(templatePermissionRows)
+          .filter(({ permissionName }) => !grantedPermissions.includes(permissionName))
+          .map((p) => p.permissionName)
+      )
+    ).sort()
   } else {
     // Get permissions for organisation without association with as user
     const orgExistingPermissions = await databaseConnect.getOrgTemplatePermissions(isSystemOrg)
