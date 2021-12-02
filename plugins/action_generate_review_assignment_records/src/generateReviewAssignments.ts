@@ -50,7 +50,7 @@ async function generateReviewAssignments({
     }
     // isApplication submission/re-submission
     else
-      return generateForAllLevelsUntilCurrentLevel(
+      return generateForAllReviewAssignmentLevels(
         db,
         applicationId,
         stageNumber,
@@ -170,7 +170,7 @@ const generateForNextLevelReviews = async (
   return result
 }
 
-const generateForAllLevelsUntilCurrentLevel = async (
+const generateForAllReviewAssignmentLevels = async (
   db: any,
   applicationId: number,
   stageNumber: number,
@@ -180,14 +180,14 @@ const generateForAllLevelsUntilCurrentLevel = async (
   numReviewLevels: number
 ) => {
   // Get last existing reviewAssignment level. If there are none - review level 1
-  let currentReviewLevel = (await db.getLastReviewLevel(applicationId, stageNumber)) ?? 1
+  let highestReviewAssignmentLevel = (await db.getLastReviewLevel(applicationId, stageNumber)) ?? 1
   console.log('Generating review assignment records for assignments re-generation...')
   console.log(
-    `Application ${applicationId} stage ${stageNumber}, current level ${currentReviewLevel}`
+    `Application ${applicationId} stage ${stageNumber}, current level ${highestReviewAssignmentLevel}`
   )
 
   // Create array with levels [1,2..,N]
-  const arrayLevels = Array.from({ length: currentReviewLevel }, (v, k) => k + 1)
+  const arrayLevels = Array.from({ length: highestReviewAssignmentLevel }, (v, k) => k + 1)
 
   let result = {
     status: ActionQueueStatus.Success,
