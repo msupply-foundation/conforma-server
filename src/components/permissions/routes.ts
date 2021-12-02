@@ -2,7 +2,8 @@ import databaseConnect from '../databaseConnect'
 import { getUserInfo } from './loginHelpers'
 import { updateRowPolicies } from './rowLevelPolicyHelpers'
 import bcrypt from 'bcrypt'
-import { UserOrg, PermissionDetails } from '../../types'
+import { UserOrg } from '../../types'
+import { PermissionDetails } from '../permissions/types'
 import path from 'path'
 import { readFileSync } from 'fs'
 import { startCase } from 'lodash'
@@ -111,7 +112,9 @@ const routeUserPermissions = async (request: any, reply: any) => {
     )
     console.log('userExistingPermissions', userExistingPermissions)
 
- grantedPermissions = Array.from(new Set(userExistingPermissions.map((p) => p.permissionName))).sort()
+    grantedPermissions = Array.from(
+      new Set(userExistingPermissions.map((p) => p.permissionName))
+    ).sort()
     availablePermissions = Array.from(
       new Set(
         Object.values(templatePermissionRows)
@@ -122,7 +125,7 @@ const routeUserPermissions = async (request: any, reply: any) => {
   } else {
     // Get permissions for organisation without association with as user
     const orgExistingPermissions = await databaseConnect.getOrgTemplatePermissions(isSystemOrg)
-  availablePermissions = Array.from(new Set(orgExistingPermissions.map((p) => p.perm))).sort()
+    availablePermissions = Array.from(new Set(orgExistingPermissions.map((p) => p.perm))).sort()
   }
 
   // Store array of object per permissionNames with properties and an array of templateCodes
