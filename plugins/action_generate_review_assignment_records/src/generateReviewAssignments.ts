@@ -10,6 +10,7 @@ import {
 import databaseMethods from './databaseMethods'
 import {
   ActionQueueStatus,
+  ApplicationStatus,
   PermissionPolicyType,
   ReviewAssignment,
   ReviewAssignmentStatus,
@@ -27,8 +28,27 @@ async function generateReviewAssignments({
 
   try {
     // Get template information and current stage for application
-    const { templateId, stageNumber, stageId, stageHistoryTimeCreated } =
-      applicationData ?? (await DBConnect.getApplicationData(applicationId))
+    const { templateId, status, stageNumber, stageId, stageHistoryTimeCreated } =
+      applicationData?.applicationId ?? (await DBConnect.getApplicationData(applicationId))
+
+    // Find out which is the highest review level that has had review
+    // assignments previously generated
+    let highestReviewAssignmentLevel = await db.getLastReviewLevel(applicationId, stageNumber)
+
+    // Early return if application still in first Draft -- we don't want
+    // review_assignments created. If they already exist, then this must be for
+    // Changes Required, so we continue
+    if (status === ApplicationStatus.Draft && highestReviewAssignmentLevel == null) {
+      console.log(
+        `Warning: Application ${applicationId} still in first Draft, so no review assignments generated`
+      )
+      return {
+        status: ActionQueueStatus.Success,
+        error_log: `Warning: Application ${applicationId} still in first Draft, so no review assignments generated`,
+        output: { levels: [] as ResultObject[] },
+      }
+    }
+    if (highestReviewAssignmentLevel == null) highestReviewAssignmentLevel = 1
 
     const numReviewLevels = (await DBConnect.getNumReviewLevels(stageId)) || 0
 
@@ -57,7 +77,8 @@ async function generateReviewAssignments({
         stageId,
         stageHistoryTimeCreated,
         templateId,
-        numReviewLevels
+        numReviewLevels,
+        highestReviewAssignmentLevel
       )
   } catch (error) {
     console.log(error.message)
@@ -68,7 +89,8 @@ async function generateReviewAssignments({
   }
 }
 
-// This function not currently used, but we can re-activate it with a parameter flag if we need to use it at some point
+// This function not currently used, but we can re-activate it with a parameter
+// flag if we need to use it at some point
 const generateForFirstLevelReviews = async (
   db: any,
   applicationId: number,
@@ -177,13 +199,12 @@ const generateForAllReviewAssignmentLevels = async (
   stageId: number,
   stageHistoryTimeCreated: Date,
   templateId: number,
-  numReviewLevels: number
+  numReviewLevels: number,
+  highestReviewAssignmentLevel: number
 ) => {
-  // Get last existing reviewAssignment level. If there are none - review level 1
-  let highestReviewAssignmentLevel = (await db.getLastReviewLevel(applicationId, stageNumber)) ?? 1
   console.log('Generating review assignment records for assignments re-generation...')
   console.log(
-    `Application ${applicationId} stage ${stageNumber}, current level ${highestReviewAssignmentLevel}`
+    `Application ${applicationId} stage ${stageNumber}, highest review level assignments: ${highestReviewAssignmentLevel}`
   )
 
   // Create array with levels [1,2..,N]

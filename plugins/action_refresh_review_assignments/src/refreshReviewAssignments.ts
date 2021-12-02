@@ -1,6 +1,7 @@
 import { ActionPluginInput } from '../../types'
 import databaseMethods from './databaseMethods'
 import { ActionQueueStatus } from '../../../src/generated/graphql'
+import { SingleApplicationResult, OutputObject } from './types'
 import generateReviewAssignments from '../../action_generate_review_assignment_records/src/generateReviewAssignments'
 
 async function refreshReviewAssignments({
@@ -37,25 +38,26 @@ async function refreshReviewAssignments({
         : 'Refreshing review_assignments for applications: ' + applicationIds
     )
 
+    const results: OutputObject = {
+      status: ActionQueueStatus.Success,
+      error_log: '',
+      output: { updatedApplications: [] },
+    }
+
     // Iterate over applications and call "generateReviewAssignments" action for
     // each one
-    const resultsArray = []
     for (const applicationId of applicationIds) {
-      const output = await generateReviewAssignments({
+      const result = await generateReviewAssignments({
         parameters: { applicationId },
         DBConnect,
       })
-      resultsArray.push(output)
+      results.output.updatedApplications.push({
+        applicationId,
+        ...result,
+      } as SingleApplicationResult)
     }
 
-    return {
-      status: ActionQueueStatus.Success,
-      error_log: '',
-      output: {
-        updatedApplications: applicationIds,
-        reviewAssignments: resultsArray,
-      },
-    }
+    return results
   } catch (error) {
     console.log(error.message)
     return {
