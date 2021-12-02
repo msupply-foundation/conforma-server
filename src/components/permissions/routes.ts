@@ -150,9 +150,7 @@ const routeUserPermissions = async (request: any, reply: any) => {
   )
 
   return reply.send({
-    templatePermissions: templatePermissions.sort(({ name: aName }, { name: bName }) =>
-      aName.localeCompare(bName)
-    ),
+    templatePermissions,
     grantedPermissions,
     availablePermissions,
   })
