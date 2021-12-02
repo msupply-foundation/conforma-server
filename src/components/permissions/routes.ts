@@ -111,13 +111,7 @@ const routeUserPermissions = async (request: any, reply: any) => {
     )
     console.log('userExistingPermissions', userExistingPermissions)
 
-    grantedPermissions = userExistingPermissions.reduce(
-      (grantedPermissions, { permissionName }) => {
-        if (!grantedPermissions.includes(permissionName)) grantedPermissions.push(permissionName)
-        return grantedPermissions
-      },
-      []
-    )
+ grantedPermissions = Array.from(new Set(userExistingPermissions.map((p) => p.permissionName))).sort()
     availablePermissions = Object.values(templatePermissionRows)
       .filter(({ permissionName }) => !grantedPermissions.includes(permissionName))
       .reduce((availablePermissions, { permissionName }) => {
