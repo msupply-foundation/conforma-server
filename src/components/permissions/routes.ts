@@ -123,7 +123,9 @@ const routeUserPermissions = async (request: any, reply: any) => {
     ).sort()
   } else {
     // Get permissions for organisation without association with as user
-    const orgExistingPermissions = await databaseConnect.getOrgTemplatePermissions(isSystemOrg)
+    const orgExistingPermissions = await databaseConnect.getSystemOrgTemplatePermissions(
+      isSystemOrg
+    )
     availablePermissions = Array.from(new Set(orgExistingPermissions.map((p) => p.perm))).sort()
   }
 

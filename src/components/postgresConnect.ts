@@ -634,7 +634,7 @@ class PostgresDB {
     }
   }
 
-  public getOrgTemplatePermissions = async (isSystemOrg: boolean) => {
+  public getSystemOrgTemplatePermissions = async (isSystemOrg: boolean) => {
     const text = `SELECT * FROM permissions_all
       WHERE "isSystemOrgPermission" = $1
       `
