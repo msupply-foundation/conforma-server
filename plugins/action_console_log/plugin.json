@@ -4,6 +4,8 @@
   "name": "Console Logger",
   "description": "All it does is print a message to the console. That's it.",
   "required_parameters": ["message"],
+  "optional_parameters": [],
+  "output_properties": [],
   "info": {
     "author": {
       "name": "The mSupply Foundation",
