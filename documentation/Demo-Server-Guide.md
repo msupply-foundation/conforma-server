@@ -4,48 +4,35 @@
 
 - Add token to githubtoken.txt (for downloading expression-evaluator)
   - requires token that has read access to packages on server repo
-- Edit `dockerise.sh` and update `SERVER_BRANCH`, `WEB_APP_BRANCH` and `IMAGE_NAME`
+- Create a [git Release Tag on Github](https://github.com/openmsupply/application-manager-server/releases/new) for both front and back-end repos with the same name for each (e.g. `B-1.0.13`)
 
-## Build
+## Build (and upload to Docker hub)
 
-`cd docker`  
-`./dockerise.sh`
+`yarn dockerise <tag-name> [push]`  
 
-Should take a while to run, will build a local image.
-**Note**: If build doesn't work
-After making changes to files used during build of Docker file you will need required to add a **new** branch or tag and commit to test!
-Example: While working on develop make a quick branch `test-demo-2021-09-01` and use in the `develop` branch dockerise.sh TAG.
+It should take a while to run and will build a local Docker image. The optional parameter `push` specifies if the script should automatically push the created image to the **msupplyfoundation** [Docker Hub](https://hub.docker.com/) account.
 
+Example:  
+`yarn dockerise B-1.0.13 push`
+
+The build process will create a local image with a tag of the form:
+`build-<Release Tag>_<date>_pg-<version>_node-<version>`
+
+*To see what's going on under the hood when this command is run, please inspect the file `/docker/dockerise.sh`*
+
+If you don't auto-push the image as part of the build process, you can do so manually by running: `yarn docker_push <full image name>`, where `<full-image-name>` includes the account name, repo name ("conforma-demo") and tag.
+
+Example:  
+`docker push msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`
 ## Test locally
 
-- Edit `run.sh`
-  - include correct `SMTP_PASSWORD`(from Bitwarden or your personal .env file)
-  - Change test build to name and tag of image created
-- Run it: `./run.sh`
+When the build (above) completes, it should print a command for running the new image locally, which you can copy and paste. It will be sometihng like:
 
-## Upload to Docker hub
+`yarn docker_run msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`
 
-- Login to docker hub (web site) to see the images in there:
-  - msupplyfoundation - password in Bitwarden (Shared-Admin)
-- List local images to get the “image ID” and "tag name"  
-  `docker image ls`
-- Create tag:  
-  `docker tag <image_id> <account-name>/<docker-repo>:<tag-name>`
-- Push new tag:  
-   `docker push <account-name>/<docker-repo>:<tag-name>`  
-  Image will upload to Docker hub
+You'll need to make sure you have the SMTP_PASSWORD in your local `.env` file.
 
-Example:
-
-- account-name: `msupplyfoundation`
-- docker-repo: `mflow-demo`
-- tag-name: `front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14`
-
-```
-docker tag dbb2111d56e9 msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14
-
-docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14
-```
+*To see the actual Docker commands are constructued, please inspect the file `/docker.run.sh`*
 
 ## Log in to demo server with ssh
 
