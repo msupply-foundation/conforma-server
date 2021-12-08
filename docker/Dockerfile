@@ -87,11 +87,10 @@ WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
 RUN echo "listen_addresses = '*'" >> postgresql.conf
 COPY postgres_config/pg_hba.conf .
 
-ARG INITIAL_DATA_LOCALE=dev
-# --- INITIALISE DATABASE
+# --- INITIALISE DATABASE (core templates)
 WORKDIR /usr/src/initialise_database
 COPY database.sh .
-RUN ./database.sh ${INITIAL_DATA_LOCALE}
+RUN ./database.sh
 
 # --- CREATE LOG DIR
 WORKDIR /var/log/application_manager
