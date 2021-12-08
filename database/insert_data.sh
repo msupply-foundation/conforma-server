@@ -7,7 +7,7 @@ cp -rf ./database/core_templates ./database/_snapshots
 #insert data from
 echo -e "\nInserting data..."
 
-SNAPSHOT_NAME=${1:-core_templates}
+SNAPSHOT_NAME=${1:-core_templates} #Fallback to core_templates if no snapshot name provided
 
 echo $SNAPSHOT_NAME
 
