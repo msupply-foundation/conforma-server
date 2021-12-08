@@ -8,7 +8,9 @@
 
 ## Build (and upload to Docker hub)
 
-`yarn dockerise <tag-name> [push]`  
+`yarn dockerise <tag-name> [push]`
+
+(If you don't specify any parameters, it will build the current `develop` branch.)
 
 It should take a while to run and will build a local Docker image. The optional parameter `push` specifies if the script should automatically push the created image to the **msupplyfoundation** [Docker Hub](https://hub.docker.com/) account.
 
