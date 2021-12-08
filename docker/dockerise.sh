@@ -3,7 +3,7 @@
 # This command requires githubtoken.txt, in the repo root (it's git ingored btw).
 # githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
 
-BRANCH_NAME=${1:-develop} # Use develop if no branch specified in args
+BRANCH_NAME=${1:-develop} # Use develop if no branch/tag specified in args
 IMAGE_NAME='conforma-demo'
 ACCOUNT='msupplyfoundation'
 INITIAL_DATA_LOCALE=''
