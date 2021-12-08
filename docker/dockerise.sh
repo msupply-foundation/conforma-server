@@ -5,18 +5,20 @@
 
 BRANCH_NAME=${1:-develop} # Use develop if no branch specified in args
 IMAGE_NAME='conforma-demo'
+ACCOUNT='msupplyfoundation'
 INITIAL_DATA_LOCALE=''
+PUSH=${2:-nopush} # Default won't push to Docker hub
 
 NODE_VERSION='14'
 POSTGRES_VERSION='12'
 
 IMAGE_TAG="build-${BRANCH_NAME}_$(date +"%Y-%m-%d")_pg-${POSTGRES_VERSION}_node-${NODE_VERSION}"
 
-echo "building image: ${IMAGE_TAG}"
+echo -e "\nBuilding image: ${IMAGE_TAG}\n"
 
 docker build \
    --progress plain \
-   -t "${IMAGE_NAME}:${IMAGE_TAG}" \
+   -t "${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}" \
    --build-arg SERVER_BRANCH="$BRANCH_NAME" \
    --build-arg WEB_APP_BRANCH="$BRANCH_NAME" \
    --build-arg NODE_VERSION="$NODE_VERSION" \
@@ -25,6 +27,13 @@ docker build \
    --secret id=githubtoken,src=../githubtoken.txt \
    --platform "linux/amd64" \
    .
+
+echo -e "\nFinished building. To run locally, use command:\nyarn docker_run ${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}\n"
+
+if [ $PUSH = 'push' ]; then
+   echo -e "\nPushing to Docker hub: ${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}\n"
+   docker push "${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}"
+fi
 
 # -t testbuild -> tag for the image, would be something like 'TMF-application-manager:B-{back end tag}-F-{front end tag}'
 # --build-arg SERVER_BRANCH and WEB_APP_BRANCH -> branch of front and back end to pull and build (should be able to use just the tag name), can escape # with \#
