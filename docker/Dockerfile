@@ -28,7 +28,7 @@ RUN apt-get install nginx -y
 
 # --- LIBRE OFFICE
 # software-properties-common needed to add-apt-repository
-# RUN apt-get install software-properties-common -y
+RUN apt-get install software-properties-common -y
 # RUN add-apt-repository ppa:libreoffice/ppa -y
 RUN apt install libreoffice -y
 # RUN apt-get update
@@ -70,41 +70,41 @@ WORKDIR /usr/src/application-manager-server
 RUN cp .npmrc .npmrc_backup
 RUN echo "" >> .npmrc
 RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
-RUN yarn install
-RUN yarn build
-RUN rm .npmrc && mv .npmrc_backup .npmrc
+# RUN yarn install
+# RUN yarn build
+# RUN rm .npmrc && mv .npmrc_backup .npmrc
 
-# --- BUILD WEB APP
-WORKDIR /usr/src/application-manager-web-app
-RUN cp .npmrc .npmrc_backup
-RUN echo "" >> .npmrc
-RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
-RUN sed -i "s/dev/front: ${SERVER_BRANCH} back: ${WEB_APP_BRANCH}/g" src/config.ts 
-RUN yarn install
-RUN yarn build
-RUN rm .npmrc && mv .npmrc_backup .npmrc
+# # --- BUILD WEB APP
+# WORKDIR /usr/src/application-manager-web-app
+# RUN cp .npmrc .npmrc_backup
+# RUN echo "" >> .npmrc
+# RUN --mount=type=secret,id=githubtoken,dst=/githubtoken echo "//npm.pkg.github.com/:_authToken=$(cat /githubtoken)" >> .npmrc
+# RUN sed -i "s/dev/front: ${SERVER_BRANCH} back: ${WEB_APP_BRANCH}/g" src/config.ts 
+# RUN yarn install
+# RUN yarn build
+# RUN rm .npmrc && mv .npmrc_backup .npmrc
 
-# --- ADD NGINX CONFIG
-COPY nginx_config/application_manager.conf /etc/nginx/conf.d/
+# # --- ADD NGINX CONFIG
+# COPY nginx_config/application_manager.conf /etc/nginx/conf.d/
 
-# --- ADD POSTGRES CONFIG
-WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
-RUN echo "listen_addresses = '*'" >> postgresql.conf
-COPY postgres_config/pg_hba.conf .
+# # --- ADD POSTGRES CONFIG
+# WORKDIR /etc/postgresql/${POSTGRES_VERSION}/main
+# RUN echo "listen_addresses = '*'" >> postgresql.conf
+# COPY postgres_config/pg_hba.conf .
 
-ARG INITIAL_DATA_LOCALE=dev
-# --- INITIALISE DATABASE
-WORKDIR /usr/src/initialise_database
-COPY database.sh .
-RUN ./database.sh ${INITIAL_DATA_LOCALE}
+# ARG INITIAL_DATA_LOCALE=dev
+# # --- INITIALISE DATABASE
+# WORKDIR /usr/src/initialise_database
+# COPY database.sh .
+# RUN ./database.sh ${INITIAL_DATA_LOCALE}
 
-# --- CREATE LOG DIR
-WORKDIR /var/log/application_manager
+# # --- CREATE LOG DIR
+# WORKDIR /var/log/application_manager
 
-# --- PREPARING ENTRY
-WORKDIR /usr/src/entry
-COPY entry.sh .
-WORKDIR /usr/src/application-manager-server
-ENTRYPOINT /./usr/src/entry/entry.sh
+# # --- PREPARING ENTRY
+# WORKDIR /usr/src/entry
+# COPY entry.sh .
+# WORKDIR /usr/src/application-manager-server
+# ENTRYPOINT /./usr/src/entry/entry.sh
 
-EXPOSE 3000
+# EXPOSE 3000

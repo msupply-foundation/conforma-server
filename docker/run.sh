@@ -6,7 +6,7 @@ docker run \
     -ti \
     -p 3000:3000 \
     -e 'SMTP_PASSWORD=smtp_password_goes_here' -e 'WEB_HOST=http://localhost:3000' \
-    testbuild
+    msupplyfoundation/conforma-demo:front-B-1.0.13_back-B-1.0.13_pg-12_node-14
 
 # -ti -> interactive (connect to shell on startup)
 # -p -> {localhost-port}:{container-port}, changing this would conflict with web_app_config/config.json
