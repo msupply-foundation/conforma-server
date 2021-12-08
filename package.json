@@ -57,7 +57,7 @@
     "generate": "graphql-codegen --config codegen.yml",
     "postinstall": "node ./utils/pluginScripts/yarnInstallPlugins.js",
     "snapshot": "ts-node ./database/snapshotCLI.ts",
-    "dockerise": "./docker/dockerise.sh"
+    "dockerise": "cd docker && ./dockerise.sh"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",

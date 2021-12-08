@@ -14,8 +14,6 @@ IMAGE_TAG="build-${BRANCH_NAME}_$(date +"%Y-%m-%d")_pg-${POSTGRES_VERSION}_node-
 
 echo "building image: ${IMAGE_TAG}"
 
-exit 0
-
 docker build \
    --progress plain \
    -t "${IMAGE_NAME}:${IMAGE_TAG}" \
