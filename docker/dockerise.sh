@@ -31,7 +31,8 @@ docker build \
 echo -e "\nFinished building. To run locally, use command:\nyarn docker_run ${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}\n"
 
 if [ $PUSH = 'push' ]; then
-   echo -e "\nPushing to Docker hub: ${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}\n"
+   # We don't need to Tag if the full local name is exactly the same as the  full remote name
+   echo -e "\nPushing to Docker hub:\ndocker push "${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}"\n"
    docker push "${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}"
 fi
 
