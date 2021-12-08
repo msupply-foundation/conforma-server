@@ -4,7 +4,7 @@
   "name": "Trim duplicate reponses",
   "description": "Trims duplicated application or review responses if nothing has changed",
   "required_parameters": [],
-  "optional_parameters": ["applicationId", "review_id"],
+  "optional_parameters": ["applicationId", "reviewId"],
   "output_properties": ["deletedIds", "updatedIds"],
   "info": {
     "author": {

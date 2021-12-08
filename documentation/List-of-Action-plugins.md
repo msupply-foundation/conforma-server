@@ -24,6 +24,7 @@
   - [Update Review Statuses](#update-review-statuses)
   - [Generate Document](#generate-document)
   - [Send Notification](#send-notification)
+  - [Schedule Action](#schedule-action)
 - [Core Actions](#core-actions)
     - [On Application Create:](#on-application-create)
     - [On Application Submit](#on-application-submit)
@@ -96,11 +97,14 @@ Changes the application Stage to the next in the sequence
 
 - _Action Code:_ **`changeStatus`**
 
-| Input parameters<br />(\*required) <br/> | Output properties             |
-| ---------------------------------------- | ----------------------------- |
-| `applicationId` or `reviewId`            | `applicationId` or `reviewId` |
-| `newStatus` \*                           | `status`                      |
-| `isReview`                               | `statusId`                    |
+| Input parameters<br />(\*required) <br/> | Output properties                      |
+| ---------------------------------------- | -------------------------------------- |
+| `applicationId` or `reviewId`            | `applicationId` or `reviewId`          |
+| `newStatus` \*                           | `status`                               |
+| `isReview`                               | `statusId`                             |
+|                                          | `applicationStatusHistoryTimestamp` or |
+|                                          | `reviewStatusHistoryTimestamp`         |
+
 
 If we are wanting to change the status of a **review**, the parameter `isReview` should be set to `true`. If `applicationId` or `reviewId` are not provided, plugin will try to retrieve from `applicationData`.
 
@@ -362,7 +366,7 @@ Should be run whenever an application or review is submitted or re-submitted, an
 
 | Input parameters<br />(\*required) <br/> | Output properties |
 | ---------------------------------------- | ----------------- |
-| `applicationId` \*                       | `levels`          |
+| `applicationId`                          | `levels`          |
 | `reviewId`                               |                   |
 |                                          |                   |
 |                                          |                   |
@@ -402,7 +406,7 @@ Should be run whenever the permissions for any user are changed.
 | Input parameters<br />(\*required) <br/> | Output properties     |
 | ---------------------------------------- | --------------------- |
 | `userId`                                 | `updatedApplications` |
-|                                          | `reviewAssignments`   |
+
 
 **Notes**:
 
@@ -444,12 +448,14 @@ When an applicant re-submits an application after making changes, this Action up
 
 - _Action Code:_ **`updateReviewsStatuses`**
 
-| Input parameters<br />(\*required) <br/>                                        | Output properties |
-| ------------------------------------------------------------------------------- | ----------------- |
-| `applicationId`                                                                 | `updatedReviews`  |
-| `reviewId`                                                                      |                   |
-| `triggeredBy` Enum: REVIEW or APPLICATION (Default)                             |                   |
-| `changedResponses`\* [Array of `applicationResponseIds` or `reviewReponsesIds`] |                   |
+| Input parameters<br />(\*required) <br/>                                        | Output properties          |
+| ------------------------------------------------------------------------------- | -------------------------- |
+| `applicationId`                                                                 | `updatedReviews`           |
+| `reviewId`                                                                      | `updatedReviewAssignments` |
+| `triggeredBy` Enum: REVIEW or APPLICATION (Default)                             |                            |
+| `changedResponses`\* [Array of `applicationResponseIds` or `reviewReponsesIds`] |                            |
+| `level`                                                                         |                            |
+| `stageId`                                                                       |                            |
 
 **Note:** - If `applicationId` or `reviewId` is not provided, the plugin will attempt to fetch it from `applicationData`. In case the `reviewId` is received, this Action will be updating status of related reviews of same stage in the current and next level reviews. Otherwhise (for an application submit - without passing `reviewId` this Action will be updating only reviewes of current level/stage.
 The list of changed review/responses submitted is passed as `changedResponses` to the action and will define which reviews statuses to update by:
@@ -469,10 +475,12 @@ Generates a PDF file based on a [Carbone](https://carbone.io/api-reference.html)
 | Input parameters<br />(\*required) <br/> | Output properties                          |
 | ---------------------------------------- | ------------------------------------------ |
 | `docTemplateId`\*                        | `document: {uniqueId, filename, filepath}` |
-| `option`                                 |                                            |
+| `options`                                |                                            |
 | `appicationSerial`                       |                                            |
-| `additionalData`                         |                                            |
+| `templateId`                             |                                            |
 | `userId`                                 |                                            |
+| `additionalData`                         |                                            |
+
 
 The Action utilises the internal `generatePDF` function, which is also accessible via the [`/generate-pdf` endpoint](API.md)
 
@@ -534,6 +542,34 @@ SMTP_PASSWORD=<password>
 The output object `notification` contains all the fields from the notification record:
 
 `id, user_id, application_id, review_id, email_recipients, subject, message, attachments, email_sent, is_read`
+
+---
+
+### Schedule Action
+
+A "special" action that allows other actions to be triggered at some time in the future, which can be used to expire licenses, registrations, or notify of upcoming deadlines.
+
+- _Action Code:_ **`scheduleAction`**
+
+| Input parameters<br />(\*required) <br/> | Output properties |
+| ---------------------------------------- | ----------------- |
+| `duration`\*                             | `scheduledEvent`  |
+| `eventCode`                              |                   |
+| `applicationId`                          |                   |
+| `templateId`                             |                   |
+| `cancel`                                 |                   |
+| `data`                                   |                   |
+
+This Action stores an "event" in the database `trigger_schedule` table, scheduled for a time in the future specified by `duration`. When this time is reached, a special trigger is fired (`ON_SCHEDULE`) which can be used as the trigger for subsequent actions.
+
+Each scheduled event can be saved with an `eventCode` -- this is used by Actions that are triggered by this event to determine *which* action should be fired for any given `ON_SCHEDULE` trigger on each template type. Every Action defined for each template has an optional `scheduledActionCode` field, which can be used to match specific events. If no event code is provided, then *every* action for that template type with an `ON_SCHEDULE` trigger will be executed.
+
+By default, when an event is saved, the `outputCumulative` object from the `scheduleAction` action (including outputs of previous actions in the sequence) is stored in the `data` field, but additional data can be added to this as well. Then when the scheduled action runs, it gets this data passed in as `outputCumulative` -- this means it effectively can continue as though it were part of the same sequence of actions, but with a "pause" due to the schedule.
+
+The `cancel` parameter is a way to prevent a previously scheduled event from occurring. Passing in `cancel: true` will, instead of creating a new event, find any *existing* event that has matching `applicationId` and `eventCode` and set to to inactive without it ever firing. In practice, though, targeting an event by `applicationId` is often not feasible, so the preferred way to cancel a scheduled event is to just apply an appropriate Condition to the subsequent action -- so the event is still triggered, but the matching action won't occur if the condition is not met (e.g. don't expire a product if registration has been renewed)
+
+Note: the `duration` value can be *either* a number (representing time in weeks) or a [Luxon duration object](https://moment.github.io/luxon/api-docs/index.html#duration).
+
 
 ---
 
