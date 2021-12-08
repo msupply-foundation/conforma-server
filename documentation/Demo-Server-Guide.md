@@ -28,13 +28,13 @@ Example:
 `docker push msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`
 ## Test locally
 
-When the build (above) completes, it should print a command for running the new image locally, which you can copy and paste. It will be sometihng like:
+When the build (above) completes, it should print a command for running the new image locally, which you can copy and paste. It will be something like:
 
 `yarn docker_run msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`
 
 You'll need to make sure you have the SMTP_PASSWORD in your local `.env` file.
 
-*To see the actual Docker commands are constructued, please inspect the file `/docker.run.sh`*
+*To see the actual Docker commands that are constructued, please inspect the file `/docker/run.sh`*
 
 ## Log in to demo server with ssh
 
