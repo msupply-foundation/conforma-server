@@ -28,10 +28,11 @@ RUN apt-get install nginx -y
 
 # --- LIBRE OFFICE
 # software-properties-common needed to add-apt-repository
-RUN apt-get install software-properties-common -y
-RUN add-apt-repository ppa:libreoffice/ppa -y
-RUN apt-get update
-RUN apt-get install libreoffice -y
+# RUN apt-get install software-properties-common -y
+# RUN add-apt-repository ppa:libreoffice/ppa -y
+RUN apt install libreoffice -y
+# RUN apt-get update
+# RUN apt-get install libreoffice -y
 
 # --- NODE and NPX
 ARG NODE_VERSION=14
