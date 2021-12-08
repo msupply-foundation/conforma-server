@@ -5,6 +5,7 @@
 - Add token to githubtoken.txt (for downloading expression-evaluator)
   - requires token that has read access to packages on server repo
 - Create a [git Release Tag on Github](https://github.com/openmsupply/application-manager-server/releases/new) for both front and back-end repos with the same name for each (e.g. `B-1.0.13`)
+- Ensure your local Docker installation is logged in with the **msupplyfoundation** account (Password in Bitwarden)
 
 ## Build (and upload to Docker hub)
 
