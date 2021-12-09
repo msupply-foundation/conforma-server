@@ -19,7 +19,7 @@ Example:
 `yarn dockerise B-1.0.13 push`
 
 The build process will create a local image with a tag of the form:
-`build-<Release Tag>_<date>_pg-<version>_node-<version>`
+`build-<releaseTag>_<date>_pg-<version>_node-<version>`
 
 *To see what's going on under the hood when this command is run, please inspect the file `/docker/dockerise.sh`*
 
