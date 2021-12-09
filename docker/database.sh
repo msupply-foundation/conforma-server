@@ -16,6 +16,10 @@ sleep 3
 
 echo '--- ADDING DATA'
 ./database/insert_data.sh $1
+# Manually copy files from core templates because the insert_data.sh script doesn't put them in the ./build folder when run from here
+cp -r ./build/database/core_templates/files ./build
+cp -r ./build/database/core_templates/localisation ./build
+cp ./build/database/core_templates/preferences.json ./build
 
 echo '--- RUNNING POST INSTALL'
 ./database/turn_on_row_level_security.sh

@@ -92,12 +92,6 @@ WORKDIR /usr/src/initialise_database
 COPY database.sh .
 RUN ./database.sh
 
-# Manually copy files from core templates because the database.sh script doesn't put them in the ./build folder
-WORKDIR /usr/src/application-manager-server
-RUN cp -r ./build/database/core_templates/files ./build
-RUN cp -r ./build/database/core_templates/localisation ./build
-RUN cp ./build/database/core_templates/preferences.json ./build
-
 # --- CREATE LOG DIR
 WORKDIR /var/log/application_manager
 
