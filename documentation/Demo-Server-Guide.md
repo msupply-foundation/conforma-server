@@ -23,7 +23,7 @@ The build process will create a local image with a tag of the form:
 
 *To see what's going on under the hood when this command is run, please inspect the file `/docker/dockerise.sh`*
 
-If you don't auto-push the image as part of the build process, you can do so manually by running: `yarn docker_push <full image name>`, where `<full-image-name>` includes the account name, repo name ("conforma-demo") and tag.
+If you don't auto-push the image as part of the build process, you can do so manually by running: `docker push <full image name>`, where `<full-image-name>` includes the account name, repo name ("conforma-demo") and tag.
 
 Example:  
 `docker push msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`
