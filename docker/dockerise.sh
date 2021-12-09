@@ -3,28 +3,38 @@
 # This command requires githubtoken.txt, in the repo root (it's git ingored btw).
 # githubtoken.txt should contain github token: https://github.com/settings/tokens -> generate new token -> [x] read:packages
 
-SERVER_BRANCH='B-1.0.12'
-WEB_APP_BRANCH='B-1.0.12'
+BRANCH_NAME=${1:-develop} # Use develop if no branch/tag specified in args
 IMAGE_NAME='conforma-demo'
+ACCOUNT='msupplyfoundation'
 INITIAL_DATA_LOCALE=''
+PUSH=${2:-nopush} # Default won't push to Docker hub
 
 NODE_VERSION='14'
 POSTGRES_VERSION='12'
 
-IMAGE_TAG="front-${WEB_APP_BRANCH}_back-${SERVER_BRANCH}_pg-${POSTGRES_VERSION}_node-${NODE_VERSION}"
+IMAGE_TAG="build-${BRANCH_NAME}_$(date +"%Y-%m-%d")_pg-${POSTGRES_VERSION}_node-${NODE_VERSION}"
 
-echo "building image: ${IMAGE_TAG}"
+echo -e "\nBuilding image: ${IMAGE_TAG}\n"
 
 docker build \
    --progress plain \
-   -t "${IMAGE_NAME}:${IMAGE_TAG}" \
-   --build-arg SERVER_BRANCH="$SERVER_BRANCH" \
-   --build-arg WEB_APP_BRANCH="$WEB_APP_BRANCH" \
+   -t "${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}" \
+   --build-arg SERVER_BRANCH="$BRANCH_NAME" \
+   --build-arg WEB_APP_BRANCH="$BRANCH_NAME" \
    --build-arg NODE_VERSION="$NODE_VERSION" \
    --build-arg POSTGRES_VERSION="$POSTGRES_VERSION" \
    --build-arg INITIAL_DATA_LOCALE="$INITIAL_DATA_LOCALE" \
    --secret id=githubtoken,src=../githubtoken.txt \
+   --platform "linux/amd64" \
    .
+
+echo -e "\nFinished building. To run locally, use command:\nyarn docker_run ${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}\n"
+
+if [ $PUSH = 'push' ]; then
+   # We don't need to Tag if the full local name is exactly the same as the  full remote name
+   echo -e "\nPushing to Docker hub:\ndocker push "${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}"\n"
+   docker push "${ACCOUNT}/${IMAGE_NAME}:${IMAGE_TAG}"
+fi
 
 # -t testbuild -> tag for the image, would be something like 'TMF-application-manager:B-{back end tag}-F-{front end tag}'
 # --build-arg SERVER_BRANCH and WEB_APP_BRANCH -> branch of front and back end to pull and build (should be able to use just the tag name), can escape # with \#

@@ -56,7 +56,9 @@
     "gui": "cd ./src/modules/expression-evaluator && yarn gui",
     "generate": "graphql-codegen --config codegen.yml",
     "postinstall": "node ./utils/pluginScripts/yarnInstallPlugins.js",
-    "snapshot": "ts-node ./database/snapshotCLI.ts"
+    "snapshot": "ts-node ./database/snapshotCLI.ts",
+    "dockerise": "cd docker && ./dockerise.sh",
+    "docker_run": "cd docker && ./run.sh"
   },
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^6.0.0",

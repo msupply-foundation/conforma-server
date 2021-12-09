@@ -1,58 +1,48 @@
-# mFlow Demo Server build and install using Docker
+# *conforma* Demo Server build and install using Docker
 
 ## Prep
 
 - Add token to githubtoken.txt (for downloading expression-evaluator)
   - requires token that has read access to packages on server repo
-- Edit `dockerise.sh` and update `SERVER_BRANCH`, `WEB_APP_BRANCH` and `IMAGE_NAME`
+- Create a [git Release Tag on Github](https://github.com/openmsupply/application-manager-server/releases/new) for both front and back-end repos with the same name for each (e.g. `B-1.0.13`)
+- Ensure your local Docker installation is logged in with the **msupplyfoundation** account (Password in Bitwarden)
 
-## Build
+## Build (and upload to Docker hub)
 
-`cd docker`  
-`./dockerise.sh`
+`yarn dockerise <tag-name> [push]`
 
-Should take a while to run, will build a local image.
-**Note**: If build doesn't work
-After making changes to files used during build of Docker file you will need required to add a **new** branch or tag and commit to test!
-Example: While working on develop make a quick branch `test-demo-2021-09-01` and use in the `develop` branch dockerise.sh TAG.
+(If you don't specify any parameters, it will build the current `develop` branch.)
 
+It should take a while to run and will build a local Docker image. The optional parameter `push` specifies if the script should automatically push the created image to the **msupplyfoundation** [Docker Hub](https://hub.docker.com/) account.
+
+Example:  
+`yarn dockerise B-1.0.13 push`
+
+The build process will create a local image with a tag of the form:
+`build-<releaseTag>_<date>_pg-<version>_node-<version>`
+
+*To see what's going on under the hood when this command is run, please inspect the file `/docker/dockerise.sh`*
+
+If you don't auto-push the image as part of the build process, you can do so manually by running: `docker push <full image name>`, where `<full-image-name>` includes the account name, repo name ("conforma-demo") and tag.
+
+Example:  
+`docker push msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`
 ## Test locally
 
-- Edit `run.sh`
-  - include correct `SMTP_PASSWORD`(from Bitwarden or your personal .env file)
-  - Change test build to name and tag of image created
-- Run it: `./run.sh`
+When the build (above) completes, it should print a command for running the new image locally, which you can copy and paste. It will be something like:
 
-## Upload to Docker hub
+`yarn docker_run msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`
 
-- Login to docker hub (web site) to see the images in there:
-  - msupplyfoundation - password in Bitwarden (Shared-Admin)
-- List local images to get the “image ID” and "tag name"  
-  `docker image ls`
-- Create tag:  
-  `docker tag <image_id> <account-name>/<docker-repo>:<tag-name>`
-- Push new tag:  
-   `docker push <account-name>/<docker-repo>:<tag-name>`  
-  Image will upload to Docker hub
+You'll need to make sure you have the SMTP_PASSWORD in your local `.env` file.
 
-Example:
-
-- account-name: `msupplyfoundation`
-- docker-repo: `mflow-demo`
-- tag-name: `front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14`
-
-```
-docker tag dbb2111d56e9 msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14
-
-docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14
-```
+*To see the actual Docker commands that are constructued, please inspect the file `/docker/run.sh`*
 
 ## Log in to demo server with ssh
 
-- Get key file from Bitwarden (openstack-irims-demo-keypair) and save locally (e.g. in `~/Documents/private/mflowkey.pem`)
+- Get key file from Bitwarden (openstack-irims-demo-keypair) and save locally (e.g. in `~/Documents/private/conformakey.pem`)
 - SSH login to server:
   ```bash
-  export KEY_LOC='/Users/<you>/Documents/private/mflowkey.pem' (or your local location)
+  export KEY_LOC='/Users/<you>/Documents/private/conformakey.pem' (or your local location)
   sudo ssh -i $KEY_LOC ubuntu@irims-demo.msupply.org
   ```
 - View commit hashes of currently running images:  
@@ -61,9 +51,9 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
   `sudo docker stop <hashes… >`
 - Pull image from docker hub:  
   `sudo docker pull <full-image-name>`
-  Example: `sudo docker pull msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14`
+  Example: `sudo docker pull msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`
 - Run image:  
-  `sudo docker run -dti -p 8000:3000 -e 'SMTP_PASSWORD=<password>' -e 'WEB_HOST=https://irims-demo.msupply.org:50000' -e 'JWT_SECRET=<some-random-secret>' --name mflow-demo-on-8000 msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14`  
+  `sudo docker run -dti -p 8000:3000 -e 'SMTP_PASSWORD=<password>' -e 'WEB_HOST=https://irims-demo.msupply.org:50000' -e 'JWT_SECRET=<some-random-secret>' --name conforma-demo-on-8000 msupplyfoundation/conforma-demo:build-B-1.0.13_2021-12-08_pg-12_node-14`  
    This will launch one instance. To launch other instances in their own container, run the same command, but change:
 
   - name
@@ -78,7 +68,7 @@ docker push msupplyfoundation/mflow-demo:front-demo-19-08-2021_back-demo-19-08-2
 Edit script in `./docker/demo_server/docker-compose.yml`
 
 - only change the image name (if required)
-- don't change SMTP_PASSOWRD!
+- don't change SMTP_PASSWORD!
 
 ### Copy script folder demo server scripts
 
@@ -158,29 +148,29 @@ sudo chown 472 grafana_on_port_8009
 ### Launching all
 
 ```bash
-export TAG='front-demo-19-08-2021_back-demo-19-08-2021_pg-12_node-14'
+export TAG='build-B-1.0.13_2021-12-08_pg-12_node-14'
 export SMTP_SECRET='add_smtp_secret_here'
 export WEB_URL='https://irims-demo.msupply.org:<replace port>'
 export JWT_SECRET='random private key'
 
 # -d is for detached, if you want to see all output then start without -d
-PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'mflow-on-8000' up -d
+PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'conforma-on-8000' up -d
 
 # currently running with snapshot demo-2021-08-27
-PORT_APP=8002 PORT_DASH=8003 sudo -E docker-compose --project-name 'mflow-on-8002' up -d
+PORT_APP=8002 PORT_DASH=8003 sudo -E docker-compose --project-name 'conforma-on-8002' up -d
 
 # currently running with basic_snapshot
-PORT_APP=8004 PORT_DASH=8005 sudo -E docker-compose --project-name 'mflow-on-8004' up -d
-PORT_APP=8006 PORT_DASH=8007 sudo -E docker-compose --project-name 'mflow-on-8006' up -d
-PORT_APP=8008 PORT_DASH=8009 sudo -E docker-compose --project-name 'mflow-on-8008' up -d
+PORT_APP=8004 PORT_DASH=8005 sudo -E docker-compose --project-name 'conforma-on-8004' up -d
+PORT_APP=8006 PORT_DASH=8007 sudo -E docker-compose --project-name 'conforma-on-8006' up -d
+PORT_APP=8008 PORT_DASH=8009 sudo -E docker-compose --project-name 'conforma-on-8008' up -d
 ```
 
 ### View logs
 
 ```bash
 # don't need bash inside contiainer for this
-sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/server.log
-sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/graphile.log
+sudo docker exec -ti conforma-on-8000_app_1 cat /var/log/application_manager/server.log
+sudo docker exec -ti conforma-on-8000_app_1 cat /var/log/application_manager/graphile.log
 ```
 
 ## To restart an instance
@@ -188,12 +178,12 @@ sudo docker exec -ti mflow-on-8000_app_1 cat /var/log/application_manager/graphi
 In case you don't want to use the existing database previously set on that instance, you need to stop and remove the resouces by doing this:
 
 - Run `sudo docker stop <name>`
-  - name from above (plus `_app_1` e.g.: `mflow-on-8000_app_1`)
+  - name from above (plus `_app_1` e.g.: `conforma-on-8000_app_1`)
   - or can use container id. e.g.: `sudo docker stop 030f8b82814b`
 - Remove container: `sudo docker rm <name>` or remove the folder on `demo_server` (e.g `sudo rm -rf app_postgres_on_port_8000`)
 
 - Now re-run the instance changing the ports accordingly to the instance you need to re-launch:
-  `PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'mflow-on-8000' up -d`
+  `PORT_APP=8000 PORT_DASH=8001 sudo -E docker-compose --project-name 'conforma-on-8000' up -d`
 
 Note: this resets the container to initial state, including database reset. If you want to preserve existing data, you’ll need to take a snapshot first, then reload after restart.
 
