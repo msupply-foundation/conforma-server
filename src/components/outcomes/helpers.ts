@@ -52,14 +52,13 @@ export const buildAllColumnDefinitions = async ({
   orgId: number | undefined
 }): Promise<ColumnDetailOutput> => {
   // Look up allowed Outcome displays
-  const outcomeTables = await DBConnect.getAllTableNames()
-
-  if (!outcomeTables.includes(snakeCase(tableName)))
-    throw new Error(`Invalid table name: ${tableName}`)
-
-  const outcomes = (
-    await DBConnect.getAllowedOutcomeDisplays(permissionNames, snakeCase(tableName))
+  const outcomeTables = (await DBConnect.getAllTableNames()).map((tableName) =>
+    camelCase(tableName)
   )
+
+  if (!outcomeTables.includes(tableName)) throw new Error(`Invalid table name: ${tableName}`)
+
+  const outcomes = (await DBConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
     .map((outcome) => objectKeysToCamelCase(outcome))
     .sort((a, b) => b.priority - a.priority) as OutcomeDisplay[]
 
