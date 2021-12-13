@@ -463,34 +463,7 @@
       "tableViewExcludeColumns": null,
       "tableViewIncludeColumns": ["logoUrl", "name", "address"],
       "title": "Organisations"
-    },
-    {
-   "code": "outcome",
-   "detailViewExcludeColumns": [
-    "id"
-   ],
-   "detailViewHeaderColumn": "title",
-   "detailViewIncludeColumns": [
-    "...",
-    "customColumnDefinitions"
-   ],
-   "id": 5,
-   "permissionNames": [
-    "admin"
-   ],
-   "priority": 1,
-   "rowRestrictions": {},
-   "showLinkedApplications": false,
-   "tableName": "outcomeDisplay",
-   "tableViewExcludeColumns": null,
-   "tableViewIncludeColumns": [
-    "tableName",
-    "title",
-    "code",
-    "tableViewIncludeColumns"
-   ],
-   "title": "Outcome Display Configurations"
-  }
+    }
   ],
   "outcomeDisplayColumnDefinition": [
     {
@@ -613,71 +586,7 @@
         ],
         "operator": "graphQL"
       }
-    },
-	  {
-   "additionalFormatting": {
-    "substitution": "`${}`"
-   },
-   "columnName": "tableName",
-   "elementParameters": null,
-   "elementTypePluginCode": null,
-   "id": 20,
-   "tableName": "outcomeDisplay",
-   "title": "Table",
-   "valueExpression": null
-  },
-  {
-   "additionalFormatting": {
-    "substitution": "**${}**"
-   },
-   "columnName": "title",
-   "elementParameters": null,
-   "elementTypePluginCode": null,
-   "id": 21,
-   "tableName": "outcomeDisplay",
-   "title": "Name",
-   "valueExpression": null
-  },
-  {
-   "additionalFormatting": {
-    "substitution": "**${}**"
-   },
-   "columnName": "rowRestrictions",
-   "elementParameters": {
-    "label": "To-Do: *Need a display element for generic object*"
-   },
-   "elementTypePluginCode": "shortText",
-   "id": 22,
-   "tableName": "outcomeDisplay",
-   "title": null,
-   "valueExpression": null
-  },
-  {
-   "additionalFormatting": null,
-   "columnName": "customColumnDefinitions",
-   "elementParameters": null,
-   "elementTypePluginCode": null,
-   "id": 23,
-   "tableName": "outcomeDisplay",
-   "title": null,
-   "valueExpression": {
-    "children": [
-     "query getColumnDefinitions($tableName: String!) {outcomeDisplayColumnDefinitions(condition: { tableName: $tableName }) { nodes {    columnName, title, elementTypePluginCode}}}",
-     "",
-     [
-      "tableName"
-     ],
-     {
-      "children": [
-       "tableName"
-      ],
-      "operator": "objectProperties"
-     },
-     "outcomeDisplayColumnDefinitions.nodes.columnName"
-    ],
-    "operator": "graphQL"
-   }
-  }
+    }
   ],
   "permissionPolicy": [
     {

@@ -1,13 +1,7 @@
 /*************************************************/
 /*** SCRIPT AUTHOR: application-manager-server ***/
-/***    CREATED ON: 2021-12-13T03:43:06.415Z   ***/
+/***    CREATED ON: 2021-11-11T22:29:01.418Z   ***/
 /*************************************************/
-
---- BEGIN ALTER TABLE "public"."organisation" ---
-
-ALTER TABLE IF EXISTS "public"."organisation" ADD COLUMN IF NOT EXISTS "registration_documentation" jsonb NULL  ;
-
---- END ALTER TABLE "public"."organisation" ---
 
 --- BEGIN CREATE TABLE "public"."organisation_application_join" ---
 
@@ -40,6 +34,12 @@ ALTER TABLE IF EXISTS "public"."user_application_join" OWNER TO postgres;
 
 
 --- END CREATE TABLE "public"."user_application_join" ---
+
+--- BEGIN ALTER TABLE "public"."organisation" ---
+
+ALTER TABLE IF EXISTS "public"."organisation" ADD COLUMN IF NOT EXISTS "registration_documentation" jsonb NULL  ;
+
+--- END ALTER TABLE "public"."organisation" ---
 
 --- BEGIN CREATE SEQUENCE "public"."organisation_application_join_id_seq" ---
 
