@@ -742,53 +742,6 @@ class PostgresDB {
     }
   }
 
-  public joinPermissionNameToUser = async (username: string, permissionName: string) => {
-    const text = `
-    insert into permission_join (user_id, permission_name_id) 
-    values (
-        (select id from "user" where username = $1),
-        (select id from permission_name where name = $2))
-    ON CONFLICT (user_id, permission_name_id)
-      WHERE organisation_id IS NULL
-    DO
-    		UPDATE SET (user_id, is_active) = ((select id from "user" where username = $1), true)
-    returning id
-    `
-    try {
-      const result = await this.query({ text, values: [username, permissionName] })
-      return result.rows[0].id
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
-  public joinPermissionNameToUserOrg = async (
-    username: string,
-    org: string | number,
-    permissionName: string
-  ) => {
-    const text = `
-    INSERT INTO permission_join (user_id, organisation_id, permission_name_id) 
-    values (
-        (select id from "user" where username = $1),
-        ${typeof org === 'number' ? '$2' : '(select id from organisation where name = $2)'},
-        (select id from permission_name where name = $3))
-    ON CONFLICT (user_id, organisation_id, permission_name_id)
-      WHERE organisation_id IS NOT NULL
-    DO
-    		UPDATE SET (user_id, is_active) = ((select id from "user" where username = $1), true)
-    RETURNING id
-    `
-    try {
-      const result = await this.query({ text, values: [username, org, permissionName] })
-      return result.rows[0].id
-    } catch (err) {
-      console.log(err.message)
-      throw err
-    }
-  }
-
   public getNumReviewLevels = async (stageId: number) => {
     const text = `
     SELECT MAX(number) FROM template_stage_review_level
