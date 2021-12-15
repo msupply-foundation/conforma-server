@@ -2,7 +2,7 @@ import DBConnect from '../databaseConnect'
 import { objectKeysToCamelCase } from '../utilityFunctions'
 import evaluateExpression from '@openmsupply/expression-evaluator'
 import fetch from 'node-fetch'
-import { camelCase, startCase } from 'lodash'
+import { camelCase, snakeCase, startCase } from 'lodash'
 // @ts-ignore
 import mapValuesDeep from 'map-values-deep'
 import {
@@ -52,7 +52,10 @@ export const buildAllColumnDefinitions = async ({
   orgId: number | undefined
 }): Promise<ColumnDetailOutput> => {
   // Look up allowed Outcome displays
-  const outcomeTables = await DBConnect.getAllTableNames()
+  const outcomeTables = (await DBConnect.getAllTableNames()).map((tableName) =>
+    camelCase(tableName)
+  )
+
   if (!outcomeTables.includes(tableName)) throw new Error(`Invalid table name: ${tableName}`)
 
   const outcomes = (await DBConnect.getAllowedOutcomeDisplays(permissionNames, tableName))
@@ -72,7 +75,7 @@ export const buildAllColumnDefinitions = async ({
 
   // Get all Fields on Outcome table (schema query)
   const fields: { name: string; dataType: PostgresDataType }[] = (
-    await DBConnect.getOutcomeTableColumns(tableName)
+    await DBConnect.getOutcomeTableColumns(snakeCase(tableName))
   ).map(({ name, dataType }) => ({
     name: camelCase(name),
     dataType: dataTypeMap?.[dataType as PostgresDataType] ?? dataType,
