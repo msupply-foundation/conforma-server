@@ -725,11 +725,13 @@ class PostgresDB {
   }
 
   public getUserOrgPermissionNames = async (userId: number, orgId: number | null | undefined) => {
+    // Only consider userId = NULL when orgId is present (can't both be NULL)
+    const userMatch = `("userId" = $1 ${orgId ? 'OR "userId" IS NULL' : ''})`
     const orgMatch = `"orgId" ${orgId ? '= $2' : 'IS NULL'}`
     const text = `
       SELECT "permissionNameId" as id,
       "permissionName" FROM permissions_all
-      WHERE "userId" = $1
+      WHERE ${userMatch}
       AND ${orgMatch}`
     const values: number[] = [userId]
     if (orgId) values.push(orgId)
