@@ -202,7 +202,10 @@ class PostgresDB {
 
   public addFile = async (payload: FilePayload): Promise<string> => {
     const text = `INSERT INTO file (${Object.keys(payload)}) 
-      VALUES (${this.getValuesPlaceholders(payload)}) RETURNING unique_id`
+      VALUES (${this.getValuesPlaceholders(payload)})
+      ON CONFLICT (unique_id) DO UPDATE
+        SET (${Object.keys(payload)}) = (${this.getValuesPlaceholders(payload)})
+        RETURNING unique_id`
     try {
       const result = await this.query({ text, values: Object.values(payload) })
       return result.rows[0].unique_id
