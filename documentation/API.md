@@ -133,7 +133,7 @@ URL query paramter fields (all optional):
 - `user_id`
 - `application_serial` (for associating files with their applications)
 - `application_response_id` (for specifying what response a file belongs to, useful for the file "clean-up" action)
-- `unique_id` (the randomly generated one should normally be sufficient)
+- `unique_id` (the randomly generated one should normally be sufficient. If this is specifed and the id already exists in the database, the file record will be *updated* with the new file data.)
 - `template_id` (to associate a file with a template, for example a carbone template doc)
 - `subfolder` (files are placed in subfolder based on the application_serial provided, but a specific subfolder can be defined instead (which over-rides the application subfolder))
 
