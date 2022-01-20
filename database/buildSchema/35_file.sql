@@ -7,6 +7,8 @@ CREATE TABLE public.file (
     template_id integer REFERENCES public.template (id) ON DELETE CASCADE,
     application_serial varchar REFERENCES public.application (serial) ON DELETE CASCADE,
     application_response_id integer REFERENCES public.application_response (id) ON DELETE CASCADE,
+    description varchar,
+    is_output_doc boolean DEFAULT FALSE NOT NULL,
     file_path varchar NOT NULL,
     thumbnail_path varchar,
     mimetype varchar,

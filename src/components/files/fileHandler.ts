@@ -98,6 +98,8 @@ export async function registerFileInDB({
   application_serial,
   user_id,
   application_response_id,
+  description,
+  is_output_doc = false,
   mimetype,
 }: any) {
   try {
@@ -108,6 +110,8 @@ export async function registerFileInDB({
       template_id,
       application_serial,
       application_response_id,
+      description,
+      is_output_doc,
       file_path,
       thumbnail_path,
       mimetype: file ? file.mimetype : mimetype,

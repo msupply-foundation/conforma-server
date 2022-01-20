@@ -8897,6 +8897,8 @@ export type File = Node & {
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc: Scalars['Boolean'];
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -8938,6 +8940,8 @@ export type FileApplicationResponseIdFkeyFileCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -9031,6 +9035,8 @@ export type FileApplicationSerialFkeyFileCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -9108,6 +9114,10 @@ export type FileCondition = {
   applicationSerial?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `applicationResponseId` field. */
   applicationResponseId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `description` field. */
+  description?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `isOutputDoc` field. */
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `filePath` field. */
   filePath?: Maybe<Scalars['String']>;
   /** Checks for equality with the object’s `thumbnailPath` field. */
@@ -9156,6 +9166,10 @@ export type FileFilter = {
   applicationSerial?: Maybe<StringFilter>;
   /** Filter by the object’s `applicationResponseId` field. */
   applicationResponseId?: Maybe<IntFilter>;
+  /** Filter by the object’s `description` field. */
+  description?: Maybe<StringFilter>;
+  /** Filter by the object’s `isOutputDoc` field. */
+  isOutputDoc?: Maybe<BooleanFilter>;
   /** Filter by the object’s `filePath` field. */
   filePath?: Maybe<StringFilter>;
   /** Filter by the object’s `thumbnailPath` field. */
@@ -9199,6 +9213,8 @@ export type FileInput = {
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -9319,6 +9335,8 @@ export type FilePatch = {
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -9369,6 +9387,10 @@ export enum FilesOrderBy {
   ApplicationSerialDesc = 'APPLICATION_SERIAL_DESC',
   ApplicationResponseIdAsc = 'APPLICATION_RESPONSE_ID_ASC',
   ApplicationResponseIdDesc = 'APPLICATION_RESPONSE_ID_DESC',
+  DescriptionAsc = 'DESCRIPTION_ASC',
+  DescriptionDesc = 'DESCRIPTION_DESC',
+  IsOutputDocAsc = 'IS_OUTPUT_DOC_ASC',
+  IsOutputDocDesc = 'IS_OUTPUT_DOC_DESC',
   FilePathAsc = 'FILE_PATH_ASC',
   FilePathDesc = 'FILE_PATH_DESC',
   ThumbnailPathAsc = 'THUMBNAIL_PATH_ASC',
@@ -9391,6 +9413,8 @@ export type FileTemplateIdFkeyFileCreateInput = {
   userId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -9482,6 +9506,8 @@ export type FileUserIdFkeyFileCreateInput = {
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath: Scalars['String'];
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -26645,6 +26671,8 @@ export type UpdateFileOnFileForFileApplicationResponseIdFkeyPatch = {
   userId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -26664,6 +26692,8 @@ export type UpdateFileOnFileForFileApplicationSerialFkeyPatch = {
   userId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -26683,6 +26713,8 @@ export type UpdateFileOnFileForFileTemplateIdFkeyPatch = {
   userId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -26702,6 +26734,8 @@ export type UpdateFileOnFileForFileUserIdFkeyPatch = {
   templateId?: Maybe<Scalars['Int']>;
   applicationSerial?: Maybe<Scalars['String']>;
   applicationResponseId?: Maybe<Scalars['Int']>;
+  description?: Maybe<Scalars['String']>;
+  isOutputDoc?: Maybe<Scalars['Boolean']>;
   filePath?: Maybe<Scalars['String']>;
   thumbnailPath?: Maybe<Scalars['String']>;
   mimetype?: Maybe<Scalars['String']>;
@@ -37392,6 +37426,8 @@ export type FileResolvers<ContextType = any, ParentType extends ResolversParentT
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   applicationSerial?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationResponseId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  isOutputDoc?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   filePath?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   thumbnailPath?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   mimetype?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
