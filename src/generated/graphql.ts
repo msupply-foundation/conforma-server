@@ -600,6 +600,259 @@ export type ActionQueueTriggerEventFkeyTriggerQueueCreateInput = {
   actionQueuesUsingId?: Maybe<ActionQueueTriggerEventFkeyInverseInput>;
 };
 
+export type ActivityLog = Node & {
+  __typename?: 'ActivityLog';
+  /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
+  nodeId: Scalars['ID'];
+  id: Scalars['Int'];
+  type: EventType;
+  timestamp: Scalars['Datetime'];
+  applicationId?: Maybe<Scalars['Int']>;
+  table: Scalars['String'];
+  recordId?: Maybe<Scalars['Int']>;
+  details: Scalars['JSON'];
+  /** Reads a single `Application` that is related to this `ActivityLog`. */
+  application?: Maybe<Application>;
+};
+
+/** The fields on `activityLog` to look up the row to connect. */
+export type ActivityLogActivityLogPkeyConnect = {
+  id: Scalars['Int'];
+};
+
+/** The fields on `activityLog` to look up the row to delete. */
+export type ActivityLogActivityLogPkeyDelete = {
+  id: Scalars['Int'];
+};
+
+/** The `activityLog` to be created by this mutation. */
+export type ActivityLogApplicationIdFkeyActivityLogCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  type: EventType;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  table: Scalars['String'];
+  recordId?: Maybe<Scalars['Int']>;
+  details?: Maybe<Scalars['JSON']>;
+  applicationToApplicationId?: Maybe<ActivityLogApplicationIdFkeyInput>;
+};
+
+/** The `application` to be created by this mutation. */
+export type ActivityLogApplicationIdFkeyApplicationCreateInput = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** Input for the nested mutation of `application` in the `ActivityLogInput` mutation. */
+export type ActivityLogApplicationIdFkeyInput = {
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectById?: Maybe<ApplicationApplicationPkeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectBySerial?: Maybe<ApplicationApplicationSerialKeyConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  connectByNodeId?: Maybe<ApplicationNodeIdConnect>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteById?: Maybe<ApplicationApplicationPkeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteBySerial?: Maybe<ApplicationApplicationSerialKeyDelete>;
+  /** The primary key(s) for `application` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<ApplicationNodeIdDelete>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateById?: Maybe<ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationPkeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateBySerial?: Maybe<ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate>;
+  /** The primary key(s) and patch data for `application` for the far side of the relationship. */
+  updateByNodeId?: Maybe<ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate>;
+  /** A `ApplicationInput` object that will be created and connected to this object. */
+  create?: Maybe<ActivityLogApplicationIdFkeyApplicationCreateInput>;
+};
+
+/** Input for the nested mutation of `activityLog` in the `ApplicationInput` mutation. */
+export type ActivityLogApplicationIdFkeyInverseInput = {
+  /** Flag indicating whether all other `activityLog` records that match this relationship should be removed. */
+  deleteOthers?: Maybe<Scalars['Boolean']>;
+  /** The primary key(s) for `activityLog` for the far side of the relationship. */
+  connectById?: Maybe<Array<ActivityLogActivityLogPkeyConnect>>;
+  /** The primary key(s) for `activityLog` for the far side of the relationship. */
+  connectByNodeId?: Maybe<Array<ActivityLogNodeIdConnect>>;
+  /** The primary key(s) for `activityLog` for the far side of the relationship. */
+  deleteById?: Maybe<Array<ActivityLogActivityLogPkeyDelete>>;
+  /** The primary key(s) for `activityLog` for the far side of the relationship. */
+  deleteByNodeId?: Maybe<Array<ActivityLogNodeIdDelete>>;
+  /** The primary key(s) and patch data for `activityLog` for the far side of the relationship. */
+  updateById?: Maybe<Array<ActivityLogOnActivityLogForActivityLogApplicationIdFkeyUsingActivityLogPkeyUpdate>>;
+  /** The primary key(s) and patch data for `activityLog` for the far side of the relationship. */
+  updateByNodeId?: Maybe<Array<ApplicationOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate>>;
+  /** A `ActivityLogInput` object that will be created and connected to this object. */
+  create?: Maybe<Array<ActivityLogApplicationIdFkeyActivityLogCreateInput>>;
+};
+
+/**
+ * A condition to be used against `ActivityLog` object types. All fields are tested
+ * for equality and combined with a logical ‘and.’
+ */
+export type ActivityLogCondition = {
+  /** Checks for equality with the object’s `id` field. */
+  id?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `type` field. */
+  type?: Maybe<EventType>;
+  /** Checks for equality with the object’s `timestamp` field. */
+  timestamp?: Maybe<Scalars['Datetime']>;
+  /** Checks for equality with the object’s `applicationId` field. */
+  applicationId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `table` field. */
+  table?: Maybe<Scalars['String']>;
+  /** Checks for equality with the object’s `recordId` field. */
+  recordId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `details` field. */
+  details?: Maybe<Scalars['JSON']>;
+};
+
+/** A filter to be used against `ActivityLog` object types. All fields are combined with a logical ‘and.’ */
+export type ActivityLogFilter = {
+  /** Filter by the object’s `id` field. */
+  id?: Maybe<IntFilter>;
+  /** Filter by the object’s `type` field. */
+  type?: Maybe<EventTypeFilter>;
+  /** Filter by the object’s `timestamp` field. */
+  timestamp?: Maybe<DatetimeFilter>;
+  /** Filter by the object’s `applicationId` field. */
+  applicationId?: Maybe<IntFilter>;
+  /** Filter by the object’s `table` field. */
+  table?: Maybe<StringFilter>;
+  /** Filter by the object’s `recordId` field. */
+  recordId?: Maybe<IntFilter>;
+  /** Filter by the object’s `details` field. */
+  details?: Maybe<JsonFilter>;
+  /** Filter by the object’s `application` relation. */
+  application?: Maybe<ApplicationFilter>;
+  /** A related `application` exists. */
+  applicationExists?: Maybe<Scalars['Boolean']>;
+  /** Checks for all expressions in this list. */
+  and?: Maybe<Array<ActivityLogFilter>>;
+  /** Checks for any expressions in this list. */
+  or?: Maybe<Array<ActivityLogFilter>>;
+  /** Negates the expression. */
+  not?: Maybe<ActivityLogFilter>;
+};
+
+/** An input for mutations affecting `ActivityLog` */
+export type ActivityLogInput = {
+  id?: Maybe<Scalars['Int']>;
+  type: EventType;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  table: Scalars['String'];
+  recordId?: Maybe<Scalars['Int']>;
+  details?: Maybe<Scalars['JSON']>;
+  applicationToApplicationId?: Maybe<ActivityLogApplicationIdFkeyInput>;
+};
+
+/** The globally unique `ID` look up for the row to connect. */
+export type ActivityLogNodeIdConnect = {
+  /** The globally unique `ID` which identifies a single `activityLog` to be connected. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to delete. */
+export type ActivityLogNodeIdDelete = {
+  /** The globally unique `ID` which identifies a single `activityLog` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
+export type ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `application` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: ApplicationPatch;
+};
+
+/** The fields on `activityLog` to look up the row to update. */
+export type ActivityLogOnActivityLogForActivityLogApplicationIdFkeyUsingActivityLogPkeyUpdate = {
+  /** An object where the defined keys will be set on the `activityLog` being updated. */
+  patch: UpdateActivityLogOnActivityLogForActivityLogApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** Represents an update to a `ActivityLog`. Fields that are set will be updated. */
+export type ActivityLogPatch = {
+  id?: Maybe<Scalars['Int']>;
+  type?: Maybe<EventType>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  applicationId?: Maybe<Scalars['Int']>;
+  table?: Maybe<Scalars['String']>;
+  recordId?: Maybe<Scalars['Int']>;
+  details?: Maybe<Scalars['JSON']>;
+  applicationToApplicationId?: Maybe<ActivityLogApplicationIdFkeyInput>;
+};
+
+/** A connection to a list of `ActivityLog` values. */
+export type ActivityLogsConnection = {
+  __typename?: 'ActivityLogsConnection';
+  /** A list of `ActivityLog` objects. */
+  nodes: Array<Maybe<ActivityLog>>;
+  /** A list of edges which contains the `ActivityLog` and cursor to aid in pagination. */
+  edges: Array<ActivityLogsEdge>;
+  /** Information to aid in pagination. */
+  pageInfo: PageInfo;
+  /** The count of *all* `ActivityLog` you could get from the connection. */
+  totalCount: Scalars['Int'];
+};
+
+/** A `ActivityLog` edge in the connection. */
+export type ActivityLogsEdge = {
+  __typename?: 'ActivityLogsEdge';
+  /** A cursor for use in pagination. */
+  cursor?: Maybe<Scalars['Cursor']>;
+  /** The `ActivityLog` at the end of the edge. */
+  node?: Maybe<ActivityLog>;
+};
+
+/** Methods to use when ordering `ActivityLog`. */
+export enum ActivityLogsOrderBy {
+  Natural = 'NATURAL',
+  IdAsc = 'ID_ASC',
+  IdDesc = 'ID_DESC',
+  TypeAsc = 'TYPE_ASC',
+  TypeDesc = 'TYPE_DESC',
+  TimestampAsc = 'TIMESTAMP_ASC',
+  TimestampDesc = 'TIMESTAMP_DESC',
+  ApplicationIdAsc = 'APPLICATION_ID_ASC',
+  ApplicationIdDesc = 'APPLICATION_ID_DESC',
+  TableAsc = 'TABLE_ASC',
+  TableDesc = 'TABLE_DESC',
+  RecordIdAsc = 'RECORD_ID_ASC',
+  RecordIdDesc = 'RECORD_ID_DESC',
+  DetailsAsc = 'DETAILS_ASC',
+  DetailsDesc = 'DETAILS_DESC',
+  PrimaryKeyAsc = 'PRIMARY_KEY_ASC',
+  PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
+}
+
 export type Application = Node & {
   __typename?: 'Application';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -639,6 +892,8 @@ export type Application = Node & {
   notifications: NotificationsConnection;
   /** Reads and enables pagination through a set of `Verification`. */
   verifications: VerificationsConnection;
+  /** Reads and enables pagination through a set of `ActivityLog`. */
+  activityLogs: ActivityLogsConnection;
   /** Reads and enables pagination through a set of `OrganisationApplicationJoin`. */
   organisationApplicationJoins: OrganisationApplicationJoinsConnection;
   /** Reads and enables pagination through a set of `UserApplicationJoin`. */
@@ -754,6 +1009,18 @@ export type ApplicationVerificationsArgs = {
   orderBy?: Maybe<Array<VerificationsOrderBy>>;
   condition?: Maybe<VerificationCondition>;
   filter?: Maybe<VerificationFilter>;
+};
+
+
+export type ApplicationActivityLogsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ActivityLogsOrderBy>>;
+  condition?: Maybe<ActivityLogCondition>;
+  filter?: Maybe<ActivityLogFilter>;
 };
 
 
@@ -895,6 +1162,10 @@ export type ApplicationFilter = {
   verifications?: Maybe<ApplicationToManyVerificationFilter>;
   /** Some related `verifications` exist. */
   verificationsExist?: Maybe<Scalars['Boolean']>;
+  /** Filter by the object’s `activityLogs` relation. */
+  activityLogs?: Maybe<ApplicationToManyActivityLogFilter>;
+  /** Some related `activityLogs` exist. */
+  activityLogsExist?: Maybe<Scalars['Boolean']>;
   /** Filter by the object’s `organisationApplicationJoins` relation. */
   organisationApplicationJoins?: Maybe<ApplicationToManyOrganisationApplicationJoinFilter>;
   /** Some related `organisationApplicationJoins` exist. */
@@ -946,6 +1217,7 @@ export type ApplicationInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -1310,6 +1582,7 @@ export type ApplicationNoteApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -1721,6 +1994,28 @@ export type ApplicationNoteUserIdFkeyUserCreateInput = {
 };
 
 /** The globally unique `ID` look up for the row to update. */
+export type ApplicationOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate = {
+  /** The globally unique `ID` which identifies a single `activityLog` to be connected. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `activityLog` being updated. */
+  patch: ActivityLogPatch;
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationPkeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch;
+  id: Scalars['Int'];
+};
+
+/** The fields on `application` to look up the row to update. */
+export type ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate = {
+  /** An object where the defined keys will be set on the `application` being updated. */
+  patch: UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch;
+  serial: Scalars['String'];
+};
+
+/** The globally unique `ID` look up for the row to update. */
 export type ApplicationOnApplicationForApplicationOrgIdFkeyNodeIdUpdate = {
   /** The globally unique `ID` which identifies a single `organisation` to be connected. */
   nodeId: Scalars['ID'];
@@ -2052,6 +2347,7 @@ export type ApplicationOrgIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -2189,6 +2485,7 @@ export type ApplicationPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -2266,6 +2563,7 @@ export type ApplicationResponseApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -2848,6 +3146,7 @@ export type ApplicationStageHistoryApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -3781,6 +4080,7 @@ export type ApplicationTemplateIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -3855,6 +4155,16 @@ export type ApplicationTemplateIdFkeyTemplateCreateInput = {
   triggerSchedulesUsingId?: Maybe<TriggerScheduleTemplateIdFkeyInverseInput>;
   reviewAssignmentsUsingId?: Maybe<ReviewAssignmentTemplateIdFkeyInverseInput>;
   filesUsingId?: Maybe<FileTemplateIdFkeyInverseInput>;
+};
+
+/** A filter to be used against many `ActivityLog` object types. All fields are combined with a logical ‘and.’ */
+export type ApplicationToManyActivityLogFilter = {
+  /** Every related `ActivityLog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  every?: Maybe<ActivityLogFilter>;
+  /** Some related `ActivityLog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  some?: Maybe<ActivityLogFilter>;
+  /** No related `ActivityLog` matches the filter criteria. All fields are combined with a logical ‘and.’ */
+  none?: Maybe<ActivityLogFilter>;
 };
 
 /** A filter to be used against many `ApplicationNote` object types. All fields are combined with a logical ‘and.’ */
@@ -3991,6 +4301,7 @@ export type ApplicationUserIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -4574,6 +4885,41 @@ export type CreateActionQueuePayload = {
 /** The output of our create `ActionQueue` mutation. */
 export type CreateActionQueuePayloadActionQueueEdgeArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
+};
+
+/** All input for the create `ActivityLog` mutation. */
+export type CreateActivityLogInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ActivityLog` to be created by this mutation. */
+  activityLog: ActivityLogInput;
+};
+
+/** The output of our create `ActivityLog` mutation. */
+export type CreateActivityLogPayload = {
+  __typename?: 'CreateActivityLogPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ActivityLog` that was created by this mutation. */
+  activityLog?: Maybe<ActivityLog>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `ActivityLog`. */
+  application?: Maybe<Application>;
+  /** An edge for our `ActivityLog`. May be used by Relay 1. */
+  activityLogEdge?: Maybe<ActivityLogsEdge>;
+};
+
+
+/** The output of our create `ActivityLog` mutation. */
+export type CreateActivityLogPayloadActivityLogEdgeArgs = {
+  orderBy?: Maybe<Array<ActivityLogsOrderBy>>;
 };
 
 /** All input for the create `Application` mutation. */
@@ -6246,6 +6592,52 @@ export type DeleteActionQueuePayload = {
 /** The output of our delete `ActionQueue` mutation. */
 export type DeleteActionQueuePayloadActionQueueEdgeArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
+};
+
+/** All input for the `deleteActivityLogByNodeId` mutation. */
+export type DeleteActivityLogByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ActivityLog` to be deleted. */
+  nodeId: Scalars['ID'];
+};
+
+/** All input for the `deleteActivityLog` mutation. */
+export type DeleteActivityLogInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  id: Scalars['Int'];
+};
+
+/** The output of our delete `ActivityLog` mutation. */
+export type DeleteActivityLogPayload = {
+  __typename?: 'DeleteActivityLogPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ActivityLog` that was deleted by this mutation. */
+  activityLog?: Maybe<ActivityLog>;
+  deletedActivityLogNodeId?: Maybe<Scalars['ID']>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `ActivityLog`. */
+  application?: Maybe<Application>;
+  /** An edge for our `ActivityLog`. May be used by Relay 1. */
+  activityLogEdge?: Maybe<ActivityLogsEdge>;
+};
+
+
+/** The output of our delete `ActivityLog` mutation. */
+export type DeleteActivityLogPayloadActivityLogEdgeArgs = {
+  orderBy?: Maybe<Array<ActivityLogsOrderBy>>;
 };
 
 /** All input for the `deleteApplicationByNodeId` mutation. */
@@ -8446,6 +8838,43 @@ export enum ElementTypePluginsOrderBy {
   PrimaryKeyDesc = 'PRIMARY_KEY_DESC'
 }
 
+export enum EventType {
+  Stage = 'STAGE',
+  Status = 'STATUS',
+  Outcome = 'OUTCOME',
+  ReviewStatus = 'REVIEW_STATUS',
+  Assignment = 'ASSIGNMENT',
+  Expiry = 'EXPIRY',
+  ReviewDecision = 'REVIEW_DECISION',
+  Permission = 'PERMISSION'
+}
+
+/** A filter to be used against EventType fields. All fields are combined with a logical ‘and.’ */
+export type EventTypeFilter = {
+  /** Is null (if `true` is specified) or is not null (if `false` is specified). */
+  isNull?: Maybe<Scalars['Boolean']>;
+  /** Equal to the specified value. */
+  equalTo?: Maybe<EventType>;
+  /** Not equal to the specified value. */
+  notEqualTo?: Maybe<EventType>;
+  /** Not equal to the specified value, treating null like an ordinary value. */
+  distinctFrom?: Maybe<EventType>;
+  /** Equal to the specified value, treating null like an ordinary value. */
+  notDistinctFrom?: Maybe<EventType>;
+  /** Included in the specified list. */
+  in?: Maybe<Array<EventType>>;
+  /** Not included in the specified list. */
+  notIn?: Maybe<Array<EventType>>;
+  /** Less than the specified value. */
+  lessThan?: Maybe<EventType>;
+  /** Less than or equal to the specified value. */
+  lessThanOrEqualTo?: Maybe<EventType>;
+  /** Greater than the specified value. */
+  greaterThan?: Maybe<EventType>;
+  /** Greater than or equal to the specified value. */
+  greaterThanOrEqualTo?: Maybe<EventType>;
+};
+
 export type File = Node & {
   __typename?: 'File';
   /** A globally unique identifier. Can be used in various places throughout the system to identify this single value. */
@@ -8582,6 +9011,7 @@ export type FileApplicationSerialFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -9502,6 +9932,8 @@ export type Mutation = {
   createActionPlugin?: Maybe<CreateActionPluginPayload>;
   /** Creates a single `ActionQueue`. */
   createActionQueue?: Maybe<CreateActionQueuePayload>;
+  /** Creates a single `ActivityLog`. */
+  createActivityLog?: Maybe<CreateActivityLogPayload>;
   /** Creates a single `Application`. */
   createApplication?: Maybe<CreateApplicationPayload>;
   /** Creates a single `ApplicationListShape`. */
@@ -9594,6 +10026,10 @@ export type Mutation = {
   updateActionQueueByNodeId?: Maybe<UpdateActionQueuePayload>;
   /** Updates a single `ActionQueue` using a unique key and a patch. */
   updateActionQueue?: Maybe<UpdateActionQueuePayload>;
+  /** Updates a single `ActivityLog` using its globally unique id and a patch. */
+  updateActivityLogByNodeId?: Maybe<UpdateActivityLogPayload>;
+  /** Updates a single `ActivityLog` using a unique key and a patch. */
+  updateActivityLog?: Maybe<UpdateActivityLogPayload>;
   /** Updates a single `Application` using its globally unique id and a patch. */
   updateApplicationByNodeId?: Maybe<UpdateApplicationPayload>;
   /** Updates a single `Application` using a unique key and a patch. */
@@ -9794,6 +10230,10 @@ export type Mutation = {
   deleteActionQueueByNodeId?: Maybe<DeleteActionQueuePayload>;
   /** Deletes a single `ActionQueue` using a unique key. */
   deleteActionQueue?: Maybe<DeleteActionQueuePayload>;
+  /** Deletes a single `ActivityLog` using its globally unique id. */
+  deleteActivityLogByNodeId?: Maybe<DeleteActivityLogPayload>;
+  /** Deletes a single `ActivityLog` using a unique key. */
+  deleteActivityLog?: Maybe<DeleteActivityLogPayload>;
   /** Deletes a single `Application` using its globally unique id. */
   deleteApplicationByNodeId?: Maybe<DeleteApplicationPayload>;
   /** Deletes a single `Application` using a unique key. */
@@ -9997,6 +10437,12 @@ export type MutationCreateActionPluginArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationCreateActionQueueArgs = {
   input: CreateActionQueueInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationCreateActivityLogArgs = {
+  input: CreateActivityLogInput;
 };
 
 
@@ -10273,6 +10719,18 @@ export type MutationUpdateActionQueueByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationUpdateActionQueueArgs = {
   input: UpdateActionQueueInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateActivityLogByNodeIdArgs = {
+  input: UpdateActivityLogByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationUpdateActivityLogArgs = {
+  input: UpdateActivityLogInput;
 };
 
 
@@ -10873,6 +11331,18 @@ export type MutationDeleteActionQueueByNodeIdArgs = {
 /** The root mutation type which contains root level fields which mutate data. */
 export type MutationDeleteActionQueueArgs = {
   input: DeleteActionQueueInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteActivityLogByNodeIdArgs = {
+  input: DeleteActivityLogByNodeIdInput;
+};
+
+
+/** The root mutation type which contains root level fields which mutate data. */
+export type MutationDeleteActivityLogArgs = {
+  input: DeleteActivityLogInput;
 };
 
 
@@ -11504,6 +11974,7 @@ export type NotificationApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -12094,6 +12565,7 @@ export type OrganisationApplicationJoinApplicationIdFkeyApplicationCreateInput =
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -14475,6 +14947,8 @@ export type Query = Node & {
   actionPlugins?: Maybe<ActionPluginsConnection>;
   /** Reads and enables pagination through a set of `ActionQueue`. */
   actionQueues?: Maybe<ActionQueuesConnection>;
+  /** Reads and enables pagination through a set of `ActivityLog`. */
+  activityLogs?: Maybe<ActivityLogsConnection>;
   /** Reads and enables pagination through a set of `Application`. */
   applications?: Maybe<ApplicationsConnection>;
   /** Reads and enables pagination through a set of `ApplicationListShape`. */
@@ -14574,6 +15048,7 @@ export type Query = Node & {
   actionPlugin?: Maybe<ActionPlugin>;
   actionPluginByCode?: Maybe<ActionPlugin>;
   actionQueue?: Maybe<ActionQueue>;
+  activityLog?: Maybe<ActivityLog>;
   application?: Maybe<Application>;
   applicationBySerial?: Maybe<Application>;
   applicationNote?: Maybe<ApplicationNote>;
@@ -14661,6 +15136,8 @@ export type Query = Node & {
   actionPluginByNodeId?: Maybe<ActionPlugin>;
   /** Reads a single `ActionQueue` using its globally unique `ID`. */
   actionQueueByNodeId?: Maybe<ActionQueue>;
+  /** Reads a single `ActivityLog` using its globally unique `ID`. */
+  activityLogByNodeId?: Maybe<ActivityLog>;
   /** Reads a single `Application` using its globally unique `ID`. */
   applicationByNodeId?: Maybe<Application>;
   /** Reads a single `ApplicationNote` using its globally unique `ID`. */
@@ -14773,6 +15250,19 @@ export type QueryActionQueuesArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
   condition?: Maybe<ActionQueueCondition>;
   filter?: Maybe<ActionQueueFilter>;
+};
+
+
+/** The root query type which gives access points into the data universe. */
+export type QueryActivityLogsArgs = {
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['Cursor']>;
+  after?: Maybe<Scalars['Cursor']>;
+  orderBy?: Maybe<Array<ActivityLogsOrderBy>>;
+  condition?: Maybe<ActivityLogCondition>;
+  filter?: Maybe<ActivityLogFilter>;
 };
 
 
@@ -15419,6 +15909,12 @@ export type QueryActionQueueArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryActivityLogArgs = {
+  id: Scalars['Int'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryApplicationArgs = {
   id: Scalars['Int'];
 };
@@ -15993,6 +16489,12 @@ export type QueryActionQueueByNodeIdArgs = {
 
 
 /** The root query type which gives access points into the data universe. */
+export type QueryActivityLogByNodeIdArgs = {
+  nodeId: Scalars['ID'];
+};
+
+
+/** The root query type which gives access points into the data universe. */
 export type QueryApplicationByNodeIdArgs = {
   nodeId: Scalars['ID'];
 };
@@ -16338,6 +16840,7 @@ export type ReviewApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -16514,6 +17017,7 @@ export type ReviewAssignmentApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -24498,6 +25002,7 @@ export type TriggerScheduleApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25013,6 +25518,66 @@ export type UpdateActionQueuePayloadActionQueueEdgeArgs = {
   orderBy?: Maybe<Array<ActionQueuesOrderBy>>;
 };
 
+/** All input for the `updateActivityLogByNodeId` mutation. */
+export type UpdateActivityLogByNodeIdInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The globally unique `ID` which will identify a single `ActivityLog` to be updated. */
+  nodeId: Scalars['ID'];
+  /** An object where the defined keys will be set on the `ActivityLog` being updated. */
+  patch: ActivityLogPatch;
+};
+
+/** All input for the `updateActivityLog` mutation. */
+export type UpdateActivityLogInput = {
+  /**
+   * An arbitrary string value with no semantic meaning. Will be included in the
+   * payload verbatim. May be used to track mutations by the client.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** An object where the defined keys will be set on the `ActivityLog` being updated. */
+  patch: ActivityLogPatch;
+  id: Scalars['Int'];
+};
+
+/** An object where the defined keys will be set on the `activityLog` being updated. */
+export type UpdateActivityLogOnActivityLogForActivityLogApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  type?: Maybe<EventType>;
+  timestamp?: Maybe<Scalars['Datetime']>;
+  table?: Maybe<Scalars['String']>;
+  recordId?: Maybe<Scalars['Int']>;
+  details?: Maybe<Scalars['JSON']>;
+  applicationToApplicationId?: Maybe<ActivityLogApplicationIdFkeyInput>;
+};
+
+/** The output of our update `ActivityLog` mutation. */
+export type UpdateActivityLogPayload = {
+  __typename?: 'UpdateActivityLogPayload';
+  /**
+   * The exact same `clientMutationId` that was provided in the mutation input,
+   * unchanged and unused. May be used by a client to track mutations.
+   */
+  clientMutationId?: Maybe<Scalars['String']>;
+  /** The `ActivityLog` that was updated by this mutation. */
+  activityLog?: Maybe<ActivityLog>;
+  /** Our root query field type. Allows us to run any query from our mutation payload. */
+  query?: Maybe<Query>;
+  /** Reads a single `Application` that is related to this `ActivityLog`. */
+  application?: Maybe<Application>;
+  /** An edge for our `ActivityLog`. May be used by Relay 1. */
+  activityLogEdge?: Maybe<ActivityLogsEdge>;
+};
+
+
+/** The output of our update `ActivityLog` mutation. */
+export type UpdateActivityLogPayloadActivityLogEdgeArgs = {
+  orderBy?: Maybe<Array<ActivityLogsOrderBy>>;
+};
+
 /** All input for the `updateApplicationByNodeId` mutation. */
 export type UpdateApplicationByNodeIdInput = {
   /**
@@ -25143,6 +25708,36 @@ export type UpdateApplicationNotePayloadApplicationNoteEdgeArgs = {
 };
 
 /** An object where the defined keys will be set on the `application` being updated. */
+export type UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch = {
+  id?: Maybe<Scalars['Int']>;
+  templateId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['Int']>;
+  orgId?: Maybe<Scalars['Int']>;
+  sessionId?: Maybe<Scalars['String']>;
+  serial?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  outcome?: Maybe<ApplicationOutcome>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  isConfig?: Maybe<Scalars['Boolean']>;
+  trigger?: Maybe<Trigger>;
+  templateToTemplateId?: Maybe<ApplicationTemplateIdFkeyInput>;
+  userToUserId?: Maybe<ApplicationUserIdFkeyInput>;
+  organisationToOrgId?: Maybe<ApplicationOrgIdFkeyInput>;
+  applicationNotesUsingId?: Maybe<ApplicationNoteApplicationIdFkeyInverseInput>;
+  applicationStageHistoriesUsingId?: Maybe<ApplicationStageHistoryApplicationIdFkeyInverseInput>;
+  applicationResponsesUsingId?: Maybe<ApplicationResponseApplicationIdFkeyInverseInput>;
+  triggerSchedulesUsingId?: Maybe<TriggerScheduleApplicationIdFkeyInverseInput>;
+  reviewAssignmentsUsingId?: Maybe<ReviewAssignmentApplicationIdFkeyInverseInput>;
+  reviewsUsingId?: Maybe<ReviewApplicationIdFkeyInverseInput>;
+  filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
+  notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
+  verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
+  organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
+  userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
+};
+
+/** An object where the defined keys will be set on the `application` being updated. */
 export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   id?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
@@ -25166,6 +25761,7 @@ export type UpdateApplicationOnApplicationForApplicationOrgIdFkeyPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25194,6 +25790,7 @@ export type UpdateApplicationOnApplicationForApplicationTemplateIdFkeyPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25222,6 +25819,7 @@ export type UpdateApplicationOnApplicationForApplicationUserIdFkeyPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25251,6 +25849,7 @@ export type UpdateApplicationOnApplicationNoteForApplicationNoteApplicationIdFke
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25280,6 +25879,7 @@ export type UpdateApplicationOnApplicationResponseForApplicationResponseApplicat
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25309,6 +25909,7 @@ export type UpdateApplicationOnApplicationStageHistoryForApplicationStageHistory
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25338,6 +25939,7 @@ export type UpdateApplicationOnFileForFileApplicationSerialFkeyPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25367,6 +25969,7 @@ export type UpdateApplicationOnNotificationForNotificationApplicationIdFkeyPatch
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25396,6 +25999,7 @@ export type UpdateApplicationOnOrganisationApplicationJoinForOrganisationApplica
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25425,6 +26029,7 @@ export type UpdateApplicationOnReviewAssignmentForReviewAssignmentApplicationIdF
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25454,6 +26059,7 @@ export type UpdateApplicationOnReviewForReviewApplicationIdFkeyPatch = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25483,6 +26089,7 @@ export type UpdateApplicationOnTriggerScheduleForTriggerScheduleApplicationIdFke
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25512,6 +26119,7 @@ export type UpdateApplicationOnUserApplicationJoinForUserApplicationJoinApplicat
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -25541,6 +26149,7 @@ export type UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -29942,6 +30551,7 @@ export type UserApplicationJoinApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -31258,6 +31868,7 @@ export type VerificationApplicationIdFkeyApplicationCreateInput = {
   filesUsingSerial?: Maybe<FileApplicationSerialFkeyInverseInput>;
   notificationsUsingId?: Maybe<NotificationApplicationIdFkeyInverseInput>;
   verificationsUsingId?: Maybe<VerificationApplicationIdFkeyInverseInput>;
+  activityLogsUsingId?: Maybe<ActivityLogApplicationIdFkeyInverseInput>;
   organisationApplicationJoinsUsingId?: Maybe<OrganisationApplicationJoinApplicationIdFkeyInverseInput>;
   userApplicationJoinsUsingId?: Maybe<UserApplicationJoinApplicationIdFkeyInverseInput>;
 };
@@ -31690,7 +32301,7 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   Query: ResolverTypeWrapper<{}>;
-  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['File'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayColumnDefinition'];
+  Node: ResolversTypes['Query'] | ResolversTypes['ActionPlugin'] | ResolversTypes['ActionQueue'] | ResolversTypes['TriggerQueue'] | ResolversTypes['Template'] | ResolversTypes['TemplateCategory'] | ResolversTypes['TemplateSection'] | ResolversTypes['TemplateElement'] | ResolversTypes['ApplicationResponse'] | ResolversTypes['Application'] | ResolversTypes['User'] | ResolversTypes['UserOrganisation'] | ResolversTypes['Organisation'] | ResolversTypes['PermissionJoin'] | ResolversTypes['PermissionName'] | ResolversTypes['PermissionPolicy'] | ResolversTypes['TemplatePermission'] | ResolversTypes['ApplicationNote'] | ResolversTypes['ReviewAssignment'] | ResolversTypes['TemplateStage'] | ResolversTypes['TemplateStageReviewLevel'] | ResolversTypes['ApplicationStageHistory'] | ResolversTypes['ApplicationStatusHistory'] | ResolversTypes['ReviewAssignmentAssignerJoin'] | ResolversTypes['ReviewQuestionAssignment'] | ResolversTypes['ReviewResponse'] | ResolversTypes['Review'] | ResolversTypes['ReviewDecision'] | ResolversTypes['ReviewStatusHistory'] | ResolversTypes['Notification'] | ResolversTypes['OrganisationApplicationJoin'] | ResolversTypes['File'] | ResolversTypes['UserApplicationJoin'] | ResolversTypes['TriggerSchedule'] | ResolversTypes['Verification'] | ResolversTypes['ActivityLog'] | ResolversTypes['TemplateFilterJoin'] | ResolversTypes['Filter'] | ResolversTypes['TemplateAction'] | ResolversTypes['Counter'] | ResolversTypes['ElementTypePlugin'] | ResolversTypes['LookupTable'] | ResolversTypes['OutcomeDisplay'] | ResolversTypes['OutcomeDisplayColumnDefinition'];
   ID: ResolverTypeWrapper<Scalars['ID']>;
   Int: ResolverTypeWrapper<Scalars['Int']>;
   Cursor: ResolverTypeWrapper<Scalars['Cursor']>;
@@ -31808,6 +32419,10 @@ export type ResolversTypes = {
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
   ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
   VerificationFilter: VerificationFilter;
+  ApplicationToManyActivityLogFilter: ApplicationToManyActivityLogFilter;
+  ActivityLogFilter: ActivityLogFilter;
+  EventTypeFilter: EventTypeFilter;
+  EventType: EventType;
   ApplicationToManyOrganisationApplicationJoinFilter: ApplicationToManyOrganisationApplicationJoinFilter;
   OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   ApplicationToManyUserApplicationJoinFilter: ApplicationToManyUserApplicationJoinFilter;
@@ -31982,6 +32597,11 @@ export type ResolversTypes = {
   VerificationsConnection: ResolverTypeWrapper<VerificationsConnection>;
   Verification: ResolverTypeWrapper<Verification>;
   VerificationsEdge: ResolverTypeWrapper<VerificationsEdge>;
+  ActivityLogsOrderBy: ActivityLogsOrderBy;
+  ActivityLogCondition: ActivityLogCondition;
+  ActivityLogsConnection: ResolverTypeWrapper<ActivityLogsConnection>;
+  ActivityLog: ResolverTypeWrapper<ActivityLog>;
+  ActivityLogsEdge: ResolverTypeWrapper<ActivityLogsEdge>;
   ApplicationResponsesEdge: ResolverTypeWrapper<ApplicationResponsesEdge>;
   TemplateElementsEdge: ResolverTypeWrapper<TemplateElementsEdge>;
   TemplateSectionsEdge: ResolverTypeWrapper<TemplateSectionsEdge>;
@@ -32675,6 +33295,16 @@ export type ResolversTypes = {
   VerificationApplicationIdFkeyInput: VerificationApplicationIdFkeyInput;
   ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnVerificationForVerificationApplicationIdFkeyPatch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
+  ActivityLogApplicationIdFkeyInverseInput: ActivityLogApplicationIdFkeyInverseInput;
+  ActivityLogActivityLogPkeyConnect: ActivityLogActivityLogPkeyConnect;
+  ActivityLogNodeIdConnect: ActivityLogNodeIdConnect;
+  ActivityLogActivityLogPkeyDelete: ActivityLogActivityLogPkeyDelete;
+  ActivityLogNodeIdDelete: ActivityLogNodeIdDelete;
+  ActivityLogOnActivityLogForActivityLogApplicationIdFkeyUsingActivityLogPkeyUpdate: ActivityLogOnActivityLogForActivityLogApplicationIdFkeyUsingActivityLogPkeyUpdate;
+  updateActivityLogOnActivityLogForActivityLogApplicationIdFkeyPatch: UpdateActivityLogOnActivityLogForActivityLogApplicationIdFkeyPatch;
+  ActivityLogApplicationIdFkeyInput: ActivityLogApplicationIdFkeyInput;
+  ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch: UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch;
   OrganisationApplicationJoinApplicationIdFkeyInverseInput: OrganisationApplicationJoinApplicationIdFkeyInverseInput;
   OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect: OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect;
   OrganisationApplicationJoinNodeIdConnect: OrganisationApplicationJoinNodeIdConnect;
@@ -32733,6 +33363,12 @@ export type ResolversTypes = {
   OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput: OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput;
   ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate;
   OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput: OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput;
+  ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate: ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate;
+  ActivityLogApplicationIdFkeyApplicationCreateInput: ActivityLogApplicationIdFkeyApplicationCreateInput;
+  ApplicationOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate: ApplicationOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate;
+  ActivityLogPatch: ActivityLogPatch;
+  ActivityLogApplicationIdFkeyActivityLogCreateInput: ActivityLogApplicationIdFkeyActivityLogCreateInput;
   ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
   VerificationApplicationIdFkeyApplicationCreateInput: VerificationApplicationIdFkeyApplicationCreateInput;
@@ -33054,6 +33690,9 @@ export type ResolversTypes = {
   TriggerQueuePatch: TriggerQueuePatch;
   ActionQueueTriggerEventFkeyTriggerQueueCreateInput: ActionQueueTriggerEventFkeyTriggerQueueCreateInput;
   CreateActionQueuePayload: ResolverTypeWrapper<CreateActionQueuePayload>;
+  CreateActivityLogInput: CreateActivityLogInput;
+  ActivityLogInput: ActivityLogInput;
+  CreateActivityLogPayload: ResolverTypeWrapper<CreateActivityLogPayload>;
   CreateApplicationInput: CreateApplicationInput;
   ApplicationInput: ApplicationInput;
   CreateApplicationPayload: ResolverTypeWrapper<CreateApplicationPayload>;
@@ -33185,6 +33824,9 @@ export type ResolversTypes = {
   UpdateActionQueueByNodeIdInput: UpdateActionQueueByNodeIdInput;
   UpdateActionQueuePayload: ResolverTypeWrapper<UpdateActionQueuePayload>;
   UpdateActionQueueInput: UpdateActionQueueInput;
+  UpdateActivityLogByNodeIdInput: UpdateActivityLogByNodeIdInput;
+  UpdateActivityLogPayload: ResolverTypeWrapper<UpdateActivityLogPayload>;
+  UpdateActivityLogInput: UpdateActivityLogInput;
   UpdateApplicationByNodeIdInput: UpdateApplicationByNodeIdInput;
   UpdateApplicationPayload: ResolverTypeWrapper<UpdateApplicationPayload>;
   UpdateApplicationInput: UpdateApplicationInput;
@@ -33332,6 +33974,9 @@ export type ResolversTypes = {
   DeleteActionQueueByNodeIdInput: DeleteActionQueueByNodeIdInput;
   DeleteActionQueuePayload: ResolverTypeWrapper<DeleteActionQueuePayload>;
   DeleteActionQueueInput: DeleteActionQueueInput;
+  DeleteActivityLogByNodeIdInput: DeleteActivityLogByNodeIdInput;
+  DeleteActivityLogPayload: ResolverTypeWrapper<DeleteActivityLogPayload>;
+  DeleteActivityLogInput: DeleteActivityLogInput;
   DeleteApplicationByNodeIdInput: DeleteApplicationByNodeIdInput;
   DeleteApplicationPayload: ResolverTypeWrapper<DeleteApplicationPayload>;
   DeleteApplicationInput: DeleteApplicationInput;
@@ -33474,7 +34119,7 @@ export type ResolversTypes = {
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   Query: {};
-  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['File'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'];
+  Node: ResolversParentTypes['Query'] | ResolversParentTypes['ActionPlugin'] | ResolversParentTypes['ActionQueue'] | ResolversParentTypes['TriggerQueue'] | ResolversParentTypes['Template'] | ResolversParentTypes['TemplateCategory'] | ResolversParentTypes['TemplateSection'] | ResolversParentTypes['TemplateElement'] | ResolversParentTypes['ApplicationResponse'] | ResolversParentTypes['Application'] | ResolversParentTypes['User'] | ResolversParentTypes['UserOrganisation'] | ResolversParentTypes['Organisation'] | ResolversParentTypes['PermissionJoin'] | ResolversParentTypes['PermissionName'] | ResolversParentTypes['PermissionPolicy'] | ResolversParentTypes['TemplatePermission'] | ResolversParentTypes['ApplicationNote'] | ResolversParentTypes['ReviewAssignment'] | ResolversParentTypes['TemplateStage'] | ResolversParentTypes['TemplateStageReviewLevel'] | ResolversParentTypes['ApplicationStageHistory'] | ResolversParentTypes['ApplicationStatusHistory'] | ResolversParentTypes['ReviewAssignmentAssignerJoin'] | ResolversParentTypes['ReviewQuestionAssignment'] | ResolversParentTypes['ReviewResponse'] | ResolversParentTypes['Review'] | ResolversParentTypes['ReviewDecision'] | ResolversParentTypes['ReviewStatusHistory'] | ResolversParentTypes['Notification'] | ResolversParentTypes['OrganisationApplicationJoin'] | ResolversParentTypes['File'] | ResolversParentTypes['UserApplicationJoin'] | ResolversParentTypes['TriggerSchedule'] | ResolversParentTypes['Verification'] | ResolversParentTypes['ActivityLog'] | ResolversParentTypes['TemplateFilterJoin'] | ResolversParentTypes['Filter'] | ResolversParentTypes['TemplateAction'] | ResolversParentTypes['Counter'] | ResolversParentTypes['ElementTypePlugin'] | ResolversParentTypes['LookupTable'] | ResolversParentTypes['OutcomeDisplay'] | ResolversParentTypes['OutcomeDisplayColumnDefinition'];
   ID: Scalars['ID'];
   Int: Scalars['Int'];
   Cursor: Scalars['Cursor'];
@@ -33575,6 +34220,9 @@ export type ResolversParentTypes = {
   ApplicationToManyNotificationFilter: ApplicationToManyNotificationFilter;
   ApplicationToManyVerificationFilter: ApplicationToManyVerificationFilter;
   VerificationFilter: VerificationFilter;
+  ApplicationToManyActivityLogFilter: ApplicationToManyActivityLogFilter;
+  ActivityLogFilter: ActivityLogFilter;
+  EventTypeFilter: EventTypeFilter;
   ApplicationToManyOrganisationApplicationJoinFilter: ApplicationToManyOrganisationApplicationJoinFilter;
   OrganisationApplicationJoinFilter: OrganisationApplicationJoinFilter;
   ApplicationToManyUserApplicationJoinFilter: ApplicationToManyUserApplicationJoinFilter;
@@ -33722,6 +34370,10 @@ export type ResolversParentTypes = {
   VerificationsConnection: VerificationsConnection;
   Verification: Verification;
   VerificationsEdge: VerificationsEdge;
+  ActivityLogCondition: ActivityLogCondition;
+  ActivityLogsConnection: ActivityLogsConnection;
+  ActivityLog: ActivityLog;
+  ActivityLogsEdge: ActivityLogsEdge;
   ApplicationResponsesEdge: ApplicationResponsesEdge;
   TemplateElementsEdge: TemplateElementsEdge;
   TemplateSectionsEdge: TemplateSectionsEdge;
@@ -34391,6 +35043,16 @@ export type ResolversParentTypes = {
   VerificationApplicationIdFkeyInput: VerificationApplicationIdFkeyInput;
   ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationPkeyUpdate;
   updateApplicationOnVerificationForVerificationApplicationIdFkeyPatch: UpdateApplicationOnVerificationForVerificationApplicationIdFkeyPatch;
+  ActivityLogApplicationIdFkeyInverseInput: ActivityLogApplicationIdFkeyInverseInput;
+  ActivityLogActivityLogPkeyConnect: ActivityLogActivityLogPkeyConnect;
+  ActivityLogNodeIdConnect: ActivityLogNodeIdConnect;
+  ActivityLogActivityLogPkeyDelete: ActivityLogActivityLogPkeyDelete;
+  ActivityLogNodeIdDelete: ActivityLogNodeIdDelete;
+  ActivityLogOnActivityLogForActivityLogApplicationIdFkeyUsingActivityLogPkeyUpdate: ActivityLogOnActivityLogForActivityLogApplicationIdFkeyUsingActivityLogPkeyUpdate;
+  updateActivityLogOnActivityLogForActivityLogApplicationIdFkeyPatch: UpdateActivityLogOnActivityLogForActivityLogApplicationIdFkeyPatch;
+  ActivityLogApplicationIdFkeyInput: ActivityLogApplicationIdFkeyInput;
+  ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationPkeyUpdate: ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationPkeyUpdate;
+  updateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch: UpdateApplicationOnActivityLogForActivityLogApplicationIdFkeyPatch;
   OrganisationApplicationJoinApplicationIdFkeyInverseInput: OrganisationApplicationJoinApplicationIdFkeyInverseInput;
   OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect: OrganisationApplicationJoinOrganisationApplicationJoinPkeyConnect;
   OrganisationApplicationJoinNodeIdConnect: OrganisationApplicationJoinNodeIdConnect;
@@ -34449,6 +35111,12 @@ export type ResolversParentTypes = {
   OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput: OrganisationApplicationJoinOrganisationIdFkeyOrganisationCreateInput;
   ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate: ApplicationOnOrganisationApplicationJoinForOrganisationApplicationJoinApplicationIdFkeyNodeIdUpdate;
   OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput: OrganisationApplicationJoinApplicationIdFkeyOrganisationApplicationJoinCreateInput;
+  ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnActivityLogForActivityLogApplicationIdFkeyUsingApplicationSerialKeyUpdate;
+  ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate: ActivityLogOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate;
+  ActivityLogApplicationIdFkeyApplicationCreateInput: ActivityLogApplicationIdFkeyApplicationCreateInput;
+  ApplicationOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate: ApplicationOnActivityLogForActivityLogApplicationIdFkeyNodeIdUpdate;
+  ActivityLogPatch: ActivityLogPatch;
+  ActivityLogApplicationIdFkeyActivityLogCreateInput: ActivityLogApplicationIdFkeyActivityLogCreateInput;
   ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate: ApplicationOnVerificationForVerificationApplicationIdFkeyUsingApplicationSerialKeyUpdate;
   VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate: VerificationOnVerificationForVerificationApplicationIdFkeyNodeIdUpdate;
   VerificationApplicationIdFkeyApplicationCreateInput: VerificationApplicationIdFkeyApplicationCreateInput;
@@ -34770,6 +35438,9 @@ export type ResolversParentTypes = {
   TriggerQueuePatch: TriggerQueuePatch;
   ActionQueueTriggerEventFkeyTriggerQueueCreateInput: ActionQueueTriggerEventFkeyTriggerQueueCreateInput;
   CreateActionQueuePayload: CreateActionQueuePayload;
+  CreateActivityLogInput: CreateActivityLogInput;
+  ActivityLogInput: ActivityLogInput;
+  CreateActivityLogPayload: CreateActivityLogPayload;
   CreateApplicationInput: CreateApplicationInput;
   ApplicationInput: ApplicationInput;
   CreateApplicationPayload: CreateApplicationPayload;
@@ -34901,6 +35572,9 @@ export type ResolversParentTypes = {
   UpdateActionQueueByNodeIdInput: UpdateActionQueueByNodeIdInput;
   UpdateActionQueuePayload: UpdateActionQueuePayload;
   UpdateActionQueueInput: UpdateActionQueueInput;
+  UpdateActivityLogByNodeIdInput: UpdateActivityLogByNodeIdInput;
+  UpdateActivityLogPayload: UpdateActivityLogPayload;
+  UpdateActivityLogInput: UpdateActivityLogInput;
   UpdateApplicationByNodeIdInput: UpdateApplicationByNodeIdInput;
   UpdateApplicationPayload: UpdateApplicationPayload;
   UpdateApplicationInput: UpdateApplicationInput;
@@ -35048,6 +35722,9 @@ export type ResolversParentTypes = {
   DeleteActionQueueByNodeIdInput: DeleteActionQueueByNodeIdInput;
   DeleteActionQueuePayload: DeleteActionQueuePayload;
   DeleteActionQueueInput: DeleteActionQueueInput;
+  DeleteActivityLogByNodeIdInput: DeleteActivityLogByNodeIdInput;
+  DeleteActivityLogPayload: DeleteActivityLogPayload;
+  DeleteActivityLogInput: DeleteActivityLogInput;
   DeleteApplicationByNodeIdInput: DeleteApplicationByNodeIdInput;
   DeleteApplicationPayload: DeleteApplicationPayload;
   DeleteApplicationInput: DeleteApplicationInput;
@@ -35249,6 +35926,33 @@ export type ActionQueuesEdgeResolvers<ContextType = any, ParentType extends Reso
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ActivityLogResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActivityLog'] = ResolversParentTypes['ActivityLog']> = {
+  nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  type?: Resolver<ResolversTypes['EventType'], ParentType, ContextType>;
+  timestamp?: Resolver<ResolversTypes['Datetime'], ParentType, ContextType>;
+  applicationId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  table?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  recordId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  details?: Resolver<ResolversTypes['JSON'], ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ActivityLogsConnectionResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActivityLogsConnection'] = ResolversParentTypes['ActivityLogsConnection']> = {
+  nodes?: Resolver<Array<Maybe<ResolversTypes['ActivityLog']>>, ParentType, ContextType>;
+  edges?: Resolver<Array<ResolversTypes['ActivityLogsEdge']>, ParentType, ContextType>;
+  pageInfo?: Resolver<ResolversTypes['PageInfo'], ParentType, ContextType>;
+  totalCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type ActivityLogsEdgeResolvers<ContextType = any, ParentType extends ResolversParentTypes['ActivityLogsEdge'] = ResolversParentTypes['ActivityLogsEdge']> = {
+  cursor?: Resolver<Maybe<ResolversTypes['Cursor']>, ParentType, ContextType>;
+  node?: Resolver<Maybe<ResolversTypes['ActivityLog']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ApplicationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Application'] = ResolversParentTypes['Application']> = {
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   id?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -35274,6 +35978,7 @@ export type ApplicationResolvers<ContextType = any, ParentType extends Resolvers
   filesByApplicationSerial?: Resolver<ResolversTypes['FilesConnection'], ParentType, ContextType, RequireFields<ApplicationFilesByApplicationSerialArgs, 'orderBy'>>;
   notifications?: Resolver<ResolversTypes['NotificationsConnection'], ParentType, ContextType, RequireFields<ApplicationNotificationsArgs, 'orderBy'>>;
   verifications?: Resolver<ResolversTypes['VerificationsConnection'], ParentType, ContextType, RequireFields<ApplicationVerificationsArgs, 'orderBy'>>;
+  activityLogs?: Resolver<ResolversTypes['ActivityLogsConnection'], ParentType, ContextType, RequireFields<ApplicationActivityLogsArgs, 'orderBy'>>;
   organisationApplicationJoins?: Resolver<ResolversTypes['OrganisationApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationOrganisationApplicationJoinsArgs, 'orderBy'>>;
   userApplicationJoins?: Resolver<ResolversTypes['UserApplicationJoinsConnection'], ParentType, ContextType, RequireFields<ApplicationUserApplicationJoinsArgs, 'orderBy'>>;
   stage?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -35704,6 +36409,15 @@ export type CreateActionQueuePayloadResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CreateActivityLogPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateActivityLogPayload'] = ResolversParentTypes['CreateActivityLogPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  activityLog?: Resolver<Maybe<ResolversTypes['ActivityLog']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  activityLogEdge?: Resolver<Maybe<ResolversTypes['ActivityLogsEdge']>, ParentType, ContextType, RequireFields<CreateActivityLogPayloadActivityLogEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type CreateApplicationListShapePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['CreateApplicationListShapePayload'] = ResolversParentTypes['CreateApplicationListShapePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationListShape?: Resolver<Maybe<ResolversTypes['ApplicationListShape']>, ParentType, ContextType>;
@@ -36125,6 +36839,16 @@ export type DeleteActionQueuePayloadResolvers<ContextType = any, ParentType exte
   triggerQueueByTriggerEvent?: Resolver<Maybe<ResolversTypes['TriggerQueue']>, ParentType, ContextType>;
   template?: Resolver<Maybe<ResolversTypes['Template']>, ParentType, ContextType>;
   actionQueueEdge?: Resolver<Maybe<ResolversTypes['ActionQueuesEdge']>, ParentType, ContextType, RequireFields<DeleteActionQueuePayloadActionQueueEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type DeleteActivityLogPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['DeleteActivityLogPayload'] = ResolversParentTypes['DeleteActivityLogPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  activityLog?: Resolver<Maybe<ResolversTypes['ActivityLog']>, ParentType, ContextType>;
+  deletedActivityLogNodeId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  activityLogEdge?: Resolver<Maybe<ResolversTypes['ActivityLogsEdge']>, ParentType, ContextType, RequireFields<DeleteActivityLogPayloadActivityLogEdgeArgs, 'orderBy'>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -36678,6 +37402,7 @@ export type LookupTablesEdgeResolvers<ContextType = any, ParentType extends Reso
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   createActionPlugin?: Resolver<Maybe<ResolversTypes['CreateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationCreateActionPluginArgs, 'input'>>;
   createActionQueue?: Resolver<Maybe<ResolversTypes['CreateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationCreateActionQueueArgs, 'input'>>;
+  createActivityLog?: Resolver<Maybe<ResolversTypes['CreateActivityLogPayload']>, ParentType, ContextType, RequireFields<MutationCreateActivityLogArgs, 'input'>>;
   createApplication?: Resolver<Maybe<ResolversTypes['CreateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationArgs, 'input'>>;
   createApplicationListShape?: Resolver<Maybe<ResolversTypes['CreateApplicationListShapePayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationListShapeArgs, 'input'>>;
   createApplicationNote?: Resolver<Maybe<ResolversTypes['CreateApplicationNotePayload']>, ParentType, ContextType, RequireFields<MutationCreateApplicationNoteArgs, 'input'>>;
@@ -36724,6 +37449,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   updateActionPluginByCode?: Resolver<Maybe<ResolversTypes['UpdateActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionPluginByCodeArgs, 'input'>>;
   updateActionQueueByNodeId?: Resolver<Maybe<ResolversTypes['UpdateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionQueueByNodeIdArgs, 'input'>>;
   updateActionQueue?: Resolver<Maybe<ResolversTypes['UpdateActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationUpdateActionQueueArgs, 'input'>>;
+  updateActivityLogByNodeId?: Resolver<Maybe<ResolversTypes['UpdateActivityLogPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActivityLogByNodeIdArgs, 'input'>>;
+  updateActivityLog?: Resolver<Maybe<ResolversTypes['UpdateActivityLogPayload']>, ParentType, ContextType, RequireFields<MutationUpdateActivityLogArgs, 'input'>>;
   updateApplicationByNodeId?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationByNodeIdArgs, 'input'>>;
   updateApplication?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationArgs, 'input'>>;
   updateApplicationBySerial?: Resolver<Maybe<ResolversTypes['UpdateApplicationPayload']>, ParentType, ContextType, RequireFields<MutationUpdateApplicationBySerialArgs, 'input'>>;
@@ -36824,6 +37551,8 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteActionPluginByCode?: Resolver<Maybe<ResolversTypes['DeleteActionPluginPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionPluginByCodeArgs, 'input'>>;
   deleteActionQueueByNodeId?: Resolver<Maybe<ResolversTypes['DeleteActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionQueueByNodeIdArgs, 'input'>>;
   deleteActionQueue?: Resolver<Maybe<ResolversTypes['DeleteActionQueuePayload']>, ParentType, ContextType, RequireFields<MutationDeleteActionQueueArgs, 'input'>>;
+  deleteActivityLogByNodeId?: Resolver<Maybe<ResolversTypes['DeleteActivityLogPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActivityLogByNodeIdArgs, 'input'>>;
+  deleteActivityLog?: Resolver<Maybe<ResolversTypes['DeleteActivityLogPayload']>, ParentType, ContextType, RequireFields<MutationDeleteActivityLogArgs, 'input'>>;
   deleteApplicationByNodeId?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationByNodeIdArgs, 'input'>>;
   deleteApplication?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationArgs, 'input'>>;
   deleteApplicationBySerial?: Resolver<Maybe<ResolversTypes['DeleteApplicationPayload']>, ParentType, ContextType, RequireFields<MutationDeleteApplicationBySerialArgs, 'input'>>;
@@ -36923,7 +37652,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type NodeResolvers<ContextType = any, ParentType extends ResolversParentTypes['Node'] = ResolversParentTypes['Node']> = {
-  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'File' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayColumnDefinition', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Query' | 'ActionPlugin' | 'ActionQueue' | 'TriggerQueue' | 'Template' | 'TemplateCategory' | 'TemplateSection' | 'TemplateElement' | 'ApplicationResponse' | 'Application' | 'User' | 'UserOrganisation' | 'Organisation' | 'PermissionJoin' | 'PermissionName' | 'PermissionPolicy' | 'TemplatePermission' | 'ApplicationNote' | 'ReviewAssignment' | 'TemplateStage' | 'TemplateStageReviewLevel' | 'ApplicationStageHistory' | 'ApplicationStatusHistory' | 'ReviewAssignmentAssignerJoin' | 'ReviewQuestionAssignment' | 'ReviewResponse' | 'Review' | 'ReviewDecision' | 'ReviewStatusHistory' | 'Notification' | 'OrganisationApplicationJoin' | 'File' | 'UserApplicationJoin' | 'TriggerSchedule' | 'Verification' | 'ActivityLog' | 'TemplateFilterJoin' | 'Filter' | 'TemplateAction' | 'Counter' | 'ElementTypePlugin' | 'LookupTable' | 'OutcomeDisplay' | 'OutcomeDisplayColumnDefinition', ParentType, ContextType>;
   nodeId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
 };
 
@@ -37236,6 +37965,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   node?: Resolver<Maybe<ResolversTypes['Node']>, ParentType, ContextType, RequireFields<QueryNodeArgs, 'nodeId'>>;
   actionPlugins?: Resolver<Maybe<ResolversTypes['ActionPluginsConnection']>, ParentType, ContextType, RequireFields<QueryActionPluginsArgs, 'orderBy'>>;
   actionQueues?: Resolver<Maybe<ResolversTypes['ActionQueuesConnection']>, ParentType, ContextType, RequireFields<QueryActionQueuesArgs, 'orderBy'>>;
+  activityLogs?: Resolver<Maybe<ResolversTypes['ActivityLogsConnection']>, ParentType, ContextType, RequireFields<QueryActivityLogsArgs, 'orderBy'>>;
   applications?: Resolver<Maybe<ResolversTypes['ApplicationsConnection']>, ParentType, ContextType, RequireFields<QueryApplicationsArgs, 'orderBy'>>;
   applicationListShapes?: Resolver<Maybe<ResolversTypes['ApplicationListShapesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationListShapesArgs, 'orderBy'>>;
   applicationNotes?: Resolver<Maybe<ResolversTypes['ApplicationNotesConnection']>, ParentType, ContextType, RequireFields<QueryApplicationNotesArgs, 'orderBy'>>;
@@ -37287,6 +38017,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   actionPlugin?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginArgs, 'id'>>;
   actionPluginByCode?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByCodeArgs, 'code'>>;
   actionQueue?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueArgs, 'id'>>;
+  activityLog?: Resolver<Maybe<ResolversTypes['ActivityLog']>, ParentType, ContextType, RequireFields<QueryActivityLogArgs, 'id'>>;
   application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationArgs, 'id'>>;
   applicationBySerial?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationBySerialArgs, 'serial'>>;
   applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType, RequireFields<QueryApplicationNoteArgs, 'id'>>;
@@ -37371,6 +38102,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   submittedAssignedQuestionsCount?: Resolver<Maybe<ResolversTypes['BigInt']>, ParentType, ContextType, RequireFields<QuerySubmittedAssignedQuestionsCountArgs, never>>;
   actionPluginByNodeId?: Resolver<Maybe<ResolversTypes['ActionPlugin']>, ParentType, ContextType, RequireFields<QueryActionPluginByNodeIdArgs, 'nodeId'>>;
   actionQueueByNodeId?: Resolver<Maybe<ResolversTypes['ActionQueue']>, ParentType, ContextType, RequireFields<QueryActionQueueByNodeIdArgs, 'nodeId'>>;
+  activityLogByNodeId?: Resolver<Maybe<ResolversTypes['ActivityLog']>, ParentType, ContextType, RequireFields<QueryActivityLogByNodeIdArgs, 'nodeId'>>;
   applicationByNodeId?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType, RequireFields<QueryApplicationByNodeIdArgs, 'nodeId'>>;
   applicationNoteByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType, RequireFields<QueryApplicationNoteByNodeIdArgs, 'nodeId'>>;
   applicationResponseByNodeId?: Resolver<Maybe<ResolversTypes['ApplicationResponse']>, ParentType, ContextType, RequireFields<QueryApplicationResponseByNodeIdArgs, 'nodeId'>>;
@@ -38048,6 +38780,15 @@ export type UpdateActionQueuePayloadResolvers<ContextType = any, ParentType exte
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type UpdateActivityLogPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateActivityLogPayload'] = ResolversParentTypes['UpdateActivityLogPayload']> = {
+  clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  activityLog?: Resolver<Maybe<ResolversTypes['ActivityLog']>, ParentType, ContextType>;
+  query?: Resolver<Maybe<ResolversTypes['Query']>, ParentType, ContextType>;
+  application?: Resolver<Maybe<ResolversTypes['Application']>, ParentType, ContextType>;
+  activityLogEdge?: Resolver<Maybe<ResolversTypes['ActivityLogsEdge']>, ParentType, ContextType, RequireFields<UpdateActivityLogPayloadActivityLogEdgeArgs, 'orderBy'>>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type UpdateApplicationNotePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['UpdateApplicationNotePayload'] = ResolversParentTypes['UpdateApplicationNotePayload']> = {
   clientMutationId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   applicationNote?: Resolver<Maybe<ResolversTypes['ApplicationNote']>, ParentType, ContextType>;
@@ -38591,6 +39332,9 @@ export type Resolvers<ContextType = any> = {
   ActionQueue?: ActionQueueResolvers<ContextType>;
   ActionQueuesConnection?: ActionQueuesConnectionResolvers<ContextType>;
   ActionQueuesEdge?: ActionQueuesEdgeResolvers<ContextType>;
+  ActivityLog?: ActivityLogResolvers<ContextType>;
+  ActivityLogsConnection?: ActivityLogsConnectionResolvers<ContextType>;
+  ActivityLogsEdge?: ActivityLogsEdgeResolvers<ContextType>;
   Application?: ApplicationResolvers<ContextType>;
   ApplicationListFilterApplicantConnection?: ApplicationListFilterApplicantConnectionResolvers<ContextType>;
   ApplicationListFilterApplicantEdge?: ApplicationListFilterApplicantEdgeResolvers<ContextType>;
@@ -38641,6 +39385,7 @@ export type Resolvers<ContextType = any> = {
   CountersEdge?: CountersEdgeResolvers<ContextType>;
   CreateActionPluginPayload?: CreateActionPluginPayloadResolvers<ContextType>;
   CreateActionQueuePayload?: CreateActionQueuePayloadResolvers<ContextType>;
+  CreateActivityLogPayload?: CreateActivityLogPayloadResolvers<ContextType>;
   CreateApplicationListShapePayload?: CreateApplicationListShapePayloadResolvers<ContextType>;
   CreateApplicationNotePayload?: CreateApplicationNotePayloadResolvers<ContextType>;
   CreateApplicationPayload?: CreateApplicationPayloadResolvers<ContextType>;
@@ -38687,6 +39432,7 @@ export type Resolvers<ContextType = any> = {
   Datetime?: GraphQLScalarType;
   DeleteActionPluginPayload?: DeleteActionPluginPayloadResolvers<ContextType>;
   DeleteActionQueuePayload?: DeleteActionQueuePayloadResolvers<ContextType>;
+  DeleteActivityLogPayload?: DeleteActivityLogPayloadResolvers<ContextType>;
   DeleteApplicationNotePayload?: DeleteApplicationNotePayloadResolvers<ContextType>;
   DeleteApplicationPayload?: DeleteApplicationPayloadResolvers<ContextType>;
   DeleteApplicationResponsePayload?: DeleteApplicationResponsePayloadResolvers<ContextType>;
@@ -38838,6 +39584,7 @@ export type Resolvers<ContextType = any> = {
   TriggerSchedulesEdge?: TriggerSchedulesEdgeResolvers<ContextType>;
   UpdateActionPluginPayload?: UpdateActionPluginPayloadResolvers<ContextType>;
   UpdateActionQueuePayload?: UpdateActionQueuePayloadResolvers<ContextType>;
+  UpdateActivityLogPayload?: UpdateActivityLogPayloadResolvers<ContextType>;
   UpdateApplicationNotePayload?: UpdateApplicationNotePayloadResolvers<ContextType>;
   UpdateApplicationPayload?: UpdateApplicationPayloadResolvers<ContextType>;
   UpdateApplicationResponsePayload?: UpdateApplicationResponsePayloadResolvers<ContextType>;
