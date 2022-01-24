@@ -5,6 +5,17 @@ CREATE TABLE public.review_question_assignment (
     review_assignment_id integer REFERENCES public.review_assignment (id) ON DELETE CASCADE NOT NULL
 );
 
+-- So we know what Section review assignments relate to:
+CREATE OR REPLACE VIEW review_question_assignment_section AS (
+    SELECT
+        rqa.id,
+        template_element_id,
+        review_assignment_id,
+        section_id AS template_section_id
+    FROM
+        public.review_question_assignment rqa
+        JOIN template_element ON template_element_id = template_element.id);
+
 -- Function to return count of assigned questions for current stage/level
 CREATE FUNCTION public.assigned_questions_count (app_id int, stage_id int, level int)
     RETURNS bigint

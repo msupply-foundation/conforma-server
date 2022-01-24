@@ -66,15 +66,18 @@ BEGIN
         SELECT
             status
         FROM
-            application_stage_status_latest
+            application_status_history
         WHERE
             application_id = app_id
-            AND stage_history_id = NEW.application_stage_history_id);
+            AND is_current = TRUE);
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
         VALUES ('STATUS', (
                 CASE WHEN NEW.status = 'DRAFT'
                     AND prev_status IS NULL THEN
                     'Started'
+                WHEN NEW.status = 'SUBMITTED'
+                    AND prev_status = 'COMPLETED' THEN
+                    'New Stage'
                 ELSE
                     NEW.status::varchar
                 END), app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status));
@@ -120,7 +123,11 @@ CREATE OR REPLACE FUNCTION public.review_assignment_activity_log ()
 BEGIN
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
         VALUES ('ASSIGNMENT', (
-                CASE WHEN NEW.status = 'ASSIGNED' THEN
+                CASE WHEN NEW.status = 'ASSIGNED'
+                    AND NEW.reviewer_id = NEW.assigner_id THEN
+                    'Self-Assigned'
+                WHEN NEW.status = 'ASSIGNED'
+                    AND NEW.reviewer_id <> NEW.assigner_id THEN
                     'Assigned'
                 WHEN NEW.status = 'AVAILABLE' THEN
                     'Unassigned'
@@ -138,7 +145,21 @@ BEGIN
                                 SELECT
                                     full_name FROM "user"
                                 WHERE
-                                    id = NEW.assigner_id)), 'sections', NEW.allowed_sections, 'review_level', NEW.level_number));
+                                    id = NEW.assigner_id)), 'stage', json_build_object('number', NEW.stage_number, 'name', (
+                                    SELECT
+                                        title FROM template_stage
+                                    WHERE
+                                        id = NEW.stage_id)), 'sections', (
+                                    SELECT
+                                        json_agg(t)
+                                        FROM (
+                                            SELECT
+                                                title, code, INDEX FROM template_section
+                                            WHERE
+                                                id = ANY (ARRAY ( SELECT DISTINCT
+                                                    template_section_id FROM review_question_assignment_section
+                                                WHERE
+                                                    review_assignment_id = NEW.id)) ORDER BY INDEX) t), 'review_level', NEW.level_number));
     RETURN NULL;
 END;
 $application_event$
@@ -149,4 +170,81 @@ CREATE TRIGGER review_assignment_activity_trigger
     FOR EACH ROW
     WHEN (NEW.status <> OLD.status)
     EXECUTE FUNCTION review_assignment_activity_log ();
+
+-- REVIEW STATUS CHANGES
+CREATE OR REPLACE FUNCTION public.review_status_activity_log ()
+    RETURNS TRIGGER
+    AS $application_event$
+DECLARE
+    app_id integer;
+    prev_status varchar;
+    reviewer_id integer;
+    rev_assignment_id integer;
+BEGIN
+    app_id = (
+        SELECT
+            application_id
+        FROM
+            review
+        WHERE
+            id = NEW.review_id);
+    prev_status = (
+        SELECT
+            status
+        FROM
+            review_status_history
+        WHERE
+            review_id = NEW.review_id
+            AND is_current = TRUE);
+    reviewer_id = (
+        SELECT
+            r.reviewer_id
+        FROM
+            review r
+        WHERE
+            id = NEW.review_id);
+    rev_assignment_id = (
+        SELECT
+            review_assignment_id
+        FROM
+            review
+        WHERE
+            id = NEW.review_id);
+    INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+        VALUES ('REVIEW_STATUS', (
+                CASE WHEN NEW.status = 'DRAFT'
+                    AND prev_status IS NULL THEN
+                    'Started'
+                ELSE
+                    NEW.status::varchar
+                END), app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewer', json_build_object('id', reviewer_id, 'name', (
+                        SELECT
+                            full_name FROM "user"
+                        WHERE
+                            id = reviewer_id), 'stage', json_build_object('number', (
+                                SELECT
+                                    stage_number FROM review
+                                WHERE
+                                    id = NEW.review_id), 'name', 'TO DO IF REQUIRED'), 'sections', (
+                                SELECT
+                                    json_agg(t)
+                                    FROM (
+                                        SELECT
+                                            title, code, INDEX FROM template_section
+                                        WHERE
+                                            id = ANY (ARRAY ( SELECT DISTINCT
+                                                template_section_id FROM review_question_assignment_section
+                                            WHERE
+                                                review_assignment_id = rev_assignment_id)) ORDER BY INDEX) t))));
+    RETURN NEW;
+END;
+$application_event$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER review_status_activity_trigger
+-- We run this trigger BEFORE insertion so we can more easily capture the
+-- previous status value
+    BEFORE INSERT ON public.review_status_history
+    FOR EACH ROW
+    EXECUTE FUNCTION review_status_activity_log ();
 
