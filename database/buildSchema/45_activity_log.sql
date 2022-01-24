@@ -78,6 +78,10 @@ BEGIN
                 WHEN NEW.status = 'SUBMITTED'
                     AND prev_status = 'COMPLETED' THEN
                     'New Stage'
+                WHEN NEW.status = 'CHANGES_REQUIRED'
+                    AND prev_status = 'DRAFT' THEN
+                    'Making changes'
+                    -- HOW TO RECOGNISE "RE-SUBMITTED" CASE ?
                 ELSE
                     NEW.status::varchar
                 END), app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status));
@@ -165,10 +169,11 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
+-- For this one we need to wait until the Trigger/Action is finished so we can check the created review_question_assignment records
 CREATE TRIGGER review_assignment_activity_trigger
     AFTER UPDATE ON public.review_assignment
     FOR EACH ROW
-    WHEN (NEW.status <> OLD.status)
+    WHEN (NEW.trigger IS NULL AND OLD.trigger = 'PROCESSING')
     EXECUTE FUNCTION review_assignment_activity_log ();
 
 -- REVIEW STATUS CHANGES
@@ -215,6 +220,9 @@ BEGIN
                 CASE WHEN NEW.status = 'DRAFT'
                     AND prev_status IS NULL THEN
                     'Started'
+                WHEN NEW.status = 'DRAFT'
+                    AND prev_status = 'PENDING' THEN
+                    'Re-started'
                 ELSE
                     NEW.status::varchar
                 END), app_id, TG_TABLE_NAME, NEW.id, json_build_object('prevStatus', prev_status, 'status', NEW.status, 'reviewer', json_build_object('id', reviewer_id, 'name', (
@@ -247,4 +255,113 @@ CREATE TRIGGER review_status_activity_trigger
     BEFORE INSERT ON public.review_status_history
     FOR EACH ROW
     EXECUTE FUNCTION review_status_activity_log ();
+
+-- REVIEW_DECISION changes
+CREATE OR REPLACE FUNCTION public.review_decision_activity_log ()
+    RETURNS TRIGGER
+    AS $application_event$
+DECLARE
+    app_id integer;
+    reviewer_id integer;
+    rev_assignment_id integer;
+BEGIN
+    SELECT
+        r.application_id,
+        r.reviewer_id,
+        r.review_assignment_id INTO app_id,
+        reviewer_id,
+        rev_assignment_id
+    FROM
+        review r
+    WHERE
+        id = NEW.review_id;
+    INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
+        VALUES ('REVIEW_DECISION', NEW.decision, app_id, TG_TABLE_NAME, NEW.id, json_build_object('decision', NEW.decision, 'comment', NEW.comment, 'reviewer', json_build_object('id', reviewer_id, 'name', (
+                        SELECT
+                            full_name FROM "user"
+                        WHERE
+                            id = reviewer_id)), 'sections', (
+                        SELECT
+                            json_agg(t)
+                            FROM (
+                                SELECT
+                                    title, code, INDEX FROM template_section
+                                WHERE
+                                    id = ANY (ARRAY ( SELECT DISTINCT
+                                        template_section_id FROM review_question_assignment_section
+                                    WHERE
+                                        review_assignment_id = rev_assignment_id)) ORDER BY INDEX) t)));
+    RETURN NULL;
+END;
+$application_event$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER review_decision_activity_trigger
+    AFTER INSERT ON public.review_decision
+    FOR EACH ROW
+    EXECUTE FUNCTION review_decision_activity_log ();
+
+-- PERMISSION CHANGES
+CREATE OR REPLACE FUNCTION public.permission_activity_log ()
+    RETURNS TRIGGER
+    AS $application_event$
+DECLARE
+    user_id integer;
+    username varchar;
+    org_id integer;
+    org_name varchar;
+    permission_id integer;
+    permission_name varchar;
+    active boolean;
+    data record;
+    status varchar;
+BEGIN
+    data = CASE WHEN TG_OP = 'DELETE' THEN
+        OLD
+    ELSE
+        NEW
+    END;
+    status = CASE WHEN TG_OP = 'DELETE' THEN
+        'REVOKED'
+    ELSE
+        'GRANTED'
+    END;
+    SELECT DISTINCT
+        "userId",
+        p.username,
+        "orgId",
+        "orgName",
+        "permissionNameId",
+        "permissionName",
+        "isActive" INTO user_id,
+        username,
+        org_id,
+        org_name,
+        permission_id,
+        permission_name,
+        active
+    FROM
+        permissions_all p
+    WHERE
+        "permissionJoinId" = data.id;
+    INSERT INTO public.activity_log (type, value, "table", record_id, details)
+        VALUES ('PERMISSION', status, TG_TABLE_NAME, data.id, json_build_object('permission', json_build_object('id', permission_id, 'name', permission_name), 'user', json_build_object('id', user_id, 'username', username, 'name', (
+                        SELECT
+                            full_name FROM "user"
+                        WHERE
+                            id = user_id)), 'organisation', json_build_object('id', org_id, 'name', org_name), 'isActive', active));
+    RETURN data;
+END;
+$application_event$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER permission_insert_activity_trigger
+    AFTER INSERT ON public.permission_join
+    FOR EACH ROW
+    EXECUTE FUNCTION permission_activity_log ();
+
+CREATE TRIGGER permission_delete_activity_trigger
+    BEFORE DELETE ON public.permission_join
+    FOR EACH ROW
+    EXECUTE FUNCTION permission_activity_log ();
 

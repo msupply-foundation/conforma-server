@@ -11,4 +11,5 @@ export const triggerTables = [
   'review_assignment',
   'review_status_history',
   'review_decision',
+  'permission_join',
 ]
