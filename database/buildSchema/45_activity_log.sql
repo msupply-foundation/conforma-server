@@ -3,7 +3,7 @@ CREATE TYPE public.event_type AS ENUM (
     'STATUS',
     'OUTCOME',
     'ASSIGNMENT',
-    'REVIEW_STATUS',
+    'REVIEW',
     'REVIEW_DECISION',
     'PERMISSION' -- This type not (necessarily) tied to an application
 );
@@ -211,7 +211,7 @@ BEGIN
         WHERE
             id = NEW.review_id);
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
-        VALUES ('REVIEW_STATUS', (
+        VALUES ('REVIEW', (
                 CASE WHEN NEW.status = 'DRAFT'
                     AND prev_status IS NULL THEN
                     'Started'

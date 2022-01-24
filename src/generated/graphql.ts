@@ -9985,7 +9985,7 @@ export enum EventType {
   Status = 'STATUS',
   Outcome = 'OUTCOME',
   Assignment = 'ASSIGNMENT',
-  ReviewStatus = 'REVIEW_STATUS',
+  Review = 'REVIEW',
   ReviewDecision = 'REVIEW_DECISION',
   Permission = 'PERMISSION'
 }
