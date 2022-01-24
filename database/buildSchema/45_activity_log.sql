@@ -19,6 +19,10 @@ CREATE TABLE public.activity_log (
     details jsonb NOT NULL DEFAULT '{}'
 );
 
+-- Make an index on the application_id field, since this is the one it will be
+-- searched by most often
+CREATE INDEX activity_log_application_index ON activity_log (application_id);
+
 -- TRIGGERS and FUNCTIONS for updating activity log
 -- STAGE changes
 CREATE OR REPLACE FUNCTION public.stage_activity_log ()
@@ -120,7 +124,7 @@ CREATE TRIGGER outcome_update_activity_trigger
     EXECUTE FUNCTION outcome_activity_log ();
 
 -- ASSIGNMENT changes
-CREATE OR REPLACE FUNCTION public.review_assignment_activity_log ()
+CREATE OR REPLACE FUNCTION public.assignment_activity_log ()
     RETURNS TRIGGER
     AS $application_event$
 BEGIN
@@ -169,11 +173,11 @@ $application_event$
 LANGUAGE plpgsql;
 
 -- For this one we need to wait until the Trigger/Action is finished so we can check the newly-created review_question_assignment records
-CREATE TRIGGER review_assignment_activity_trigger
+CREATE TRIGGER assignment_activity_trigger
     AFTER UPDATE ON public.review_assignment
     FOR EACH ROW
     WHEN (NEW.trigger IS NULL AND OLD.trigger = 'PROCESSING')
-    EXECUTE FUNCTION review_assignment_activity_log ();
+    EXECUTE FUNCTION assignment_activity_log ();
 
 -- REVIEW STATUS CHANGES
 CREATE OR REPLACE FUNCTION public.review_status_activity_log ()
@@ -181,16 +185,19 @@ CREATE OR REPLACE FUNCTION public.review_status_activity_log ()
     AS $application_event$
 DECLARE
     app_id integer;
-    prev_status varchar;
     reviewer_id integer;
     rev_assignment_id integer;
+    stage_number integer;
+    prev_status varchar;
 BEGIN
     SELECT
         r.application_id,
         r.reviewer_id,
-        r.review_assignment_id INTO app_id,
+        r.review_assignment_id,
+        r.stage_number INTO app_id,
         reviewer_id,
-        rev_assignment_id
+        rev_assignment_id,
+        stage_number
     FROM
         review r
     WHERE
@@ -217,21 +224,27 @@ BEGIN
                         SELECT
                             full_name FROM "user"
                         WHERE
-                            id = reviewer_id), 'stage', json_build_object('number', (
+                            id = reviewer_id), 'stage', json_build_object('number', stage_number, 'name', (
                                 SELECT
-                                    stage_number FROM review
+                                    title FROM public.template_stage
                                 WHERE
-                                    id = NEW.review_id), 'name', 'TO DO IF REQUIRED'), 'sections', (
-                                SELECT
-                                    json_agg(t)
-                                    FROM (
+                                    number = stage_number
+                                    AND template_id = (
                                         SELECT
-                                            title, code, INDEX FROM template_section
+                                            template_id FROM application
                                         WHERE
-                                            id = ANY (ARRAY ( SELECT DISTINCT
-                                                template_section_id FROM review_question_assignment_section
+                                            id = app_id))), 'sections', (
+                                    SELECT
+                                        json_agg(t)
+                                        FROM (
+                                            SELECT
+                                                title, code, "index" FROM template_section
                                             WHERE
-                                                review_assignment_id = rev_assignment_id)) ORDER BY INDEX) t))));
+                                                id = ANY (ARRAY ( SELECT DISTINCT
+                                                            template_section_id FROM review_question_assignment_section
+                                                        WHERE
+                                                            review_assignment_id = rev_assignment_id))
+                                                ORDER BY "index") t))));
     RETURN NEW;
 END;
 $application_event$
@@ -264,7 +277,7 @@ BEGIN
     WHERE
         id = NEW.review_id;
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
-        VALUES ('REVIEW_DECISION', NEW.decision, app_id, TG_TABLE_NAME, NEW.id, json_build_object('decision', NEW.decision, 'comment', NEW.comment, 'reviewer', json_build_object('id', reviewer_id, 'name', (
+        VALUES ('REVIEW_DECISION', NEW.decision, app_id, TG_TABLE_NAME, NEW.id, json_build_object('reviewId', NEW.review_id, 'decision', NEW.decision, 'comment', NEW.comment, 'reviewer', json_build_object('id', reviewer_id, 'name', (
                         SELECT
                             full_name FROM "user"
                         WHERE
@@ -285,8 +298,9 @@ $application_event$
 LANGUAGE plpgsql;
 
 CREATE TRIGGER review_decision_activity_trigger
-    AFTER INSERT ON public.review_decision
+    AFTER UPDATE ON public.review_decision
     FOR EACH ROW
+    WHEN (NEW.decision <> OLD.decision)
     EXECUTE FUNCTION review_decision_activity_log ();
 
 -- PERMISSION CHANGES
