@@ -17401,9 +17401,11 @@ export type PermissionsAll = {
   templatePermissionId?: Maybe<Scalars['Int']>;
   templateId?: Maybe<Scalars['Int']>;
   userId?: Maybe<Scalars['Int']>;
+  permissionJoinId?: Maybe<Scalars['Int']>;
   orgId?: Maybe<Scalars['Int']>;
   isUserCategory?: Maybe<Scalars['Boolean']>;
   isSystemOrgPermission?: Maybe<Scalars['Boolean']>;
+  isActive?: Maybe<Scalars['Boolean']>;
 };
 
 /**
@@ -17449,12 +17451,16 @@ export type PermissionsAllCondition = {
   templateId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `userId` field. */
   userId?: Maybe<Scalars['Int']>;
+  /** Checks for equality with the object’s `permissionJoinId` field. */
+  permissionJoinId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `orgId` field. */
   orgId?: Maybe<Scalars['Int']>;
   /** Checks for equality with the object’s `isUserCategory` field. */
   isUserCategory?: Maybe<Scalars['Boolean']>;
   /** Checks for equality with the object’s `isSystemOrgPermission` field. */
   isSystemOrgPermission?: Maybe<Scalars['Boolean']>;
+  /** Checks for equality with the object’s `isActive` field. */
+  isActive?: Maybe<Scalars['Boolean']>;
 };
 
 /** A filter to be used against `PermissionsAll` object types. All fields are combined with a logical ‘and.’ */
@@ -17497,12 +17503,16 @@ export type PermissionsAllFilter = {
   templateId?: Maybe<IntFilter>;
   /** Filter by the object’s `userId` field. */
   userId?: Maybe<IntFilter>;
+  /** Filter by the object’s `permissionJoinId` field. */
+  permissionJoinId?: Maybe<IntFilter>;
   /** Filter by the object’s `orgId` field. */
   orgId?: Maybe<IntFilter>;
   /** Filter by the object’s `isUserCategory` field. */
   isUserCategory?: Maybe<BooleanFilter>;
   /** Filter by the object’s `isSystemOrgPermission` field. */
   isSystemOrgPermission?: Maybe<BooleanFilter>;
+  /** Filter by the object’s `isActive` field. */
+  isActive?: Maybe<BooleanFilter>;
   /** Checks for all expressions in this list. */
   and?: Maybe<Array<PermissionsAllFilter>>;
   /** Checks for any expressions in this list. */
@@ -17574,12 +17584,16 @@ export enum PermissionsAllsOrderBy {
   TemplateIdDesc = 'TEMPLATE_ID_DESC',
   UserIdAsc = 'USER_ID_ASC',
   UserIdDesc = 'USER_ID_DESC',
+  PermissionJoinIdAsc = 'PERMISSION_JOIN_ID_ASC',
+  PermissionJoinIdDesc = 'PERMISSION_JOIN_ID_DESC',
   OrgIdAsc = 'ORG_ID_ASC',
   OrgIdDesc = 'ORG_ID_DESC',
   IsUserCategoryAsc = 'IS_USER_CATEGORY_ASC',
   IsUserCategoryDesc = 'IS_USER_CATEGORY_DESC',
   IsSystemOrgPermissionAsc = 'IS_SYSTEM_ORG_PERMISSION_ASC',
-  IsSystemOrgPermissionDesc = 'IS_SYSTEM_ORG_PERMISSION_DESC'
+  IsSystemOrgPermissionDesc = 'IS_SYSTEM_ORG_PERMISSION_DESC',
+  IsActiveAsc = 'IS_ACTIVE_ASC',
+  IsActiveDesc = 'IS_ACTIVE_DESC'
 }
 
 export type PostgresRowLevel = {
@@ -44082,9 +44096,11 @@ export type PermissionsAllResolvers<ContextType = any, ParentType extends Resolv
   templatePermissionId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   templateId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   userId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  permissionJoinId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   orgId?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   isUserCategory?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   isSystemOrgPermission?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  isActive?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

@@ -24,19 +24,18 @@ CREATE TABLE public.activity_log (
 CREATE OR REPLACE FUNCTION public.stage_activity_log ()
     RETURNS TRIGGER
     AS $application_event$
+DECLARE
+    stage_name varchar;
 BEGIN
+    stage_name = (
+        SELECT
+            title
+        FROM
+            template_stage
+        WHERE
+            id = NEW.stage_id);
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
-        VALUES ('STAGE', (
-                SELECT
-                    title
-                FROM
-                    template_stage
-                WHERE
-                    id = NEW.stage_id), NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('stage', (
-                        SELECT
-                            title FROM template_stage
-                        WHERE
-                            id = NEW.stage_id)));
+        VALUES ('STAGE', stage_name, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('stage', stage_name));
     RETURN NULL;
 END;
 $application_event$
@@ -169,7 +168,7 @@ END;
 $application_event$
 LANGUAGE plpgsql;
 
--- For this one we need to wait until the Trigger/Action is finished so we can check the created review_question_assignment records
+-- For this one we need to wait until the Trigger/Action is finished so we can check the newly-created review_question_assignment records
 CREATE TRIGGER review_assignment_activity_trigger
     AFTER UPDATE ON public.review_assignment
     FOR EACH ROW
@@ -186,13 +185,16 @@ DECLARE
     reviewer_id integer;
     rev_assignment_id integer;
 BEGIN
-    app_id = (
-        SELECT
-            application_id
-        FROM
-            review
-        WHERE
-            id = NEW.review_id);
+    SELECT
+        r.application_id,
+        r.reviewer_id,
+        r.review_assignment_id INTO app_id,
+        reviewer_id,
+        rev_assignment_id
+    FROM
+        review r
+    WHERE
+        id = NEW.review_id;
     prev_status = (
         SELECT
             status
@@ -201,20 +203,6 @@ BEGIN
         WHERE
             review_id = NEW.review_id
             AND is_current = TRUE);
-    reviewer_id = (
-        SELECT
-            r.reviewer_id
-        FROM
-            review r
-        WHERE
-            id = NEW.review_id);
-    rev_assignment_id = (
-        SELECT
-            review_assignment_id
-        FROM
-            review
-        WHERE
-            id = NEW.review_id);
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
         VALUES ('REVIEW', (
                 CASE WHEN NEW.status = 'DRAFT'
