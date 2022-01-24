@@ -44,6 +44,15 @@ const useSnapshot: SnapshotOperation = async ({
       execSync(`rm -rf ${FILES_FOLDER}/*`)
     }
 
+    // Prevent triggers from running while we insert data
+    execSync('psql -U postgres -d tmf_app_manager -c "ALTER TABLE application DISABLE TRIGGER ALL"')
+    execSync(
+      'psql -U postgres -d tmf_app_manager -c "ALTER TABLE application_stage_history DISABLE TRIGGER ALL"'
+    )
+    execSync(
+      'psql -U postgres -d tmf_app_manager -c "ALTER TABLE application_status_history DISABLE TRIGGER ALL"'
+    )
+
     console.log('inserting from snapshot ... ')
     const insertedRecords = await importFromJson(
       snapshotObject,
@@ -51,6 +60,15 @@ const useSnapshot: SnapshotOperation = async ({
       options.shouldReInitialise
     )
     console.log('inserting from snapshot ... done')
+
+    // Re-enable triggers
+    execSync('psql -U postgres -d tmf_app_manager -c "ALTER TABLE application ENABLE TRIGGER ALL"')
+    execSync(
+      'psql -U postgres -d tmf_app_manager -c "ALTER TABLE application_stage_history ENABLE TRIGGER ALL"'
+    )
+    execSync(
+      'psql -U postgres -d tmf_app_manager -c "ALTER TABLE application_status_history ENABLE TRIGGER ALL"'
+    )
 
     await copyFiles(snapshotFolder, insertedRecords.file)
 
