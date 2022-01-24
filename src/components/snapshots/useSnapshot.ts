@@ -6,6 +6,7 @@ import insertData from '../../../database/insertData'
 import updateRowPolicies from '../../../database/updateRowPolicies'
 import { SnapshotOperation, ExportAndImportOptions, ObjectRecord } from '../exportAndImport/types'
 import importFromJson from '../exportAndImport/importFromJson'
+import { triggerTables } from './triggerTables'
 
 import {
   DEFAULT_SNAPSHOT_NAME,
@@ -45,13 +46,9 @@ const useSnapshot: SnapshotOperation = async ({
     }
 
     // Prevent triggers from running while we insert data
-    execSync('psql -U postgres -d tmf_app_manager -c "ALTER TABLE application DISABLE TRIGGER ALL"')
-    execSync(
-      'psql -U postgres -d tmf_app_manager -c "ALTER TABLE application_stage_history DISABLE TRIGGER ALL"'
-    )
-    execSync(
-      'psql -U postgres -d tmf_app_manager -c "ALTER TABLE application_status_history DISABLE TRIGGER ALL"'
-    )
+    triggerTables.forEach((table) => {
+      execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} DISABLE TRIGGER ALL"`)
+    })
 
     console.log('inserting from snapshot ... ')
     const insertedRecords = await importFromJson(
@@ -62,13 +59,9 @@ const useSnapshot: SnapshotOperation = async ({
     console.log('inserting from snapshot ... done')
 
     // Re-enable triggers
-    execSync('psql -U postgres -d tmf_app_manager -c "ALTER TABLE application ENABLE TRIGGER ALL"')
-    execSync(
-      'psql -U postgres -d tmf_app_manager -c "ALTER TABLE application_stage_history ENABLE TRIGGER ALL"'
-    )
-    execSync(
-      'psql -U postgres -d tmf_app_manager -c "ALTER TABLE application_status_history ENABLE TRIGGER ALL"'
-    )
+    triggerTables.forEach((table) => {
+      execSync(`psql -U postgres -d tmf_app_manager -c "ALTER TABLE ${table} ENABLE TRIGGER ALL"`)
+    })
 
     await copyFiles(snapshotFolder, insertedRecords.file)
 
