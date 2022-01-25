@@ -29,17 +29,19 @@ CREATE OR REPLACE FUNCTION public.stage_activity_log ()
     RETURNS TRIGGER
     AS $application_event$
 DECLARE
+    stage_num integer;
     stage_name varchar;
 BEGIN
-    stage_name = (
-        SELECT
-            title
-        FROM
-            template_stage
-        WHERE
-            id = NEW.stage_id);
+    SELECT
+        number,
+        title INTO stage_num,
+        stage_name
+    FROM
+        template_stage
+    WHERE
+        id = NEW.stage_id;
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
-        VALUES ('STAGE', stage_name, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('stage', stage_name));
+        VALUES ('STAGE', stage_name, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('stage', json_build_object('number', stage_num, 'name', stage_name)));
     RETURN NULL;
 END;
 $application_event$
