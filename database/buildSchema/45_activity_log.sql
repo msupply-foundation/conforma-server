@@ -31,17 +31,20 @@ CREATE OR REPLACE FUNCTION public.stage_activity_log ()
 DECLARE
     stage_num integer;
     stage_name varchar;
+    stage_col varchar;
 BEGIN
     SELECT
         number,
-        title INTO stage_num,
-        stage_name
+        title,
+        colour INTO stage_num,
+        stage_name,
+        stage_col
     FROM
         template_stage
     WHERE
         id = NEW.stage_id;
     INSERT INTO public.activity_log (type, value, application_id, "table", record_id, details)
-        VALUES ('STAGE', stage_name, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('stage', json_build_object('number', stage_num, 'name', stage_name)));
+        VALUES ('STAGE', stage_name, NEW.application_id, TG_TABLE_NAME, NEW.id, json_build_object('stage', json_build_object('number', stage_num, 'name', stage_name, 'colour', stage_col)));
     RETURN NULL;
 END;
 $application_event$
@@ -83,9 +86,9 @@ BEGIN
                 WHEN NEW.status = 'SUBMITTED'
                     AND prev_status = 'COMPLETED' THEN
                     'New Stage'
-                WHEN NEW.status = 'CHANGES_REQUIRED'
-                    AND prev_status = 'DRAFT' THEN
-                    'Making changes'
+                WHEN NEW.status = 'DRAFT'
+                    AND prev_status = 'CHANGES_REQUIRED' THEN
+                    'Re-started'
                     -- HOW TO RECOGNISE "RE-SUBMITTED" CASE ?
                 ELSE
                     NEW.status::varchar
