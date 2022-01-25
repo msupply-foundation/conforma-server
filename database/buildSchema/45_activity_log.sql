@@ -11,7 +11,7 @@ CREATE TYPE public.event_type AS ENUM (
 CREATE TABLE public.activity_log (
     id serial PRIMARY KEY,
     type public.event_type NOT NULL,
-    value varchar,
+    value varchar NOT NULL,
     timestamp timestamptz DEFAULT CURRENT_TIMESTAMP NOT NULL,
     application_id integer REFERENCES public.application (id) ON DELETE CASCADE,
     "table" varchar NOT NULL,
